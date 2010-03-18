@@ -1,0 +1,109 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.model.persist.triggers.actions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+
+
+/**
+ * @author Vincent Legendre
+ * This action create a message event.
+ */
+public class EbActMessage extends AnAction
+{
+  static final long serialVersionUID = 123;
+
+  private String m_message = "";
+  private String m_title = null;
+
+
+  /**
+   * 
+   */
+  public EbActMessage()
+  {
+    init();
+  }
+
+  /**
+   * @param p_base
+   */
+  public EbActMessage(EbBase p_base)
+  {
+    super( p_base );
+    init();
+  }
+
+  private void init()
+  {
+    m_message = "";
+    m_title = null;
+  }
+
+  @Override
+  public void reinit()
+  {
+    super.reinit();
+    this.init();
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.triggers.actions.AnAction#exec(com.fullmetalgalaxy.model.persist.EbGame)
+   */
+  @Override
+  public List<AnEvent> createEvents(EbGame p_game, List<Object> p_params)
+  {
+    List<AnEvent> events = new ArrayList<AnEvent>();
+    if( !getMessage().trim().equals( "" ) )
+    {
+      EbEvtMessage msg = new EbEvtMessage();
+      msg.setGame( p_game );
+      msg.setMessage( getMessage() );
+      msg.setTitle( getTitle() );
+      events.add( msg );
+    }
+    return events;
+  }
+
+  /**
+   * if message start with './' or 'http://', message is a web page url
+   * @return the message
+   */
+  public String getMessage()
+  {
+    return m_message;
+  }
+
+  /**
+   * @param p_message the message to set
+   */
+  public void setMessage(String p_message)
+  {
+    m_message = p_message;
+  }
+
+  /**
+   * @return the title
+   */
+  public String getTitle()
+  {
+    return m_title;
+  }
+
+  /**
+   * @param p_title the title to set
+   */
+  public void setTitle(String p_title)
+  {
+    m_title = p_title;
+  }
+
+
+}

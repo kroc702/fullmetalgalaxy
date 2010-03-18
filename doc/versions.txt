@@ -1,0 +1,215 @@
+
+24/02/10:
+=========
+- support du tutorial (la lecture d'un fichier)
+
+18/02/10:
+=========
+- correction de quelques bugs fonctionnelles
+- comptes spécifiques (sans google)
+- prévoir le requettage sur les parties, ajout de la liste de joueur, suivi des stats avec google analitics
+- retirer les fonctions pack/unpack -> les logs ne doivent plus contenir game ou token (retirer les EbFactory...)
+- catch de com.google.apphosting.api.DeadlineExceededException pour sortir rapidement une réponse normale
+- restoration de la fonction 'comet' ou pseudo long pool
+- retrait des pointeurs du model 'game' vers les objets 'account'
+- utilisation des blob pour stocker les models serializé et décorellation complètes des fonctions liées a la base (version, timestamp, id)
+- utilisation de AppEngine a la place de tomcat/hibernate/mysql
+
+19/01/09:
+=========
+- travail sur la charte graphique du site.
+- articles sur la création d'une partie.
+- calcul des points + page classement + detail stat sur joueur
+- ajout des pages: screenshots, hall of fame, FAQ
+- la minimap est clickable
+- correction d'une foule de petit bugs
+
+20/12/08:
+=========
+- règles de neutralisation correctes
+- saisi du mail a l'inscription (a mettre dans la session). remplacer le popup par une
+requette caché et un lien.
+- export / import des parties via fichiers XML.
+- gestion du type de la planete (desert,herbe,glace,...).
+- modif du mot de passe via jforum.
+- le history state par default être recupéré dans la page jsp.
+- inscription a google analitycs.
+
+20/11/08:
+=========
+- page de création de partie plus complète (édition de la carte, de scénario,...)
+- tutorials -> support complet des scenarios (via triggers)
+- chat entre joueurs
+- liste des joueurs connecté a la partie en cours 
+- minimap généré coté serveur
+- support des servlets de type CometProcessor (serveur push data)
+
+
+14/10/08: V0.7
+=========
+- réécriture de la gestion des actions 
+  - rationalisation des vérifications de règle
+  - log en base des actions utilisateurs
+  - possibilité de faire un replay des parties dans le futur
+  - logique de création des actions (IHM) plus intuitive.
+- layout (organisation des composants graphiques) repensé
+- gestion des munitions des destructeurs
+- affichage des munitions et cargaison a coté des pions.
+- utilisation de SVN
+- edition de la carte pendant la creation de la partie
+- gestion du decolage de l'astronef (enfin !)
+- possibilite de jouer en solo (même non loggé) pour les futurs tutoriaux
+
+30/08/08:
+=========
+- passage a GWT 1.5
+- action play/pause sur la partie
+- les tours de jeu sont comtabilisé en mode tour par tour ET asynchrone.
+  en mode asynchrone seul les tours de jeu sont influencé par le temps réel, 
+  le reste se base sur les tours de jeu sans distinction asynch/tt.
+  controle plus aisé sur le temps.
+
+10/08/08:
+=========
+- premiers ajouts des effets atmosphériques
+- ajout d'ombrage sur les pions
+- chronomètre en tour par tour
+- reconstruction des tourelles
+- une nouvelle possibilitée de scrolling de la carte
+- recherche de chemin simpliste pour le déplacement de pion.
+- début du support clavier
+- correction de régressions
+
+25/06/08: V0.6
+=========
+- réécriture du composant d'affichage de la carte pour de meilleurs performances
+- les fichiers images sont généré avec blender et affiché en 3D isométriques.
+- plus que 2 niveaux de zoom: tactique (de près et de coté) et stratégique (de loin et dessus)
+
+
+20/05/08: V0.5
+=========
+- l'historique du navigateur est géré
+- chaque état de l'appli (ie chaque partie) a sont url propre
+- bouton d'actions contextuelles, bouton action ok/cancel, détection des actions impossible plus tot.
+- ajout de all/none dans le menu des zones de feux. sélection par joueur et non plus par couleurs.
+- possibilité d'utiliser le skin Mathieu
+-> un pion qui entre dans un astronef prend la couleur de l'astronef.
+-> un tir sur une case détruit le ponton et le pion dessus.
+
+11/04/08: V0.4
+=========
+- Utilisation de Hibernate: gros changements architectural, rationalisation des règles métiers.
+- Ajout d'un forum (JForum) connecté en SSO avec FMP.
+- gestion des cookies pour le login
+- impossible de tirer avec 2 chars cote/cote sur 2 montagnes
+- correction: impossible de mettre un minerais sur un ponton
+
+04/03/08: 
+=========
+- donner, comme dans les vrais règles, la possibilité de débarquer le contenu d'un véhicule en une seule fois
+Corrections de bug:
+- de retour de l'ecran de partie vers la liste, un clic sur une partie ne fonctionne plus.
+
+
+29/02/08: 
+=========
+- affichage de fin de partie et du vainqueur
+- ne prendre qu'un seul point d'action pour sortir la barge
+- Ajout d'une table PlayerPointsHistory (idAccount int,idGame int, lastUpdate timestamp, currentPoints int)
+- dans les listes des parties/joueurs limiter a 50 le nombre de résultat pour éviter des temps de chargements trop long.
+- ajout d'un flag indiquant si les points ont été comptabilisé (recopié dans PlayerPointsHistory)
+- mise a jour du shema de la base 'automatique'
+- ajouter une option de jeu tour par tour (ou asynchrone)
+Corrections de bug:
+- le pb de la barge qui s'échoue sur l'astronef est résolu
+
+
+21/02/08: V0.3
+=========
+- demander confirmation avant de détruire ses propres pions
+- internationalisation (penser au format de date) + traduction en francais
+- ajout d'un menu "a propos" avec date de mise en prod, copyright, auteur, remerciment aux alphas testeurs
+- un paneau simple/avancé pour la création de la partie et correction de bug graphique
+- calcul des points de chaque joueurs
+
+Corrections de bug:
+- impossible de cummuler plus de 10 points d'action une fois posé
+- la marré est mise a jour avant une action (et non plus après)
+
+
+14/02/08: Mise en prod
+=========
+- les prévisions des marrées dépendent maintenant de la pondeuse météo
+- la partie ne commence pas tant que le minimum de joueur n'est pas inscrit
+- Il n'est plus possible de cumuler plus de 10 points d'actions avant de ce poser.
+- la frequence de rafraichisement est fonction de la vitesse du jeu.
+- ne pas rafraichir quand une action est en cours
+- afficher le prochain incrément de pt d'action et la fin de la partie
+- amélioration de l'écran de création de partie (affichage de la carte généré)
+- affichage de la zone d'atterissage lors du choix du site
+- les tourelles et l'astronef ne sont pas affecté par les zones de feux
+- respect de la règle "Une unité peut se déneutraliser avec un déplacement d'une seule case si ce déplacement la met hors du feu adverse. Sinon, l'unité ne peut strictement rien faire."
+- ajout d'info utilisateurs
+- ajout de l'annuaire dans le menu "Account"
+- lors de l'atterissage, remplacer l'image hexagon hightlight par l'astronef
+- création d'un mini site expliquant le projet.
+ 
+Correction de bug:
+- impossible de charger un minerais sous sont propre feux
+- ne pas dépasser le nombre maxi de pt d'action
+- le nombre maxi de joueur n'est pas verifié
+- régler le pb de diff de login entre le paneau de gauche et le menu.
+- un minerais transformé en pièce (char, crabe ou ponton) et transfèré dans un transporteur dans la même action, reste un minerais. 
+
+
+07/02/08: Mise en prod
+=========
+- page de création de partie minimal
+- controle des vehicules adverse et de leur contenu
+- limiter la zone de feu des tanks cote a cote sur une montagne
+- donner 5 points d'actions dès l'inscription.
+- ne pas afficher les parties terminées.
+- controle sur les capacités des transporteurs
+- petit effort sur le paneau de gauche
+
+Correction de bug:
+- les points d'actions s'incrémentent avant le debut de la partie.
+- le choix de la couleur a l'enregistrement de la partie doit être obligatoire.
+- la selection d'une tourelle après une autre selection est possible mais ne devrais pas.
+- impossible de sortir la barge de l'astronef
+- impossible de charger un crabe sur un ponton
+- sortir la barge de 2 cases minimum
+
+
+05/02/08: Mise en prod
+=========
+- affichage d'un petit icon a coté des pions déactivés
+- classement des parties (en cours, terminé, au joueur)
+- deplacer les methodes canFire, canMove... des tokens au model afin de vérifier le terrain/marré etc. + ajout d'une methode isActive (faux si dans mer, zone de feux)
+- Utilisation de Ant
+- Zone de feu
+- Préstation comune aux 3 pages avec un menu
+- Faire un seul module ?
+- logo wait lors d'un appel RPC
+- se déplacer sur la carte avec la souris
+- prise d'un astronef, destruction des tourelles, etc...
+- ne pas atterrir a coté d'un autre astronef, detruire les pions autour de la zone d'atterrisage
+- Architecture av le change listner dans les 2 sens (wgt <-> model) & init
+- générer les pages (des wgt composites) en fonction des beans avec le générateur de code
+- Faire les 4 widgets WgtFormXxx (String, Integer, DateTime, Boolean) dans un 1 package
+- tout en anglais
+- création des images
+
+Correction de bug:
+- décalage des images de l'interface ou des pions
+
+
+12/10/07: Mise en prod
+=========
+- toute les actions de base
+- generation cartes
+- interface client  minimal
+- interface board minimal
+- services RPC  minimal
+

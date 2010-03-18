@@ -1,0 +1,335 @@
+from PSPApp import *
+
+def ScriptProperties():
+    return {
+        'Author': u'kroc',
+        'Copyright': u'',
+        'Description': u'',
+        'Host': u'Paint Shop Pro X',
+        'Host Version': u'10.00'
+        }
+
+
+
+
+
+
+
+def Do(Environment):
+    # Resize
+    App.Do( Environment, 'Resize', {
+            'AspectRatio': 1.29156, 
+            'CurrentDimensionUnits': App.Constants.UnitsOfMeasure.Pixels, 
+            'CurrentResolutionUnits': App.Constants.ResolutionUnits.PixelsPerCM, 
+            'Height': 512, 
+            'MaintainAspectRatio': False, 
+            'Resample': True, 
+            'ResampleType': App.Constants.ResampleType.SmartSize, 
+            'ResizeAllLayers': True, 
+            'Resolution': 78.74, 
+            'Width': 512, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+
+    # SelectAll
+    App.Do( Environment, 'SelectAll', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Copy
+    App.Do( Environment, 'Copy', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # ResizeCanvas
+    App.Do( Environment, 'ResizeCanvas', {
+            'AspectRatio': 1, 
+            'FillColor': (176,80,82), 
+            'HoriPlace': App.Constants.HorizontalType.Left, 
+            'MaintainAspect': False, 
+            'NewDimUnits': App.Constants.UnitsOfMeasure.Pixels, 
+            'NewHeight': 1024, 
+            'NewWidth': 1024, 
+            'PlaceBottom': 512, 
+            'PlaceLeft': 0, 
+            'PlaceRight': 512, 
+            'PlaceTop': 0, 
+            'VertPlace': App.Constants.VerticalType.Top, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # NormalViewing
+#    App.Do( Environment, 'NormalViewing', {
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Interactive, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # Zoom In
+#    App.Do( Environment, 'ZoomIn1', {
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Interactive, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # Zoom In
+#    App.Do( Environment, 'ZoomIn1', {
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Interactive, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # Zoom In
+#    App.Do( Environment, 'ZoomIn1', {
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Interactive, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # PasteAsNewSelection
+    App.Do( Environment, 'PasteAsNewSelection', {
+            'Offset': (147,-116), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Move
+    App.Do( Environment, 'Mover', {
+            'Offset': (109,-141), 
+            'Object': App.Constants.LayerOrSelection.Layer, 
+            'SelectPoint': (411.25,638.25), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Move
+    App.Do( Environment, 'Mover', {
+            'Offset': (0,1), 
+            'Object': App.Constants.LayerOrSelection.Layer, 
+            'SelectPoint': (520.75,497.75), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # PasteAsNewSelection
+    App.Do( Environment, 'PasteAsNewSelection', {
+            'Offset': (-242,213), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Move
+    App.Do( Environment, 'Mover', {
+            'Offset': (-14,43), 
+            'Object': App.Constants.LayerOrSelection.Layer, 
+            'SelectPoint': (33.25,477.25), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # PasteAsNewSelection
+    App.Do( Environment, 'PasteAsNewSelection', {
+            'Offset': (-6,91), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Move
+    App.Do( Environment, 'Mover', {
+            'Offset': (262,165), 
+            'Object': App.Constants.LayerOrSelection.Layer, 
+            'SelectPoint': (277.75,411.75), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # SelectNone
+    App.Do( Environment, 'SelectNone', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # Rotate
+    App.Do( Environment, 'Rotate', {
+            'RotAngleDegrees': 45, 
+            'Direction': False, 
+            'Rotate All Layers': False, 
+            'FillMaterial': {
+                'Color': (255,255,255), 
+                'Pattern': None, 
+                'Gradient': None, 
+                'Texture': None, 
+                'Art': None
+                }, 
+            'Rotate single layer around canvas center': False, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # UndoLastCmd
+#    App.Do( Environment, 'UndoLastCmd', {
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # ResizeCanvas
+#    App.Do( Environment, 'ResizeCanvas', {
+#            'AspectRatio': 1, 
+#            'FillColor': (176,80,82), 
+#            'HoriPlace': App.Constants.HorizontalType.Center, 
+#            'MaintainAspect': False, 
+#            'NewDimUnits': App.Constants.UnitsOfMeasure.Pixels, 
+#            'NewHeight': 1448, 
+#            'NewWidth': 1448, 
+#            'PlaceBottom': 212, 
+#            'PlaceLeft': 212, 
+#            'PlaceRight': 212, 
+#            'PlaceTop': 212, 
+#            'VertPlace': App.Constants.VerticalType.Center, 
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # Rotate
+#    App.Do( Environment, 'Rotate', {
+#            'RotAngleDegrees': 45, 
+#            'Direction': False, 
+#            'Rotate All Layers': False, 
+#            'FillMaterial': {
+#                'Color': (255,255,255), 
+#                'Pattern': None, 
+#                'Gradient': None, 
+#                'Texture': None, 
+#                'Art': None
+#                }, 
+#            'Rotate single layer around canvas center': False, 
+#            'GeneralSettings': {
+#                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+#                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+#                'Version': ((10,0,0),1)
+#                }
+#            })
+
+    # Resize
+    App.Do( Environment, 'Resize', {
+            'AspectRatio': 1, 
+            'CurrentDimensionUnits': App.Constants.UnitsOfMeasure.Pixels, 
+            'CurrentResolutionUnits': App.Constants.ResolutionUnits.PixelsPerIn, 
+            'Height': 80, 
+            'MaintainAspectRatio': False, 
+            'Resample': True, 
+            'ResampleType': App.Constants.ResampleType.SmartSize, 
+            'ResizeAllLayers': True, 
+            'Resolution': 96, 
+            'Width': 231, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # MaskFromImage
+    App.Do( Environment, 'MaskFromImage', {
+            'CreateMaskFrom': App.Constants.CreateMaskFrom.Luminance, 
+            'InvertMaskData': False, 
+            'SourceImage': 0, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            }) 
+
+    # Crop
+    App.Do( Environment, 'Crop', {
+            'CropRect': ((77,20), 77, 40), 
+            'Mode': App.Constants.CropMode.Custom, 
+            'Units': App.Constants.CropUnits.Pixels, 
+            'SelectedArea': False, 
+            'PrintWidth': -1, 
+            'PrintHeight': -1, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (1,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((10,0,0),1)
+                }
+            })
+
+    # LayerMergeGroup
+    App.Do( Environment, 'LayerMergeGroup', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((10,0,0),1)
+                }
+            })

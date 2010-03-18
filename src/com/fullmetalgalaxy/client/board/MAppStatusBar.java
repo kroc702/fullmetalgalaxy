@@ -1,0 +1,123 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.client.board;
+
+
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.HistoryState;
+import com.fullmetalgalaxy.client.MApp;
+import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.creation.MAppGameCreation;
+import com.fullmetalgalaxy.client.home.MAppGameList;
+import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.client.ressources.fonts.ImageFont;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+/**
+ * @author Vincent Legendre
+ *
+ */
+public class MAppStatusBar extends MApp
+{
+  public static final String HISTORY_ID = "status";
+
+  protected HorizontalPanel m_panel = new HorizontalPanel();
+  protected Image m_icon = Icons.s_instance.desert_planet_medium().createImage();
+  protected HTML m_title = new HTML();
+  private String m_strTitle = "";
+
+  protected WgtPlayerInfo m_playerInfo = new WgtPlayerInfo();
+  protected WgtTimeInfo m_timeInfo = new WgtTimeInfo();
+
+  /**
+   * 
+   */
+  public MAppStatusBar()
+  {
+    ModelFmpMain.model().subscribeModelUpdateEvent( this );
+    m_panel.setWidth( "100%" );
+    m_panel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
+    m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
+
+    VerticalPanel vpanel = new VerticalPanel();
+    vpanel.setSize( "100%", "40px" );
+    vpanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
+    vpanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
+    vpanel.add( m_playerInfo );
+    // vpanel.setCellWidth( m_playerInfo, "200px" );
+    vpanel.add( m_timeInfo );
+
+    m_panel.add( vpanel );
+    m_panel.setCellWidth( vpanel, "280px" );
+    m_panel.add( m_icon );
+    m_panel.setCellWidth( m_icon, "40px" );
+    m_panel.add( m_title );
+    m_panel.setCellHorizontalAlignment( m_title, HasHorizontalAlignment.ALIGN_LEFT );
+    initWidget( m_panel );
+  }
+
+  public String getHistoryId()
+  {
+    return HISTORY_ID;
+  }
+
+  private void setTitleStatus(String p_title)
+  {
+    if( m_strTitle.equals( p_title ) )
+    {
+      return;
+    }
+    m_strTitle = p_title;
+    m_title.setHTML( ImageFont.getHTML( ImageFont.s_FontTitleBundle, m_strTitle ) );
+  }
+
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.MApp#show(com.fullmetalgalaxy.client.HistoryState)
+   */
+  public void show(HistoryState p_state)
+  {
+    super.show( p_state );
+
+    if( p_state.containsKey( MAppBoard.HISTORY_ID ) )
+    {
+      setTitleStatus( ModelFmpMain.model().getGame().getName() );
+    }
+    else if( p_state.containsKey( MAppGameCreation.HISTORY_ID ) )
+    {
+      setTitleStatus( AppMain.s_messages.newGame() );
+    }
+    else if( p_state.containsKey( MAppGameList.HISTORY_ID ) )
+    {
+      String title = "";
+      if( !p_state.containsKey( MAppGameList.s_TokenGameFiler ) )
+      {
+        if( ModelFmpMain.model().isLogged() )
+        {
+          title += AppMain.s_messages.myGame();
+        }
+        else
+        {
+          title += AppMain.s_messages.currentGame();
+        }
+      }
+      else
+      {
+        title += "Galaxy";
+      }
+      setTitleStatus( title );
+    }
+    else
+    {
+      setTitleStatus( "browse" );
+    }
+  }
+
+
+}

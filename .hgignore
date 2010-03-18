@@ -1,0 +1,19 @@
+
+syntax: regexp
+^src/com/fullmetalgalaxy/client/ressources/tokens/render$
+syntax: regexp
+^war/images/home-header\.jpg$
+syntax: regexp
+^war/images/home-header\.pspimage$
+syntax: regexp
+^war/WEB-INF/lib/appengine.*\.jar$
+syntax: regexp
+^war/WEB-INF/lib/datanucleus.*\.jar$
+syntax: regexp
+^war/WEB-INF/lib/geronimo.*\.jar$
+syntax: regexp
+^war/WEB-INF/lib/gwt.*\.jar$
+syntax: regexp
+^war/WEB-INF/lib/jdo2-api.*\.jar$
+syntax: regexp
+^war/WEB-INF/lib/jsr107cache.*\.jar$

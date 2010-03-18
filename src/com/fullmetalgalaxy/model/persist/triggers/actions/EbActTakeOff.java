@@ -1,0 +1,86 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.model.persist.triggers.actions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
+
+
+/**
+ * @author Vincent Legendre
+ * This action create a message event.
+ */
+public class EbActTakeOff extends AnAction
+{
+  static final long serialVersionUID = 123;
+
+
+
+  /**
+   * 
+   */
+  public EbActTakeOff()
+  {
+    init();
+  }
+
+  /**
+   * @param p_base
+   */
+  public EbActTakeOff(EbBase p_base)
+  {
+    super( p_base );
+    init();
+  }
+
+  private void init()
+  {
+  }
+
+  @Override
+  public void reinit()
+  {
+    super.reinit();
+    this.init();
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.triggers.actions.AnAction#exec(com.fullmetalgalaxy.model.persist.EbGame)
+   */
+  @Override
+  public List<AnEvent> createEvents(EbGame p_game, List<Object> p_params)
+  {
+    List<AnEvent> events = new ArrayList<AnEvent>();
+    EbToken freighter = null;
+    if( (p_params.size() >= 1) && (p_params.get( 0 ) instanceof EbToken) )
+    {
+      freighter = (EbToken)p_params.get( 0 );
+      if( (freighter.getType() == TokenType.Freighter)
+          && (freighter.getLocation() == Location.Board) )
+      {
+        EbEvtTakeOff event = new EbEvtTakeOff();
+        event.setGame( p_game );
+        event.setCost( 0 );
+        event.setToken( freighter );
+        event.setBackInOrbit( true );
+        event.setOldPosition( freighter.getPosition() );
+        event.setAccountId( 0L );
+        event.setAuto( true );
+        events.add( event );
+      }
+    }
+    return events;
+  }
+
+
+
+}
