@@ -4,7 +4,7 @@
 	<% if(Auth.isUserLogged(request,response)) { %>
 	    <%= Auth.getUserPseudo(request,response) %> :
 	    <% if(Auth.isUserAdmin(request, response)) { %>
-	    	<a href="https://appengine.google.com/custompage?name=Index&app_id=fullmetalgalaxy2">Admin</a> |
+	    	<a href="https://appengine.google.com/custompage?url=/admin/index.jsp&app_id=fullmetalgalaxy2">Admin</a> |
 	    <% } %>
 	    <a HREF="/account.jsp" >
 	    	<img style="border=none" border=0 src="/images/css/user.gif" alt="" />&nbsp;Mon&nbsp;profil

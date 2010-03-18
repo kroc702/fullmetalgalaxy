@@ -121,7 +121,14 @@ public class AccountServlet extends HttpServlet
         {
           Auth.connectUser( p_request, params.get( "login" ) );
         }
-        p_response.sendRedirect( "/profile.jsp?id=" + params.get( "accountid" ) );
+        if( "0".equalsIgnoreCase( params.get( "accountid" ) ) )
+        {
+          p_response.sendRedirect( "/gamelist.jsp" );
+        }
+        else
+        {
+          p_response.sendRedirect( "/profile.jsp?id=" + params.get( "accountid" ) );
+        }
       }
     }
 

@@ -17,6 +17,7 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -196,6 +197,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
       // do we need to send an email ?
       ModelFmpUpdate modelUpdate = new ModelFmpUpdate( model, lastUpdate );
+      FmpUpdateStatus.loadAllAccounts( modelUpdate.getMapAccounts(), model );
       sendMail( model, modelUpdate );
     }
     dataStore.close();
@@ -313,16 +315,21 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
       {
+        if( p_update.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null )
+        {
+          // player is connected: we don't need to send an email
+          return;
+        }
         EbAccount currentPlayer = p_update.getMapAccounts().get(
             p_game.getCurrentPlayerRegistration().getAccountId() );
+        if( currentPlayer == null )
+        {
+          log.error( "New turn email couldn't be send" );
+          return;
+        }
         if( currentPlayer.isAllowMailFromGame() )
         {
           // player don't want any notification
-          return;
-        }
-        if( p_update.isUserConnected( currentPlayer.getPseudo() ) )
-        {
-          // player is connected: we don't need to send an email
           return;
         }
         String subject = "FullMetalGalaxy: Notification de tour de jeux";
@@ -417,7 +424,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     // return model update since the last client version
     if( modelUpdate == null )
     {
-      modelUpdate = new ModelFmpUpdate( game, p_lastUpdate );
+      modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo( getThreadLocalRequest(),
+          getThreadLocalResponse() ), game.getId(), p_lastUpdate );
     }
 
     // do we need to send an email ?
@@ -473,7 +481,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     // //////////////
     FmpUpdateStatus.broadCastGameUpdate( game );
 
-    ModelFmpUpdate modelUpdate = new ModelFmpUpdate( game, p_lastUpdate );
+    ModelFmpUpdate modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
+        getThreadLocalRequest(), getThreadLocalResponse() ), game.getId(), p_lastUpdate );
     // do we need to send an email ?
     sendMail( game, modelUpdate );
 
@@ -526,6 +535,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     else
     {
       while( (!p_game.isFinished())
+          /* TODO turn skiping is deactivated in Standard time */
+          && (p_game.getConfigGameTime() == ConfigGameTime.Standard)
           && (p_game.getCurrentPlayerRegistration() != null)
           && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
           && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System
@@ -554,7 +565,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       }
       ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( null, p_game.getId(), null );
       if( (p_game.getCurrentPlayerRegistration() != null)
-          && (updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountId() ))
+          && (updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null)
           && ((p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) || (p_game
               .getCurrentPlayerRegistration().getEndTurnDate().getTime() > System
               .currentTimeMillis()
@@ -576,7 +587,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         int index = currentPlayerRegistration.getOrderIndex();
         EbRegistration nextPlayerRegistration = p_game.getNextPlayerRegistration( index );
         while( (nextPlayerRegistration != p_game.getCurrentPlayerRegistration())
-            && (updates.isUserConnected( nextPlayerRegistration.getAccountId() ))
+            && (updates.getConnectedUser( nextPlayerRegistration.getAccountId() ) != null)
             && ((nextPlayerRegistration.getEndTurnDate() == null) || (nextPlayerRegistration
                 .getEndTurnDate().getTime() > System.currentTimeMillis()
                 + p_game.getEbConfigGameTime().getTimeStepDurationInMili())) )

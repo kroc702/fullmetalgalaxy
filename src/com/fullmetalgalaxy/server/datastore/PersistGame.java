@@ -23,7 +23,7 @@ public class PersistGame extends PersistEntity
 {
   private String m_name = null;
   private String m_description = "";
-  private Date m_creationDate = new Date();
+  private Date m_creationDate = new Date( System.currentTimeMillis() );
   private String m_loginCreator = "";
   private String m_loginCurrentPlayer = "";
   private boolean m_isStarted = false;

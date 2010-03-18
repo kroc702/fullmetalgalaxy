@@ -15,8 +15,9 @@ public class ConnectedUser implements IsSerializable, java.io.Serializable
 {
   static final long serialVersionUID = 203;
 
+  private long m_id = 0;
   private String m_pseudo = "";
-  private Date m_lastConnexion = new Date();
+  private Date m_lastConnexion = new Date( System.currentTimeMillis() );
   private Date m_endTurnDate = null;
 
   public ConnectedUser()
@@ -57,6 +58,22 @@ public class ConnectedUser implements IsSerializable, java.io.Serializable
   public void setLastConnexion(Date p_lastConnexion)
   {
     m_lastConnexion = p_lastConnexion;
+  }
+
+  /**
+   * @return the id
+   */
+  public long getId()
+  {
+    return m_id;
+  }
+
+  /**
+   * @param p_id the id to set
+   */
+  public void setId(long p_id)
+  {
+    m_id = p_id;
   }
 
 

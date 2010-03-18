@@ -51,9 +51,22 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
   {
   }
 
+  private EbAccount getAccount(String p_pseudo)
+  {
+    assert p_pseudo != null;
+    for( Map.Entry<Long, EbAccount> entry : getMapAccounts().entrySet() )
+    {
+      if( p_pseudo.equals( entry.getValue() ) )
+      {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
   public ModelFmpUpdate(EbGame p_game, Date p_fromUpdate)
   {
-    setLastUpdate( new Date() );
+    setLastUpdate( new Date( System.currentTimeMillis() ) );
     if( p_game != null )
     {
       setGameId( p_game.getId() );
@@ -195,6 +208,11 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
     if( isDone == false )
     {
       ConnectedUser connectedUser = new ConnectedUser( p_user, null );
+      EbAccount account = getAccount( p_user );
+      if( account != null )
+      {
+        connectedUser.setId( account.getId() );
+      }
       getConnectedUsers().add( connectedUser );
       isDone = true;
       isReConnected = true;
@@ -279,6 +297,21 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
     return null;
   }
 
+  public ConnectedUser getConnectedUser(long p_accountId)
+  {
+    assert p_accountId != 0;
+
+    Set<ConnectedUser> connectedUsers = getConnectedUsers();
+    for( ConnectedUser connectedUser : connectedUsers )
+    {
+      if( connectedUser.getId() == p_accountId )
+      {
+        return connectedUser;
+      }
+    }
+    return null;
+  }
+
 
   /**
    * determine if user 'p_login' is currently viewing game 'm_gameId'
@@ -288,32 +321,6 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
   public boolean isUserConnected(String p_pseudo)
   {
     return getConnectedUser( p_pseudo ) != null;
-  }
-
-  public ConnectedUser getConnectedUser(long p_accountId)
-  {
-    EbAccount account = getMapAccounts().get( p_accountId );
-    if( account != null )
-    {
-      return getConnectedUser( account.getLogin() );
-    }
-    return null;
-  }
-
-  /**
-   * determine if user whose account id is 'p_accountId' is currently viewing game 'm_gameId'.
-   * This method is based on 'm_connectedUsers' and 'm_accounts'.
-   * @param p_accountId
-   * @return
-   */
-  public boolean isUserConnected(long p_accountId)
-  {
-    EbAccount account = getMapAccounts().get( p_accountId );
-    if( account != null )
-    {
-      return isUserConnected( account.getLogin() );
-    }
-    return false;
   }
 
 

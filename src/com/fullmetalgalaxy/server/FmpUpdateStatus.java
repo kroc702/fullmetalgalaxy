@@ -74,7 +74,8 @@ public class FmpUpdateStatus
       // google probably find this query too long...
     }
 
-    log.fine( "waitForModelUpdate(" + p_login + ") date=" + new Date() + " timeout="
+    log.fine( "waitForModelUpdate(" + p_login + ") date=" + new Date( System.currentTimeMillis() )
+        + " timeout="
         + new Date( timeoutTime ) + "  durration="
         + ((System.currentTimeMillis() - startTime) / 1000) + "sec" );
 
@@ -178,8 +179,8 @@ public class FmpUpdateStatus
       EbGame game = dataStore.getGame( p_gameId );
       dataStore.close();
       updates = new ModelFmpUpdate( game, oldest );
-      updates.connectUser( p_login );
       loadAllAccounts( updates.getMapAccounts(), game );
+      updates.connectUser( p_login );
       toSave = true;
     }
     int oldConnectedCount = updates.getConnectedUsers().size();
@@ -217,7 +218,8 @@ public class FmpUpdateStatus
   public static void broadCastGameUpdate(EbGame p_game)
   {
     assert p_game != null;
-    ModelFmpUpdate updates = getCachedModelUpdate( null, p_game.getId(), new Date() );
+    ModelFmpUpdate updates = getCachedModelUpdate( null, p_game.getId(), new Date( System
+        .currentTimeMillis() ) );
     updates.setGameEvents( p_game.getLogs(), new Date( System.currentTimeMillis()
         - SEARCH_OLDER_OBJECT_MS ) );
     broadCastGameUpdate( updates );

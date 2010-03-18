@@ -21,7 +21,7 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
 
   private String m_fromLogin = "";
 
-  private Date m_date = new Date();
+  private Date m_date = new Date( System.currentTimeMillis() );
 
   public ChatMessage()
   {

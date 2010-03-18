@@ -57,7 +57,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private Tide m_nextTide = Tide.Medium;
   private int m_lastTideChange = 0;
   private int m_currentTimeStep = 0;
-  private Date m_lastTimeStepChange = new Date();
+  private Date m_lastTimeStepChange = new Date( System.currentTimeMillis() );
   private ArrayList<Integer> m_takeOffTurns = null;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
@@ -72,7 +72,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private byte[] m_lands = new byte[0];
   private int m_landWidth = 0;
   private int m_landHeight = 0;
-  private Date m_creationDate = new Date();
+  private Date m_creationDate = new Date( System.currentTimeMillis() );
   private boolean m_started = false;
 
 
@@ -135,8 +135,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     m_lands = new byte[0];
     m_landWidth = 0;
     m_landHeight = 0;
-    m_creationDate = new Date();
-    m_lastTimeStepChange = new Date();
+    m_creationDate = new Date( System.currentTimeMillis() );
+    m_lastTimeStepChange = new Date( System.currentTimeMillis() );
     m_description = "";
     m_name = "";
     m_configGameTime = ConfigGameTime.Standard;
@@ -253,7 +253,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     if( lastUpdate == null )
     {
-      lastUpdate = new Date();
+      lastUpdate = new Date( System.currentTimeMillis() );
     }
     return lastUpdate;
   }
@@ -1000,7 +1000,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   {
     if( m_lastTokenUpdate == null )
     {
-      m_lastTokenUpdate = new Date();
+      m_lastTokenUpdate = new Date( System.currentTimeMillis() );
     }
     return m_lastTokenUpdate;
   }
@@ -1009,7 +1009,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   {
     if( p_lastUpdate == null )
     {
-      m_lastTokenUpdate = new Date();
+      m_lastTokenUpdate = new Date( System.currentTimeMillis() );
     }
     else if( p_lastUpdate.after( m_lastTokenUpdate ) )
     {
