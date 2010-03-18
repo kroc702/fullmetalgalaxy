@@ -1,0 +1,115 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.client.board;
+
+
+import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.ressources.BoardIcons;
+import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
+import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
+import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Image;
+
+/**
+ * @author Vincent Legendre
+ * display the curently selected token and hight light hexagon
+ */
+public class WgtBoardLayerSelect extends WgtBoardLayerBase
+{
+  protected Image m_hexagonHightlight = new Image();
+
+  protected Image m_hexagonSelect = new Image();
+
+  /**
+   * last update of the currently displayed action
+   */
+  protected long m_actionLastUpdate = 0;
+
+  /**
+   * 
+   */
+  public WgtBoardLayerSelect()
+  {
+    super();
+    BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( m_hexagonSelect );
+    add( m_hexagonSelect, 0, 0 );
+    m_hexagonSelect.setVisible( false );
+    getHighLightImage().applyTo( m_hexagonHightlight );
+    add( m_hexagonHightlight, 0, 0 );
+  }
+
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#onModelChange()
+   */
+  public void onModelChange(boolean p_forceRedraw)
+  {
+    // TODO Auto-generated method stub
+    super.onModelChange( p_forceRedraw );
+    EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
+    if( action.getLastUpdate().getTime() != m_actionLastUpdate || p_forceRedraw )
+    {
+      redrawAction();
+    }
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.fullmetalgalaxy.model.EnuZoom)
+   */
+  public void setZoom(EnuZoom p_zoom)
+  {
+    super.setZoom( p_zoom );
+    getHighLightImage().applyTo( m_hexagonHightlight );
+    BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( m_hexagonSelect );
+    redrawAction();
+  }
+
+  private AbstractImagePrototype getHighLightImage()
+  {
+    EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+    if( actionBuilder.getSelectedAction() instanceof EbEvtLand )
+    {
+      EbEvtLand action = (EbEvtLand)actionBuilder.getSelectedAction();
+      return TokenImages.getTokenImage( action.getToken( ModelFmpMain.model().getGame() ),
+          getZoom().getValue() );
+    }
+    return BoardIcons.hightlight_hexagon( getZoom().getValue() );
+  }
+
+  /**
+   * redraw the full action layer.  
+   */
+  protected void redrawAction()
+  {
+    EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+    m_actionLastUpdate = actionBuilder.getLastUpdate().getTime();
+
+    if( actionBuilder.isBoardTokenSelected() )
+    {
+      m_hexagonSelect.setVisible( true );
+      setWidgetHexPosition( m_hexagonSelect, actionBuilder.getSelectedPosition() );
+    }
+    else
+    {
+      getHighLightImage().applyTo( m_hexagonHightlight );
+      m_hexagonSelect.setVisible( false );
+    }
+  }
+
+
+  public void moveHightLightHexagon(AnBoardPosition p_anBoardPosition)
+  {
+    setWidgetHexPosition( m_hexagonHightlight, p_anBoardPosition );
+  }
+
+  public void setHexagonHightVisible(boolean p_visible)
+  {
+    m_hexagonHightlight.setVisible( p_visible );
+  }
+
+
+}

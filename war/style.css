@@ -1,0 +1,62 @@
+html, body {
+  font-family: verdana;
+  font-weight: bold;
+  font-size: 10pt;
+  color: black;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  height: 100%;
+  background:url(images/css/navbar-index.png) repeat-x scroll top ;
+  background-color:#ccb69c;
+}
+
+body {
+  background:url(images/home-header.jpg) no-repeat scroll top center ;
+  text-align: center;
+}
+
+
+.bloc {
+  margin: 10px;
+  padding: 10px;
+  border:2px solid black;
+  text-align:left;
+  background:url(/images/css/bloc-bkg.png);
+}
+
+
+.bloc a {
+  font-family: verdana;
+  font-weight: bold;
+  font-size: 10pt;
+  text-decoration:none;
+  cursor: pointer;
+  color: #75470d;
+}
+
+.bloc a:visited {
+  color: #341d00;
+}
+
+.bloc a:hover {
+  text-decoration:underline ;
+  color: #75470d;
+}
+
+#mymenu a {
+  font-family: verdana;
+  font-weight: bold;
+  font-size: 10pt;
+  text-decoration:none;
+  cursor: pointer;
+  color: white;
+}
+
+#mymenu a:hover {
+  text-decoration:underline ;
+}
+
+.fmp-array {
+  text-align:center;
+}

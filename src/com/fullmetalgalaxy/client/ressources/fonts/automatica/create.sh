@@ -1,0 +1,1 @@
+convert -background transparent -fill "#0794B2" -font automati.ttf  -strokewidth 2  -stroke white  -size x40 -gravity center label:$1  $2.png

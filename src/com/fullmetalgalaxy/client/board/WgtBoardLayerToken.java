@@ -1,0 +1,323 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.client.board;
+
+import java.util.HashMap;
+import java.util.Set;
+
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.ressources.BoardIcons;
+import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
+import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnPair;
+import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbToken;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LoadListener;
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * @author Vincent Legendre
+ *
+ */
+public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListener
+{
+  private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
+
+  /**
+   * contain all loaded color. it's used to display the loading picture if at least 
+   * one image isn't loaded yet.
+   */
+  // private Set m_loadedColor = new HashSet();
+  /**
+   * 
+   */
+  public WgtBoardLayerToken()
+  {
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#redraw(int, int, int, int)
+   */
+  public void redraw()
+  {
+    super.redraw();
+
+    EbGame game = ModelFmpMain.model().getGame();
+    Set<EbToken> tokenList = game.getSetToken();
+
+    // little optimisation to avoid using isHexVisible for each token...
+    AnPair pixPositionLeftTop = new AnPair( m_left, m_top );
+    AnPair pixPositionRightBotom = new AnPair( m_right, m_botom );
+    AnPair hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
+    hexPositionLeftTop.setX( hexPositionLeftTop.getX() - 2 );
+    hexPositionLeftTop.setY( hexPositionLeftTop.getY() - 2 );
+    AnPair hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
+    hexPositionRightBotom.setX( hexPositionRightBotom.getX() + 2 );
+    hexPositionRightBotom.setY( hexPositionRightBotom.getY() + 2 );
+
+    for( EbToken token : tokenList )
+    {
+      if( (token.getLocation() == Location.Board)
+          && (token.getPosition().getX() > hexPositionLeftTop.getX())
+          && (token.getPosition().getY() > hexPositionLeftTop.getY())
+          && (token.getPosition().getX() < hexPositionRightBotom.getX())
+          && (token.getPosition().getY() < hexPositionRightBotom.getY()) )
+      {
+        // for each visible token...
+        updateTokenWidget( token, false );
+      }
+      else if( token.getLocation() != Location.Board )
+      {
+        // not visible token, but it may still need an update
+        updateTokenWidget( token, false );
+      }
+    }
+
+  }
+
+  /**
+   * remove token which where removed from game.
+   */
+  public void cleanToken()
+  {
+    for( EbToken token : m_tokenMap.keySet() )
+    {
+      if( token.getGame() == null )
+      {
+        // token was removed from the game, get rid of it
+        TokenWidget tokenWidget = m_tokenMap.get( token );
+        tokenWidget.setVisible( false );
+        remove( tokenWidget.getTokenImage() );
+        remove( tokenWidget.getIconWarningImage() );
+        m_tokenMap.remove( tokenWidget );
+      }
+    }
+  }
+
+
+  /**
+   * return the timed html corresponding to any given token.
+   * If the widget isn't found in cache (ie in m_tokenMap) or if the cache is too old,
+   * it create and add it.
+   * @param p_token
+   * @return
+   */
+  private void updateTokenWidget(EbToken p_token, boolean p_force)
+  {
+    assert p_token != null;
+    TokenWidget tokenWidget = (TokenWidget)m_tokenMap.get( p_token );
+    if( p_token.getLocation() != Location.Board )
+    {
+      if( tokenWidget != null )
+      {
+        // token isn't on board but have a widget: hide it !
+        tokenWidget.setVisible( false );
+      }
+      return;
+    }
+    if( tokenWidget == null )
+    {
+      tokenWidget = new TokenWidget();
+      m_tokenMap.put( p_token, tokenWidget );
+    }
+    if( (tokenWidget.isUpdateRequired( p_token )) || (p_force == true) )
+    {
+      // update is needed !
+
+      // token is on board: display it !
+      EbGame game = ModelFmpMain.model().getGame();
+      add( tokenWidget.getTokenImage() );
+      tokenWidget.getTokenImage().setVisible( true );
+      int landPixOffset = 0;
+      if( getZoom().getValue() == EnuZoom.Medium )
+      {
+        landPixOffset = p_token.getLandPixOffset();
+      }
+      TokenImages.getTokenImage( p_token, getZoom().getValue() ).applyTo(
+          tokenWidget.getTokenImage() );
+
+      setWidgetHexPosition( tokenWidget.getTokenImage(), p_token.getPosition(), landPixOffset );
+      DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex", Integer
+          .toString( p_token.getZIndex() ) );
+
+      // this is to handle the loading status
+      /*if( !m_loadedColor.contains( p_token.getEnuColor() ) )
+      {
+        AppMain.instance().startLoading();
+        m_loadedColor.add( p_token.getEnuColor() );
+        tokenWidget.getTokenImage().addLoadListener( this );
+      }*/
+
+      EbToken nearTank = null;
+
+      // if token is under opponents fire cover, display a warning icon
+      if( p_token.isFireDisabled() )
+      {
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.disable_fire( getZoom()
+            .getValue() ), p_token, landPixOffset );
+      }
+      else
+      // if the token isn't active (ie under water for land unit)
+      // then display a warning icon
+      if( !game.isTokenTideActive( p_token ) )
+      {
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.disable_water( getZoom()
+            .getValue() ), p_token, landPixOffset );
+      }
+      else
+      // if two tank are neighbor on two montains, display a warning icon
+      if( ((nearTank = game.getTankCheating( p_token )) != null) )
+      {
+        if( nearTank.getId() > p_token.getId() )
+        {
+          addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.warning( getZoom()
+              .getValue() ), p_token, landPixOffset );
+        }
+        else
+        {
+          updateTokenWidget( nearTank, true );
+        }
+      }
+      else
+      // display a load count image ?
+      if( (getZoom().getValue() == EnuZoom.Medium) && (p_token.getType() != TokenType.Ore)
+          && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
+          && (p_token.getType() != TokenType.Pontoon) && (p_token.getSetContain().size() > 0) )
+      {
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconLoad( p_token
+            .getSetContain().size() ), p_token, landPixOffset );
+      }
+      else
+      // display a bullet count image ?
+      if( (getZoom().getValue() == EnuZoom.Medium) && (p_token.getType() != TokenType.Ore)
+          && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
+          && (p_token.getType() != TokenType.Pontoon) && (p_token.getBulletCount() > 0) )
+      {
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconBullet( p_token
+            .getBulletCount() ), p_token, landPixOffset );
+      }
+      else
+      {
+        remove( tokenWidget.getIconWarningImage() );
+      }
+      // last touch...
+      tokenWidget.setLastTokenDrawn( p_token );
+    }
+  }
+
+  private void addWarningImage(Image p_image, AbstractImagePrototype p_absImage, EbToken p_token,
+      int p_landPixOffset)
+  {
+    add( p_image );
+    p_image.setVisible( true );
+    p_absImage.applyTo( p_image );
+    DOM.setStyleAttribute( p_image.getElement(), "zIndex", Integer.toString( p_token.getZIndex() ) );
+    setWidgetHexPosition( p_image, p_token.getPosition(), p_landPixOffset );
+  }
+
+
+  /* (non-Javadoc)
+   * @see com.google.gwt.user.client.ui.LoadListener#onError(com.google.gwt.user.client.ui.Widget)
+   */
+  public void onError(Widget p_sender)
+  {
+    MAppMessagesStack.s_instance
+        .showWarning( "You seems to have some trouble with your internet connexion" );
+  }
+
+  /* (non-Javadoc)
+   * @see com.google.gwt.user.client.ui.LoadListener#onLoad(com.google.gwt.user.client.ui.Widget)
+   */
+  public void onLoad(Widget p_sender)
+  {
+    AppMain.instance().stopLoading();
+  }
+
+
+  /**
+   * reset lastUpdate off all TimedHtml
+   */
+  private void invalidateTokenMap()
+  {
+    for( java.util.Iterator it = m_tokenMap.values().iterator(); it.hasNext(); )
+    {
+      TokenWidget timedHtml = (TokenWidget)it.next();
+      timedHtml.invalidate();
+      remove( timedHtml.getIconWarningImage() );
+      remove( timedHtml.getTokenImage() );
+    }
+  }
+
+  private void clearTokenMap()
+  {
+    for( java.util.Iterator it = m_tokenMap.values().iterator(); it.hasNext(); )
+    {
+      TokenWidget timedHtml = (TokenWidget)it.next();
+      remove( timedHtml.getIconWarningImage() );
+      remove( timedHtml.getTokenImage() );
+    }
+    m_tokenMap.clear();
+  }
+
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.board.test.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
+   */
+  public void setZoom(EnuZoom p_zoom)
+  {
+    super.setZoom( p_zoom );
+    EbGame game = ModelFmpMain.model().getGame();
+    int pxW = game.getLandPixWidth( getZoom() );
+    int pxH = game.getLandPixHeight( getZoom() );
+    setPixelSize( pxW, pxH );
+    invalidateTokenMap();
+    redraw();
+  }
+
+  private long m_tokenLastUpdate = 0;
+  private Tide m_lastTideValue = Tide.Unknown;
+  private long m_lastGameId = 0;
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.client.board.WgtBoardLayerBase#onModelChange()
+   */
+  public void onModelChange(boolean p_forceRedraw)
+  {
+    super.onModelChange( p_forceRedraw );
+    EbGame game = ModelFmpMain.model().getGame();
+    if( m_lastGameId != game.getId() || p_forceRedraw )
+    {
+      m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
+      m_lastTideValue = game.getCurrentTide();
+      m_lastGameId = game.getId();
+      int pxW = game.getLandPixWidth( getZoom() );
+      int pxH = game.getLandPixHeight( getZoom() );
+      setPixelSize( pxW, pxH );
+      clearTokenMap();
+      redraw();
+    }
+    if( m_tokenLastUpdate != game.getLastTokenUpdate().getTime() )
+    {
+      m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
+      m_lastTideValue = game.getCurrentTide();
+      redraw();
+    }
+    if( m_lastTideValue != game.getCurrentTide() )
+    {
+      m_lastTideValue = game.getCurrentTide();
+      invalidateTokenMap();
+      redraw();
+    }
+  }
+
+
+
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <!-- Servlets -->
+  
+  <servlet>
+    <servlet-name>Services</servlet-name>
+    <servlet-class>com.fullmetalgalaxy.server.ServicesImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Services</servlet-name>
+    <url-pattern>/fullmetalgalaxy/Services</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>ImageServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.image.ImageServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>ImageServlet</servlet-name>
+       <url-pattern>/ImageServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+       <servlet-name>AccountServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.AccountServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>AccountServlet</servlet-name>
+       <url-pattern>/AccountServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+       <servlet-name>PMServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.PMServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>PMServlet</servlet-name>
+       <url-pattern>/PMServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+       <servlet-name>AdminServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.AdminServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>AdminServlet</servlet-name>
+       <url-pattern>/admin/Servlet</url-pattern>
+    </servlet-mapping>
+
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+	<security-constraint>
+	   <web-resource-collection>
+	       <url-pattern>/admin/index.jsp</url-pattern>
+	   </web-resource-collection>
+	   <auth-constraint>
+	       <role-name>admin</role-name>
+	   </auth-constraint>
+	</security-constraint>
+
+</web-app>

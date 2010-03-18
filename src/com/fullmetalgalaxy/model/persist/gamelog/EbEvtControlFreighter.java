@@ -1,0 +1,163 @@
+/**
+ * 
+ */
+package com.fullmetalgalaxy.model.persist.gamelog;
+
+import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbToken;
+
+
+/**
+ * @author Vincent Legendre
+ *
+ */
+public class EbEvtControlFreighter extends AnEventPlay
+{
+  static final long serialVersionUID = 1;
+
+
+
+  /**
+   * 
+   */
+  public EbEvtControlFreighter()
+  {
+    super();
+    init();
+  }
+
+  @Override
+  public void reinit()
+  {
+    super.reinit();
+    this.init();
+  }
+
+  private void init()
+  {
+    setCost( 0 );
+  }
+
+  @Override
+  public GameLogType getType()
+  {
+    return GameLogType.EvtControlFreighter;
+  }
+
+
+  @Override
+  // @Transient
+  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  {
+    if( getToken(p_game) != null )
+    {
+      return getToken(p_game).getPosition();
+    }
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#check()
+   */
+  @Override
+  public void check(EbGame p_game) throws RpcFmpException
+  {
+    super.check(p_game);
+
+    if( getTokenCarrier(p_game).getType() != TokenType.Freighter )
+    {
+      // no i18n
+      throw new RpcFmpException( "le pion control� doit �tre un astronef" );
+    }
+    if( !getToken(p_game).isNeighbor( getTokenCarrier(p_game) ) )
+    {
+      // no i18n
+      throw new RpcFmpException( getToken(p_game) + " doit etre au contact de " + getTokenCarrier(p_game)
+          + " pour le controler" );
+    }
+    // check that token is colored
+    if( getToken(p_game).getColor() == EnuColor.None )
+    {
+      throw new RpcFmpException( "vous ne pouvez pas d�placer des pions incolores" );
+    }
+
+    for( EbRegistration registration : p_game.getSetRegistration() )
+    {
+      EnuColor color = registration.getEnuColor();
+      if( color.isColored( getTokenCarrier(p_game).getColor() ) )
+      {
+        assert getOldRegistration( p_game ) == registration;
+      }
+    }
+
+    // check that player control the token color
+    EbRegistration myRegistration = getMyRegistration(p_game);
+    assert myRegistration != null;
+    if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
+    {
+      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getColor(),
+          myRegistration.getColor() );
+    }
+    // check that token isn't under opponents fire covers
+    EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getColor(),
+        getToken(p_game).getPosition() );
+    if( fireCoverColor.getValue() != EnuColor.None )
+    {
+      throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken(p_game).getType()
+          .ordinal(), fireCoverColor.getValue() );
+    }
+    // check presence of turrets
+    for( AnBoardPosition position : getTokenCarrier(p_game).getExtraPositions() )
+    {
+      EbToken turret = p_game.getToken( position, TokenType.Turret );
+      if( turret != null )
+      {
+        throw new RpcFmpException( RpcFmpException.MustDestroyAllTurrets );
+      }
+    }
+
+    // player have extra action points.
+    assert getCost() == -1 * p_game.getEbConfigGameTime().getActionPtPerExtraShip();
+
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
+   */
+  @Override
+  public void exec(EbGame p_game) throws RpcFmpException
+  {
+    super.exec(p_game);
+
+    getOldRegistration( p_game ).setColor(
+        EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
+            .getColor() ) );
+    // the new color owner
+    getMyRegistration(p_game).setColor(
+        EnuColor.addColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
+    getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() + 3 );
+    p_game.invalidateFireCover();
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
+   */
+  @Override
+  public void unexec(EbGame p_game) throws RpcFmpException
+  {
+    super.unexec(p_game);
+    // the new color owner
+    getMyRegistration(p_game).setColor(
+        EnuColor.removeColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
+    getOldRegistration( p_game ).setColor(
+        EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
+            .getColor() ) );
+    getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
+  }
+
+}

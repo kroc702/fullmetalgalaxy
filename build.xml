@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+compilation file for Full Metal Planet
+-->
+
+<project name="FMG" default="update">
+	<property environment="env" />
+
+	<property name="adminaccount" value="vincent.legendre@gmail.com" />
+	<property name="passwordfile" value="..\password" />
+	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
+	<property name="appenginesdkdir" value="C:\Sun\appengine-java-sdk-1.3.1" />
+	<property name="gwtsdkdir" value="C:\Sun\gwt-windows-1.7.1" />
+	<property name="path" value="C:\Sun\SDK\jdk\bin" />
+	<property name="javadocDir" value="javadoc" />
+	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
+
+	<import file="${appenginesdkdir}/config/user/ant-macros.xml" />
+
+	<path id="classpath">
+		<pathelement location="src" />
+		<pathelement path="war/WEB-INF/classes" />
+		<fileset dir="war/WEB-INF/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${appenginesdkdir}/lib">
+			<include name="shared/**/*.jar" />
+		</fileset>
+		<fileset dir="${gwtsdkdir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="copyjars" description="Copies the App Engine JARs to the WAR.">
+		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="${appenginesdkdir}/lib/user">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${gwtsdkdir}">
+				<include name="gwt-servlet.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compilserver" depends="copyjars" description="Compiles Java source and copies other source files to the WAR.">
+		<mkdir dir="war/WEB-INF/classes" />
+		<copy todir="war/WEB-INF/classes">
+			<fileset dir="src">
+				<exclude name="**/client/**"/>
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<javac srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source">
+			<exclude name="**/client/**"/>
+		</javac>
+	</target>
+
+	<target name="datanucleusenhance" depends="compilserver" description="Performs JDO enhancement on compiled data classes.">
+		<enhance failonerror="true">
+			<classpath>
+				<pathelement path="${appengine.tools.classpath}"/>
+				<pathelement path="war/WEB-INF/classes"/>
+				<fileset dir="war/WEB-INF/lib" includes="*.jar"/>
+			</classpath>
+			<fileset dir="war/WEB-INF/classes" includes="**/server/**/*.class"/>
+		</enhance>
+	</target>
+
+	<target name="compilclient" depends="">
+		<echo message="Compiling client java code to javascript" />
+		<mkdir dir="war" />
+		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
+			<jvmarg value="-Xmx512M" />
+			<sysproperty key="ENCODING" value="UTF-8" />
+			<arg value="-style" />
+			<arg value="${jsstyle}" />
+			<arg value="-war" />
+			<arg value="war" />
+			<arg value="com.fullmetalgalaxy.FullMetalGalaxy2" />
+		</java>
+	</target>
+
+	<macrodef name="reducecolor">
+		<attribute name="filename" />
+		<sequential>
+			<echo message="reduce color file @{filename}" level="info" />
+			<exec executable="${imagemagickDir}convert">
+				<env key="PATH" path="${env.PATH}:${imagemagickDir}" />
+				<arg line="@{filename} -type Optimize +dither -colors 128 @{filename}" />
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<target name="postimages" depends="">
+		<echo message="images bundle post traitment" level="info" />
+		<reducecolor filename="war/fullmetalgalaxy/012AB58E4CF22EFC2B6AF7141A05B288.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/0C6D36B5B9AC9E07F426DBB25733A882.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/1AD5C3426E1FE88BB8CBE0CE122C5F8E.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/1F06C2BA8FDB7FCAB3FCF23A54A2D005.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/2FE6F99A862310989EC519626A2D54BE.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/5391DF1BFD3DE8914C76DEEDF4716EC9.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/548CDF11D6FE9011F3447CA200D7FB7F.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/713473C85E17063E5E60BD12076363E4.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/72DD0AA073E99E7FDAB3475BF1744D3A.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/7362E8664352A1C559B365F758112B82.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/935E1ED12BB690BC6AD2B1A25031EC53.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/9DA92932034707C17CFF15F95086D53F.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/9EECD6BBD011FBA40BF8C07AC210E04E.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/A09FC281048B63C2E0C36471A7AD5F4C.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/A142423EDF493FD488DD6BAC8A89D6F5.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/A874E0A8DB64D83F80ED4C825C52B356.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/D197F6183680C810B0FA5E4AB074B655.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/D95F47DA07C8319F9166065FD4EF1447.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/DE6E60F353CF4DCFAB4ED08C4C67525C.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/EB1C4FB7D6EC2A78C75C8FEA8A86A6F9.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/02FBEBB1E9E73C13F3D7C5F92C8DB18F.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/7E10AEC5EB89088E68BB4BAA1235465A.cache.png" />
+		<!-- old font 
+    	<reducecolor filename="war/fullmetalgalaxy/1577AC5BFDD8F9571C7FD5E76B435F3A.cache.png"/>
+    	-->
+		<reducecolor filename="war/fullmetalgalaxy/9F65BE0BCB3A3479A79EF266F3F418FD.cache.png" />
+	</target>
+
+	<target name="runserver" depends="datanucleusenhance" description="Starts the development server.">
+		<dev_appserver war="war" port="8888">
+			<options>
+				<arg value="--jvm_flag=-Xdebug" />
+				<arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y" />
+			</options>
+		</dev_appserver>
+	</target>
+
+	<target name="build" depends="datanucleusenhance, compilclient, postimages">
+	</target>
+
+
+	<target name="javadoc" description="Generates de Java documentation files for the project">
+		<delete dir="${javadocDir}" />
+		<javadoc access="public" author="true" classpathref="classpath" destdir="${javadocDir}" doctitle="Full Metal Planet" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.fullmetalgalaxy.formgen,com.fullmetalgalaxy.client.board,com.fullmetalgalaxy.model,nc.kroc,com.fullmetalgalaxy.client.home,com.fullmetalgalaxy.client.form,com.fullmetalgalaxy.server,com.fullmetalgalaxy.client" source="1.5" sourcepath="src" splitindex="true" use="true" version="true" />
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="war/WEB-INF/lib">
+				<exclude name="commons-fileupload*.jar"/>
+			</fileset>
+		</delete>
+		<delete dir="war/WEB-INF/classes" />
+		<delete dir="war/fullmetalgalaxy" />
+		<delete dir="${javadocDir}" />
+	</target>
+
+	<target name="all" depends="clean, build, javadoc" />
+
+
+	<macrodef name="appcfg2" description="Manages an application">
+		<attribute name="war" description="The exploded war directory containing the application" />
+		<attribute name="action" description="One of (update, rollback, update_indexes, request_logs)" />
+		<element name="options" optional="true" description="Options for appcfg (such as --server, --num_days, etc...)" />
+		<element name="args" optional="true" description="Additional arguments for the java task" />
+		<sequential>
+			<java classname="com.google.appengine.tools.admin.AppCfg" classpath="${appengine.tools.classpath}" fork="true" failonerror="true" input="${passwordfile}">
+				<arg value="--email=${adminaccount}" />
+				<arg value="--passin" />
+				<options />
+				<arg value="@{action}" />
+				<arg value="@{war}" />
+				<args />
+			</java>
+		</sequential>
+	</macrodef>
+
+
+	<target name="updateonly" depends="" description="Uploads the application to App Engine.">
+		<buildnumber file="update.properties" />
+		<tstamp>
+			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
+			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
+		</tstamp>
+		<echo message="${TODAY_FR} - update: ${build.number}" level="info" />
+		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.html" />
+		<appcfg2 action="update" war="war" />
+	</target>
+
+	<target name="update" depends="build,updateonly" description="Uploads the application to App Engine.">
+	</target>
+
+	<target name="update_indexes" depends="build" description="Uploads just the datastore index configuration to App Engine.">
+		<appcfg action="update_indexes" war="war" />
+	</target>
+
+	<target name="rollback" depends="" description="Rolls back an interrupted application update.">
+		<appcfg action="rollback" war="war" />
+	</target>
+
+	<target name="request_logs" description="Downloads log data from App Engine for the application.">
+		<appcfg action="request_logs" war="war">
+			<options>
+				<arg value="--num_days=5" />
+			</options>
+			<args>
+				<arg value="logs.txt" />
+			</args>
+		</appcfg>
+	</target>
+
+</project>
