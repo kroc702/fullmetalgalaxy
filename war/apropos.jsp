@@ -16,7 +16,8 @@
             </P>
 
             <p>
-            Full Metal Galaxy est une adaptation open source pour le web de Full Metal Planète.
+            Full Metal Galaxy est une adaptation <a href="http://code.google.com/p/fullmetalgalaxy/">
+            open source</a> pour le web de Full Metal Planète.
             Il sagit d'un jeu de stratégie sur table de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, 
             édité par Ludodélire entre 1989 et 1996. 
             Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris 
@@ -30,7 +31,7 @@
             <h3>Remerciements :</h3>
             <p>
             - A ma copine chérie qui en a entendu parler quelques heures...<br/>
-            - A Eric Alber pour m'avoir fourni les models blender des pions<br/>
+            - A Eric Alber pour m'avoir fourni les modèles blender des pions<br/>
             - A Brice Vandemoortele pour m'avoir fourni la superbe illustration de pondeuse météo<br/>
             - A Jean-Marc Leroy, l'auteur de full metal program, pour m'avoir fourni son algorithme 
             de g&eacute;n&eacute;ration

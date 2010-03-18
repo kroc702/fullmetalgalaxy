@@ -711,7 +711,7 @@ public class EventsPlayBuilder implements GameEventStack
         // p_position.setSector( action.getPosition().getSector() );
         action.getPosition().setX( p_position.getX() );
         action.getPosition().setY( p_position.getY() );
-        setLastUpdate( new Date() );
+        setLastUpdate( new Date( System.currentTimeMillis() ) );
         isUpdated = EventBuilderMsg.Updated;
       }
       else if( isActionsPending() )
@@ -725,7 +725,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     if( isUpdated == EventBuilderMsg.Updated )
     {
-      setLastUpdate( new Date() );
+      setLastUpdate( new Date( System.currentTimeMillis() ) );
     }
     return isUpdated;
   }
@@ -810,7 +810,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     if( isUpdated )
     {
-      setLastUpdate( new Date() );
+      setLastUpdate( new Date( System.currentTimeMillis() ) );
       // ModelFmpMain.model().notifyModelUpdate();
     }
     return isUpdated;

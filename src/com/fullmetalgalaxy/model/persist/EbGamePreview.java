@@ -27,7 +27,7 @@ public class EbGamePreview extends AnPojoBase // EbBase
   private String m_name = "";
   private String m_description = "";
   private int m_maxNumberOfPlayer = 0;
-  private Date m_creationDate = new Date();
+  private Date m_creationDate = new Date( System.currentTimeMillis() );
   private boolean m_isStarted = false;
   private boolean m_isAsynchron = true;
   private boolean m_history = false;
@@ -105,7 +105,7 @@ public class EbGamePreview extends AnPojoBase // EbBase
     m_name = "";
     m_description = "";
     m_maxNumberOfPlayer = 0;
-    m_creationDate = new Date();
+    m_creationDate = new Date( System.currentTimeMillis() );
     m_isStarted = true;
     m_isAsynchron = true;
     m_history = false;

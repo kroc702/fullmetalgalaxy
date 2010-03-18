@@ -24,7 +24,7 @@ public class EbAccount extends EbBase
   private String m_login = "";
   private String m_email = "";
   private String m_pseudo = "";
-  private Date m_subscriptionDate = new Date();
+  private Date m_subscriptionDate = new Date( System.currentTimeMillis() );
   private AuthProvider m_authProvider = AuthProvider.Fmg;
   private String m_description = "";
   private boolean m_allowPrivateMsg = true;
@@ -44,7 +44,7 @@ public class EbAccount extends EbBase
     m_login = "";
     m_email = "";
     m_pseudo = "";
-    m_subscriptionDate = new Date();
+    m_subscriptionDate = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
     m_description = "";
     m_allowPrivateMsg = true;
