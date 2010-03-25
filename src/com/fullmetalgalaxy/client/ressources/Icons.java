@@ -95,6 +95,9 @@ public interface Icons extends ImageBundle
   public AbstractImagePrototype takeOff16();
 
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/moon16.png")
+  public AbstractImagePrototype moon16();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tide_low.png")
   public AbstractImagePrototype tide_low();
 
@@ -136,31 +139,31 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/yellow/icon16.png")
   public AbstractImagePrototype yellow_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/blue/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/blue/icon48.png")
   public AbstractImagePrototype blue_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/cyan/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/cyan/icon48.png")
   public AbstractImagePrototype cyan_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/green/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/green/icon48.png")
   public AbstractImagePrototype green_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/grey/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/grey/icon48.png")
   public AbstractImagePrototype grey_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/olive/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/olive/icon48.png")
   public AbstractImagePrototype olive_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/orange/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/orange/icon48.png")
   public AbstractImagePrototype orange_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/purple/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/purple/icon48.png")
   public AbstractImagePrototype purple_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/red/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/red/icon48.png")
   public AbstractImagePrototype red_icon64();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/yellow/icon64.png")
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/yellow/icon48.png")
   public AbstractImagePrototype yellow_icon64();
 
 

@@ -37,7 +37,7 @@ public class FmpLogger
 
   public void fine(String p_message)
   {
-    // System.err.println( p_message );
+    System.err.println( p_message );
   }
 
   public void finer(String p_message)

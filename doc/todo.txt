@@ -3,36 +3,48 @@ A verifier:
 - on peut déposer un minerais dans l'eau
 - j'ai pu décharger d'un crabe & d'une barge [tide deactive] un char sur un récif dans l'eau.
 - après le décollage de tout les astronefs d'un joueur, il faut passer son tour
+- on peut tirer avec le second destructeur neutralisé
 
 TODO
 ====
-- rafraichir les dates de fin de tour et vérifier qu'elles sont bien calculé - créer un gamelog 'player connexion'
-- ajouter un tache cron pour faire évoluer les parties non regardé.
-- appeler updateEbGame plus régulièrement et même si aucune action n'est executé
-- étudier les pb "Request was aborted after waiting too long"
+- le time config contient aussi l'info asynchron
+  - rafraichir les dates de fin de tour et vérifier qu'elles sont bien calculé - créer un gamelog 'player connexion' ?
+    -> seul le current player qui vient de se connecter a une date de fin de tour
+  - ajouter une variante temps en tour/tour sans date limite (donc uniquement géré par les joueurs)
+
+- utiliser objectify-appengine a la place de JDO
+  + étudier les pb "Request was aborted after waiting too long"
   + 1.5sec de CPU pour chaque requettes sur Services
-  + mettre en cache la page gamelist.jsp
+
 - inclure le pseudo dans EbRegistration et une chaine dans GamePersist pour faire des requettes dessus
 - une page gamelist qui tri/utilise le cache, une qui affiche les jeux solo
+  + mettre en cache la page gamelist.jsp
 
-- ajouter une variante temps en tour/tour sans date limite (donc uniquement géré par les joueurs)
+- retrait de la page board.jsp
+
 - gestion du débarquement gratuit. (en t/t uniquement ?)
 - ajout d'une variante respect strict des règles :
 	- gestion du stock de pion
-	- la réserve de point n'est pas arrondi a 5 point
+	- la réserve de point arrondi a 5 point (t/t uniquement)
+	- les neutralisations tournante ne plaisent pas a tous...
 	- ...
-- ne pas autoriser l'inscription a plus de 2 parties si aucune partie n'a été finis.
-- comptage des points d'actions perdu -> servira entre autre a détecter les abandons lache (malus de points *2 + mail ?)
-- parties protégé par mot de passe
-- création des parties par l'import des fichier full metal programme
-- en tour par tour, mélanger l'ordre des joueurs
+
+- en tour par tour sur plusieurs jours, autoriser l'annulation de son tour.
+- pouvoir rejouer les coups précédents
+- en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
+
+- ajouter un tache cron pour faire évoluer les parties non regardé.
+- appeler updateEbGame plus régulièrement et même si aucune action n'est executé
+
 
 bugs :
 ======
+- on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
+- quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
 - on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
 - pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
-- on peut tirer avec le second destructeur neutralisé
 - si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
+- On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
 - On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
@@ -49,6 +61,8 @@ bugs :
 - si le tour change juste après qu'un joueur viensde se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
 - si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
+- si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
+- au changement de marrée, on ne vérifie pas si tous les pontons sont bien relié a la terre.
 
 Support des comptes :
 =====================
@@ -61,22 +75,23 @@ Support des comptes :
 
 Améliorations de l'IHM:
 =======================
+- chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detaille d'une partie + description partie + mail des joueurs
 - look plus fini du widget info, liste de partie, de la fin de partie
-- le focus du chat ne s'active pas automatiquement
 - taille de plateau illimité
-- retrait de la page board.jsp
 - rotation du plateau de jeu
 - amélioration de la liste de partie
   -> localiser les exploitations sur une carte de la galaxie (en gros des sous repertoires 
      de partie)
 - ammeliorer l'affichage des données contextuelles.
 - minimap: affichage des unitées
-- gestion de l'atmosphere.
+- amélioration des fonctions sociale, il faut 'sentir' les autres joueurs sur la partie.
+  - Une page discussion associé a chaque partie (lié au chat ?) -> avec flux rss
+  - ajout de marques sur la carte, pour le tutorial ou la comunication entre joueurs.
 - associer a chaque type de planete une couleur/image de fond. grille hexagonale.
 - possibilite d'avoir une image de fond pour le plateau.
-- ajout de marques sur la carte, pour le tutorial ou la comunication entre joueurs.
 - chat privé, envoie de messages privé (@adresse mail sans afficher l'adresse mail)
+- gestion de l'atmosphere.
 
 - affichage de bulle d'aide indiquant le nom des joueurs sur les astronefs. 
   Bulles s'effacent (->ou s'affiche) a l'approche du hightlight hexagon 
@@ -89,6 +104,11 @@ utiliser. donc des bmp de bord
 
 Amélioration de fond:
 =====================
+- sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sérialisers vers le client (taille 18Ko -> 200Ko)
+- création des parties par l'import des fichier full metal programme
+- parties protégé par mot de passe
+- ne pas autoriser l'inscription a plus de 2 parties si aucune partie n'a été finis.
+- comptage des points d'actions perdu -> servira entre autre a détecter les abandons lache (malus de points *2 + mail ?)
 - ouverture au public de l'édition de scénario
 - gérer les couleurs comme une simple enum sur le pion. Créer une relation bidirectionel 
   (table many2many) entre les pions et leurs propriétaires.
@@ -124,8 +144,7 @@ Variantes:
 - gestion des alliances (zone de feu communes)
 - possibilité de configurer le stock de pion de base
 - ajouter, en option, une pause de la partie le week-end.
-- ajout de l'action de décolage avec des fenêtres de tir aléatoire et prévisible via 
-la pondeuse meteo.
+- fenêtres de décolage aléatoire et prévisible via la pondeuse meteo.
 - comptabiliser les points d'actions perdu.
 - autre type de minerais
 - création de scénario (avec pion incolore, pion foret)
@@ -146,5 +165,20 @@ interdiction d'en mettre 2 cote cote, transportable que par le crabe
 - missile...
 - l'Ornitoptère, sorte de planeur qui bombarde, part de son astro et doit y rentrer dans le même tour, sous peine de se crasher.
 - Le scorpion - lorsqu'il prend un minerai, il en sort deux mais n'a pas de capacité de transport, il faut donc un crabe dans une case adjacente.
+
+Différences avec le jeu original:
+=================================
+- Pas de déploiement gratuit
+- Pas de limite du nombre de pièce dans la construction
+- arrondi des pt d'action
+- pas d'embourbement volontaire
+- l'ordre des joueurs ne tien pas compte de la position des astro
+- on ne peut pas tirer deux fois en entrant dans une zone de feu
+- prévisons de la prochaine marrée uniquement (même avec 2 pondeuses)
+- a règle "entre deux tours, deux chars ne peuvent pas	stationner côte à côte sur des montagnes." a été adaptée à "si deux chars, du même propriétaire, sont côte à côte sur des montagnes, l'un des deux ne produit pas de zone de feu"
+- La marrée est connue dès la sortie de la pondeuse météo (et non au début du tour)
+- La neutralisation est automatique et n'empêche pas de se déplacer. En revanche, un pion en mouvement ne créer pas de zone de feu (un pion ne peut donc pas pénétrer dans la zone de feu du pion qu'il neutralise)
+
+
 
 

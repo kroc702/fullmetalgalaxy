@@ -70,7 +70,7 @@ public class MiniMapProducer implements ImageProducer
 
   private void loadFiles(String p_servletBasePath, PlanetType p_planet)
   {
-    String base = p_servletBasePath + "images/board/" + p_planet.getFolderName();
+    String base = p_servletBasePath + "/images/board/" + p_planet.getFolderName();
     Map<LandType, Image> landImage = new HashMap<LandType, Image>();
     s_landImage.put( p_planet, landImage );
     try
@@ -91,7 +91,7 @@ public class MiniMapProducer implements ImageProducer
     Image image = s_landImage.get( p_planet ).get( p_land );
     if( image == null )
     {
-      System.out.println( "error while loading image " + p_planet + " " + p_land );
+      System.err.println( "error while loading image " + p_planet + " " + p_land );
     }
     return image;
   }

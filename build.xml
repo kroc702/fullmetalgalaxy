@@ -177,9 +177,15 @@ compilation file for Full Metal Planet
 			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
 			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
 		</tstamp>
-		<echo message="${TODAY_FR} - update: ${build.number}" level="info" />
 		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.html" />
+		<delete file="war/WEB-INF/appengine-web.xml" />
+		<copy file="war/WEB-INF/appengine-web.template" tofile="war/WEB-INF/appengine-web.xml" >
+			<filterset>
+				<filter token="UPDATE_COUNT" value="${build.number}" />
+			</filterset>
+		</copy>
 		<appcfg2 action="update" war="war" />
+		<echo message="${TODAY_FR} - update: ${build.number}" level="info" />
 	</target>
 
 	<target name="update" depends="build,updateonly" description="Uploads the application to App Engine.">

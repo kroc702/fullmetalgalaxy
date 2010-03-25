@@ -209,10 +209,15 @@ public class WgtContextAction extends WgtView implements ClickListener
       }
       else if( p_sender == m_btnEndTurn )
       {
-        EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-        action.setGame( ModelFmpMain.model().getGame() );
-        action.setAccountId( ModelFmpMain.model().getMyAccountId() );
-        ModelFmpMain.model().runSingleAction( action );
+        if( Window.confirm( "Il vous reste "
+                + ModelFmpMain.model().getMyRegistration().getPtAction()
+                + " points d'action. Confirmez-vous la fin de tour ?" ) )
+        {
+          EbEvtPlayerTurn action = new EbEvtPlayerTurn();
+          action.setGame( ModelFmpMain.model().getGame() );
+          action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+          ModelFmpMain.model().runSingleAction( action );
+        }
       }
       else if( p_sender == m_btnTakeOff )
       {
@@ -265,6 +270,15 @@ public class WgtContextAction extends WgtView implements ClickListener
       {
         m_panel.add( m_btnZoomOut );
       }
+      m_panel.add( m_btnInfo );
+      if( ModelFmpMain.model().isMiniMapDisplayed() )
+      {
+        m_panel.add( m_btnPlayer );
+      }
+      else
+      {
+        m_panel.add( m_btnMiniMap );
+      }
       if( (!ModelFmpMain.model().getGame().isAsynchron())
           && (ModelFmpMain.model().getMyRegistration() != null)
           && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == ModelFmpMain.model()
@@ -279,15 +293,6 @@ public class WgtContextAction extends WgtView implements ClickListener
         m_panel.add( m_btnRegister );
         MAppMessagesStack.s_instance.showMessage( m_pnlRegister );
       }
-      if( ModelFmpMain.model().isMiniMapDisplayed() )
-      {
-        m_panel.add( m_btnPlayer );
-      }
-      else
-      {
-        m_panel.add( m_btnMiniMap );
-      }
-      m_panel.add( m_btnInfo );
     }
     else if( ModelFmpMain.model().getMyRegistration() == null )
     {

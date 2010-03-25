@@ -23,7 +23,6 @@ try
 EbAccount account = FmgDataStore.sgetAccount( id );
 if( account == null ) 
 { 
-	account = new EbAccount();
 	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'existe pas.</h2>" );
 	return;
 }

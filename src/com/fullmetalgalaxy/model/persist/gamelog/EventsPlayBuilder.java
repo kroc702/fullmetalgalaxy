@@ -560,9 +560,12 @@ public class EventsPlayBuilder implements GameEventStack
           if( getSelectedAction() == null )
           {
             boolean isPathFound = true;
-            AnBoardPosition closePosition = p_position.getNeighbour( p_position
+            /*AnBoardPosition closePosition = p_position.getNeighbour( p_position
                 .getNeighbourSector( getSelectedPosition() ) );
-            if( !closePosition.equals( getSelectedPosition() ) )
+            if( !closePosition.equals( getSelectedPosition() ) )*/
+            AnBoardPosition closePosition = p_position.getNeighbour( p_position
+                .getNeighbourSector( getSelectedToken().getPosition() ) );
+            if( !closePosition.equals( getSelectedToken().getPosition() ) )
             {
               isPathFound = moveSelectedTo( closePosition );
             }

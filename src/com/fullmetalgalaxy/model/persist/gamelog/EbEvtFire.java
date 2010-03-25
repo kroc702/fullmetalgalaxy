@@ -112,15 +112,11 @@ public class EbEvtFire extends AnEventPlay
             .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer1(p_game) ).getValue() );
       }
     }
-    if( (!(p_game.getLastLog() instanceof EbEvtMove))
-        || (((EbEvtMove)p_game.getLastLog()).getToken(p_game) != getTokenDestroyer2(p_game)) )
+    if( getTokenDestroyer2( p_game ).isFireDisabled() )
     {
-      // check the second destroyer is not fire deactivated
-      if( !p_game.isTokenFireActive( getMyRegistration(p_game).getEnuColor(), getTokenDestroyer2(p_game) ) )
-      {
-        throw new RpcFmpException( RpcFmpException.CantFireDisableFire, getTokenDestroyer2(p_game)
-            .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer2(p_game) ).getValue() );
-      }
+      throw new RpcFmpException( RpcFmpException.CantFireDisableFire, getTokenDestroyer2( p_game )
+          .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer2( p_game ) )
+          .getValue() );
     }
 
     if( !p_game.canTokenFireOn( getTokenDestroyer1(p_game), getTokenTarget(p_game) ) )

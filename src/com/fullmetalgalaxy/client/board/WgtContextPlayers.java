@@ -115,13 +115,13 @@ public class WgtContextPlayers extends Composite implements ClickListener
     }
   }
 
-  private boolean contain(List<EbRegistration> p_players, String p_login)
+  private boolean contain(List<EbRegistration> p_players, String p_pseudo)
   {
     for( EbRegistration player : p_players )
     {
       if( player.haveAccount()
-          && ModelFmpMain.model().getAccount( player.getAccountId() ).getLogin().equalsIgnoreCase(
-              p_login ) )
+          && ModelFmpMain.model().getAccount( player.getAccountId() ).getPseudo().equalsIgnoreCase(
+              p_pseudo ) )
       {
         return true;
       }
@@ -176,9 +176,9 @@ public class WgtContextPlayers extends Composite implements ClickListener
     m_playerPanel.add( new HTML( htmlPlayers ) );
   }
 
-  private void addVisitor(String p_login)
+  private void addVisitor(String p_pseudo)
   {
-    HTML html = new HTML( "<b>" + p_login + "</b>" );
+    HTML html = new HTML( "<b>" + p_pseudo + "</b>" );
     html.setWidth( "100%" );
     m_playerPanel.add( html );
   }
