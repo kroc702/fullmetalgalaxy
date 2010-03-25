@@ -7,22 +7,27 @@ package com.fullmetalgalaxy.client.board;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.Services;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class DlgChatInput extends DialogBox implements ClickListener, KeyboardListener
+public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHandler,
+    KeyPressHandler
 {
   // UI
   private Button m_btnOk = new Button( "OK" );
@@ -37,11 +42,12 @@ public class DlgChatInput extends DialogBox implements ClickListener, KeyboardLi
 
     // Set the dialog box's caption.
     setText( "tapez votre message" );
-    m_text.addKeyboardListener( this );
+    m_text.addKeyDownHandler( this );
+    m_text.addKeyPressHandler( this );
     m_text.setWidth( "400px" );
     m_panel.add( m_text );
 
-    m_btnOk.addClickListener( this );
+    m_btnOk.addClickHandler( this );
     m_btnOk.setWidth( "50px" );
     m_panel.add( m_btnOk );
 
@@ -50,59 +56,64 @@ public class DlgChatInput extends DialogBox implements ClickListener, KeyboardLi
 
   protected void sendMessage()
   {
-    ChatMessage message = new ChatMessage();
-    message.setGameId( ModelFmpMain.model().getGame().getId() );
-    message.setFromLogin( ModelFmpMain.model().getMyPseudo() );
-    message.setText( m_text.getText() );
-    Services.Util.getInstance().sendChatMessage( message,
-        ModelFmpMain.model().getLastServerUpdate(), ModelFmpMain.model().getCallbackEvents() );
+    if( m_text.getText().length() > 0 )
+    {
+      ChatMessage message = new ChatMessage();
+      message.setGameId( ModelFmpMain.model().getGame().getId() );
+      message.setFromLogin( ModelFmpMain.model().getMyPseudo() );
+      message.setText( m_text.getText() );
+      Services.Util.getInstance().sendChatMessage( message,
+          ModelFmpMain.model().getLastServerUpdate(), ModelFmpMain.model().getCallbackEvents() );
+    }
     hide();
   }
 
+
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnOk )
+    if( p_event.getSource() == m_btnOk )
     {
       sendMessage();
     }
   }
 
+
+
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyPress(com.google.gwt.user.client.ui.Widget, char, int)
+   * @see com.google.gwt.event.dom.client.KeyUpHandler#onKeyUp(com.google.gwt.event.dom.client.KeyUpEvent)
    */
-  public void onKeyPress(Widget p_sender, char p_keyCode, int p_modifiers)
+  @Override
+  public void onKeyDown(KeyDownEvent p_event)
   {
-    switch( p_keyCode )
+    switch( p_event.getNativeKeyCode() )
     {
-    case KeyboardListener.KEY_ESCAPE:
+    case KeyCodes.KEY_ESCAPE:
       hide();
       break;
-    case KeyboardListener.KEY_ENTER:
-      if( m_text.getText().length() > 0 )
-      {
-        sendMessage();
-      }
-      break;
+    // case KeyCodes.KEY_ENTER:
+    // sendMessage();
+    // break;
     default:
       break;
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyDown(com.google.gwt.user.client.ui.Widget, char, int)
-   */
-  public void onKeyDown(Widget p_sender, char p_keyCode, int p_modifiers)
-  {
-  }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyUp(com.google.gwt.user.client.ui.Widget, char, int)
+   * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
    */
-  public void onKeyUp(Widget p_sender, char p_keyCode, int p_modifiers)
+  @Override
+  public void onKeyPress(KeyPressEvent p_event)
   {
+    if( p_event.getCharCode() == 13 )
+    {
+      // KEY_ENTER
+      sendMessage();
+    }
   }
 
   /* (non-Javadoc)
@@ -119,7 +130,7 @@ public class DlgChatInput extends DialogBox implements ClickListener, KeyboardLi
     m_isChatMode = true;
     // center call show method
     // center();
-    DeferredCommand.add( new Command()
+    DeferredCommand.addCommand( new Command()
     {
       public void execute()
       {

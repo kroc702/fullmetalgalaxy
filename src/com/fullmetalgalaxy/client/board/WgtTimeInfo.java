@@ -10,7 +10,6 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -131,11 +130,6 @@ public class WgtTimeInfo extends WgtView
       m_panel.setCellWidth( image, "20px" );
     }
 
-    image = BoardIcons.iconTide( game.getCurrentTide() ).createImage();
-    image.setTitle( "marree actuelle: " + Messages.getTideString( game.getCurrentTide() ) );
-    m_panel.add( image );
-    m_panel.setCellWidth( image, "20px" );
-
     if( game.isAsynchron() )
     {
       Label lblDate = new Label( ClientUtil.formatDateTime( game.estimateNextTimeStep() ) );
@@ -153,21 +147,6 @@ public class WgtTimeInfo extends WgtView
         lblDate.setTitle( "Date de fin de tour" );
         m_panel.add( lblDate );
       }
-    }
-
-    if( ModelFmpMain.model().haveWeatherHen() )
-    {
-      image = BoardIcons.iconTide( game.getNextTide() ).createImage();
-      image.setTitle( "marree futur: " + Messages.getTideString( game.getNextTide() ) );
-      m_panel.setCellWidth( image, "20px" );
-      m_panel.add( image );
-    }
-    else
-    {
-      image = Icons.s_instance.tide_unknown().createImage();
-      image.setTitle( MAppBoard.s_messages.noForecast() );
-      m_panel.setCellWidth( image, "20px" );
-      m_panel.add( image );
     }
 
     if( (!game.isAsynchron()) && (ModelFmpMain.model().getMyRegistration() != null)

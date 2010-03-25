@@ -128,6 +128,7 @@ public class PMServlet extends HttpServlet
       msg.setContent( p_body, "text/plain" );
       msg.setRecipients( Message.RecipientType.TO, InternetAddress.parse( p_recipients ) );
       Transport.send( msg );
+      log.fine( "Mail send to " + p_recipients + " subject:" + p_subject );
     } catch( AddressException e )
     {
       isOk = false;

@@ -4,12 +4,14 @@
 package com.fullmetalgalaxy.server;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 
 /**
@@ -43,11 +45,23 @@ public class AdminServlet extends HttpServlet
       dataStore.deleteGame( Long.parseLong( strid ) );
       p_resp.sendRedirect( "/gamelist.jsp" );
     }
+
     strid = p_req.getParameter( "deleteaccount" );
     if( strid != null )
     {
       dataStore.deleteAccount( Long.parseLong( strid ) );
       p_resp.sendRedirect( "/halloffames.jsp" );
+    }
+
+    strid = p_req.getParameter( "downloadgame" );
+    if( strid != null )
+    {
+      ModelFmpInit modelInit = ServicesImpl.sgetModelFmpInit( strid );
+      if( modelInit != null )
+      {
+        ObjectOutputStream out = new ObjectOutputStream( p_resp.getOutputStream() );
+        out.writeObject( modelInit );
+      }
     }
 
     dataStore.close();

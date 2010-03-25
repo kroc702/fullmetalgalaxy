@@ -175,7 +175,11 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       return null;
     }
 
-    Date lastUpdate = model.getLastGameLog().getLastUpdate();
+    Date lastUpdate = new Date( System.currentTimeMillis() );
+    if( model.getLastGameLog() != null )
+    {
+      lastUpdate = model.getLastGameLog().getLastUpdate();
+    }
 
     try
     {
@@ -317,7 +321,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       {
         if( p_update.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null )
         {
-          // player is connected: we don't need to send an email
+          log.fine( "player is connected: we don't need to send an email" );
           return;
         }
         EbAccount currentPlayer = p_update.getMapAccounts().get(
@@ -327,19 +331,18 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           log.error( "New turn email couldn't be send" );
           return;
         }
-        if( currentPlayer.isAllowMailFromGame() )
+        if( !currentPlayer.isAllowMailFromGame() )
         {
           // player don't want any notification
+          log.fine( "player " + currentPlayer.getPseudo() + " don't want any notification" );
           return;
         }
-        String subject = "FullMetalGalaxy: Notification de tour de jeux";
-        String body = "Bonjour "
-            + currentPlayer.getLogin()
+        String subject = "FMG: Notification de tour de jeux sur " + p_game.getName();
+        String body = "Bonjour " + currentPlayer.getPseudo()
             + "\n\n"
-            + "Vous pouvez des a present vous connecter a la partie <a href=\"http://fullmetalgalaxy.com/game.jsp?id="
-            + p_game.getId() + "\" >" + p_game.getName() + "</a> pour jouer votre tour "
-            + p_game.getCurrentTimeStep() + " avant "
-            + p_game.getCurrentPlayerRegistration().getEndTurnDate() + ".\n";
+            + "Vous pouvez des a present vous connecter a la partie " + p_game.getName()
+            + " http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId()
+            + " pour jouer votre tour " + p_game.getCurrentTimeStep() + ".\n";
         PMServlet.sendMail( subject, body, currentPlayer.getEmail() );
         return;
       }
@@ -536,7 +539,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       while( (!p_game.isFinished())
           /* TODO turn skiping is deactivated in Standard time */
-          && (p_game.getConfigGameTime() == ConfigGameTime.Standard)
+          && (p_game.getConfigGameTime() != ConfigGameTime.Standard)
           && (p_game.getCurrentPlayerRegistration() != null)
           && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
           && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System

@@ -6,7 +6,6 @@ package com.fullmetalgalaxy.client;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.DOM;
@@ -29,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener, HistoryListener,
     SourcesPreviewEvents, EventPreview
 {
-  protected PopupPanel m_loadingPanel = new PopupPanel();
+  protected PopupPanel m_loadingPanel = new PopupPanel( false, true );
   protected int m_isLoading = 0;
   protected Map m_dialogMap = new HashMap();
 
@@ -49,8 +48,9 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
    */
   public void onModuleLoad()
   {
-
-    m_loadingPanel.setWidget( new Image( ClientUtil.getBaseUrl() + "icons/loading.cache.gif" ) );
+    m_loadingPanel.setWidget( new Image( ClientUtil.getBaseUrl() + "images/loading.cache.gif" ) );
+    m_loadingPanel.setVisible( true );
+    m_loadingPanel.setStyleName( "gwt-DialogBox" );
 
 
     // Hook the window resize event, so that we can adjust the UI.
@@ -72,6 +72,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
     // onHistoryChanged() is not called when the application first runs. Call
     // it now in order to reflect the initial state.
     onHistoryChanged( initToken );
+
   }
 
 
@@ -234,6 +235,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
       m_isLoading = 0;
     }
     m_isLoading++;
+    m_loadingPanel.show();
     m_loadingPanel.center();
   }
 

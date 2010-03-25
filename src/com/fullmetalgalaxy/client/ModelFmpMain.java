@@ -361,6 +361,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       super.onSuccess( p_result );
       m_successiveRpcErrorCount = 0;
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       try
       {
         getActionBuilder().clear();
@@ -378,6 +379,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       m_successiveRpcErrorCount++;
       super.onFailure( p_caught );
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
       m_callbackFmpUpdate.onFailure( p_caught );
@@ -556,12 +558,12 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   {
     if( m_isActionPending )
     {
-      Window.alert( "Only one action at a time !" );
+      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
       return;
     }
     m_isActionPending = true;
     m_updateTimer.cancel();
-
+    AppMain.instance().startLoading();
 
     try
     {
@@ -584,12 +586,14 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       Window.alert( Messages.getString( ex ) );
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       getActionBuilder().cancel();
     }
   }
@@ -602,12 +606,12 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   {
     if( m_isActionPending )
     {
-      Window.alert( "Only one action at a time !" );
+      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
       return;
     }
     m_isActionPending = true;
     m_updateTimer.cancel();
-
+    AppMain.instance().startLoading();
 
     try
     {
@@ -632,12 +636,14 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       Window.alert( Messages.getString( ex ) );
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       scheduleUpdateTimer( true );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
       m_isActionPending = false;
+      AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
       scheduleUpdateTimer( true );

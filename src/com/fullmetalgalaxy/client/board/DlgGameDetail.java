@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -179,6 +180,8 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
 
     // edit button
     m_generalPanel.add( m_btnEdit );
+    m_generalPanel.add( new HTML( "<a href='/admin/Servlet?downloadgame=" + game.getId()
+        + "'>download</a>" ) );
 
 
     // display end game date

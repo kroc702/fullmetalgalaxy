@@ -26,6 +26,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -124,7 +125,7 @@ public class WgtContextExtra extends WgtView implements ClickListener
     }
     else if( action.getSelectedAction() instanceof EbEvtLand )
     {
-      m_panel.add( new Label( MAppBoard.s_messages.landing() ) );
+      m_panel.add( new HTML( MAppBoard.s_messages.landing() ) );
       assert action.getSelectedToken() != null;
       EbToken token = (EbToken)action.getSelectedToken();
       addToken( token, token.getPosition().getSector() );
@@ -220,6 +221,7 @@ public class WgtContextExtra extends WgtView implements ClickListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.WgtView#notifyHmiUpdate()
    */
+  @Override
   public void notifyHmiUpdate()
   {
     redraw();
@@ -229,6 +231,7 @@ public class WgtContextExtra extends WgtView implements ClickListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     // TODO optimisation: redraw only if required

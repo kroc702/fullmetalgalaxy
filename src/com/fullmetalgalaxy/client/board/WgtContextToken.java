@@ -70,7 +70,8 @@ public class WgtContextToken extends Composite
       {
         absPanel.add( new HTML( ModelFmpMain.model().getAccount(
             ModelFmpMain.model().getGame().getRegistrationByColor(
-                actionBuilder.getSelectedToken().getColor() ).getAccountId() ).getLogin() ), 0, 20 );
+                    actionBuilder.getSelectedToken().getColor() ).getAccountId() ).getPseudo() ),
+                0, 20 );
       }
       // m_panel.add( new HTML( "</center>" ) );
     }
