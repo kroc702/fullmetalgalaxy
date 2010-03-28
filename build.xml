@@ -3,7 +3,7 @@
 compilation file for Full Metal Planet
 -->
 
-<project name="FMG" default="update">
+<project name="FMG" default="upload">
 	<property environment="env" />
 
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
@@ -34,7 +34,8 @@ compilation file for Full Metal Planet
 	<target name="copyjars" description="Copies the App Engine JARs to the WAR.">
 		<copy todir="war/WEB-INF/lib" flatten="true">
 			<fileset dir="${appenginesdkdir}/lib/user">
-				<include name="**/*.jar" />
+				<include name="*.jar" />
+				<include name="**/geronimo-jpa*.jar" />
 			</fileset>
 			<fileset dir="${gwtsdkdir}">
 				<include name="gwt-servlet.jar" />
@@ -53,17 +54,6 @@ compilation file for Full Metal Planet
 		<javac srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source">
 			<exclude name="**/client/**"/>
 		</javac>
-	</target>
-
-	<target name="datanucleusenhance" depends="compilserver" description="Performs JDO enhancement on compiled data classes.">
-		<enhance failonerror="true">
-			<classpath>
-				<pathelement path="${appengine.tools.classpath}"/>
-				<pathelement path="war/WEB-INF/classes"/>
-				<fileset dir="war/WEB-INF/lib" includes="*.jar"/>
-			</classpath>
-			<fileset dir="war/WEB-INF/classes" includes="**/server/**/*.class"/>
-		</enhance>
 	</target>
 
 	<target name="compilclient" depends="">
@@ -121,7 +111,7 @@ compilation file for Full Metal Planet
 		<reducecolor filename="war/fullmetalgalaxy/9F65BE0BCB3A3479A79EF266F3F418FD.cache.png" />
 	</target>
 
-	<target name="runserver" depends="datanucleusenhance" description="Starts the development server.">
+	<target name="runserver" depends="compilserver" description="Starts the development server.">
 		<dev_appserver war="war" port="8888">
 			<options>
 				<arg value="--jvm_flag=-Xdebug" />
@@ -130,7 +120,7 @@ compilation file for Full Metal Planet
 		</dev_appserver>
 	</target>
 
-	<target name="build" depends="datanucleusenhance, compilclient, postimages">
+	<target name="build" depends="compilserver, compilclient, postimages">
 	</target>
 
 
@@ -143,6 +133,7 @@ compilation file for Full Metal Planet
 		<delete>
 			<fileset dir="war/WEB-INF/lib">
 				<exclude name="commons-fileupload*.jar"/>
+				<exclude name="objectify*.jar"/>
 			</fileset>
 		</delete>
 		<delete dir="war/WEB-INF/classes" />
@@ -171,7 +162,7 @@ compilation file for Full Metal Planet
 	</macrodef>
 
 
-	<target name="updateonly" depends="" description="Uploads the application to App Engine.">
+	<target name="uploadonly" depends="" description="Uploads the application to App Engine.">
 		<buildnumber file="update.properties" />
 		<tstamp>
 			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
@@ -188,7 +179,7 @@ compilation file for Full Metal Planet
 		<echo message="${TODAY_FR} - update: ${build.number}" level="info" />
 	</target>
 
-	<target name="update" depends="build,updateonly" description="Uploads the application to App Engine.">
+	<target name="upload" depends="clean,build,uploadonly" description="Uploads the application to App Engine.">
 	</target>
 
 	<target name="update_indexes" depends="build" description="Uploads just the datastore index configuration to App Engine.">

@@ -11,30 +11,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.persistence.Entity;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Version;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.Key;
 
-/**
+/** 
  * @author Vincent
  *
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class PersistEntity
 {
   @Id
-  @javax.persistence.GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Key m_key = null;
+  private Long m_id = null;
 
-  @Version
-  private long m_version = 0;
+  private long m_version = 1;
 
   /** serialized instance */
   private com.google.appengine.api.datastore.Blob m_data = null;
@@ -54,7 +46,6 @@ public class PersistEntity
     ObjectOutputStream out = null;
     try
     {
-      // TODO why do I have to do this ?
       m_version++;
       outStream = new ByteArrayOutputStream();
       out = new ObjectOutputStream( outStream );
@@ -116,17 +107,24 @@ public class PersistEntity
         e.printStackTrace();
       }
     }
-    return EbBase.class.cast( obj );
+    EbBase base = EbBase.class.cast( obj );
+    base.setVersion( getVersion() );
+    base.setId( getId() );
+    return base;
   }
 
+  public void setTransient()
+  {
+    m_id = null;
+  }
 
   public long getId()
   {
-    if( m_key == null )
+    if( m_id == null )
     {
       return 0;
     }
-    return m_key.getId();
+    return m_id;
   }
 
 

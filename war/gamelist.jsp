@@ -12,7 +12,7 @@
 <%@include file="include/header.jsp"%>
 
 	<table class="fmp-array" style="width:100%;">
-	<%  List<PersistGame> gameList = FmgDataStore.getPersistGameList();
+	<%  Iterable<PersistGame> gameList = FmgDataStore.getPersistGameList();
 	    for( PersistGame game : gameList )
 	    {
 	      out.println("<tr>" );
