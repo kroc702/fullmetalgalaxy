@@ -7,13 +7,12 @@ A verifier:
 
 TODO
 ====
-- utiliser objectify-appengine a la place de JDO
-  + étudier les pb "Request was aborted after waiting too long"
-  + 1.5sec de CPU pour chaque requettes sur Services
-
 - inclure le pseudo dans EbRegistration et une chaine dans GamePersist pour faire des requettes dessus
 - une page gamelist qui tri/utilise le cache, une qui affiche les jeux solo
   + mettre en cache la page gamelist.jsp
+
+- en tour par tour sur plusieurs jours, autoriser l'annulation de son tour.
+- pouvoir rejouer les coups précédents
 
 - retrait de la page board.jsp
 
@@ -23,9 +22,6 @@ TODO
 	- la réserve de point arrondi a 5 point (t/t uniquement)
 	- les neutralisations tournante ne plaisent pas a tous...
 	- ...
-
-- en tour par tour sur plusieurs jours, autoriser l'annulation de son tour.
-- pouvoir rejouer les coups précédents
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
 
 - ajouter un tache cron pour faire évoluer les parties non regardé.
@@ -100,6 +96,7 @@ utiliser. donc des bmp de bord
 Amélioration de fond:
 =====================
 - sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sérialisers vers le client (taille 18Ko -> 200Ko)
+- utilisation de objectify a fond, optimisation du datastore et retirer les persistEntity.
 - création des parties par l'import des fichier full metal programme
 - parties protégé par mot de passe
 - ne pas autoriser l'inscription a plus de 2 parties si aucune partie n'a été finis.

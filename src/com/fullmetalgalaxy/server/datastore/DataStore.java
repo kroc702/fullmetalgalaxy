@@ -3,16 +3,10 @@
  */
 package com.fullmetalgalaxy.server.datastore;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 
 /**
  * @author Vincent
@@ -21,67 +15,93 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class DataStore
 {
 
-  private static EntityManagerFactory s_emf = null;
-  private static EntityManager s_em = null;
-  private static Boolean s_createSemaphore = false;
-
-  /**
-   * Lazily acquire the EntityManagerFactory and cache it.
-   */
-  private static EntityManagerFactory getEMF()
+  static
   {
-    if( s_emf == null )
-    {
-      synchronized( s_createSemaphore )
-      {
-        if( s_emf == null )
-        {
-          s_emf = Persistence.createEntityManagerFactory( "transactions-optional" );
-        }
-      }
-    }
-    return s_emf;
+    ObjectifyService.register( PersistGame.class );
+    ObjectifyService.register( PersistAccount.class );
+    
+    ObjectifyService.setDatastoreTimeoutRetryCount( 3 );
   }
 
-  /**
-   * @return a static entity manager used for read only
-   */
-  protected static EntityManager getEntityManager()
-  {
-    if( s_em == null )
-    {
-      s_em = getEMF().createEntityManager();
-    }
-    return s_em;
-  }
 
-  public static PersistEntity getEntity(Class<?> p_class, long p_id)
+  static private <T> PersistEntity getPersistEntity(Objectify p_ofy,
+      Class<? extends T> p_persistEntityClass,
+      long p_id)
   {
-    return getEntity( s_em, p_class, p_id );
-  }
-
-  private static PersistEntity getEntity(EntityManager p_em, Class<?> p_class, long p_id)
-  {
-    PersistEntity obj = null;
-    try
-    {
-      obj = (PersistEntity)p_em.getReference( p_class, KeyFactory.createKey( p_class
-          .getSimpleName(), p_id ) );
-    } catch( Exception e )
+    assert p_ofy != null;
+    if( p_id == 0 )
     {
       return null;
     }
-    return obj;
+    PersistEntity entity = null;
+    // find persist entity
+    try
+    {
+      T t = p_ofy.get( p_persistEntityClass, p_id );
+      entity = PersistEntity.class.cast( t );
+    } catch( EntityNotFoundException e )
+    {
+    }
+    return entity;
+  }
+
+  static private long savePersistEntity(Objectify p_ofy, PersistEntity p_entity)
+  {
+    assert p_ofy != null;
+    // find persist entity
+    p_ofy.put( p_entity );
+    return p_entity.getId();
+  }
+
+  static private <T> void deletePersistEntity(Objectify p_ofy,
+      Class<? extends T> p_persistEntityClass, long p_id)
+  {
+    assert p_ofy != null;
+    assert p_id != 0;
+    // find persist entity
+    p_ofy.delete( p_persistEntityClass, p_id );
   }
 
 
-  private boolean m_isOpen = true;
-  private List<DataInstance> m_dataInstances = new ArrayList<DataInstance>();
+  static protected <T> Iterable<T> getList(Class<? extends T> p_persistEntityClass, java.lang.String p_condition, java.lang.Object p_value)
+  {
+    assert p_persistEntityClass != null;
 
+    com.googlecode.objectify.Query<T> query = (com.googlecode.objectify.Query<T>)ObjectifyService.begin().query(p_persistEntityClass);
+    if(p_condition != null && p_value != null)
+    {
+      query = query.filter(p_condition, p_value);
+    }
+    
+    return query;
+  }
+
+  static protected PersistEntity getEntity(Class<?> p_persistEntityClass, long p_id)
+  {
+    return getPersistEntity( ObjectifyService.begin(), p_persistEntityClass, p_id );
+  }
+
+
+  private Objectify m_ofy = null;
+  private boolean m_isOpen = true;
+
+  
   protected DataStore()
   {
   }
 
+  /**
+   * start a transaction
+   * @return
+   */
+  private Objectify getThisObjectify()
+  {
+    if( m_ofy == null )
+    {
+      m_ofy = ObjectifyService.beginTransaction();
+    }
+    return m_ofy;
+  }
 
   /**
    * for debug: insure the close() or rollback() was called.
@@ -97,35 +117,6 @@ public class DataStore
     }
   }
 
-  /** load a dataInstance either from cache or database */
-  private DataInstance loadDataInstance(Class<?> p_persistEntityClass, long p_id)
-  {
-    // find persist entity
-    PersistEntity entity = null;
-    EntityManager em = null;
-    DataInstance dataInstance = findDataInstance( p_persistEntityClass, p_id );
-    if( dataInstance != null )
-    {
-      entity = dataInstance.entity;
-    }
-    else
-    {
-      em = getEMF().createEntityManager();
-      entity = getEntity( em, p_persistEntityClass, p_id );
-    }
-    if( entity == null )
-    {
-      return null;
-    }
-    assert entity.getData() != null;
-    // put persist entity in cache
-    if( dataInstance == null )
-    {
-      dataInstance = new DataInstance( p_id, entity, em );
-      m_dataInstances.add( dataInstance );
-    }
-    return dataInstance;
-  }
 
 
   protected PersistEntity getPersistEntity(Class<?> p_persistEntityClass,
@@ -136,25 +127,10 @@ public class DataStore
     {
       return null;
     }
-    // find persist entity
-    DataInstance dataInstance = loadDataInstance( p_persistEntityClass, p_id );
-    if( dataInstance == null )
-    {
-      return null;
-    }
-    return dataInstance.entity;
+    return getPersistEntity( getThisObjectify(), p_persistEntityClass, p_id );
   }
 
 
-  /** ouvrir une transaction du em */
-  private void setRW(DataInstance dataInstance)
-  {
-    if( dataInstance.isRW )
-    {
-      dataInstance.em.getTransaction().begin();
-      dataInstance.isRW = true;
-    }
-  }
 
   /**
   * save an EbBase into database. p_obj will be really saved after a properly close of this datastore.
@@ -166,11 +142,9 @@ public class DataStore
     assert m_isOpen == true;
     assert p_persistEntityClass != null;
 
-    DataInstance dataInstance = null;
+    PersistEntity entity = null;
     if( p_obj.isTrancient() )
     {
-      // persist object for the first time
-      PersistEntity entity = null;
       try
       {
         entity = (PersistEntity)p_persistEntityClass.newInstance();
@@ -179,48 +153,22 @@ public class DataStore
         e.printStackTrace();
         return;
       }
-      EntityManager em = getEMF().createEntityManager();
-      em.getTransaction().begin();
-      em.persist( entity );
-      em.flush();
-      dataInstance = new DataInstance( entity.getId(), entity, em );
-      dataInstance.isRW = true;
-      m_dataInstances.add( dataInstance );
-      p_obj.setId( entity.getId() );
     }
     else
     {
-      dataInstance = loadDataInstance( p_persistEntityClass, p_obj.getId() );
-      setRW( dataInstance );
+      // TODO we can save datastore cpu use by caching PersistEntity
+      // like it was done with JPA
+      entity = getPersistEntity( getThisObjectify(), p_persistEntityClass, p_obj.getId() );
     }
 
-    dataInstance.entity.setEb( p_obj );
+    entity.setEb( p_obj );
+    savePersistEntity( getThisObjectify(), entity );
 
     // TODO we may want to patch PersistEntity here
-    p_obj.setVersion( dataInstance.entity.getVersion() );
+    p_obj.setVersion( entity.getVersion() );
+    p_obj.setId( entity.getId() );
   }
 
-
-
-  @SuppressWarnings("unchecked")
-  static protected List<?> getList(Class<?> p_persistEntityClass, String p_whereClase)
-  {
-    assert p_persistEntityClass != null;
-
-    Query query = null;
-    if( p_whereClase == null )
-    {
-      query = getEntityManager()
-          .createQuery( "select from " + p_persistEntityClass.getSimpleName() );
-    }
-    else
-    {
-      query = getEntityManager().createQuery(
-          "select from " + p_persistEntityClass.getSimpleName() + " where " + p_whereClase );
-    }
-    List<Object> resultList = query.getResultList();
-    return resultList;
-  }
 
 
 
@@ -228,17 +176,7 @@ public class DataStore
   {
     assert p_id != 0;
     assert m_isOpen == true;
-    DataInstance dataInstance = loadDataInstance( p_persistEntityClass, p_id );
-    if( dataInstance == null )
-    {
-      System.err.println( "delete " + p_persistEntityClass + "(" + p_id + ") failed" );
-      return;
-    }
-    if( !dataInstance.isRW )
-    {
-      setRW( dataInstance );
-    }
-    dataInstance.em.remove( dataInstance.entity );
+    deletePersistEntity( getThisObjectify(), p_persistEntityClass, p_id );
   }
 
 
@@ -247,13 +185,9 @@ public class DataStore
   public void close()
   {
     assert m_isOpen == true;
-    for( DataInstance di : m_dataInstances )
+    if( m_ofy != null )
     {
-      if( di.isRW )
-      {
-        di.em.getTransaction().commit();
-      }
-      di.em.close();
+      m_ofy.getTxn().commit();
     }
     m_isOpen = false;
   }
@@ -262,60 +196,12 @@ public class DataStore
   public void rollback()
   {
     assert m_isOpen == true;
-    for( DataInstance di : m_dataInstances )
+    if( m_ofy != null )
     {
-      if( di.isRW )
-      {
-        if( di.entity.getData() == null )
-        {
-          di.em.remove( di.entity );
-          di.em.getTransaction().commit();
-        }
-        else
-        {
-          di.em.getTransaction().rollback();
-        }
-      }
-      di.em.close();
+      m_ofy.getTxn().rollback();
     }
     m_isOpen = false;
   }
 
-  private DataInstance findDataInstance(Class<?> p_class, long p_id)
-  {
-    for( DataInstance di : m_dataInstances )
-    {
-      if( di.entity.getClass() == p_class && di.id == p_id )
-      {
-        return di;
-      }
-    }
-    return null;
-  }
-
-  private class DataInstance
-  {
-    public long id = 0;
-    public PersistEntity entity = null;
-    public EntityManager em = null;
-    public boolean isRW = false;
-
-    public DataInstance(long p_id, PersistEntity p_entity, EntityManager p_em)
-    {
-      assert p_id != 0;
-      assert p_entity != null;
-      assert p_em != null;
-      id = p_id;
-      entity = p_entity;
-      em = p_em;
-    }
-
-    @SuppressWarnings("unused")
-    public DataInstance(EntityManager p_em)
-    {
-      assert p_em != null;
-      em = p_em;
-    }
-  }
 
 }

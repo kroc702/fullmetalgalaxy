@@ -17,6 +17,17 @@ import com.fullmetalgalaxy.model.persist.EbGamePreview;
  */
 public class FmgDataStore extends DataStore
 {
+
+  static public EbGame sgetGame(long p_id)
+  {
+    PersistEntity entity = DataStore.getEntity( PersistGame.class, p_id );
+    if( entity == null )
+    {
+      return null;
+    }
+    return PersistGame.class.cast( entity ).getGame();
+  }
+
   static public EbAccount sgetAccount(long p_id)
   {
     PersistAccount entity = sgetPersistAccount( p_id );
@@ -37,17 +48,15 @@ public class FmgDataStore extends DataStore
     return PersistAccount.class.cast( entity );
   }
 
-  @SuppressWarnings("unchecked")
   static public PersistAccount getPersistAccount(String p_login)
   {
-    List<PersistAccount> resultList = (List<PersistAccount>)getList( PersistAccount.class,
-        "m_login = '" + p_login + "'" );
-    assert resultList.size() <= 1;
-    if( resultList.isEmpty() )
+    Iterable<PersistAccount> resultList = (Iterable<PersistAccount>)getList( PersistAccount.class,
+        "m_login", p_login );
+    if( !resultList.iterator().hasNext() )
     {
       return null;
     }
-    return resultList.get( 0 );
+    return resultList.iterator().next();
   }
 
   static public EbAccount getAccount(String p_login)
@@ -62,23 +71,22 @@ public class FmgDataStore extends DataStore
 
   static public boolean isLoginExist(String p_login)
   {
-    List<?> resultList = getList( PersistAccount.class, "m_login = '" + p_login + "'" );
-    return resultList.size() >= 1;
+    Iterable<?> resultList = getList( PersistAccount.class, "m_login", p_login );
+    return resultList.iterator().hasNext();
   }
 
   static public boolean isPseudoExist(String p_pseudo)
   {
-    List<?> resultList = getList( PersistAccount.class, "m_pseudo = '" + p_pseudo + "'" );
-    return resultList.size() >= 1;
+    Iterable<?> resultList = getList( PersistAccount.class, "m_pseudo", p_pseudo );
+    return resultList.iterator().hasNext();
   }
 
 
-  @SuppressWarnings("unchecked")
-  static public List<EbAccount> getAccountList()
+  static public Iterable<EbAccount> getAccountList()
   {
     List<EbAccount> returnedList = new ArrayList<EbAccount>();
-    List<PersistAccount> accountList = null;
-    accountList = (List<PersistAccount>)getList( PersistAccount.class, null );
+    Iterable<PersistAccount> accountList = null;
+    accountList = (Iterable<PersistAccount>)getList( PersistAccount.class, null, null );
     // TODO this request could be optimized by a lot... I guess
     for( PersistAccount persistGame : accountList )
     {
@@ -92,11 +100,10 @@ public class FmgDataStore extends DataStore
     return returnedList;
   }
 
-  @SuppressWarnings("unchecked")
-  static public List<PersistGame> getPersistGameList()
+  static public Iterable<PersistGame> getPersistGameList()
   {
-    List<PersistGame> gameList = null;
-    gameList = (List<PersistGame>)getList( PersistGame.class, null );
+    Iterable<PersistGame> gameList = null;
+    gameList = (Iterable<PersistGame>)getList( PersistGame.class, null, null );
     return gameList;
   }
 
@@ -104,7 +111,7 @@ public class FmgDataStore extends DataStore
   static public List<com.fullmetalgalaxy.model.persist.EbGamePreview> getGamePreviewList()
   {
     List<EbGamePreview> returnedList = new ArrayList<EbGamePreview>();
-    List<PersistGame> gameList = getPersistGameList();
+    Iterable<PersistGame> gameList = getPersistGameList();
     // TODO this request could be optimized by a lot... I guess
     for( PersistGame persistGame : gameList )
     {

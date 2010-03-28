@@ -98,11 +98,10 @@ public class ImageServlet extends HttpServlet
     if( data == null )
     {
       // cache is empty, then load game from datastore
-      FmgDataStore dataStore = new FmgDataStore();
       EbGame model = null;
       if( gameId != 0 )
       {
-        model = dataStore.getGame( gameId );
+        model = FmgDataStore.sgetGame( gameId );
       }
       else if( p_gameId != null && !p_gameId.equals( "0" ) )
       {

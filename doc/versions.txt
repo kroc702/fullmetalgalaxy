@@ -1,4 +1,9 @@
 
+28/03/10:
+=========
+- Quelques ajustements suite a une partie a 4
+- utilisation de objectify-appengine a la place de JPA pour réduire le temps de chargement
+
 24/02/10:
 =========
 - support du tutorial (la lecture d'un fichier)
