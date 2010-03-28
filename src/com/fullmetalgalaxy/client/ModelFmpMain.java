@@ -688,7 +688,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       {
         m_updatePeriodInMS = FmpConstant.minimumResfreshingPeriod;
       }
-      if( m_updatePeriodInMS > FmpConstant.maximumResfreshingPeriod )
+      if( m_updatePeriodInMS > FmpConstant.maximumResfreshingPeriod
+          || ModelFmpMain.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() == 0 )
       {
         m_updatePeriodInMS = FmpConstant.maximumResfreshingPeriod;
       }

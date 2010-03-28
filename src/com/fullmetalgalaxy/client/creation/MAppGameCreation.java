@@ -295,7 +295,6 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickListene
     EbGame game = ModelFmpMain.model().getGame();
     game.setAccountCreatorId( ModelFmpMain.model().getMyAccountId() );
 
-    game.setAsynchron( false );
     /*    ModelFmpMain.model().getGame().setTotalTimeStep( 120 );
         ModelFmpMain.model().getGame().setRegistrationEndDate(
             new Date( System.currentTimeMillis() + 2021760000 ) );

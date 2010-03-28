@@ -28,6 +28,7 @@ public class EbConfigGameTime extends EbBase
   private int m_bulletCountIncrement = 2;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
+  private boolean m_asynchron = false;
 
   /**
    * 
@@ -48,6 +49,7 @@ public class EbConfigGameTime extends EbBase
     m_takeOffTurns = new ArrayList<Integer>();
     m_takeOffTurns.add( 21 );
     m_takeOffTurns.add( 25 );
+    m_asynchron = false;
   }
 
   @Override
@@ -206,6 +208,22 @@ public class EbConfigGameTime extends EbBase
   public void setTakeOffTurns(ArrayList<Integer> p_takeOffTurns)
   {
     m_takeOffTurns = p_takeOffTurns;
+  }
+
+  /**
+   * @return the asynchron
+   */
+  public boolean isAsynchron()
+  {
+    return m_asynchron;
+  }
+
+  /**
+   * @param p_asynchron the asynchron to set
+   */
+  public void setAsynchron(boolean p_asynchron)
+  {
+    m_asynchron = p_asynchron;
   }
 
 }

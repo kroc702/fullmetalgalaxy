@@ -29,7 +29,6 @@ public class EbGamePreview extends AnPojoBase // EbBase
   private int m_maxNumberOfPlayer = 0;
   private Date m_creationDate = new Date( System.currentTimeMillis() );
   private boolean m_isStarted = false;
-  private boolean m_isAsynchron = true;
   private boolean m_history = false;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
@@ -72,7 +71,6 @@ public class EbGamePreview extends AnPojoBase // EbBase
     m_maxNumberOfPlayer = p_game.getMaxNumberOfPlayer();
     m_creationDate = p_game.getCreationDate();
     m_isStarted = p_game.isStarted();
-    m_isAsynchron = p_game.isAsynchron();
     m_history = p_game.isHistory();
     m_landWidth = p_game.getLandWidth();
     m_landHeight = p_game.getLandHeight();
@@ -107,7 +105,6 @@ public class EbGamePreview extends AnPojoBase // EbBase
     m_maxNumberOfPlayer = 0;
     m_creationDate = new Date( System.currentTimeMillis() );
     m_isStarted = true;
-    m_isAsynchron = true;
     m_history = false;
     m_landWidth = 0;
     m_landHeight = 0;
@@ -190,16 +187,7 @@ public class EbGamePreview extends AnPojoBase // EbBase
    */
   public boolean isAsynchron()
   {
-    return m_isAsynchron;
-  }
-
-
-  /**
-   * @param p_isAsynchron the isAsynchron to set
-   */
-  public void setAsynchron(boolean p_isAsynchron)
-  {
-    m_isAsynchron = p_isAsynchron;
+    return getConfigGameTime().getEbConfigGameTime().isAsynchron();
   }
 
   /**

@@ -34,6 +34,7 @@ public class WgtConfigGameTime extends WgtBean
 
     HorizontalPanel hPanel = new HorizontalPanel();
     hPanel.add( new Label( "Description :" ) );
+    getDescription().setMaxLength( 50 );
     hPanel.add( getDescription() );
     m_panel.add( hPanel );
 

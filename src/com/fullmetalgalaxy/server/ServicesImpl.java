@@ -17,7 +17,6 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
-import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -509,132 +508,83 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   {
     assert p_game != null;
     boolean isUpdated = false;
-    if( !p_game.isStarted() || p_game.isFinished() || p_game.getGameType() != GameType.MultiPlayer )
+    if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer )
     {
       return isUpdated;
     }
-    if( p_game.isAsynchron() )
+    if( !p_game.isFinished() )
     {
-      long currentTimeInMiliSec = System.currentTimeMillis();
-      while( (!p_game.isFinished())
-          && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
-              .getEbConfigGameTime().getTimeStepDurationInMili()) )
+      if( p_game.isAsynchron() )
       {
-        EbEvtTimeStep event = new EbEvtTimeStep();
-        p_game.addEvent( event );
-        event.checkedExec(p_game);
-        // p_session.persist( event );
-        if( p_game.getNextTideChangeTimeStep() >= p_game.getCurrentTimeStep() )
+        long currentTimeInMiliSec = System.currentTimeMillis();
+        while( (!p_game.isFinished())
+            && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
+                .getEbConfigGameTime().getTimeStepDurationInMili()) )
         {
-          EbEvtTide eventTide = new EbEvtTide();
-          eventTide.setNextTide( Tide.getRandom() );
-          p_game.addEvent( eventTide );
-          eventTide.checkedExec(p_game);
-          // p_session.persist( eventTide );
-        }
-        isUpdated = true;
-      }
-    }
-    else
-    {
-      while( (!p_game.isFinished())
-          /* TODO turn skiping is deactivated in Standard time */
-          && (p_game.getConfigGameTime() != ConfigGameTime.Standard)
-          && (p_game.getCurrentPlayerRegistration() != null)
-          && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
-          && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System
-              .currentTimeMillis()) )
-      {
-        // change player's turn
-        int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
-        EbEvtPlayerTurn event = new EbEvtPlayerTurn();
-        event.setAuto( true );
-        p_game.addEvent( event );
-        event.checkedExec(p_game);
-        // p_session.persist( event );
-        if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
-        {
-          // new turn !
-          if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+          EbEvtTimeStep event = new EbEvtTimeStep();
+          p_game.addEvent( event );
+          event.checkedExec( p_game );
+          // p_session.persist( event );
+          if( p_game.getNextTideChangeTimeStep() >= p_game.getCurrentTimeStep() )
           {
             EbEvtTide eventTide = new EbEvtTide();
-            eventTide.setGame( p_game );
             eventTide.setNextTide( Tide.getRandom() );
+            p_game.addEvent( eventTide );
             eventTide.checkedExec(p_game);
             // p_session.persist( eventTide );
           }
+          isUpdated = true;
         }
-        isUpdated = true;
       }
-      ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( null, p_game.getId(), null );
-      if( (p_game.getCurrentPlayerRegistration() != null)
-          && (updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null)
-          && ((p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) || (p_game
-              .getCurrentPlayerRegistration().getEndTurnDate().getTime() > System
-              .currentTimeMillis()
-              + p_game.getEbConfigGameTime().getTimeStepDurationInMili())) )
+      else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
       {
-        // current player is connected, update his end turn
-        p_game.getCurrentPlayerRegistration().setEndTurnDate(
-            new Date( System.currentTimeMillis()
-                + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-        // p_session.persist( p_game.getCurrentPlayerRegistration() );
-        updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
-            .setEndTurnDate(
+        if( (p_game.getCurrentPlayerRegistration() != null)
+            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
+            && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System
+                .currentTimeMillis()) )
+        {
+          // change player's turn
+          int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
+          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+          event.setAuto( true );
+          p_game.addEvent( event );
+          event.checkedExec( p_game );
+          // p_session.persist( event );
+          if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
+          {
+            // new turn !
+            if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+            {
+              EbEvtTide eventTide = new EbEvtTide();
+              eventTide.setGame( p_game );
+              eventTide.setNextTide( Tide.getRandom() );
+              eventTide.checkedExec( p_game );
+              // p_session.persist( eventTide );
+            }
+          }
+          isUpdated = true;
+        }
+        if( (p_game.getCurrentPlayerRegistration() != null)
+            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
+        {
+          ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( null, p_game.getId(), null );
+          if( updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null )
+          {
+            // current player is connected, update his end turn
+            p_game.getCurrentPlayerRegistration().setEndTurnDate(
                 new Date( System.currentTimeMillis()
                     + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+            // p_session.persist( p_game.getCurrentPlayerRegistration() );
+            updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
+                .setEndTurnDate(
+                    new Date( System.currentTimeMillis()
+                        + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
 
-        // as we update current players end turn date, we may need to update
-        // next players end turn date
-        EbRegistration currentPlayerRegistration = p_game.getCurrentPlayerRegistration();
-        int index = currentPlayerRegistration.getOrderIndex();
-        EbRegistration nextPlayerRegistration = p_game.getNextPlayerRegistration( index );
-        while( (nextPlayerRegistration != p_game.getCurrentPlayerRegistration())
-            && (updates.getConnectedUser( nextPlayerRegistration.getAccountId() ) != null)
-            && ((nextPlayerRegistration.getEndTurnDate() == null) || (nextPlayerRegistration
-                .getEndTurnDate().getTime() > System.currentTimeMillis()
-                + p_game.getEbConfigGameTime().getTimeStepDurationInMili())) )
-        {
-          // next player is also connected, update his end turn
-          nextPlayerRegistration.setEndTurnDate( new Date( currentPlayerRegistration
-              .getEndTurnDate().getTime()
-              + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-          // p_session.persist( nextPlayerRegistration );
-          updates.getConnectedUser( nextPlayerRegistration.getAccountId() )
-              .setEndTurnDate(
-                  new Date( currentPlayerRegistration.getEndTurnDate().getTime()
-                      + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-          // let see next player
-          currentPlayerRegistration = nextPlayerRegistration;
-          index = currentPlayerRegistration.getOrderIndex();
-          nextPlayerRegistration = p_game.getNextPlayerRegistration( index );
+            isUpdated = true;
+          }
         }
-        FmpUpdateStatus.broadCastGameUpdate( updates );
-        isUpdated = true;
       }
 
-      /* I was using getRemoteUser (replaced by getConnectedUser)
-            if( (p_game.getCurrentPlayerRegistration() != null)
-                && (isLogged())
-                && (getRemoteUser()
-                    .equals( p_game.getCurrentPlayerRegistration().getAccount().getLogin() ))
-                && ((p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) || (p_game
-                    .getCurrentPlayerRegistration().getEndTurnDate().getTime() > System
-                    .currentTimeMillis()
-                    + p_game.getEbConfigGameTime().getTimeStepDurationInMili())) )
-            {
-              // player current's turn !
-              // update end turn
-              p_game.getCurrentPlayerRegistration().setEndTurnDate(
-                  new Date( System.currentTimeMillis()
-                      + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-              p_session.persist( p_game.getCurrentPlayerRegistration() );
-            }
-      */
-    }
-
-    if( !p_game.isFinished() )
-    {
       // triggers
       p_game.execTriggers();
     }
