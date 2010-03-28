@@ -51,7 +51,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private String m_name = "";
   private String m_description = "";
   private int m_maxNumberOfPlayer = 0;
-  private boolean m_asynchron = true;
   private boolean m_history = false;
   private Tide m_currentTide = Tide.Medium;
   private Tide m_nextTide = Tide.Medium;
@@ -125,7 +124,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private void init()
   {
     m_maxNumberOfPlayer = 0;
-    m_asynchron = true;
     m_history = false;
     m_currentTide = Tide.Medium;
     m_nextTide = Tide.Medium;
@@ -1910,17 +1908,9 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public boolean isAsynchron()
   {
-    return m_asynchron;
+    return getEbConfigGameTime().isAsynchron();
   }
 
-
-  /**
-   * @param p_isAsynchron the isAsynchron to set
-   */
-  public void setAsynchron(boolean p_isAsynchron)
-  {
-    m_asynchron = p_isAsynchron;
-  }
 
   /**
    * @return the history
@@ -2015,7 +2005,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public EbConfigGameTime getEbConfigGameTime()
   {
-    return getConfigGameTime().getEbConfigGameTime( isAsynchron() );
+    return getConfigGameTime().getEbConfigGameTime();
   }
 
 

@@ -7,11 +7,6 @@ A verifier:
 
 TODO
 ====
-- le time config contient aussi l'info asynchron
-  - rafraichir les dates de fin de tour et vérifier qu'elles sont bien calculé - créer un gamelog 'player connexion' ?
-    -> seul le current player qui vient de se connecter a une date de fin de tour
-  - ajouter une variante temps en tour/tour sans date limite (donc uniquement géré par les joueurs)
-
 - utiliser objectify-appengine a la place de JDO
   + étudier les pb "Request was aborted after waiting too long"
   + 1.5sec de CPU pour chaque requettes sur Services

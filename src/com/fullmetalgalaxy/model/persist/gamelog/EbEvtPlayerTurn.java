@@ -3,8 +3,6 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
-import java.util.Date;
-
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -84,20 +82,11 @@ public class EbEvtPlayerTurn extends AnEvent
     super.exec(p_game);
     EbGame game = p_game;
     assert game != null;
-    // update current player end turn date to the less optimistic date.
-    EbRegistration previousPlayer = game.getPreviousPlayerRegistration();
-    long endTurn = 0;
-    if( previousPlayer.getEndTurnDate() != null )
+    // reset all end turn date
+    for( EbRegistration player : game.getSetRegistration() )
     {
-      endTurn = previousPlayer.getEndTurnDate().getTime()
-          + game.getEbConfigGameTime().getTimeStepDurationInMili();
+      player.setEndTurnDate( null );
     }
-    else
-    {
-      endTurn = game.getEbConfigGameTime().getTimeStepDurationInMili()
-          * game.getCurrentNumberOfRegiteredPlayer();
-    }
-    game.getCurrentPlayerRegistration().setEndTurnDate( new Date( endTurn ) );
     // next player
     EbRegistration nextPlayerRegistration = game.getNextPlayerRegistration();
     if( nextPlayerRegistration.getOrderIndex() <= game.getCurrentPlayerRegistration()
@@ -142,12 +131,6 @@ public class EbEvtPlayerTurn extends AnEvent
       actionPt = game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint;
     }
     nextPlayerRegistration.setPtAction( actionPt );
-    endTurn = getLastUpdate().getTime() + game.getEbConfigGameTime().getTimeStepDurationInMili();
-    if( (nextPlayerRegistration.getEndTurnDate() != null)
-        && (nextPlayerRegistration.getEndTurnDate().before( new Date( endTurn ) )) )
-    {
-      nextPlayerRegistration.setEndTurnDate( new Date( endTurn ) );
-    }
     game.setCurrentPlayerRegistration( nextPlayerRegistration );
   }
 

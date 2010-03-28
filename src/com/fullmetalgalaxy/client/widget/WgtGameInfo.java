@@ -27,8 +27,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
   private WgtTextBox m_name = new WgtTextBox();
   private WgtTextArea m_description = new WgtTextArea();
   private WgtIntBox m_maxNumberOfPlayer = new WgtIntBox();
-  private WgtBooleanBox m_isAsynchron = new WgtBooleanBox();
-  private Label m_asynchronDesc = new Label( "(Les joueurs jouent chacun a leur tour)" );
   private WgtTextBox m_accountCreator = new WgtTextBox();
   private WgtIntBox m_landWidth = new WgtIntBox();
   private WgtIntBox m_landHeight = new WgtIntBox();
@@ -58,12 +56,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
     hPanel.add( getMaxNumberOfPlayer() );
     m_panel.add( hPanel );
 
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "mode asynchrone :" ) );
-    hPanel.add( getAsynchron() );
-    hPanel.add( m_asynchronDesc );
-    getAsynchron().addChangeListener( this );
-
     m_panel.add( hPanel );
     hPanel = new HorizontalPanel();
     hPanel.add( new Label( "Taille de carte :" ) );
@@ -85,10 +77,12 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
 
     hPanel = new HorizontalPanel();
     hPanel.add( new Label( "Vitesse du jeu :" ) );
-    m_gameSpeed.addItem( ConfigGameTime.getFromOrdinal( 0 ).name() );
-    m_gameSpeed.addItem( ConfigGameTime.getFromOrdinal( 1 ).name() );
+    for( ConfigGameTime config : ConfigGameTime.values() )
+    {
+      m_gameSpeed.addItem( config.name() );
+    }
     m_gameSpeed.setVisibleItemCount( 1 );
-    m_gameSpeed.setItemSelected( 1, true );
+    m_gameSpeed.setItemSelected( 0, true );
     m_gameSpeed.addChangeListener( this );
     hPanel.add( m_gameSpeed );
     m_panel.add( hPanel );
@@ -123,19 +117,11 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
       GameGenerator.setSize( MapSize.getFromOrdinal( m_mapSize.getSelectedIndex() ) );
       ModelFmpMain.model().notifyModelUpdate();
     }
-    else if( p_sender == m_gameSpeed || p_sender == getAsynchron() )
+    else if( p_sender == m_gameSpeed )
     {
       ModelFmpMain.model().getGame().setConfigGameTime(
           ConfigGameTime.getFromOrdinal( m_gameSpeed.getSelectedIndex() ) );
       ModelFmpMain.model().notifyModelUpdate();
-    }
-    if( ModelFmpMain.model().getGame().isAsynchron() )
-    {
-      m_asynchronDesc.setText( "(Les joueurs jouent tous en meme temps)" );
-    }
-    else
-    {
-      m_asynchronDesc.setText( "(Les joueurs jouent chacun a leur tour)" );
     }
   }
 
@@ -165,16 +151,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
   protected WgtIntBox getMaxNumberOfPlayer()
   {
     return m_maxNumberOfPlayer;
-  }
-
-
-  /**
-   * @return the isAsynchron
-   * @BeanGetter isAsynchron()
-   */
-  protected WgtBooleanBox getAsynchron()
-  {
-    return m_isAsynchron;
   }
 
 
