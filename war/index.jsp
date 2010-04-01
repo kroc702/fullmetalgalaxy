@@ -41,7 +41,7 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
 </div>
 
 
-<div class="bloc" style="width:955px; height:55px; position:absolute; left:0px; top:450px;" >   
+<div class="bloc" style="width:955px; height:50px; position:absolute; left:0px; top:450px;" >   
 Full Metal Galaxy est une adaptation jeu web de Full Metal Plan&egrave;te, un jeu
 de strat&eacute;gie sur table de G&eacute;rard Mathieu, G&eacute;rard Delfanti et Pascal
 Trigaux, &eacute;dit&eacute; par Ludod&eacute;lire entre 1989 et
@@ -49,8 +49,6 @@ Trigaux, &eacute;dit&eacute; par Ludod&eacute;lire entre 1989 et
 auteurs n'ont pas pris part &agrave; son d&eacute;veloppement. 
 <A HREF="/apropos.jsp">A propos...</A>
 </div>
-<img style="position:absolute; left:850px; top:505px;" src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" 
-alt="Powered by Google App Engine" />
 
 <div id="menu" class="bloc" style="width:180px; height:280px; position:absolute; top:130px; left:0px;" >
     <%@include file="include/menu.html"%>
