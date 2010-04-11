@@ -44,6 +44,7 @@ public class EbGameJoin extends AnEventUser
   static final long serialVersionUID = 1;
 
 
+
   /**
    * 
    */

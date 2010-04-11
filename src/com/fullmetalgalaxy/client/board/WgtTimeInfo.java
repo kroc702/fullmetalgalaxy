@@ -147,7 +147,7 @@ public class WgtTimeInfo extends WgtView
     {
       // take off is allowed : display it !
       image = Icons.s_instance.takeOff16().createImage();
-      image.setTitle( "Decollage autorisÃ© !" );
+      image.setTitle( "Decollage autorisé !" );
       m_panel.add( image );
       m_panel.setCellWidth( image, "20px" );
     }
@@ -159,16 +159,14 @@ public class WgtTimeInfo extends WgtView
       lblDate.setTitle( "Date du prochain increment de temps" );
       m_panel.add( lblDate );
     }
-    else
+    else if( ModelFmpMain.model().isJoined()
+        && ModelFmpMain.model().getMyRegistration() == game.getCurrentPlayerRegistration() )
     {
-      if( ModelFmpMain.model().getMyRegistration() == game.getCurrentPlayerRegistration() )
-      {
         Label lblDate = new Label( ClientUtil.formatDateTime( game.getCurrentPlayerRegistration()
             .getEndTurnDate() ) );
         lblDate.setStyleName( "fmp-status-text" );
         lblDate.setTitle( "Date de fin de tour" );
         m_panel.add( lblDate );
-      }
     }
 
     if( (!game.isAsynchron()) && (ModelFmpMain.model().getMyRegistration() != null)

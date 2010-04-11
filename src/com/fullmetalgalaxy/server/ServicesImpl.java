@@ -92,7 +92,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
 
 
-
   public EbAccount askForIdentity() throws RpcFmpException
   {
     if( !isLogged() )
@@ -359,8 +358,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           return;
         }
         String subject = "FMG: Notification de tour de jeux sur " + p_game.getName();
-        String body = "Bonjour " + currentPlayer.getPseudo()
-            + "\n\n"
+        String body = "Bonjour " + currentPlayer.getPseudo() + "\n\n"
             + "Vous pouvez des a present vous connecter a la partie " + p_game.getName()
             + " http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId()
             + " pour jouer votre tour " + p_game.getCurrentTimeStep() + ".\n";
@@ -392,8 +390,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     game.addEvent( p_action );
 
     // execute action
-    p_action.check(game);
-    p_action.exec(game);
+    p_action.check( game );
+    p_action.exec( game );
 
     // save all events. This action is required as game->events relation isn't
     // a real bidirectional relation (because of event_index column)
@@ -417,29 +415,32 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     dataStore.save( game );
 
-    // if the last player is just connected, automatically launch the game.
-    if( (p_action.getType() == GameLogType.GameJoin)
-        && (game.getCurrentNumberOfRegiteredPlayer() == game
-            .getMaxNumberOfPlayer()) )
-    {
-      EbAdminTimePlay action = new EbAdminTimePlay();
-      action.setAuto( true );
-      action.setLastUpdate( ServerUtil.currentDate() );
-      action.setAccountId( ((EbGameJoin)p_action).getAccountId() );
-      game.addEvent( action );
-      action.checkedExec( game );
-    }
-    dataStore.save( game );
-    dataStore.close();
-
     if( p_action.getType() == GameLogType.GameJoin )
     {
       // in case of join event, we must load corresponding account
       ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
           getThreadLocalRequest(), getThreadLocalResponse() ), p_action.getIdGame(), null );
       FmpUpdateStatus.loadAllAccounts( updates.getMapAccounts(), game );
+      // set pseudo into registration
+      EbRegistration registration = game.getRegistrationByIdAccount( p_action.getAccountId() );
+      registration.setAccountPseudo( updates.getMapAccounts().get( p_action.getAccountId() )
+          .getPseudo() );
+
       FmpUpdateStatus.broadCastGameUpdate( updates );
+
+      if( game.getCurrentNumberOfRegiteredPlayer() == game.getMaxNumberOfPlayer() )
+      {
+        // if the last player is just connected, automatically launch the game.
+        EbAdminTimePlay action = new EbAdminTimePlay();
+        action.setAuto( true );
+        action.setLastUpdate( ServerUtil.currentDate() );
+        action.setAccountId( ((EbGameJoin)p_action).getAccountId() );
+        game.addEvent( action );
+        action.checkedExec( game );
+      }
     }
+    dataStore.save( game );
+    dataStore.close();
 
     // comet stuff
     // //////////////
@@ -552,7 +553,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
             EbEvtTide eventTide = new EbEvtTide();
             eventTide.setNextTide( Tide.getRandom() );
             p_game.addEvent( eventTide );
-            eventTide.checkedExec(p_game);
+            eventTide.checkedExec( p_game );
             // p_session.persist( eventTide );
           }
           isUpdated = true;

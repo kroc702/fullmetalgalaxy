@@ -29,8 +29,8 @@ jeu.
 <h2>Résumé d'une partie</h2>
 
 Vous posez votre astronef sur une planète pour une campagne d'extraction. 
-Vous recevrez &agrave; interval régulier (en mode asynchrone) ou au début de votre tour
-(en mode tour par tour) un certain nombre de point d'action que vous pouvez dépenser 
+Vous recevrez &agrave; intervale régulier (en mode asynchrone) ou au début de votre tour
+(en mode tour par tour) un certain nombre de points d'action que vous pouvez dépenser 
 à tout instant pour :
 <ul>
 <li>Ramasser des minerais à l'aide de vos transporteurs et les ramener dans votre Astronef</li>
@@ -43,7 +43,7 @@ bénéficier de points d'action supplémentaires et décoller en fin de partie avec 
 astronefs et leur contenu (minerais et pièces).</li>
 </ul>
 <p>
-L'évolution des marrées changerons, en cours de partie, la topologie de la carte rendant 
+Les marées changeront, en cours de partie, la topologie de la carte rendant 
 certaines zones inacessibles par voie terrestre.
 </p>
 <p>
@@ -70,7 +70,7 @@ de points aura gagné.
 <p>
 Le moyen le plus simple pour avoir un bon aperçu et s'initier au jeu est de faire le 
 <a href="/game.jsp?id=/puzzles/tutorial/model.bin" >tutorial</a>.
-Il ne dure qu'une dixaine de minutes et vous n'avez pas besoin de créer de compte.
+Il ne dure qu'une dizaine de minutes et vous n'avez pas besoin de créer de compte.
 </p>
 <p>
 Par la suite, vous pouvez tenter les quelques problèmes proposés ou vous inscrire &agrave; une

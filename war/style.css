@@ -60,3 +60,24 @@ body {
 .fmp-array {
   text-align:center;
 }
+
+.icon-gamelisttab img {
+	width:170px; 
+	height:170px;
+	border:none;
+	background-image: url(/images/css/gamelisttab_bw.cache.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+}
+
+.icon-gamelisttab:hover img {
+	background-image: url(/images/css/gamelisttab.cache.png);
+}
+
+.selected-gamelisttab img {
+	width:170px; 
+	height:170px;
+	background-image: url(/images/css/gamelisttab.cache.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+}

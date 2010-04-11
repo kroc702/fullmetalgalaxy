@@ -85,7 +85,9 @@ public class DataStore
   }
 
 
-  static protected <T> Iterable<T> getList(Class<? extends T> p_persistEntityClass, java.lang.String p_condition, java.lang.Object p_value)
+  static protected <T> com.googlecode.objectify.Query<T> getList(
+      Class<? extends T> p_persistEntityClass, java.lang.String p_condition,
+      java.lang.Object p_value)
   {
     assert p_persistEntityClass != null;
 

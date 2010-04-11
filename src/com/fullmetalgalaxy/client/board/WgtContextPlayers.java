@@ -26,7 +26,6 @@
 package com.fullmetalgalaxy.client.board;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
@@ -88,26 +87,13 @@ public class WgtContextPlayers extends Composite implements ClickListener
     {
       for( int index = 0; index < ModelFmpMain.model().getGame().getSetRegistration().size(); index++ )
       {
-        for( Iterator<EbRegistration> it = ModelFmpMain.model().getGame().getSetRegistration()
-            .iterator(); it.hasNext(); )
-        {
-          EbRegistration registration = (EbRegistration)it.next();
-          if( registration.getOrderIndex() == index )
-          {
-            sortedRegistration.add( registration );
-          }
-        }
+        sortedRegistration
+            .add( ModelFmpMain.model().getGame().getRegistrationByOrderIndex( index ) );
       }
     }
     else
     {
-      for( Iterator<EbRegistration> it = ModelFmpMain.model().getGame().getSetRegistration()
-          .iterator(); it.hasNext(); )
-      {
-        EbRegistration registration = (EbRegistration)it.next();
-        sortedRegistration.add( registration );
-      }
-
+      sortedRegistration.addAll( ModelFmpMain.model().getGame().getSetRegistration() );
     }
 
     for( EbRegistration player : sortedRegistration )

@@ -84,6 +84,7 @@ public class EbRegistration extends EbBase
 
 
   private long m_accountId = 0L;
+  private String m_accountPseudo = null;
 
   private EbRegistrationStats m_stats = null;
 
@@ -104,7 +105,6 @@ public class EbRegistration extends EbBase
     return count;
   }
 
-  // @Transient
   public int getTokenCount()
   {
     int count = 0;
@@ -119,7 +119,6 @@ public class EbRegistration extends EbBase
     return count;
   }
 
-  // @Transient
   public int getWinningPoint()
   {
     int winningPoint = 0;
@@ -167,7 +166,6 @@ public class EbRegistration extends EbBase
     m_color = p_color.getValue();
   }
 
-  // @Transient
   public EnuColor getEnuColor()
   {
     return new EnuColor( getColor() );
@@ -197,7 +195,6 @@ public class EbRegistration extends EbBase
     m_ptAction = p_ptAction;
   }
 
-  // @Transient
   public long getIdGame()
   {
     if( getGame() == null )
@@ -312,6 +309,22 @@ public class EbRegistration extends EbBase
   public void setStats(EbRegistrationStats p_stats)
   {
     m_stats = p_stats;
+  }
+
+  /**
+   * @return the accountPseudo
+   */
+  public String getAccountPseudo()
+  {
+    return m_accountPseudo;
+  }
+
+  /**
+   * @param p_accountPseudo the accountPseudo to set
+   */
+  public void setAccountPseudo(String p_accountPseudo)
+  {
+    m_accountPseudo = p_accountPseudo;
   }
 
 
