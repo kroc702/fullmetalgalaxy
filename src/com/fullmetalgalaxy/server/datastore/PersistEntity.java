@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.google.appengine.api.datastore.Blob;
@@ -58,6 +59,13 @@ public class PersistEntity
   {
   }
 
+  @SuppressWarnings("unused")
+  @PrePersist
+  private void PrePersist()
+  {
+    m_version++;
+  }
+
   /**
    * serialize EbBase
    * @param p_ebBase
@@ -68,7 +76,6 @@ public class PersistEntity
     ObjectOutputStream out = null;
     try
     {
-      m_version++;
       outStream = new ByteArrayOutputStream();
       out = new ObjectOutputStream( outStream );
       out.writeObject( p_ebBase );

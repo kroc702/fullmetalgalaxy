@@ -122,10 +122,11 @@ public class FmgDataStore extends DataStore
     return returnedList;
   }
 
-  static public Iterable<PersistGame> getPersistGameList()
+
+  static public com.googlecode.objectify.Query<PersistGame> getPersistGameList()
   {
-    Iterable<PersistGame> gameList = null;
-    gameList = (Iterable<PersistGame>)getList( PersistGame.class, null, null );
+    com.googlecode.objectify.Query<PersistGame> gameList = null;
+    gameList = (com.googlecode.objectify.Query<PersistGame>)getList( PersistGame.class, null, null );
     return gameList;
   }
 

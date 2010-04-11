@@ -3,7 +3,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>Full Metal Galaxy - Parties en cours</title>
+<title>Full Metal Galaxy - Liste des parties</title>
         
 <%@include file="include/meta.jsp"%>
 
@@ -11,17 +11,97 @@
 <body>
 <%@include file="include/header.jsp"%>
 
-	<table class="fmp-array" style="width:100%;">
-	<%  Iterable<PersistGame> gameList = FmgDataStore.getPersistGameList();
-	    for( PersistGame game : gameList )
+<%
+long tab = 2;
+if( Auth.isUserLogged( request, response ) )
+{
+	tab = 1; // my games
+}
+try
+{
+	tab = Long.parseLong( request.getParameter( "tab" ) );
+} catch( NumberFormatException e )
+{
+}
+if(tab < 0 || tab > 3 )
+{
+	tab = 2; // solo games
+}
+%>
+
+	<table style="width:100%;"><tr>
+	<td><%= tab==0? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=0'>" %>
+		<img src="/images/clear.cache.gif" title="Nouvelles parties"/><%= tab==0? "</div>" : "</a>" %> </td>
+	<td><%= tab==1? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=1'>" %>
+		<img src="/images/clear.cache.gif" style="background-position: -170px 0px;" title="Mes parties en cours"/><%= tab==1? "</div>" : "</a>" %></td>
+	<td><%= tab==2? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=2'>" %>
+		<img src="/images/clear.cache.gif" style="background-position: -340px 0px;" title="Jeux solo"/><%= tab==2? "</div>" : "</a>" %></td>
+	<td><%= tab==3? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=3'>" %>
+		<img src="/images/clear.cache.gif" style="background-position: -510px 0px;" title="Toutes les parties"/><%= tab==3? "</div>" : "</a>" %></td>
+	</tr></table>
+	<br/><br/>
+	
+<% if(tab==2) { /* solo games */ %>
+	<%@include file="include/puzzleslist.html"%>
+<% } else { 
+	Iterable<PersistGame> gameList = new ArrayList<PersistGame>();
+	if( tab == 0 ) {
+		// new or open games
+		gameList = FmgDataStore.getPersistGameList();
+		((com.googlecode.objectify.Query<PersistGame>)gameList).filter( "m_isOpen", true );
+	} else if( tab == 1 && !Auth.isUserLogged( request, response ) ) {
+		// my games but not logged
+		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
+	} else if( tab == 1 && Auth.isUserLogged( request, response ) ) {
+		// my games
+		String myPseudo = " " + Auth.getUserPseudo( request, response ) + " ";
+		com.googlecode.objectify.Query<PersistGame> query = FmgDataStore.getPersistGameList();
+		query.filter( "m_history", false );
+		for( PersistGame game : query )
 	    {
-	      out.println("<tr>" );
+	    	if(game.getPlayers() != null && game.getPlayers().contains( myPseudo ))
+	    	{
+	    		((ArrayList<PersistGame>)gameList).add( game );
+	    	}
+	    }
+	} else if( tab == 3 ) {
+		// all games
+		gameList = FmgDataStore.getPersistGameList();
+	}
+%>
+	<table class="fmp-array" style="width:100%;">
+	<%  for( PersistGame game : gameList )
+	    {
+	      out.println( "<tr>" );
 	      // minimap
-	      out.println("<td style=\"width:100px;\"><a href=\"/game.jsp?id="+game.getId()+"\"><img src=\"/ImageServlet?minimap="+game.getId()+"\" height=\"50\"></a></td>" );
+	      out.println( "<td style=\"width:100px;\"><a href=\"/game.jsp?id="+game.getId()+"\"><img src=\"/ImageServlet?minimap="+game.getId()+"\" height=\"50\"></a></td>" );
 	      // game name
-	      out.println("<td><a href=\"/game.jsp?id="+game.getId()+"\"><h2>"+ game.getName() + "</h2></a></td>" );
-	      // player nb
-	      out.println("<td>"+game.getCurrentNumberOfRegiteredPlayer()+"/"+ game.getMaxNumberOfPlayer() + "</td>" );
+	      out.println( "<td><a href=\"/game.jsp?id="+game.getId()+"\"><big>"+ game.getName() + "</big><br/><small>" );
+	      // player name and number
+	      out.println( game.getPlayers()  );
+	      if( game.getCurrentNumberOfRegiteredPlayer() != game.getMaxNumberOfPlayer() ) {
+	      	out.println( " (" + game.getCurrentNumberOfRegiteredPlayer()+"/"+ game.getMaxNumberOfPlayer() + ")" );
+	      }
+  		  out.println( "</small></a></td>" );
+	      
+	      // time option
+	      out.println("<td>" );
+	      if( !game.isStarted() ) {
+	      	out.println( "<img src='/images/css/icon_pause.cache.png' title='En pause' />" );
+	      }
+	      if( game.getConfigGameTime() == ConfigGameTime.Standard || game.getConfigGameTime() == ConfigGameTime.QuickTurnBased ) {
+		    out.println( "<img src='/images/css/icon_tbt.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+	      }
+	      if( game.getConfigGameTime() == ConfigGameTime.StandardAsynch ) {
+		    out.println( "<img src='/images/css/icon_slow.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+		  }
+	      if( game.getConfigGameTime() == ConfigGameTime.QuickTurnBased || game.getConfigGameTime() == ConfigGameTime.QuickAsynch ) {
+		    out.println( "<img src='/images/css/icon_fast.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+		  }
+	      if( game.isHistory() ) {
+	      	out.println( "<img src='/images/css/icon_history.cache.png' title='Archive' />" );
+	      }
+	      out.println("</tr>" );
 	      
 	      // admin option
 	      if(Auth.isUserAdmin(request, response))
@@ -32,9 +112,11 @@
 	    }
 	%>
 	</table>
-	<% if(Auth.isUserLogged(request, response)) { %>
-		<a href="editgame.jsp">Cr&eacute;er une nouvelle partie</a>
+	<% if( tab == 0 && Auth.isUserLogged(request, response)) { %>
+		<center><a href="editgame.jsp"><big>Cr&eacute;er une nouvelle partie</big></a></center>
 	<% } %>
+<% } %>
+
 <%@include file="include/footer.jsp"%>
 </body>
 </html>

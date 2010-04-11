@@ -14,7 +14,7 @@
 <div style="display:none">
 Full Metal Planete ou Full Metal Galaxy est un jeu web gratuit de strategie et tactique, 
 ou wargame online par navigateur.
-Il ce joue tour par tour ou en mode asynchrone (grace a ajax).
+Il ce joue tour par tour ou en mode asynchrone.
 Vous déplacez vos pions sur une carte pavée d'hexagones.
 </div>
 
@@ -30,9 +30,9 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
     metal pilote vendant vos comp&eacute;tences militaires au plus
     offrant.<br/>
     <br/>
-    FMG est un wargame (ou jeu de strategies) gratuit jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
+    FMG est un wargame (ou jeu de strategies) enti&egrave;rement gratuit jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
     Ici pas de formulaire mais uniquement une carte sur laquelle vous d&eacute;placez vos
-    v&eacute;hicules.</p>
+    unit&eacute;s.</p>
     <center>
     <A HREF="/presentation.jsp" style="font-size:12pt; line-height:25px;">En savoir plus &amp; Screenshots...</A><br/>
     <A HREF="/game.jsp?id=/puzzles/tutorial/model.bin" style="font-size:12pt; line-height:25px;">Tutorial (15 min)</A><br/>

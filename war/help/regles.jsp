@@ -16,7 +16,7 @@
     <h1>Les r&egrave;gles du jeu</h1>
     
 			<P STYLE="margin-bottom: 0.5cm"><FONT FACE="Verdana, sans-serif">La
-			r&egrave;gle suivante correspond au jeu original, je l'adapterais
+			r&egrave;gle suivante correspond au jeu original, je l'adapterai
 			au jeu en ligne d'ici peu. On peut cependant noter les diff&eacute;rences
 			suivantes entre le jeu original et cette version en ligne :</FONT></P>
 			<ul>
@@ -33,7 +33,7 @@
 			propri&eacute;taire, sont c&ocirc;te &agrave; c&ocirc;te sur des montagnes, l'un des
 			deux ne produit pas de zone de feu&quot;
 			</li>
-			<li>La marrée est connue dès la sortie de la pondeuse météo (et non au début du tour)</li>
+			<li>La marée est connue dès la sortie de la pondeuse météo (et non au début du tour)</li>
 			<li>La neutralisation est automatique et n'empêche pas de se déplacer. En revanche, 
 			un pion en mouvement ne créer pas de zone de feu (un pion  ne peut donc pas pénétrer 
 			dans la zone de feu du pion qu'il neutralise)</li>

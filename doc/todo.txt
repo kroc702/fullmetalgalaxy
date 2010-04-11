@@ -7,10 +7,6 @@ A verifier:
 
 TODO
 ====
-- inclure le pseudo dans EbRegistration et une chaine dans GamePersist pour faire des requettes dessus
-- une page gamelist qui tri/utilise le cache, une qui affiche les jeux solo
-  + mettre en cache la page gamelist.jsp
-
 - en tour par tour sur plusieurs jours, autoriser l'annulation de son tour.
 - pouvoir rejouer les coups précédents
 
@@ -23,10 +19,12 @@ TODO
 	- les neutralisations tournante ne plaisent pas a tous...
 	- ...
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
+- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 
 - ajouter un tache cron pour faire évoluer les parties non regardé.
 - appeler updateEbGame plus régulièrement et même si aucune action n'est executé
-
+- extraires toute les chaines dans les fichiers txt et corriger les fautes
+- passer a gwt 2
 
 bugs :
 ======
@@ -66,6 +64,7 @@ Support des comptes :
 
 Améliorations de l'IHM:
 =======================
+- améliorer la page gamelist (utilise le cache, filtres, ...)
 - chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detaille d'une partie + description partie + mail des joueurs
 - look plus fini du widget info, liste de partie, de la fin de partie

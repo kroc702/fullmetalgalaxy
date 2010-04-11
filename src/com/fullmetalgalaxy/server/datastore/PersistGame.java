@@ -25,7 +25,11 @@
  */
 package com.fullmetalgalaxy.server.datastore;
 
+
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -35,6 +39,7 @@ import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 
 /**
  * @author Vincent
@@ -46,13 +51,11 @@ public class PersistGame extends PersistEntity
   private String m_name = null;
   private String m_description = "";
   private Date m_creationDate = new Date( System.currentTimeMillis() );
-  private String m_loginCreator = "";
-  private String m_loginCurrentPlayer = "";
   private boolean m_isStarted = false;
-  private boolean m_isAsynchron = true;
   private boolean m_history = false;
   private int m_maxNumberOfPlayer = 0;
   private int m_currentNumberOfRegiteredPlayer = 0;
+  private boolean m_isOpen = false;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
   // variante
@@ -62,7 +65,8 @@ public class PersistGame extends PersistEntity
   private int m_landWidth = 0;
   private int m_landHeight = 0;
 
-  
+  private String m_players = null;
+
   public PersistGame()
   {
   }
@@ -82,10 +86,7 @@ public class PersistGame extends PersistEntity
     game.setDescription( null );
     setCreationDate( game.getCreationDate() );
     game.setCreationDate( null );
-    setLoginCreator( "" );
-    setLoginCurrentPlayer( "" );
-    setStarted( !game.isFinished() );
-    setAsynchron( game.isAsynchron() );
+    setStarted( game.isStarted() );
     setHistory( game.isHistory() );
     setMaxNumberOfPlayer( game.getMaxNumberOfPlayer() );
     setCurrentNumberOfRegiteredPlayer( game.getCurrentNumberOfRegiteredPlayer() );
@@ -95,6 +96,12 @@ public class PersistGame extends PersistEntity
     setConfigGameVariant( game.getConfigGameVariant() );
     setLandWidth( game.getLandWidth() );
     setLandHeight( game.getLandHeight() );
+    setPlayers( game );
+    setOpen( false );
+    if( !isStarted() && getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer() )
+    {
+      setOpen( true );
+    }
     super.setEb( p_ebBase );
     game.setName( getName() );
     game.setDescription( getDescription() );
@@ -193,22 +200,6 @@ public class PersistGame extends PersistEntity
   public void setStarted(boolean p_isStarted)
   {
     m_isStarted = p_isStarted;
-  }
-
-  /**
-   * @return the isAsynchron
-   */
-  public boolean isAsynchron()
-  {
-    return m_isAsynchron;
-  }
-
-  /**
-   * @param p_isAsynchron the isAsynchron to set
-   */
-  public void setAsynchron(boolean p_isAsynchron)
-  {
-    m_isAsynchron = p_isAsynchron;
   }
 
   /**
@@ -324,38 +315,6 @@ public class PersistGame extends PersistEntity
   }
 
   /**
-   * @return the loginCreator
-   */
-  public String getLoginCreator()
-  {
-    return m_loginCreator;
-  }
-
-  /**
-   * @param p_loginCreator the loginCreator to set
-   */
-  public void setLoginCreator(String p_loginCreator)
-  {
-    m_loginCreator = p_loginCreator;
-  }
-
-  /**
-   * @return the loginCurrentPlayer
-   */
-  public String getLoginCurrentPlayer()
-  {
-    return m_loginCurrentPlayer;
-  }
-
-  /**
-   * @param p_loginCurrentPlayer the loginCurrentPlayer to set
-   */
-  public void setLoginCurrentPlayer(String p_loginCurrentPlayer)
-  {
-    m_loginCurrentPlayer = p_loginCurrentPlayer;
-  }
-
-  /**
    * @return the currentNumberOfRegiteredPlayer
    */
   public int getCurrentNumberOfRegiteredPlayer()
@@ -369,6 +328,77 @@ public class PersistGame extends PersistEntity
   public void setCurrentNumberOfRegiteredPlayer(int p_currentNumberOfRegiteredPlayer)
   {
     m_currentNumberOfRegiteredPlayer = p_currentNumberOfRegiteredPlayer;
+  }
+
+
+
+  /**
+   * @return the isOpen
+   */
+  public boolean isOpen()
+  {
+    return m_isOpen;
+  }
+
+  /**
+   * @param p_isOpen the isOpen to set
+   */
+  public void setOpen(boolean p_isOpen)
+  {
+    m_isOpen = p_isOpen;
+  }
+
+  /**
+   * @return the players
+   */
+  public String getPlayers()
+  {
+    return m_players;
+  }
+
+  /**
+   * @param p_players the players to set
+   */
+  public void setPlayers(EbGame p_game)
+  {
+    StringBuffer strBuf = new StringBuffer( " " );
+    // get player order
+    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
+    if( !p_game.isAsynchron() )
+    {
+      for( int index = 0; index < p_game.getSetRegistration().size(); index++ )
+      {
+        sortedRegistration.add( p_game.getRegistrationByOrderIndex( index ) );
+      }
+    }
+    else
+    {
+      sortedRegistration.addAll( p_game.getSetRegistration() );
+    }
+
+    int playerCount = 0;
+    for( EbRegistration player : sortedRegistration )
+    {
+      playerCount++;
+      strBuf.append( player.getAccountPseudo() );
+      if( p_game.getCurrentPlayerRegistration() == player )
+      {
+        strBuf
+            .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );
+      }
+      if( playerCount < sortedRegistration.size() )
+      {
+        if( p_game.isAsynchron() )
+        {
+          strBuf.append( " - " );
+        }
+        else
+        {
+          strBuf.append( " > " );
+        }
+      }
+    }
+    m_players = strBuf.toString();
   }
 
 

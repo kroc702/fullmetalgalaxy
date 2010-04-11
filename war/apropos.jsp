@@ -20,7 +20,8 @@
 			<a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="http://www.gnu.org/graphics/agplv3-88x31.png"/></a> 
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>
 			Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /><br/>
-			Code disponible <a href="http://code.google.com/p/fullmetalgalaxy/">ici</a>. 
+			Source disponible <a href="http://code.google.com/p/fullmetalgalaxy/">ici</a>.<br/>
+			<small>Copyright 2010 Vincent Legendre</small>
 			</p>
             
             <p>
