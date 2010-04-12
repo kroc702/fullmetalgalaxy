@@ -47,7 +47,7 @@ Les marées changeront, en cours de partie, la topologie de la carte rendant
 certaines zones inacessibles par voie terrestre.
 </p>
 <p>
-Pendant toute la partie, vous pourrez aussi échanger avec vos adverssaires (via mail, 
+Pendant toute la partie, vous pourrez aussi échanger avec vos adversaires (via mail, 
 messages privés ou chat intégré) pour 
 lancer des actions communes.
 </p>
