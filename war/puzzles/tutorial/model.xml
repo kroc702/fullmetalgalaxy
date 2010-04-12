@@ -4,7 +4,6 @@
 	<m__name>tutorial</m__name>
 	<m__description>partie de presentation du jeu</m__description>
 	<m__maxNumberOfPlayer>2</m__maxNumberOfPlayer>
-	<m__asynchron>false</m__asynchron>
 	<m__history>false</m__history>
 	<m__currentPlayerId>1</m__currentPlayerId>
 	<m__accountCreatorId>2</m__accountCreatorId>

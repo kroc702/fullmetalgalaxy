@@ -398,6 +398,7 @@ public class PersistGame extends PersistEntity
         }
       }
     }
+    strBuf.append( " " );
     m_players = strBuf.toString();
   }
 
