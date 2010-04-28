@@ -308,6 +308,7 @@ public class AccountServlet extends HttpServlet
       return "Vous devez definir un mot de passe";
     }
     pAccount.setEb( account );
+    store.save( pAccount );
     store.close();
     // to reload account data from datastore
     p_request.getSession().setAttribute( "account", null );

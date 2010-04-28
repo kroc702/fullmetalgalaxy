@@ -17,7 +17,7 @@
             
 			<p>
 			Logiciel libre publié sous 
-			<a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="http://www.gnu.org/graphics/agplv3-88x31.png"/></a> 
+			<a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="/images/agplv3-88x31.cache.png" alt="AGPL v3"/></a> 
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>
 			Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /><br/>
 			Source disponible <a href="http://code.google.com/p/fullmetalgalaxy/">ici</a>.<br/>

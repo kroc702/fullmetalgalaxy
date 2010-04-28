@@ -29,6 +29,7 @@ TODO
 bugs :
 ======
 - on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
+- lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
 - on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
 - pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
@@ -52,7 +53,7 @@ bugs :
 - si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
 - si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
 - au changement de marrée, on ne vérifie pas si tous les pontons sont bien relié a la terre.
-
+ 
 Support des comptes :
 =====================
 - option perso: afficher/cacher l'email, recevoir un email a son tour de jeu, avatar.

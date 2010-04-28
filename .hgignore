@@ -6,6 +6,8 @@ syntax: regexp
 syntax: regexp
 ^war/images/home-header\.pspimage$
 syntax: regexp
+^war/WEB-INF/classes$
+syntax: regexp
 ^war/WEB-INF/lib/appengine.*\.jar$
 syntax: regexp
 ^war/WEB-INF/lib/datanucleus.*\.jar$

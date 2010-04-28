@@ -186,13 +186,16 @@ public class DataStore
     }
 
     entity.setEb( p_obj );
-    savePersistEntity( getThisObjectify(), entity );
+    save( entity );
 
-    // TODO we may want to patch PersistEntity here
     p_obj.setVersion( entity.getVersion() );
     p_obj.setId( entity.getId() );
   }
 
+  protected void save(PersistEntity p_entity)
+  {
+    savePersistEntity( getThisObjectify(), p_entity );
+  }
 
 
 

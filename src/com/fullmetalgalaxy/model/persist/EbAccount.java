@@ -124,7 +124,7 @@ public class EbAccount extends EbBase
     {
       return("<img style=\"border=none\" src=\"/favicon.ico\" alt=\"FMG\" />");
     } else {
-      return("<img style=\"border=none\" src=\"http://www.google.com/favicon.ico\" alt=\"Google\" />");
+      return("<img style=\"border=none\" src=\"/images/icon_google.cache.ico\" alt=\"Google\" />");
     }
     
   }

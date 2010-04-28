@@ -328,7 +328,7 @@
 			<m__id>2</m__id>
 			<m__version>0</m__version>
 			<m__color>128</m__color>
-			<m__OriginalColor>16</m__OriginalColor>
+			<m__OriginalColor>128</m__OriginalColor>
 			<m__ptAction>5</m__ptAction>
 			<m__orderIndex>1</m__orderIndex>
 			<m__turretsToRepair>0</m__turretsToRepair>
@@ -340,7 +340,7 @@
 			<m__id>1</m__id>
 			<m__version>0</m__version>
 			<m__color>4</m__color>
-			<m__OriginalColor>1</m__OriginalColor>
+			<m__OriginalColor>4</m__OriginalColor>
 			<m__ptAction>35</m__ptAction>
 			<m__orderIndex>0</m__orderIndex>
 			<m__turretsToRepair>0</m__turretsToRepair>
