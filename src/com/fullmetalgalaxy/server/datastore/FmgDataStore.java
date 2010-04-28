@@ -179,6 +179,11 @@ public class FmgDataStore extends DataStore
     return PersistGame.class.cast( entity ).getGame();
   }
 
+  public void save(PersistAccount p_account)
+  {
+    super.save( p_account );
+  }
+
   public void save(EbAccount p_account)
   {
     super.save( PersistAccount.class, p_account );

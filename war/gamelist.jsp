@@ -31,13 +31,17 @@ if(tab < 0 || tab > 3 )
 
 	<table style="width:100%;"><tr>
 	<td><%= tab==0? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=0'>" %>
-		<img src="/images/clear.cache.gif" title="Nouvelles parties"/><%= tab==0? "</div>" : "</a>" %> </td>
+		<img class='icon' src="/images/clear.cache.gif" title="Nouvelles parties"/> <br/> 
+		<img class='text' src="/images/clear.cache.gif"/><%= tab==0? "</div>" : "</a>" %></td>
 	<td><%= tab==1? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=1'>" %>
-		<img src="/images/clear.cache.gif" style="background-position: -170px 0px;" title="Mes parties en cours"/><%= tab==1? "</div>" : "</a>" %></td>
+		<img class='icon' src="/images/clear.cache.gif" style="background-position: -170px 0px;" title="Mes parties en cours"/> <br/>
+		<img class='text' src="/images/clear.cache.gif" style="background-position: -170px 0px;"/><%= tab==1? "</div>" : "</a>" %></td>
 	<td><%= tab==2? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=2'>" %>
-		<img src="/images/clear.cache.gif" style="background-position: -340px 0px;" title="Jeux solo"/><%= tab==2? "</div>" : "</a>" %></td>
+		<img class='icon' src="/images/clear.cache.gif" style="background-position: -340px 0px;" title="Jeux solo"/> <br/> 
+		<img class='text' src="/images/clear.cache.gif" style="background-position: -340px 0px;"/><%= tab==2? "</div>" : "</a>" %></td>
 	<td><%= tab==3? "<div class='selected-gamelisttab'>" : "<a class='icon-gamelisttab' href='/gamelist.jsp?tab=3'>" %>
-		<img src="/images/clear.cache.gif" style="background-position: -510px 0px;" title="Toutes les parties"/><%= tab==3? "</div>" : "</a>" %></td>
+		<img class='icon' src="/images/clear.cache.gif" style="background-position: -510px 0px;" title="Toutes les parties"/> <br/>
+		<img class='text' src="/images/clear.cache.gif" style="background-position: -510px 0px;"/><%= tab==3? "</div>" : "</a>" %></td>
 	</tr></table>
 	<br/><br/>
 	
