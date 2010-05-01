@@ -31,18 +31,19 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtContextMinimap extends Composite implements MouseListener
+
+public class WgtContextMinimap extends Composite implements MouseUpHandler
 {
   private AbsolutePanel m_panel = new AbsolutePanel();
   private Image m_miniMapImage = new Image();
@@ -57,7 +58,7 @@ public class WgtContextMinimap extends Composite implements MouseListener
   {
     super();
     initWidget( m_panel );
-    m_miniMapImage.addMouseListener( this );
+    m_miniMapImage.addMouseUpHandler( this );
   }
 
   public void redraw()
@@ -98,44 +99,18 @@ public class WgtContextMinimap extends Composite implements MouseListener
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
-   */
-  public void onMouseDown(Widget p_sender, int p_x, int p_y)
-  {
-  }
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
-   */
-  public void onMouseEnter(Widget p_sender)
-  {
-  }
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
-   */
-  public void onMouseLeave(Widget p_sender)
-  {
-  }
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
-   */
-  public void onMouseMove(Widget p_sender, int p_x, int p_y)
-  {
-  }
-
-  /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  public void onMouseUp(Widget p_sender, int p_x, int p_y)
+  public void onMouseUp(MouseUpEvent p_event)
   {
-    if( p_sender == m_miniMapImage )
+    if( p_event.getSource() == m_miniMapImage )
     {
       if( MAppBoard.s_instance != null )
       {
-        int hexPositionX = (int)(((float)p_x * ModelFmpMain.model().getGame().getLandWidth()) / FmpConstant.miniMapWidth);
-        int hexPositionY = (int)(((float)p_y * ModelFmpMain.model().getGame().getLandHeight()) / FmpConstant.miniMapHeight);
+        int hexPositionX = (int)(((float)p_event.getX() * ModelFmpMain.model().getGame()
+            .getLandWidth()) / FmpConstant.miniMapWidth);
+        int hexPositionY = (int)(((float)p_event.getY() * ModelFmpMain.model().getGame()
+            .getLandHeight()) / FmpConstant.miniMapHeight);
         MAppBoard.s_instance.setScrollPosition( hexPositionX, hexPositionY );
       }
     }

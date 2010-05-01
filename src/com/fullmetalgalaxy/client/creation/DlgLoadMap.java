@@ -37,19 +37,20 @@ import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class DlgLoadMap extends DialogBox implements ClickListener
+
+public class DlgLoadMap extends DialogBox implements ClickHandler
 {
   // UI
   private Map<Image, Long> m_maps = new HashMap<Image, Long>();
@@ -63,6 +64,7 @@ public class DlgLoadMap extends DialogBox implements ClickListener
 
   private FmpCallback<List<EbGamePreview>> m_callbackGameList = new FmpCallback<List<EbGamePreview>>()
   {
+    @Override
     public void onSuccess(List<EbGamePreview> p_result)
     {
       super.onSuccess( p_result );
@@ -74,6 +76,7 @@ public class DlgLoadMap extends DialogBox implements ClickListener
 
   private FmpCallback<ModelFmpInit> m_callbackFmpInit = new FmpCallback<ModelFmpInit>()
   {
+    @Override
     public void onSuccess(ModelFmpInit p_result)
     {
       super.onSuccess( p_result );
@@ -101,7 +104,7 @@ public class DlgLoadMap extends DialogBox implements ClickListener
     // Set the dialog box's caption.
     setText( "Clickez sur la carte de votre choix" );
 
-    m_btnCancel.addClickListener( this );
+    m_btnCancel.addClickHandler( this );
     redraw();
     m_filter.reinit();
     m_filter.setStatus( GameStatus.Scenario );
@@ -121,16 +124,17 @@ public class DlgLoadMap extends DialogBox implements ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnCancel )
+    if( p_event.getSource() == m_btnCancel )
     {
       this.hide();
       return;
     }
-    Long gameId = m_maps.get( p_sender );
+    Long gameId = m_maps.get( p_event.getSource() );
     Services.Util.getInstance().getModelFmpInit( gameId.toString(), m_callbackFmpInit );
   }
 
@@ -145,7 +149,7 @@ public class DlgLoadMap extends DialogBox implements ClickListener
       {
         Image image = new Image( FmpConstant.getMiniMapUrl( "" + game.getId() ) );
         image.setPixelSize( 96, 64 );
-        image.addClickListener( this );
+        image.addClickHandler( this );
         m_maps.put( image, game.getId() );
         m_panel.add( image );
       }

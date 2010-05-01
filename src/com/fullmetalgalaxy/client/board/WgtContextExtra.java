@@ -45,7 +45,8 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -59,7 +60,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Kroc
  * display information about the current action.
  */
-public class WgtContextExtra extends WgtView implements ClickListener
+
+public class WgtContextExtra extends WgtView implements ClickHandler
 {
   // UI
   FocusPanel m_focusPanel = new FocusPanel();
@@ -90,12 +92,12 @@ public class WgtContextExtra extends WgtView implements ClickListener
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
     try
     {
       EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
-      EbToken token = m_wgtTokenLink.get( p_sender );
+      EbToken token = m_wgtTokenLink.get( p_event.getSource() );
 
       assert token != null;
 
@@ -231,7 +233,7 @@ public class WgtContextExtra extends WgtView implements ClickListener
     }
     TokenImages.getTokenImage( p_token.getEnuColor(), EnuZoom.Small, p_token.getType(),
         p_sectorValue ).applyTo( wgtToken );
-    wgtToken.addClickListener( this );
+    wgtToken.addClickHandler( this );
     wgtToken.setTitle( Messages.getTokenString( p_token ) );
     m_wgtTokenLink.put( wgtToken, p_token );
     panelToken.add( wgtToken );

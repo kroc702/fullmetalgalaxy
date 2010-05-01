@@ -35,20 +35,21 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Vincent Legendre
  * display information about the selected token
  */
-public final class MAppContext extends MApp implements EventPreview
+
+public final class MAppContext extends MApp implements NativePreviewHandler
 {
   public static final String HISTORY_ID = "context";
 
@@ -96,33 +97,37 @@ public final class MAppContext extends MApp implements EventPreview
   }
 
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
   }
 
+
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.EventPreview#onEventPreview(com.google.gwt.user.client.Event)
    */
-  public boolean onEventPreview(Event p_event)
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
-    if( DOM.eventGetType( p_event ) == Event.ONKEYPRESS )
+    if( p_event.getTypeInt() == Event.ONKEYPRESS )
     {
       if( m_dlgChat.isChatMode() )
       {
         // don't catch any key if chat dialog is visible
-        return true;
+        return;
       }
-      if( DOM.eventGetKeyCode( p_event ) == KeyboardListener.KEY_ENTER )
+      if( p_event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER )
       {
         if( ModelFmpMain.model().getGame().getGameType() == GameType.MultiPlayer )
         {
           m_dlgChat.center();
           m_dlgChat.show();
         }
-        return false;
+        return;
       }
-      else if( DOM.eventGetKeyCode( p_event ) == 'f' || DOM.eventGetKeyCode( p_event ) == 'F' )
+      else if( p_event.getNativeEvent().getKeyCode() == 'f'
+          || p_event.getNativeEvent().getKeyCode() == 'F' )
       {
         if( ModelFmpMain.model().isFireCoverDisplayed() )
         {
@@ -133,27 +138,28 @@ public final class MAppContext extends MApp implements EventPreview
           ModelFmpMain.model().setFireCoverDisplayed( true );
         }
         // cancel event
-        return false;
+        return;
       }
-      else if( DOM.eventGetKeyCode( p_event ) == '+' )
+      else if( p_event.getNativeEvent().getKeyCode() == '+' )
       {
         ModelFmpMain.model().setZoomDisplayed( EnuZoom.Medium );
         // cancel event
-        return false;
+        return;
       }
-      else if( DOM.eventGetKeyCode( p_event ) == '-' )
+      else if( p_event.getNativeEvent().getKeyCode() == '-' )
       {
         ModelFmpMain.model().setZoomDisplayed( EnuZoom.Small );
         // cancel event
-        return false;
+        return;
       }
-      else if( DOM.eventGetKeyCode( p_event ) == 'g' || DOM.eventGetKeyCode( p_event ) == 'G' )
+      else if( p_event.getNativeEvent().getKeyCode() == 'g'
+          || p_event.getNativeEvent().getKeyCode() == 'G' )
       {
         ModelFmpMain.model().setGridDisplayed( !ModelFmpMain.model().isGridDisplayed() );
         // cancel event
-        return false;
+        return;
       }
-      else if( DOM.eventGetKeyCode( p_event ) == KeyboardListener.KEY_ESCAPE )
+      else if( p_event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE )
       {
         try
         {
@@ -164,10 +170,9 @@ public final class MAppContext extends MApp implements EventPreview
           MAppMessagesStack.s_instance.showWarning( Messages.getString( e ) );
         }
         // cancel action
-        return false;
+        return;
       }
     }
-    return true;
   }
 
 
@@ -187,6 +192,7 @@ public final class MAppContext extends MApp implements EventPreview
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MApp#show(com.fullmetalgalaxy.client.HistoryState)
    */
+  @Override
   public void show(HistoryState p_state)
   {
     super.show( p_state );

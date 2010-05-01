@@ -36,8 +36,9 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -49,7 +50,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class MAppGameList extends MApp implements TableListener, ClickListener
+
+public class MAppGameList extends MApp implements TableListener, ClickHandler
 {
   public static final String HISTORY_ID = "list";
 
@@ -99,6 +101,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
   }
 
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
@@ -107,6 +110,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#hide()
    */
+  @Override
   public void hide()
   {
     // TODO Auto-generated method stub
@@ -118,6 +122,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#show()
    */
+  @Override
   public void show(HistoryState p_state)
   {
     if( !ModelFmpMain.model().isLogged() )
@@ -149,6 +154,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return this;
@@ -166,9 +172,10 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
   }
 
@@ -189,6 +196,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
   private AsyncCallback<List<EbGamePreview>> m_callbackGameList = new FmpCallback<List<EbGamePreview>>()
   {
 
+    @Override
     public void onSuccess(List<EbGamePreview> p_result)
     {
       super.onSuccess( p_result );
@@ -243,6 +251,7 @@ public class MAppGameList extends MApp implements TableListener, ClickListener
       AppMain.instance().stopLoading();
     }
 
+    @Override
     public void onFailure(Throwable p_caught)
     {
       super.onFailure( p_caught );

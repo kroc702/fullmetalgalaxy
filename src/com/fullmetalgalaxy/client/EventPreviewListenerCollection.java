@@ -28,17 +28,17 @@ package com.fullmetalgalaxy.client;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 
 /**
  * @author Vincent Legendre
  * A helper class for implementers of the SourcesPreviewEvents interface. This subclass of ArrayList assumes that
  * all objects added to it will be of type EventPreview.
  */
-public class EventPreviewListenerCollection extends ArrayList<EventPreview>
+
+public class EventPreviewListenerCollection extends ArrayList<NativePreviewHandler>
 {
   static final long serialVersionUID = 15;
 
@@ -51,27 +51,21 @@ public class EventPreviewListenerCollection extends ArrayList<EventPreview>
   }
 
 
-  public boolean fireEventPreview(Event p_event)
+  public void fireEventPreview(NativePreviewEvent p_event)
   {
-    EventPreview listener = null;
-    for( Iterator<EventPreview> it = iterator(); it.hasNext(); )
+    NativePreviewHandler listener = null;
+    for( Iterator<NativePreviewHandler> it = iterator(); it.hasNext(); )
     {
-      listener = (EventPreview)it.next();
+      listener = (NativePreviewHandler)it.next();
       try
       {
-        if( listener.onEventPreview( p_event ) == false )
-        {
-          // stop fire preview event, and cancel it
-          return false;
-        }
+        listener.onPreviewNativeEvent( p_event );
       } catch( Exception e )
       {
         RpcUtil.logError( "the listener " + listener.toString()
             + " bug while notify a modefireEventPreview", e );
       }
     }
-    // do not cancel event
-    return true;
   }
 
 

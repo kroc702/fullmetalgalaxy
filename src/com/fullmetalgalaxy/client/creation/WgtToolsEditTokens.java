@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
@@ -38,9 +37,10 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtToolsEditTokens extends Composite implements ClickListener, ChangeListener
+public class WgtToolsEditTokens extends Composite implements ClickHandler, ChangeListener
 {
   private Panel m_panel = new VerticalPanel();
   private Button m_btnOre = new Button( "pose minerais" );
@@ -70,8 +70,8 @@ public class WgtToolsEditTokens extends Composite implements ClickListener, Chan
   {
     assert p_wgtBoardEditTokens != null;
     m_wgtBoardEditTokens = p_wgtBoardEditTokens;
-    m_btnOre.addClickListener( this );
-    m_currentTool.addClickListener( this );
+    m_btnOre.addClickHandler( this );
+    m_currentTool.addClickHandler( this );
     m_lstColor.setMultipleSelect( false );
     m_lstColor.setVisibleItemCount( 1 );
     // add all colors
@@ -134,28 +134,29 @@ public class WgtToolsEditTokens extends Composite implements ClickListener, Chan
     Image btn = TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Small, p_token,
         Sector.SouthWest ).createImage();
     m_tools.put( btn, p_token );
-    btn.addClickListener( this );
+    btn.addClickHandler( this );
     m_panel.add( btn );
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    TokenType token = m_tools.get( p_sender );
+    TokenType token = m_tools.get( p_event.getSource() );
     if( token != null )
     {
       m_wgtBoardEditTokens.setTokenType( token );
     }
-    if( p_sender == m_currentTool )
+    if( p_event.getSource() == m_currentTool )
     {
       m_wgtBoardEditTokens.setSector( m_wgtBoardEditTokens.getSector().getNext() );
     }
     TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
         m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ).applyTo(
         m_currentTool );
-    if( p_sender == m_btnOre )
+    if( p_event.getSource() == m_btnOre )
     {
       GameGenerator.populateOres();
       m_wgtBoardEditTokens.m_layerToken.cleanToken();

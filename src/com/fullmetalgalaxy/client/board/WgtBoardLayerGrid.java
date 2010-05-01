@@ -50,6 +50,7 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
@@ -82,6 +83,7 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
 
 
 
+  @SuppressWarnings("unused")
   private static int s_firstGridRuleIndex = createGridRules();
 
   public static int createGridRules()

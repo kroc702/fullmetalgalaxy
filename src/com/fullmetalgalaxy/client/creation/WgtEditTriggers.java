@@ -28,12 +28,12 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -44,13 +44,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtEditTriggers extends Composite implements ClickListener, ChangeListener
+
+public class WgtEditTriggers extends Composite implements ClickHandler, ChangeListener
 {
   private int m_triggerCount = 0;
   private Map<String, EbTrigger> m_mapTrigger = new HashMap<String, EbTrigger>();
 
   // UI
-  private ListBox m_lstTrigger = new ListBox();
+  private ListBox m_lstTrigger = new ListBox( false );
   private Button m_btnNewTrigger = new Button( "Nouveau Trigger" );
   private WgtEditOneTrigger m_wgtTrigger = new WgtEditOneTrigger();
 
@@ -61,11 +62,10 @@ public class WgtEditTriggers extends Composite implements ClickListener, ChangeL
   public WgtEditTriggers()
   {
     VerticalPanel vpanel = new VerticalPanel();
-    m_lstTrigger.setMultipleSelect( false );
     m_lstTrigger.addChangeListener( this );
     m_lstTrigger.setVisibleItemCount( 10 );
     vpanel.add( m_lstTrigger );
-    m_btnNewTrigger.addClickListener( this );
+    m_btnNewTrigger.addClickHandler( this );
     vpanel.add( m_btnNewTrigger );
 
     HorizontalPanel panel = new HorizontalPanel();
@@ -77,11 +77,12 @@ public class WgtEditTriggers extends Composite implements ClickListener, ChangeL
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnNewTrigger )
+    if( p_event.getSource() == m_btnNewTrigger )
     {
       EbTrigger trigger = new EbTrigger();
       trigger.setName( "trigger " + m_triggerCount );

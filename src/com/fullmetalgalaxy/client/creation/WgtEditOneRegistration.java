@@ -28,18 +28,19 @@ package com.fullmetalgalaxy.client.creation;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtEditOneRegistration extends Composite implements ClickListener
+
+public class WgtEditOneRegistration extends Composite implements ClickHandler
 {
   // model
   private EbRegistration m_registration = null;
@@ -56,22 +57,23 @@ public class WgtEditOneRegistration extends Composite implements ClickListener
   {
     VerticalPanel panel = new VerticalPanel();
     panel.add( m_lblAccount );
-    m_btnBan.addClickListener( this );
+    m_btnBan.addClickHandler( this );
     panel.add( m_btnBan );
     initWidget( panel );
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
     if( m_registration == null )
     {
       return;
     }
 
-    if( p_sender == m_btnBan )
+    if( p_event.getSource() == m_btnBan )
     {
       // TODO ajouter un log admin
       m_registration.setAccountId( 0 );

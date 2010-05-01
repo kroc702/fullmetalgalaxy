@@ -68,6 +68,7 @@ public class WgtModelUpdateEvent extends WgtView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.WgtView#notifyHmiUpdate()
    */
+  @Override
   public void notifyHmiUpdate()
   {
   }
@@ -76,6 +77,7 @@ public class WgtModelUpdateEvent extends WgtView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ctrModelSender)
   {
     // TODO optimisation: redraw only if required
