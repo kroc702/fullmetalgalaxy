@@ -30,7 +30,6 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.GameGenerator;
 import com.fullmetalgalaxy.client.creation.MapSize;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -49,11 +48,10 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
   private WgtTextBox m_name = new WgtTextBox();
   private WgtTextArea m_description = new WgtTextArea();
   private WgtIntBox m_maxNumberOfPlayer = new WgtIntBox();
-  private WgtTextBox m_accountCreator = new WgtTextBox();
   private WgtIntBox m_landWidth = new WgtIntBox();
   private WgtIntBox m_landHeight = new WgtIntBox();
   private WgtDateBox m_creationDate = new WgtDateBox();
-  private WgtConfigGameTime m_configTime = (WgtConfigGameTime)GWT.create( WgtConfigGameTime.class );
+  private WgtConfigGameTime m_configTime = new BindedWgtConfigGameTime();
 
   private ListBox m_mapSize = new ListBox();
   private ListBox m_gameSpeed = new ListBox();
@@ -175,17 +173,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
     return m_maxNumberOfPlayer;
   }
 
-
-  /**
-   * @return the accountCreator
-   * @ReadOnly
-   * @BeanGetter getAccountCreator().getLogin()
-   * @BeanSetter getAccountCreator().setLogin()
-   */
-  protected WgtTextBox getAccountCreator()
-  {
-    return m_accountCreator;
-  }
 
 
   /**

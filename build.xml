@@ -10,7 +10,7 @@ compilation file for Full Metal Planet
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
 	<property name="appenginesdkdir" value="C:\Sun\appengine-java-sdk-1.3.3.1" />
-	<property name="gwtsdkdir" value="C:\Sun\gwt-windows-1.7.1" />
+	<property name="gwtsdkdir" value="C:\Sun\gwt-2.0.3" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
@@ -58,7 +58,6 @@ compilation file for Full Metal Planet
 
 	<target name="compilclient" depends="">
 		<echo message="Compiling client java code to javascript" />
-		<mkdir dir="war" />
 		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
 			<jvmarg value="-Xmx512M" />
 			<sysproperty key="ENCODING" value="UTF-8" />
@@ -115,7 +114,7 @@ compilation file for Full Metal Planet
 		<dev_appserver war="war" port="8888">
 			<options>
 				<arg value="--jvm_flag=-Xdebug" />
-				<arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y" />
+				<arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9997" />
 			</options>
 		</dev_appserver>
 	</target>
