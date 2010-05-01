@@ -60,6 +60,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
    * 
    * @see com.fullmetalgalaxy.client.board.WgtBoardLayerBase#redraw()
    */
+  @Override
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
@@ -156,6 +157,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );

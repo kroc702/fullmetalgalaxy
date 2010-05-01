@@ -34,7 +34,8 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +44,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  * display in game message, error and chat messages from other players
  */
-public class MAppAdvisesStack extends MApp implements ClickListener
+
+public class MAppAdvisesStack extends MApp implements ClickHandler
 {
   public static final String HISTORY_ID = "advises";
 
@@ -63,11 +65,13 @@ public class MAppAdvisesStack extends MApp implements ClickListener
     s_instance = this;
   }
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
   }
 
+  @Override
   public void show(HistoryState p_state)
   {
     super.show( p_state );
@@ -80,7 +84,7 @@ public class MAppAdvisesStack extends MApp implements ClickListener
         Label label = new Label( "?" );
         label.setTitle( ((EbEvtMessage)event).getTitle() );
         label.setStyleName( "fmp-btn-advises" );
-        label.addClickListener( this );
+        label.addClickHandler( this );
         m_panel.insert( label, 0 );
         s_advisesMap.put( label, (EbEvtMessage)event );
       }
@@ -90,11 +94,11 @@ public class MAppAdvisesStack extends MApp implements ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
-    EbEvtMessage message = s_advisesMap.get( p_sender );
+    EbEvtMessage message = s_advisesMap.get( p_event.getSource() );
     if( message != null )
     {
       DlgMessageEvent dlgMsg = new DlgMessageEvent( message );

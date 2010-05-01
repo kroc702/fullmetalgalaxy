@@ -44,11 +44,12 @@ import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
@@ -60,7 +61,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Kroc
  *
  */
-public class MAppGameCreation extends Composite implements MiniApp, ClickListener, ChangeListener,
+
+public class MAppGameCreation extends Composite implements MiniApp, ClickHandler, ChangeListener,
     TabListener
 {
   public static final String HISTORY_ID = "new";
@@ -92,8 +94,8 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickListene
 
   public MAppGameCreation()
   {
-    m_btnCreateGame.addClickListener( this );
-    m_btnCancel.addClickListener( this );
+    m_btnCreateGame.addClickHandler( this );
+    m_btnCancel.addClickHandler( this );
 
 
     // m_form.setBean( ModelFmpMain.model().getGame() );
@@ -229,9 +231,10 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickListene
     game.setGameEventStack( stack );
   }
 
-  public void onClick(Widget sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( sender == m_btnCreateGame )
+    if( p_event.getSource() == m_btnCreateGame )
     {
       if( ModelFmpMain.model().getGame().isTrancient() )
       {
@@ -242,7 +245,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickListene
         saveGame();
       }
     }
-    else if( sender == m_btnCancel )
+    else if( p_event.getSource() == m_btnCancel )
     {
       ModelFmpMain.model().getGame().reinit();
       History.back();

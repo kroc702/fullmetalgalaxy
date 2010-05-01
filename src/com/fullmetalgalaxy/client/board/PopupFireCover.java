@@ -26,9 +26,7 @@
 package com.fullmetalgalaxy.client.board;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.HistoryState;
@@ -36,20 +34,21 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.ModelUpdateListener;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class PopupFireCover extends PopupPanel implements ModelUpdateListener, ClickListener
+
+public class PopupFireCover extends PopupPanel implements ModelUpdateListener, ClickHandler
 {
   private Label m_lblAll = new Label( "Tous" );
   private Label m_lblNone = new Label( "Aucun" );
@@ -66,8 +65,8 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
 
     ModelFmpMain.model().subscribeModelUpdateEvent( this );
 
-    m_lblAll.addClickListener( this );
-    m_lblNone.addClickListener( this );
+    m_lblAll.addClickHandler( this );
+    m_lblNone.addClickHandler( this );
 
     // PopupPanel is a SimplePanel, so you have to set it's widget property to
     // whatever you want its contents to be.
@@ -98,12 +97,11 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
       m_vPanel.add( m_lblAll );
       m_vPanel.add( m_lblNone );
 
-      for( Iterator it = model.getGame().getSetRegistration().iterator(); it.hasNext(); )
+      for( EbRegistration registration : model.getGame().getSetRegistration() )
       {
-        EbRegistration registration = (EbRegistration)it.next();
         HTML label = new HTML( ModelFmpMain.model().getAccount( registration.getAccountId() )
             .getPseudo() );
-        label.addClickListener( this );
+        label.addClickHandler( this );
         m_map.put( label, registration );
         m_vPanel.add( label );
       }
@@ -112,31 +110,30 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
     HistoryState state = AppMain.instance().getHistoryState();
     String[] oldFireCover = state.getStringArray( MAppBoard.s_TokenFireCover );
     String[] newFireCover = new String[m_map.size()];
     boolean isChanged = false;
 
-    if( p_sender == m_lblAll )
+    if( p_event.getSource() == m_lblAll )
     {
       if( oldFireCover.length != m_map.size() )
       {
         isChanged = true;
       }
-      Set entry = m_map.entrySet();
       int i = 0;
-      for( Iterator it = entry.iterator(); it.hasNext(); )
+      for( Map.Entry<HTML, EbRegistration> entry : m_map.entrySet() )
       {
-        newFireCover[i] = "" + ((EbRegistration)((Map.Entry)it.next()).getValue()).getId();
+        newFireCover[i] = "" + entry.getValue().getId();
         i++;
       }
       state.setStringArray( MAppBoard.s_TokenFireCover, newFireCover );
     }
-    else if( p_sender == m_lblNone )
+    else if( p_event.getSource() == m_lblNone )
     {
       if( oldFireCover.length != 0 )
       {
@@ -146,7 +143,7 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
     }
     else
     {
-      EbRegistration registration = (EbRegistration)m_map.get( p_sender );
+      EbRegistration registration = (EbRegistration)m_map.get( p_event.getSource() );
       assert registration != null;
       boolean isAdded = false;
       int i = 0;

@@ -43,8 +43,11 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -52,9 +55,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -62,12 +64,15 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class DlgGameDetail extends DialogBox implements ClickListener, TabListener
+
+
+public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionHandler<Integer>
 {
   private Button m_btnOk = new Button( "OK" );
   private Button m_btnPlay = new Button( "Play" );
   private Button m_btnPause = new Button( "Pause" );
   private Button m_btnEdit = new Button( "Edite" );
+  private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
   private VerticalPanel m_panel = new VerticalPanel();
   private TabPanel m_tabPanel = new TabPanel();
 
@@ -92,10 +97,11 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
     // Set the dialog box's caption.
     setText( "Game detail" );
 
-    m_btnOk.addClickListener( this );
-    m_btnPlay.addClickListener( this );
-    m_btnPause.addClickListener( this );
-    m_btnEdit.addClickListener( this );
+    m_btnOk.addClickHandler( this );
+    m_btnPlay.addClickHandler( this );
+    m_btnPause.addClickHandler( this );
+    m_btnEdit.addClickHandler( this );
+    m_btnGrid.addClickHandler( this );
 
     m_tabPanel.add( m_generalPanel, "general" );
     m_tabPanel.add( m_playerPanel, "joueurs" );
@@ -110,7 +116,7 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
     m_tabPanel.setWidth( "100%" );
     m_tabPanel.selectTab( 0 );
     m_tabPanel.setPixelSize( 700, 400 );
-    m_tabPanel.addTabListener( this );
+    m_tabPanel.addSelectionHandler( this );
 
     m_panel.add( m_tabPanel );
     m_panel.add( m_btnOk );
@@ -122,6 +128,7 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.PopupPanel#show()
    */
+  @Override
   public void show()
   {
     super.show();
@@ -199,6 +206,10 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
         }
       }
     }
+
+    // grid button
+    m_generalPanel.add( m_btnGrid );
+    m_btnGrid.setDown( ModelFmpMain.model().isGridDisplayed() );
 
     // edit button
     m_generalPanel.add( m_btnEdit );
@@ -348,28 +359,35 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
     return m_playerPanel;
   }
 
+
+
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnOk )
+    if( p_event.getSource() == m_btnOk )
     {
       hide();
     }
-    else if( p_sender == m_btnPause )
+    else if( p_event.getSource() == m_btnGrid )
+    {
+      ModelFmpMain.model().setGridDisplayed( m_btnGrid.isDown() );
+    }
+    else if( p_event.getSource() == m_btnPause )
     {
       AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccountId() );
       gameLog.setGame( ModelFmpMain.model().getGame() );
       ModelFmpMain.model().runSingleAction( gameLog );
     }
-    else if( p_sender == m_btnPlay )
+    else if( p_event.getSource() == m_btnPlay )
     {
       AnEvent gameLog = GameLogFactory.newAdminTimePlay( ModelFmpMain.model().getMyAccountId() );
       gameLog.setGame( ModelFmpMain.model().getGame() );
       ModelFmpMain.model().runSingleAction( gameLog );
     }
-    else if( p_sender == m_btnEdit )
+    else if( p_event.getSource() == m_btnEdit )
     {
       AppMain.instance().gotoEditGame( ModelFmpMain.model().getGame().getId() );
       hide();
@@ -380,21 +398,12 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents, int)
+   * @see com.google.gwt.event.logical.shared.SelectionHandler#onSelection(com.google.gwt.event.logical.shared.SelectionEvent)
    */
-  public boolean onBeforeTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
+  @Override
+  public void onSelection(SelectionEvent<Integer> p_event)
   {
-    return true;
-  }
-
-
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents, int)
-   */
-  public void onTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
-  {
-    switch( p_tabIndex )
+    switch( p_event.getSelectedItem() )
     {
     case 0: // general
       break;
@@ -415,7 +424,6 @@ public class DlgGameDetail extends DialogBox implements ClickListener, TabListen
       m_wgtAdminLogs.redraw();
       break;
     }
-
   }
 
 

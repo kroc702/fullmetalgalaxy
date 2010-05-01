@@ -84,7 +84,7 @@ public class TokenWidget
     }
     if( (p_token.getVersion() != getLastUpdate())
         || (p_token.isFireDisabled() != m_wasFireDisable)
-        || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != m_lastLand) )
+        || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != getLastLand()) )
     {
       return true;
     }

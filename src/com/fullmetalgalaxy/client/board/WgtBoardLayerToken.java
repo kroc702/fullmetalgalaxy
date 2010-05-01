@@ -39,17 +39,18 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.LoadListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListener
+
+public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
 {
   private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
 
@@ -68,6 +69,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListene
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#redraw(int, int, int, int)
    */
+  @Override
   public void redraw()
   {
     super.redraw();
@@ -247,31 +249,21 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListene
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.LoadListener#onError(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.LoadHandler#onLoad(com.google.gwt.event.dom.client.LoadEvent)
    */
-  public void onError(Widget p_sender)
-  {
-    MAppMessagesStack.s_instance
-        .showWarning( "You seems to have some trouble with your internet connexion" );
-  }
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.LoadListener#onLoad(com.google.gwt.user.client.ui.Widget)
-   */
-  public void onLoad(Widget p_sender)
+  @Override
+  public void onLoad(LoadEvent p_event)
   {
     AppMain.instance().stopLoading();
   }
-
 
   /**
    * reset lastUpdate off all TimedHtml
    */
   private void invalidateTokenMap()
   {
-    for( java.util.Iterator it = m_tokenMap.values().iterator(); it.hasNext(); )
+    for( TokenWidget timedHtml : m_tokenMap.values() )
     {
-      TokenWidget timedHtml = (TokenWidget)it.next();
       timedHtml.invalidate();
       remove( timedHtml.getIconWarningImage() );
       remove( timedHtml.getTokenImage() );
@@ -280,9 +272,8 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListene
 
   private void clearTokenMap()
   {
-    for( java.util.Iterator it = m_tokenMap.values().iterator(); it.hasNext(); )
+    for( TokenWidget timedHtml : m_tokenMap.values() )
     {
-      TokenWidget timedHtml = (TokenWidget)it.next();
       remove( timedHtml.getIconWarningImage() );
       remove( timedHtml.getTokenImage() );
     }
@@ -293,6 +284,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListene
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
@@ -311,6 +303,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadListene
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.WgtBoardLayerBase#onModelChange()
    */
+  @Override
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );

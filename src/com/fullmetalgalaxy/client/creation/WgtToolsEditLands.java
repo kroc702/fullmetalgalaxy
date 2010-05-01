@@ -28,19 +28,19 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -56,7 +56,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtToolsEditLands extends Composite implements ClickListener, MouseListener,
+
+public class WgtToolsEditLands extends Composite implements ClickHandler, MouseListener,
     ChangeListener
 {
   private Panel m_panel = new VerticalPanel();
@@ -107,9 +108,9 @@ public class WgtToolsEditLands extends Composite implements ClickListener, Mouse
     m_panel.add( new Label( "taille de carte" ) );
     m_panel.add( m_txtLandWidth );
     m_panel.add( m_txtLandHeight );
-    m_btnClear.addClickListener( this );
+    m_btnClear.addClickHandler( this );
     m_panel.add( m_btnClear );
-    m_btnGenerate.addClickListener( this );
+    m_btnGenerate.addClickHandler( this );
     m_panel.add( m_btnGenerate );
     HorizontalPanel hpanel = new HorizontalPanel();
     hpanel.add( new Label( "terre en %" ) );
@@ -141,7 +142,7 @@ public class WgtToolsEditLands extends Composite implements ClickListener, Mouse
     m_panel.add( m_btnPlain );
     m_btnMontain.addMouseListener( this );
     m_panel.add( m_btnMontain );
-    m_btnLoadMap.addClickListener( this );
+    m_btnLoadMap.addClickHandler( this );
     m_panel.add( m_btnLoadMap );
 
     setClicTool( Event.BUTTON_LEFT, LandType.Sea );
@@ -190,29 +191,30 @@ public class WgtToolsEditLands extends Composite implements ClickListener, Mouse
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
     int landWidth = Integer.parseInt( m_txtLandWidth.getText() );
     int landHeight = Integer.parseInt( m_txtLandHeight.getText() );
-    if( p_sender == m_btnGenerate )
+    if( p_event.getSource() == m_btnGenerate )
     {
       int percent = Integer.parseInt( m_txtLandPercent.getText() );
       GameGenerator.setSize( landWidth, landHeight );
       GameGenerator.setLandPercent( percent );
-      GameGenerator.setHexagonMap( m_chkRoundMap.isChecked() );
+      GameGenerator.setHexagonMap( m_chkRoundMap.getValue() );
       GameGenerator.generLands();
       ModelFmpMain.model().fireModelUpdate();
     }
-    else if( p_sender == m_btnClear )
+    else if( p_event.getSource() == m_btnClear )
     {
       GameGenerator.setSize( landWidth, landHeight );
       GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
       ModelFmpMain.model().fireModelUpdate();
     }
-    else if( p_sender == m_btnLoadMap )
+    else if( p_event.getSource() == m_btnLoadMap )
     {
       m_dlgLoadMap.show();
     }

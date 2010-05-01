@@ -27,14 +27,15 @@ package com.fullmetalgalaxy.client.board;
 
 
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements EventPreview
+
+public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements NativePreviewHandler
 {
 
   /**
@@ -45,16 +46,21 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements EventP
     setStyleName( "fmp-atmosphere" );
   }
 
+
+
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.EventPreview#onEventPreview(com.google.gwt.user.client.Event)
+   * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
    */
-  public boolean onEventPreview(Event p_event)
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
     // TODO Auto-generated method stub
-    return false;
+
   }
 
 
+
+  @SuppressWarnings("unused")
   private static int s_firstGridRuleIndex = createGridRules();
 
   public static int createGridRules()

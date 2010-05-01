@@ -25,10 +25,13 @@
  */
 package com.fullmetalgalaxy.client.widget;
 
+
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ChangeListenerCollection;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -36,7 +39,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtBooleanBox extends CheckBox implements ScalarView, ClickListener, KeyboardListener
+
+public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler, KeyboardListener
 {
   private ChangeListenerCollection m_changeListnerCollection = new ChangeListenerCollection();
   private boolean m_oldValue = false;
@@ -72,7 +76,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickListener
   {
     setChecked( m_oldValue );
     addKeyboardListener( this );
-    addClickListener( this );
+    addClickHandler( this );
   }
 
   public void setReadOnly(boolean p_readOnly)
@@ -155,11 +159,12 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickListener
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_wgt)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_wgt == this )
+    if( p_event.getSource() == this )
     {
       mayFireChange();
     }
@@ -167,9 +172,9 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickListener
 
   private void mayFireChange()
   {
-    if( m_oldValue != isChecked() )
+    if( m_oldValue != getValue() )
     {
-      m_oldValue = isChecked();
+      m_oldValue = getValue();
       m_changeListnerCollection.fireChange( this );
     }
   }

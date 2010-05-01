@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.TokenType;
@@ -40,21 +41,22 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtContextAction extends WgtView implements ClickListener
+
+public class WgtContextAction extends WgtView implements ClickHandler
 {
   HorizontalPanel m_panel = new HorizontalPanel();
   Image m_btnOk = Icons.s_instance.ok32().createImage();
@@ -84,58 +86,58 @@ public class WgtContextAction extends WgtView implements ClickListener
    */
   public WgtContextAction()
   {
-    m_btnOk.addClickListener( this );
+    m_btnOk.addClickHandler( this );
     m_btnOk.setTitle( "Valider l'action" );
     m_btnOk.setStyleName( "fmp-button" );
-    m_btnCancel.addClickListener( this );
+    m_btnCancel.addClickHandler( this );
     m_btnCancel.setTitle( "Annuler l'action [ESC]" );
     m_btnCancel.setStyleName( "fmp-button" );
-    m_btnRepairTurret.addClickListener( this );
+    m_btnRepairTurret.addClickHandler( this );
     m_btnRepairTurret.setTitle( "Reparer la tourelle" );
     m_btnRepairTurret.setStyleName( "fmp-button" );
-    m_btnTakeOff.addClickListener( this );
+    m_btnTakeOff.addClickHandler( this );
     m_btnTakeOff.setTitle( "Decollage" );
     m_btnTakeOff.setStyleName( "fmp-button" );
-    m_btnFire.addClickListener( this );
+    m_btnFire.addClickHandler( this );
     m_btnFire.setTitle( "Tirer" );
     m_btnFire.setStyleName( "fmp-button" );
-    m_btnControl.addClickListener( this );
+    m_btnControl.addClickHandler( this );
     m_btnControl.setTitle( "Controle" );
     m_btnControl.setStyleName( "fmp-button" );
-    m_btnFireCoverOn.addClickListener( this );
+    m_btnFireCoverOn.addClickHandler( this );
     m_btnFireCoverOn.setTitle( "Afficher les couvertures de feux [F]" );
     m_btnFireCoverOn.setStyleName( "fmp-button" );
-    m_btnFireCoverOff.addClickListener( this );
+    m_btnFireCoverOff.addClickHandler( this );
     m_btnFireCoverOff.setTitle( "Cacher les couvertures de feux [F]" );
     m_btnFireCoverOff.setStyleName( "fmp-button" );
-    m_btnEndTurn.addClickListener( this );
+    m_btnEndTurn.addClickHandler( this );
     m_btnEndTurn.setTitle( "Fin de tour" );
     m_btnEndTurn.setStyleName( "fmp-button" );
-    m_btnZoomIn.addClickListener( this );
+    m_btnZoomIn.addClickHandler( this );
     m_btnZoomIn.setTitle( "Zoom tactique [+]" );
     m_btnZoomIn.setStyleName( "fmp-button" );
-    m_btnZoomOut.addClickListener( this );
+    m_btnZoomOut.addClickHandler( this );
     m_btnZoomOut.setTitle( "Zoom strategique [-]" );
     m_btnZoomOut.setStyleName( "fmp-button" );
-    m_btnGrid.addClickListener( this );
+    m_btnGrid.addClickHandler( this );
     m_btnGrid.setTitle( "Afficher/cacher la grille [G]" );
     m_btnGrid.setStyleName( "fmp-button" );
-    m_btnRegister.addClickListener( this );
+    m_btnRegister.addClickHandler( this );
     m_btnRegister.setTitle( "S'inscrire a cette partie" );
     m_btnRegister.setStyleName( "fmp-button" );
     HorizontalPanel hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.register32().createImage() );
     hPanel.add( new Label( "Cette partie recherche des joueurs. Inscrivez vous !" ) );
     m_pnlRegister = new FocusPanel( hPanel );
-    m_pnlRegister.addClickListener( this );
+    m_pnlRegister.addClickHandler( this );
 
-    m_btnInfo.addClickListener( this );
+    m_btnInfo.addClickHandler( this );
     m_btnInfo.setTitle( "Information detailles sur cette partie" );
     m_btnInfo.setStyleName( "fmp-button" );
-    m_btnMiniMap.addClickListener( this );
+    m_btnMiniMap.addClickHandler( this );
     m_btnMiniMap.setTitle( "Affichage de la minimap" );
     m_btnMiniMap.setStyleName( "fmp-button" );
-    m_btnPlayer.addClickListener( this );
+    m_btnPlayer.addClickHandler( this );
     m_btnPlayer.setTitle( "Joueurs connectes" );
     m_btnPlayer.setStyleName( "fmp-button" );
     m_iconAction.setTitle( "Cout en point d'action" );
@@ -153,24 +155,26 @@ public class WgtContextAction extends WgtView implements ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
+    Object sender = p_event.getSource();
     try
     {
       EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
-      if( p_sender == m_btnOk )
+      if( sender == m_btnOk )
       {
         actionBuilder.userOk();
         ModelFmpMain.model().runCurrentAction();
       }
-      else if( p_sender == m_btnCancel )
+      else if( sender == m_btnCancel )
       {
         actionBuilder.userCancel();
         ModelFmpMain.model().notifyModelUpdate();
       }
-      else if( p_sender == m_btnRepairTurret )
+      else if( sender == m_btnRepairTurret )
       {
         EventBuilderMsg eventBuilderMsg = actionBuilder.userAction( GameLogType.EvtRepair );
         if( eventBuilderMsg == EventBuilderMsg.MustRun )
@@ -178,58 +182,58 @@ public class WgtContextAction extends WgtView implements ClickListener
           ModelFmpMain.model().runSingleAction( actionBuilder.getSelectedAction() );
         }
       }
-      else if( p_sender == m_btnFire )
+      else if( sender == m_btnFire )
       {
         actionBuilder.userAction( GameLogType.EvtFire );
         MAppMessagesStack.s_instance
             .showMessage( "Selectionez un second destructeur a porte, puis votre cible" );
       }
-      else if( p_sender == m_btnControl )
+      else if( sender == m_btnControl )
       {
         actionBuilder.userAction( GameLogType.EvtControl );
         MAppMessagesStack.s_instance
             .showMessage( "Selectionez un second destructeur au contact, puis votre cible" );
       }
-      else if( p_sender == m_btnFireCoverOn )
+      else if( sender == m_btnFireCoverOn )
       {
         ModelFmpMain.model().setFireCoverDisplayed( true );
       }
-      else if( p_sender == m_btnFireCoverOff )
+      else if( sender == m_btnFireCoverOff )
       {
         ModelFmpMain.model().setFireCoverDisplayed( false );
       }
-      else if( p_sender == m_btnGrid )
+      else if( sender == m_btnGrid )
       {
         ModelFmpMain.model().setGridDisplayed( !ModelFmpMain.model().isGridDisplayed() );
       }
-      else if( p_sender == m_btnZoomIn )
+      else if( sender == m_btnZoomIn )
       {
         ModelFmpMain.model().setZoomDisplayed( EnuZoom.Medium );
       }
-      else if( p_sender == m_btnZoomOut )
+      else if( sender == m_btnZoomOut )
       {
         ModelFmpMain.model().setZoomDisplayed( EnuZoom.Small );
       }
-      else if( p_sender == m_btnMiniMap )
+      else if( sender == m_btnMiniMap )
       {
         ModelFmpMain.model().setMiniMapDisplayed( true );
       }
-      else if( p_sender == m_btnPlayer )
+      else if( sender == m_btnPlayer )
       {
         ModelFmpMain.model().setMiniMapDisplayed( false );
       }
-      else if( p_sender == m_btnInfo )
+      else if( sender == m_btnInfo )
       {
         m_dlgGameDetail.center();
         m_dlgGameDetail.show();
       }
-      else if( p_sender == m_btnRegister || p_sender == m_pnlRegister )
+      else if( sender == m_btnRegister || sender == m_pnlRegister )
       {
         DlgJoinGame dlg = new DlgJoinGame();
         dlg.show();
         dlg.center();
       }
-      else if( p_sender == m_btnEndTurn )
+      else if( sender == m_btnEndTurn )
       {
         if( Window.confirm( "Il vous reste "
                 + ModelFmpMain.model().getMyRegistration().getPtAction()
@@ -241,7 +245,7 @@ public class WgtContextAction extends WgtView implements ClickListener
           ModelFmpMain.model().runSingleAction( action );
         }
       }
-      else if( p_sender == m_btnTakeOff )
+      else if( sender == m_btnTakeOff )
       {
         if( Window.confirm( "Confirmez-vous le decolage de "
             + Messages.getTokenString( actionBuilder.getSelectedToken() ) + " ?" ) )
@@ -283,7 +287,7 @@ public class WgtContextAction extends WgtView implements ClickListener
       {
         m_panel.add( m_btnFireCoverOn );
       }
-      m_panel.add( m_btnGrid );
+      // m_panel.add( m_btnGrid );
       if( ModelFmpMain.model().getZoomDisplayed().getValue() == EnuZoom.Small )
       {
         m_panel.add( m_btnZoomIn );
@@ -295,7 +299,10 @@ public class WgtContextAction extends WgtView implements ClickListener
       m_panel.add( m_btnInfo );
       if( ModelFmpMain.model().isMiniMapDisplayed() )
       {
-        m_panel.add( m_btnPlayer );
+        if( model.getGame().getGameType() == GameType.MultiPlayer )
+        {
+          m_panel.add( m_btnPlayer );
+        }
       }
       else
       {

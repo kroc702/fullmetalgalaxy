@@ -25,16 +25,16 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -46,7 +46,8 @@ import com.google.gwt.user.client.ui.Widget;
  * to edit registrations
  * -> to active puzzle mode
  */
-public class WgtEditForces extends Composite implements ClickListener, ChangeListener
+
+public class WgtEditForces extends Composite implements ClickHandler, ChangeListener
 {
   private Map<String, EbRegistration> m_mapReg = new HashMap<String, EbRegistration>();
 
@@ -62,7 +63,7 @@ public class WgtEditForces extends Composite implements ClickListener, ChangeLis
     m_lstReg.addChangeListener( this );
     m_lstReg.setVisibleItemCount( 10 );
     vpanel.add( m_lstReg );
-    m_btnNewReg.addClickListener( this );
+    m_btnNewReg.addClickHandler( this );
     vpanel.add( m_btnNewReg );
 
     HorizontalPanel panel = new HorizontalPanel();
@@ -73,11 +74,12 @@ public class WgtEditForces extends Composite implements ClickListener, ChangeLis
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnNewReg )
+    if( p_event.getSource() == m_btnNewReg )
     {
       EbGame game = ModelFmpMain.model().getGame();
 

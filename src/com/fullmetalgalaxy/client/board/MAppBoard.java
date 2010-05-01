@@ -34,14 +34,16 @@ import com.fullmetalgalaxy.client.WgtScroll;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowResizeListener;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class MAppBoard extends MApp implements WindowResizeListener
+
+public class MAppBoard extends MApp implements ResizeHandler
 {
   public static final String HISTORY_ID = "board";
 
@@ -70,7 +72,7 @@ public class MAppBoard extends MApp implements WindowResizeListener
     m_wgtScroll.setWidget( m_wgtBoard );
     ModelFmpMain.model().subscribeModelUpdateEvent( this );
     // Hook the window resize event, so that we can adjust the UI.
-    Window.addWindowResizeListener( this );
+    Window.addResizeHandler( this );
     initWidget( m_wgtScroll );
   }
 
@@ -83,7 +85,7 @@ public class MAppBoard extends MApp implements WindowResizeListener
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int, int)
    */
-  public void onWindowResized(int p_width, int p_height)
+  public void onResize(ResizeEvent event)
   {
     if( !isVisible() )
     {

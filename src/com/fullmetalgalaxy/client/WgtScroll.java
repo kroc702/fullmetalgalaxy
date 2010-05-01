@@ -29,8 +29,9 @@ package com.fullmetalgalaxy.client;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -47,7 +48,8 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class WgtScroll extends Composite implements MouseListener, SourcesScrollEvents,
-    EventPreview
+
+    NativePreviewHandler
 {
   private Widget m_contentWidget = new AbsolutePanel();
   // private
@@ -265,26 +267,28 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.EventPreview#onEventPreview(com.google.gwt.user.client.Event)
+   * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
    */
-  public boolean onEventPreview(Event p_event)
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
-    if( DOM.eventGetType( p_event ) == Event.ONKEYDOWN )
+    if( p_event.getTypeInt() == Event.ONKEYDOWN )
     {
       // start scrolling ?
-      return onKeyDown( DOM.eventGetKeyCode( p_event ) );
+      onKeyDown( p_event.getNativeEvent().getKeyCode() );
+      return;
     }
-    if( DOM.eventGetType( p_event ) == Event.ONKEYUP )
+    if( p_event.getTypeInt() == Event.ONKEYUP )
     {
       // stop scrolling ?
-      return onKeyUp( DOM.eventGetKeyCode( p_event ) );
+      onKeyUp( p_event.getNativeEvent().getKeyCode() );
+      return;
     }
-    if( (DOM.eventGetType( p_event ) == Event.ONMOUSEUP) && (m_cancelMouseUpEvent) )
+    if( (p_event.getTypeInt() == Event.ONMOUSEUP) && (m_cancelMouseUpEvent) )
     {
       // cancel event
-      return false;
+      return;
     }
-    return true;
   }
 
 
@@ -309,6 +313,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
 
   private Timer m_keyDraggingTimer = new Timer()
   {
+    @Override
     public void run()
     {
       if( (m_keyDragingX == 0) && (m_keyDragingY == 0) )

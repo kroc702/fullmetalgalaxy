@@ -30,25 +30,27 @@ import java.util.Map;
 
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener, HistoryListener,
-    SourcesPreviewEvents, EventPreview
+
+public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, HistoryListener,
+    SourcesPreviewEvents, NativePreviewHandler
 {
   protected PopupPanel m_loadingPanel = new PopupPanel( false, true );
   protected int m_isLoading = 0;
@@ -81,8 +83,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
 
     // Hook the preview event.
     // no other element should hook this event as only one can receive it.
-    DOM.addEventPreview( this );
-
+    Event.addNativePreviewHandler( this );
 
     // Add history listener
     History.addHistoryListener( this );
@@ -102,7 +103,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.SourcesPreviewEvents#addPreviewListener(com.google.gwt.user.client.EventPreview)
    */
-  public void addPreviewListener(EventPreview p_listener)
+  public void addPreviewListener(NativePreviewHandler p_listener)
   {
     m_previewListenerCollection.add( p_listener );
   }
@@ -110,7 +111,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.SourcesPreviewEvents#removePreviewListener(com.google.gwt.user.client.EventPreview)
    */
-  public void removePreviewListener(EventPreview p_listener)
+  public void removePreviewListener(NativePreviewHandler p_listener)
   {
     m_previewListenerCollection.remove( p_listener );
   }
@@ -118,12 +119,14 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.EventPreview#onEventPreview(com.google.gwt.user.client.Event)
+   * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
    */
-  public boolean onEventPreview(Event p_event)
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
-    return m_previewListenerCollection.fireEventPreview( p_event );
+    m_previewListenerCollection.fireEventPreview( p_event );
   }
+
 
   /**
    * 
@@ -146,7 +149,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickListener,
     // m_dockPanel.setHeight( "" + (p_height - 20) + "px" );
   }
 
-  public void onClick(Widget sender)
+  public void onClick(ClickEvent p_event)
   {
 
   }

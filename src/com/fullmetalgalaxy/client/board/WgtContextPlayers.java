@@ -37,20 +37,21 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtContextPlayers extends Composite implements ClickListener
+
+public class WgtContextPlayers extends Composite implements ClickHandler
 {
   private Panel m_playerPanel = new VerticalPanel();
   private Button m_btnChat = new Button( "chat" );
@@ -66,7 +67,7 @@ public class WgtContextPlayers extends Composite implements ClickListener
     super();
     assert p_dlgChat != null;
     m_dlgChat = p_dlgChat;
-    m_btnChat.addClickListener( this );
+    m_btnChat.addClickHandler( this );
     initWidget( m_playerPanel );
   }
 
@@ -193,11 +194,11 @@ public class WgtContextPlayers extends Composite implements ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnChat )
+    if( p_event.getSource() == m_btnChat )
     {
       m_dlgChat.center();
       m_dlgChat.show();

@@ -60,6 +60,7 @@ public class WgtIntBox extends WgtTextBox implements ChangeListener
     return Integer.parseInt( getText() );
   }
 
+  @Override
   public Object getObject()
   {
     return getNumber();

@@ -28,18 +28,19 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  * other actions
  */
-public class WgtEditExtra extends Composite implements ClickListener
+
+public class WgtEditExtra extends Composite implements ClickHandler
 {
   private VerticalPanel m_panel = new VerticalPanel();
   private Button m_btnDelete = new Button( "Detruire la partie" );
@@ -48,14 +49,15 @@ public class WgtEditExtra extends Composite implements ClickListener
   public WgtEditExtra()
   {
     m_panel.add( m_btnHistory );
-    m_btnHistory.addClickListener( this );
+    m_btnHistory.addClickHandler( this );
     m_panel.add( m_btnDelete );
-    m_btnDelete.addClickListener( this );
+    m_btnDelete.addClickHandler( this );
     initWidget( m_panel );
   }
 
   FmpCallback<Void> m_callback = new FmpCallback<Void>()
   {
+    @Override
     public void onSuccess(Void p_result)
     {
       super.onSuccess( p_result );
@@ -89,18 +91,19 @@ public class WgtEditExtra extends Composite implements ClickListener
   };
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnDelete )
+    if( p_event.getSource() == m_btnDelete )
     {
       if( Window.confirm( "Etes vous sur de vouloir détruire cette partie ?" ) )
       {
         Services.Util.getInstance().deleteGame( ModelFmpMain.model().getGame().getId(), m_callback );
       }
     }
-    else if( p_sender == m_btnHistory )
+    else if( p_event.getSource() == m_btnHistory )
     {
       Services.Util.getInstance().cancelGame( ModelFmpMain.model().getGame().getId(), m_callback );
     }

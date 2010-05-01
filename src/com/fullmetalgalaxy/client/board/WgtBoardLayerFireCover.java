@@ -27,7 +27,6 @@ package com.fullmetalgalaxy.client.board;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,9 +45,9 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 {
-  private HashMap m_fireCoverLayers = new HashMap();
+  private HashMap<EbRegistration, HTML> m_fireCoverLayers = new HashMap<EbRegistration, HTML>();
 
-  private Set m_validLayersSet = new HashSet();
+  private Set<EbRegistration> m_validLayersSet = new HashSet<EbRegistration>();
 
   /**
    * last update of the currently displayed fire cover
@@ -70,9 +69,8 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   public void displayFireCover(boolean p_isVisible)
   {
     EbGame game = ModelFmpMain.model().getGame();
-    for( Iterator it = game.getSetRegistration().iterator(); it.hasNext(); )
+    for( EbRegistration registration : game.getSetRegistration() )
     {
-      EbRegistration registration = (EbRegistration)it.next();
       displayFireCover( p_isVisible, registration );
     }
   }
@@ -116,6 +114,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#onModelChange()
    */
+  @Override
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
@@ -126,9 +125,9 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
       m_gameLastVersion = game.getVersion();
       // new game: clear all fire cover layer.
-      for( java.util.Iterator it = m_fireCoverLayers.values().iterator(); it.hasNext(); )
+      for( HTML html : m_fireCoverLayers.values() )
       {
-        remove( (HTML)it.next() );
+        remove( html );
       }
       m_fireCoverLayers.clear();
       m_validLayersSet.clear();
@@ -140,10 +139,9 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
       m_gameLastVersion = game.getVersion();
       // same game but somethings changed: redraw all visible layers.
       m_validLayersSet.clear();
-      for( java.util.Iterator it = m_fireCoverLayers.entrySet().iterator(); it.hasNext(); )
+      for( Map.Entry<EbRegistration, HTML> entry : m_fireCoverLayers.entrySet() )
       {
-        Map.Entry entry = (Map.Entry)it.next();
-        HTML layer = ((HTML)entry.getValue());
+        HTML layer = entry.getValue();
         if( layer.isVisible() )
         {
           layer.setHTML( getFireCoverHtml( (EbRegistration)entry.getKey() ) );
@@ -160,14 +158,14 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
     // redraw all visible layers.
     m_validLayersSet.clear();
-    for( java.util.Iterator it = m_fireCoverLayers.entrySet().iterator(); it.hasNext(); )
+    for( Map.Entry<EbRegistration, HTML> entry : m_fireCoverLayers.entrySet() )
     {
-      Map.Entry entry = (Map.Entry)it.next();
       HTML layer = ((HTML)entry.getValue());
       if( layer.isVisible() )
       {
@@ -184,9 +182,9 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
    */
   private boolean isAnyCoverVisible()
   {
-    for( java.util.Iterator it = m_fireCoverLayers.values().iterator(); it.hasNext(); )
+    for( HTML html : m_fireCoverLayers.values() )
     {
-      if( ((HTML)it.next()).isVisible() )
+      if( html.isVisible() )
       {
         return true;
       }

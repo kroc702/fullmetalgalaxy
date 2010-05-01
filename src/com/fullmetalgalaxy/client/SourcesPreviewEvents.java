@@ -25,7 +25,7 @@
  */
 package com.fullmetalgalaxy.client;
 
-import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 
 /**
  * @author Vincent Legendre
@@ -33,8 +33,8 @@ import com.google.gwt.user.client.EventPreview;
  */
 public interface SourcesPreviewEvents
 {
-  void addPreviewListener(EventPreview p_listener);
+  void addPreviewListener(NativePreviewHandler p_listener);
 
-  void removePreviewListener(EventPreview p_listener);
+  void removePreviewListener(NativePreviewHandler p_listener);
 
 }

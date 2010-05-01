@@ -25,20 +25,23 @@
  */
 package com.fullmetalgalaxy.client.board;
 
+
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class DlgConfirmWithMessage extends DialogBox implements ClickListener
+
+public class DlgConfirmWithMessage extends DialogBox implements ClickHandler
 {
   // UI
   private Button m_btnOk = new Button( "OK" );
@@ -54,8 +57,8 @@ public class DlgConfirmWithMessage extends DialogBox implements ClickListener
     // Set the dialog box's caption.
     setText( "You sure ?" );
 
-    m_btnOk.addClickListener( this );
-    m_btnCancel.addClickListener( this );
+    m_btnOk.addClickHandler( this );
+    m_btnCancel.addClickHandler( this );
 
     m_panel.add( new Label( p_question ) );
     m_panel.add( m_textArea );
@@ -69,15 +72,15 @@ public class DlgConfirmWithMessage extends DialogBox implements ClickListener
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnOk )
+    if( p_event.getSource() == m_btnOk )
     {
 
     }
-    else if( p_sender == m_btnCancel )
+    else if( p_event.getSource() == m_btnCancel )
     {
       this.hide();
       this.removeFromParent();

@@ -71,15 +71,17 @@ body {
 .icon-gamelisttab img.icon {
 	height:136px;
 	background-image: url(/images/css/tab_icons.png);
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 	-moz-opacity:0.5;
 	-opacity:0.5;
 	opacity: 0.5;
 }
 
 .icon-gamelisttab:hover img.icon {
--moz-opacity:1;
--opacity:1;
-opacity: 1;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+	-moz-opacity:1;
+	-opacity:1;
+	opacity: 1;
 }
 
 .icon-gamelisttab img.text {

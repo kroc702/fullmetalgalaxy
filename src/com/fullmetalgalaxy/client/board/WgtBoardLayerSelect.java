@@ -68,6 +68,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#onModelChange()
    */
+  @Override
   public void onModelChange(boolean p_forceRedraw)
   {
     // TODO Auto-generated method stub
@@ -82,6 +83,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );

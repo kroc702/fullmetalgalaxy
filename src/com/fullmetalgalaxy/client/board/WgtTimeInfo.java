@@ -204,6 +204,7 @@ public class WgtTimeInfo extends WgtView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.WgtView#notifyHmiUpdate()
    */
+  @Override
   public void notifyHmiUpdate()
   {
     redraw();
@@ -213,6 +214,7 @@ public class WgtTimeInfo extends WgtView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     redraw();

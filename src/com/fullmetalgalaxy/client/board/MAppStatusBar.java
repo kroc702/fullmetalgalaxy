@@ -84,6 +84,7 @@ public class MAppStatusBar extends MApp
     initWidget( m_panel );
   }
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
@@ -103,6 +104,7 @@ public class MAppStatusBar extends MApp
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MApp#show(com.fullmetalgalaxy.client.HistoryState)
    */
+  @Override
   public void show(HistoryState p_state)
   {
     super.show( p_state );

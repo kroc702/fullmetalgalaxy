@@ -39,11 +39,20 @@ import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,7 +60,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtBoard extends FocusPanel implements MouseListener, ScrollListener
+public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHandler,
+    MouseUpHandler, MouseOverHandler, MouseMoveHandler, MouseOutHandler
 {
   AbsolutePanel m_panel = new AbsolutePanel();
 
@@ -83,7 +93,11 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
     // m_panel.setSize( "100%", "100%" );
     // setSize( "100%", "100%" );
     setWidget( m_panel );
-    addMouseListener( this );
+    addMouseDownHandler( this );
+    addMouseMoveHandler( this );
+    addMouseOutHandler( this );
+    addMouseOverHandler( this );
+    addMouseUpHandler( this );
   }
 
   private void addLayer(BoardLayer p_layer)
@@ -148,7 +162,8 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  public void onMouseDown(Widget p_sender, int p_x, int p_y)
+  @Override
+  public void onMouseDown(MouseDownEvent p_event)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
   }
@@ -157,7 +172,8 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
    */
-  public void onMouseEnter(Widget p_sender)
+  @Override
+  public void onMouseOver(MouseOverEvent event)
   {
     m_layerSelect.setHexagonHightVisible( true );
   }
@@ -166,7 +182,8 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
    */
-  public void onMouseLeave(Widget p_sender)
+  @Override
+  public void onMouseOut(MouseOutEvent p_event)
   {
     m_layerSelect.setHexagonHightVisible( false );
   }
@@ -176,10 +193,11 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  public void onMouseMove(Widget p_sender, int p_x, int p_y)
+  @Override
+  public void onMouseMove(MouseMoveEvent p_event)
   {
-    AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair( p_x,
-        p_y ), getZoom() );
+    AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair(
+        p_event.getX(), p_event.getY() ), getZoom() );
     if( (position.getX() != m_hexagonHightlightPosition.getX())
         || (position.getY() != m_hexagonHightlightPosition.getY()) )
     {
@@ -191,10 +209,12 @@ public class WgtBoard extends FocusPanel implements MouseListener, ScrollListene
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  public void onMouseUp(Widget p_sender, int p_x, int p_y)
+  @Override
+  public void onMouseUp(MouseUpEvent p_event)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
-    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_x, p_y ) );
+    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_event.getX(), p_event
+        .getY() ) );
     // EbActionPlay action = ModelFmpMain.model().getAction();
     // ActionPlayBuilder actionBuilder =
     // ModelFmpMain.model().getActionBuilder();

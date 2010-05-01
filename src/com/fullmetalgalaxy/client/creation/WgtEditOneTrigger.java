@@ -31,9 +31,10 @@ import com.fullmetalgalaxy.model.persist.triggers.actions.ActionClass;
 import com.fullmetalgalaxy.model.persist.triggers.actions.AnAction;
 import com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition;
 import com.fullmetalgalaxy.model.persist.triggers.conditions.ConditionClass;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -43,13 +44,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtEditOneTrigger extends Composite implements ClickListener, ChangeListener
+
+public class WgtEditOneTrigger extends Composite implements ClickHandler, ChangeListener
 {
   // UI
   private ListBox m_lstConditions = new ListBox();
   private ListBox m_lstActions = new ListBox();
-  private ListBox m_lstConditionsClass = new ListBox();
-  private ListBox m_lstActionsClass = new ListBox();
+  private ListBox m_lstConditionsClass = new ListBox( false );
+  private ListBox m_lstActionsClass = new ListBox( false );
   private Button m_btnNewAction = new Button( "Nouvelle Action" );
   private Button m_btnNewCondition = new Button( "Nouvelle Condition" );
 
@@ -66,7 +68,6 @@ public class WgtEditOneTrigger extends Composite implements ClickListener, Chang
     m_lstConditions.setVisibleItemCount( 10 );
     vpanel.add( m_lstConditions );
 
-    m_lstConditionsClass.setMultipleSelect( false );
     m_lstConditionsClass.setVisibleItemCount( 1 );
     for( ConditionClass conditionClass : ConditionClass.values() )
     {
@@ -74,13 +75,12 @@ public class WgtEditOneTrigger extends Composite implements ClickListener, Chang
     }
     vpanel.add( m_lstConditionsClass );
 
-    m_btnNewCondition.addClickListener( this );
+    m_btnNewCondition.addClickHandler( this );
     vpanel.add( m_btnNewCondition );
     m_lstActions.addChangeListener( this );
     m_lstActions.setVisibleItemCount( 10 );
     vpanel.add( m_lstActions );
 
-    m_lstActionsClass.setMultipleSelect( false );
     m_lstActionsClass.setVisibleItemCount( 1 );
     for( ActionClass actionClass : ActionClass.values() )
     {
@@ -88,22 +88,23 @@ public class WgtEditOneTrigger extends Composite implements ClickListener, Chang
     }
     vpanel.add( m_lstActionsClass );
 
-    m_btnNewAction.addClickListener( this );
+    m_btnNewAction.addClickHandler( this );
     vpanel.add( m_btnNewAction );
 
     initWidget( vpanel );
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  @Override
+  public void onClick(ClickEvent p_event)
   {
     if( getTrigger() == null )
     {
       return;
     }
-    if( p_sender == m_btnNewCondition )
+    if( p_event.getSource() == m_btnNewCondition )
     {
       AnCondition condition = ConditionClass.valueOf(
           m_lstConditionsClass.getItemText( m_lstConditionsClass.getSelectedIndex() ) )
@@ -111,7 +112,7 @@ public class WgtEditOneTrigger extends Composite implements ClickListener, Chang
       getTrigger().getConditions().add( condition );
       refreshConditions();
     }
-    else if( p_sender == m_btnNewAction )
+    else if( p_event.getSource() == m_btnNewAction )
     {
       AnAction action = ActionClass.valueOf(
           m_lstActionsClass.getItemText( m_lstActionsClass.getSelectedIndex() ) ).newAction();

@@ -27,19 +27,20 @@ package com.fullmetalgalaxy.client.board;
 
 
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class DlgMessageEvent extends DialogBox implements ClickListener
+
+public class DlgMessageEvent extends DialogBox implements ClickHandler
 {
   private VerticalPanel m_panel = new VerticalPanel();
   private Button m_btnOk = new Button( "OK" );
@@ -66,18 +67,18 @@ public class DlgMessageEvent extends DialogBox implements ClickListener
       }
       setText( m_message.getTitle() );
     }
-    m_btnOk.addClickListener( this );
+    m_btnOk.addClickHandler( this );
     m_panel.add( m_btnOk );
     setWidget( m_panel );
   }
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnOk )
+    if( p_event.getSource() == m_btnOk )
     {
       hide();
     }

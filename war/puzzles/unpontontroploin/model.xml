@@ -112,7 +112,7 @@
 		<com.fullmetalgalaxy.model.persist.EbToken>
 
 			<m__id>6</m__id>
-			<m__type>Ore</m__type>
+			<m__type>Turret</m__type>
 			<m__color>128</m__color>
 			<m__location>Board</m__location>
 			<m__position>

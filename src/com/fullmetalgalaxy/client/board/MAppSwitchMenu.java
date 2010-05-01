@@ -29,20 +29,19 @@ package com.fullmetalgalaxy.client.board;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MApp;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
+public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewHandler
 {
   public static final String HISTORY_ID = "switch";
 
@@ -56,7 +55,7 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
   public MAppSwitchMenu()
   {
     super();
-    m_button.addClickListener( this );
+    m_button.addClickHandler( this );
     m_button.setSize( "7px", "100%" );
 
     initWidget( m_button );
@@ -65,6 +64,7 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
   }
 
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
@@ -73,6 +73,7 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MApp#hide()
    */
+  @Override
   public void hide()
   {
     super.hide();
@@ -86,6 +87,7 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MApp#show(com.fullmetalgalaxy.client.HistoryState)
    */
+  @Override
   public void show(HistoryState p_state)
   {
     super.show( p_state );
@@ -98,25 +100,26 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.EventPreview#onEventPreview(com.google.gwt.user.client.Event)
    */
-  public boolean onEventPreview(Event p_event)
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
-    if( (DOM.eventGetType( p_event ) == Event.ONKEYPRESS) && (DOM.eventGetCtrlKey( p_event )) )
+    if( (p_event.getTypeInt() == Event.ONKEYPRESS) && (p_event.getNativeEvent().getCtrlKey()) )
     {
-      if( DOM.eventGetKeyCode( p_event ) == 'm' || DOM.eventGetKeyCode( p_event ) == 'M' )
+      if( p_event.getNativeEvent().getKeyCode() == 'm'
+          || p_event.getNativeEvent().getKeyCode() == 'M' )
       {
-        onClick( m_button );
+        onClick( null );
         // cancel event
-        return false;
+        return;
       }
     }
-    return true;
   }
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
     if( m_isMenuVisible )
     {
@@ -150,12 +153,5 @@ public class MAppSwitchMenu extends MApp implements ClickListener, EventPreview
     m_isMenuVisible = false;
   }
 
-  private Timer m_hideTimer = new Timer()
-  {
-    public void run()
-    {
-      hideMenu();
-    }
-  };
 
 }

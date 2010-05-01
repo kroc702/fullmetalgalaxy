@@ -34,19 +34,20 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Kroc
  *
  */
-public class DlgJoinGame extends DialogBox implements ClickListener
+
+public class DlgJoinGame extends DialogBox implements ClickHandler
 {
   // UI
   private Map<Image, Integer> m_icons = new HashMap<Image, Integer>();
@@ -65,7 +66,7 @@ public class DlgJoinGame extends DialogBox implements ClickListener
     // Set the dialog box's caption.
     setText( "Choisissez votre couleur" );
 
-    m_btnCancel.addClickListener( this );
+    m_btnCancel.addClickHandler( this );
 
     // configure color selector
     Set<EnuColor> freeColors = null;
@@ -84,7 +85,7 @@ public class DlgJoinGame extends DialogBox implements ClickListener
       BoardIcons.icon64( color.getValue() ).applyTo( image );
       image.setTitle( Messages.getColorString( color.getValue() ) );
       image.addStyleName( "fmp-button" );
-      image.addClickListener( this );
+      image.addClickHandler( this );
       m_icons.put( image, color.getValue() );
       m_panel.add( image );
     }
@@ -96,17 +97,17 @@ public class DlgJoinGame extends DialogBox implements ClickListener
 
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  public void onClick(Widget p_sender)
+  public void onClick(ClickEvent p_event)
   {
-    if( p_sender == m_btnCancel )
+    if( p_event.getSource() == m_btnCancel )
     {
       this.hide();
       return;
     }
 
-    int color = m_icons.get( p_sender );
+    int color = m_icons.get( p_event.getSource() );
 
     EbGameJoin action = new EbGameJoin();
     action.setGame( ModelFmpMain.model().getGame() );
@@ -122,6 +123,7 @@ public class DlgJoinGame extends DialogBox implements ClickListener
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.PopupPanel#show()
    */
+  @Override
   public void show()
   {
     super.show();
