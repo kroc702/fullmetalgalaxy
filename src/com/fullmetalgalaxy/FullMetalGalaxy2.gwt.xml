@@ -25,10 +25,5 @@
   
   <!-- Specify the app Remote service for RPC.              -->
   <servlet class="com.fullmetalgalaxy.server.ServicesImpl" path="/Services"/>
-
-    <generate-with class="com.fullmetalgalaxy.formgen.BindedWgtGenerator">
-        <when-type-assignable class="com.fullmetalgalaxy.client.widget.BeanView"/>
-    </generate-with>
-    
-    
+  
 </module>

@@ -33,8 +33,8 @@ import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MiniApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.widget.BindedWgtGameInfo;
 import com.fullmetalgalaxy.client.widget.WgtBean;
-import com.fullmetalgalaxy.client.widget.WgtGameInfo;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.LandType;
@@ -80,10 +80,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   // UI
   private FlowPanel m_panel = new FlowPanel();
   private TabPanel m_tabPanel = new TabPanel();
-  // private WgtBean m_simpleForm = new BindedWgtGameInfo(
-  // ModelFmpMain.model().getGame() );
-  private WgtBean m_simpleForm = (WgtGameInfo)GWT.create( WgtGameInfo.class );
-  // private WgtForm m_form = (WgtForm)GWT.create( AnGame.class );
+  private WgtBean m_simpleForm = new BindedWgtGameInfo();
   private WgtEditLand m_wgtEditLand = new WgtEditLand();
   private WgtEditTokens m_wgtEditTokens = new WgtEditTokens();
   private WgtEditForces m_wgtEditForces = new WgtEditForces();
