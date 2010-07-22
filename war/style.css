@@ -53,6 +53,10 @@ body {
   color: white;
 }
 
+#mymenu .bloc a {
+  color: black;
+}
+
 #mymenu a:hover {
   text-decoration:underline ;
 }
