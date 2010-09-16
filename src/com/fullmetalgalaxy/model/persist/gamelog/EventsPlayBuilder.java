@@ -699,6 +699,11 @@ public class EventsPlayBuilder implements GameEventStack
             // then unload token
             userTokenClick( actionConstruct.getToken( m_game ) );
             exec();
+            if( token.getType() == TokenType.Turret )
+            {
+              token = getGame().getToken( p_position, TokenType.Freighter );
+              assert token != null;
+            }
             // then move constructed token
             if( token.isNeighbor( ((EbEvtUnLoad)getSelectedAction()).getTokenCarrier( m_game ) ) )
             {
@@ -727,11 +732,6 @@ public class EventsPlayBuilder implements GameEventStack
                 setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
                 moveSelectedTo( closeLoadPosition );
                 setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
-              }
-              if( token.getType() == TokenType.Turret )
-              {
-                token = getGame().getToken( p_position, TokenType.Freighter );
-                assert token != null;
               }
               actionLoadSelected( token, p_position );
               isUpdated = EventBuilderMsg.Updated;

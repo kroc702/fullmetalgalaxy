@@ -4,6 +4,9 @@ A verifier:
 - j'ai pu décharger d'un crabe & d'une barge [tide deactive] un char sur un récif dans l'eau.
 - après le décollage de tout les astronefs d'un joueur, il faut passer son tour
 - on peut tirer avec le second destructeur neutralisé
+- on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
+- on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
+- pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
 
 TODO
 ====
@@ -26,11 +29,7 @@ TODO
 bugs :
 ======
 - annulation de l'action construction
-- on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
-- lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
-- on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
-- pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
 - si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
 - On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
 - On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
@@ -52,6 +51,7 @@ bugs :
 - si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
 - au changement de marrée, on ne vérifie pas si tous les pontons sont bien relié a la terre.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
+- lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
  
 Support des comptes :
 =====================
