@@ -367,14 +367,17 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnCancel );
       }
 
-      if( (ModelFmpMain.model().getGame().getTokenFireLength( action.getSelectedToken() ) > 0)
+      if( ((ModelFmpMain.model().getGame().getTokenFireLength( action.getSelectedToken() ) > 0) 
+          || (action.getSelectedToken().getType() == TokenType.Freighter && ModelFmpMain.model().getGame().getToken( action.getSelectedPosition(), TokenType.Turret ) != null))
           && (ModelFmpMain.model().getMyRegistration().getEnuColor().isColored( action
               .getSelectedToken().getColor() )) )
       {
         try
         {
           action.exec();
-          if( action.getSelectedToken().getBulletCount() > 0 )
+          if( (action.getSelectedToken().getBulletCount() > 0 
+              && !action.getSelectedToken().isFireDisabled())
+           || (action.getSelectedToken().getType() == TokenType.Freighter ) )
           {
             m_panel.add( m_btnFire );
           }

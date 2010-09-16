@@ -150,11 +150,11 @@ public class EbEvtFire extends AnEventPlay
       throw new RpcFmpException( getTokenDestroyer2(p_game) + " ne peu pas tirer sur " + getTokenTarget(p_game) );
     }
 
-    if( getTokenDestroyer1(p_game).getBulletCount() <= 0 )
+    if( getTokenDestroyer1(p_game).getBulletCount() <= 0 && getTokenDestroyer1(p_game).getType() != TokenType.Turret )
     {
       throw new RpcFmpException( getTokenDestroyer1(p_game) + " n'a plus de munitions" );
     }
-    if( getTokenDestroyer2(p_game).getBulletCount() <= 0 )
+    if( getTokenDestroyer2(p_game).getBulletCount() <= 0 && getTokenDestroyer2(p_game).getType() != TokenType.Turret  )
     {
       throw new RpcFmpException( getTokenDestroyer2(p_game) + " n'a plus de munitions" );
     }

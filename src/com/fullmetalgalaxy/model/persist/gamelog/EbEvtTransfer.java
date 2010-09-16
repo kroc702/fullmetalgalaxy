@@ -26,8 +26,10 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -143,6 +145,13 @@ public class EbEvtTransfer extends AnEventPlay
       throw new RpcFmpException( RpcFmpException.CantLoad,
           getNewTokenCarrier(p_game).getType().ordinal(), getToken(p_game).getType().ordinal() );
     }
+    // check that heap don't goes on mountain
+    if(getToken(p_game).getType() == TokenType.Heap && p_game.getLand( getNewTokenCarrier( p_game ).getPosition() ) == LandType.Montain )
+    {
+      throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
+          p_game.getLand( getNewTokenCarrier( p_game ).getPosition() ).ordinal() );
+    }
+    // check tide/fire disable
     if( !p_game.isTokenTideActive( getNewTokenCarrier(p_game) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableTide, getTokenCarrier(p_game).getType()
