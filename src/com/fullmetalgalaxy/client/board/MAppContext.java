@@ -58,6 +58,7 @@ public final class MAppContext extends MApp implements NativePreviewHandler
   private HorizontalPanel m_panelExtra = new HorizontalPanel();
   private WgtContextMinimap m_wgtMinimap = new WgtContextMinimap();
   private WgtContextToken m_wgtToken = new WgtContextToken();
+  private WgtContextTimeMode m_wgtTimeMode = new WgtContextTimeMode();
   private WgtContextPlayers m_wgtPlayers = null;
 
   private DlgChatInput m_dlgChat = new DlgChatInput();
@@ -201,33 +202,33 @@ public final class MAppContext extends MApp implements NativePreviewHandler
     if( p_state.containsKey( MAppBoard.HISTORY_ID ) )
     {
       AppMain.instance().addPreviewListener( this );
+      m_panelMiniMap.remove( m_wgtMinimap );
+      m_panelMiniMap.remove( m_wgtPlayers );
+      m_panelMiniMap.remove( m_wgtToken );
+      m_panelMiniMap.remove( m_wgtTimeMode );
       if( actionBuilder.isBoardTokenSelected() )
       {
         // display current selected token
-        m_panelMiniMap.remove( m_wgtMinimap );
-        m_panelMiniMap.remove( m_wgtPlayers );
         m_panelMiniMap.add( m_wgtToken );
         m_wgtToken.redraw();
       }
+      else if( ModelFmpMain.model().isTimeLineMode() )
+      {
+        // display time line to navigate in past actions
+        m_panelMiniMap.add( m_wgtTimeMode );
+        m_wgtTimeMode.redraw();
+      }
+      else if( ModelFmpMain.model().isMiniMapDisplayed() )
+      {
+        // display minimap
+        m_panelMiniMap.add( m_wgtMinimap );
+        m_wgtMinimap.redraw();
+      }
       else
       {
-        // nothing special to display
-        if( ModelFmpMain.model().isMiniMapDisplayed() )
-        {
-          // display minimap
-          m_panelMiniMap.remove( m_wgtToken );
-          m_panelMiniMap.remove( m_wgtPlayers );
-          m_panelMiniMap.add( m_wgtMinimap );
-          m_wgtMinimap.redraw();
-        }
-        else
-        {
-          // display players connections informations
-          m_panelMiniMap.remove( m_wgtToken );
-          m_panelMiniMap.remove( m_wgtMinimap );
-          m_panelMiniMap.add( m_wgtPlayers );
-          m_wgtPlayers.redraw();
-        }
+        // display players connections informations
+        m_panelMiniMap.add( m_wgtPlayers );
+        m_wgtPlayers.redraw();
       }
     }
     else

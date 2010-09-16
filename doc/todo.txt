@@ -7,10 +7,8 @@ A verifier:
 
 TODO
 ====
-- en tour par tour sur plusieurs jours, autoriser l'annulation de son tour.
-- pouvoir rejouer les coups précédents
-
-- retrait de la page board.jsp
+- utiliser le clic droit pour les longs déplacements, annuler l'action sinon
+- ne pas sélectioner le pion qui viens de finir une action
 
 - gestion du débarquement gratuit. (en t/t uniquement ?)
 - ajout d'une variante respect strict des règles :
@@ -24,10 +22,10 @@ TODO
 - ajouter un tache cron pour faire évoluer les parties non regardé.
 - appeler updateEbGame plus régulièrement et même si aucune action n'est executé
 - extraires toute les chaines dans les fichiers txt et corriger les fautes
-- passer a gwt 2
 
 bugs :
 ======
+- annulation de l'action construction
 - on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
@@ -53,6 +51,7 @@ bugs :
 - si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
 - si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
 - au changement de marrée, on ne vérifie pas si tous les pontons sont bien relié a la terre.
+- Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
  
 Support des comptes :
 =====================

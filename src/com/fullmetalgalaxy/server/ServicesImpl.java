@@ -49,12 +49,14 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.google.appengine.repackaged.net.sourceforge.yamlbeans.parser.EventType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -385,14 +387,26 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       }
     }*/
 
-    updateGame( game );
-    p_action.setLastUpdate( ServerUtil.currentDate() );
-    game.addEvent( p_action );
-
-    // execute action
-    p_action.check( game );
-    p_action.exec( game );
-
+    
+    if(p_action.getType() == GameLogType.EvtCancel)
+    {
+      // cancel action doesn't work in exact same way as other event
+      p_action.setLastUpdate( ServerUtil.currentDate() );
+      ((EbEvtCancel)p_action).execCancel( game );
+      
+      updateGame( game );
+    }
+    else
+    {
+      updateGame( game );
+      p_action.setLastUpdate( ServerUtil.currentDate() );
+      game.addEvent( p_action );
+  
+      // execute action
+      p_action.check( game );
+      p_action.exec( game );
+    }
+    
     // save all events. This action is required as game->events relation isn't
     // a real bidirectional relation (because of event_index column)
     if( p_action.getType().isEventUser() )

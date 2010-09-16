@@ -9,8 +9,11 @@ dependences directes:
 
 environement de dev:
 ====================
-SVN
-eclipse + ant + subclipse + plugin google
+eclipse + ant + JST UI (ou bien amateras editor)
+	MercurialEclipse: http://cbes.javaforge.com/update
+	Plugin Google: http://dl.google.com/eclipse/plugin/3.6
+
+plugin browser: http://gwt-dev-plugin-missing.appspot.com/
 
 
 generation des images statiques:

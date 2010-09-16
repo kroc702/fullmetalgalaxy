@@ -50,7 +50,8 @@ public enum GameLogType
   EvtTimeStep,
   EvtTransfer,
   EvtUnLoad,
- GameJoin;
+  GameJoin,
+  EvtCancel;
 
   public boolean isEventUser()
   {
@@ -88,49 +89,6 @@ public enum GameLogType
     return false;
   }
 
-  public AnEvent newAnEvent()
-  {
-    switch( this )
-    {
-    case AdminTimePause:
-      return new EbAdminTimePause();
-    case AdminTimePlay:
-      return new EbAdminTimePlay();
-    case EvtConstruct:
-      return new EbEvtConstruct();
-    case EvtControl:
-      return new EbEvtControl();
-    case EvtControlFreighter:
-      return new EbEvtControlFreighter();
-    case EvtFire:
-      return new EbEvtFire();
-    case EvtLand:
-      return new EbEvtLand();
-    case EvtLoad:
-      return new EbEvtLoad();
-    case EvtMessage:
-      return new EbEvtMessage();
-    case EvtMove:
-      return new EbEvtMove();
-    case EvtPlayerTurn:
-      return new EbEvtPlayerTurn();
-    case EvtRepair:
-      return new EbEvtRepair();
-    case EvtTakeOff:
-      return new EbEvtTakeOff();
-    case EvtTide:
-      return new EbEvtTide();
-    case EvtTimeStep:
-      return new EbEvtTimeStep();
-    case EvtTransfer:
-      return new EbEvtTransfer();
-    case EvtUnLoad:
-      return new EbEvtUnLoad();
-    case GameJoin:
-      return new EbGameJoin();
-    }
-    return null;
-  }
 
 
 }

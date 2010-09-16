@@ -58,6 +58,7 @@ public class EbEvtTide extends AnEvent
 
   private void init()
   {
+    setAuto( true );
   }
 
   @Override

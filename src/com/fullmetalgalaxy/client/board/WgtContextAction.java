@@ -74,6 +74,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
   FocusPanel m_pnlRegister = null;
   Image m_btnInfo = Icons.s_instance.info32().createImage();
   Image m_btnTakeOff = Icons.s_instance.takeOff32().createImage();
+  Image m_btnTimeMode = Icons.s_instance.time32().createImage();
   Image m_btnMiniMap = Icons.s_instance.map32().createImage();
   Image m_btnPlayer = Icons.s_instance.player32().createImage();
   Image m_iconAction = Icons.s_instance.action16().createImage();
@@ -134,6 +135,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnInfo.addClickHandler( this );
     m_btnInfo.setTitle( "Information detailles sur cette partie" );
     m_btnInfo.setStyleName( "fmp-button" );
+    m_btnTimeMode.addClickHandler( this );
+    m_btnTimeMode.setTitle( "Annuler ou voir les coups precedents" );
+    m_btnTimeMode.setStyleName( "fmp-button" );
     m_btnMiniMap.addClickHandler( this );
     m_btnMiniMap.setTitle( "Affichage de la minimap" );
     m_btnMiniMap.setStyleName( "fmp-button" );
@@ -227,6 +231,10 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_dlgGameDetail.center();
         m_dlgGameDetail.show();
       }
+      else if( sender == m_btnTimeMode )
+      {
+        ModelFmpMain.model().setTimeLineMode( !ModelFmpMain.model().isTimeLineMode() );
+      }
       else if( sender == m_btnRegister || sender == m_pnlRegister )
       {
         DlgJoinGame dlg = new DlgJoinGame();
@@ -297,30 +305,33 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnZoomOut );
       }
       m_panel.add( m_btnInfo );
-      if( ModelFmpMain.model().isMiniMapDisplayed() )
+      m_panel.add( m_btnTimeMode );
+      if( !ModelFmpMain.model().isTimeLineMode() )
       {
-        if( model.getGame().getGameType() == GameType.MultiPlayer )
+        if( ModelFmpMain.model().isMiniMapDisplayed() )
         {
-          m_panel.add( m_btnPlayer );
+          if( model.getGame().getGameType() == GameType.MultiPlayer )
+          {
+            m_panel.add( m_btnPlayer );
+          }
         }
-      }
-      else
-      {
-        m_panel.add( m_btnMiniMap );
-      }
-      if( (!ModelFmpMain.model().getGame().isAsynchron())
-          && (ModelFmpMain.model().getMyRegistration() != null)
-          && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == ModelFmpMain.model()
-              .getMyRegistration()) )
-      {
-        m_panel.add( m_btnEndTurn );
-      }
-      if( ModelFmpMain.model().isLogged()
-          && ModelFmpMain.model().getMyRegistration() == null
-          && !ModelFmpMain.model().getGame().isStarted() )
-      {
-        m_panel.add( m_btnRegister );
-        MAppMessagesStack.s_instance.showMessage( m_pnlRegister );
+        else
+        {
+          m_panel.add( m_btnMiniMap );
+        }
+        if( (!ModelFmpMain.model().getGame().isAsynchron())
+            && (ModelFmpMain.model().getMyRegistration() != null)
+            && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == ModelFmpMain
+                .model().getMyRegistration()) )
+        {
+          m_panel.add( m_btnEndTurn );
+        }
+        if( ModelFmpMain.model().isLogged() && ModelFmpMain.model().getMyRegistration() == null
+            && !ModelFmpMain.model().getGame().isStarted() )
+        {
+          m_panel.add( m_btnRegister );
+          MAppMessagesStack.s_instance.showMessage( m_pnlRegister );
+        }
       }
     }
     else if( ModelFmpMain.model().getMyRegistration() == null )

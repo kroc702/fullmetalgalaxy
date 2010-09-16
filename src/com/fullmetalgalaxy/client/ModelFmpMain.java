@@ -49,12 +49,15 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
@@ -115,6 +118,17 @@ public class ModelFmpMain implements SourceModelUpdateEvents
    */
   private boolean m_isMiniMapDisplayed = true;
 
+  /**
+   * if set, user can't do anything else:
+   * - navigate in past actions
+   * - exiting this mode
+   * - if game is puzzle or standard (turn by turn, no time limit) validate to cancel some actions
+   */
+  private boolean m_isTimeLineMode = false;
+  private int m_currentActionIndex = 0;
+  /** game currentTimeStep at the moment we start time line mode */
+  private int m_lastTurnPlayed = 0;
+  
   private boolean m_isModelUpdatePending = false;
 
 
@@ -384,14 +398,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       m_successiveRpcErrorCount = 0;
       m_isActionPending = false;
       AppMain.instance().stopLoading();
-      try
-      {
-        getActionBuilder().clear();
-      } catch( RpcFmpException e )
-      {
-        RpcUtil.logError( "error ", e );
-        Window.alert( "unexpected error : " + e );
-      }
+      getActionBuilder().clear();
       m_callbackFmpUpdate.onSuccess( p_result );
     }
 
@@ -472,7 +479,14 @@ public class ModelFmpMain implements SourceModelUpdateEvents
         List<AnEvent> events = p_result.getGameEvents();
         for( AnEvent event : events )
         {
-          getGame().addEvent( event );
+          if( event.getType() == GameLogType.EvtCancel )
+          {
+            ((EbEvtCancel)event).execCancel( getGame() );
+          }
+          else
+          {
+            getGame().addEvent( event );
+          }
           isActive = true;
         }
         for( AnEvent event : events )
@@ -900,6 +914,129 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     fireModelUpdate();
   }
 
+  /**
+   * @return the isTimeLineMode
+   */
+  public boolean isTimeLineMode()
+  {
+    return m_isTimeLineMode;
+  }
+
+  /**
+   * @param p_isTimeLineMode the isTimeLineMode to set
+   */
+  public void setTimeLineMode(boolean p_isTimeLineMode)
+  {
+    getActionBuilder().clear();
+    m_isTimeLineMode = p_isTimeLineMode;
+    m_lastTurnPlayed = getGame().getCurrentTimeStep();
+    if( !p_isTimeLineMode )
+    {
+      timePlay( 99999 );
+    }
+    m_currentActionIndex = getGame().getLogs().size();
+    fireModelUpdate();
+  }
+
+  public void timeBack(int p_actionCount)
+  {
+    List<AnEvent> logs = getGame().getLogs();
+    while( (m_currentActionIndex > 0) && (p_actionCount > 0) )
+    {
+      m_currentActionIndex--;
+      AnEvent action = logs.get( m_currentActionIndex );
+      if( !(action instanceof EbAdmin) )
+      {
+        // unexec action
+        try
+        {
+          logs.get( m_currentActionIndex ).unexec( getGame() );
+        } catch( RpcFmpException e )
+        {
+          RpcUtil.logError( "error ", e );
+          Window.alert( "unexpected error : " + e );
+          fireModelUpdate();
+          return;
+        }
+        // don't count automatic action as one action to play
+        if( !action.isAuto() )
+        {
+          p_actionCount--;
+        }
+      }
+    }
+    fireModelUpdate();
+  }
+
+
+  public void timePlay(int p_actionCount)
+  {
+    List<AnEvent> logs = getGame().getLogs();
+    while( (m_currentActionIndex < logs.size()) && (p_actionCount > 0) )
+    {
+      AnEvent action = logs.get( m_currentActionIndex );
+      if( !(action instanceof EbAdmin) )
+      {
+        // exec action
+        try
+        {
+          action.exec( getGame() );
+        } catch( RpcFmpException e )
+        {
+          RpcUtil.logError( "error ", e );
+          Window.alert( "unexpected error : " + e );
+          return;
+        }
+        // don't count automatic action as one action to play
+        if( !action.isAuto() )
+        {
+          p_actionCount--;
+        }
+      }
+      m_currentActionIndex++;
+    }
+    fireModelUpdate();
+  }
+
+  public int getCurrentActionIndex()
+  {
+    return m_currentActionIndex;
+  }
+
+  /**
+   * User is allowed to cancel action if in puzzle or turn by turn on several day.
+   * He must also be in his own turn.
+   * @return true if user is allowed to cancel action up to 'getCurrentActionIndex()'
+   */
+  public boolean canCancelAction()
+  {
+    if( getGame().getGameType()==GameType.Puzzle )
+    {
+      return true;
+    }
+    if( getMyRegistration() == null )
+    {
+      return false;
+    }
+    if( getMyPseudo().equalsIgnoreCase( "admin" ) )
+    {
+      return true;
+    }
+    if( getGame().getConfigGameTime()!=ConfigGameTime.Standard )
+    {
+      return false;
+    }
+    if( m_lastTurnPlayed != getGame().getCurrentTimeStep() )
+    {
+      return false;
+    }
+    if( getMyRegistration() != getGame().getCurrentPlayerRegistration())
+    {
+      return false;
+    }
+    return true;
+  }
+  
   /**
    * @return the connectedPlayer
    */

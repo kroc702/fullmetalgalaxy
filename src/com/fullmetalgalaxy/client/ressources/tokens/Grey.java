@@ -161,12 +161,6 @@ public interface Grey extends ImageBundle, TokenImageBundle
   public AbstractImagePrototype tactic_weatherhen_se();
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/grey/strategy/freighter120-0001.png")
-  public AbstractImagePrototype strategy_freighter_sw();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/grey/strategy/freighter240-0001.png")
-  public AbstractImagePrototype strategy_freighter_se();
-
   @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/grey/strategy/turret0-0001.png")
   public AbstractImagePrototype strategy_turret_n();
 
