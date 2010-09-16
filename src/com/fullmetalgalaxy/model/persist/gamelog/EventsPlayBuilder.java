@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameType;
@@ -46,6 +47,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.google.gwt.user.client.Window;
 
 
 /**
@@ -80,12 +82,19 @@ public class EventsPlayBuilder implements GameEventStack
 
   }
 
-  public void clear() throws RpcFmpException
+  public void clear()
   {
     RpcUtil.logDebug( "clear action " );
     if( m_isExecuted )
     {
-      unexec();
+      try
+      {
+        unexec();
+      } catch( RpcFmpException e )
+      {
+        RpcUtil.logError( "error ", e );
+        Window.alert( "unexpected error : " + e );
+      }
     }
     m_actionList.clear();
     unselectToken();
@@ -384,9 +393,9 @@ public class EventsPlayBuilder implements GameEventStack
     }
 
     setLastUserClick( p_position );
-    if( getMyRegistration() == null )
+    if( getMyRegistration() == null || ModelFmpMain.model().isTimeLineMode() )
     {
-      // user isn't registred to this game
+      // user isn't registred to this game or is viewing past actions
       clear();
       isUpdated = EventBuilderMsg.Updated;
     }

@@ -86,6 +86,7 @@ public class EbActMessage extends AnAction
     if( !getMessage().trim().equals( "" ) )
     {
       EbEvtMessage msg = new EbEvtMessage();
+      msg.setAuto( true );
       msg.setGame( p_game );
       msg.setMessage( getMessage() );
       msg.setTitle( getTitle() );

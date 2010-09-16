@@ -206,6 +206,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     }
   }
 
+
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
@@ -213,6 +214,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   public void onMouseUp(MouseUpEvent p_event)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
+    p_event.preventDefault();
     AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_event.getX(), p_event
         .getY() ) );
     // EbActionPlay action = ModelFmpMain.model().getAction();
@@ -257,7 +259,6 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       Window.alert( ex.getMessage() );
       ModelFmpMain.model().getActionBuilder().cancel();
     }
-
   }
 
   protected AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition)

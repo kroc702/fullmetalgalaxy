@@ -605,6 +605,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       p_tokenToMove.setColor( p_tokenCarrier.getColor() );
     }
     // incFireCover( p_tokenToMove );
+    // this update is here only to refresh token display during time mode
+    updateLastTokenUpdate( null );
   }
 
   public void changeTokenColor(EbToken p_token, int p_newColor)
@@ -645,6 +647,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     getTokenIndexSet().setPosition( p_token, new AnBoardPosition( p_position ) );
     getBoardFireCover().incFireCover( p_token );
+    // this update is here only to refresh token display during time mode
+    updateLastTokenUpdate( null );
   }
 
   /**
@@ -668,6 +672,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     getTokenIndexSet().setPosition( p_token, p_location );
     getBoardFireCover().incFireCover( p_token );
+    // this update is here only to refresh token display during time mode
+    updateLastTokenUpdate( null );
   }
 
   /**

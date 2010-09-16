@@ -119,7 +119,15 @@ if(tab < 0 || tab > 3 )
 	<% if( tab == 0 && Auth.isUserLogged(request, response)) { %>
 		<center><a href="editgame.jsp"><big>Cr&eacute;er une nouvelle partie</big></a></center>
 	<% } %>
+	<br/><small>
+	<img src='/images/css/icon_pause.cache.png'/> : Partie en pause<br/>
+	<img src='/images/css/icon_tbt.cache.png'/> : Partie en mode tour par tour sans limite de temps<br/>
+	<img src='/images/css/icon_tbt.cache.png'/><img src='/images/css/icon_fast.cache.png'/> : Partie rapide en tour par tour (3 min pour jouer)<br/>
+	<img src='/images/css/icon_slow.cache.png'/> : Partie lente en mode asynchrone (25 jours)<br/>
+	<img src='/images/css/icon_fast.cache.png'/> : Partie rapide en mode asynchrone (1h20)<br/>
+	</small>
 <% } %>
+
 
 <%@include file="include/footer.jsp"%>
 </body>

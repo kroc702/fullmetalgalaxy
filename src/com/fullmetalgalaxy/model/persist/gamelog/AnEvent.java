@@ -51,6 +51,7 @@ public class AnEvent extends EbBase
 
   private Date m_lastUpdate = null;
 
+  // TODO is it really usefull now ?
   private GameLogType m_type = null;
 
   private ArrayList<Long> m_miscTokenIds = null;
@@ -117,58 +118,6 @@ public class AnEvent extends EbBase
     init();
   }
 
-  public AnEvent(AnEvent p_event)
-  {
-    super( p_event );
-    setAnEvent( p_event );
-  }
-
-  public void setAnEvent(AnEvent p_event)
-  {
-    assert p_event != null;
-    if( p_event.getId() != 0 && getId() == 0 )
-    {
-      setId( p_event.getId() );
-
-      // m_isPersistent = true;
-
-      // setKey( KeyFactory.createKey( p_event.getKey().getParent(), "AnEvent",
-      // p_event.getKey()
-      // .getId() ) );
-    }
-    setLastUpdate( p_event.getLastUpdate() );
-
-    m_type = p_event.getType();
-
-    m_miscTokenIds = p_event.getMiscTokenIds();
-    m_factoryIndex = p_event.getFactoryIndex();
-    m_newEbBaseList = p_event.getNewEbBaseList();
-    m_oldUpdate = p_event.getOldUpdate();
-    m_idGame = p_event.getIdGame();
-    m_oldTimeStepChange = p_event.getOldTimeStepChange();
-    m_oldTide = p_event.getOldTide();
-    m_oldTideChange = p_event.getOldTideChange();
-    m_nextTide = p_event.getNextTide();
-    m_message = p_event.getMessage();
-    m_title = p_event.getTitle();
-    m_accountId = p_event.getAccountId();
-    m_auto = p_event.isAuto();
-    m_remoteAddr = p_event.getRemoteAddr();
-    m_cost = p_event.getCost();
-    m_color = p_event.getColor();
-    m_newPosition = p_event.getNewPosition();
-    m_packedToken = p_event.getPackedToken();
-    m_packedTokenCarrier = p_event.getPackedTokenCarrier();
-    m_packedNewTokenCarrier = p_event.m_packedNewTokenCarrier;
-    m_oldPosition = p_event.getOldPosition();
-    m_backInOrbit = p_event.isBackInOrbit();
-    m_position = p_event.getPosition();
-    m_oldColor = p_event.getOldColor();
-    m_packedTokenDestroyer1 = p_event.m_packedTokenDestroyer1;
-    m_packedTokenDestroyer2 = p_event.m_packedTokenDestroyer2;
-    m_packedOldRegistration = p_event.m_packedOldRegistration;
-    m_constructType = p_event.getConstructType();
-  }
 
   @Override
   public boolean isTrancient()
@@ -242,7 +191,6 @@ public class AnEvent extends EbBase
    * we don't really need the original timestamp, but you can set it with 'setOldUpdate()'
    * @return last update minus one second
    */
-  // @Transient
   protected Date getOldUpdate()
   {
     if( m_oldUpdate != null )

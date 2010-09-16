@@ -47,7 +47,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class LocalGame
 {
   /**
-   * This method is called after a succesfull load of a local game.
+   * This method is called after a successful load of a local game.
    * @param callback
    */
   public static void loadGame(AsyncCallback<ModelFmpUpdate> callbackUpdates)

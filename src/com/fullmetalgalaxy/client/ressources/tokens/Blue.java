@@ -161,9 +161,6 @@ public interface Blue extends ImageBundle, TokenImageBundle
   public AbstractImagePrototype tactic_weatherhen_se();
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/blue/strategy/freighter240-0001.png")
-  public AbstractImagePrototype strategy_freighter_se();
-
   @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/blue/strategy/turret0-0001.png")
   public AbstractImagePrototype strategy_turret_n();
 

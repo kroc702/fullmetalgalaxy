@@ -188,8 +188,11 @@ public class BoardFireCover implements Serializable
 
   public void enableFireCover(EbToken p_token)
   {
-    assert m_fireCover != null;
     assert p_token.getLocation() == Location.Board;
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
+    }
     if( !p_token.isFireDisabled() )
     {
       // token isn't fire deactivated
@@ -339,8 +342,11 @@ public class BoardFireCover implements Serializable
 
   public void checkFireDisableFlag(EbToken p_token)
   {
-    assert m_fireCover != null;
     assert p_token.getLocation() == Location.Board;
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
+    }
     EnuColor color = m_game.getOpponentFireCover( p_token );
     if( p_token.isFireDisabled() && color.getValue() == EnuColor.None )
     {
@@ -354,8 +360,11 @@ public class BoardFireCover implements Serializable
 
   public void disableFireCover(EbToken p_token)
   {
-    assert m_fireCover != null;
     assert p_token.getLocation() == Location.Board;
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
+    }
     if( !p_token.isDestroyer() )
     {
       p_token.setFireDisabled( true );

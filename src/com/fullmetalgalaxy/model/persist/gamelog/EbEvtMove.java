@@ -79,7 +79,6 @@ public class EbEvtMove extends AnEventPlay
 
 
   @Override
-  // @Transient
   public AnBoardPosition getSelectedPosition(EbGame p_game)
   {
     return getOldPosition();
@@ -215,8 +214,6 @@ public class EbEvtMove extends AnEventPlay
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), getOldPosition() );
     getToken(p_game).decVersion();
-    // this update is here only to refresh token display
-    p_game.updateLastTokenUpdate( null );
   }
 
 }

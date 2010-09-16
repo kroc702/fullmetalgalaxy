@@ -144,6 +144,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       {
         // token isn't on board but have a widget: hide it !
         tokenWidget.setVisible( false );
+        tokenWidget.setLastTokenDrawn( p_token );
       }
       return;
     }
