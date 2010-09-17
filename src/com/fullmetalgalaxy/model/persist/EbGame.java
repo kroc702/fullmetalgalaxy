@@ -647,6 +647,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     getTokenIndexSet().setPosition( p_token, new AnBoardPosition( p_position ) );
     getBoardFireCover().incFireCover( p_token );
+    getBoardFireCover().checkFireDisableFlag( p_token );
     // this update is here only to refresh token display during time mode
     updateLastTokenUpdate( null );
   }

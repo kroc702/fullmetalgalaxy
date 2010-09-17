@@ -173,12 +173,12 @@ public class EbEvtMove extends AnEventPlay
       }
     }
     // check this token is not going from AND to an opponent fire cover
-    p_game.getBoardFireCover().disableFireCover( getToken(p_game) );
+    p_game.getBoardFireCover().decFireCover( getToken(p_game) );
     EnuColor fireCoverColorOld = p_game.getOpponentFireCover( myRegistration.getColor(),
         getOldPosition() );
     EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
         getNewPosition() );
-    p_game.getBoardFireCover().enableFireCover( getToken(p_game) );
+    p_game.getBoardFireCover().incFireCover( getToken(p_game) );
     if( (p_game.getLastLog().getType() == GameLogType.EvtMove)
         && (p_game.getLastLog().getPackedToken().getId() == getPackedToken().getId())
         && (fireCoverColorOld.getValue() != EnuColor.None) )
