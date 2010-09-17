@@ -186,7 +186,7 @@ public class BoardFireCover implements Serializable
     }
   }
 
-  public void enableFireCover(EbToken p_token)
+  protected void enableFireCover(EbToken p_token)
   {
     assert p_token.getLocation() == Location.Board;
     if( m_fireCover == null )
@@ -204,7 +204,7 @@ public class BoardFireCover implements Serializable
       return;
     }
 
-    decFireCoverNoCheck( p_token, true );
+    decFireCoverNoCheck( p_token, false );
     p_token.setFireDisabled( false );
 
     EbToken nearTank = m_game.getTankCheating( p_token );
@@ -219,7 +219,7 @@ public class BoardFireCover implements Serializable
         decFireCoverNoCheck( nearTank, false );
       }
     }
-    incFireCoverNoCheck( p_token, true );
+    incFireCoverNoCheck( p_token, false );
   }
 
   public void incFireCover(EbToken p_token)
@@ -273,6 +273,14 @@ public class BoardFireCover implements Serializable
   }
 
 
+  /**
+   * 
+   * @param p_x
+   * @param p_y
+   * @param p_color
+   * @param p_fireCover
+   * @param p_disableFireCover if true, don't search for other destroyer to fire enable
+   */
   protected void decFireCover(int p_x, int p_y, EnuColor p_color, byte[][][] p_fireCover,
       boolean p_disableFireCover)
   {
@@ -358,7 +366,7 @@ public class BoardFireCover implements Serializable
     }
   }
 
-  public void disableFireCover(EbToken p_token)
+  protected void disableFireCover(EbToken p_token)
   {
     assert p_token.getLocation() == Location.Board;
     if( m_fireCover == null )
@@ -383,11 +391,16 @@ public class BoardFireCover implements Serializable
         incFireCoverNoCheck( nearTank, false );
       }
     }
-    decFireCoverNoCheck( p_token, true );
+    decFireCoverNoCheck( p_token, false );
     p_token.setFireDisabled( true );
-    incFireCoverNoCheck( p_token, true );
+    incFireCoverNoCheck( p_token, false );
   }
 
+  /**
+   * Don't check that p_token is destroyer or cheating.
+   * @param p_token
+   * @param p_disableFireCover if true, don't search for other destroyer to fire enable
+   */
   protected void decFireCoverNoCheck(EbToken p_token, boolean p_disableFireCover)
   {
     int fireRange = m_game.getTokenFireLength( p_token );

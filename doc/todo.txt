@@ -7,6 +7,10 @@ A verifier:
 - on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
 - on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
 - pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
+- On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
+- si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
+- le marqueur de pion [fire disable] ne s'affiche pas s'il est dans une zone hachuré qui redeviens normale
+- si un char adverse [fire disable] quitte une zone de feu, le marqueur [FD] reste.
 
 TODO
 ====
@@ -30,19 +34,17 @@ bugs :
 ======
 - annulation de l'action construction
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
-- si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
-- On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
+  -> après avoir ajouté une action, on déselectionne les pions hors plateaux (EventsPlayBuilder ln1029)
+
 - On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - les icons 'bullets' ne se rafraichissent pas correctement
 - le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
-- le marqueur de pion [fire disable] ne s'affiche pas s'il est dans une zone hachuré qui redeviens normale
 - de même il ne disparait pas automatiquement si normale -> hachuré
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
 - le marqueur [fire disable] disparait si on souhaite quitter la zone de feu puis annule l'action
-- si un char adverse [fire disable] quitte une zone de feu, le marqueur [FD] reste.
 - l'action de chargement d'un char dans la barge doit se faire en une seule action
 - si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 - si le tour change juste après qu'un joueur viensde se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
