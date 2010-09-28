@@ -15,11 +15,11 @@ A verifier:
 - le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
 - si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
+- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 
 TODO
 ====
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
-- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 
 - utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 - ne pas sélectioner le pion qui viens de finir une action
@@ -127,7 +127,7 @@ A voir:
 =======
 - pour éviter un grand nombre d'event (et exec/unexec) faire une action move de plusieurs cases.
 - utilisation de la lib java informa pour la lecture des flux RSS
-
+- ou bien utiliser twiter pour les mises à jours
 
 Variantes:
 ==========

@@ -22,6 +22,10 @@ Météo &agrave; l'extérieur et en état de marche : pas déactivée par une marrée
 ou une zone de feu adverse.
 </p>
 <p>
+Q: Bon j'ai sorti ma pondeuse mais je ne vois toujours pas la marrée futur.<br/>
+R: Vous ne verrez la marrée futur qu'au prochain changement de tour ou d'incréments de temps.
+</p>
+<p>
 Q: Je n'arrive pas &agrave; charger mon Crabe dans ma Barge.<br/>
 R: L'action de chargement coûte un point d'action et nécessite que le véhicule chargé 
 ait suffisament de place. Un Crabe chargé de 2 chars occupe 4 places.

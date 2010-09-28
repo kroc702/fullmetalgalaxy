@@ -71,7 +71,6 @@ public class WgtTimeInfo extends WgtView
   }
 
   private long m_gameLastVersion = 0;
-  boolean m_haveWeatherHen = false;
 
 
   protected void redraw()
@@ -81,12 +80,10 @@ public class WgtTimeInfo extends WgtView
     {
       return;
     }
-    boolean haveWeatherHen = ModelFmpMain.model().haveWeatherHen();
-    if( m_gameLastVersion == game.getVersion() && m_haveWeatherHen == haveWeatherHen )
+    if( m_gameLastVersion == game.getVersion() )
     {
       return;
     }
-    m_haveWeatherHen = haveWeatherHen;
     m_gameLastVersion = game.getVersion();
 
     m_panel.clear();
