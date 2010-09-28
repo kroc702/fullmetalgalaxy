@@ -26,6 +26,7 @@
 package com.fullmetalgalaxy.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
@@ -51,6 +52,13 @@ public class BoardFireCover implements Serializable
   private byte m_disabledFireCover[][][] = null;
   private EbGame m_game = null;
 
+  /**
+   * contain all destroyer on board token which should be fire enable/disable/dec as it's during
+   * one of his movement.
+   */
+  private Set<EbToken> m_lockedToken = new HashSet<EbToken>();
+  
+  
   /**
    * 
    */
@@ -189,6 +197,11 @@ public class BoardFireCover implements Serializable
   protected void enableFireCover(EbToken p_token)
   {
     assert p_token.getLocation() == Location.Board;
+    if( m_lockedToken.contains( p_token ) )
+    {
+      RpcUtil.logDebug( "token " + p_token + "is locked" );
+      return;
+    }
     if( m_fireCover == null )
     {
       reComputeFireCover();
@@ -270,6 +283,8 @@ public class BoardFireCover implements Serializable
         }
       }
     }
+    
+    m_lockedToken.remove( p_token );
   }
 
 
@@ -369,6 +384,11 @@ public class BoardFireCover implements Serializable
   protected void disableFireCover(EbToken p_token)
   {
     assert p_token.getLocation() == Location.Board;
+    if( m_lockedToken.contains( p_token ) )
+    {
+      RpcUtil.logDebug( "token " + p_token + " is locked" );
+      return;
+    }
     if( m_fireCover == null )
     {
       reComputeFireCover();
@@ -403,6 +423,11 @@ public class BoardFireCover implements Serializable
    */
   protected void decFireCoverNoCheck(EbToken p_token, boolean p_disableFireCover)
   {
+    if( m_lockedToken.contains( p_token ))
+    {
+      RpcUtil.logDebug( "token " + p_token + " is already locked" );
+    }
+    m_lockedToken.add( p_token );
     int fireRange = m_game.getTokenFireLength( p_token );
     EnuColor color = new EnuColor( EnuColor.None );
     if( p_token.getColor() != EnuColor.None )
@@ -433,6 +458,7 @@ public class BoardFireCover implements Serializable
   {
     m_fireCover = null;
     m_disabledFireCover = null;
+    m_lockedToken.clear();
   }
 
   protected void reComputeFireCover()
@@ -442,6 +468,7 @@ public class BoardFireCover implements Serializable
         .getTotalNumberOfColor()];
     m_disabledFireCover = new byte[m_game.getLandWidth()][m_game.getLandHeight()][EnuColor
         .getTotalNumberOfColor()];
+    m_lockedToken.clear();
     for( EbToken token : m_game.getSetToken() )
     {
       if( token.isDestroyer() )

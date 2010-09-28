@@ -239,7 +239,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
         if( game.getFireCover( ix, iy, p_registration ) >= 2 )
         {
           int hexHeight = 1;
-          iy++;
+          iy++;  
           while( game.getFireCover( ix, iy, p_registration ) >= 2 )
           {
             hexHeight++;
@@ -254,6 +254,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + pxHexHeight + "px;\" class=\"" + hCssClass + "\"></div>" );
         }
+
         iy++;
       }
     }
