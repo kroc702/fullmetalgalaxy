@@ -375,8 +375,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         try
         {
           action.exec();
-          if( (action.getSelectedToken().getBulletCount() > 0 
-              && !action.getSelectedToken().isFireDisabled())
+          if( (action.getSelectedToken().getBulletCount() > 0 )
            || (action.getSelectedToken().getType() == TokenType.Freighter ) )
           {
             m_panel.add( m_btnFire );

@@ -133,8 +133,7 @@ public class EbEvtLoad extends AnEventPlay
     if( !p_game.isTokenTideActive( getToken(p_game) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
- p_game
-          .getLand( getOldPosition() ).ordinal() );
+          p_game.getLand( getOldPosition() ).ordinal() );
     }
     // check that new token carrier can load this token
     if( !p_game.canTokenLoad( getTokenCarrier(p_game), getToken(p_game) ) )
