@@ -14,6 +14,7 @@ A verifier:
 - de même il ne disparait pas automatiquement si normale -> hachuré
 - le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
+- si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 
 TODO
 ====
@@ -41,7 +42,6 @@ bugs :
   -> après avoir ajouté une action, on déselectionne les pions hors plateaux (EventsPlayBuilder ln1029)
 
 - On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
-- si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - les icons 'bullets' ne se rafraichissent pas correctement
 - un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
