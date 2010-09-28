@@ -508,7 +508,8 @@ public class EbToken extends EbBase
     EbToken newTokenOnWay = game.getToken( p_position );
     EnuColor myColor = p_player.getEnuColor();
 
-    if( newTokenOnWay != null )
+    // if newTokenOnWay == this, this mean that barge head want to move on barge tail: this is allowed
+    if( newTokenOnWay != null && newTokenOnWay != this)
     {
       if( newTokenOnWay.getType() == TokenType.Pontoon )
       {
