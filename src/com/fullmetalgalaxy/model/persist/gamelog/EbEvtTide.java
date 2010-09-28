@@ -25,8 +25,12 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.Sector;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbToken;
 
 
 /**
@@ -92,6 +96,23 @@ public class EbEvtTide extends AnEvent
     game.setCurrentTide( game.getNextTide() );
     game.setNextTide( getNextTide() );
     game.setLastTideChange( game.getCurrentTimeStep() );
+    
+    // check that all pontoon are still linked to ground
+    setMiscTokenIds( null );
+    if(getOldTide().ordinal() < getNextTide().ordinal() )
+    {
+      for(EbToken token : p_game.getSetToken())
+      {
+        if( token.getType() == TokenType.Pontoon )
+        {
+          if( !p_game.isPontoonLinkToGround( token ) )
+          {
+            chainRemovePontoon( p_game, token );
+          }
+        }
+      }
+    }
+    
     game.invalidateFireCover();
   }
 
@@ -106,6 +127,21 @@ public class EbEvtTide extends AnEvent
     assert game != null;
     game.setNextTide( game.getCurrentTide() );
     game.setCurrentTide( getOldTide() );
+    
+    // put back pontoon if there is some
+    if( getMiscTokenIds() != null )
+    {
+      for( Long id : getMiscTokenIds() )
+      {
+        EbToken token = p_game.getToken( id );
+        if( (token != null) && (token.getLocation() == Location.Graveyard) )
+        {
+          p_game.moveToken( token, token.getPosition() );
+          token.decVersion();
+        }
+      }
+    }
+    
     game.invalidateFireCover();
     game.setLastTideChange( getOldTideChange() );
   }
