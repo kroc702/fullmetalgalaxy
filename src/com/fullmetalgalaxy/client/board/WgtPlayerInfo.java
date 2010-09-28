@@ -111,7 +111,7 @@ public class WgtPlayerInfo extends WgtView
       BoardIcons.iconTide( game.getCurrentTide() ).applyTo( m_iconTide1 );
       m_iconTide1.setTitle( "maree actuelle: " + Messages.getTideString( game.getCurrentTide() ) );
 
-      if( ModelFmpMain.model().haveWeatherHen() )
+      if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0 )
       {
         BoardIcons.iconTide( game.getNextTide() ).applyTo( m_iconTide2 );
         m_iconTide2.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );

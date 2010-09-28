@@ -158,7 +158,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         + BoardIcons.iconTide( game.getCurrentTide() ).getHTML()
         + " ";
     // + Messages.getTideString( game.getCurrentTide() ) + "'> ";
-    if( ModelFmpMain.model().haveWeatherHen() )
+    if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0 )
     {
       htmlTide += BoardIcons.iconTide( game.getNextTide() ).getHTML() + " ";
       // + Messages.getTideString( game.getNextTide() ) + "'>";

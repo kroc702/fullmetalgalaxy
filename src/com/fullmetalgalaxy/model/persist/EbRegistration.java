@@ -78,6 +78,8 @@ public class EbRegistration extends EbBase
   private int m_ptAction = 0;
   private int m_orderIndex = 0;
   private int m_turretsToRepair = 0;
+  /** number of weather hen at the last time step change. */
+  private int m_workingWeatherHenCount = 0;
   private Date m_endTurnDate = null;
 
   private EbGame m_game = null;
@@ -325,6 +327,16 @@ public class EbRegistration extends EbBase
   public void setAccountPseudo(String p_accountPseudo)
   {
     m_accountPseudo = p_accountPseudo;
+  }
+
+  public int getWorkingWeatherHenCount()
+  {
+    return m_workingWeatherHenCount;
+  }
+
+  public void setWorkingWeatherHenCount(int p_workingWeatherHenCount)
+  {
+    m_workingWeatherHenCount = p_workingWeatherHenCount;
   }
 
 

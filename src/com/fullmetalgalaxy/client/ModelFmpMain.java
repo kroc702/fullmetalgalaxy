@@ -285,15 +285,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     return null;
   }
 
-  public boolean haveWeatherHen()
-  {
-    EbRegistration registration = getMyRegistration();
-    if( registration == null )
-    {
-      return false;
-    }
-    return m_game.haveWeatherHen( registration.getEnuColor() );
-  }
 
   private void loadAccountInfoFromPage()
   {
