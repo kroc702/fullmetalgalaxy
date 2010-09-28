@@ -11,10 +11,15 @@ A verifier:
 - si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
 - le marqueur de pion [fire disable] ne s'affiche pas s'il est dans une zone hachuré qui redeviens normale
 - si un char adverse [fire disable] quitte une zone de feu, le marqueur [FD] reste.
+- de même il ne disparait pas automatiquement si normale -> hachuré
+- le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
 
 TODO
 ====
-- utiliser le clic droit pour les longs déplacements, annuler l'action sinon
+- en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
+- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
+
+- utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 - ne pas sélectioner le pion qui viens de finir une action
 
 - gestion du débarquement gratuit. (en t/t uniquement ?)
@@ -23,8 +28,6 @@ TODO
 	- la réserve de point arrondi a 5 point (t/t uniquement)
 	- les neutralisations tournante ne plaisent pas a tous...
 	- ...
-- en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
-- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 
 - ajouter un tache cron pour faire évoluer les parties non regardé.
 - appeler updateEbGame plus régulièrement et même si aucune action n'est executé
@@ -38,29 +41,23 @@ bugs :
 
 - On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
+- si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - les icons 'bullets' ne se rafraichissent pas correctement
-- le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
+- un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
-- de même il ne disparait pas automatiquement si normale -> hachuré
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
 - le marqueur [fire disable] disparait si on souhaite quitter la zone de feu puis annule l'action
 - l'action de chargement d'un char dans la barge doit se faire en une seule action
-- si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
-- si le tour change juste après qu'un joueur viensde se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
-- un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
+- si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
 - si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
-- au changement de marrée, on ne vérifie pas si tous les pontons sont bien relié a la terre.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
  
 Support des comptes :
 =====================
 - option perso: afficher/cacher l'email, recevoir un email a son tour de jeu, avatar.
-- ne pas inscrire automatiquement, poser la question
-- page de modif données
-- comptes spécifiques (sans google)
 - procédure en cas de perte de mot de passe.
 - OpenID
 
