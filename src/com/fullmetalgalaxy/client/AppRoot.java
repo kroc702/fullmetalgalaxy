@@ -105,7 +105,10 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
    */
   public void addPreviewListener(NativePreviewHandler p_listener)
   {
-    m_previewListenerCollection.add( p_listener );
+    if( !m_previewListenerCollection.contains( p_listener ) )
+    {
+      m_previewListenerCollection.add( p_listener );
+    }
   }
 
   /* (non-Javadoc)
