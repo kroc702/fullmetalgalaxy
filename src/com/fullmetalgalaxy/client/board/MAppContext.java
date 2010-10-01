@@ -158,6 +158,7 @@ public final class MAppContext extends MApp implements NativePreviewHandler
       {
         ModelFmpMain.model().setGridDisplayed( !ModelFmpMain.model().isGridDisplayed() );
         // cancel event
+        p_event.cancel();
         return;
       }
       else if( p_event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE )

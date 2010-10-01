@@ -50,6 +50,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -93,6 +94,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     // m_panel.setSize( "100%", "100%" );
     // setSize( "100%", "100%" );
     setWidget( m_panel );
+    sinkEvents( Event.ONCONTEXTMENU );
     addMouseDownHandler( this );
     addMouseMoveHandler( this );
     addMouseOutHandler( this );
@@ -157,6 +159,27 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     m_isVisible = false;
     m_layerCollection.hide();
     Window.enableScrolling( true );
+  }
+
+  
+  
+  /**
+   * to get rid of browser contextual menu.
+   */
+  @Override
+  public void onBrowserEvent(Event p_event)
+  {
+    switch (DOM.eventGetType(p_event)) 
+    {
+    case Event.ONCONTEXTMENU:
+      //p_event.cancelBubble(true);
+      p_event.stopPropagation();
+      p_event.preventDefault();
+      break;
+    default:
+      super.onBrowserEvent( p_event );
+      break; 
+    }
   }
 
   /* (non-Javadoc)
@@ -231,7 +254,10 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
         ModelFmpMain.model().getActionBuilder().userOk();
         ModelFmpMain.model().runCurrentAction();
       }
-      eventBuilderMsg = ModelFmpMain.model().getActionBuilder().userBoardClick( position );
+      else // this is more a test to avoid select current token
+      {
+        eventBuilderMsg = ModelFmpMain.model().getActionBuilder().userBoardClick( position );
+      }
       switch( eventBuilderMsg )
       {
       case Updated:
