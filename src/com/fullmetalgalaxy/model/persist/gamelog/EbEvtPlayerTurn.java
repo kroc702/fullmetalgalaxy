@@ -26,6 +26,7 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -92,6 +93,15 @@ public class EbEvtPlayerTurn extends AnEvent
     if( !isAuto() && (getAccountId() != p_game.getCurrentPlayerRegistration().getAccountId()) )
     {
       throw new RpcFmpException( "Seul le joueur dont c'est le tour peut ecourter sont tour de jeu" );
+    }
+    if(p_game.getCurrentTimeStep() < 2)
+    {
+      EbToken freighter = p_game.getFreighter( p_game.getCurrentPlayerRegistration() );
+      if(freighter != null && freighter.getLocation() != Location.Board)
+      {
+        // TODO i18n
+        throw new RpcFmpException( "Vous devez poser votre astronef avant." );
+      }
     }
   }
 

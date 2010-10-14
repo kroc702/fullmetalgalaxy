@@ -51,7 +51,8 @@ public enum GameLogType
   EvtTransfer,
   EvtUnLoad,
   GameJoin,
-  EvtCancel;
+  EvtCancel,
+  EvtChangePlayerOrder;
 
   public boolean isEventUser()
   {

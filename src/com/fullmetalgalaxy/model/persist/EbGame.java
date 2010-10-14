@@ -809,6 +809,22 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
     if( !isAsynchron() )
     {
+      // sort registration according to their order index.
+      for(EbRegistration registration : getSetRegistration() )
+      {
+        int index = 0;
+        while( index < sortedRegistration.size() )
+        {
+          if(registration.getOrderIndex() < sortedRegistration.get( index ).getOrderIndex())
+          {
+            break;
+          }
+          index++;
+        }
+        sortedRegistration.add(index, registration );
+      }
+
+      /* old algorithm, may fail if orderIndex have arbitrary value (ie: 0,1,7,15)
       for( int index = 0; index < getSetRegistration().size(); index++ )
       {
         for( EbRegistration registration : getSetRegistration() )
@@ -818,7 +834,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
             sortedRegistration.add( registration );
           }
         }
-      }
+      }*/
     }
     else
     {
@@ -1042,6 +1058,23 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     {
       m_lastTokenUpdate = p_lastUpdate;
     }
+  }
+
+  /**
+   * 
+   * @param p_registration
+   * @return first freighter owned by p_registration. null if not found.
+   */
+  public EbToken getFreighter( EbRegistration p_registration)
+  {
+    for( EbToken token : getSetToken() )
+    {
+      if(token.getType() == TokenType.Freighter && p_registration.getEnuColor().isColored( token.getColor() ))
+      {
+        return token;
+      }
+    }
+    return null;
   }
 
   /**
