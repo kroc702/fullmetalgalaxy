@@ -43,6 +43,7 @@ public class EbEvtTakeOff extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  private boolean m_backInOrbit = false;
 
   /**
    * 
@@ -63,6 +64,7 @@ public class EbEvtTakeOff extends AnEventPlay
   private void init()
   {
     setCost( 0 );
+    m_backInOrbit = false;
   }
 
   @Override
@@ -128,6 +130,9 @@ public class EbEvtTakeOff extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    // backup for unexec
+    setOldPosition( getToken(p_game).getPosition() );
+    
     // reload three turrets
     for( AnBoardPosition position : getToken(p_game).getExtraPositions() )
     {
@@ -190,6 +195,21 @@ public class EbEvtTakeOff extends AnEventPlay
   }
 
 
+  /**
+   * @return the backInOrbit
+   */
+  public boolean isBackInOrbit()
+  {
+    return m_backInOrbit;
+  }
+
+  /**
+   * @param p_backInOrbit the backInOrbit to set
+   */
+  public void setBackInOrbit(boolean p_backInOrbit)
+  {
+    m_backInOrbit = p_backInOrbit;
+  }
 
 
 }

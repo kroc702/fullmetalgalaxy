@@ -43,6 +43,7 @@ public class EbGameJoin extends AnEventUser
 {
   static final long serialVersionUID = 1;
 
+  private int m_color = EnuColor.None;
 
 
   /**
@@ -63,7 +64,7 @@ public class EbGameJoin extends AnEventUser
 
   private void init()
   {
-
+    m_color = EnuColor.None;
   }
 
 
@@ -288,6 +289,27 @@ public class EbGameJoin extends AnEventUser
 
   // Bean getter / setter
   // ====================
+  /**
+   * @return the color
+   */
+  public EnuColor getEnuColor()
+  {
+    return new EnuColor( m_color );
+  }
+
+  public int getColor()
+  {
+    return m_color;
+  }
+
+
+  /**
+   * @param p_color the color to set
+   */
+  public void setColor(int p_value)
+  {
+    m_color = p_value;
+  }
 
 
 }

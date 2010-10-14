@@ -25,9 +25,11 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.ArrayList;
+
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Sector;
+import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -41,6 +43,11 @@ public class EbEvtTide extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  private ArrayList<Long> m_PontoonIds = null;
+  
+  private Tide m_oldTide = null;
+  private int m_oldTideChange = 0;
+  private Tide m_nextTide = null;
 
 
   /**
@@ -63,6 +70,10 @@ public class EbEvtTide extends AnEvent
   private void init()
   {
     setAuto( true );
+    m_PontoonIds = null;
+    m_oldTide = null;
+    m_nextTide = null;
+    m_oldTideChange = 0;
   }
 
   @Override
@@ -93,12 +104,17 @@ public class EbEvtTide extends AnEvent
     super.exec(p_game);
     EbGame game = p_game;
     assert game != null;
+    
+    // backup before changes
+    setOldTide( p_game.getCurrentTide() );
+    setOldTideChange( p_game.getLastTideChange() );
+
     game.setCurrentTide( game.getNextTide() );
     game.setNextTide( getNextTide() );
     game.setLastTideChange( game.getCurrentTimeStep() );
     
     // check that all pontoon are still linked to ground
-    setMiscTokenIds( null );
+    m_PontoonIds = new ArrayList<Long>();
     if(getOldTide().ordinal() < getNextTide().ordinal() )
     {
       for(EbToken token : p_game.getSetToken())
@@ -107,7 +123,7 @@ public class EbEvtTide extends AnEvent
         {
           if( !p_game.isPontoonLinkToGround( token ) )
           {
-            chainRemovePontoon( p_game, token );
+            m_PontoonIds.addAll( p_game.chainRemovePontoon( token ) );
           }
         }
       }
@@ -129,9 +145,9 @@ public class EbEvtTide extends AnEvent
     game.setCurrentTide( getOldTide() );
     
     // put back pontoon if there is some
-    if( getMiscTokenIds() != null )
+    if( m_PontoonIds != null )
     {
-      for( Long id : getMiscTokenIds() )
+      for( Long id : m_PontoonIds )
       {
         EbToken token = p_game.getToken( id );
         if( (token != null) && (token.getLocation() == Location.Graveyard) )
@@ -162,5 +178,57 @@ public class EbEvtTide extends AnEvent
 
   // Bean getter / setter
   // ====================
+  /**
+   * @return the oldTide
+   */
+  private Tide getOldTide()
+  {
+    return m_oldTide;
+  }
+
+
+  /**
+   * @param p_oldTide the oldTide to set
+   */
+  private void setOldTide(Tide p_oldTide)
+  {
+    m_oldTide = p_oldTide;
+  }
+
+
+  /**
+   * @return the oldTideChange
+   */
+  private int getOldTideChange()
+  {
+    return m_oldTideChange;
+  }
+
+
+  /**
+   * @param p_oldTideChange the oldTideChange to set
+   */
+  private void setOldTideChange(int p_oldTideChange)
+  {
+    m_oldTideChange = p_oldTideChange;
+  }
+
+
+  /**
+   * @return the nextTide
+   */
+  public Tide getNextTide()
+  {
+    return m_nextTide;
+  }
+
+
+  /**
+   * @param p_nextTide the nextTide to set
+   */
+  public void setNextTide(Tide p_nextTide)
+  {
+    m_nextTide = p_nextTide;
+  }
 
 }

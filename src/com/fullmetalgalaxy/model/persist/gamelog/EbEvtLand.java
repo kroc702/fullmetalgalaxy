@@ -49,7 +49,11 @@ public class EbEvtLand extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
-
+  /**
+   * token list which as been put in graveyard after this action
+   */
+  private ArrayList<Long> m_TokenIds = null;
+  
   /**
    * 
    */
@@ -69,6 +73,7 @@ public class EbEvtLand extends AnEventPlay
   private void init()
   {
     setCost( 0 );
+    m_TokenIds = null;
   }
 
   @Override
@@ -164,7 +169,7 @@ public class EbEvtLand extends AnEventPlay
     p_game.moveToken( getToken(p_game), getPosition() );
     getToken(p_game).incVersion();
     // destroy any colorless token in the deployement area
-    setMiscTokenIds( new ArrayList<Long>() );
+    m_TokenIds = new ArrayList<Long>();
     for( EbToken currentToken : p_game.getSetToken() )
     {
       if( (currentToken.getColor() == EnuColor.None)
@@ -173,7 +178,7 @@ public class EbEvtLand extends AnEventPlay
               .getEbConfigGameVariant().getDeployementRadius()) )
       {
         // destroy this colorless token
-        getMiscTokenIds().add( currentToken.getId() );
+        m_TokenIds.add( currentToken.getId() );
         p_game.moveToken( currentToken, Location.Graveyard );
         currentToken.incVersion();
       }
@@ -243,9 +248,9 @@ public class EbEvtLand extends AnEventPlay
     p_game.updateLastTokenUpdate( null );
 
     // put back ore on board.
-    if( getMiscTokenIds() != null )
+    if( m_TokenIds != null )
     {
-      for( Long id : getMiscTokenIds() )
+      for( Long id : m_TokenIds )
       {
         EbToken token = p_game.getToken( id );
         if( (token != null) && (token.getLocation() == Location.Graveyard) )

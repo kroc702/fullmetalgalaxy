@@ -31,7 +31,6 @@ import java.util.List;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.EbGame;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author vlegendr

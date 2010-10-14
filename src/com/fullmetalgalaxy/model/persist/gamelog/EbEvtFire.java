@@ -25,10 +25,11 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.ArrayList;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -43,6 +44,10 @@ public class EbEvtFire extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  /**
+   * token list which as been put in graveyard after this action
+   */
+  private ArrayList<Long> m_TokenIds = null;
 
 
   /**
@@ -64,6 +69,7 @@ public class EbEvtFire extends AnEventPlay
   private void init()
   {
     setCost( 2 );
+    m_TokenIds = null;
   }
 
   @Override
@@ -108,7 +114,7 @@ public class EbEvtFire extends AnEventPlay
     if( (getTokenTarget(p_game).canBeColored())
         && (getMyRegistration(p_game).getEnuColor().isColored( getTokenTarget(p_game).getColor() )) )
     {
-      throw new RpcFmpException( "Vous ne pouvez pas dÃ©truire vos propre pions" );
+      throw new RpcFmpException( "Vous ne pouvez pas détruire vos propre pions" );
     }
 
     // check the first destroyer is not tide deactivated
@@ -163,7 +169,7 @@ public class EbEvtFire extends AnEventPlay
     if( getTokenTarget(p_game).getType() == TokenType.Freighter )
     {
       throw new RpcFmpException(
-          "les astronefs ne peuvent etres detruits. Ils peuvent cependant ï¿½tres controlï¿½" );
+          "les astronefs ne peuvent etres detruits. Ils peuvent cependant êtres controlés" );
     }
 
   }
@@ -171,56 +177,48 @@ public class EbEvtFire extends AnEventPlay
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
-  // @Override
   @Override
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
-    getTokenTarget(p_game).incVersion();
+    // backup for unexec
+    setOldPosition( getTokenTarget(p_game).getPosition() );
+    
     getTokenDestroyer1(p_game).setBulletCount( getTokenDestroyer1(p_game).getBulletCount() - 1 );
     getTokenDestroyer1(p_game).incVersion();
     getTokenDestroyer2(p_game).setBulletCount( getTokenDestroyer2(p_game).getBulletCount() - 1 );
     getTokenDestroyer2(p_game).incVersion();
     // if token is a pontoon, check that other pontoon are linked to ground
-    setMiscTokenIds( null );
-    if( getToken(p_game).getType() == TokenType.Pontoon )
+    if(getTokenTarget(p_game).getType() != TokenType.Pontoon)
     {
-      for( Sector sector : Sector.values() )
-      {
-        EbToken otherPontoon = p_game.getToken( getOldPosition().getNeighbour( sector ),
-            TokenType.Pontoon );
-        if( otherPontoon != null )
-        {
-          if( !p_game.isPontoonLinkToGround( otherPontoon ) )
-          {
-            chainRemovePontoon( p_game, otherPontoon );
-          }
-        }
-      }
+      p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
+      getTokenTarget(p_game).incVersion();
+    } else {
+      m_TokenIds = p_game.chainRemovePontoon( getTokenTarget(p_game) );
     }
   }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
-  // @Override
   @Override
   public void unexec(EbGame p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    p_game.moveToken( getTokenTarget(p_game), getOldPosition() );
-    getTokenTarget(p_game).decVersion();
     getTokenDestroyer1(p_game).setBulletCount( getTokenDestroyer1(p_game).getBulletCount() + 1 );
     getTokenDestroyer1(p_game).decVersion();
     getTokenDestroyer2(p_game).setBulletCount( getTokenDestroyer2(p_game).getBulletCount() + 1 );
     getTokenDestroyer2(p_game).decVersion();
     p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer1( p_game ) );
     p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer2( p_game ) );
-    // put back pontoon if there is some
-    if( getMiscTokenIds() != null )
+    if( getTokenIds() == null )
     {
-      for( Long id : getMiscTokenIds() )
+      p_game.moveToken( getTokenTarget(p_game), getOldPosition() );
+      getTokenTarget(p_game).decVersion();      
+    } else {
+      // we fire on a pontoon
+      // put back other pontoon/token if there is some
+      for( Long id : getTokenIds() )
       {
         EbToken token = p_game.getToken( id );
         if( (token != null) && (token.getLocation() == Location.Graveyard) )
@@ -232,5 +230,30 @@ public class EbEvtFire extends AnEventPlay
     }
   }
 
+  private ArrayList<Long> getTokenIds()
+  {
+    return m_TokenIds;
+  }
+
+
+  
+  /**
+   * @param p_game game to apply event
+    * @return the tokenTarget
+   */
+  public EbToken getTokenTarget(EbGame p_game)
+  {
+    return getToken( p_game );
+  }
+
+
+  /**
+   * @param p_game game to apply event
+    * @return the tokenTarget
+   */
+  public void setTokenTarget(EbToken p_token)
+  {
+    setToken( p_token );
+  }
 
 }

@@ -237,8 +237,7 @@ public class BoardFireCover implements Serializable
 
   public void incFireCover(EbToken p_token)
   {
-    if( (m_fireCover == null) || (p_token.getLocation() != Location.Board)
-        || (!p_token.isDestroyer()) )
+    if( (m_fireCover == null) || (!p_token.isDestroyer()) )
     {
       return;
     }
@@ -259,26 +258,29 @@ public class BoardFireCover implements Serializable
 
   protected void incFireCoverNoCheck(EbToken p_token, boolean p_disableFireCover)
   {
-    int fireRange = m_game.getTokenFireLength( p_token );
-    EnuColor color = new EnuColor( EnuColor.None );
-    if( p_token.getColor() != EnuColor.None )
+    if(p_token.getLocation() == Location.Board)
     {
-      color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
-    }
-    AnBoardPosition position = p_token.getPosition();
-    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
-    {
-      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      int fireRange = m_game.getTokenFireLength( p_token );
+      EnuColor color = new EnuColor( EnuColor.None );
+      if( p_token.getColor() != EnuColor.None )
       {
-        if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
+        color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
+      }
+      AnBoardPosition position = p_token.getPosition();
+      for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+      {
+        for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
         {
-          if( p_token.isFireDisabled() )
+          if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
           {
-            incFireCover( ix, iy, color, m_disabledFireCover, true );
-          }
-          else
-          {
-            incFireCover( ix, iy, color, m_fireCover, p_disableFireCover );
+            if( p_token.isFireDisabled() )
+            {
+              incFireCover( ix, iy, color, m_disabledFireCover, true );
+            }
+            else
+            {
+              incFireCover( ix, iy, color, m_fireCover, p_disableFireCover );
+            }
           }
         }
       }
@@ -343,8 +345,7 @@ public class BoardFireCover implements Serializable
 
   public void decFireCover(EbToken p_token)
   {
-    if( (m_fireCover == null) || (p_token.getLocation() != Location.Board)
-        || (!p_token.isDestroyer()) )
+    if( (m_fireCover == null) || (!p_token.isDestroyer()) )
     {
       return;
     }
@@ -428,26 +429,29 @@ public class BoardFireCover implements Serializable
       RpcUtil.logDebug( "token " + p_token + " is already locked" );
     }
     m_lockedToken.add( p_token );
-    int fireRange = m_game.getTokenFireLength( p_token );
-    EnuColor color = new EnuColor( EnuColor.None );
-    if( p_token.getColor() != EnuColor.None )
+    if(p_token.getLocation() == Location.Board)
     {
-      color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
-    }
-    AnBoardPosition position = p_token.getPosition();
-    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
-    {
-      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      int fireRange = m_game.getTokenFireLength( p_token );
+      EnuColor color = new EnuColor( EnuColor.None );
+      if( p_token.getColor() != EnuColor.None )
       {
-        if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
+        color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
+      }
+      AnBoardPosition position = p_token.getPosition();
+      for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+      {
+        for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
         {
-          if( p_token.isFireDisabled() )
+          if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
           {
-            decFireCover( ix, iy, color, m_disabledFireCover, true );
-          }
-          else
-          {
-            decFireCover( ix, iy, color, m_fireCover, p_disableFireCover );
+            if( p_token.isFireDisabled() )
+            {
+              decFireCover( ix, iy, color, m_disabledFireCover, true );
+            }
+            else
+            {
+              decFireCover( ix, iy, color, m_fireCover, p_disableFireCover );
+            }
           }
         }
       }

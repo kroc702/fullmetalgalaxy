@@ -436,8 +436,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           getThreadLocalRequest(), getThreadLocalResponse() ), p_action.getIdGame(), null );
       FmpUpdateStatus.loadAllAccounts( updates.getMapAccounts(), game );
       // set pseudo into registration
-      EbRegistration registration = game.getRegistrationByIdAccount( p_action.getAccountId() );
-      registration.setAccountPseudo( updates.getMapAccounts().get( p_action.getAccountId() )
+      EbRegistration registration = game.getRegistrationByIdAccount( ((EbGameJoin)p_action).getAccountId() );
+      registration.setAccountPseudo( updates.getMapAccounts().get( ((EbGameJoin)p_action).getAccountId() )
           .getPseudo() );
 
       FmpUpdateStatus.broadCastGameUpdate( updates );

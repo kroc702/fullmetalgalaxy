@@ -25,6 +25,8 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.ArrayList;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
@@ -45,6 +47,12 @@ public class EbEvtLoad extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  private int m_oldColor = EnuColor.None;
+
+  /**
+   * token list which as been put in graveyard after this action
+   */
+  private ArrayList<Long> m_TokenIds = null;
 
   /**
    * 
@@ -65,6 +73,8 @@ public class EbEvtLoad extends AnEventPlay
   private void init()
   {
     setCost( 1 );
+    m_TokenIds = null;
+    m_oldColor = EnuColor.None;
   }
 
   @Override
@@ -172,11 +182,16 @@ public class EbEvtLoad extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    // backup for unexec
+    setOldColor( getToken(p_game).getColor() );
+    setOldPosition( getToken(p_game).getPosition() );
+    
     p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
+      
     // if token is a pontoon, check that other pontoon are linked to ground
-    setMiscTokenIds( null );
+    m_TokenIds = null ;
     if( getToken(p_game).getType() == TokenType.Pontoon )
     {
       for( Sector sector : Sector.values() )
@@ -187,7 +202,12 @@ public class EbEvtLoad extends AnEventPlay
         {
           if( !p_game.isPontoonLinkToGround( otherPontoon ) )
           {
-            chainRemovePontoon( p_game, otherPontoon );
+            if(m_TokenIds == null)
+            {
+              m_TokenIds = p_game.chainRemovePontoon( otherPontoon );
+            } else {
+              m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon ) );
+            }
           }
         }
       }
@@ -209,9 +229,9 @@ public class EbEvtLoad extends AnEventPlay
     }
     getTokenCarrier(p_game).decVersion();
     // put back pontoon if there is some
-    if( getMiscTokenIds() != null )
+    if( m_TokenIds != null )
     {
-      for( Long id : getMiscTokenIds() )
+      for( Long id : m_TokenIds)
       {
         EbToken token = p_game.getToken( id );
         if( (token != null) && (token.getLocation() == Location.Graveyard) )
@@ -225,5 +245,20 @@ public class EbEvtLoad extends AnEventPlay
 
 
 
+  /**
+   * @return the oldColor
+   */
+  private int getOldColor()
+  {
+    return m_oldColor;
+  }
+
+  /**
+   * @param p_oldColor the oldColor to set
+   */
+  private void setOldColor(int p_oldColor)
+  {
+    m_oldColor = p_oldColor;
+  }
 
 }

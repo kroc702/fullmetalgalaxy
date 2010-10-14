@@ -42,6 +42,7 @@ public class EbEvtTimeStep extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  private Date m_oldTimeStepChange = null;
 
 
   /**
@@ -63,6 +64,7 @@ public class EbEvtTimeStep extends AnEvent
 
   private void init()
   {
+    m_oldTimeStepChange = null;
   }
 
   @Override
@@ -188,5 +190,21 @@ public class EbEvtTimeStep extends AnEvent
 
   // Bean getter / setter
   // ====================
+  /**
+   * @return the oldTimeStepChange
+   */
+  private Date getOldTimeStepChange()
+  {
+    return m_oldTimeStepChange;
+  }
+
+
+  /**
+   * @param p_oldTimeStepChange the oldTimeStepChange to set
+   */
+  private void setOldTimeStepChange(Date p_oldTimeStepChange)
+  {
+    m_oldTimeStepChange = p_oldTimeStepChange;
+  }
 
 }

@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -42,6 +43,7 @@ public class EbEvtControlFreighter extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  private EbBase m_packedOldRegistration = null;
 
 
   /**
@@ -63,6 +65,7 @@ public class EbEvtControlFreighter extends AnEventPlay
   private void init()
   {
     setCost( 0 );
+    m_packedOldRegistration = null;
   }
 
   @Override
@@ -156,6 +159,17 @@ public class EbEvtControlFreighter extends AnEventPlay
   {
     super.exec(p_game);
 
+    // backup old registration (used by unexec)
+    for( EbRegistration registration : p_game.getSetRegistration() )
+    {
+      EnuColor color = registration.getEnuColor();
+      if( color.isColored( getTokenFreighter(p_game).getColor() ) )
+      {
+        setOldRegistration( registration );
+      }
+    }
+
+    
     getOldRegistration( p_game ).setColor(
         EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
             .getColor() ) );
@@ -180,6 +194,44 @@ public class EbEvtControlFreighter extends AnEventPlay
         EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
             .getColor() ) );
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
+  }
+
+  /**
+   * @return the packedOldRegistration
+   */
+  private EbBase getPackedOldRegistration()
+  {
+    return m_packedOldRegistration;
+  }
+
+  public EbToken getTokenFreighter(EbGame p_game)
+  {
+    return getTokenCarrier( p_game );
+  }
+
+  public void setTokenFreighter(EbToken p_token)
+  {
+    setToken( p_token );
+  }
+
+  // cache to avoid researching again and again
+  // and to implement getter
+  // ===========================================
+  transient private EbRegistration m_oldRegistration = null;
+
+  public EbRegistration getOldRegistration(EbGame p_game)
+  {
+    if( m_oldRegistration == null )
+    {
+      m_oldRegistration = p_game.getRegistration( getPackedOldRegistration().getId() );
+    }
+    return m_oldRegistration;
+  }
+
+  private void setOldRegistration(EbRegistration p_oldRegistration)
+  {
+    m_packedOldRegistration = p_oldRegistration.createEbBase();
+    m_oldRegistration = p_oldRegistration;
   }
 
 }

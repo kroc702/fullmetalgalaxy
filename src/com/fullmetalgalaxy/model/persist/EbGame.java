@@ -524,13 +524,13 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   /**
    * return the bitfields of all opponents fire cover on this token.<br/>
-   * note: if p_token is color less, all colors are opponents
+   * note: if p_token is color less or not on board, always return EnuColor.None
    * @param p_token
    * @return
    */
   public EnuColor getOpponentFireCover(EbToken p_token)
   {
-    if( p_token.getLocation() != Location.Board )
+    if( p_token.getLocation() != Location.Board || p_token.getColor() == EnuColor.None )
     {
       return new EnuColor( EnuColor.None );
     }
@@ -552,7 +552,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public EbToken getTankCheating(EbToken p_token)
   {
-    if( p_token.getType() != TokenType.Tank )
+    if( p_token.getType() != TokenType.Tank || p_token.getLocation() != Location.Board )
     {
       return null;
     }
@@ -1105,7 +1105,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     Set<EbToken> allTokens = getTokenIndexSet().getAllToken( p_position );
     if( allTokens != null )
     {
-      return allTokens;
+      return new HashSet<EbToken>(allTokens);
     }
     return new HashSet<EbToken>();
   }
@@ -1456,7 +1456,52 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     return false;
   }
+  
+  /**
+   * put p_token and all linked pontoon to graveyard.
+   * @param p_token must be a pontoon
+   * @return list of all tokens removed from board to graveyard (pontoons and token on them). 
+   *        Token have to be put back on board in the same order.
+   * @throws RpcFmpException
+   */
+  public ArrayList<Long> chainRemovePontoon(EbToken p_token) throws RpcFmpException
+  {
+    assert p_token.getType() == TokenType.Pontoon;
+    ArrayList<Long> pontoons = new ArrayList<Long>();
+    // backup pontoon's id first (to put back on board first)
+    pontoons.add( p_token.getId() );
+    AnBoardPosition position = p_token.getPosition();
+    // remove all tokens on pontoon
+    Set<EbToken> tokens = getAllToken( position );
+    for(EbToken token : tokens)
+    {
+      if(token != p_token)
+      {
+        // remove token on pontoon
+        pontoons.add( token.getId() );
+        moveToken( token, Location.Graveyard );
+        token.incVersion();
+      }
+    }
+    // then remove pontoon
+    moveToken( p_token, Location.Graveyard );
+    p_token.incVersion();
 
+    // finally remove other linked pontoons
+    for( Sector sector : Sector.values() )
+    {
+      EbToken otherPontoon = getToken( position.getNeighbour( sector ), TokenType.Pontoon );
+      if( otherPontoon != null )
+      {
+        pontoons.addAll( chainRemovePontoon( otherPontoon ) );
+      }
+    }
+    return pontoons;
+  }
+
+
+
+  // TODO move this to another class
   @Transient
   private Set<com.fullmetalgalaxy.model.persist.AnBoardPosition> m_allowedNodeGraphCache = new HashSet<com.fullmetalgalaxy.model.persist.AnBoardPosition>();
   @Transient

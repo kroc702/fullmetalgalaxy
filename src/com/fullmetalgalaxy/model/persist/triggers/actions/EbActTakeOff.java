@@ -94,7 +94,6 @@ public class EbActTakeOff extends AnAction
         event.setCost( 0 );
         event.setToken( freighter );
         event.setBackInOrbit( true );
-        event.setOldPosition( freighter.getPosition() );
         event.setAccountId( 0L );
         event.setAuto( true );
         events.add( event );
