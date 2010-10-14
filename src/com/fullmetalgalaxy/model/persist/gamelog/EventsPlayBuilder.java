@@ -811,7 +811,7 @@ public class EventsPlayBuilder implements GameEventStack
         assert getSelectedToken() == p_token.getCarrierToken();
         if( getLastAction() != null
             && (getLastAction().getType() == GameLogType.EvtLoad || getLastAction().getType() == GameLogType.EvtTransfer)
-            && getLastAction().getToken( getGame() ).canBeColored() )
+            && ((AnEventPlay)getLastAction()).getToken( getGame() ).canBeColored() )
         {
           AnBoardPosition selectedPosition = getSelectedPosition();
           clear();
@@ -893,7 +893,6 @@ public class EventsPlayBuilder implements GameEventStack
       action.setGame( getGame() );
       action.setAccountId( getAccountId() );
       action.setPosition( getSelectedPosition() );
-      // ModelFmpMain.model().runSingleAction( gameLog );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.MustRun;
     }
@@ -904,8 +903,6 @@ public class EventsPlayBuilder implements GameEventStack
       action.setGame( getGame() );
       action.setAccountId( getAccountId() );
       action.setToken( getSelectedToken() );
-      action.setOldPosition( getSelectedToken().getPosition() );
-      // ModelFmpMain.model().runSingleAction( gameLog );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.MustRun;
     }
@@ -1054,7 +1051,6 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user control with " + action.getTokenDestroyer1( m_game ) + " and "
         + action.getTokenDestroyer2( m_game ) + " onto " + p_tokenTarget + " " + p_position );
     action.setTokenTarget( p_tokenTarget );
-    action.setOldColor( p_tokenTarget.getColor() );
     actionAdd( action );
     setSelectedAction( null );
   }
@@ -1070,7 +1066,6 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user fire with " + action.getTokenDestroyer1( m_game ) + " and "
         + action.getTokenDestroyer2( m_game ) + " onto " + p_tokenTarget + " " + p_position );
     action.setTokenTarget( p_tokenTarget );
-    action.setOldPosition( p_tokenTarget.getPosition() );
     actionAdd( action );
     setSelectedAction( null );
   }
@@ -1135,7 +1130,6 @@ public class EventsPlayBuilder implements GameEventStack
     action.setGame( getGame() );
     action.setAccountId( getAccountId() );
     action.setToken( getSelectedToken() );
-    action.setOldPosition( getSelectedToken().getPosition() );
     action.setNewPosition( p_position );
     actionAdd( action );
     setSelectedAction( null );
@@ -1244,16 +1238,8 @@ public class EventsPlayBuilder implements GameEventStack
     action.setAccountId( getAccountId() );
     action.setGame( getGame() );
     action.setToken( p_token );
-    action.setTokenCarrier( p_tokenFreighter );
+    action.setTokenFreighter( p_tokenFreighter );
     action.setCost( -1 * getGame().getEbConfigGameTime().getActionPtPerExtraShip() );
-    for( EbRegistration registration : getGame().getSetRegistration() )
-    {
-      EnuColor color = registration.getEnuColor();
-      if( color.isColored( p_tokenFreighter.getColor() ) )
-      {
-        action.setOldRegistration( registration );
-      }
-    }
     assert action.getOldRegistration( getGame() ) != null;
     actionAdd( action );
   }
@@ -1272,14 +1258,11 @@ public class EventsPlayBuilder implements GameEventStack
     {
       // user want to load something into an ore...
       // he probably want the reverse !
-      action.setOldPosition( p_tokenCarrier.getPosition() );
       action.setTokenCarrier( getSelectedToken() );
       action.setToken( p_tokenCarrier );
       actionAdd( action );
       return;
     }
-    action.setOldColor( getSelectedToken().getColor() );
-    action.setOldPosition( getSelectedToken().getPosition() );
     action.setTokenCarrier( p_tokenCarrier );
     action.setToken( getSelectedToken() );
 

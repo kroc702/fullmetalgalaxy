@@ -40,6 +40,7 @@ public class EbEvtPlayerTurn extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  private long m_accountId = 0L;
 
 
   /**
@@ -60,6 +61,7 @@ public class EbEvtPlayerTurn extends AnEvent
 
   private void init()
   {
+    m_accountId = 0;
   }
 
   @Override
@@ -211,4 +213,19 @@ public class EbEvtPlayerTurn extends AnEvent
 
   }
 
+  /**
+   * @return the account
+   */
+  public long getAccountId()
+  {
+    return m_accountId;
+  }
+
+  /**
+   * @param p_account the account to set
+   */
+  public void setAccountId(long p_id)
+  {
+    m_accountId = p_id;
+  }
 }

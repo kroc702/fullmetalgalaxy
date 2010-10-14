@@ -35,6 +35,8 @@ public class EbEvtMessage extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  private String m_message = null;
+  private String m_title = null;
 
   /**
    * 
@@ -55,6 +57,8 @@ public class EbEvtMessage extends AnEvent
 
   private void init()
   {
+    m_message = null;
+    m_title = null;
   }
 
   @Override
@@ -67,5 +71,39 @@ public class EbEvtMessage extends AnEvent
 
   // Bean getter / setter
   // ====================
+  /**
+   * if message start with './', '/' or 'http://', message is a web page url
+   * @return the message
+   */
+  public String getMessage()
+  {
+    return m_message;
+  }
+
+  /**
+   * @param p_message the message to set
+   */
+  public void setMessage(String p_message)
+  {
+    m_message = p_message;
+  }
+
+  /**
+   * @return the title
+   */
+  public String getTitle()
+  {
+    return m_title;
+  }
+
+  /**
+   * @param p_title the title to set
+   */
+  public void setTitle(String p_title)
+  {
+    m_title = p_title;
+  }
+
+
 
 }

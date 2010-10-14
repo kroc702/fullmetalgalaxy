@@ -39,6 +39,9 @@ public class AnEventUser extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  private long m_accountId = 0L;
+  private String m_remoteAddr = null;
+
   /**
    * 
    */
@@ -57,6 +60,8 @@ public class AnEventUser extends AnEvent
 
   private void init()
   {
+    m_accountId = 0;
+    m_remoteAddr = null;
   }
 
   public EbRegistration getMyRegistration(EbGame p_game)
@@ -102,6 +107,37 @@ public class AnEventUser extends AnEvent
   }
 
 
+  /**
+   * @return the account
+   */
+  public long getAccountId()
+  {
+    return m_accountId;
+  }
+
+  /**
+   * @param p_account the account to set
+   */
+  public void setAccountId(long p_id)
+  {
+    m_accountId = p_id;
+  }
+
+  /**
+   * @return the remoteAddr
+   */
+  public String getRemoteAddr()
+  {
+    return m_remoteAddr;
+  }
+
+  /**
+   * @param p_remoteAddr the remoteAddr to set
+   */
+  public void setRemoteAddr(String p_remoteAddr)
+  {
+    m_remoteAddr = p_remoteAddr;
+  }
 
 
 }

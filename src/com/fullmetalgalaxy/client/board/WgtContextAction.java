@@ -262,7 +262,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
           action.setGame( ModelFmpMain.model().getGame() );
           action.setAccountId( ModelFmpMain.model().getMyAccountId() );
           action.setToken( actionBuilder.getSelectedToken() );
-          action.setOldPosition( actionBuilder.getSelectedToken().getPosition() );
           ModelFmpMain.model().runSingleAction( action );
         }
       }

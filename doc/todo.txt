@@ -20,7 +20,7 @@ A verifier:
 
 TODO
 ====
-- en tour par tour, mélanger l'ordre des joueurs pour l'atterrisage, puis ordre des astro sur le plateau
+- en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
 
 - utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 

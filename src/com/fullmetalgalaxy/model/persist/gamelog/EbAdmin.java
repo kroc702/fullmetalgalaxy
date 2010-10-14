@@ -37,6 +37,8 @@ public class EbAdmin extends AnEventUser
 {
   static final long serialVersionUID = 1;
 
+  private String m_message = null;
+
   /**
    * 
    */
@@ -56,6 +58,7 @@ public class EbAdmin extends AnEventUser
 
   private void init()
   {
+    m_message = null;
   }
 
   /* (non-Javadoc)
@@ -67,5 +70,23 @@ public class EbAdmin extends AnEventUser
     throw new RpcFmpException( "les actions d'administrations ne peuvent �tre d�faite" );
   }
 
+  // Bean getter / setter
+  // ====================
+  /**
+   * if message start with './', '/' or 'http://', message is a web page url
+   * @return the message
+   */
+  public String getMessage()
+  {
+    return m_message;
+  }
+
+  /**
+   * @param p_message the message to set
+   */
+  public void setMessage(String p_message)
+  {
+    m_message = p_message;
+  }
 
 }

@@ -90,8 +90,6 @@ public class EbActChangeTide extends AnAction
     EbEvtTide event = new EbEvtTide();
     event.setGame( p_game );
     event.setNextTide( nextTide );
-    event.setOldTide( p_game.getCurrentTide() );
-    event.setOldTideChange( p_game.getLastTideChange() );
     events.add( event );
 
     return events;

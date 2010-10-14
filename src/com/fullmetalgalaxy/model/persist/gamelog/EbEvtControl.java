@@ -41,6 +41,7 @@ public class EbEvtControl extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  private int m_oldColor = EnuColor.None;
 
 
   /**
@@ -62,6 +63,7 @@ public class EbEvtControl extends AnEventPlay
   private void init()
   {
     setCost( 1 );
+    m_oldColor = EnuColor.None;
   }
 
   @Override
@@ -163,7 +165,9 @@ public class EbEvtControl extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
-
+    // backup for unexec
+    setOldColor( getTokenTarget( p_game).getColor() );
+    
     p_game.changeTokenColor( getTokenTarget(p_game), getTokenDestroyer1(p_game).getColor() );
     getTokenTarget(p_game).incVersion();
     for( EbToken token : getTokenTarget(p_game).getSetContain() )
@@ -192,6 +196,41 @@ public class EbEvtControl extends AnEventPlay
         token.decVersion();
       }
     }
+  }
+
+  /**
+   * @param p_game game to apply event
+    * @return the tokenTarget
+   */
+  public EbToken getTokenTarget(EbGame p_game)
+  {
+    return getToken( p_game );
+  }
+
+
+  /**
+   * @param p_game game to apply event
+    * @return the tokenTarget
+   */
+  public void setTokenTarget(EbToken p_token)
+  {
+    setToken( p_token );
+  }
+
+  /**
+   * @return the oldColor
+   */
+  private int getOldColor()
+  {
+    return m_oldColor;
+  }
+
+  /**
+   * @param p_oldColor the oldColor to set
+   */
+  private void setOldColor(int p_oldColor)
+  {
+    m_oldColor = p_oldColor;
   }
 
 }

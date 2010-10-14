@@ -41,6 +41,7 @@ public class EbEvtConstruct extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
+  private TokenType m_constructType = TokenType.None;
 
   /**
    * 
@@ -61,6 +62,7 @@ public class EbEvtConstruct extends AnEventPlay
   private void init()
   {
     setCost( 0 );
+    m_constructType = TokenType.None;
   }
 
   @Override
@@ -138,5 +140,20 @@ public class EbEvtConstruct extends AnEventPlay
     getToken(p_game).setBulletCount( getToken(p_game).getMaxBulletCount() );
   }
 
+  /**
+   * @return the p_constructType
+   */
+  public TokenType getConstructType()
+  {
+    return m_constructType;
+  }
+
+  /**
+   * @param p_type the p_constructType to set
+   */
+  public void setConstructType(TokenType p_type)
+  {
+    m_constructType = p_type;
+  }
 
 }

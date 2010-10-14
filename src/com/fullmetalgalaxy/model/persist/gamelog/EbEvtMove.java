@@ -180,7 +180,7 @@ public class EbEvtMove extends AnEventPlay
         getNewPosition() );
     p_game.getBoardFireCover().incFireCover( getToken(p_game) );
     if( (p_game.getLastLog().getType() == GameLogType.EvtMove)
-        && (p_game.getLastLog().getPackedToken().getId() == getPackedToken().getId())
+        && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId())
         && (fireCoverColorOld.getValue() != EnuColor.None) )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken( p_game ).getType()
@@ -201,6 +201,9 @@ public class EbEvtMove extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    // backup for unexec
+    setOldPosition( getToken(p_game).getPosition() );
+    
     p_game.moveToken( getToken(p_game), getNewPosition() );
     getToken(p_game).incVersion();
   }
