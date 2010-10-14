@@ -50,6 +50,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
@@ -429,6 +430,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     dataStore.save( game );
 
+    // Some special cases
+    /////////////////////
     if( p_action.getType() == GameLogType.GameJoin )
     {
       // in case of join event, we must load corresponding account
@@ -453,6 +456,30 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         action.checkedExec( game );
       }
     }
+    if(game.getCurrentTimeStep() == 0 
+        && game.getLastGameLog().getType() == GameLogType.AdminTimePlay
+        && !game.isAsynchron() )
+    {
+      // game is starting
+      EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
+      action.setLastUpdate( ServerUtil.currentDate() );
+      action.initRandomOrder( game );
+      game.addEvent( action );
+      action.checkedExec( game );      
+    }
+    if(game.getCurrentTimeStep() == 1 
+        && game.getLastGameLog().getType() == GameLogType.EvtTimeStep
+        && !game.isAsynchron() )
+    {
+      // second turn: everybody should be landed
+      EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
+      action.setLastUpdate( ServerUtil.currentDate() );
+      action.initBoardOrder( game );
+      game.addEvent( action );
+      action.checkedExec( game );      
+    }
+    
+    
     dataStore.save( game );
     dataStore.close();
 

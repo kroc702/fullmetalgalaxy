@@ -17,11 +17,10 @@ A verifier:
 - si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 - ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 - ne pas sélectioner le pion qui viens de finir une action
+- en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
 
 TODO
 ====
-- en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
-
 - utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 
 - gestion du débarquement gratuit. (en t/t uniquement ?)
