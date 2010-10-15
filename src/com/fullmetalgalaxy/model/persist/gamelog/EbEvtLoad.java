@@ -87,7 +87,11 @@ public class EbEvtLoad extends AnEventPlay
   @Override
   public AnBoardPosition getSelectedPosition(EbGame p_game)
   {
-    return getOldPosition();
+    if(getOldPosition() != null)
+    {
+      return getOldPosition();
+    }
+    return getToken(p_game).getPosition();
   }
 
   /* (non-Javadoc)
@@ -108,7 +112,7 @@ public class EbEvtLoad extends AnEventPlay
           + getToken(p_game).getLocation() );
     }
     // check old position is egal to token position
-    if( !getToken(p_game).getPosition().equals( getOldPosition() ) )
+    if( !getToken(p_game).getPosition().equals( getToken(p_game).getPosition() ) )
     {
       // not probable error (no i18n)
       throw new RpcFmpException( "bad action" );
@@ -143,7 +147,7 @@ public class EbEvtLoad extends AnEventPlay
     if( !p_game.isTokenTideActive( getToken(p_game) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
-          p_game.getLand( getOldPosition() ).ordinal() );
+          p_game.getLand( getToken(p_game).getPosition() ).ordinal() );
     }
     // check that new token carrier can load this token
     if( !p_game.canTokenLoad( getTokenCarrier(p_game), getToken(p_game) ) )

@@ -97,7 +97,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     if( getTokenCarrier(p_game).getType() != TokenType.Freighter )
     {
       // no i18n
-      throw new RpcFmpException( "le pion controlï¿½ doit ï¿½tre un astronef" );
+      throw new RpcFmpException( "le pion controlé doit être un astronef" );
     }
     if( !getToken(p_game).isNeighbor( getTokenCarrier(p_game) ) )
     {
@@ -108,7 +108,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( "vous ne pouvez pas dï¿½placer des pions incolores" );
+      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
     }
 
     for( EbRegistration registration : p_game.getSetRegistration() )
