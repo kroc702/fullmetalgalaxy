@@ -605,7 +605,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         if( (p_game.getCurrentPlayerRegistration() != null)
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System
-                .currentTimeMillis()) )
+                .currentTimeMillis())
+            && (p_game.getCurrentTimeStep() != 0) ) // never skip first turn
         {
           // change player's turn
           int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
