@@ -107,12 +107,6 @@ public class EbEvtTakeOff extends AnEventPlay
       throw new RpcFmpException( "token " + getToken(p_game) + " can't be moved from location "
           + getToken(p_game).getLocation() );
     }
-    // check old position is egal to token position
-    if( !getToken(p_game).getPosition().equals( getOldPosition() ) )
-    {
-      // not probable error (no i18n)
-      throw new RpcFmpException( "bad action" );
-    }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
     assert myRegistration != null;

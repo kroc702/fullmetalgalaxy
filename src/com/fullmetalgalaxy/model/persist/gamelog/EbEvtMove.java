@@ -81,7 +81,11 @@ public class EbEvtMove extends AnEventPlay
   @Override
   public AnBoardPosition getSelectedPosition(EbGame p_game)
   {
-    return getOldPosition();
+    if(getOldPosition() != null)
+    {
+      return getOldPosition();
+    }
+    return getToken(p_game).getPosition();
   }
 
   /* (non-Javadoc)
@@ -100,12 +104,6 @@ public class EbEvtMove extends AnEventPlay
       throw new RpcFmpException( "token " + getToken(p_game) + " can't be moved from location "
           + getToken(p_game).getLocation() );
     }
-    // check old position is egal to token position
-    if( !getToken(p_game).getPosition().equals( getOldPosition() ) )
-    {
-      // not probable error (no i18n)
-      throw new RpcFmpException( "bad action" );
-    }
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
@@ -117,10 +115,11 @@ public class EbEvtMove extends AnEventPlay
       throw new RpcFmpException( "vous ne pouvez pas déplacer votre astronef" );
     }
     // check no hexagon are skipped
-    if( !getOldPosition().equals( getNewPosition() )
-        && !getOldPosition().isNeighbor( getNewPosition() )
-        && ((getToken(p_game).getHexagonSize() == 1) || !getOldPosition().getNeighbour(
-            getOldPosition().getSector() ).equals(
+    AnBoardPosition tokenPosition = getToken(p_game).getPosition();
+    if( !tokenPosition.equals( getNewPosition() )
+        && !tokenPosition.isNeighbor( getNewPosition() )
+        && ((getToken(p_game).getHexagonSize() == 1) || !tokenPosition.getNeighbour(
+            tokenPosition.getSector() ).equals(
             getNewPosition().getNeighbour( getNewPosition().getSector() ) )) )
     {
       // unusual error
@@ -139,8 +138,7 @@ public class EbEvtMove extends AnEventPlay
     if( !p_game.isTokenTideActive( getToken(p_game) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
- p_game
-          .getLand( getOldPosition() ).ordinal() );
+              p_game.getLand( tokenPosition ).ordinal() );
     }
     // check token move to a 'clear' hexagon
     boolean moveToPontoon = false;
@@ -175,7 +173,7 @@ public class EbEvtMove extends AnEventPlay
     // check this token is not going from AND to an opponent fire cover
     p_game.getBoardFireCover().decFireCover( getToken(p_game) );
     EnuColor fireCoverColorOld = p_game.getOpponentFireCover( myRegistration.getColor(),
-        getOldPosition() );
+        tokenPosition );
     EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
         getNewPosition() );
     p_game.getBoardFireCover().incFireCover( getToken(p_game) );
