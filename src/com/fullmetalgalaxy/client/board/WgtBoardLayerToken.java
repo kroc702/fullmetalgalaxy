@@ -213,21 +213,21 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       }
       else
       // display a load count image ?
-      if( (getZoom().getValue() == EnuZoom.Medium) && (p_token.getType() != TokenType.Ore)
+      if( (p_token.getType() != TokenType.Ore)
           && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
           && (p_token.getType() != TokenType.Pontoon) && (p_token.getSetContain().size() > 0) )
       {
-        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconLoad( p_token
-            .getSetContain().size() ), p_token, landPixOffset );
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconLoad( getZoom().getValue(),
+            p_token.getContainSize() ), p_token, landPixOffset );
       }
       else
       // display a bullet count image ?
-      if( (getZoom().getValue() == EnuZoom.Medium) && (p_token.getType() != TokenType.Ore)
+      if( (p_token.getType() != TokenType.Ore)
           && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
           && (p_token.getType() != TokenType.Pontoon) && (p_token.getBulletCount() > 0) )
       {
-        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconBullet( p_token
-            .getBulletCount() ), p_token, landPixOffset );
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconBullet( getZoom().getValue(),
+            p_token.getBulletCount() ), p_token, landPixOffset );
       }
       else
       {

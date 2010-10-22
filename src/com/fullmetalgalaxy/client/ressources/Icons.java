@@ -298,6 +298,18 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disable_water.png")
   public AbstractImagePrototype strategy_disable_water();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load1.png")
+  public AbstractImagePrototype strategy_icon_load1();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load2.png")
+  public AbstractImagePrototype strategy_icon_load2();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load3.png")
+  public AbstractImagePrototype strategy_icon_load3();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load4.png")
+  public AbstractImagePrototype strategy_icon_load4();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load1.png")
   public AbstractImagePrototype tactic_icon_load1();
 
@@ -309,6 +321,12 @@ public interface Icons extends ImageBundle
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load4.png")
   public AbstractImagePrototype tactic_icon_load4();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_bullet1.png")
+  public AbstractImagePrototype strategy_icon_bullet1();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_bullet2.png")
+  public AbstractImagePrototype strategy_icon_bullet2();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_bullet1.png")
   public AbstractImagePrototype tactic_icon_bullet1();

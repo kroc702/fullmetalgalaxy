@@ -56,33 +56,67 @@ public class BoardIcons
   }
 
 
-  public static AbstractImagePrototype iconLoad(int p_loadSize)
+  public static AbstractImagePrototype iconLoad(int p_zoom, int p_loadSize)
   {
-    switch( p_loadSize )
+    switch( p_zoom )
     {
-    case 1:
-      return Icons.s_instance.tactic_icon_load1();
-    case 2:
-      return Icons.s_instance.tactic_icon_load2();
-    case 3:
-      return Icons.s_instance.tactic_icon_load3();
-    case 4:
-      return Icons.s_instance.tactic_icon_load4();
     default:
-      return null;
+    case EnuZoom.Medium:
+      switch( p_loadSize )
+      {
+      case 1:
+        return Icons.s_instance.tactic_icon_load1();
+      case 2:
+        return Icons.s_instance.tactic_icon_load2();
+      case 3:
+        return Icons.s_instance.tactic_icon_load3();
+      case 4:
+        return Icons.s_instance.tactic_icon_load4();
+      default:
+        return null;
+      }
+    case EnuZoom.Small:
+      switch( p_loadSize )
+      {
+      case 1:
+        return Icons.s_instance.strategy_icon_load1();
+      case 2:
+        return Icons.s_instance.strategy_icon_load2();
+      case 3:
+        return Icons.s_instance.strategy_icon_load3();
+      case 4:
+        return Icons.s_instance.strategy_icon_load4();
+      default:
+        return null;
+      }
     }
-  }
+}
 
-  public static AbstractImagePrototype iconBullet(int p_bulletCount)
+  public static AbstractImagePrototype iconBullet(int p_zoom, int p_bulletCount)
   {
-    switch( p_bulletCount )
+    switch( p_zoom )
     {
-    case 1:
-      return Icons.s_instance.tactic_icon_bullet1();
-    case 2:
-      return Icons.s_instance.tactic_icon_bullet2();
     default:
-      return null;
+    case EnuZoom.Medium:
+      switch( p_bulletCount )
+      {
+      case 1:
+        return Icons.s_instance.tactic_icon_bullet1();
+      case 2:
+        return Icons.s_instance.tactic_icon_bullet2();
+      default:
+        return null;
+      }
+    case EnuZoom.Small:
+      switch( p_bulletCount )
+      {
+      case 1:
+        return Icons.s_instance.strategy_icon_bullet1();
+      case 2:
+        return Icons.s_instance.strategy_icon_bullet2();
+      default:
+        return null;
+      }
     }
   }
 
