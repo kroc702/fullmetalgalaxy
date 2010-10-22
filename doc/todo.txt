@@ -18,11 +18,10 @@ A verifier:
 - ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
 - ne pas sélectioner le pion qui viens de finir une action
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
+- utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 
 TODO
 ====
-- utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
-
 - gestion du débarquement gratuit. (en t/t uniquement ?)
 - ajout d'une variante respect strict des règles :
 	- gestion du stock de pion
