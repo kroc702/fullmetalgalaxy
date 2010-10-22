@@ -370,9 +370,10 @@ public class EventsPlayBuilder implements GameEventStack
    * This method is part of the user building action API.
    * if user click on board.
    * @param p_position
+   * @param p_searchPath if true, EventPlayBuilder will try to find a long path to achieve actions.
    * @return true if action has changed
    */
-  public EventBuilderMsg userBoardClick(AnBoardPosition p_position) throws RpcFmpException
+  public EventBuilderMsg userBoardClick(AnBoardPosition p_position, boolean p_searchPath) throws RpcFmpException
   {
     EventBuilderMsg isUpdated = EventBuilderMsg.None;
     RpcUtil.logDebug( "user click board " + p_position );
@@ -463,7 +464,13 @@ public class EventsPlayBuilder implements GameEventStack
 
             }
 
-            if( isUpdated == EventBuilderMsg.None )
+            if( !p_searchPath && !getSelectedToken().isNeighbor( p_position ) )
+            {
+              // user standard click far away: clear current action
+              clear();
+              isUpdated = EventBuilderMsg.Updated;
+            }
+            else if( isUpdated == EventBuilderMsg.None )
             {
               // move previously selected token to that position
               if( moveSelectedTo( p_position ) )
@@ -472,7 +479,7 @@ public class EventsPlayBuilder implements GameEventStack
               }
             }
 
-            if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad) )
+            if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad) && !getActionList().isEmpty() )
             {
               setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
             }
@@ -483,26 +490,34 @@ public class EventsPlayBuilder implements GameEventStack
             AnBoardPosition closePosition = getSelectedPosition().getNeighbour(
                 getSelectedPosition().getNeighbourSector( p_position ) );
 
-            // first add a construct action
-            EbEvtConstruct actionConstruct = (EbEvtConstruct)getSelectedAction();
-            actionConstruct.setGame( m_game );
-            actionConstruct.setAccountId( getAccountId() );
-            actionAdd( actionConstruct );
-
-            // then unload token
-            userTokenClick( actionConstruct.getToken( m_game ) );
-            exec();
-            // we never construct barge token.
-            // assume that constructed token has only one hexagon
-            actionUnloadSelected( closePosition );
-
-            if( !closePosition.equals( p_position ) )
+            if( !p_searchPath && !closePosition.equals( p_position ) )
             {
-              setSelectedAction( null );
-              setSelectedPosition( closePosition );
-              setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
-              moveSelectedTo( p_position );
-              setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+              // user standard click far away: clear current action
+              clear();
+            }
+            else
+            {
+              // first add a construct action
+              EbEvtConstruct actionConstruct = (EbEvtConstruct)getSelectedAction();
+              actionConstruct.setGame( m_game );
+              actionConstruct.setAccountId( getAccountId() );
+              actionAdd( actionConstruct );
+  
+              // then unload token
+              userTokenClick( actionConstruct.getToken( m_game ) );
+              exec();
+              // we never construct barge token.
+              // assume that constructed token has only one hexagon
+              actionUnloadSelected( closePosition );
+  
+              if( !closePosition.equals( p_position ) )
+              {
+                setSelectedAction( null );
+                setSelectedPosition( closePosition );
+                setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
+                moveSelectedTo( p_position );
+                setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+              }
             }
             isUpdated = EventBuilderMsg.Updated;
           }
@@ -557,24 +572,37 @@ public class EventsPlayBuilder implements GameEventStack
               selectBoardToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ), getAction( 0 )
                   .getSelectedPosition( m_game ) );
             }
+            
             if( closePosition2 != null )
             {
               if( !closePosition2.equals( p_position ) )
               {
-                setSelectedAction( null );
-                setSelectedPosition( closePosition2 );
-                setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
-                moveSelectedTo( p_position );
-                setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+                if(!p_searchPath)
+                {
+                  // user standard click far away: clear current action
+                  clear();
+                } else {
+                  setSelectedAction( null );
+                  setSelectedPosition( closePosition2 );
+                  setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
+                  moveSelectedTo( p_position );
+                  setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+                }
               }
             }
             else if( !closePosition.equals( p_position ) )
             {
-              setSelectedAction( null );
-              setSelectedPosition( closePosition );
-              setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
-              moveSelectedTo( p_position );
-              setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+              if(!p_searchPath)
+              {
+                // user standard click far away: clear current action
+                clear();
+              } else {
+                setSelectedAction( null );
+                setSelectedPosition( closePosition );
+                setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
+                moveSelectedTo( p_position );
+                setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
+              }
             }
             isUpdated = EventBuilderMsg.Updated;
           }
@@ -591,28 +619,34 @@ public class EventsPlayBuilder implements GameEventStack
           if( getSelectedAction() == null )
           {
             boolean isPathFound = true;
-            /*AnBoardPosition closePosition = p_position.getNeighbour( p_position
-                .getNeighbourSector( getSelectedPosition() ) );
-            if( !closePosition.equals( getSelectedPosition() ) )*/
             AnBoardPosition closePosition = p_position.getNeighbour( p_position
                 .getNeighbourSector( getSelectedToken().getPosition() ) );
-            if( !closePosition.equals( getSelectedToken().getPosition() ) )
+            if( !p_searchPath && !token.isNeighbor( getSelectedToken() ) )
             {
-              isPathFound = moveSelectedTo( closePosition );
-            }
-            if( token.getType() == TokenType.Turret )
-            {
-              token = getGame().getToken( p_position, TokenType.Freighter );
-              assert token != null;
-            }
-            if( isPathFound )
-            {
-              actionLoadSelected( token, p_position );
+              // user standard click far away: clear current action
+              clear();
+              selectBoardToken( token, p_position );
             }
             else
             {
-              clear();
-              selectBoardToken( token, p_position );
+              if( !closePosition.equals( getSelectedToken().getPosition() ) )
+              {
+                isPathFound = moveSelectedTo( closePosition );
+              }
+              if( token.getType() == TokenType.Turret )
+              {
+                token = getGame().getToken( p_position, TokenType.Freighter );
+                assert token != null;
+              }
+              if( isPathFound )
+              {
+                actionLoadSelected( token, p_position );
+              }
+              else
+              {
+                clear();
+                selectBoardToken( token, p_position );
+              }
             }
             isUpdated = EventBuilderMsg.Updated;
           }
@@ -655,6 +689,12 @@ public class EventsPlayBuilder implements GameEventStack
             {
               // it is a transfer !
               actionTransferSelected( token, p_position );
+              isUpdated = EventBuilderMsg.Updated;
+            }
+            else if( !p_searchPath )
+            {
+              // user standard click far away: clear current action
+              clear();
               isUpdated = EventBuilderMsg.Updated;
             }
             else
@@ -709,7 +749,11 @@ public class EventsPlayBuilder implements GameEventStack
             {
               // it is a transfer !
               actionTransferSelected( token, p_position );
-              isUpdated = EventBuilderMsg.Updated;
+            }
+            else if( !p_searchPath )
+            {
+              // user standard click far away: clear current action
+              clear();
             }
             else
             {
@@ -734,8 +778,8 @@ public class EventsPlayBuilder implements GameEventStack
                 setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
               }
               actionLoadSelected( token, p_position );
-              isUpdated = EventBuilderMsg.Updated;
             }
+            isUpdated = EventBuilderMsg.Updated;
           }
         }
       }
@@ -815,7 +859,7 @@ public class EventsPlayBuilder implements GameEventStack
         {
           AnBoardPosition selectedPosition = getSelectedPosition();
           clear();
-          userBoardClick( selectedPosition );
+          userBoardClick( selectedPosition, false );
         }
         // a token inside another token: prepare to unload !
         EbEvtUnLoad action = new EbEvtUnLoad();

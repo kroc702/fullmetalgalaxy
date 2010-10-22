@@ -39,6 +39,7 @@ import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -248,15 +249,17 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     try
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
+      // this is a test to avoid select current token
       if( position.equals( ModelFmpMain.model().getActionBuilder().getLastUserClick() )
           && ModelFmpMain.model().getActionBuilder().isRunnable() )
       {
         ModelFmpMain.model().getActionBuilder().userOk();
         ModelFmpMain.model().runCurrentAction();
       }
-      else // this is more a test to avoid select current token
+      else 
       {
-        eventBuilderMsg = ModelFmpMain.model().getActionBuilder().userBoardClick( position );
+        boolean searchPath = p_event.isControlKeyDown() || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
+        eventBuilderMsg = ModelFmpMain.model().getActionBuilder().userBoardClick( position, searchPath );
       }
       switch( eventBuilderMsg )
       {
@@ -275,7 +278,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       ModelFmpMain.model().getActionBuilder().cancel();
       try
       {
-        ModelFmpMain.model().getActionBuilder().userBoardClick( position );
+        ModelFmpMain.model().getActionBuilder().userBoardClick( position, false );
       } catch( Throwable iniore )
       {
       }
