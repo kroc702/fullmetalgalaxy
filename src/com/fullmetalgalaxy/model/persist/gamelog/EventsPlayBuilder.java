@@ -203,7 +203,8 @@ public class EventsPlayBuilder implements GameEventStack
         exec();
       }
 
-      if( (getLastAction().getType() == GameLogType.EvtMove) && (getSelectedToken() != null)
+      if( (getLastAction().getType() == GameLogType.EvtMove || getLastAction().getType() == GameLogType.EvtFire) 
+          && (getSelectedToken() != null)
           && (getSelectedToken().getLocation() == Location.Board) )
       {
         getGame().getBoardFireCover().decFireCover( getSelectedToken() );
@@ -211,8 +212,14 @@ public class EventsPlayBuilder implements GameEventStack
         getGame().getBoardFireCover().incFireCover( getSelectedToken() );
         if( fireCoverColor.getValue() != EnuColor.None )
         {
-          throw new RpcFmpException(
+          if( getLastAction().getType() == GameLogType.EvtMove)
+          {
+            throw new RpcFmpException(
               "un mouvement ne peut se terminer dans une zone de feu adverse. Vous pouvez quand meme effectuer un tir" );
+          } else {
+            throw new RpcFmpException(
+              "apres ce tir le destructeur est toujours dans une zone de feu adverse. Vous pouvez selectioner une autre cible" );
+          }
         }
       }
 
@@ -618,34 +625,46 @@ public class EventsPlayBuilder implements GameEventStack
           // user click on another token
           if( getSelectedAction() == null )
           {
-            boolean isPathFound = true;
-            AnBoardPosition closePosition = p_position.getNeighbour( p_position
-                .getNeighbourSector( getSelectedToken().getPosition() ) );
-            if( !p_searchPath && !token.isNeighbor( getSelectedToken() ) )
+            if( previousAction!=null && previousAction.getType()==GameLogType.EvtFire )
             {
-              // user standard click far away: clear current action
-              clear();
-              selectBoardToken( token, p_position );
+              // user is firing and click on another token:
+              // he want a double shoot !
+              userAction(GameLogType.EvtFire);
+              ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( ((EbEvtFire)previousAction).getTokenDestroyer2( m_game ) );
+              actionFire( token, p_position );
             }
             else
             {
-              if( !closePosition.equals( getSelectedToken().getPosition() ) )
+              boolean isPathFound = true;
+              AnBoardPosition closePosition = p_position.getNeighbour( p_position
+                  .getNeighbourSector( getSelectedToken().getPosition() ) );
+              if( !p_searchPath && !token.isNeighbor( getSelectedToken() ) )
               {
-                isPathFound = moveSelectedTo( closePosition );
-              }
-              if( token.getType() == TokenType.Turret )
-              {
-                token = getGame().getToken( p_position, TokenType.Freighter );
-                assert token != null;
-              }
-              if( isPathFound )
-              {
-                actionLoadSelected( token, p_position );
+                // user standard click far away: clear current action
+                clear();
+                selectBoardToken( token, p_position );
               }
               else
               {
-                clear();
-                selectBoardToken( token, p_position );
+                // user want to load a token into another
+                if( !closePosition.equals( getSelectedToken().getPosition() ) )
+                {
+                  isPathFound = moveSelectedTo( closePosition );
+                }
+                if( token.getType() == TokenType.Turret )
+                {
+                  token = getGame().getToken( p_position, TokenType.Freighter );
+                  assert token != null;
+                }
+                if( isPathFound )
+                {
+                  actionLoadSelected( token, p_position );
+                }
+                else
+                {
+                  clear();
+                  selectBoardToken( token, p_position );
+                }
               }
             }
             isUpdated = EventBuilderMsg.Updated;

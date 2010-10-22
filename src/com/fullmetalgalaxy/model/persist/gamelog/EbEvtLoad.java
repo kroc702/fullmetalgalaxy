@@ -101,7 +101,6 @@ public class EbEvtLoad extends AnEventPlay
   public void check(EbGame p_game) throws RpcFmpException
   {
     super.check(p_game);
-    assert getOldColor() == getToken(p_game).getColor();
 
     // check both token is on board
     if( (getToken(p_game).getLocation() != Location.Board)
