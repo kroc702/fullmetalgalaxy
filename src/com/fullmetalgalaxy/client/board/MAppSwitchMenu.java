@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.client.MApp;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -47,6 +48,18 @@ public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewH
 
   private Image m_button = new Image( "images/blank.gif" );
   private boolean m_isMenuVisible = true;
+
+  /**
+   * Create a new timer that will hide menu
+   */
+  private Timer m_hideTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      hideMenu();
+    }
+  };
 
 
   /**
@@ -91,7 +104,10 @@ public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewH
   public void show(HistoryState p_state)
   {
     super.show( p_state );
-    hideMenu();
+    showMenu();
+    // leave menu longuer at beginning
+    m_hideTimer.cancel();
+    m_hideTimer.schedule( 15 * 1000 );
     AppMain.instance().addPreviewListener( this );
   }
 
@@ -141,6 +157,7 @@ public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewH
       menu.setVisible( true );
     }
     m_isMenuVisible = true;
+    m_hideTimer.schedule( 5 * 1000 );
   }
 
   private void hideMenu()
