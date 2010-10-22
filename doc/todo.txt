@@ -19,6 +19,8 @@ A verifier:
 - ne pas sélectioner le pion qui viens de finir une action
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
 - utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
+- Corrige: On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
+- tirer 2 fois après être entré dans une zone de feu
 
 TODO
 ====
@@ -28,7 +30,6 @@ TODO
 	- la réserve de point arrondi a 5 point (t/t uniquement)
 	- les neutralisations tournante ne plaisent pas a tous...
 	- ...
-- tirer 2 fois après être entré dans une zone de feu
 - ajouter un tache cron pour faire évoluer les parties non regardé.
 - appeler updateEbGame plus régulièrement et même si aucune action n'est executé
 - trouver un moyen simple de gérer des messages i18n, paramettrés, persitable facilement 
@@ -43,7 +44,6 @@ bugs :
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
   -> après avoir ajouté une action, on déselectionne les pions hors plateaux (EventsPlayBuilder ln1029)
 
-- On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - les icons 'bullets' ne se rafraichissent pas correctement
 - un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
