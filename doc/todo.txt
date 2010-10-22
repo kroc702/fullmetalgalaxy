@@ -21,6 +21,8 @@ A verifier:
 - utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
 - Corrige: On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
 - tirer 2 fois après être entré dans une zone de feu
+- l'action de chargement d'un char dans la barge doit se faire en une seule action
+- un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
 
 TODO
 ====
@@ -43,14 +45,13 @@ bugs :
 - annulation de l'action construction
 - quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
   -> après avoir ajouté une action, on déselectionne les pions hors plateaux (EventsPlayBuilder ln1029)
-
+  -> et en deux fois ca plante
+  
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - les icons 'bullets' ne se rafraichissent pas correctement
-- un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
 - le marqueur [fire disable] disparait si on souhaite quitter la zone de feu puis annule l'action
-- l'action de chargement d'un char dans la barge doit se faire en une seule action
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
 - si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
@@ -163,11 +164,8 @@ Différences avec le jeu original:
 - Pas de limite du nombre de pièce dans la construction
 - arrondi des pt d'action
 - pas d'embourbement volontaire
-- l'ordre des joueurs ne tien pas compte de la position des astro
-- on ne peut pas tirer deux fois en entrant dans une zone de feu
 - prévisons de la prochaine marrée uniquement (même avec 2 pondeuses)
 - a règle "entre deux tours, deux chars ne peuvent pas	stationner côte à côte sur des montagnes." a été adaptée à "si deux chars, du même propriétaire, sont côte à côte sur des montagnes, l'un des deux ne produit pas de zone de feu"
-- La marrée est connue dès la sortie de la pondeuse météo (et non au début du tour)
 - La neutralisation est automatique et n'empêche pas de se déplacer. En revanche, un pion en mouvement ne créer pas de zone de feu (un pion ne peut donc pas pénétrer dans la zone de feu du pion qu'il neutralise)
 
 

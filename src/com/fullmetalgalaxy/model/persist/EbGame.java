@@ -1146,23 +1146,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
 
   /**
-   * @param p_token
-   * @return the size of p_token and all his loaded token take inside another token.
-   */
-  public int getTokenLoadingSize(EbToken p_token)
-  {
-    int loadingSize = p_token.getLoadingSize();
-    // ArrayList loadedTokenList = getAllTokenInside( p_token );
-    Set<EbToken> loadedTokenList = p_token.getSetContain();
-    for( Iterator<EbToken> it = loadedTokenList.iterator(); it.hasNext(); )
-    {
-      EbToken token = (EbToken)it.next();
-      loadingSize += token.getLoadingSize();
-    }
-    return loadingSize;
-  }
-
-  /**
    * determine if this token can load the given token
    * @param p_carrier the token we want load
    * @param p_token the token we want load
@@ -1184,7 +1167,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       EbToken token = (EbToken)it.next();
       freeLoadingSpace -= token.getLoadingSize();
     }
-    return freeLoadingSpace >= getTokenLoadingSize( p_token );
+    return freeLoadingSpace >= p_token.getFullLoadingSize();
   }
 
 

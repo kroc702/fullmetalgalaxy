@@ -28,6 +28,7 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -116,7 +117,6 @@ public class EbToken extends EbBase
    * This value is also used to determine with token to select in case of several
    * token on the same hexagon.
    */
-  // @Transient
   public int getZIndex()
   {
     return getZIndex( getType(), getPosition().getSector() ) + getPosition().getY() * 2
@@ -154,8 +154,7 @@ public class EbToken extends EbBase
    * offset height in pixel to display token image in tactic zoom.
    * it represent the land height.
    * @return
-   */
-  // @Transient
+   */  
   public int getLandPixOffset()
   {
     switch( getType() )
@@ -180,7 +179,6 @@ public class EbToken extends EbBase
   /**
    * @return true if this token can have a specific color (ie if not a pontoon nor ore)
    */
-  // @Transient
   public boolean canBeColored()
   {
     return canBeColored( getType() );
@@ -208,9 +206,32 @@ public class EbToken extends EbBase
 
 
   /**
+   * 
+   * @return the size of all his loaded token take inside another token.
+   */
+  public int getContainSize()
+  {
+    int loadingSize = 0;
+    for( EbToken token : getSetContain() )
+    {
+      loadingSize += token.getLoadingSize();
+    }
+    return loadingSize;
+  }
+  
+  /**
+   * @param p_token
+   * @return the size of p_token and all his loaded token take inside another token.
+   */
+  public int getFullLoadingSize()
+  {
+    return getLoadingSize() + getContainSize();
+  }
+
+  
+  /**
    * @return the size it take inside another token (don't take in account token inside him)
    */
-  // @Transient
   public int getLoadingSize()
   {
     switch( getType() )
@@ -236,7 +257,6 @@ public class EbToken extends EbBase
   /**
    * @return the size it take inside another token
    */
-  // @Transient
   public int getLoadingCapability()
   {
     switch( getType() )
@@ -265,7 +285,6 @@ public class EbToken extends EbBase
    * 
    * @return the maximum number of bullet according to the token type
    */
-  // @Transient
   public int getMaxBulletCount()
   {
     switch( getType() )
@@ -287,7 +306,7 @@ public class EbToken extends EbBase
     }
   }
 
-  // @Transient
+  
   public boolean isDestroyer()
   {
     switch( getType() )
@@ -312,7 +331,7 @@ public class EbToken extends EbBase
    * @param p_token
    * @return true if the two token have at least one neighbor position.
    */
-  // @Transient
+  
   public boolean isNeighbor(EbToken p_token)
   {
     if( (getLocation() != Location.Board) || (p_token.getLocation() != Location.Board) )
@@ -333,7 +352,7 @@ public class EbToken extends EbBase
     return false;
   }
 
-  // @Transient
+  
   public ArrayList<EbToken> getNeighborTokens()
   {
     ArrayList<EbToken> neighbor = new ArrayList<EbToken>();
@@ -351,7 +370,7 @@ public class EbToken extends EbBase
    * 
    * @return true if an opponent token is a neighbor of this token.
    */
-  // @Transient
+  
   public boolean haveOponentNeighbor()
   {
     // first determine the token owner color
@@ -371,7 +390,7 @@ public class EbToken extends EbBase
    * @param 
    * @return true if the token have at least one neighbor position with p_position.
    */
-  // @Transient
+  
   public boolean isNeighbor(AnBoardPosition p_position)
   {
     if( getPosition().isNeighbor( p_position ) )
@@ -394,7 +413,7 @@ public class EbToken extends EbBase
    * @param p_tokenType the token type value we want to load
    * @return
    */
-  // @Transient
+  
   public boolean canLoad(TokenType p_tokenType)
   {
     switch( getType() )
@@ -601,7 +620,7 @@ public class EbToken extends EbBase
   /**
    * @return the size in hexagon of the token
    */
-  // @Transient
+  
   public int getHexagonSize()
   {
     switch( getType() )
@@ -620,7 +639,7 @@ public class EbToken extends EbBase
    * @param p_token
    * @return all board positions of a given token 
    */
-  // @Transient
+  
   public ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition> getExtraPositions()
   {
     ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition> list = new ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition>();
@@ -707,7 +726,7 @@ public class EbToken extends EbBase
 
 
 
-  // @Transient
+  
   public EnuColor getEnuColor()
   {
     return new EnuColor( getColor() );
