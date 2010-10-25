@@ -28,8 +28,6 @@ package com.fullmetalgalaxy.client.board;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.model.GameType;
-import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;

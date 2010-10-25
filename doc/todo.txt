@@ -1,28 +1,18 @@
 A verifier:
 ===========
-- on peut déposer un minerais dans l'eau
 - j'ai pu décharger d'un crabe & d'une barge [tide deactive] un char sur un récif dans l'eau.
 - après le décollage de tout les astronefs d'un joueur, il faut passer son tour
 - on peut tirer avec le second destructeur neutralisé
-- on ne peut pas construire un char directement dans l'astro (la tourelle ne charge pas)
 - on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
-- pas possible d'initier un tir avec une tourelle (donc pas de tir avec 2 tourelles)
 - On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
 - si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
 - le marqueur de pion [fire disable] ne s'affiche pas s'il est dans une zone hachuré qui redeviens normale
 - si un char adverse [fire disable] quitte une zone de feu, le marqueur [FD] reste.
 - de même il ne disparait pas automatiquement si normale -> hachuré
-- le comptage du nb de point d'action pour le déplacement de la barge peu être mauvais
 - lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
 - si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
-- ne connaitre la marée que si la pondeuse était sortie lors du derniers changement de tour
-- ne pas sélectioner le pion qui viens de finir une action
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
-- utiliser le clic droit (ou ctrl) pour les longs déplacements, annuler l'action sinon
-- Corrige: On peut entrer dans une zone de feu pour tirer même si on est encore neutralisé après
-- tirer 2 fois après être entré dans une zone de feu
-- l'action de chargement d'un char dans la barge doit se faire en une seule action
-- un crabe dans une barge n'ajoute qu'un petit carré de chargement alors qu'il occupe deux places
+- les icons 'bullets' ne se rafraichissent pas correctement
 
 TODO
 ====
@@ -42,19 +32,11 @@ et transportable du serveur au client (package rpc).
 
 bugs :
 ======
-- annulation de l'action construction
-- quand on sort d'une pondeuse, un crabe pour prendre un minerais directement, les boutons ok/ko ne sont pas affiché.
-  -> après avoir ajouté une action, on déselectionne les pions hors plateaux (EventsPlayBuilder ln1029)
-  -> et en deux fois ca plante
-  
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
-- les icons 'bullets' ne se rafraichissent pas correctement
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
 - le marqueur [fire disable] disparait si on souhaite quitter la zone de feu puis annule l'action
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
-- si dans la même action, on fait sortir un crabe (de l'astro) juste a coté d'un minerais, puis on clique sur le minerais, ca ne fonctionne pas.
-- si on transfert un char d'une pondeuse vers un crabe, l'image transparente est celle d'un minerais. 
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
  

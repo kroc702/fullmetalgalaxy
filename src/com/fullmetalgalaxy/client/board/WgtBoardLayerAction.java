@@ -43,6 +43,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtUnLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
@@ -187,9 +188,9 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       if( action.getType() == GameLogType.EvtMove )
       {
         if( (nextAction == null)
-            || ((nextAction.getType() == GameLogType.EvtLoad) && (((EbEvtLoad)nextAction)
-.getToken(
-                ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)) )
+            || ((nextAction.getType() == GameLogType.EvtLoad) 
+                && (((EbEvtLoad)nextAction).getToken(  ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+                && (firstAction.getType() != GameLogType.EvtConstruct) ) )
         {
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
           {
@@ -247,36 +248,62 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       else if( action.getType() == GameLogType.EvtLoad )
       {
         // hardly nothing to display as the transparent token is displayed with
-        // the
-        // potential next unload action.
+        // the potential next unload action.
         if( (nextAction != null) && (nextAction.getType() == GameLogType.EvtUnLoad) )
         {
           // the loaded token will be strait unloaded
-          AnBoardPosition position = ((EbEvtLoad)action).getTokenCarrier(
+          AnBoardPosition position = ((AnEventPlay)action).getTokenCarrier(
               ModelFmpMain.model().getGame() ).getPosition().newInstance();
-          position.setSector( ((EbEvtLoad)action).getToken( ModelFmpMain.model().getGame() )
+          position.setSector( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() )
               .getPosition()
               .getNeighbourSector(
               position ) );
           drawFoot( position );
         }
-        else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove)
-            && (((EbEvtLoad)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore) )
+        else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
+            && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
-          drawTransparentToken( ((EbEvtLoad)action).getToken( ModelFmpMain.model().getGame() ),
-              ((EbEvtMove)previousAction)
-              .getNewPosition() );
+          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+              ((AnEventPlay)previousAction).getNewPosition() );
         }
         else if( ModelFmpMain.model().getActionBuilder().getSelectedAction() == null )
         {
-          drawTransparentToken( ((EbEvtLoad)action).getToken( ModelFmpMain.model().getGame() ),
-              ((EbEvtLoad)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition() );
+          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+              ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition() );
+        }
+
+      }
+      else if( action.getType() == GameLogType.EvtTransfer)
+      {
+        // hardly nothing to display as the transparent token is displayed with
+        // the potential next unload action.
+        if( (nextAction != null) && (nextAction.getType() == GameLogType.EvtUnLoad) )
+        {
+          // the loaded token will be strait unloaded
+          AnBoardPosition position = ((AnEventPlay)action).getNewTokenCarrier(
+              ModelFmpMain.model().getGame() ).getPosition().newInstance();
+          position.setSector( ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition()
+              .getNeighbourSector( position ) );
+          drawFoot( position );
+        }
+        else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
+            && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (firstAction.getType() != GameLogType.EvtConstruct) )
+        {
+          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+              ((AnEventPlay)previousAction).getNewPosition() );
+        }
+        else if( ModelFmpMain.model().getActionBuilder().getSelectedAction() == null )
+        {
+          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+              ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition() );
         }
 
       }
       else if( action.getType() == GameLogType.EvtUnLoad )
       {
-        if( (nextAction != null) && (nextAction.getType() == GameLogType.EvtMove) )
+        if( (nextAction != null) && (nextAction.getType() == GameLogType.EvtMove || nextAction.getType() == GameLogType.EvtLoad) )
         {
           drawFoot( ((EbEvtUnLoad)action).getNewPosition() );
         }
@@ -353,9 +380,14 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
             position.setSector( position
                 .getNeighbourSector( ((EbEvtUnLoad)action).getNewPosition() ) );
           }
-          drawTransparentToken( ((EbEvtUnLoad)action).getToken( ModelFmpMain.model().getGame() ),
+          TokenType tokenType = action.getToken( ModelFmpMain.model().getGame() ).getType();
+          if( firstAction != null && firstAction.getType() == GameLogType.EvtConstruct)
+          {
+            tokenType = ((EbEvtConstruct)firstAction).getConstructType();
+          }
+          drawTransparentToken( tokenType,
+              ((EbEvtUnLoad)action).getTokenCarrier(ModelFmpMain.model().getGame()).getEnuColor(),
               position );
-          // ((EbActionUnLoad)action).getTokenCarrier().getPosition() );
         }
       }
       else if( action instanceof EbEvtFire )
@@ -374,135 +406,6 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
     }
     m_images.hideOtherImage();
   }
-  /**
-   * redraw the full action layer.  
-   */
-  /*
-    protected void redrawAction()
-    {
-      EbActionPlay action = ModelFmpMain.model().getAction();
-      m_actionLastUpdate = action.getLastUpdate().getTime();
-
-      m_images.resetImageIndex();
-      Image image = null;
-
-      switch( action.getType() )
-      {
-      case Selected:
-        assert action.getPosition().size() > 0;
-        assert action.getToken().size() == 1;
-        // image = m_images.getNextImage();
-        // BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
-        // setWidgetHexPosition( image, action.getPosition( 0 ) );
-        break;
-
-      case Move:
-        assert action.getPosition().size() > 0;
-        assert action.getToken().size() >= 1;
-        // image = m_images.getNextImage();
-        // BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
-        // setWidgetHexPosition( image, action.getPosition( 0 ) );
-        if( action.getToken().size() == 2 )
-        {
-          // token leave another token
-          image = m_images.getNextImage();
-          TokenImages.getTokenImage( ((EbToken)action.getToken( 1 )), getZoom().getValue() ).applyTo(
-              image );
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( 0 ) );
-        }
-
-        for( int i = 1; i < action.getPosition().size(); i++ )
-        {
-          image = m_images.getNextImage();
-          BoardIcons.foots( getZoom().getValue() ).applyTo( image );
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( i ) );
-        }
-        break;
-
-      case Unload:
-        assert action.getPosition().size() >= 2;
-        assert action.getToken().size() >= 2;
-        // image = m_images.getNextImage();
-        // BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
-        // setWidgetHexPosition( image, action.getPosition( 0 ) );
-        image = m_images.getNextImage();
-        EbToken movingToken = ((EbToken)action.getToken( action.getToken().size() - 1 ));
-        TokenImages.getTokenImage( movingToken, getZoom().getValue() ).applyTo( image );
-        DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-        setWidgetHexPosition( image, action.getPosition( 0 ) );
-        int footCount = action.getPosition().size() + 1 - action.getToken().size();
-        for( int i = 1; i < action.getPosition().size(); i++ )
-        {
-          image = m_images.getNextImage();
-          if( i + footCount >= action.getPosition().size() )
-          {
-            BoardIcons.foots( getZoom().getValue() ).applyTo( image );
-          }
-          else
-          {
-            movingToken = ((EbToken)action.getToken( i ));
-            TokenImages.getTokenImage( movingToken, getZoom().getValue() ).applyTo( image );
-          }
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( i ) );
-        }
-        break;
-
-      case Fire:
-        assert action.getPosition().size() >= 2;
-        assert action.getToken().size() >= 2;
-        // draw target
-        image = m_images.getNextImage();
-        BoardIcons.target( getZoom().getValue() ).applyTo( image );
-        setWidgetHexPosition( image, action.getPosition( 0 ) );
-        // draw selection on first shooter
-        image = m_images.getNextImage();
-        BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
-        DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-        setWidgetHexPosition( image, action.getPosition( 1 ) );
-        if( action.getPosition().size() >= 3 )
-        {
-          // draw selection on second shooter
-          image = m_images.getNextImage();
-          BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( 2 ) );
-        }
-        if( action.getPosition().size() >= 4 )
-        {
-          // draw foots
-          image = m_images.getNextImage();
-          BoardIcons.foots( getZoom().getValue() ).applyTo( image );
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( 3 ) );
-        }
-        break;
-
-      case Landing:
-        if( (action.getPosition().size() == 1) && (action.getToken().size() == 1) )
-        {
-          image = m_images.getNextImage();
-          EbToken landingToken = ((EbToken)action.getToken( 0 ));
-          TokenImages.getTokenImage( landingToken, getZoom().getValue() ).applyTo( image );
-          DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-          setWidgetHexPosition( image, action.getPosition( 0 ) );
-        }
-        break;
-
-      case EndTurn:
-      case None:
-        break;
-
-      default:
-        Window.alert( "WgtBoardLayerAction::redrawAction() " + action.getType()
-            + " action is unknown" );
-        break;
-      }
-      m_images.hideOtherImage();
-    }*/
-
 
 
 }

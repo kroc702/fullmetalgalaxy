@@ -536,8 +536,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       ((AnEventUser)action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
       action.setLastUpdate( ServerUtil.currentDate() );
-      action.checkedExec( game );
       game.addEvent( action );
+      action.checkedExec( game );
     }
 
     dataStore.save( game );
