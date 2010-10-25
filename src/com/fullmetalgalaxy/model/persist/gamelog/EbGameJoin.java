@@ -155,15 +155,6 @@ public class EbGameJoin extends AnEventUser
     {
       registration.setPtAction( 0 );
     }
-    // TODO sort randomly player order - how ? as they must have the same order
-    // on all clients
-    // Warning: currentPlayerRegistration must have an id (ie already persisted)
-    /*int index = 0;
-    for( EbRegistration otherRegistration : game.getSetRegistration() )
-    {
-      otherRegistration.setOrderIndex( index );
-      index++;
-    }*/
     registration.setOrderIndex( game.getSetRegistration().size() - 1 );
     // set current player as the first player
     game.setCurrentPlayerRegistration( game.getRegistrationByOrderIndex( 0 ) );

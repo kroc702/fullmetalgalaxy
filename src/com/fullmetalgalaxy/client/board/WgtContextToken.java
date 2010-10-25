@@ -62,10 +62,6 @@ public class WgtContextToken extends Composite
   {
     assert ModelFmpMain.model() != null;
     EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
-    if( !actionBuilder.isBoardTokenSelected() )
-    {
-      return;
-    }
     if( actionBuilder.getLastUpdate().getTime() != m_actionLastUpdate )
     {
       assert ModelFmpMain.model() != null;

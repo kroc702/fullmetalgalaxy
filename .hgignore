@@ -21,3 +21,5 @@ syntax: regexp
 ^war/WEB-INF/lib/jsr107cache.*\.jar$
 syntax: regexp
 ^war/fullmetalgalaxy$
+syntax: regexp
+^.*Thumbs\.db$

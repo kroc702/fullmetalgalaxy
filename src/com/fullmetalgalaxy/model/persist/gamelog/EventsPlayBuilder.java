@@ -450,25 +450,17 @@ public class EventsPlayBuilder implements GameEventStack
           // user don't click on a token
           if( getSelectedAction() == null )
           {
-            if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad) )
+            if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad)
+                && (getSelectedToken().getHexagonSize() == 2)
+                && (p_position.isNeighbor( ((EbEvtUnLoad)previousAction).getNewPosition() )) )
             {
+              // in fact user want to turn his unloaded barge.
               EbEvtUnLoad previousUnload = (EbEvtUnLoad)previousAction;
-              // so user want to move the just unloaded token, not the carrier
-              // token
-              selectBoardToken( previousUnload.getToken( m_game ), previousUnload
-                  .getSelectedPosition( m_game ) );
-
-              if( (getSelectedToken().getHexagonSize() == 2)
-                  && (p_position.isNeighbor( previousUnload.getNewPosition() )) )
-              {
-                // in fact user want to turn his unloaded barge.
-                previousUnload.unexec( m_game );
-                previousUnload.getNewPosition().setSector(
-                    previousUnload.getNewPosition().getNeighbourSector( p_position ) );
-                previousUnload.exec( m_game );
-                isUpdated = EventBuilderMsg.Updated;
-              }
-
+              previousUnload.unexec( m_game );
+              previousUnload.getNewPosition().setSector(
+                  previousUnload.getNewPosition().getNeighbourSector( p_position ) );
+              previousUnload.exec( m_game );
+              isUpdated = EventBuilderMsg.Updated;
             }
 
             if( !p_searchPath && !getSelectedToken().isNeighbor( p_position ) )
@@ -574,6 +566,7 @@ public class EventsPlayBuilder implements GameEventStack
             }
             if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtLoad) )
             {
+              // TODO remove this, its not logic
               // they where other action before this unload:
               // reselect the original selected token
               selectBoardToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ), getAction( 0 )
@@ -642,7 +635,7 @@ public class EventsPlayBuilder implements GameEventStack
               {
                 // user standard click far away: clear current action
                 clear();
-                selectBoardToken( token, p_position );
+                selectBoardToken( p_position );
               }
               else
               {
@@ -663,7 +656,7 @@ public class EventsPlayBuilder implements GameEventStack
                 else
                 {
                   clear();
-                  selectBoardToken( token, p_position );
+                  selectBoardToken( p_position );
                 }
               }
             }
@@ -819,7 +812,7 @@ public class EventsPlayBuilder implements GameEventStack
     } finally
     {
       unexec();
-    }
+     }
     if( isUpdated == EventBuilderMsg.Updated )
     {
       setLastUpdate( new Date( System.currentTimeMillis() ) );
@@ -1086,11 +1079,11 @@ public class EventsPlayBuilder implements GameEventStack
     getActionList().add( p_action );
     m_selectedAction = null;
     // if a board token is selected, keep it
-    if( (m_selectedToken == null) || (m_selectedPosition == null) )
+    /*if( (m_selectedToken == null) || (m_selectedPosition == null) )
     {
       m_selectedToken = null;
       m_selectedPosition = null;
-    }
+    }*/
     setLastUpdate( new Date( System.currentTimeMillis() ) );
   }
 
@@ -1218,7 +1211,7 @@ public class EventsPlayBuilder implements GameEventStack
     {
       lastAction = getGame().getLogs().get( getGame().getLogs().size() - 1 );
     }
-    // this code was to set unload cost to 1 for any vehicle number
+    // this code is to set unload cost to 1 for a vehicle which contain other any number of vehicle
     if( (lastAction != null)
         && (lastAction.getType() == GameLogType.EvtUnLoad)
         && (((EbEvtUnLoad)lastAction).getTokenCarrier( m_game ) == action.getTokenCarrier( m_game ))
@@ -1273,23 +1266,9 @@ public class EventsPlayBuilder implements GameEventStack
     {
       lastAction = getGame().getLogs().get( getGame().getLogs().size() - 1 );
     }
-    /* this code was to set unload cost to 1 for any vehicle number
-    if( (lastAction != null)
-        && (lastAction.getType() == GameLogType.EvtUnLoad)
-        && (((EbEvtUnLoad)lastAction).getTokenCarrier( m_game ) == action.getTokenCarrier( m_game )) )
-    {
-      action.setCost( 0 );
-    }
-    if( (lastAction != null)
-        && (lastAction.getType() == GameLogType.EvtTransfer)
-        && (((EbEvtTransfer)lastAction).getTokenCarrier( m_game ) == action
-            .getTokenCarrier( m_game )) )
-    {
-      action.setCost( 0 );
-    }*/
     
     actionAdd( action );
-    // setSelectedToken( getSelectedToken() );
+    setSelectedToken( action.getToken( m_game ) );
     // setSelectedPosition( p_position );
     setSelectedAction( null );
   }
@@ -1351,13 +1330,14 @@ public class EventsPlayBuilder implements GameEventStack
       transfer.setCost( 0 );
       actionAdd( transfer );
     }
+    
     // keep the first token selected to be ready to unload it
-    EbToken token = getSelectedToken();
+    // ie prepare unload action
     selectBoardToken( p_tokenCarrier, p_position );
     EbEvtUnLoad actionUnload = new EbEvtUnLoad();
     actionUnload.setGame( getGame() );
     actionUnload.setTokenCarrier( p_tokenCarrier );
-    actionUnload.setToken( token );
+    actionUnload.setToken( action.getToken( m_game ) );
     setSelectedAction( actionUnload );
   }
 

@@ -207,7 +207,7 @@ public final class MAppContext extends MApp implements NativePreviewHandler
       m_panelMiniMap.remove( m_wgtPlayers );
       m_panelMiniMap.remove( m_wgtToken );
       m_panelMiniMap.remove( m_wgtTimeMode );
-      if( actionBuilder.isBoardTokenSelected() )
+      if( actionBuilder.isTokenSelected() )
       {
         // display current selected token
         m_panelMiniMap.add( m_wgtToken );

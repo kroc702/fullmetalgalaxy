@@ -60,6 +60,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.client.DOM;
@@ -478,10 +479,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
           {
             getGame().addEvent( event );
           }
-          isActive = true;
-        }
-        for( AnEvent event : events )
-        {
           if( event.getType() == GameLogType.EvtMessage )
           {
             DlgMessageEvent dlgMsg = new DlgMessageEvent( (EbEvtMessage)event );
@@ -496,6 +493,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
             getGame().getLastServerUpdate().setTime( event.getLastUpdate().getTime() );
             ModelFmpMain.model().getGame().updateLastTokenUpdate( null );
           }
+          isActive = true;
         }
 
         // handle chat messages
@@ -936,7 +934,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       m_currentActionIndex--;
       AnEvent action = logs.get( m_currentActionIndex );
-      if( !(action instanceof EbAdmin) )
+      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin) )
       {
         // unexec action
         try
@@ -954,6 +952,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents
         {
           p_actionCount--;
         }
+        // if previous action is EvtConstruct, then unexec too
+        if( m_currentActionIndex>0 && logs.get( m_currentActionIndex-1 ).getType() == GameLogType.EvtConstruct )
+        {
+          p_actionCount++;
+        }
       }
     }
     fireModelUpdate();
@@ -966,7 +969,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     while( (m_currentActionIndex < logs.size()) && (p_actionCount > 0) )
     {
       AnEvent action = logs.get( m_currentActionIndex );
-      if( !(action instanceof EbAdmin) )
+      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin))
       {
         // exec action
         try
@@ -979,7 +982,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
           return;
         }
         // don't count automatic action as one action to play
-        if( !action.isAuto() )
+        if( !action.isAuto() && action.getType() != GameLogType.EvtConstruct )
         {
           p_actionCount--;
         }

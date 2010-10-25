@@ -33,7 +33,6 @@ import java.util.Map;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -109,6 +108,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
       p_game.getRegistration( idRegistration ).setOrderIndex( orderIndex );
       orderIndex++;
     }
+    p_game.setCurrentPlayerRegistration( p_game.getRegistrationByOrderIndex( 0 ) );
   }
   
   /* (non-Javadoc)

@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 
@@ -69,6 +70,19 @@ public class EbEvtConstruct extends AnEventPlay
   public GameLogType getType()
   {
     return GameLogType.EvtConstruct;
+  }
+
+  @Override
+  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  {
+    if( getTokenCarrier(p_game) != null )
+    {
+      return getTokenCarrier(p_game).getPosition();
+    }
+    else
+    {
+      return getNewPosition();
+    }
   }
 
   /* (non-Javadoc)
