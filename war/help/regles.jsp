@@ -21,7 +21,7 @@
 			suivantes entre le jeu original et cette version en ligne :</FONT></P>
 			<ul>
 			  <li>Pas de d&eacute;ploiement gratuit (en cours)</li>
-			  <li>Pas de limite du nombre de pi&egrave;ce dans la construction</li>
+			  <li>Pas de limite du nombre de pi&egrave;ce dans la construction (en cours)</li>
 			</ul>
 			La notion de tour de jeu est facultative (voir mode asynchrone). Dans ce cas, tous 
 			les joueurs peuvent jouer en même temps. Ceci entraine la modification des règles
@@ -33,10 +33,10 @@
 			propri&eacute;taire, sont c&ocirc;te &agrave; c&ocirc;te sur des montagnes, l'un des
 			deux ne produit pas de zone de feu&quot;
 			</li>
-			<li>La marée est connue dès la sortie de la pondeuse météo (et non au début du tour)</li>
-			<li>La neutralisation est automatique et n'empêche pas de se déplacer. En revanche, 
+			<li>Neutralisation tournante: la neutralisation est automatique et n'empêche pas de se déplacer. 
+			En revanche, 
 			un pion en mouvement ne créer pas de zone de feu (un pion  ne peut donc pas pénétrer 
-			dans la zone de feu du pion qu'il neutralise)</li>
+			dans la zone de feu du pion qu'il neutralise).</li>
 			</ul>
 			<HR/>
 			

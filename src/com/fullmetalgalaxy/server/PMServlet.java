@@ -163,6 +163,10 @@ public class PMServlet extends HttpServlet
     {
       isOk = false;
       log.error( e );
+    } catch( Exception e )
+    {
+      isOk = false;
+      log.error( e );
     }
     return isOk;
   }

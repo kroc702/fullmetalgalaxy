@@ -129,6 +129,12 @@ public class EbAccount extends EbBase
     
   }
 
+  public boolean haveEmail()
+  {
+    return getEmail() != null && !getEmail().trim().isEmpty() && getEmail().contains( "@" );
+  }
+
+  
   // getters / setters
   // -----------------
   /**
@@ -250,7 +256,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowPrivateMsg()
   {
-    return m_allowPrivateMsg;
+    return m_allowPrivateMsg && haveEmail();
   }
 
 
@@ -268,7 +274,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowMailFromGame()
   {
-    return m_allowMailFromGame;
+    return m_allowMailFromGame && haveEmail();
   }
 
 
@@ -286,7 +292,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowMailFromNewsLetter()
   {
-    return m_allowMailFromNewsLetter;
+    return m_allowMailFromNewsLetter && haveEmail();
   }
 
 
