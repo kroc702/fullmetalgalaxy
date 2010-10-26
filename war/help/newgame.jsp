@@ -27,17 +27,20 @@
         <li>Nom : C'est le nom de la partie.</li>
         <li>Description : Ajoutez ici toute les info utiles aux futurs joueurs (ex: niveau des joueurs).</li>
         <li>Nombre max de joueur : Le maximum d'inscription.</li>
-        <li>Mode asynchrone : Si non coché, la partie se fait en tour par tour.</li>
         <li>Taille de la carte : Elle est calculé en fonction du nombre de joueur.</li>
-        <li>Vitesse du jeu : Pour l'instant seul 2 choix, Standard (un tour par jour) ou Quick (un tour toutes les 3 minutes)</li>
+        <li>Vitesse du jeu : </li>
+        <ul>
+        <li>Standard : tour par tour</li>
+        <li>StandardAsynch : Aynchrone, 3pt d'action toute les 4.8 heures (ie un tour par jour)</li>
+        <li>QuickTurnBased : un tour toutes les 3 minutes</li>
+        <li>QuickAsynch : Aynchrone, 8pt d'action toute les 100 secondes (ie un tour toutes les 3 minutes)</li>
+        </ul>
     </ul>
     Les autres champs sont de simples indications sur vos choix.<br/>
     Note: Comme pour le jeu de plateau, pour être intéressant les parties de 
     Full Metal Galaxy doivent comporter entre 3 et 9 joueurs.
     <p>
-    C'est tout, cliquez sur "Sauver/céer la partie" (utilisez l'ascenseur).<br/>
-    Les icons d'actions ne s'affichent pas tout de suite (bug), sélectionnez un pion
-    pour les faires apparaitres.
+    C'est tout, cliquez sur "Sauver/céer la partie" (utilisez l'ascenseur).
     </p>
     
     <h2>Personalisation</h2>
