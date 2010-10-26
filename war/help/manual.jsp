@@ -15,9 +15,6 @@
 
     <h1>Manuel d'utilisation</h1>
 
-<p>
-Bon, on ne peut pas tout faire... ce manuel est un début, si vous avez des remarques ou désiré m'aider, contactez moi.
-</p>
 
 <h2>raccourcis claviers</h2>
 <pre>

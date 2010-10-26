@@ -15,6 +15,10 @@
 
     <h1>Conseils aux d&eacute;butants</h1>
 
+<p>
+Ces conseils étaits données à la fin du livre de règle.
+</p>
+
 <ul>
   <li>
     Lors de l'inscription &agrave; une partie, bien regardez le type de partie (nombre de joueurs, 
@@ -50,6 +54,11 @@ d'un débutant,
 ne le croyez jamais.
   </li>
 </ul>
+
+<p>
+<a href="http://fullmetalplanete.forum2jeux.com/trucs-et-astuces-f16/les-lecons-d-alpha-t203.htm">
+Il y a aussi de véritable cours !</a>
+</p>
 
 <%@include file="/include/footer.jsp"%>
 </body>

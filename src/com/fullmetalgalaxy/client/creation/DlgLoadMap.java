@@ -53,25 +53,12 @@ import com.google.gwt.user.client.ui.Panel;
 public class DlgLoadMap extends DialogBox implements ClickHandler
 {
   // UI
-  private Map<Image, Long> m_maps = new HashMap<Image, Long>();
+  private Map<Image, String> m_maps = new HashMap<Image, String>();
   private Button m_btnCancel = new Button( "Cancel" );
   private Panel m_panel = new FlowPanel();
 
   // model
-  private List<EbGamePreview> m_gameList = null;
-  private GameFilter m_filter = new GameFilter();
   protected DlgLoadMap m_this = this;
-
-  private FmpCallback<List<EbGamePreview>> m_callbackGameList = new FmpCallback<List<EbGamePreview>>()
-  {
-    @Override
-    public void onSuccess(List<EbGamePreview> p_result)
-    {
-      super.onSuccess( p_result );
-      m_gameList = p_result;
-      redraw();
-    }
-  };
 
 
   private FmpCallback<ModelFmpInit> m_callbackFmpInit = new FmpCallback<ModelFmpInit>()
@@ -106,8 +93,6 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
 
     m_btnCancel.addClickHandler( this );
     redraw();
-    m_filter.reinit();
-    m_filter.setStatus( GameStatus.Scenario );
     setWidget( m_panel );
   }
 
@@ -119,7 +104,6 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
   public void show()
   {
     super.show();
-    Services.Util.getInstance().getGameList( m_filter, m_callbackGameList );
   }
 
 
@@ -134,26 +118,24 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
       this.hide();
       return;
     }
-    Long gameId = m_maps.get( p_event.getSource() );
-    Services.Util.getInstance().getModelFmpInit( gameId.toString(), m_callbackFmpInit );
+    String gameId = m_maps.get( p_event.getSource() );
+    Services.Util.getInstance().getModelFmpInit( gameId, m_callbackFmpInit );
   }
 
 
   protected void redraw()
   {
     m_panel.clear();
-    m_maps = new HashMap<Image, Long>();
-    if( m_gameList != null )
-    {
-      for( EbGamePreview game : m_gameList )
-      {
-        Image image = new Image( FmpConstant.getMiniMapUrl( "" + game.getId() ) );
-        image.setPixelSize( 96, 64 );
-        image.addClickHandler( this );
-        m_maps.put( image, game.getId() );
-        m_panel.add( image );
-      }
-    }
+    m_maps = new HashMap<Image, String>();
+    
+    // add original map
+    Image image = new Image( "/puzzles/original/icon.jpg" );
+    //image.setPixelSize( 96, 64 );
+    image.addClickHandler( this );
+    m_maps.put( image, "/puzzles/original/model.bin" );
+    m_panel.add( image );
+    
+    
     m_panel.add( m_btnCancel );
   }
 }
