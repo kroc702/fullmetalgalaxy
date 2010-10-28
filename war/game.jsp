@@ -17,8 +17,6 @@
 
     <body style="width:100%; height:100%; background:url(images/css/bloc-bkg.png) repeat;">
     
-    <img src="/images/loading.cache.gif" style="display:none"/>
-    
     <table width="100%" height="100%" border="0" rules="none" cellspacing="0" cellpadding="0" style="position:absolute; top:0px; right:0px; z-index:1;" >
     <tr height="50px"><td height="50px" style="height:50px; background-image:url('images/css/navbar-bkg.png'); background-repeat:repeat;">
         <table width="100%" height="40px"  border="0" rules="none" cellspacing="0" cellpadding="0">

@@ -250,9 +250,10 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
       // this is a test to avoid select current token
-      if( position.equals( ModelFmpMain.model().getActionBuilder().getLastUserClick() )
-          && ModelFmpMain.model().getActionBuilder().isRunnable() )
+      if( position.equals( ModelFmpMain.model().getActionBuilder().getLastUserClick() ) )
       {
+        ModelFmpMain.model().getActionBuilder().check();
+        
         ModelFmpMain.model().getActionBuilder().userOk();
         ModelFmpMain.model().runCurrentAction();
       }

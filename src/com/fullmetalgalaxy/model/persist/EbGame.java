@@ -1608,8 +1608,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     {
       try
       {
-        addEvent( event );
         event.exec( this );
+        addEvent( event );
       } catch( RpcFmpException e )
       {
         // print error and continue executing events

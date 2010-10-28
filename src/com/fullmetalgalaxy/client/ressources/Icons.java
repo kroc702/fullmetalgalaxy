@@ -37,6 +37,9 @@ public interface Icons extends ImageBundle
 {
   public static Icons s_instance = (Icons)GWT.create( Icons.class );
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/loading.png")
+  public AbstractImagePrototype loading();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/logout.gif")
   public AbstractImagePrototype logout();
 

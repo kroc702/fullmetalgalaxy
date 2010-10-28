@@ -46,7 +46,7 @@ public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewH
 {
   public static final String HISTORY_ID = "switch";
 
-  private Image m_button = new Image( "images/blank.gif" );
+  private Image m_button = new Image( "images/clear.cache.gif" );
   private boolean m_isMenuVisible = true;
 
   /**

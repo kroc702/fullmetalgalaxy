@@ -84,7 +84,6 @@ public class EbEvtLand extends AnEventPlay
 
 
   @Override
-  // @Transient
   public AnBoardPosition getSelectedPosition(EbGame p_game)
   {
     return getPosition();

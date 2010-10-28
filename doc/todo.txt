@@ -1,21 +1,12 @@
 A verifier:
 ===========
-- j'ai pu décharger d'un crabe & d'une barge [tide deactive] un char sur un récif dans l'eau.
 - après le décollage de tout les astronefs d'un joueur, il faut passer son tour
-- on peut tirer avec le second destructeur neutralisé
-- on peu transferer un gros tas dans un crabe sur une montagne (ca fait un warning mais ca marche !)
-- On peut traverser une zone de feu en un coup avec 2 chars neutralisant seulement
-- si on neutralise A lui même neutralisant B, alors B est toujours neutralisé
-- le marqueur de pion [fire disable] ne s'affiche pas s'il est dans une zone hachuré qui redeviens normale
-- si un char adverse [fire disable] quitte une zone de feu, le marqueur [FD] reste.
-- de même il ne disparait pas automatiquement si normale -> hachuré
-- lors de l'attaque d'une tourelle (deplacement + tir) puis annulation de l'action, le destructeur apparais avec [FD]
-- si la marré monte, on ne vérifie pas que les pontons sont relier a la terre
 - en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
-- les icons 'bullets' ne se rafraichissent pas correctement
 
 TODO
 ====
+- le marqueur "Tide" de la barge ne se met pas a jours
+
 - gestion du débarquement gratuit. (en t/t uniquement ?)
 - ajout d'une variante respect strict des règles :
 	- gestion du stock de pion
@@ -32,6 +23,7 @@ et transportable du serveur au client (package rpc).
 
 bugs :
 ======
+- le flag fire disable n'est pas sauvegardé / remis à jours par exec/unexec.
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
@@ -39,6 +31,7 @@ bugs :
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
+- les clic juste au dessus du widget ContextExtra ne fonctionnent pas
  
 Support des comptes :
 =====================
@@ -48,6 +41,7 @@ Support des comptes :
 
 Améliorations de l'IHM:
 =======================
+- les messages d'erreurs ne sont pas toujours très clairs
 - améliorer la page gamelist (utilise le cache, filtres, ...)
 - chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detail d'une partie + description partie + mail des joueurs
@@ -125,6 +119,9 @@ Variantes:
 - Variante de règle (pion supplémentaires, minerais supplémentaires, arbres, visibilité)
 - carte hexagonal, cylindrique, torique, shpèrique ?
 - Regroupement des pilotes en corporations
+- En plus du tour par tour et de l'a&synchrone: 
+  -> envoie des ordres en aveugle et résolution simulané (cf diplomacy)
+  -> tour/tour pour un grand nombre de joueur (plusieurs joueur en même temps)
 
 nouvelles unités possible:
 - hovercraft: tir a 2 cases, ne peu être transporté, ce déplace sur toute les cases 

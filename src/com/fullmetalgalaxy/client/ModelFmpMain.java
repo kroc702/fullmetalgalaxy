@@ -471,14 +471,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
         List<AnEvent> events = p_result.getGameEvents();
         for( AnEvent event : events )
         {
-          if( event.getType() == GameLogType.EvtCancel )
-          {
-            ((EbEvtCancel)event).execCancel( getGame() );
-          }
-          else
-          {
-            getGame().addEvent( event );
-          }
           if( event.getType() == GameLogType.EvtMessage )
           {
             DlgMessageEvent dlgMsg = new DlgMessageEvent( (EbEvtMessage)event );
@@ -487,11 +479,20 @@ public class ModelFmpMain implements SourceModelUpdateEvents
           }
           if( getGame() != null )
           {
+            if( event.getType() == GameLogType.EvtCancel )
+            {
+              ((EbEvtCancel)event).execCancel( getGame() );
+            }
+            
             event.exec( getGame() );
             // getGame().getLastUpdate().setTime(
             // event.getLastUpdate().getTime() );
+            if( event.getType() != GameLogType.EvtCancel )
+            {
+              getGame().addEvent( event );
+            }
             getGame().getLastServerUpdate().setTime( event.getLastUpdate().getTime() );
-            ModelFmpMain.model().getGame().updateLastTokenUpdate( null );
+            getGame().updateLastTokenUpdate( null );
           }
           isActive = true;
         }
