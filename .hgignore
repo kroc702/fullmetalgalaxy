@@ -22,4 +22,8 @@ syntax: regexp
 syntax: regexp
 ^war/fullmetalgalaxy$
 syntax: regexp
+^war/WEB-INF/appengine-generated$
+syntax: regexp
+^javadoc$
+syntax: regexp
 ^.*Thumbs\.db$

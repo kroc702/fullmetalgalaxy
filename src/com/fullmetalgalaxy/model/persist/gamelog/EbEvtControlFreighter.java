@@ -111,15 +111,6 @@ public class EbEvtControlFreighter extends AnEventPlay
       throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
     }
 
-    for( EbRegistration registration : p_game.getSetRegistration() )
-    {
-      EnuColor color = registration.getEnuColor();
-      if( color.isColored( getTokenCarrier(p_game).getColor() ) )
-      {
-        assert getOldRegistration( p_game ) == registration;
-      }
-    }
-
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
     assert myRegistration != null;
@@ -211,7 +202,7 @@ public class EbEvtControlFreighter extends AnEventPlay
 
   public void setTokenFreighter(EbToken p_token)
   {
-    setToken( p_token );
+    setTokenCarrier( p_token );
   }
 
   // cache to avoid researching again and again

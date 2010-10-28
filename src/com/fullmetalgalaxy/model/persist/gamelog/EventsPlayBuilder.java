@@ -1282,7 +1282,6 @@ public class EventsPlayBuilder implements GameEventStack
     action.setToken( p_token );
     action.setTokenFreighter( p_tokenFreighter );
     action.setCost( -1 * getGame().getEbConfigGameTime().getActionPtPerExtraShip() );
-    assert action.getOldRegistration( getGame() ) != null;
     actionAdd( action );
   }
 

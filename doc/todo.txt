@@ -27,7 +27,6 @@ bugs :
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - le marqueur de pion [warning /!\] ne s'efface pas tout seul
 - les marqueurs [FD] ne disparaissent pas après une capture d'astronef
-- le marqueur [fire disable] disparait si on souhaite quitter la zone de feu puis annule l'action
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
@@ -41,7 +40,6 @@ Support des comptes :
 
 Améliorations de l'IHM:
 =======================
-- les messages d'erreurs ne sont pas toujours très clairs
 - améliorer la page gamelist (utilise le cache, filtres, ...)
 - chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detail d'une partie + description partie + mail des joueurs
@@ -73,7 +71,7 @@ utiliser. donc des bmp de bord
 
 Amélioration de fond:
 =====================
-- utiliser App Engine's High-Performance Image Serving System pour le chargement des images de fond de carte.
+- utiliser App Engine's High-Performance Image Serving System pour le chargement des images de fond de carte/mini-map.
 - sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sérialisers vers le client (taille 18Ko -> 200Ko)
 - utilisation de objectify a fond, optimisation du datastore et retirer les persistEntity.
 - création des parties par l'import des fichiers full metal programme
@@ -100,6 +98,7 @@ Amélioration de fond:
     les nom des ressources étant généré par md5 comme les imagesBundles.
   -> Autre possibilitée: implementer un générateur du type GWT.create("interface.html")
   -> il y a qqch dans le genre dans l'incubateur
+  -> présent dans gwt2
 
 A voir:
 =======
@@ -136,7 +135,8 @@ interdiction d'en mettre 2 cote cote, transportable que par le crabe
 - missile...
 - l'Ornitoptère, sorte de planeur qui bombarde, part de son astro et doit y rentrer dans le même tour, sous peine de se crasher.
 - Le scorpion - lorsqu'il prend un minerai, il en sort deux mais n'a pas de capacité de transport, il faut donc un crabe dans une case adjacente.
-
+  -> ou bien transport de 1 et tir a 2 cases (une seule munition), pas transportable.
+  
 Différences avec le jeu original:
 =================================
 - Pas de déploiement gratuit

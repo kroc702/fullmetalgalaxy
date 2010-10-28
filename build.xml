@@ -9,8 +9,8 @@ compilation file for Full Metal Planet
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
-	<property name="appenginesdkdir" value="..\..\eclipse\plugins\com.google.appengine.eclipse.sdkbundle.1.3.6_1.3.6.v201008132057\appengine-java-sdk-1.3.6" />
-	<property name="gwtsdkdir" value="..\..\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301309\gwt-2.0.4" />
+	<property name="appenginesdkdir" value="C:\Program Files (x86)\eclipse\plugins\com.google.appengine.eclipse.sdkbundle.1.3.7_1.3.7.v201008311405\appengine-java-sdk-1.3.7" />
+	<property name="gwtsdkdir" value="C:\Program Files (x86)\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301254\gwt-2.0.4" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
@@ -82,32 +82,27 @@ compilation file for Full Metal Planet
 
 	<target name="postimages" depends="">
 		<echo message="images bundle post traitment" level="info" />
-		<reducecolor filename="war/fullmetalgalaxy/012AB58E4CF22EFC2B6AF7141A05B288.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/0C6D36B5B9AC9E07F426DBB25733A882.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/1AD5C3426E1FE88BB8CBE0CE122C5F8E.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/1F06C2BA8FDB7FCAB3FCF23A54A2D005.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/2FE6F99A862310989EC519626A2D54BE.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/5391DF1BFD3DE8914C76DEEDF4716EC9.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/548CDF11D6FE9011F3447CA200D7FB7F.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/713473C85E17063E5E60BD12076363E4.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/72DD0AA073E99E7FDAB3475BF1744D3A.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/7362E8664352A1C559B365F758112B82.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/935E1ED12BB690BC6AD2B1A25031EC53.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/9DA92932034707C17CFF15F95086D53F.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/9EECD6BBD011FBA40BF8C07AC210E04E.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/A09FC281048B63C2E0C36471A7AD5F4C.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/A142423EDF493FD488DD6BAC8A89D6F5.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/A874E0A8DB64D83F80ED4C825C52B356.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/D197F6183680C810B0FA5E4AB074B655.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/D95F47DA07C8319F9166065FD4EF1447.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/DE6E60F353CF4DCFAB4ED08C4C67525C.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/EB1C4FB7D6EC2A78C75C8FEA8A86A6F9.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/02FBEBB1E9E73C13F3D7C5F92C8DB18F.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/7E10AEC5EB89088E68BB4BAA1235465A.cache.png" />
-		<!-- old font 
-    	<reducecolor filename="war/fullmetalgalaxy/1577AC5BFDD8F9571C7FD5E76B435F3A.cache.png"/>
-    	-->
-		<reducecolor filename="war/fullmetalgalaxy/9F65BE0BCB3A3479A79EF266F3F418FD.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/1BC220DDAE3A0E7DD2AB36AC6D0F91FC.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/23DCEB7A71EAED4D59C5EFCE6FBC75B4.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/2D966E68BB76B352CA3DEB5EBA6BEBDE.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/343086729BAA3C320274EEFBEEE08BE5.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/3D9F1E8F8596DF774BC9E267BF40B658.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/3E94C7FDF3915D255ED393F0392D3ED9.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/44D36CD34907DB26651A026C0C2684AD.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/49F371730D5AD1CDEEC891BEE82B8F29.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/79BD1896F1542380BBC87905686107FD.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/7CE1D84C5BE11324C0FD35D2B942D5D4.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/870FB49E6FDE621EA20C9084E9E08BD9.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/8B6470246F748FE0D7BF0A73635BA3BA.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/903F26FDF120F010620CA336F75D8D58.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/95D976CDB2757F877AC2E46F009A301D.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/C25640596C0658D904C90CF4F26EF851.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/C9C99DF3EACAA39D3CD308E361D92913.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/D308AA6683C7C581896AC9D75ED4D073.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/DFBE352AE0539BB632855C8846F27FB0.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/E6A24DE240501AD0DE83788C984500A0.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/F568C2E7587BC6E66F3BD2FF16A68E41.cache.png" />
+		<reducecolor filename="war/fullmetalgalaxy/FA41BB8FF37AAB73BE5D6D3791BD0073.cache.png" />
 	</target>
 
 	<target name="runserver" depends="compilserver" description="Starts the development server.">
