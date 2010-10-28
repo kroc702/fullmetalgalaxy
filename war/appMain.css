@@ -60,6 +60,11 @@ code {
   background-color: white;
 }
 
+.fmp-loading {
+  border: 0px;
+  background: transparent;
+}
+
 .gwt-DialogBox .Caption {
   background-color: #666666;
   padding: 3px;

@@ -28,6 +28,7 @@ package com.fullmetalgalaxy.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,10 +38,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -72,9 +72,10 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
    */
   public void onModuleLoad()
   {
-    m_loadingPanel.setWidget( new Image( ClientUtil.getBaseUrl() + "images/loading.cache.gif" ) );
+    m_loadingPanel.setWidget( Icons.s_instance.loading().createImage() );
     m_loadingPanel.setVisible( true );
     m_loadingPanel.setStyleName( "gwt-DialogBox" );
+    m_loadingPanel.addStyleName( "fmp-loading" );
 
 
     // Hook the window resize event, so that we can adjust the UI.

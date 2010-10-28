@@ -127,22 +127,25 @@ public class EbEvtCancel extends AnEventUser
   }
 
 
-  @Override
-  public void setGame(EbGame p_game)
-  {
-    super.setGame( p_game );
-    if( p_game != null && p_game.getLogs().size() > 0 )
-    {
-      m_fromActionIndex = p_game.getLogs().size() -1;
-    }
-  }
-
   // Bean getter / setter
   // ====================
 
   public void setToActionIndex(int p_toActionIndex)
   {
     m_toActionIndex = p_toActionIndex;
+  }
+
+  public void setFromActionIndex(EbGame p_game)
+  {
+    if( p_game != null && p_game.getLogs().size() > 0 )
+    {
+      setFromActionIndex( p_game.getLogs().size() -1 );
+    }
+  }
+
+  protected void setFromActionIndex(int p_fromActionIndex)
+  {
+    m_fromActionIndex = p_fromActionIndex;
   }
 
 

@@ -252,7 +252,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   public static int createLandsRules()
   {
     int oldLength = ClientUtil.setCssRule( ".fmp-None",
-        "{position: absolute; width: 77px; background: url(images/blank.gif);}" ) - 1;
+        "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
     ClientUtil.setCssRule( ".fmp-Sea",
         " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea.png);}" );
     ClientUtil

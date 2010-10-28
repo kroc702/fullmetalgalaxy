@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
 
@@ -129,10 +130,17 @@ public class EbEvtTide extends AnEvent
       }
     }
     
+    // update all players weather hen count
+    for( EbRegistration registration : game.getSetRegistration() )
+    {
+      registration.setWorkingWeatherHenCount( p_game.haveWeatherHen( registration.getEnuColor() ) ? 1 : 0 );
+    }
+    
     game.invalidateFireCover();
   }
 
-  /* (non-Javadoc)
+  /**
+   * players weather hen count isn't unexec... I don't think it's a big issue
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
    */
   @Override

@@ -112,8 +112,14 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   private void drawTransparentToken(TokenType p_type, EnuColor p_color, AnBoardPosition p_position)
   {
     Image image = m_images.getNextImage();
-    TokenImages.getTokenImage( p_color, getZoom().getValue(), p_type, p_position.getSector() )
+    if( EbToken.canBeColored( p_type ) )
+    {
+      TokenImages.getTokenImage( p_color, getZoom().getValue(), p_type, p_position.getSector() )
         .applyTo( image );
+    } else {
+      TokenImages.getTokenImage( new EnuColor(EnuColor.None), getZoom().getValue(), p_type, p_position.getSector() )
+      .applyTo( image );
+    }
     DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
     image.addStyleName( "transparent50" );
     setWidgetHexPosition( image, p_position );
@@ -194,18 +200,10 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         {
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
           {
-            if( EbToken.canBeColored( ((EbEvtConstruct)firstAction).getConstructType() ) )
-            {
-              drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
+            drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
                   ((EbEvtConstruct)firstAction).getTokenCarrier( ModelFmpMain.model().getGame() )
                       .getEnuColor(),
                   ((EbEvtMove)action).getNewPosition() );
-            }
-            else
-            {
-              drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(), new EnuColor(
-                  EnuColor.None ), ((EbEvtMove)action).getNewPosition() );
-            }
           }
           else
           {
@@ -311,18 +309,10 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         {
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
           {
-            if( EbToken.canBeColored( ((EbEvtConstruct)firstAction).getConstructType() ) )
-            {
-              drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
+            drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
                   ((EbEvtConstruct)firstAction).getTokenCarrier( ModelFmpMain.model().getGame() )
                       .getEnuColor(),
                   ((EbEvtUnLoad)action).getNewPosition() );
-            }
-            else
-            {
-              drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(), new EnuColor(
-                  EnuColor.None ), ((EbEvtUnLoad)action).getNewPosition() );
-            }
           }
           else
           {
@@ -356,19 +346,10 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       else if( action instanceof EbEvtConstruct )
       {
         assert ((EbEvtConstruct)action).getTokenCarrier( ModelFmpMain.model().getGame() ) != null;
-        if( !EbToken.canBeColored( ((EbEvtConstruct)action).getConstructType() ) )
-        {
-          drawTransparentToken( ((EbEvtConstruct)action).getConstructType(), new EnuColor(
-              EnuColor.None ), ((EbEvtConstruct)action).getTokenCarrier(
-              ModelFmpMain.model().getGame() ).getPosition() );
-        }
-        else
-        {
-          drawTransparentToken( ((EbEvtConstruct)action).getConstructType(),
+        drawTransparentToken( ((EbEvtConstruct)action).getConstructType(),
               ((EbEvtConstruct)action).getTokenCarrier( ModelFmpMain.model().getGame() )
                   .getEnuColor(), ((EbEvtConstruct)action).getTokenCarrier(
                   ModelFmpMain.model().getGame() ).getPosition() );
-        }
       }
       else if( action instanceof EbEvtUnLoad )
       {

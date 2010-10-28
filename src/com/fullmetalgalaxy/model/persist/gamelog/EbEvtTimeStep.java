@@ -126,9 +126,6 @@ public class EbEvtTimeStep extends AnEvent
               + ((nbColor - 1) * game.getEbConfigGameTime().getActionPtPerExtraShip());
         }
         registration.setPtAction( action );
-        
-        // update wheather hen count
-        registration.setWorkingWeatherHenCount( p_game.haveWeatherHen( registration.getEnuColor() ) ? 1 : 0 );
       }
     }
     // update all tokens bullets count

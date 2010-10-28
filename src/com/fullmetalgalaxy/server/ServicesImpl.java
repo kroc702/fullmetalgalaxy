@@ -401,11 +401,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       updateGame( game );
       p_action.setLastUpdate( ServerUtil.currentDate() );
-      game.addEvent( p_action );
   
       // execute action
-      p_action.check( game );
-      p_action.exec( game );
+      p_action.checkedExec( game );
+      game.addEvent( p_action );
     }
     
     // save all events. This action is required as game->events relation isn't
@@ -422,9 +421,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       if( game.getNextTideChangeTimeStep() <= game.getCurrentTimeStep() )
       {
         EbEvtTide eventTide = new EbEvtTide();
-        game.addEvent( eventTide );
         eventTide.setNextTide( Tide.getRandom() );
+        eventTide.setGame( game );
         eventTide.checkedExec( game );
+        game.addEvent( eventTide );
       }
     }
 
@@ -452,8 +452,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         action.setAuto( true );
         action.setLastUpdate( ServerUtil.currentDate() );
         action.setAccountId( ((EbGameJoin)p_action).getAccountId() );
-        game.addEvent( action );
+        action.setGame( game );
         action.checkedExec( game );
+        game.addEvent( action );
       }
     }
     if(game.getCurrentTimeStep() == 0 
@@ -464,8 +465,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
       action.setLastUpdate( ServerUtil.currentDate() );
       action.initRandomOrder( game );
-      game.addEvent( action );
+      action.setGame( game );
       action.checkedExec( game );      
+      game.addEvent( action );
     }
     if(game.getCurrentTimeStep() == 1 
         && game.getLastGameLog().getType() == GameLogType.EvtTimeStep
@@ -475,8 +477,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
       action.setLastUpdate( ServerUtil.currentDate() );
       action.initBoardOrder( game );
-      game.addEvent( action );
+      action.setGame( game );
       action.checkedExec( game );      
+      game.addEvent( action );
     }
     
     
@@ -536,8 +539,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       ((AnEventUser)action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
       action.setLastUpdate( ServerUtil.currentDate() );
-      game.addEvent( action );
       action.checkedExec( game );
+      game.addEvent( action );
     }
 
     dataStore.save( game );
@@ -586,15 +589,17 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
                 .getEbConfigGameTime().getTimeStepDurationInMili()) )
         {
           EbEvtTimeStep event = new EbEvtTimeStep();
-          p_game.addEvent( event );
+          event.setGame( p_game );
           event.checkedExec( p_game );
+          p_game.addEvent( event );
           // p_session.persist( event );
           if( p_game.getNextTideChangeTimeStep() >= p_game.getCurrentTimeStep() )
           {
             EbEvtTide eventTide = new EbEvtTide();
             eventTide.setNextTide( Tide.getRandom() );
-            p_game.addEvent( eventTide );
+            eventTide.setGame( p_game );
             eventTide.checkedExec( p_game );
+            p_game.addEvent( eventTide );
             // p_session.persist( eventTide );
           }
           isUpdated = true;
@@ -612,8 +617,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
           EbEvtPlayerTurn event = new EbEvtPlayerTurn();
           event.setAuto( true );
-          p_game.addEvent( event );
           event.checkedExec( p_game );
+          p_game.addEvent( event );
           // p_session.persist( event );
           if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
           {

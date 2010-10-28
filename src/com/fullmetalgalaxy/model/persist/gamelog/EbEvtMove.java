@@ -177,12 +177,12 @@ public class EbEvtMove extends AnEventPlay
     EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
         getNewPosition() );
     p_game.getBoardFireCover().incFireCover( getToken(p_game) );
-    if( (p_game.getLastLog().getType() == GameLogType.EvtMove)
-        && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId())
-        && (fireCoverColorOld.getValue() != EnuColor.None) )
+    if( (fireCoverColorOld.getValue() != EnuColor.None)
+        && (p_game.getLastLog().getType() == GameLogType.EvtMove)
+        && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId())  )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken( p_game ).getType()
-          .ordinal(), fireCoverColorNew.getValue() );
+          .ordinal(), fireCoverColorOld.getValue() );
     }
     if( (fireCoverColorOld.getValue() != EnuColor.None)
         && (fireCoverColorNew.getValue() != EnuColor.None) )

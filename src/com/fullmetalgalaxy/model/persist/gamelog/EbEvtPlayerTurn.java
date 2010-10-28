@@ -214,6 +214,7 @@ public class EbEvtPlayerTurn extends AnEvent
       {
         // previous turn !
         index = game.getSetRegistration().size() - 1;
+        game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
       }
       registration = game.getRegistrationByOrderIndex( index );
       assert registration != null;

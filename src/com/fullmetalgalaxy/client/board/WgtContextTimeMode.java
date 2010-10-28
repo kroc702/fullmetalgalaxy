@@ -137,6 +137,7 @@ public class WgtContextTimeMode extends Composite implements ClickHandler
       actionBuilder.clear();
       EbEvtCancel evtCancel = new EbEvtCancel();
       evtCancel.setGame( ModelFmpMain.model().getGame() );
+      evtCancel.setFromActionIndex( ModelFmpMain.model().getGame() );
       evtCancel.setToActionIndex( ModelFmpMain.model().getCurrentActionIndex() );
       evtCancel.setAccountId( ModelFmpMain.model().getMyAccountId() );
       ModelFmpMain.model().setTimeLineMode( false );
