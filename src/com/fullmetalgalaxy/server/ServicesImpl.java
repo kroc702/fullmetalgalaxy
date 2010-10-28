@@ -57,7 +57,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
-import com.google.appengine.repackaged.net.sourceforge.yamlbeans.parser.EventType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

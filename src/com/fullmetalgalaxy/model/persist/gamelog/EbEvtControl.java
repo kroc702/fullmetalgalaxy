@@ -90,7 +90,6 @@ public class EbEvtControl extends AnEventPlay
   public void check(EbGame p_game) throws RpcFmpException
   {
     super.check(p_game);
-    assert getOldColor() == getTokenTarget(p_game).getColor();
 
     // check that player control destroyers
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer1(p_game).getColor() )
