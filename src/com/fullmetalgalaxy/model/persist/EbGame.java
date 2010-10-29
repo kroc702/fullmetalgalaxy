@@ -547,7 +547,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   /**
    * @param p_token
-   *  true if this token is in a forbiden position. ie: if p_token is a tank near another on montain.
+   *  true if this token is in a forbidden position. ie: if p_token is a tank near another on mountain.
    * @return the token with witch this token is cheating
    */
   public EbToken getTankCheating(EbToken p_token)
@@ -580,6 +580,19 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return null;
   }
 
+  /**
+   * similar to 'getTankCheating' but simply return true if this token is in a forbidden position
+   * AND is the one which should be tag as cheater. 
+   * => only of the tow tank: the lower ID
+   * @param p_token
+   * @return
+   */
+  public boolean isTankCheating(EbToken p_token)
+  {
+    EbToken nearTank = getTankCheating(p_token);
+    return (nearTank!=null) && (nearTank.getId() > p_token.getId());
+  }
+  
   /**
    * Should be called only on server side.
    * Move a token and all token he contain into any other token in the game.

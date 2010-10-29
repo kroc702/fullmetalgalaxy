@@ -82,7 +82,7 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     {
       ChatMessage message = new ChatMessage();
       message.setGameId( ModelFmpMain.model().getGame().getId() );
-      message.setFromLogin( ModelFmpMain.model().getMyPseudo() );
+      message.setFromLogin( ModelFmpMain.model().getMyLogin() );
       message.setText( m_text.getText() );
       Services.Util.getInstance().sendChatMessage( message,
           ModelFmpMain.model().getLastServerUpdate(), ModelFmpMain.model().getCallbackEvents() );

@@ -9,7 +9,8 @@
 
 
 <% if( Auth.isUserLogged(request,response) ) { %>
-<meta name='gwt:property' id='fmp_user' content='<%= Auth.getUserLogin(request,response) %>' />
+<meta name='gwt:property' id='fmp_userlogin' content='<%= Auth.getUserLogin(request,response) %>' />
+<meta name='gwt:property' id='fmp_userpseudo' content='<%= Auth.getUserPseudo(request,response) %>' />
 <meta name='gwt:property' id='fmp_userid' content='<%= Auth.getUserAccount(request,response).getId() %>' />
 <% } else { %>
 <% } %>

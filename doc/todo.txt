@@ -1,12 +1,9 @@
 A verifier:
 ===========
 - après le décollage de tout les astronefs d'un joueur, il faut passer son tour
-- en tour par tour, mélanger l'ordre des joueurs pour l'atterrissage, puis ordre des astro sur le plateau
 
 TODO
 ====
-- le marqueur "Tide" de la barge ne se met pas a jours
-
 - gestion du débarquement gratuit. (en t/t uniquement ?)
 - ajout d'une variante respect strict des règles :
 	- gestion du stock de pion
@@ -24,9 +21,8 @@ et transportable du serveur au client (package rpc).
 bugs :
 ======
 - le flag fire disable n'est pas sauvegardé / remis à jours par exec/unexec.
+- le marqueur "Tide" de la barge ne se met pas toujours a jours
 - après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
-- le marqueur de pion [warning /!\] ne s'efface pas tout seul
-- les marqueurs [FD] ne disparaissent pas après une capture d'astronef
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
@@ -58,6 +54,7 @@ Améliorations de l'IHM:
 - amélioration de la liste de partie
   -> localiser les exploitations sur une carte de la galaxie (en gros des sous repertoires 
      de partie)
+- En haut a droite, a coté de son nom, avoir la liste de ses astronefs. Un clic sur l'un d'eux, centre la vue dessus.
 - taille de plateau illimité
 - rotation du plateau de jeu
 - chat privé, envoie de messages privé (@adresse mail sans afficher l'adresse mail)
@@ -71,6 +68,7 @@ utiliser. donc des bmp de bord
 
 Amélioration de fond:
 =====================
+- Dans ServicesImpl, fusionner les deux methodes runAction & runEvent
 - utiliser App Engine's High-Performance Image Serving System pour le chargement des images de fond de carte/mini-map.
 - sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sérialisers vers le client (taille 18Ko -> 200Ko)
 - utilisation de objectify a fond, optimisation du datastore et retirer les persistEntity.
@@ -118,7 +116,7 @@ Variantes:
 - Variante de règle (pion supplémentaires, minerais supplémentaires, arbres, visibilité)
 - carte hexagonal, cylindrique, torique, shpèrique ?
 - Regroupement des pilotes en corporations
-- En plus du tour par tour et de l'a&synchrone: 
+- En plus du tour par tour et de l'asynchrone: 
   -> envoie des ordres en aveugle et résolution simulané (cf diplomacy)
   -> tour/tour pour un grand nombre de joueur (plusieurs joueur en même temps)
 

@@ -40,6 +40,7 @@ public class TokenWidget
   private long m_lastVersion = 0;
   private LandType m_lastLand = LandType.None;
   private boolean m_wasFireDisable = false;
+  private boolean m_wasTankCheating = false;
   private Image m_tokenImage = new Image();
   private Image m_iconWarningImage = new Image();
 
@@ -84,7 +85,8 @@ public class TokenWidget
     }
     if( (p_token.getVersion() != getLastUpdate())
         || (p_token.isFireDisabled() != m_wasFireDisable)
-        || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != getLastLand()) )
+        || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != getLastLand())
+        || ((game.getTankCheating(p_token)!=null) != m_wasTankCheating) )
     {
       return true;
     }
@@ -135,6 +137,7 @@ public class TokenWidget
     assert game != null;
     m_lastVersion = p_token.getVersion();
     m_wasFireDisable = p_token.isFireDisabled();
+    m_wasTankCheating = (game.getTankCheating(p_token)!=null);
     m_lastLand = game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() );
   }
 

@@ -536,6 +536,7 @@ public class EventsPlayBuilder implements GameEventStack
                 // the second position we where waiting for
                 closePosition = ((EbEvtUnLoad)getSelectedAction()).getNewPosition();
                 closePosition.setSector( closePosition.getNeighbourSector( p_position ) );
+                closePosition2 = closePosition.getNeighbour( closePosition.getSector() );
                 actionUnloadSelected( closePosition );
               }
               else
@@ -548,7 +549,7 @@ public class EventsPlayBuilder implements GameEventStack
                 }
                 if( getGame().canTokenMoveOn(
                     ((EbEvtUnLoad)getSelectedAction()).getToken( m_game ),
-                    closePosition.getNeighbour( closePosition.getSector() ) ) )
+                    closePosition ) )
                 {
                   actionUnloadSelected( closePosition );
                 }
@@ -577,7 +578,7 @@ public class EventsPlayBuilder implements GameEventStack
             {
               if( !closePosition2.equals( p_position ) )
               {
-                if(!p_searchPath)
+                if(!p_searchPath || getLastAction()==null)
                 {
                   // user standard click far away: clear current action
                   clear();
@@ -592,7 +593,7 @@ public class EventsPlayBuilder implements GameEventStack
             }
             else if( !closePosition.equals( p_position ) )
             {
-              if(!p_searchPath)
+              if(!p_searchPath || getLastAction()==null)
               {
                 // user standard click far away: clear current action
                 clear();

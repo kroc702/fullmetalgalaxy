@@ -136,6 +136,7 @@ public class EbEvtRepair extends AnEventPlay
     super.unexec(p_game);
     EbToken turret = p_game.getToken( getPosition(), TokenType.Turret );
     turret.setLocation( Location.Graveyard );
+    turret.decVersion();
     EbRegistration registration = getMyRegistration(p_game);
     registration.setTurretsToRepair( registration.getTurretsToRepair() + 1 );
   }

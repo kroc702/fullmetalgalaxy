@@ -163,8 +163,8 @@ public class EbEvtChangePlayerOrder extends AnEvent
       EbToken token = p_game.getFreighter( registration );
       if(token != null && token.getLocation() == Location.Board)
       {
-        thetaRegistrationMap.put( Math.atan2( token.getPosition().getX()-p_game.getLandWidth()/2, 
-            token.getPosition().getY()-p_game.getLandHeight()/2 ), registration );
+        thetaRegistrationMap.put( Math.atan2( token.getPosition().getY()-p_game.getLandHeight()/2 ,
+            token.getPosition().getX()-p_game.getLandWidth()/2), registration );
       } else {
         // freighter isn't on board, it will play at the end.
         thetaRegistrationMap.put( 3*Math.PI, registration );

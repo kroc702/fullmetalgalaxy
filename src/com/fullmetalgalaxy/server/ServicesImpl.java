@@ -469,8 +469,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       game.addEvent( action );
     }
     if(game.getCurrentTimeStep() == 1 
-        && game.getLastGameLog().getType() == GameLogType.EvtTimeStep
-        && !game.isAsynchron() )
+        && !game.isAsynchron()
+        && game.getLastGameLog().getType() == GameLogType.EvtTide )
     {
       // second turn: everybody should be landed
       EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();

@@ -199,17 +199,11 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       }
       else
       // if two tank are neighbor on two montains, display a warning icon
-      if( ((nearTank = game.getTankCheating( p_token )) != null) )
+      if( ((nearTank = game.getTankCheating( p_token )) != null)
+          && (nearTank.getId() > p_token.getId()) )
       {
-        if( nearTank.getId() > p_token.getId() )
-        {
-          addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.warning( getZoom()
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.warning( getZoom()
               .getValue() ), p_token, landPixOffset );
-        }
-        else
-        {
-          updateTokenWidget( nearTank, true );
-        }
       }
       else
       // display a load count image ?
