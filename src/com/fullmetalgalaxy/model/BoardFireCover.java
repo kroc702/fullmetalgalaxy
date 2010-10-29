@@ -366,7 +366,14 @@ public class BoardFireCover implements Serializable
 
   public void checkFireDisableFlag(EbToken p_token)
   {
-    assert p_token.getLocation() == Location.Board;
+    if( (p_token.getLocation() != Location.Board)
+        || (!p_token.canBeColored())
+        || (p_token.getType() == TokenType.Freighter)
+        || (p_token.getType() == TokenType.Turret) )
+    {
+      // all theses token can't be fire disabled
+      return;
+    }
     if( m_fireCover == null )
     {
       reComputeFireCover();
@@ -473,6 +480,7 @@ public class BoardFireCover implements Serializable
     m_disabledFireCover = new byte[m_game.getLandWidth()][m_game.getLandHeight()][EnuColor
         .getTotalNumberOfColor()];
     m_lockedToken.clear();
+    // compute fire cover
     for( EbToken token : m_game.getSetToken() )
     {
       if( token.isDestroyer() )
@@ -486,6 +494,11 @@ public class BoardFireCover implements Serializable
           incFireCover( token );
         }
       }
+    }
+    // some token may have to be fire enabled/disabled
+    for( EbToken token : m_game.getSetToken() )
+    {
+      checkFireDisableFlag( token );
     }
   }
 

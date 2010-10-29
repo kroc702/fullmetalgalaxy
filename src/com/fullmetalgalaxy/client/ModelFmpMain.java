@@ -97,6 +97,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   protected EventsPlayBuilder m_actionBuilder = new EventsPlayBuilder();
 
+  protected String m_myAccountLogin = null;
   protected String m_myAccountPseudo = null;
   protected long m_myAccountId = -1L;
 
@@ -289,7 +290,16 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   private void loadAccountInfoFromPage()
   {
-    RootPanel panel = RootPanel.get( "fmp_user" );
+    RootPanel panel = RootPanel.get( "fmp_userlogin" );
+    if( panel == null )
+    {
+      m_myAccountLogin = "";
+    }
+    else
+    {
+      m_myAccountLogin = DOM.getElementAttribute( panel.getElement(), "content" );
+    }
+    panel = RootPanel.get( "fmp_userpseudo" );
     if( panel == null )
     {
       m_myAccountPseudo = "";
@@ -329,6 +339,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       loadAccountInfoFromPage();
     }
     return m_myAccountPseudo;
+  }
+
+  public String getMyLogin()
+  {
+    if( m_myAccountLogin == null )
+    {
+      loadAccountInfoFromPage();
+    }
+    return m_myAccountLogin;
   }
 
 
@@ -935,7 +954,9 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       m_currentActionIndex--;
       AnEvent action = logs.get( m_currentActionIndex );
-      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin) )
+      if( !(action instanceof EbAdmin) 
+          && !(action instanceof EbGameJoin)
+          && !(action instanceof EbEvtCancel) )
       {
         // unexec action
         try
@@ -954,7 +975,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents
           p_actionCount--;
         }
         // if previous action is EvtConstruct, then unexec too
-        if( m_currentActionIndex>0 && logs.get( m_currentActionIndex-1 ).getType() == GameLogType.EvtConstruct )
+        if( m_currentActionIndex>0 
+            && logs.get( m_currentActionIndex-1 ).getType() == GameLogType.EvtConstruct )
         {
           p_actionCount++;
         }
@@ -970,7 +992,9 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     while( (m_currentActionIndex < logs.size()) && (p_actionCount > 0) )
     {
       AnEvent action = logs.get( m_currentActionIndex );
-      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin))
+      if( !(action instanceof EbAdmin) 
+          && !(action instanceof EbGameJoin)
+          && !(action instanceof EbEvtCancel) )
       {
         // exec action
         try
@@ -986,6 +1010,12 @@ public class ModelFmpMain implements SourceModelUpdateEvents
         if( !action.isAuto() && action.getType() != GameLogType.EvtConstruct )
         {
           p_actionCount--;
+        }
+        // if next action is automatic, then exec too
+        if( m_currentActionIndex<logs.size()-1 
+            && logs.get( m_currentActionIndex+1 ).isAuto() )
+        {
+          p_actionCount++;
         }
       }
       m_currentActionIndex++;
@@ -1009,13 +1039,13 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       return true;
     }
-    if( getMyRegistration() == null )
-    {
-      return false;
-    }
     if( getMyPseudo().equalsIgnoreCase( "admin" ) )
     {
       return true;
+    }
+    if( getMyRegistration() == null )
+    {
+      return false;
     }
     if( getGame().getConfigGameTime()!=ConfigGameTime.Standard )
     {

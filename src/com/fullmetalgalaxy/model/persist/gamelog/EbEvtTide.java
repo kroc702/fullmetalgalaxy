@@ -151,7 +151,8 @@ public class EbEvtTide extends AnEvent
     assert game != null;
     game.setNextTide( game.getCurrentTide() );
     game.setCurrentTide( getOldTide() );
-    
+    game.setLastTideChange( getOldTideChange() );
+        
     // put back pontoon if there is some
     if( m_PontoonIds != null )
     {
@@ -170,18 +171,6 @@ public class EbEvtTide extends AnEvent
     game.setLastTideChange( getOldTideChange() );
   }
 
-
-
-  @Override
-  public void setGame(EbGame p_game)
-  {
-    assert p_game != null;
-    setIdGame( p_game.getId() );
-
-    setOldTide( p_game.getCurrentTide() );
-    setOldTideChange( p_game.getLastTideChange() );
-
-  }
 
 
   // Bean getter / setter
