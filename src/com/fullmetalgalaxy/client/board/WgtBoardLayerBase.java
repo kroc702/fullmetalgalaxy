@@ -60,6 +60,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return this;
@@ -68,6 +69,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#hide()
    */
+  @Override
   public void hide()
   {
   }
@@ -76,6 +78,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /**
    * you usually don't need to override this method (override redraw() instead)
    */
+  @Override
   public void redraw(int p_left, int p_top, int p_right, int p_botom)
   {
     m_top = p_top;
@@ -110,6 +113,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#onModelChange()
    */
+  @Override
   public final void onModelChange()
   {
     onModelChange( false );
@@ -118,6 +122,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#show()
    */
+  @Override
   public void show()
   {
   }
@@ -125,6 +130,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     EbGame game = ModelFmpMain.model().getGame();

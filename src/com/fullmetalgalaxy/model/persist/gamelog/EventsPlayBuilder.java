@@ -281,6 +281,7 @@ public class EventsPlayBuilder implements GameEventStack
     return getAction( getActionList().size() - 1 );
   }
 
+  @Override
   public AnEvent getLastGameLog()
   {
     return getLastAction();

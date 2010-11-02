@@ -32,9 +32,9 @@ import com.fullmetalgalaxy.client.MApp;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -135,6 +135,7 @@ public class MAppSwitchMenu extends MApp implements ClickHandler, NativePreviewH
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(ClickEvent p_event)
   {
     if( m_isMenuVisible )

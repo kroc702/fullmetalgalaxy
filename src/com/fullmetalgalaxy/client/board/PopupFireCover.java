@@ -84,6 +84,7 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     ModelFmpMain model = (ModelFmpMain)p_ModelSender;
@@ -112,6 +113,7 @@ public class PopupFireCover extends PopupPanel implements ModelUpdateListener, C
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(ClickEvent p_event)
   {
     HistoryState state = AppMain.instance().getHistoryState();

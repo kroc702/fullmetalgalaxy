@@ -52,11 +52,13 @@ public class HTMLInclude extends HTML
     {
       new RequestBuilder( RequestBuilder.GET, url ).sendRequest( "", new RequestCallback()
       {
+        @Override
         public void onError(Request request, Throwable exception)
         {
           GWT.log( "HTMLInclude: error fetching " + url, exception );
         }
 
+        @Override
         public void onResponseReceived(Request request, Response response)
         {
           if( response.getStatusCode() == 200 )

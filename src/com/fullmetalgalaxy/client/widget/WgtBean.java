@@ -46,6 +46,7 @@ public class WgtBean extends Composite implements BeanView
     super();
   }
 
+  @Override
   public void attachBean(Object p_bean)
   {
     if( m_bean != p_bean )
@@ -62,10 +63,12 @@ public class WgtBean extends Composite implements BeanView
     }
   }
 
+  @Override
   public void setReadOnly(boolean p_readOnly)
   {
   }
 
+  @Override
   public Object getObject()
   {
     return m_bean;
@@ -74,6 +77,7 @@ public class WgtBean extends Composite implements BeanView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.ModelUpdateListener#onModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     attachBean( getObject() );
@@ -90,6 +94,7 @@ public class WgtBean extends Composite implements BeanView
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesChangeEvents#addChangeListener(com.google.gwt.user.client.ui.ChangeListener)
    */
+  @Override
   public void addChangeListener(ChangeListener p_listener)
   {
     m_listenerCollection.add( p_listener );
@@ -98,6 +103,7 @@ public class WgtBean extends Composite implements BeanView
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesChangeEvents#removeChangeListener(com.google.gwt.user.client.ui.ChangeListener)
    */
+  @Override
   public void removeChangeListener(ChangeListener p_listener)
   {
     m_listenerCollection.remove( p_listener );

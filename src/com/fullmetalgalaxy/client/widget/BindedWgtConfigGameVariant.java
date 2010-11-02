@@ -51,6 +51,7 @@ public class BindedWgtConfigGameVariant extends
     getDescription().addChangeListener( this );
   }
 
+  @Override
   public void onChange(Widget p_sender)
   {
     if( getTypedBean() == null )
@@ -76,6 +77,7 @@ public class BindedWgtConfigGameVariant extends
     }
   }
 
+  @Override
   public void attachBean(Object p_bean)
   {
     super.attachBean( p_bean );
@@ -89,6 +91,7 @@ public class BindedWgtConfigGameVariant extends
     getDescription().setScalarValue( getTypedBean().getDescription() );
   }
 
+  @Override
   public void setReadOnly(boolean p_readOnly)
   {
     super.setReadOnly( p_readOnly );

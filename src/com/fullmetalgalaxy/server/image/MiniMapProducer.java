@@ -39,10 +39,10 @@ import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.google.appengine.api.images.Composite;
+import com.google.appengine.api.images.Composite.Anchor;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.Composite.Anchor;
 
 /**
  * @author Vincent Legendre
@@ -191,6 +191,7 @@ public class MiniMapProducer implements ImageProducer
   /* (non-Javadoc)
    * @see nc.kroc.fmp.server.image.ImageProducer#createImage(java.io.OutputStream)
    */
+  @Override
   public String createImage(OutputStream p_stream) throws IOException
   {
     p_stream.write( getImage() );

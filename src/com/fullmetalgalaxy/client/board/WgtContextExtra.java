@@ -92,6 +92,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(ClickEvent p_event)
   {
     try

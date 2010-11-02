@@ -31,7 +31,6 @@ import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.MAppGameCreation;
-import com.fullmetalgalaxy.client.home.MAppGameList;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.fonts.ImageFont;
 import com.google.gwt.user.client.ui.HTML;
@@ -116,26 +115,6 @@ public class MAppStatusBar extends MApp
     else if( p_state.containsKey( MAppGameCreation.HISTORY_ID ) )
     {
       setTitleStatus( AppMain.s_messages.newGame() );
-    }
-    else if( p_state.containsKey( MAppGameList.HISTORY_ID ) )
-    {
-      String title = "";
-      if( !p_state.containsKey( MAppGameList.s_TokenGameFiler ) )
-      {
-        if( ModelFmpMain.model().isLogged() )
-        {
-          title += AppMain.s_messages.myGame();
-        }
-        else
-        {
-          title += AppMain.s_messages.currentGame();
-        }
-      }
-      else
-      {
-        title += "Galaxy";
-      }
-      setTitleStatus( title );
     }
     else
     {

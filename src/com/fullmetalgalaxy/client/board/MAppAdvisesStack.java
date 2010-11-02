@@ -96,6 +96,7 @@ public class MAppAdvisesStack extends MApp implements ClickHandler
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(ClickEvent p_event)
   {
     EbEvtMessage message = s_advisesMap.get( p_event.getSource() );

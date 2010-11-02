@@ -66,6 +66,7 @@ public class WgtEditLand extends WgtView implements WindowResizeListener
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int, int)
    */
+  @Override
   public void onWindowResized(int p_width, int p_height)
   {
     if( !isVisible() )
@@ -81,6 +82,7 @@ public class WgtEditLand extends WgtView implements WindowResizeListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     if( !isVisible() )

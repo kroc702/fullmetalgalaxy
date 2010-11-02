@@ -224,6 +224,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseDown(Widget p_arg0, int p_arg1, int p_arg2)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -233,6 +234,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseEnter(Widget p_arg0)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -242,6 +244,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseLeave(Widget p_arg0)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -251,6 +254,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseMove(Widget p_arg0, int p_arg1, int p_arg2)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -260,6 +264,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseUp(Widget p_sender, int p_arg1, int p_arg2)
   {
     int button = DOM.eventGetButton( DOM.eventGetCurrentEvent() );
@@ -294,6 +299,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onChange(Widget p_sender)
   {
     if( p_sender == m_txtLandPercent )

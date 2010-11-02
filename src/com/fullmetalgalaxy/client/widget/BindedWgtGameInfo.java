@@ -52,6 +52,7 @@ public class BindedWgtGameInfo extends com.fullmetalgalaxy.client.widget.WgtGame
     getConfigTime().setReadOnly( true );
   }
   
+  @Override
   public void onChange(Widget p_sender)
   {
     if( getTypedBean() == null )
@@ -82,6 +83,7 @@ public class BindedWgtGameInfo extends com.fullmetalgalaxy.client.widget.WgtGame
     super.onChange( p_sender );
   }
   
+  @Override
   public void attachBean(Object p_bean)
   {
     super.attachBean( p_bean );
@@ -98,6 +100,7 @@ public class BindedWgtGameInfo extends com.fullmetalgalaxy.client.widget.WgtGame
     getConfigTime().attachBean( getTypedBean().getEbConfigGameTime() );
   }
   
+  @Override
   public void setReadOnly(boolean p_readOnly)
   {
     super.setReadOnly( p_readOnly );

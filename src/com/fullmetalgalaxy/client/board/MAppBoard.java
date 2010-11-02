@@ -85,6 +85,7 @@ public class MAppBoard extends MApp implements ResizeHandler
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int, int)
    */
+  @Override
   public void onResize(ResizeEvent event)
   {
     if( !isVisible() )

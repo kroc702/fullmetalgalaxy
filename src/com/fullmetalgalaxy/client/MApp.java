@@ -49,6 +49,7 @@ public abstract class MApp extends Composite implements MiniApp, ModelUpdateList
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return this;
@@ -57,6 +58,7 @@ public abstract class MApp extends Composite implements MiniApp, ModelUpdateList
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#hide()
    */
+  @Override
   public void hide()
   {
   }
@@ -64,6 +66,7 @@ public abstract class MApp extends Composite implements MiniApp, ModelUpdateList
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#show()
    */
+  @Override
   public void show(HistoryState p_state)
   {
   }
@@ -71,6 +74,7 @@ public abstract class MApp extends Composite implements MiniApp, ModelUpdateList
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     if( !isVisible() )
@@ -86,6 +90,7 @@ public abstract class MApp extends Composite implements MiniApp, ModelUpdateList
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#getHistoryId()
    */
+  @Override
   public abstract String getHistoryId();
 
 

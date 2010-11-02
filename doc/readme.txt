@@ -4,15 +4,17 @@ dependences directes:
 - gwt
 - appengine
 - common fileupload
-
+- objectify
 
 
 environement de dev:
 ====================
-eclipse + ant + JST UI (ou bien amateras editor)
+eclipse + ant (standard
+    html jsp [...] editor\JST Web UI (ou bien amateras editor)
 	MercurialEclipse: http://cbes.javaforge.com/update
 	Plugin Google: http://dl.google.com/eclipse/plugin/3.6
-
+	Mylyn google code connector: http://knittig.de/googlecode-mylyn-connector/update/
+	
 plugin browser: http://gwt-dev-plugin-missing.appspot.com/
 
 

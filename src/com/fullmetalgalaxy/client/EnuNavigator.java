@@ -33,6 +33,8 @@ import com.fullmetalgalaxy.model.MyEnum;
  */
 public class EnuNavigator extends MyEnum
 {
+  private static final long serialVersionUID = 1L;
+
   public static final int FF = 0;
   public static final int IE = 1;
 
@@ -53,6 +55,7 @@ public class EnuNavigator extends MyEnum
     // TODO Auto-generated constructor stub
   }
 
+  @Override
   protected int getMaxValue()
   {
     return 1;

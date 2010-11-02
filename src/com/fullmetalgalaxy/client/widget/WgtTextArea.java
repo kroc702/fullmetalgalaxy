@@ -53,6 +53,7 @@ public class WgtTextArea extends TextArea implements ScalarView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.widget.AbstractView#getObject()
    */
+  @Override
   public Object getObject()
   {
     return getString();
@@ -70,6 +71,7 @@ public class WgtTextArea extends TextArea implements ScalarView
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.test.BeanView#attachBean(java.lang.Object)
    */
+  @Override
   public void setScalarValue(Object p_bean)
   {
     if( p_bean == null )

@@ -35,11 +35,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -70,6 +70,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
   /* (non-Javadoc)
    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
    */
+  @Override
   public void onModuleLoad()
   {
     m_loadingPanel.setWidget( Icons.s_instance.loading().createImage() );
@@ -104,6 +105,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.SourcesPreviewEvents#addPreviewListener(com.google.gwt.user.client.EventPreview)
    */
+  @Override
   public void addPreviewListener(NativePreviewHandler p_listener)
   {
     if( !m_previewListenerCollection.contains( p_listener ) )
@@ -115,6 +117,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.SourcesPreviewEvents#removePreviewListener(com.google.gwt.user.client.EventPreview)
    */
+  @Override
   public void removePreviewListener(NativePreviewHandler p_listener)
   {
     m_previewListenerCollection.remove( p_listener );
@@ -144,6 +147,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
   /**
    * Called when the browser window is resized.
    */
+  @Override
   public void onWindowResized(int p_width, int p_height)
   {
     if( m_isLoading > 0 )
@@ -153,6 +157,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
     // m_dockPanel.setHeight( "" + (p_height - 20) + "px" );
   }
 
+  @Override
   public void onClick(ClickEvent p_event)
   {
 
@@ -188,6 +193,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
    * display all MiniApp found in p_historyToken and hide the other one.
    * @see com.google.gwt.user.client.HistoryListener#onHistoryChanged(java.lang.String)
    */
+  @Override
   public void onHistoryChanged(String p_historyToken)
   {
     HistoryState oldHistoryState = m_historyState;

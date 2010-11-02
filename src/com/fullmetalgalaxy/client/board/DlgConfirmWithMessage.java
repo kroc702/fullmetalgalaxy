@@ -74,6 +74,7 @@ public class DlgConfirmWithMessage extends DialogBox implements ClickHandler
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(ClickEvent p_event)
   {
     if( p_event.getSource() == m_btnOk )

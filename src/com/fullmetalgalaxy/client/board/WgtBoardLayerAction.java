@@ -43,7 +43,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtUnLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
@@ -196,6 +195,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         if( (nextAction == null)
             || ((nextAction.getType() == GameLogType.EvtLoad) 
                 && (((EbEvtLoad)nextAction).getToken(  ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+                && (firstAction != null)
                 && (firstAction.getType() != GameLogType.EvtConstruct) ) )
         {
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
@@ -260,6 +260,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
             && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
           drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
@@ -287,6 +288,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
             && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
           drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
