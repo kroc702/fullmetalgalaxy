@@ -42,7 +42,8 @@ public class EbEvtPlayerTurn extends AnEvent
   static final long serialVersionUID = 1;
 
   private long m_accountId = 0L;
-
+  private int m_oldActionPt = 0;
+  
 
   /**
    * 
@@ -116,6 +117,14 @@ public class EbEvtPlayerTurn extends AnEvent
     super.exec(p_game);
     EbGame game = p_game;
     assert game != null;
+    
+    // round down players action point
+    EbRegistration currentPlayerRegistration = game.getCurrentPlayerRegistration();
+    assert currentPlayerRegistration != null;
+    // backup for unexec
+    m_oldActionPt = currentPlayerRegistration.getPtAction();
+    currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt() );
+    
     // reset all end turn date
     for( EbRegistration player : game.getSetRegistration() )
     {
@@ -123,8 +132,7 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     // next player
     EbRegistration nextPlayerRegistration = game.getNextPlayerRegistration();
-    if( nextPlayerRegistration.getOrderIndex() <= game.getCurrentPlayerRegistration()
-        .getOrderIndex() )
+    if( nextPlayerRegistration.getOrderIndex() <= currentPlayerRegistration.getOrderIndex() )
     {
       // next turn !
       game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
@@ -221,7 +229,7 @@ public class EbEvtPlayerTurn extends AnEvent
     } while( registration.getColor() == EnuColor.None );
 
     game.setCurrentPlayerRegistration( registration );
-
+    registration.setPtAction( m_oldActionPt );
   }
 
   /**

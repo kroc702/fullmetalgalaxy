@@ -243,9 +243,20 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnEndTurn )
       {
-        if( Window.confirm( "Il vous reste "
-                + ModelFmpMain.model().getMyRegistration().getPtAction()
-                + " points d'action. Confirmez-vous la fin de tour ?" ) )
+        String msg = null;
+        int oldPt = ModelFmpMain.model().getMyRegistration().getPtAction();
+        int newPt = ModelFmpMain.model().getMyRegistration().getRoundedActionPt();
+        // TODO i18n
+        if( oldPt == newPt )
+        {
+          msg = "Il vous reste " + oldPt
+            + " points d'action. Confirmez-vous la fin de tour ?";
+        } else {
+          msg = "Vos " + oldPt + " points d'action seront arrondi a "
+            + newPt+ " pts. Confirmez-vous la fin de tour ?";
+        }
+        // TODO i18n
+        if( Window.confirm( msg ) )
         {
           EbEvtPlayerTurn action = new EbEvtPlayerTurn();
           action.setGame( ModelFmpMain.model().getGame() );
@@ -255,6 +266,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnTakeOff )
       {
+        // TODO i18n
         if( Window.confirm( "Confirmez-vous le decolage de "
             + Messages.getTokenString( actionBuilder.getSelectedToken() ) + " ?" ) )
         {

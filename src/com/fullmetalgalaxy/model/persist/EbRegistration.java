@@ -159,7 +159,16 @@ public class EbRegistration extends EbBase
     m_accountId = p_id;
   }
 
-
+  /**
+   * like getActionPt() but after been rounded according to selected time variant.
+   * @return
+   */
+  public int getRoundedActionPt()
+  {
+    int futurActionPt = getPtAction() / getGame().getEbConfigGameTime().getRoundActionPt();
+    futurActionPt *= getGame().getEbConfigGameTime().getRoundActionPt();
+    return futurActionPt;
+  }
 
   // getters / setters
   // -----------------
