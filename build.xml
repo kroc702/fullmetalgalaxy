@@ -9,8 +9,8 @@ compilation file for Full Metal Planet
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
-	<property name="appenginesdkdir" value="C:\Program Files (x86)\eclipse\plugins\com.google.appengine.eclipse.sdkbundle.1.3.7_1.3.7.v201008311405\appengine-java-sdk-1.3.7" />
-	<property name="gwtsdkdir" value="C:\Program Files (x86)\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301254\gwt-2.0.4" />
+	<property name="appenginesdkdir" value="C:\Sun\eclipse\plugins\com.google.appengine.eclipse.sdkbundle.1.3.8_1.3.8.v201010161055\appengine-java-sdk-1.3.8" />
+	<property name="gwtsdkdir" value="C:\Sun\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.1.0_2.1.0.v201010280102\gwt-2.1.0" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->

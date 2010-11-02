@@ -48,6 +48,7 @@ public class SimplePathFinder implements PathFinder
     m_pathGraph = p_pathGraph;
   }
 
+  @Override
   public List<com.fullmetalgalaxy.model.pathfinder.PathNode> findPath(PathNode p_fromNode, PathNode p_toNode)
   {
     return findPath( p_fromNode, p_toNode, null );
@@ -61,6 +62,7 @@ public class SimplePathFinder implements PathFinder
    * @param p_toNode
    * @return empty if no path was found.
    */
+  @Override
   public List<com.fullmetalgalaxy.model.pathfinder.PathNode> findPath(PathNode p_fromNode, PathNode p_toNode,
       PathMobile p_mobile)
   {

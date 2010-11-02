@@ -167,6 +167,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onChange(Widget p_sender)
   {
     if( p_sender == m_lstColor )

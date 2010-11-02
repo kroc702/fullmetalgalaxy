@@ -27,7 +27,6 @@ package com.fullmetalgalaxy.client.widget;
 
 import java.util.Date;
 
-
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,6 +55,7 @@ public class WgtDateBox extends WgtTextBox implements ChangeListener
     setScalarValue( p_date );
   }
 
+  @Override
   public void setScalarValue(Object p_bean)
   {
     if( (p_bean != null) && (p_bean instanceof Date) )
@@ -76,6 +76,7 @@ public class WgtDateBox extends WgtTextBox implements ChangeListener
     return ClientUtil.s_dateTimeFormat.parse( getText() );
   }
 
+  @Override
   public Object getObject()
   {
     return getDate();
@@ -84,6 +85,7 @@ public class WgtDateBox extends WgtTextBox implements ChangeListener
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onChange(Widget p_sender)
   {
     if( p_sender == this )

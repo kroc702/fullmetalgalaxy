@@ -27,9 +27,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
 
-import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.google.gwt.i18n.client.DateTimeFormat;

@@ -29,9 +29,9 @@ package com.fullmetalgalaxy.client;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -111,6 +111,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.Composite#onAttach()
    */
+  @Override
   protected void onLoad()
   {
     super.onLoad();
@@ -120,6 +121,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.Composite#onDetach()
    */
+  @Override
   protected void onUnload()
   {
     super.onUnload();
@@ -131,6 +133,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /**
    * reinit the scrolling position to 0,0
    */
+  @Override
   public void setWidget(Widget p_wgt)
   {
     m_absPanel.remove( m_contentWidget );
@@ -191,6 +194,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   private boolean m_cancelMouseUpEvent = false;
   private Timer m_cancelTimer = new Timer()
   {
+    @Override
     public void run()
     {
       m_cancelMouseUpEvent = false;
@@ -296,6 +300,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesScrollEvents#addScrollListener(com.google.gwt.user.client.ui.ScrollListener)
    */
+  @Override
   public void addScrollListener(ScrollListener p_listener)
   {
     m_scrollListenerCollection.add( p_listener );
@@ -304,6 +309,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesScrollEvents#removeScrollListener(com.google.gwt.user.client.ui.ScrollListener)
    */
+  @Override
   public void removeScrollListener(ScrollListener p_listener)
   {
     m_scrollListenerCollection.remove( p_listener );
@@ -330,6 +336,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseDown(Widget p_sender, int p_x, int p_y)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -348,6 +355,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseEnter(Widget p_sender)
   {
     // TODO Auto-generated method stub
@@ -356,6 +364,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseLeave(Widget p_sender)
   {
     if( p_sender == m_mouseScrollingImage )
@@ -382,6 +391,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseMove(Widget p_sender, int p_x, int p_y)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
@@ -455,6 +465,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseUp(Widget p_sender, int p_x, int p_y)
   {
     if( p_sender == m_mouseScrollingImage )

@@ -43,7 +43,7 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 
 /**
  * @author Vincent Legendre
- *
+ * Land a Freighter from Orbit to a board position.
  */
 public class EbEvtLand extends AnEventPlay
 {

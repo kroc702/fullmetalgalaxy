@@ -202,6 +202,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.SourceModelUpdateEvents#subscribeModelUpdateEvent(com.fullmetalgalaxy.client.ModelUpdateListener)
    */
+  @Override
   public void subscribeModelUpdateEvent(ModelUpdateListener p_listener)
   {
     m_listenerCollection.add( p_listener );
@@ -210,6 +211,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.SourceModelUpdateEvents#removeModelUpdateEvent(com.fullmetalgalaxy.model.ModelUpdateListener)
    */
+  @Override
   public void removeModelUpdateEvent(ModelUpdateListener p_listener)
   {
     m_listenerCollection.remove( p_listener );

@@ -50,6 +50,7 @@ public class BindedWgtConfigGameTime extends com.fullmetalgalaxy.client.widget.W
     getDescription().addChangeListener( this );
   }
 
+  @Override
   public void onChange(Widget p_sender)
   {
     if( getTypedBean() == null )
@@ -82,6 +83,7 @@ public class BindedWgtConfigGameTime extends com.fullmetalgalaxy.client.widget.W
     }
   }
 
+  @Override
   public void attachBean(Object p_bean)
   {
     super.attachBean( p_bean );
@@ -97,6 +99,7 @@ public class BindedWgtConfigGameTime extends com.fullmetalgalaxy.client.widget.W
     getDescription().setScalarValue( getTypedBean().getDescription() );
   }
 
+  @Override
   public void setReadOnly(boolean p_readOnly)
   {
     super.setReadOnly( p_readOnly );

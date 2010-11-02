@@ -300,6 +300,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ScrollListener#onScroll(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onScroll(Widget p_widget, int p_scrollLeft, int p_scrollTop)
   {
     m_layerCollection.redraw( p_scrollLeft, p_scrollTop, p_scrollLeft + p_widget.getOffsetWidth(),

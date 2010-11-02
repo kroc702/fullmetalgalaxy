@@ -54,6 +54,7 @@ public class WgtView extends Composite implements ModelUpdateListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_modelSender)
   {
   }

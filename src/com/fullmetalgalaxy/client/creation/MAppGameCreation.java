@@ -118,6 +118,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     initWidget( m_panel );
   }
 
+  @Override
   public String getHistoryId()
   {
     return HISTORY_ID;
@@ -252,6 +253,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   /**
    * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onChange(Widget p_sender)
   {
     // m_form.initFromBean();
@@ -260,6 +262,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   /**
    * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return this;
@@ -269,6 +272,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   /**
    * @see com.fullmetalgalaxy.client.MiniApp#hide()
    */
+  @Override
   public void hide()
   {
     // nothing to do ...
@@ -277,6 +281,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   /**
    * @see com.fullmetalgalaxy.client.MiniApp#show()
    */
+  @Override
   public void show(HistoryState p_state)
   {
     if( !ModelFmpMain.model().isLogged() )
@@ -337,6 +342,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     m_isOreGenerated = false;
   }
 
+  @Override
   public void onTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
   {
     // Let the user know what they just did.
@@ -369,6 +375,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     }
   }
 
+  @Override
   public boolean onBeforeTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
   {
     switch( p_tabIndex )

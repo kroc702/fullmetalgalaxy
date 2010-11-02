@@ -35,7 +35,6 @@ import com.fullmetalgalaxy.client.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.board.MAppStatusBar;
 import com.fullmetalgalaxy.client.board.MAppSwitchMenu;
 import com.fullmetalgalaxy.client.creation.MAppGameCreation;
-import com.fullmetalgalaxy.client.home.MAppGameList;
 import com.fullmetalgalaxy.client.ressources.MessagesAppMain;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelUpdateListener;
@@ -120,6 +119,7 @@ public class AppMain extends AppRoot implements ModelUpdateListener
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.ModelBase)
    */
+  @Override
   public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
   {
     // DbbAccountPreview account = ModelFmpMain.model().getMyAccount();
@@ -146,11 +146,7 @@ public class AppMain extends AppRoot implements ModelUpdateListener
     MiniApp miniApp = s_mappMap.get( p_key );
     if( miniApp == null )
     {
-      if( p_key.equals( MAppGameList.HISTORY_ID ) )
-      {
-        miniApp = new MAppGameList();
-      }
-      else if( p_key.equals( MAppGameCreation.HISTORY_ID ) )
+      if( p_key.equals( MAppGameCreation.HISTORY_ID ) )
       {
         miniApp = new MAppGameCreation();
       }
@@ -191,7 +187,6 @@ public class AppMain extends AppRoot implements ModelUpdateListener
     if( defaultHistory.isEmpty() )
     {
       defaultHistory = getEmptyHistoryState();
-      defaultHistory.addKey( MAppGameList.HISTORY_ID );
     }
     return defaultHistory;
   }

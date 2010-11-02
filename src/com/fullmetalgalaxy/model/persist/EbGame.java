@@ -354,6 +354,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
   }
 
+  @Override
   public AnEvent getLastGameLog()
   {
     if( getLogs().size() > 0 )
@@ -1545,6 +1546,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.pathfinder.PathGraph#getAvailableNode(com.fullmetalgalaxy.model.pathfinder.PathNode)
    */
+  @Override
   public Set<com.fullmetalgalaxy.model.pathfinder.PathNode> getAvailableNode(PathNode p_fromNode,
       PathMobile p_mobile)
   {
@@ -1592,6 +1594,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.pathfinder.PathGraph#heuristic(com.fullmetalgalaxy.model.pathfinder.PathNode, com.fullmetalgalaxy.model.pathfinder.PathNode)
    */
+  @Override
   public float heuristic(PathNode p_fromNode, PathNode p_toNode, PathMobile p_mobile)
   {
     return (float)((AnBoardPosition)p_fromNode).getRealDistance( (AnBoardPosition)p_toNode );

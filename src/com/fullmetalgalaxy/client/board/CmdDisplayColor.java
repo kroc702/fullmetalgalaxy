@@ -53,6 +53,7 @@ public class CmdDisplayColor extends MenuItem implements Command
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.Command#execute()
    */
+  @Override
   public void execute()
   {
     if( m_isChecked )

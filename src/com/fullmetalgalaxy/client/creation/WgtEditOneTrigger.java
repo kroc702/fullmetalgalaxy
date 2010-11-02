@@ -124,6 +124,7 @@ public class WgtEditOneTrigger extends Composite implements ClickHandler, Change
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onChange(Widget p_sender)
   {
     // TODO Auto-generated method stub

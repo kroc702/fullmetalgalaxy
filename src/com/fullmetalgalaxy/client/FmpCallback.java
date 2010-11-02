@@ -42,6 +42,8 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.rpc.AsyncCallback#onFailure(java.lang.Throwable)
    */
+  @SuppressWarnings("null")
+  @Override
   public void onFailure(Throwable p_caught)
   {
     // AppMain.instance().stopLoading();
@@ -78,6 +80,7 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.rpc.AsyncCallback#onSuccess(java.lang.Object)
    */
+  @Override
   public void onSuccess(ReturnedType p_result)
   {
     // AppMain.instance().stopLoading();

@@ -44,11 +44,13 @@ public abstract class MABtn implements MiniApp
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#getHistoryId()
    */
+  @Override
   public abstract String getHistoryId();
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return panel;
@@ -57,6 +59,7 @@ public abstract class MABtn implements MiniApp
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#hide()
    */
+  @Override
   public void hide()
   {
   }
@@ -64,6 +67,7 @@ public abstract class MABtn implements MiniApp
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#show(com.fullmetalgalaxy.client.HistoryState)
    */
+  @Override
   public void show(HistoryState p_state)
   {
   }

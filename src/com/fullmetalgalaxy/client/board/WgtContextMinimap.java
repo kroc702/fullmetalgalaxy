@@ -101,6 +101,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseUp(MouseUpEvent p_event)
   {
     if( p_event.getSource() == m_miniMapImage )

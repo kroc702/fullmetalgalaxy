@@ -27,7 +27,6 @@ package com.fullmetalgalaxy.client.board;
 
 import java.util.ArrayList;
 
-
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,6 +52,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
    * shouldn't be called, as it always return null. 
    * @see com.fullmetalgalaxy.client.board.BoardLayer#getTopWidget()
    */
+  @Override
   public Widget getTopWidget()
   {
     return null;
@@ -61,6 +61,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#hide()
    */
+  @Override
   public void hide()
   {
     for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
@@ -72,6 +73,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#onModelChange()
    */
+  @Override
   public void onModelChange()
   {
     for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
@@ -89,6 +91,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#redraw(int, int, int, int)
    */
+  @Override
   public void redraw(int p_left, int p_top, int p_right, int p_botom)
   {
     for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
@@ -100,6 +103,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#setZoom(com.fullmetalgalaxy.model.EnuZoom)
    */
+  @Override
   public void setZoom(EnuZoom p_zoom)
   {
     for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
@@ -111,6 +115,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#show()
    */
+  @Override
   public void show()
   {
     for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )

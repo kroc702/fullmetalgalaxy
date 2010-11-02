@@ -63,6 +63,7 @@ public class HistoryState
     return state;
   }
 
+  @Override
   public String toString()
   {
     StringBuffer buffer = new StringBuffer();

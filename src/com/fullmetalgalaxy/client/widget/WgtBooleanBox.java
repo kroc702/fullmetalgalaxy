@@ -79,6 +79,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
     addClickHandler( this );
   }
 
+  @Override
   public void setReadOnly(boolean p_readOnly)
   {
     setEnabled( !p_readOnly );
@@ -88,6 +89,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.test.ScalarView#setValue(java.lang.Object)
    */
+  @Override
   public void setScalarValue(Object p_value)
   {
     assert p_value != null;
@@ -103,6 +105,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.test.AbstractView#getObject()
    */
+  @Override
   public Object getObject()
   {
     return getBoolean();
@@ -111,6 +114,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesChangeEvents#addChangeListener(com.google.gwt.user.client.ui.ChangeListener)
    */
+  @Override
   public void addChangeListener(ChangeListener p_listener)
   {
     m_changeListnerCollection.add( p_listener );
@@ -119,6 +123,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.SourcesChangeEvents#removeChangeListener(com.google.gwt.user.client.ui.ChangeListener)
    */
+  @Override
   public void removeChangeListener(ChangeListener p_listener)
   {
     m_changeListnerCollection.remove( p_listener );
@@ -128,6 +133,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyDown(com.google.gwt.user.client.ui.Widget, char, int)
    */
+  @Override
   public void onKeyDown(Widget p_wgt, char p_arg1, int p_arg2)
   {
     if( p_wgt == this )
@@ -139,6 +145,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyPress(com.google.gwt.user.client.ui.Widget, char, int)
    */
+  @Override
   public void onKeyPress(Widget p_wgt, char p_arg1, int p_arg2)
   {
     if( p_wgt == this )
@@ -150,6 +157,7 @@ public class WgtBooleanBox extends CheckBox implements ScalarView, ClickHandler,
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.KeyboardListener#onKeyUp(com.google.gwt.user.client.ui.Widget, char, int)
    */
+  @Override
   public void onKeyUp(Widget p_wgt, char p_arg1, int p_arg2)
   {
     if( p_wgt == this )

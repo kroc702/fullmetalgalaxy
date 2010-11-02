@@ -74,6 +74,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onClick(Widget p_sender)
   {
     if( p_sender == m_createAccountLabel )
@@ -85,6 +86,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseDown(Widget p_sender, int p_x, int p_y)
   {
   }
@@ -92,6 +94,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseEnter(Widget p_sender)
   {
     p_sender.addStyleName( "underline" );
@@ -100,6 +103,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
    */
+  @Override
   public void onMouseLeave(Widget p_sender)
   {
     p_sender.removeStyleName( "underline" );
@@ -108,6 +112,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseMove(Widget p_sender, int p_x, int p_y)
   {
   }
@@ -115,6 +120,7 @@ public abstract class MAppLink extends MApp implements ClickListener, MouseListe
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
+  @Override
   public void onMouseUp(Widget p_sender, int p_x, int p_y)
   {
   }
