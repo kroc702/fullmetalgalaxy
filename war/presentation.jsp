@@ -22,14 +22,14 @@ des RTS.<BR/>
 Chaque partie est ind&eacute;pendante, il n'y a donc pas de monde
 persistant. La communaut&eacute; et le classement donnent une
 consistante &agrave; l'univers, mais il vous est tout &agrave; fait possible de ne
-jouer qu'une partie de temps &agrave; autre sans aucun d&eacute;savantages en
+jouer qu'une partie de temps &agrave; autre sans aucun d&eacute;savantage en
 jeu.
 </p>
 
 <h2>Résumé d'une partie</h2>
 
 Vous posez votre astronef sur une planète pour une campagne d'extraction. 
-Vous recevrez &agrave; intervale régulier (en mode asynchrone) ou au début de votre tour
+Vous recevrez &agrave; intervalle régulier (en mode asynchrone) ou au début de votre tour
 (en mode tour par tour) un certain nombre de points d'action que vous pouvez dépenser 
 à tout instant pour :
 <ul>
@@ -44,7 +44,7 @@ astronefs et leur contenu (minerais et pièces).</li>
 </ul>
 <p>
 Les marées changeront, en cours de partie, la topologie de la carte rendant 
-certaines zones inacessibles par voie terrestre.
+certaines zones inaccessibles par voie terrestre.
 </p>
 <p>
 Pendant toute la partie, vous pourrez aussi échanger avec vos adversaires (via mail, 

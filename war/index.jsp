@@ -25,13 +25,13 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
 <div style="position:absolute;">
 
 <div class="bloc" style="width:400px; position:absolute; top:130px; left:220px;">   
-    <p>Aux confins de la galaxie plus aucune loi ne r&eacute;gule les conflits
-    entre m&eacute;ga-corporations mini&egrave;res. Vous &ecirc;tes un full
+    <p>Aux confins de la galaxie, plus aucune loi ne r&eacute;gule les conflits
+    entre m&eacute;gacorporations mini&egrave;res. Vous &ecirc;tes un full
     metal pilote vendant vos comp&eacute;tences militaires au plus
     offrant.<br/>
     <br/>
     FMG est un wargame (ou jeu de strategies) enti&egrave;rement gratuit jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
-    Ici pas de formulaire mais uniquement une carte sur laquelle vous d&eacute;placez vos
+    Ici pas de formulaire, mais uniquement une carte sur laquelle vous d&eacute;placez vos
     unit&eacute;s.</p>
     <center>
     <A HREF="/presentation.jsp" style="font-size:12pt; line-height:25px;">En savoir plus &amp; Screenshots...</A><br/>

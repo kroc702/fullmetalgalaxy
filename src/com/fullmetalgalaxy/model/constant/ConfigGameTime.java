@@ -81,6 +81,7 @@ public enum ConfigGameTime
     takeOffTurns.add( 25 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( false );
+    timeConfig.setRoundActionPt( 5 );
     timeConfig.setDescription( "25 tours (pas de temps limite)" );
     s_configMap.put( Standard, timeConfig );
 
@@ -97,6 +98,7 @@ public enum ConfigGameTime
     takeOffTurns.add( 25 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( false );
+    timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 tours (3 min pour jouer)" );
     s_configMap.put( QuickTurnBased, timeConfig );
 
@@ -121,6 +123,7 @@ public enum ConfigGameTime
     takeOffTurns.add( 125 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( true );
+    timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 jours en asynchrone" );
     s_configMap.put( StandardAsynch, timeConfig );
 
@@ -138,6 +141,7 @@ public enum ConfigGameTime
     takeOffTurns.add( 50 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( true );
+    timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "1h20 en asynchrone" );
     s_configMap.put( QuickAsynch, timeConfig );
 

@@ -50,8 +50,11 @@ public class EbConfigGameTime extends EbBase
   private int m_bulletCountIncrement = 2;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
+  /** if true, players can all play at same time */
   private boolean m_asynchron = false;
-
+  /** in turn by turn, action point are rounded to this value */
+  private int m_roundActionPt = 1;
+  
   /**
    * 
    */
@@ -72,6 +75,7 @@ public class EbConfigGameTime extends EbBase
     m_takeOffTurns.add( 21 );
     m_takeOffTurns.add( 25 );
     m_asynchron = false;
+    m_roundActionPt = 1;
   }
 
   @Override
@@ -247,5 +251,17 @@ public class EbConfigGameTime extends EbBase
   {
     m_asynchron = p_asynchron;
   }
+
+  public int getRoundActionPt()
+  {
+    return m_roundActionPt;
+  }
+
+  public void setRoundActionPt(int p_roundActionPt)
+  {
+    m_roundActionPt = p_roundActionPt;
+  }
+  
+  
 
 }

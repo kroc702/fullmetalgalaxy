@@ -1,22 +1,37 @@
-A verifier:
-===========
-- après le décollage de tout les astronefs d'un joueur, il faut passer son tour
 
-TODO
-====
-- gestion du débarquement gratuit. (en t/t uniquement ?)
-- ajout d'une variante respect strict des règles :
-	- gestion du stock de pion
-	- la réserve de point arrondi a 5 point (t/t uniquement)
-	- les neutralisations tournante ne plaisent pas a tous...
-	- ...
-- ajouter un tache cron pour faire évoluer les parties non regardé.
-- appeler updateEbGame plus régulièrement et même si aucune action n'est executé
+TODO :
+======
 - trouver un moyen simple de gérer des messages i18n, paramettrés, persitable facilement 
 et transportable du serveur au client (package rpc).
 - extraires toute les chaines dans les fichiers txt, corriger les fautes, i18n
-- créer un fil rss des evenements (mise a jour, nouvelle partie, fin de partie)
-- user manual
+
+Communauté FMP fr
+- respect strict de toutes les règles
+
+Communauté TDJ
+
+Communauté FMP int
+- i18n
+- collaboration pour la traduction du jeu et du site
+
+Finitions
+- travail réactivité: channel API + JVM
+- IHM léché
+  - boites de dialogues
+  - messages d'erreurs
+  - graphismes
+- le site en général
+- liste des parties
+
+Ajouts fonctionels
+- variantes
+- communauté: 
+  - forum 
+  - chat
+  - fil rss des evenements (mise a jour, nouvelle partie, fin de partie)
+- classement, stats
+
+
 
 bugs :
 ======
@@ -36,7 +51,7 @@ Support des comptes :
 
 Améliorations de l'IHM:
 =======================
-- améliorer la page gamelist (utilise le cache, filtres, ...)
+- améliorer la page gamelist (utilise le cache, filtres, pages, ...)
 - chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detail d'une partie + description partie + mail des joueurs
 - look plus fini du widget info, liste de partie, de la fin de partie
