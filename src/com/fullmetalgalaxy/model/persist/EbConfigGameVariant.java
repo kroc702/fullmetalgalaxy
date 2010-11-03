@@ -23,9 +23,15 @@
 /**
  * 
  */
-package com.fullmetalgalaxy.model;
+package com.fullmetalgalaxy.model.persist;
 
-import com.fullmetalgalaxy.model.persist.EbBase;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fullmetalgalaxy.model.TokenType;
 
 
 /**
@@ -43,7 +49,9 @@ public class EbConfigGameVariant extends EbBase
   private int m_minSpaceBetweenFreighter = 8;
   private int m_deployementRadius = 4;
   private String m_description = "";
-
+  private Map<TokenType,Integer> m_constructReserve = new HashMap<TokenType,Integer>();
+  
+  
   /**
    * 
    */
@@ -53,11 +61,23 @@ public class EbConfigGameVariant extends EbBase
     init();
   }
 
+  public EbConfigGameVariant(EbConfigGameVariant p_config)
+  {
+    super(p_config);
+    m_actionPtMaxReserve = p_config.getActionPtMaxReserve();
+    m_minSpaceBetweenFreighter = p_config.getMinSpaceBetweenFreighter();
+    m_deployementRadius = p_config.getDeployementRadius();
+    m_description = new String( p_config.getDescription() );
+    m_constructReserve = new HashMap<TokenType,Integer>(p_config.m_constructReserve);
+  }
+
   private void init()
   {
     m_actionPtMaxReserve = 25;
     m_minSpaceBetweenFreighter = 8;
     m_deployementRadius = 4;
+    m_description = "";
+    m_constructReserve = new HashMap<TokenType,Integer>();
   }
 
   @Override
@@ -67,6 +87,62 @@ public class EbConfigGameVariant extends EbBase
     this.init();
   }
 
+    
+  public Map<TokenType,Integer> getConstructReserve()
+  {
+    return m_constructReserve;
+  }
+  
+  public boolean canConstruct(TokenType p_type)
+  {
+    Integer qty = m_constructReserve.get( p_type );
+    return qty != null && qty != 0;
+  }
+  
+  public void incConstructQty(TokenType p_type)
+  {
+    Integer qty = m_constructReserve.get( p_type );
+    if(qty != null && qty >= 0)
+    {
+      qty++;
+      setConstructQty(p_type,qty);
+    }
+  }
+  
+  public void decConstructQty(TokenType p_type)
+  {
+    Integer qty = m_constructReserve.get( p_type );
+    if(qty != null && qty > 0)
+    {
+      qty--;
+      setConstructQty(p_type,qty);
+    }
+  }
+  
+  /**
+   * Set allowed construct quantity for a given token type
+   * Note that, for predefined variant, theses quantity will be multiply by
+   * players number.
+   * @param p_type
+   * @param p_qty if < 0, unlimited
+   */
+  public void setConstructQty(TokenType p_type, int p_qty)
+  {
+    m_constructReserve.put( p_type, p_qty );
+  }
+
+  /**
+   * @see setConstructQty
+   * @param p_playerNumber
+   */
+  public void multiplyConstructQty(int p_playerNumber)
+  {
+    for(Entry<TokenType,Integer> entry : m_constructReserve.entrySet())
+    {
+      entry.setValue( entry.getValue() * p_playerNumber );
+    }
+  }
+  
   /**
    * @return the actionPtMaxReserve
    */

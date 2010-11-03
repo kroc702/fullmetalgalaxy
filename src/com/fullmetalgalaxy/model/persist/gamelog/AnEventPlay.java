@@ -169,12 +169,7 @@ public class AnEventPlay extends AnEventUser
   public String toString()
   {
     String str = super.toString();
-    String name = getClass().getName();
-    if( name.startsWith( "com.fullmetalgalaxy.model.persist.gamelog.EbEvt" ) )
-    {
-      name = name.substring( 37 );
-    }
-    str += " : " + name;
+    str += getCost() + "pt : ";
     return str;
   }
 

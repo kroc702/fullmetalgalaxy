@@ -151,6 +151,14 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
 
     game.setAccountCreatorId( ModelFmpMain.model().getMyAccountId() );
 
+    // tune configuration
+    if(game.getConfigGameVariant() != null)
+    {
+      // standard variant configuration: construct quantity have to be multiply by player count
+      game.setConfigGameVariant( game.getConfigGameVariant() );
+      game.getEbConfigGameVariant().multiplyConstructQty( game.getMaxNumberOfPlayer() );
+    }
+    
     // lands creation
     if( m_isLandGenerated == false )
     {

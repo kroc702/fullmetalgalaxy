@@ -28,7 +28,7 @@ package com.fullmetalgalaxy.model.constant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.fullmetalgalaxy.model.EbConfigGameTime;
+import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 
 
 /**
