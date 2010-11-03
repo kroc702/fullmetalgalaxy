@@ -23,13 +23,12 @@
 /**
  * 
  */
-package com.fullmetalgalaxy.model;
+package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 
 import javax.persistence.Transient;
 
-import com.fullmetalgalaxy.model.persist.EbBase;
 
 
 /**
@@ -63,6 +62,20 @@ public class EbConfigGameTime extends EbBase
     super();
     init();
   }
+
+  public EbConfigGameTime(EbConfigGameTime p_config)
+  {
+    super(p_config);
+    m_timeStepDurationInSec = p_config.getTimeStepDurationInSec();
+    m_tideChangeFrequency = p_config.getTideChangeFrequency();
+    m_totalTimeStep = p_config.getTotalTimeStep();
+    m_actionPtPerTimeStep = p_config.getActionPtPerTimeStep();
+    m_actionPtPerExtraShip = p_config.getActionPtPerExtraShip();
+    m_takeOffTurns = new ArrayList<Integer>( p_config.getTakeOffTurns() );
+    m_asynchron = p_config.isAsynchron();
+    m_roundActionPt = p_config.getRoundActionPt();
+  }
+  
 
   private void init()
   {

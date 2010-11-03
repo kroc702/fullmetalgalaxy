@@ -24,7 +24,8 @@ package com.fullmetalgalaxy.model.constant;
 
 import java.util.HashMap;
 
-import com.fullmetalgalaxy.model.EbConfigGameVariant;
+import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 
 
 public enum ConfigGameVariant
@@ -48,10 +49,20 @@ public enum ConfigGameVariant
     return s_configMap.get( p_config );
   }
 
+  public EbConfigGameVariant getEbConfigGameVariant()
+  {
+    return getEbConfigGameVariant( this );
+  }
+
   private static HashMap<ConfigGameVariant, EbConfigGameVariant> s_configMap = new HashMap<ConfigGameVariant, EbConfigGameVariant>();
   static
   {
-    // TODO
-    s_configMap.put( Standard, new EbConfigGameVariant() );
+    EbConfigGameVariant variantConfig = null;
+    
+    variantConfig = new EbConfigGameVariant();
+    variantConfig.setConstructQty( TokenType.Pontoon, 1 );
+    variantConfig.setConstructQty( TokenType.Crab, 1 );
+    variantConfig.setConstructQty( TokenType.Tank, 4 );
+    s_configMap.put( Standard, variantConfig );
   }
 }

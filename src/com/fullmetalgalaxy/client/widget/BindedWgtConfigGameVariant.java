@@ -38,9 +38,9 @@ public class BindedWgtConfigGameVariant extends
     addChangeListener();
   }
 
-  public com.fullmetalgalaxy.model.EbConfigGameVariant getTypedBean()
+  public com.fullmetalgalaxy.model.persist.EbConfigGameVariant getTypedBean()
   {
-    return (com.fullmetalgalaxy.model.EbConfigGameVariant)getObject();
+    return (com.fullmetalgalaxy.model.persist.EbConfigGameVariant)getObject();
   }
 
   protected void addChangeListener()

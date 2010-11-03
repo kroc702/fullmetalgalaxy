@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameTime;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
+import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -78,6 +79,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
 
   private Panel m_generalPanel = new FlowPanel();
   private Panel m_playerPanel = new FlowPanel();
+  private WgtConstructReserve m_wgtReserve = new WgtConstructReserve();
   private WgtConfigGameTime m_wgtConfigTime = (WgtConfigGameTime)GWT
       .create( WgtConfigGameTime.class );
   private WgtConfigGameVariant m_wgtConfigVariant = (WgtConfigGameVariant)GWT
@@ -105,11 +107,17 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
 
     m_tabPanel.add( m_generalPanel, "general" );
     m_tabPanel.add( m_playerPanel, "joueurs" );
+    m_wgtReserve.setStyleName( "fmp-log-panel" );
+    m_wgtReserve.setSize( "650px", "400px" );
+    m_tabPanel.add( m_wgtReserve, "reserve" );
+    
     m_tabPanel.add( m_wgtConfigTime, "temps" );
     m_tabPanel.add( m_wgtConfigVariant, "variantes" );
     m_wgtLogs.setStyleName( "fmp-log-panel" );
+    m_wgtLogs.setSize( "650px", "400px" );
     m_tabPanel.add( m_wgtLogs, "log" );
     m_wgtAdminLogs.setStyleName( "fmp-log-panel" );
+    m_wgtAdminLogs.setSize( "650px", "400px" );
     m_tabPanel.add( m_wgtAdminLogs, "admin log" );
 
 
@@ -158,7 +166,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         + BoardIcons.iconTide( game.getCurrentTide() ).getHTML()
         + " ";
     // + Messages.getTideString( game.getCurrentTide() ) + "'> ";
-    if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0 )
+    if( (ModelFmpMain.model().getMyRegistration() != null)
+        && (ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0) )
     {
       htmlTide += BoardIcons.iconTide( game.getNextTide() ).getHTML() + " ";
       // + Messages.getTideString( game.getNextTide() ) + "'>";
@@ -245,6 +254,11 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_playerPanel.clear();
     m_playerPanel.add( getPlayerWidget() );
 
+    
+    // redraw reserve
+    // --------------
+    m_wgtReserve.redraw();
+    
     // display winner !
     /*if( ModelFmpMain.model().getGame().isFinished() )
     {
@@ -409,18 +423,21 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       break;
     case 1: // players
       break;
-    case 2: // time
+    case 2: // reserve 
+      m_wgtReserve.redraw();
+      break;
+    case 3: // time
       m_wgtConfigTime.attachBean( ModelFmpMain.model().getGame().getEbConfigGameTime() );
       m_wgtConfigTime.setReadOnly( true );
       break;
-    case 3: // variant
+    case 4: // variant
       m_wgtConfigVariant.attachBean( ModelFmpMain.model().getGame().getEbConfigGameVariant() );
       m_wgtConfigVariant.setReadOnly( true );
       break;
-    case 4: // logs
+    case 5: // logs
       m_wgtLogs.redraw();
       break;
-    case 5: // admin logs
+    case 6: // admin logs
       m_wgtAdminLogs.redraw();
       break;
     }

@@ -60,11 +60,6 @@ code {
   background-color: white;
 }
 
-.fmp-loading {
-  border: 0px;
-  background: transparent;
-}
-
 .gwt-DialogBox .Caption {
   background-color: #666666;
   padding: 3px;
@@ -313,6 +308,11 @@ code {
 
 /* -------------------------------------------------------------------------- */
 
+.fmp-loading {
+  border: 0px;
+  background: transparent;
+}
+
 .fmp-board-gameTitle {
   font-size: large;
   font-weight: bold;
@@ -408,7 +408,7 @@ code {
 .fmp-log-panel {
     width: 650px;
     height: 400px; 
-	overflow: auto;
+	overflow: scroll;
 }
 
 .fmp-btn-advises {

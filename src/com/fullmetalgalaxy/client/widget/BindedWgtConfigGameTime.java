@@ -35,9 +35,9 @@ public class BindedWgtConfigGameTime extends com.fullmetalgalaxy.client.widget.W
     addChangeListener();
   }
 
-  public com.fullmetalgalaxy.model.EbConfigGameTime getTypedBean()
+  public com.fullmetalgalaxy.model.persist.EbConfigGameTime getTypedBean()
   {
-    return (com.fullmetalgalaxy.model.EbConfigGameTime)getObject();
+    return (com.fullmetalgalaxy.model.persist.EbConfigGameTime)getObject();
   }
 
   protected void addChangeListener()

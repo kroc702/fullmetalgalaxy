@@ -28,6 +28,7 @@ package com.fullmetalgalaxy.client.board;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
@@ -40,6 +41,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
@@ -161,7 +163,8 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       {
         m_panel.add( new Label( MAppBoard.s_messages.contain() ) );
       }
-      // TODO
+      // Add list of token contained by the selected token 
+      // and won't be unload during the preparing action
       for( EbToken token : mainToken.getSetContain() )
       {
         if( !action.containUnload( token )
@@ -173,34 +176,30 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       if( (mainToken.getType() == TokenType.WeatherHen) && (!mainToken.getSetContain().isEmpty())
           && !(action.getSelectedAction() instanceof EbEvtConstruct) )
       {
+        // Add list of token that can be constructed
+        //
         EbToken ore = mainToken.getSetContain().iterator().next();
         m_panel.add( new Label( MAppBoard.s_messages.construct() ) );
 
-        EbToken fakeToken = new EbToken( TokenType.Pontoon );
-        fakeToken.setId( ore.getId() );
-        fakeToken.setVersion( ore.getVersion() );
-        fakeToken.setLocation( Location.ToBeConstructed );
-        fakeToken.setGame( mainToken.getGame() );
-        fakeToken.setCarrierToken( mainToken );
-        addToken( fakeToken );
-
-        fakeToken = new EbToken( TokenType.Tank );
-        fakeToken.setColor( mainToken.getColor() );
-        fakeToken.setId( ore.getId() );
-        fakeToken.setVersion( ore.getVersion() );
-        fakeToken.setLocation( Location.ToBeConstructed );
-        fakeToken.setGame( mainToken.getGame() );
-        fakeToken.setCarrierToken( mainToken );
-        addToken( fakeToken );
-
-        fakeToken = new EbToken( TokenType.Crab );
-        fakeToken.setColor( mainToken.getColor() );
-        fakeToken.setId( ore.getId() );
-        fakeToken.setLocation( Location.ToBeConstructed );
-        fakeToken.setGame( mainToken.getGame() );
-        fakeToken.setVersion( ore.getVersion() );
-        fakeToken.setCarrierToken( mainToken );
-        addToken( fakeToken );
+        EbConfigGameVariant variant = mainToken.getGame().getEbConfigGameVariant();
+        for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )
+        {
+          if( variant.canConstruct( entry.getKey() ) )
+          {
+            EbToken fakeToken = new EbToken( entry.getKey() );
+            fakeToken.setId( ore.getId() );
+            if( EbToken.canBeColored( entry.getKey()) )
+            {
+              fakeToken.setColor( mainToken.getColor() );
+            }
+            fakeToken.setVersion( ore.getVersion() );
+            fakeToken.setLocation( Location.ToBeConstructed );
+            fakeToken.setGame( mainToken.getGame() );
+            fakeToken.setCarrierToken( mainToken );
+            addToken( fakeToken );
+          }
+        }
+        
       }
     }
   }

@@ -37,8 +37,6 @@ import java.util.Set;
 import javax.persistence.Transient;
 
 import com.fullmetalgalaxy.model.BoardFireCover;
-import com.fullmetalgalaxy.model.EbConfigGameTime;
-import com.fullmetalgalaxy.model.EbConfigGameVariant;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
@@ -100,7 +98,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
   private ConfigGameVariant m_configGameVariant = ConfigGameVariant.Standard;
-
+  private EbConfigGameTime m_ebConfigGameTime = null;
+  private EbConfigGameVariant m_ebConfigGameVariant = null;
 
   // theses data come from other table
   // --------------------------------
@@ -159,8 +158,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     m_lastTimeStepChange = new Date( System.currentTimeMillis() );
     m_description = "";
     m_name = "";
-    m_configGameTime = ConfigGameTime.Standard;
-    m_configGameVariant = ConfigGameVariant.Standard;
+    setConfigGameTime( ConfigGameTime.Standard );
+    setConfigGameVariant( ConfigGameVariant.Standard );
     m_takeOffTurns = null;
     m_gameType = GameType.MultiPlayer;
     m_planetType = PlanetType.Desert;
@@ -2107,20 +2106,52 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
   /**
+   * Don't forget to reset to null m_configGameTimeDefault if you change any value of this config
+   * @return the configGameTime
+   */
+  public void setEbConfigGameTime(EbConfigGameTime p_config)
+  {
+    m_ebConfigGameTime = p_config;
+  }
+
+  /**
+   * Don't forget to reset to null m_configGameTimeDefault if you change any value of this config
    * @return the configGameTime
    */
   public EbConfigGameTime getEbConfigGameTime()
   {
-    return getConfigGameTime().getEbConfigGameTime();
+    // this patch is to handle old data game
+    if(m_ebConfigGameTime == null && getConfigGameTime() != null)
+    {
+      setConfigGameTime( getConfigGameTime() );
+    }
+    return m_ebConfigGameTime;
   }
 
 
   /**
+   * Don't forget to reset to null m_configGameVariantDefault if you change any value of this config
+   * @return the configGameVariant
+   */
+  public void setEbConfigGameVariant(EbConfigGameVariant p_config)
+  {
+    m_ebConfigGameVariant = p_config;
+  }
+
+  /**
+   * Don't forget to reset to null m_configGameVariantDefault if you change any value of this config
    * @return the configGameVariant
    */
   public EbConfigGameVariant getEbConfigGameVariant()
   {
-    return ConfigGameVariant.getEbConfigGameVariant( getConfigGameVariant() );
+    // this patch is to handle old data game
+    if(m_ebConfigGameVariant == null && getConfigGameVariant() != null)
+    {
+      setConfigGameVariant( getConfigGameVariant() );
+      assert m_ebConfigGameVariant != null;
+      m_ebConfigGameVariant.multiplyConstructQty( getMaxNumberOfPlayer() );
+    }
+    return m_ebConfigGameVariant;
   }
 
 
@@ -2186,6 +2217,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public void setConfigGameTime(ConfigGameTime p_configGameTime)
   {
     m_configGameTime = p_configGameTime;
+    setEbConfigGameTime( new EbConfigGameTime(m_configGameTime.getEbConfigGameTime()) );
   }
 
   /**
@@ -2194,6 +2226,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public void setConfigGameVariant(ConfigGameVariant p_configGameVariant)
   {
     m_configGameVariant = p_configGameVariant;
+    setEbConfigGameVariant( new EbConfigGameVariant(m_configGameVariant.getEbConfigGameVariant()) );
   }
 
   /**
