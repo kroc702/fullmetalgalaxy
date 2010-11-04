@@ -38,6 +38,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.pathfinder.PathFinder;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
@@ -98,7 +99,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     m_actionList.clear();
     unselectToken();
-    m_lastClick = null;
+    setLastUserClick( null );
   }
 
   public void exec() throws RpcFmpException
@@ -186,7 +187,8 @@ public class EventsPlayBuilder implements GameEventStack
 
   public void check() throws RpcFmpException
   {
-    if( (getSelectedAction() != null) && (getSelectedAction() instanceof EbEvtLand) )
+    if( (getSelectedAction() != null)
+        && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
       getSelectedAction().check( m_game );
       return;
@@ -797,10 +799,10 @@ public class EventsPlayBuilder implements GameEventStack
           }
         }
       }
-      else if( getSelectedAction() instanceof EbEvtLand )
+      else if( getSelectedAction() != null
+          && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
       {
-        EbEvtLand action = (EbEvtLand)getSelectedAction();
-        // p_position.setSector( action.getPosition().getSector() );
+        AnEventPlay action = (AnEventPlay)getSelectedAction();
         action.getPosition().setX( p_position.getX() );
         action.getPosition().setY( p_position.getY() );
         setLastUpdate( new Date( System.currentTimeMillis() ) );
@@ -837,31 +839,48 @@ public class EventsPlayBuilder implements GameEventStack
     exec();
     try
     {
-      if( (p_token.getLocation() == Location.Orbit) && (p_token.getType() == TokenType.Freighter) )
+      if( getSelectedAction() != null
+          && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
       {
-        // player select a freighter in orbit
-        if( getSelectedAction() instanceof EbEvtLand )
-        {
-          // player want to turn his ship before landing !
-          EbEvtLand action = (EbEvtLand)getSelectedAction();
-          action.getPosition().setSector( action.getPosition().getSector().getNext() );
-          p_token.getPosition().setSector( action.getPosition().getSector() );
-          isUpdated = true;
-        }
-        else
-        {
-          // ship in orbit: prepare to land
-          clear();
-          EbEvtLand action = new EbEvtLand();
-          action.setGame( getGame() );
-          action.setAccountId( getAccountId() );
-          action.setPosition( new AnBoardPosition() );
-          p_token.getPosition().setSector( action.getPosition().getSector() );
-          action.setToken( p_token );
-          setSelectedAction( action );
-          setSelectedToken( p_token );
-          isUpdated = true;
-        }
+        // player want to turn his ship before landing or any token before
+        // deployment
+        AnEventPlay action = (AnEventPlay)getSelectedAction();
+        action.getPosition().setSector( action.getPosition().getSector().getNext() );
+        p_token.getPosition().setSector( action.getPosition().getSector() );
+        isUpdated = true;
+      }
+      else if( (p_token.getLocation() == Location.Orbit)
+          && (p_token.getType() == TokenType.Freighter) )
+      {
+        // player select a freighter in orbit: prepare to land
+        clear();
+        EbEvtLand action = new EbEvtLand();
+        action.setGame( getGame() );
+        action.setAccountId( getAccountId() );
+        action.setPosition( new AnBoardPosition() );
+        p_token.getPosition().setSector( action.getPosition().getSector() );
+        action.setToken( p_token );
+        setSelectedAction( action );
+        setSelectedToken( p_token );
+        isUpdated = true;
+      }
+      else if( p_token.getLocation() == Location.Token
+          && p_token.getCarrierToken().getType() == TokenType.Freighter
+          && getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime()
+              .getDeploymentTimeStep() )
+      {
+        // player want to deploy his token from freighter
+        clear();
+        EbEvtDeployment action = new EbEvtDeployment();
+        action.setGame( getGame() );
+        action.setAccountId( getAccountId() );
+        action.setPosition( new AnBoardPosition(p_token.getCarrierToken().getPosition()) );
+        action.getPosition().setSector( Sector.North );
+        p_token.getPosition().setSector( action.getPosition().getSector() );
+        action.setToken( p_token );
+        setSelectedAction( action );
+        setSelectedToken( p_token );
+        isUpdated = true;
       }
       else if( p_token.getLocation() == Location.Token )
       {
@@ -915,7 +934,8 @@ public class EventsPlayBuilder implements GameEventStack
   public void userOk() throws RpcFmpException
   {
     // RpcUtil.logDebug( "user click OK " );
-    if( getSelectedAction() instanceof EbEvtLand )
+    if( getSelectedAction() != null
+        && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
       actionAdd( getSelectedAction() );
       m_isExecuted = true;

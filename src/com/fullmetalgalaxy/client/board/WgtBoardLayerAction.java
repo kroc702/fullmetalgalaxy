@@ -39,6 +39,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControl;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtDeployment;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
@@ -381,10 +382,10 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       {
         drawControlAction( (EbEvtControl)action );
       }
-      else if( action instanceof EbEvtLand )
+      else if( action instanceof EbEvtLand || action instanceof EbEvtDeployment )
       {
-        drawTransparentToken( ((EbEvtLand)action).getToken( ModelFmpMain.model().getGame() ),
-            ((EbEvtLand)action).getPosition() );
+        drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+            ((AnEventPlay)action).getPosition() );
       }
     }
     m_images.hideOtherImage();

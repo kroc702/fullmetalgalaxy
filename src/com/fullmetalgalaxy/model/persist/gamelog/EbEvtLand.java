@@ -174,7 +174,7 @@ public class EbEvtLand extends AnEventPlay
       if( (currentToken.getColor() == EnuColor.None)
           && (currentToken.getLocation() == Location.Board)
           && (getPosition().getHexDistance( currentToken.getPosition() ) <= p_game
-              .getEbConfigGameVariant().getDeployementRadius()) )
+              .getEbConfigGameVariant().getDeploymentRadius()) )
       {
         // destroy this colorless token
         m_TokenIds.add( currentToken.getId() );

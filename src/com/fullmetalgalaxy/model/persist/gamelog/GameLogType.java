@@ -52,7 +52,7 @@ public enum GameLogType
   EvtUnLoad,
   GameJoin,
   EvtCancel,
-  EvtChangePlayerOrder;
+ EvtChangePlayerOrder, EvtDeployment;
 
   public boolean isEventUser()
   {
@@ -63,17 +63,18 @@ public enum GameLogType
   {
     switch( this )
     {
-    case  EvtConstruct:
-    case  EvtControl:
-    case  EvtControlFreighter:
-    case  EvtFire:
-    case  EvtLand:
-    case  EvtLoad:
-    case  EvtMove:
-    case  EvtRepair:
-    case  EvtTakeOff:
-    case  EvtTransfer:
-    case  EvtUnLoad:
+    case EvtConstruct:
+    case EvtControl:
+    case EvtControlFreighter:
+    case EvtFire:
+    case EvtLand:
+    case EvtLoad:
+    case EvtMove:
+    case EvtRepair:
+    case EvtTakeOff:
+    case EvtTransfer:
+    case EvtUnLoad:
+    case EvtDeployment:
       return true;
     }
     return false;

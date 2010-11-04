@@ -41,6 +41,8 @@ public interface MessagesAppBoard extends Messages
 
   String landing();
 
+  String deployment(String p_token);
+
   String moving();
 
   String inOrbit();

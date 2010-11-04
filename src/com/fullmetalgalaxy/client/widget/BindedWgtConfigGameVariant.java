@@ -87,7 +87,7 @@ public class BindedWgtConfigGameVariant extends
     }
     getActionPtMaxReserve().setScalarValue( getTypedBean().getActionPtMaxReserve() );
     getMinSpaceBetweenFreighter().setScalarValue( getTypedBean().getMinSpaceBetweenFreighter() );
-    getDeployementRadius().setScalarValue( getTypedBean().getDeployementRadius() );
+    getDeployementRadius().setScalarValue( getTypedBean().getDeploymentRadius() );
     getDescription().setScalarValue( getTypedBean().getDescription() );
   }
 

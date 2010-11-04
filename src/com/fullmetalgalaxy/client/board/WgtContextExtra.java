@@ -45,8 +45,8 @@ import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
+import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -150,11 +150,21 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         }
       }
     }
-    else if( action.getSelectedAction() instanceof EbEvtLand )
+    else if( action.getSelectedAction() != null
+        && (action.getSelectedAction().getType() == GameLogType.EvtLand || action
+            .getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
-      m_panel.add( new HTML( MAppBoard.s_messages.landing() ) );
       assert action.getSelectedToken() != null;
       EbToken token = (EbToken)action.getSelectedToken();
+      if( action.getSelectedAction().getType() == GameLogType.EvtLand )
+      {
+        m_panel.add( new HTML( MAppBoard.s_messages.landing() ) );
+      }
+      else
+      {
+        m_panel.add( new HTML( MAppBoard.s_messages.deployment( Messages.getTokenString( token
+            .getType() ) ) ) );
+      }
       addToken( token, token.getPosition().getSector() );
     }
     else if( action.isBoardTokenSelected() )

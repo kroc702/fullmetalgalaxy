@@ -83,6 +83,7 @@ public enum ConfigGameTime
     timeConfig.setAsynchron( false );
     timeConfig.setRoundActionPt( 5 );
     timeConfig.setDescription( "25 tours (pas de temps limite)" );
+    timeConfig.setDeploymentTimeStep( 1 );
     s_configMap.put( Standard, timeConfig );
 
     // time config : QuickTurnBased
@@ -100,6 +101,7 @@ public enum ConfigGameTime
     timeConfig.setAsynchron( false );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 tours (3 min pour jouer)" );
+    timeConfig.setDeploymentTimeStep( 1 );
     s_configMap.put( QuickTurnBased, timeConfig );
 
     // Asynchron
@@ -125,6 +127,7 @@ public enum ConfigGameTime
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 jours en asynchrone" );
+    timeConfig.setDeploymentTimeStep( 8 );
     s_configMap.put( StandardAsynch, timeConfig );
 
     // time config : QuickAsynch
@@ -143,6 +146,7 @@ public enum ConfigGameTime
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "1h20 en asynchrone" );
+    timeConfig.setDeploymentTimeStep( 3 );
     s_configMap.put( QuickAsynch, timeConfig );
 
   }

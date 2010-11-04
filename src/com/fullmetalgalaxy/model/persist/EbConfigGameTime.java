@@ -53,6 +53,9 @@ public class EbConfigGameTime extends EbBase
   private boolean m_asynchron = false;
   /** in turn by turn, action point are rounded to this value */
   private int m_roundActionPt = 1;
+  /** in turn by turn it's the time step during which we can deploy token.
+   *  in asynchron mode it's the time step up to which we can deploy token. */
+  private int m_deploymentTimeStep = 1;
   
   /**
    * 
@@ -74,6 +77,7 @@ public class EbConfigGameTime extends EbBase
     m_takeOffTurns = new ArrayList<Integer>( p_config.getTakeOffTurns() );
     m_asynchron = p_config.isAsynchron();
     m_roundActionPt = p_config.getRoundActionPt();
+    m_deploymentTimeStep = p_config.getDeploymentTimeStep();
   }
   
 
@@ -89,6 +93,7 @@ public class EbConfigGameTime extends EbBase
     m_takeOffTurns.add( 25 );
     m_asynchron = false;
     m_roundActionPt = 1;
+    m_deploymentTimeStep = 1;
   }
 
   @Override
@@ -117,6 +122,33 @@ public class EbConfigGameTime extends EbBase
   {
     return getActionPtPerTimeStep() * getTotalTimeStep();
   }
+
+
+  public static int getDefaultActionInc(EbGame p_game)
+  {
+    int timeStep = p_game.getCurrentTimeStep();
+    if( p_game.getEbConfigGameTime().getDeploymentTimeStep() > 0
+        && !p_game.getEbConfigGameTime().isAsynchron() )
+    {
+      timeStep -= p_game.getEbConfigGameTime().getDeploymentTimeStep();
+    }
+    int actionInc = p_game.getEbConfigGameTime().getActionPtPerTimeStep();
+
+    if( timeStep <= 0 )
+    {
+      actionInc = 0;
+    }
+    else if( timeStep == 1 )
+    {
+      actionInc = actionInc / 3;
+    }
+    else if( timeStep == 2 )
+    {
+      actionInc = (2 * actionInc) / 3;
+    }
+    return actionInc;
+  }
+
 
 
   // =============================
@@ -273,6 +305,22 @@ public class EbConfigGameTime extends EbBase
   public void setRoundActionPt(int p_roundActionPt)
   {
     m_roundActionPt = p_roundActionPt;
+  }
+
+  /**
+   * @return the deploymentTimeStep
+   */
+  public int getDeploymentTimeStep()
+  {
+    return m_deploymentTimeStep;
+  }
+
+  /**
+   * @param p_deploymentTimeStep the deploymentTimeStep to set
+   */
+  public void setDeploymentTimeStep(int p_deploymentTimeStep)
+  {
+    m_deploymentTimeStep = p_deploymentTimeStep;
   }
   
   

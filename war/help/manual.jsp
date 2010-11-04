@@ -23,7 +23,7 @@
 [+][-] changement de zoom
 [G] afficher la grille
 [F] afficher les zones de feu
-[CTRL]+[Clic] Mouvement de plusieurs cases
+[CTRL]+[Clic] ou [Clic droit] Mouvement de plusieurs cases
 
 [CTRL]+[M] afficher le menu
 </pre>

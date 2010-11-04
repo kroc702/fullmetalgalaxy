@@ -31,8 +31,9 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
+import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 
@@ -95,9 +96,11 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
   private AbstractImagePrototype getHighLightImage()
   {
     EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
-    if( actionBuilder.getSelectedAction() instanceof EbEvtLand )
+    if( actionBuilder.getSelectedAction() != null
+        && (actionBuilder.getSelectedAction().getType() == GameLogType.EvtLand || actionBuilder
+            .getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
-      EbEvtLand action = (EbEvtLand)actionBuilder.getSelectedAction();
+      AnEventPlay action = (AnEventPlay)actionBuilder.getSelectedAction();
       return TokenImages.getTokenImage( action.getToken( ModelFmpMain.model().getGame() ),
           getZoom().getValue() );
     }
