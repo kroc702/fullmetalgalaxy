@@ -28,6 +28,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -151,19 +152,7 @@ public class EbEvtPlayerTurn extends AnEvent
       }
     }
 
-    int actionInc = game.getEbConfigGameTime().getActionPtPerTimeStep();
-    if( game.getCurrentTimeStep() == 0 )
-    {
-      actionInc = 0;
-    }
-    if( game.getCurrentTimeStep() == 1 )
-    {
-      actionInc = 5;
-    }
-    if( game.getCurrentTimeStep() == 2 )
-    {
-      actionInc = 10;
-    }
+    int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
     int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
         * (nextPlayerRegistration.getEnuColor().getNbColor() - 1);
     actionInc += actionExtraPoint;
@@ -188,19 +177,7 @@ public class EbEvtPlayerTurn extends AnEvent
     assert game != null;
 
     // current player action points
-    int actionInc = game.getEbConfigGameTime().getActionPtPerTimeStep();
-    if( game.getCurrentTimeStep() == 0 )
-    {
-      actionInc = 0;
-    }
-    if( game.getCurrentTimeStep() == 1 )
-    {
-      actionInc = 5;
-    }
-    if( game.getCurrentTimeStep() == 2 )
-    {
-      actionInc = 10;
-    }
+    int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
     int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
         * (game.getCurrentPlayerRegistration().getEnuColor().getNbColor() - 1);
     actionInc += actionExtraPoint;

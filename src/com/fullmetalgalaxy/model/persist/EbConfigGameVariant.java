@@ -66,7 +66,7 @@ public class EbConfigGameVariant extends EbBase
     super(p_config);
     m_actionPtMaxReserve = p_config.getActionPtMaxReserve();
     m_minSpaceBetweenFreighter = p_config.getMinSpaceBetweenFreighter();
-    m_deployementRadius = p_config.getDeployementRadius();
+    m_deployementRadius = p_config.getDeploymentRadius();
     m_description = new String( p_config.getDescription() );
     m_constructReserve = new HashMap<TokenType,Integer>(p_config.m_constructReserve);
   }
@@ -178,7 +178,7 @@ public class EbConfigGameVariant extends EbBase
   /**
    * @return the deployementRadius
    */
-  public int getDeployementRadius()
+  public int getDeploymentRadius()
   {
     return m_deployementRadius;
   }
