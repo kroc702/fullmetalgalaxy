@@ -1080,6 +1080,10 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public EbToken getFreighter( EbRegistration p_registration)
   {
+    if( p_registration == null )
+    {
+      return null;
+    }
     for( EbToken token : getSetToken() )
     {
       if(token.getType() == TokenType.Freighter && p_registration.getEnuColor().isColored( token.getColor() ))

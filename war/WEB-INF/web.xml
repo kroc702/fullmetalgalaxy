@@ -57,6 +57,16 @@
        <url-pattern>/admin/Servlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+       <servlet-name>PingServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.PingServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>PingServlet</servlet-name>
+       <url-pattern>/ping</url-pattern>
+    </servlet-mapping>
+    
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

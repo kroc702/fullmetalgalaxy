@@ -107,11 +107,12 @@ public class DataStore
 
 
   private Objectify m_ofy = null;
-  private boolean m_isOpen = true;
+  private boolean m_isOpen = false;
 
   
   protected DataStore()
   {
+    open();
   }
 
   /**
@@ -207,6 +208,14 @@ public class DataStore
   }
 
 
+
+  /** open datastore. use only if you close it  */
+  public void open()
+  {
+    assert m_isOpen == false;
+    m_ofy = null;
+    m_isOpen = true;
+  }
 
   /** close tt les em & commit des trans */
   public void close()

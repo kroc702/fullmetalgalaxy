@@ -63,6 +63,7 @@ public enum ConfigGameVariant
     variantConfig.setConstructQty( TokenType.Pontoon, 1 );
     variantConfig.setConstructQty( TokenType.Crab, 1 );
     variantConfig.setConstructQty( TokenType.Tank, 4 );
+    variantConfig.setDescription( "l'unique variante" );
     s_configMap.put( Standard, variantConfig );
   }
 }

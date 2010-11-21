@@ -255,7 +255,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
           msg = "Vos " + oldPt + " points d'action seront arrondi a "
             + newPt+ " pts. Confirmez-vous la fin de tour ?";
         }
-        // TODO i18n
         if( Window.confirm( msg ) )
         {
           EbEvtPlayerTurn action = new EbEvtPlayerTurn();
@@ -338,7 +337,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
           m_panel.add( m_btnEndTurn );
         }
         if( ModelFmpMain.model().isLogged() && ModelFmpMain.model().getMyRegistration() == null
-            && !ModelFmpMain.model().getGame().isStarted() )
+            && !ModelFmpMain.model().getGame().isStarted()
+            && ModelFmpMain.model().getGame().getMaxNumberOfPlayer() > ModelFmpMain.model()
+                .getGame().getCurrentNumberOfRegiteredPlayer() )
         {
           m_panel.add( m_btnRegister );
           MAppMessagesStack.s_instance.showMessage( m_pnlRegister );

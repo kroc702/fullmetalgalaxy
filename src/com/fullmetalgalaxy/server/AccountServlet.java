@@ -119,11 +119,22 @@ public class AccountServlet extends HttpServlet
 
     if( isConnexion )
     {
+      boolean isConnected = true;
       if( !Auth.isUserLogged( p_request, p_response ) )
       {
-        connectUser( p_request, p_response, params );
+        isConnected = connectFmgUser( p_request, p_response, params );
       }
-
+      if( isConnected )
+      {
+        String continueUrl = params.get( "continue" );
+        if( continueUrl == null )
+        {
+          // by default, my games is the default url
+          continueUrl = "/gamelist.jsp";
+        }
+        p_response.sendRedirect( continueUrl );
+      }
+      return;
     }
     else
     {
@@ -131,11 +142,13 @@ public class AccountServlet extends HttpServlet
       if( msg != null )
       {
         p_response.sendRedirect( "/account.jsp?msg=" + msg );
+        return;
       }
       msg = saveAccount( p_request, p_response, params );
       if( msg != null )
       {
         p_response.sendRedirect( "/account.jsp?msg=" + msg );
+        return;
       }
       else
       {
@@ -145,12 +158,15 @@ public class AccountServlet extends HttpServlet
         }
         if( "0".equalsIgnoreCase( params.get( "accountid" ) ) )
         {
-          p_response.sendRedirect( "/gamelist.jsp" );
+          // return page new games
+          p_response.sendRedirect( "/gamelist.jsp?tab=0" );
         }
         else
         {
+          // stay editing profile
           p_response.sendRedirect( "/profile.jsp?id=" + params.get( "accountid" ) );
         }
+        return;
       }
     }
 
@@ -158,44 +174,50 @@ public class AccountServlet extends HttpServlet
   }
 
 
-  private void connectUser(HttpServletRequest p_request, HttpServletResponse p_response,
+  /**
+   * try to connect an FMG (not google or other credential) user
+   * @param p_request
+   * @param p_response
+   * @param params
+   * @return false if connection failed and p_response is redirected. 
+   * @throws IOException
+   */
+  private boolean connectFmgUser(HttpServletRequest p_request, HttpServletResponse p_response,
       Map<String, String> params) throws IOException
   {
     String login = params.get( "login" );
     if( login == null || login.isEmpty() )
     {
-      p_response.sendRedirect( "/auth.jsp" );
-      return;
+      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+      return false;
     }
     PersistAccount account = FmgDataStore.getPersistAccount( login );
     if( account == null )
     {
-      p_response.sendRedirect( "/auth.jsp" );
-      return;
+      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+      return false;
     }
     if( account.getAuthProvider() != AuthProvider.Fmg )
     {
       p_response.sendRedirect( Auth.getGoogleLoginURL( p_request, p_response ) );
-      return;
+      return false;
     }
     String password = params.get( "password" );
     if( password == null )
     {
-      p_response.sendRedirect( "/auth.jsp" );
-      return;
+      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+      return false;
     }
-    if( account != null && account.getPassword() != null && account.getPassword().equals( password ) )
+    if( account == null || account.getPassword() == null
+        || !account.getPassword().equals( password ) )
     {
-      Auth.connectUser( p_request, login );
-      String continueUrl = params.get( "continue" );
-      if( continueUrl == null )
-      {
-        continueUrl = "/";
-      }
-      p_response.sendRedirect( continueUrl );
-      return;
+      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+      return false;
     }
-    p_response.sendRedirect( "/auth.jsp" );
+
+    // all seams ok: connect user
+    Auth.connectUser( p_request, login );
+    return true;
   }
 
 
@@ -296,8 +318,13 @@ public class AccountServlet extends HttpServlet
       account.setLogin( params.get( "login" ) );
       account.setAuthProvider( AuthProvider.Fmg );
       store.save( account );
+      // this is an artefact... store must be closed to commit data and get a
+      // PersistAcount
+      store.close();
+      store.open();
       pAccount = store.getPersistAccount( account.getId() );
     }
+    assert pAccount != null;
     if( params.get( "password" ) != null )
     {
       pAccount.setPassword( params.get( "password" ) );

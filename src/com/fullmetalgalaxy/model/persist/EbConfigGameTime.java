@@ -78,6 +78,7 @@ public class EbConfigGameTime extends EbBase
     m_asynchron = p_config.isAsynchron();
     m_roundActionPt = p_config.getRoundActionPt();
     m_deploymentTimeStep = p_config.getDeploymentTimeStep();
+    m_description = new String( p_config.getDescription() );
   }
   
 

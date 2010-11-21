@@ -34,6 +34,9 @@ if(pAccount != null) {
 	account = pAccount.getAccount();
 } else {
     pAccount = new PersistAccount();
+    account.setAllowMailFromGame( true );
+    account.setAllowMailFromNewsLetter( true );
+    account.setAllowPrivateMsg( true );
 } 
 %>
 

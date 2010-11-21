@@ -14,6 +14,9 @@
 <center>
 <h2>Full Metal Connexion</h2>
 
+
+<h1><%= (request.getParameter("msg")==null) ? "" : request.getParameter("msg") %></h1>
+
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data">
 
 login :
