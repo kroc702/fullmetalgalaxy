@@ -74,19 +74,16 @@ public class EbAdminTimePlay extends EbAdmin
   public void check(EbGame p_game) throws RpcFmpException
   {
     super.check(p_game);
-    EbRegistration myRegistration = getMyRegistration(p_game);
-    if( myRegistration == null )
-    {
-      // TODO i18n
-      throw new RpcFmpException(
-          "Vous devez être inscrit a cette partie pour réaliser cette action" );
-    }
+    // only admin or game creator sould be able to do this
+    // TODO how to check my account is admin ?
     if( p_game.isStarted() )
     {
+      // no i18n (hmi don't display button in this case)
       throw new RpcFmpException( "la partie est deja en cours" );
     }
     if( p_game.getCurrentNumberOfRegiteredPlayer() < 2 )
     {
+      // TODO i18n
       throw new RpcFmpException( "Pour démarrer une partie il faut au moins deux joueurs" );
     }
   }

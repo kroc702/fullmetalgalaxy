@@ -37,7 +37,6 @@ import com.fullmetalgalaxy.model.persist.EbToken;
  * @author Vincent Legendre
  *
  */
-// @MappedSuperclass
 public class AnEventPlay extends AnEventUser
 {
   static final long serialVersionUID = 1;

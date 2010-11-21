@@ -333,6 +333,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     return m_myAccountId;
   }
 
+  public boolean iAmAdmin()
+  {
+    EbAccount myAccount = getAccount( getMyAccountId() );
+    return myAccount != null && myAccount.isAdmin();
+  }
 
   public String getMyPseudo()
   {

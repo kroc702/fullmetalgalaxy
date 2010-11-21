@@ -52,7 +52,7 @@ public enum GameLogType
   EvtUnLoad,
   GameJoin,
   EvtCancel,
- EvtChangePlayerOrder, EvtDeployment;
+ EvtChangePlayerOrder, EvtDeployment, AdminBan;
 
   public boolean isEventUser()
   {
@@ -86,6 +86,7 @@ public enum GameLogType
     {
     case AdminTimePause:
     case AdminTimePlay:
+    case AdminBan:
       return true;
     }
     return false;

@@ -29,7 +29,7 @@ Ajouts fonctionels
   - forum 
   - chat
   - fil rss des evenements (mise a jour, nouvelle partie, fin de partie)
-- classement, stats
+- classement, stats (agressif/mineraiteur), karma (abandon, note des autres joueurs)
 
 
 
