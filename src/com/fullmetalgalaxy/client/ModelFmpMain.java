@@ -100,6 +100,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   protected String m_myAccountLogin = null;
   protected String m_myAccountPseudo = null;
   protected long m_myAccountId = -1L;
+  protected boolean m_myAccountAdmin = false;
 
   protected Date m_lastServerUpdate = new Date();
 
@@ -319,6 +320,16 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       m_myAccountId = Long.parseLong( DOM.getElementAttribute( panel.getElement(), "content" ) );
     }
+    panel = RootPanel.get( "fmp_useradmin" );
+    if( panel == null )
+    {
+      m_myAccountAdmin = false;
+    }
+    else
+    {
+      m_myAccountAdmin = true;
+    }
+
   }
 
   /**
@@ -335,8 +346,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   public boolean iAmAdmin()
   {
-    EbAccount myAccount = getAccount( getMyAccountId() );
-    return myAccount != null && myAccount.isAdmin();
+    if( m_myAccountId == -1 )
+    {
+      loadAccountInfoFromPage();
+    }
+    return m_myAccountAdmin;
   }
 
   public String getMyPseudo()
@@ -1046,7 +1060,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       return true;
     }
-    if( getMyPseudo().equalsIgnoreCase( "admin" ) )
+    if( iAmAdmin() )
     {
       return true;
     }

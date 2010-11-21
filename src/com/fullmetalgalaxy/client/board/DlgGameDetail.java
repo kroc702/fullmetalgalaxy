@@ -408,7 +408,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         banImage.setAltText( "BAN" );
         banImage.setTitle( "Banir un joueur de cette partie" );
         banImage.addClickHandler( this );
-        m_playerGrid.setWidget( index, 6, banImage );
+        m_playerGrid.setWidget( index, 7, banImage );
         m_banButtons.put( banImage, registration );
       }
     }
