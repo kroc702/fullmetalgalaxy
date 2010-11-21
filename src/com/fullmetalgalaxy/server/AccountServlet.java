@@ -313,6 +313,7 @@ public class AccountServlet extends HttpServlet
     account.setAllowMailFromGame( params.get( "AllowMailFromGame" ) != null );
     account.setAllowMailFromNewsLetter( params.get( "AllowMailFromNewsLetter" ) != null );
     account.setAllowPrivateMsg( params.get( "AllowPrivateMsg" ) != null );
+    account.setAdmin( Auth.isUserAdmin( p_request, p_response ) );
     if( pAccount == null )
     {
       account.setLogin( params.get( "login" ) );

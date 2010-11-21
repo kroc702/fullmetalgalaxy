@@ -35,7 +35,7 @@ if( !Auth.isUserLogged( request, response ) )
 }
 if( !account.isAllowPrivateMsg() )
 {
-	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté.</h2>" );
+	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté par mail.</h2>" );
 	return;
 }
 %>

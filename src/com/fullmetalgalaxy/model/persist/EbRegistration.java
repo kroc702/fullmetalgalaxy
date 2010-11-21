@@ -91,7 +91,6 @@ public class EbRegistration extends EbBase
   private EbRegistrationStats m_stats = null;
 
 
-  // @Transient
   public int getOreCount()
   {
     int count = 0;
@@ -140,7 +139,7 @@ public class EbRegistration extends EbBase
    */
   public boolean haveAccount()
   {
-    return getAccountId() != 0L;
+    return getAccountId() > 0L;
   }
 
   /**
@@ -298,7 +297,7 @@ public class EbRegistration extends EbBase
   }
 
   /**
-   * Warning, it's recomended to use EbGame.setEndTurnDate instead of this one.
+   * Warning, it's recommended to use EbGame.setEndTurnDate instead of this one.
    * @param p_endTurnDate the endTurnDate to set
    */
   public void setEndTurnDate(Date p_endTurnDate)

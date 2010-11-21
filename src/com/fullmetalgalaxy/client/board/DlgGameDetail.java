@@ -26,7 +26,9 @@
 package com.fullmetalgalaxy.client.board;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.ClientUtil;
@@ -41,20 +43,24 @@ import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -64,16 +70,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
- *
+ * TODO i18n
  */
-
-
 public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionHandler<Integer>
 {
   private Button m_btnOk = new Button( "OK" );
   private Button m_btnPlay = new Button( "Play" );
   private Button m_btnPause = new Button( "Pause" );
   private Button m_btnEdit = new Button( "Edite" );
+  private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
   private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
   private VerticalPanel m_panel = new VerticalPanel();
   private TabPanel m_tabPanel = new TabPanel();
@@ -185,9 +190,15 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_generalPanel.add( tidePanel );
 
     // display start game date
-    m_generalPanel.add( new Label( MAppBoard.s_messages.gameCreation( ClientUtil.s_dateTimeFormat
+    if( game.getGameType() == GameType.MultiPlayer )
+    {
+      m_generalPanel.add( new HTML( MAppBoard.s_messages.gameCreation( ClientUtil.s_dateTimeFormat
         .format( game.getCreationDate() ) )
-        + " par " + ModelFmpMain.model().getAccount( game.getAccountCreatorId() ).getPseudo() ) );
+        + " par <a href='/profile.jsp?id="
+        + game.getAccountCreatorId()
+        + "' target='_blank'>"
+        + ModelFmpMain.model().getAccount( game.getAccountCreatorId() ).getPseudo() + "</a>" ) );
+    }
 
     if( ModelFmpMain.model().isJoined() )
     {
@@ -219,12 +230,6 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_generalPanel.add( m_btnGrid );
     m_btnGrid.setDown( ModelFmpMain.model().isGridDisplayed() );
 
-    // edit button
-    m_generalPanel.add( m_btnEdit );
-    m_generalPanel.add( new HTML( "<a href='/admin/Servlet?downloadgame=" + game.getId()
-        + "'>download</a>" ) );
-
-
     // display end game date
     if( !game.isAsynchron() )
     {
@@ -239,13 +244,37 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       if( game.isStarted() )
       {
         m_generalPanel.add( new Label( "Partie en cours" ) );
-        m_generalPanel.add( m_btnPause );
       }
       else
       {
         m_generalPanel.add( new Label( "Partie en pause" ) );
-        m_generalPanel.add( m_btnPlay );
       }
+    }
+
+    if( ModelFmpMain.model().getMyAccountId() == game.getAccountCreatorId()
+        || ModelFmpMain.model().iAmAdmin() )
+    {
+      // play / pause button
+      if( game.getGameType() == GameType.MultiPlayer )
+      {
+        if( game.isStarted() )
+        {
+          m_generalPanel.add( m_btnPause );
+        }
+        else
+        {
+          m_generalPanel.add( m_btnPlay );
+        }
+      }
+      // edit button
+      m_generalPanel.add( m_btnEdit );
+    }
+
+    if( ModelFmpMain.model().iAmAdmin() )
+    {
+      // download button
+      m_generalPanel.add( new HTML( "<a href='/admin/Servlet?downloadgame=" + game.getId()
+          + "'>download</a>" ) );
     }
 
     // set player informations
@@ -272,6 +301,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   private Widget getPlayerWidget()
   {
     Panel m_playerPanel = new FlowPanel();
+    m_banButtons.clear();
 
     m_playerPanel.clear();
     m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( ModelFmpMain.model().getGame()
@@ -292,37 +322,37 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_playerGrid.setText( 0, 4, "pt de victoire" );
     m_playerGrid.setText( 0, 5, "" ); // must play before
     m_playerGrid.setText( 0, 6, "" ); // messages
-    m_playerGrid.setText( 0, 7, "" ); // email
+    m_playerGrid.setText( 0, 7, "" ); // ban
     m_playerGrid.getRowFormatter().addStyleName( 0, "fmp-home-gameline-caption" );
 
     int index = 0;
     for( EbRegistration registration : sortedRegistration )
     {
       index++;
+      EbAccount account = ModelFmpMain.model().getAccount( registration.getAccountId() );
 
       // display avatar
-      if( registration.haveAccount() )
+      if( account != null )
       {
-        m_playerGrid.setHTML( index, 0, "<IMG SRC='"
-            + ModelFmpMain.model().getAccount( registration.getAccountId() ).getAvatarUrl()
+        m_playerGrid.setHTML( index, 0, "<IMG SRC='" + account.getAvatarUrl()
             + "' WIDTH=60 HEIGHT=60 BORDER=0 />" );
       }
 
       // display login
       String login = "???";
-      if( registration.haveAccount() )
+      if( account != null )
       {
-        login = ModelFmpMain.model().getAccount( registration.getAccountId() ).getPseudo();
+        login = account.getPseudo();
       }
+      String html = "<a href='/profile.jsp?id=" + registration.getAccountId()
+          + "' target='_blank'>" + login
+          + "</a>";
       if( (!ModelFmpMain.model().getGame().isAsynchron())
           && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
       {
-        m_playerGrid.setHTML( index, 1, "<b>" + login + "</b>" );
+        html += Icons.s_instance.action16().getHTML();
       }
-      else
-      {
-        m_playerGrid.setHTML( index, 1, login );
-      }
+      m_playerGrid.setHTML( index, 1, html );
 
       // display all colors
       EnuColor color = registration.getEnuColor();
@@ -358,13 +388,28 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
             .getEndTurnDate() ) );
       }
 
-      // display email
-      if( (registration.haveAccount()) )
+      // display email messages
+      if( account != null && account.isAllowPrivateMsg() )
       {
         String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
             + registration.getAccountId()
             + "'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
-        m_playerGrid.setHTML( index, 7, htmlMail );
+        m_playerGrid.setHTML( index, 6, htmlMail );
+      }
+
+      // display ban button
+      if( (ModelFmpMain.model().getMyAccountId() == ModelFmpMain.model().getGame()
+          .getAccountCreatorId() || ModelFmpMain.model().iAmAdmin())
+          && registration.haveAccount() )
+      {
+        // account
+        Image banImage = new Image();
+        banImage.setUrl( "/images/css/icon_ban.gif" );
+        banImage.setAltText( "BAN" );
+        banImage.setTitle( "Banir un joueur de cette partie" );
+        banImage.addClickHandler( this );
+        m_playerGrid.setWidget( index, 6, banImage );
+        m_banButtons.put( banImage, registration );
       }
     }
 
@@ -405,7 +450,20 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       AppMain.instance().gotoEditGame( ModelFmpMain.model().getGame().getId() );
       hide();
     }
-
+    else if( m_banButtons.get( p_event.getSource() ) != null )
+    {
+      // want to ban player
+      EbRegistration registration = m_banButtons.get( p_event.getSource() );
+      if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccountPseudo()
+          + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
+      {
+        EbAdminBan gameLog = new EbAdminBan();
+        gameLog.setAccountId( ModelFmpMain.model().getMyAccountId() );
+        gameLog.setRegistrationId( registration.getId() );
+        gameLog.setGame( ModelFmpMain.model().getGame() );
+        ModelFmpMain.model().runSingleAction( gameLog );
+      }
+    }
   }
 
 

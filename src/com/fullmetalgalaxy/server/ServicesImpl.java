@@ -411,12 +411,15 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     if( p_action.getType().isEventUser() )
     {
       ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-      EbRegistration registration = game.getRegistrationByIdAccount( ((EbGameJoin)p_action)
-          .getAccountId() );
-      String myPseudo = Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() );
-      if( registration != null && !myPseudo.equals( registration.getAccountPseudo() ) )
+      if( p_action.getType() == GameLogType.GameJoin )
       {
-        registration.setAccountPseudo( myPseudo );
+        EbRegistration registration = game.getRegistrationByIdAccount( ((AnEventUser)p_action)
+            .getAccountId() );
+        String myPseudo = Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() );
+        if( registration != null && !myPseudo.equals( registration.getAccountPseudo() ) )
+        {
+          registration.setAccountPseudo( myPseudo );
+        }
       }
     }
 

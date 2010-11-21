@@ -138,7 +138,10 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
       {
         EbToken token = (EbToken)it.next();
-        if( token.getLocation() == Location.Orbit )
+
+        if( token.getLocation() == Location.Orbit
+            && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() )
+                .getAccountId() != 0 )
         {
           if( !isTitleDisplayed )
           {
@@ -146,6 +149,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
             m_panel.add( new Label( MAppBoard.s_messages.inOrbit() ) );
           }
           // this token is in orbit !
+          // and an account is associated with it
           addToken( token );
         }
       }

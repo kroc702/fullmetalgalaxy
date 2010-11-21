@@ -53,6 +53,7 @@ public class EbAccount extends EbBase
   /** to allow message like 'it your turn on game xxx' */
   private boolean m_allowMailFromGame = true;
   private boolean m_allowMailFromNewsLetter = true;
+  private boolean m_admin = false;
 
   public EbAccount()
   {
@@ -72,6 +73,7 @@ public class EbAccount extends EbBase
     m_allowPrivateMsg = true;
     m_allowMailFromGame = true;
     m_allowMailFromNewsLetter = true;
+    m_admin = false;
   }
 
   @Override
@@ -302,6 +304,24 @@ public class EbAccount extends EbBase
   public void setAllowMailFromNewsLetter(boolean p_allowMailFromNewsLetter)
   {
     m_allowMailFromNewsLetter = p_allowMailFromNewsLetter;
+  }
+
+
+  /**
+   * @return the admin
+   */
+  public boolean isAdmin()
+  {
+    return m_admin;
+  }
+
+
+  /**
+   * @param p_admin the admin to set
+   */
+  public void setAdmin(boolean p_admin)
+  {
+    m_admin = p_admin;
   }
 
 
