@@ -397,8 +397,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     case 4: // triggers
     case 5: // Extra
     default:
-      if( (ModelFmpMain.model().isLogged())
-          && (ModelFmpMain.model().getMyPseudo().equalsIgnoreCase( "admin" )) )
+      if( ModelFmpMain.model().iAmAdmin() )
       {
         return true;
       }

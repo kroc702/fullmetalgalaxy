@@ -721,9 +721,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.Services#deleteGame(long)
    */
+  @Override
   public void deleteGame(long p_gameId) throws RpcFmpException
   {
-    if( !isLogged() || !getThreadLocalRequest().isUserInRole( "admin" ) )
+    if( !isLogged() || !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ) )
     {
       throw new RpcFmpException(
           "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
