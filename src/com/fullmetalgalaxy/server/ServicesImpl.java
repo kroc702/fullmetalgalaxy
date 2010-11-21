@@ -411,6 +411,13 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     if( p_action.getType().isEventUser() )
     {
       ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+      EbRegistration registration = game.getRegistrationByIdAccount( ((EbGameJoin)p_action)
+          .getAccountId() );
+      String myPseudo = Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() );
+      if( registration != null && !myPseudo.equals( registration.getAccountPseudo() ) )
+      {
+        registration.setAccountPseudo( myPseudo );
+      }
     }
 
     if( (p_action.getType() == GameLogType.EvtPlayerTurn)
@@ -502,6 +509,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     return modelUpdate;
   }
 
+  @Override
   public ModelFmpUpdate runAction(ArrayList<AnEventPlay> p_actionList, Date p_lastUpdate)
       throws RpcFmpException
   {

@@ -32,7 +32,9 @@ import com.fullmetalgalaxy.client.MApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtScroll;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
+import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -95,7 +97,7 @@ public class MAppBoard extends MApp implements ResizeHandler
     m_wgtScroll.fireScroll();
   }
 
-  private long m_idGame = 0;
+  private long m_idGame = -1;
   private int m_oldZoomValue = EnuZoom.Unknown;
 
   /* (non-Javadoc)
@@ -134,7 +136,16 @@ public class MAppBoard extends MApp implements ResizeHandler
     if( m_idGame != ModelFmpMain.model().getGame().getId() )
     {
       m_idGame = ModelFmpMain.model().getGame().getId();
-      m_wgtScroll.centerContentWidget();
+      EbToken myFreighter = ModelFmpMain.model().getGame()
+          .getFreighter( ModelFmpMain.model().getMyRegistration() );
+      if( myFreighter != null && myFreighter.getLocation() == Location.Board )
+      {
+        setScrollPosition( myFreighter.getPosition().getX(), myFreighter.getPosition().getY() );
+      }
+      else
+      {
+        m_wgtScroll.centerContentWidget();
+      }
     }
     m_wgtScroll.ensureWidgetIsVisible();
   }

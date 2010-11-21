@@ -147,6 +147,7 @@ public class FmgDataStore extends DataStore
 
   public FmgDataStore()
   {
+    super();
   }
 
   public PersistAccount getPersistAccount(long p_id)

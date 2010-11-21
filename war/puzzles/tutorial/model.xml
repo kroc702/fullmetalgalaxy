@@ -34,7 +34,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
       <m__actionPtPerTimeStep>15</m__actionPtPerTimeStep>
       <m__actionPtPerExtraShip>5</m__actionPtPerExtraShip>
       <m__bulletCountIncrement>2</m__bulletCountIncrement>
-      <m__description></m__description>
+      <m__description>25 tours (pas de temps limite)</m__description>
       <m__takeOffTurns>
         <int>21</int>
         <int>25</int>
@@ -1196,6 +1196,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
         <m__workingWeatherHenCount>0</m__workingWeatherHenCount>
         <m__game reference="../../.."/>
         <m__accountId>2</m__accountId>
+        <m__accountPseudo>CPU</m__accountPseudo>
       </com.fullmetalgalaxy.model.persist.EbRegistration>
       <com.fullmetalgalaxy.model.persist.EbRegistration>
         <m__id>1</m__id>
@@ -1208,6 +1209,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
         <m__workingWeatherHenCount>0</m__workingWeatherHenCount>
         <m__game reference="../../.."/>
         <m__accountId>1</m__accountId>
+        <m__accountPseudo>Vous</m__accountPseudo>
       </com.fullmetalgalaxy.model.persist.EbRegistration>
     </m__setRegistration>
     <m__setGameLog/>
@@ -1576,9 +1578,25 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
       <com.fullmetalgalaxy.model.persist.EbAccount>
         <m__id>1</m__id>
         <m__version>0</m__version>
-        <m__login>CPU-0</m__login>
+        <m__login>Vous</m__login>
         <m__email></m__email>
         <m__pseudo>Vous</m__pseudo>
+        <m__subscriptionDate>2010-11-03 12:01:14.500 CET</m__subscriptionDate>
+        <m__authProvider>Fmg</m__authProvider>
+        <m__description></m__description>
+        <m__allowPrivateMsg>true</m__allowPrivateMsg>
+        <m__allowMailFromGame>true</m__allowMailFromGame>
+        <m__allowMailFromNewsLetter>true</m__allowMailFromNewsLetter>
+      </com.fullmetalgalaxy.model.persist.EbAccount>
+    </entry>
+    <entry>
+      <long>2</long>
+      <com.fullmetalgalaxy.model.persist.EbAccount>
+        <m__id>2</m__id>
+        <m__version>0</m__version>
+        <m__login>CPU-0</m__login>
+        <m__email></m__email>
+        <m__pseudo>CPU</m__pseudo>
         <m__subscriptionDate>2010-11-03 12:01:14.500 CET</m__subscriptionDate>
         <m__authProvider>Fmg</m__authProvider>
         <m__description></m__description>

@@ -34,6 +34,8 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
+import com.fullmetalgalaxy.client.widget.BindedWgtConfigGameTime;
+import com.fullmetalgalaxy.client.widget.BindedWgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameTime;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
@@ -43,7 +45,6 @@ import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -80,10 +81,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   private Panel m_generalPanel = new FlowPanel();
   private Panel m_playerPanel = new FlowPanel();
   private WgtConstructReserve m_wgtReserve = new WgtConstructReserve();
-  private WgtConfigGameTime m_wgtConfigTime = (WgtConfigGameTime)GWT
-      .create( WgtConfigGameTime.class );
-  private WgtConfigGameVariant m_wgtConfigVariant = (WgtConfigGameVariant)GWT
-      .create( WgtConfigGameVariant.class );
+  private WgtConfigGameTime m_wgtConfigTime = new BindedWgtConfigGameTime();
+  private WgtConfigGameVariant m_wgtConfigVariant = new BindedWgtConfigGameVariant();
   private WgtGameLogs m_wgtLogs = new WgtGameLogs();
   private WgtGameAdminLogs m_wgtAdminLogs = new WgtGameAdminLogs();
 

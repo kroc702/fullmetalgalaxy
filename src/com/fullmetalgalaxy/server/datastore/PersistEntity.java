@@ -137,8 +137,11 @@ public class PersistEntity
       }
     }
     EbBase base = EbBase.class.cast( obj );
-    base.setVersion( getVersion() );
-    base.setId( getId() );
+    if( base != null )
+    {
+      base.setVersion( getVersion() );
+      base.setId( getId() );
+    }
     return base;
   }
 

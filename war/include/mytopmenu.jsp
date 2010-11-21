@@ -1,7 +1,7 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
 
-<div id="mymenu" style="margin:5px; float:right; color:white;">
-	<% if(Auth.isUserLogged(request,response)) { %>
+<div id="mymenu" style="margin:5px; float:right; color:white;  z-index:9999999998;">
+	<% if(Auth.isUserLogged(request,response)) { %> 
 	    <%= Auth.getUserPseudo(request,response) %> :
 	    <% if(Auth.isUserAdmin(request, response)) { %>
 	    
