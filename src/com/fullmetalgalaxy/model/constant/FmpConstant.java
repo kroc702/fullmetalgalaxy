@@ -31,8 +31,6 @@ public class FmpConstant
   public static final int initialActionPt = 5;
   public static final int maximumActionPtWithoutLanding = 10;
 
-  public static final String forumUrl = "/jforum";
-
   // in second
   public static final int minimumResfreshingPeriod = 1;
   public static final int maximumResfreshingPeriod = 2;
@@ -57,7 +55,7 @@ public class FmpConstant
 
   public static String getForumUrl()
   {
-    return forumUrl;
+    return "http://fullmetalplanete.forum2jeux.com/programme-de-vincent-f33/";
   }
 
   public static String getMiniMapUrl(String p_gameId)
@@ -65,14 +63,14 @@ public class FmpConstant
     return "ImageServlet?minimap=" + p_gameId;
   }
 
-  public static String getForumPMUrl(long p_forumId)
+  public static String getPMUrl(long p_accountId)
   {
-    return forumUrl + "/pm/sendTo/" + p_forumId + ".page";
+    return "/privatemsg.jsp?id=" + p_accountId;
   }
 
-  public static String getMyProfilUrl(long p_forumId)
+  public static String getProfileUrl(long p_accountId)
   {
-    return forumUrl + "/user/edit/" + p_forumId + ".page";
+    return "/profile.jsp?id=" + p_accountId;
   }
 
   /**

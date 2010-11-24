@@ -282,7 +282,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           log.error( "New turn email couldn't be send" );
           return;
         }
-        if( !currentPlayer.isAllowMailFromGame() )
+        if( !currentPlayer.isAllowMailFromGame() || !currentPlayer.haveEmail() )
         {
           // player don't want any notification
           log.fine( "player " + currentPlayer.getPseudo() + " don't want any notification" );

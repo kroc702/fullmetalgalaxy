@@ -33,7 +33,7 @@ if( !Auth.isUserLogged( request, response ) )
 	out.println("<h2>Vous devez être connecté pour envoyer un message a un autre joueur.</h2>" );
 	return;
 }
-if( !account.isAllowPrivateMsg() )
+if( !account.isAllowPrivateMsg() || !account.haveEmail() )
 {
 	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté par mail.</h2>" );
 	return;
