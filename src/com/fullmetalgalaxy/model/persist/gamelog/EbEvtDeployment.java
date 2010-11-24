@@ -94,6 +94,7 @@ public class EbEvtDeployment extends AnEventPlay
       throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getType()
           .ordinal(), myRegistration.getColor() );
     }
+
     // check token is contained by a landed freighter
     EbToken freighter = getToken( p_game ).getCarrierToken();
     if( freighter == null || freighter.getType() != TokenType.Freighter
@@ -104,6 +105,14 @@ public class EbEvtDeployment extends AnEventPlay
           + " should be located in a landed freighter" );
     }
 
+    // check that, in turn by turn, player don't wan't to deploy too early
+    if( !p_game.isAsynchron() && p_game.getEbConfigGameTime().getDeploymentTimeStep() != p_game.getCurrentTimeStep() )
+    {
+      // TODO i18n
+      throw new RpcFmpException( "Vous devez attendre le tour " + p_game.getEbConfigGameTime().getDeploymentTimeStep()
+          + " pour deployer vos vehicules" );
+    }
+    
     // check token isn't deployed too far from his freighter
     // AnBoardPosition position = getToken( p_game )
     if( freighter.getPosition().getHexDistance( getPosition() ) > p_game.getEbConfigGameVariant()

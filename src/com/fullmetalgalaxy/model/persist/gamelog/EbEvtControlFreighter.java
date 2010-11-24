@@ -133,7 +133,8 @@ public class EbEvtControlFreighter extends AnEventPlay
       EbToken turret = p_game.getToken( position, TokenType.Turret );
       if( turret != null )
       {
-        throw new RpcFmpException( RpcFmpException.MustDestroyAllTurrets );
+        // no i18n ?
+        throw new RpcFmpException( "You must destroy all turrets of an opponents freighter before taking control of it." );
       }
     }
 

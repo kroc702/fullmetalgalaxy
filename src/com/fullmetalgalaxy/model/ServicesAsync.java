@@ -45,20 +45,6 @@ public interface ServicesAsync
 {
 
   /**
-   * simply ask server for user's identity. 
-   */
-  public void askForIdentity(AsyncCallback<EbAccount> callback);
-
-
-  /**
-   * @param whereClause to select a subset of games.
-   * @return an array of all games found.
-   */
-  public void getGameList(GameFilter p_filter,
-      AsyncCallback<List<com.fullmetalgalaxy.model.persist.EbGamePreview>> callback);
-
-
-  /**
    * Add a new game.
    * Must have a new name.
    * @param game description of the game.
@@ -75,20 +61,6 @@ public interface ServicesAsync
    */
   public void saveGame(EbGame game, String p_modifDesc, AsyncCallback<EbBase> callback);
 
-
-  /**
-   * remove the given game from database
-   * @param p_id
-   * @throws RpcFmpException
-   */
-  public void deleteGame(long p_gameId, AsyncCallback<Void> callback);
-
-  /**
-   * cancel and history the given game.
-   * @param p_id
-   * @throws RpcFmpException
-   */
-  public void cancelGame(long p_gameId, AsyncCallback<Void> callback);
 
   /**
    * Get all informations concerning the specific game.

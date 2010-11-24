@@ -960,35 +960,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-  /**
-   * check that current player can play.<br/>
-   * ie: game is started, but not finished, player's turn, etc...
-   * @throws RpcFmpException
-   */
-  public void checkICanPlay(EbRegistration p_myRegistration) throws RpcFmpException
-  {
-    // check that this player as joined this game
-    if( (p_myRegistration == null) || (p_myRegistration.isTrancient())
-        || (p_myRegistration.getGame() != this) )
-    {
-      // player didn't join this game
-      throw new RpcFmpException( RpcFmpException.YouDidntJoinThisGame );
-    }
-    // check that game is currently open
-    if( !isStarted() )
-    {
-      throw new RpcFmpException( RpcFmpException.GameNotStarted );
-    }
-    if( isFinished() )
-    {
-      throw new RpcFmpException( RpcFmpException.GameFinished, estimateEndingDate().getTime() );
-    }
-    if( (!isAsynchron()) && (getCurrentPlayerRegistration() != p_myRegistration) )
-    {
-      // turn by turn game
-      throw new RpcFmpException( RpcFmpException.NotYourTurn );
-    }
-  }
 
   /**
    * offset height in pixel to display token image in tactic zoom.

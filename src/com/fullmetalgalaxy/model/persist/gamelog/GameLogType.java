@@ -52,7 +52,9 @@ public enum GameLogType
   EvtUnLoad,
   GameJoin,
   EvtCancel,
- EvtChangePlayerOrder, EvtDeployment, AdminBan;
+  EvtChangePlayerOrder, 
+  EvtDeployment, 
+  AdminBan;
 
   public boolean isEventUser()
   {

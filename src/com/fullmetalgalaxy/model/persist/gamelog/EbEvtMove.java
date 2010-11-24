@@ -122,8 +122,8 @@ public class EbEvtMove extends AnEventPlay
             tokenPosition.getSector() ).equals(
             getNewPosition().getNeighbour( getNewPosition().getSector() ) )) )
     {
-      // unusual error
-      throw new RpcFmpException( RpcFmpException.TwoStepAreNotNeighbour );
+      // unusual error: no i18n
+      throw new RpcFmpException( "You must select all moving step without any gap between them." );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);

@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtScroll;
+import com.fullmetalgalaxy.client.ressources.MessagesAppBoard;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;

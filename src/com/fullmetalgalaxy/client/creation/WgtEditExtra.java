@@ -40,18 +40,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * other actions
  */
 
-public class WgtEditExtra extends Composite implements ClickHandler
+public class WgtEditExtra extends Composite  
 {
   private VerticalPanel m_panel = new VerticalPanel();
-  private Button m_btnDelete = new Button( "Detruire la partie" );
-  private Button m_btnHistory = new Button( "Annuler et archiver la partie" );
 
   public WgtEditExtra()
   {
-    m_panel.add( m_btnHistory );
-    m_btnHistory.addClickHandler( this );
-    m_panel.add( m_btnDelete );
-    m_btnDelete.addClickHandler( this );
+
     initWidget( m_panel );
   }
 
@@ -90,25 +85,6 @@ public class WgtEditExtra extends Composite implements ClickHandler
 
   };
 
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
-   */
-  @Override
-  public void onClick(ClickEvent p_event)
-  {
-    if( p_event.getSource() == m_btnDelete )
-    {
-      if( Window.confirm( "Etes vous sur de vouloir détruire cette partie ?" ) )
-      {
-        Services.Util.getInstance().deleteGame( ModelFmpMain.model().getGame().getId(), m_callback );
-      }
-    }
-    else if( p_event.getSource() == m_btnHistory )
-    {
-      Services.Util.getInstance().cancelGame( ModelFmpMain.model().getGame().getId(), m_callback );
-    }
-
-  }
 
 
 }

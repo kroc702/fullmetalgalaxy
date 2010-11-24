@@ -244,6 +244,12 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   public void load(EbGame p_model)
   {
+    if( p_model==null )
+    {
+      // TODO i18n
+      Window.alert( "Partie non trouve...\nVerifier l'url, mais il ce peut qu'elle ai ete suprime" );
+      return;
+    }
     m_updatePeriodInMS = 0;
     m_game = p_model;
     getActionBuilder().setGame( getGame() );
@@ -635,7 +641,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       if( !ModelFmpMain.model().isLogged() && getGame().getGameType() == GameType.MultiPlayer )
       {
-        throw new RpcFmpException( RpcFmpException.MustBeLogged );
+        // TODO i18n ???
+        throw new RpcFmpException( "You must be logged to do this action" );
       }
       // do not check player is logged to let him join action
       // action.check();
@@ -683,7 +690,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       if( !ModelFmpMain.model().isJoined() )
       {
-        throw new RpcFmpException( RpcFmpException.YouDidntJoinThisGame );
+        // no i18n ?
+        throw new RpcFmpException( "you didn't join this game." );
       }
       // action.check();
       cancelUpdateTimer();

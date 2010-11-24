@@ -121,7 +121,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         tokenWidget.setVisible( false );
         remove( tokenWidget.getTokenImage() );
         remove( tokenWidget.getIconWarningImage() );
-        m_tokenMap.remove( tokenWidget );
+        m_tokenMap.remove( token );
       }
     }
   }

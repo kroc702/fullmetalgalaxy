@@ -23,7 +23,7 @@
 /**
  * 
  */
-package com.fullmetalgalaxy.client.board;
+package com.fullmetalgalaxy.client.ressources;
 
 import com.google.gwt.i18n.client.Messages;
 
@@ -33,8 +33,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesAppBoard extends Messages
 {
-  String selectedToken();
-
   String contain();
 
   String construct();
@@ -43,19 +41,11 @@ public interface MessagesAppBoard extends Messages
 
   String deployment(String p_token);
 
-  String moving();
-
   String inOrbit();
-
-  String fireOrControl();
 
   String xPlayers(int p_nbPlayer);
 
   String playerDescription(String p_login, int p_points);
-
-  String notJoined();
-
-  String actionPtCount(int p_actionPtCount);
 
   String nextActionPt(int p_actionPtIncrement, String p_date);
 
@@ -69,27 +59,9 @@ public interface MessagesAppBoard extends Messages
 
   String gameFinishAt(String p_date);
 
+  // unused ?
   String gameFinished();
 
   String turn();
 
-  String youSureDestroyYourToken();
-
-  String small();
-
-  String medium();
-
-  String large();
-
-  String zoom();
-
-  String action();
-
-  String join();
-
-  String endTurn();
-
-  String fireCover();
-
-  String home();
 }

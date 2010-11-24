@@ -96,7 +96,7 @@ public class FmpUpdateStatus
       // google probably find this query too long...
     }
 
-    log.fine( "waitForModelUpdate(" + p_login + ") date=" + new Date( System.currentTimeMillis() )
+    log.finest( "waitForModelUpdate(" + p_login + ") date=" + new Date( System.currentTimeMillis() )
         + " timeout="
         + new Date( timeoutTime ) + "  durration="
         + ((System.currentTimeMillis() - startTime) / 1000) + "sec" );
