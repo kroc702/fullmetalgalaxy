@@ -33,43 +33,17 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesAppGameCreation extends Messages
 {
-  String gameName();
+    String createGame();
 
-  String createGame();
+    String cancel();
 
-  String cancel();
+    String simpleCreation();
 
-  String timeStepDuration();
+    String map();
 
-  String actionPtPerTimeStep();
+    String errorActionPt();
 
-  String actionPtPerExtraShip();
+    String errorName();
 
-  String tideFrequencyInStep();
-
-  String tideFrequencyInSec();
-
-  String startingDate();
-
-  String endingDate();
-
-  String registrationEndDate();
-
-  String simpleCreation();
-
-  String hardWay();
-
-  String map();
-
-  String gameCreation();
-
-  String gameCreationSuccess();
-
-  String errorEndDate();
-
-  String errorActionPt();
-
-  String errorName();
-
-  String errorMapTooLarge(int p_maxWidth, int p_maxHeight);
+    String errorMapTooLarge(int p_maxWidth, int p_maxHeight);
 }

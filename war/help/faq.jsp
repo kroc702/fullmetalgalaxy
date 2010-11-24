@@ -23,7 +23,7 @@ ou une zone de feu adverse.
 </p>
 <p>
 Q: Bon j'ai sorti ma pondeuse mais je ne vois toujours pas la marrée futur.<br/>
-R: Vous ne verrez la marrée futur qu'au prochain changement de tour ou d'incréments de temps.
+R: Vous ne verrez la marrée futur qu'au prochain changement de tour ou incréments de temps.
 </p>
 <p>
 Q: Je n'arrive pas &agrave; charger mon Crabe dans ma Barge.<br/>

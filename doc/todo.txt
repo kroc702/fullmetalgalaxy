@@ -1,14 +1,10 @@
 
 TODO :
 ======
+
 - trouver un moyen simple de gérer des messages i18n, paramettrés, persitable facilement 
 et transportable du serveur au client (package rpc).
-- extraires toute les chaines dans les fichiers txt, corriger les fautes, i18n
 
-Communauté FMP fr
-- respect strict de toutes les règles
-
-Communauté TDJ
 
 Communauté FMP int
 - i18n
@@ -150,15 +146,6 @@ interdiction d'en mettre 2 cote cote, transportable que par le crabe
 - Le scorpion - lorsqu'il prend un minerai, il en sort deux mais n'a pas de capacité de transport, il faut donc un crabe dans une case adjacente.
   -> ou bien transport de 1 et tir a 2 cases (une seule munition), pas transportable.
   
-Différences avec le jeu original:
-=================================
-- Pas de déploiement gratuit
-- Pas de limite du nombre de pièce dans la construction
-- arrondi des pt d'action
-- pas d'embourbement volontaire
-- prévisons de la prochaine marrée uniquement (même avec 2 pondeuses)
-- a règle "entre deux tours, deux chars ne peuvent pas	stationner côte à côte sur des montagnes." a été adaptée à "si deux chars, du même propriétaire, sont côte à côte sur des montagnes, l'un des deux ne produit pas de zone de feu"
-- La neutralisation est automatique et n'empêche pas de se déplacer. En revanche, un pion en mouvement ne créer pas de zone de feu (un pion ne peut donc pas pénétrer dans la zone de feu du pion qu'il neutralise)
 
 
 

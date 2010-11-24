@@ -33,20 +33,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesRpcException extends Messages
 {
-  String LogonWrongPassword();
-
-  String UnknownGameId(long p_gameId);
-
-  String MustBeLogged();
-
-  String NoGameId();
-
-  String UnknownAccount();
-
-  String MaximumPlayerReached();
-
-  String YouDidntJoinThisGame();
-
   String GameNotStarted();
 
   String GameFinished(String p_date);
@@ -61,8 +47,6 @@ public interface MessagesRpcException extends Messages
 
   String CantUnloadDisableFire(String p_token, String p_fireCover);
 
-  String MustTwoPositionToUnloadBarge();
-
   String NotEnouthActionPt();
 
   String CantMoveDisableFire(String p_token, String p_color);
@@ -70,8 +54,6 @@ public interface MessagesRpcException extends Messages
   String CantLoad(String p_tokenCarrier, String p_token);
 
   String MustControlBothToken(String p_tokenCarrier, String p_token);
-
-  String MustDestroyAllTurrets();
 
   String CantFireOn(String p_token, String p_tokenTarget);
 
@@ -87,11 +69,6 @@ public interface MessagesRpcException extends Messages
 
   String NotYourTurn();
 
-  String TokenWasAlreadyMoved(String p_token);
-
   String CantDestroyFreighter();
 
-  String TwoStepAreNotNeighbour();
-
-  String LoginAlreadyExist();
 }

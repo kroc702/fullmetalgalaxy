@@ -27,12 +27,10 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
 import com.fullmetalgalaxy.model.ChatMessage;
-import com.fullmetalgalaxy.model.GameFilter;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
@@ -94,28 +92,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
 
 
-  public EbAccount askForIdentity() throws RpcFmpException
-  {
-    if( !isLogged() )
-    {
-      throw new RpcFmpException( RpcFmpException.LogonWrongPassword );
-    }
-    EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
-
-    return account;
-  }
-
-
-
-  /**
-   * @see com.fullmetalgalaxy.model.Services#getGameList(java.lang.String)
-   */
-  public List<com.fullmetalgalaxy.model.persist.EbGamePreview> getGameList(GameFilter p_filter)
-      throws RpcFmpException
-  {
-    return FmgDataStore.getGamePreviewList();
-  }
-
 
   public EbBase saveGame(EbGame p_game) throws RpcFmpException
   {
@@ -127,11 +103,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   */
   public EbBase saveGame(EbGame p_game, String p_modifDesc) throws RpcFmpException
   {
-    // if( !isLogged() ||
-    // (!p_game.getAccountCreator().getLogin().equalsIgnoreCase( getRemoteUser()
-    // ))
-    // && !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )
-    // )
     if( !isLogged() )
     {
       throw new RpcFmpException(
@@ -148,7 +119,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       EbAdmin adminEvent = new EbAdmin();
       adminEvent.setGame( p_game );
       adminEvent.setMessage( p_modifDesc );
-      EbAccount account = askForIdentity();
+      EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
       if( (!Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ))
           && !(p_game.getAccountCreatorId() != account.getId()) )
       {
@@ -165,24 +136,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     return p_game.createEbBase();
 
-    // save initial state
-    /*try
-    {
-      // get a game step and save it.
-      session = FmgDataStore.beginTransaction();
-      GameInit gameInit = new GameInit( p_game );
-      session.persist( gameInit );
-      FmgDataStore.commit( session );
-    } catch( Exception e )
-    {
-      FmgDataStore.rollback( session );
-    }
-
-    GameStep gameStep = new GameStep( p_game, dateBeforeCommit );
-    gameStep.setIdRegistration( 0 );
-    gameStep.setGreatEvent( EnuGreatEvent.GameCreation );
-    saveGameStep( gameStep );
-    */
   }
 
 
@@ -278,7 +231,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   {
     ModelFmpInit modelInit = sgetModelFmpInit( p_gameId );
 
-    if( modelInit.getGame().getId() != 0 )
+    if( modelInit.getGame() != null && modelInit.getGame().getId() != 0 )
     {
       ModelFmpUpdate modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
           getThreadLocalRequest(), getThreadLocalResponse() ), modelInit.getGame().getId(), null );
@@ -295,7 +248,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   }
 
 
-
+  @Override
   public ModelFmpUpdate getModelFmpUpdate(long p_gameId, Date p_lastUpdate) throws RpcFmpException
   {
     assert p_lastUpdate != null;
@@ -305,30 +258,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   }
 
 
-  private void convertThrowable(Throwable p_th) throws RpcFmpException
-  {
-    if( p_th instanceof RpcFmpException )
-    {
-      throw (RpcFmpException)p_th;
-    }
-    if( p_th instanceof Exception )
-    {
-      throw new RpcFmpException( ((Exception)p_th).getMessage() );
-    }
-    String message = "Unexpected error: " + p_th.toString();
-    if( p_th.getMessage() != null )
-    {
-      message += "\n" + p_th.getMessage();
-    }
-    if( p_th.getStackTrace() != null )
-    {
-      for( int i = 0; i < p_th.getStackTrace().length; i++ )
-      {
-        message += "\n" + p_th.getStackTrace()[i].toString();
-      }
-    }
-    throw new RpcFmpException( message );
-  }
 
   /**
    * eventually send an email to people that need it.
@@ -370,6 +299,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
   }
 
+  @Override
   public ModelFmpUpdate runEvent(AnEvent p_action, Date p_lastUpdate) throws RpcFmpException
   {
     ModelFmpUpdate modelUpdate = null;
@@ -685,6 +615,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.Services#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
    */
+  @Override
   public ModelFmpUpdate sendChatMessage(ChatMessage p_message, Date p_lastUpdate)
       throws RpcFmpException
   {
@@ -696,42 +627,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     updates.addChatMessages( p_message );
     FmpUpdateStatus.broadCastGameUpdate( updates );
     return updates.getNewModelUpdate( p_lastUpdate );
-  }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.Services#cancelGame(long)
-   */
-  public void cancelGame(long p_gameId) throws RpcFmpException
-  {
-    FmgDataStore dataStore = new FmgDataStore();
-    EbGame game = dataStore.getGame( p_gameId );
-    if( !isLogged()
-        || (game.getAccountCreatorId() != Auth.getUserAccount( getThreadLocalRequest(),
-            getThreadLocalResponse() ).getId())
-        && !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ) )
-    {
-      throw new RpcFmpException(
-          "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
-    }
-    game.setHistory( true );
-
-    dataStore.close();
-  }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.Services#deleteGame(long)
-   */
-  @Override
-  public void deleteGame(long p_gameId) throws RpcFmpException
-  {
-    if( !isLogged() || !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ) )
-    {
-      throw new RpcFmpException(
-          "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
-    }
-    FmgDataStore dataStore = new FmgDataStore();
-    dataStore.deleteGame( p_gameId );
-    dataStore.close();
   }
 
 

@@ -168,8 +168,7 @@ public class EbEvtFire extends AnEventPlay
     // check that target isn't freighter
     if( getTokenTarget(p_game).getType() == TokenType.Freighter )
     {
-      throw new RpcFmpException(
-          "les astronefs ne peuvent etres detruits. Ils peuvent cependant êtres controlés" );
+      throw new RpcFmpException( RpcFmpException.CantDestroyFreighter );
     }
 
   }

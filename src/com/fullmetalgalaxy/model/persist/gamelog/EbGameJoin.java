@@ -107,7 +107,8 @@ public class EbGameJoin extends AnEventUser
     }
     else if( p_game.getMaxNumberOfPlayer() <= p_game.getSetRegistration().size() )
     {
-      throw new RpcFmpException( RpcFmpException.MaximumPlayerReached );
+      // no i18n ?
+      throw new RpcFmpException( "The maximum number of player is reached for this game." );
     }
   }
 

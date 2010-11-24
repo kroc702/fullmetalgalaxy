@@ -286,20 +286,6 @@ public class Messages
   {
     switch( p_exception.m_errorCode )
     {
-    case RpcFmpException.LogonWrongPassword:
-      return s_rpcEx.LogonWrongPassword();
-    case RpcFmpException.UnknownGameId:
-      return s_rpcEx.UnknownGameId( p_exception.getLong( 0 ) );
-    case RpcFmpException.MustBeLogged:
-      return s_rpcEx.MustBeLogged();
-    case RpcFmpException.NoGameId:
-      return s_rpcEx.NoGameId();
-    case RpcFmpException.UnknownAccount:
-      return s_rpcEx.UnknownAccount();
-    case RpcFmpException.MaximumPlayerReached:
-      return s_rpcEx.MaximumPlayerReached();
-    case RpcFmpException.YouDidntJoinThisGame:
-      return s_rpcEx.YouDidntJoinThisGame();
     case RpcFmpException.GameNotStarted:
       return s_rpcEx.GameNotStarted();
     case RpcFmpException.GameFinished:
@@ -321,8 +307,6 @@ public class Messages
     case RpcFmpException.CantUnloadDisableFire:
       return s_rpcEx.CantUnloadDisableFire( getTokenString( TokenType.getFromOrdinal( p_exception
           .getInt( 0 ) ) ), getColorString( p_exception.getInt( 1 ) ) );
-    case RpcFmpException.MustTwoPositionToUnloadBarge:
-      return s_rpcEx.MustTwoPositionToUnloadBarge();
     case RpcFmpException.NotEnouthActionPt:
       return s_rpcEx.NotEnouthActionPt();
     case RpcFmpException.CantMoveDisableFire:
@@ -335,8 +319,6 @@ public class Messages
     case RpcFmpException.MustControlBothToken:
       return s_rpcEx.MustControlBothToken( getTokenString( TokenType.getFromOrdinal( p_exception
           .getInt( 0 ) ) ), getTokenString( TokenType.getFromOrdinal( p_exception.getInt( 1 ) ) ) );
-    case RpcFmpException.MustDestroyAllTurrets:
-      return s_rpcEx.MustDestroyAllTurrets();
     case RpcFmpException.CantFireOn:
       return s_rpcEx.CantFireOn(
           getTokenString( TokenType.getFromOrdinal( p_exception.getInt( 0 ) ) ),
@@ -357,15 +339,8 @@ public class Messages
       return s_rpcEx.CantLandCloser( p_exception.getInt( 0 ) );
     case RpcFmpException.NotYourTurn:
       return s_rpcEx.NotYourTurn();
-    case RpcFmpException.TokenWasAlreadyMoved:
-      return s_rpcEx.TokenWasAlreadyMoved( getTokenString( TokenType.getFromOrdinal( p_exception
-          .getInt( 0 ) ), p_exception.getInt( 1 ) ) );
     case RpcFmpException.CantDestroyFreighter:
       return s_rpcEx.CantDestroyFreighter();
-    case RpcFmpException.TwoStepAreNotNeighbour:
-      return s_rpcEx.TwoStepAreNotNeighbour();
-    case RpcFmpException.LoginAlreadyExist:
-      return s_rpcEx.LoginAlreadyExist();
     case 0:
     default:
       return p_exception.toString();

@@ -57,7 +57,7 @@ ne le croyez jamais.
 
 <p>
 <a href="http://fullmetalplanete.forum2jeux.com/trucs-et-astuces-f16/les-lecons-d-alpha-t203.htm">
-Il y a aussi de véritable cours !</a>
+Il y a aussi de véritables cours !</a>
 </p>
 
 <%@include file="/include/footer.jsp"%>

@@ -63,20 +63,6 @@ public interface Services extends RemoteService
 
 
   /**
-   * simply ask server for user's identity. 
-   */
-  public EbAccount askForIdentity() throws RpcFmpException;
-
-
-  /**
-   * @param whereClause to select a subset of games.
-   * @return an array of all games found.
-   */
-  public List<com.fullmetalgalaxy.model.persist.EbGamePreview> getGameList(GameFilter p_filter)
-      throws RpcFmpException;
-
-
-  /**
    * create (if id=0) or save a game.
    * @param game description of the game.
    * @return id/lastUpdate of the created/saved game
@@ -92,19 +78,6 @@ public interface Services extends RemoteService
    */
   public EbBase saveGame(EbGame game, String p_modifDesc) throws RpcFmpException;
 
-  /**
-   * remove the given game from database
-   * @param p_id
-   * @throws RpcFmpException
-   */
-  public void deleteGame(long p_gameId) throws RpcFmpException;
-
-  /**
-   * cancel and history the given game.
-   * @param p_id
-   * @throws RpcFmpException
-   */
-  public void cancelGame(long p_gameId) throws RpcFmpException;
 
   /**
    * Get all informations concerning the specific game.

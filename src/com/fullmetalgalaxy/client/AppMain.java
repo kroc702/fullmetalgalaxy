@@ -35,12 +35,10 @@ import com.fullmetalgalaxy.client.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.board.MAppStatusBar;
 import com.fullmetalgalaxy.client.board.MAppSwitchMenu;
 import com.fullmetalgalaxy.client.creation.MAppGameCreation;
-import com.fullmetalgalaxy.client.ressources.MessagesAppMain;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelUpdateListener;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 
 /**
@@ -49,8 +47,6 @@ import com.google.gwt.user.client.History;
  */
 public class AppMain extends AppRoot implements ModelUpdateListener
 {
-  public static MessagesAppMain s_messages = (MessagesAppMain)GWT.create( MessagesAppMain.class );
-
   private static AppMain m_instance = null;
 
 

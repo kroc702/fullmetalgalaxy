@@ -114,7 +114,8 @@ public class MAppStatusBar extends MApp
     }
     else if( p_state.containsKey( MAppGameCreation.HISTORY_ID ) )
     {
-      setTitleStatus( AppMain.s_messages.newGame() );
+      // TODO i18n
+      setTitleStatus( "Nouvelle exploitation" );
     }
     else
     {

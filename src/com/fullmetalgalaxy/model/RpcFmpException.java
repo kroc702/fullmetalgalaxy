@@ -36,13 +36,6 @@ public class RpcFmpException extends Exception implements IsSerializable
   static final long serialVersionUID = 0;
 
   // all possible error code
-  public static final int LogonWrongPassword = 1;
-  public static final int UnknownGameId = 2;
-  public static final int MustBeLogged = 3;
-  public static final int NoGameId = 4;
-  public static final int UnknownAccount = 5;
-  public static final int MaximumPlayerReached = 6;
-  public static final int YouDidntJoinThisGame = 7;
   public static final int GameNotStarted = 8;
   public static final int GameFinished = 9;
   public static final int CantMoveDontControl = 10;
@@ -50,12 +43,10 @@ public class RpcFmpException extends Exception implements IsSerializable
   public static final int CantUnloadDontControl = 12;
   public static final int CantUnloadDisableTide = 13;
   public static final int CantUnloadDisableFire = 14;
-  public static final int MustTwoPositionToUnloadBarge = 15;
   public static final int NotEnouthActionPt = 16;
   public static final int CantMoveDisableFire = 17;
   public static final int CantLoad = 18;
   public static final int MustControlBothToken = 19;
-  public static final int MustDestroyAllTurrets = 20;
   public static final int CantFireOn = 21;
   public static final int CantFireDisableTide = 22;
   public static final int CantFireDisableFire = 23;
@@ -63,10 +54,7 @@ public class RpcFmpException extends Exception implements IsSerializable
   public static final int CantLandOn = 25;
   public static final int CantLandCloser = 26;
   public static final int NotYourTurn = 27;
-  public static final int TokenWasAlreadyMoved = 28;
   public static final int CantDestroyFreighter = 29;
-  public static final int TwoStepAreNotNeighbour = 30;
-  public static final int LoginAlreadyExist = 31;
 
 
   public int m_errorCode = 0;

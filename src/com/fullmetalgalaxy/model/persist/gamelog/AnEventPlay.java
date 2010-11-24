@@ -114,7 +114,8 @@ public class AnEventPlay extends AnEventUser
     EbRegistration registration = getMyRegistration(p_game);
     if( registration == null )
     {
-      throw new RpcFmpException( RpcFmpException.YouDidntJoinThisGame );
+      // no i18n ?
+      throw new RpcFmpException( "you didn't join this game." );
     }
     if( registration.getPtAction() < getCost() )
     {
@@ -126,8 +127,7 @@ public class AnEventPlay extends AnEventUser
     }
     if( !p_game.isStarted() )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Cette partie n'est pas demarre" );
+      throw new RpcFmpException( RpcFmpException.GameNotStarted );
     }
   }
 
