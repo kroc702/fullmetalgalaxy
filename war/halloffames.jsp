@@ -11,17 +11,43 @@
 <body>
 <%@include file="include/header.jsp"%>
 
+<%
+final int COUNT_PER_PAGE = 20;
+int offset = 0;
+try
+{
+  offset = Integer.parseInt( request.getParameter( "offset" ) );
+} catch( NumberFormatException e )
+{
+}
+
+int accountListCount = FmgDataStore.getAccountListCount();
+out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
+
+%>
+
 	<table class="fmp-array" style="width:100%;">
+	<tr><td>Date d'inscription</td><td>Pseudo</td><td>Message</td></tr>
 	<%
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
-	    for( EbAccount account : FmgDataStore.getAccountList() )
+	    for( EbAccount account : FmgDataStore.getAccountList(offset,COUNT_PER_PAGE) )
 	    {
 	      out.println("<tr>" );
 	      // subscribtion date
-	      out.println("<td>"+ simpleFormat.format(account.getSubscriptionDate()) + "</td>" );
+	      out.println("<td style='width:150px;''>"+ simpleFormat.format(account.getSubscriptionDate()) + "</td>" );
 	      
-	      // account name
-	      out.println("<td><a href=\"/profile.jsp?id="+account.getId()+"\">"+ account.getPseudo() + "</a></td>" );
+	      // Pseudo 
+	      out.println("<td><a href='"+FmpConstant.getProfileUrl(account.getId())+"'>"+ account.getPseudo() + "</a></td>" );
+	      
+	      // Message
+	      if( account.isAllowPrivateMsg() && account.haveEmail() )
+	      {
+	      	out.println("<td><a href='"+FmpConstant.getPMUrl(account.getId())+"'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
+	      }
+	      else
+	      {
+	        out.println("<td></td>" );
+	      }
 	      
 	      // admin option
 	      if(Auth.isUserAdmin(request, response))
@@ -38,6 +64,19 @@
 	    }
 	%>
 	</table>
+	
+	<p>Pages :
+	<%
+		int p = 0;
+		while(accountListCount > 0)
+		{
+		  out.println( "<a href='/halloffames.jsp?offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
+		  accountListCount -= COUNT_PER_PAGE;
+		  p++;
+		}
+	%>
+	</p>
+	
 <%@include file="include/footer.jsp"%>
 </body>
 </html>

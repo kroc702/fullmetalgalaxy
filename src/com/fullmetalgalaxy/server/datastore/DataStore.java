@@ -41,8 +41,6 @@ public class DataStore
   {
     ObjectifyService.register( PersistGame.class );
     ObjectifyService.register( PersistAccount.class );
-    
-    ObjectifyService.setDatastoreTimeoutRetryCount( 3 );
   }
 
 
@@ -57,13 +55,8 @@ public class DataStore
     }
     PersistEntity entity = null;
     // find persist entity
-    try
-    {
-      T t = p_ofy.get( p_persistEntityClass, p_id );
-      entity = PersistEntity.class.cast( t );
-    } catch( EntityNotFoundException e )
-    {
-    }
+    T t = p_ofy.get( p_persistEntityClass, p_id );
+    entity = PersistEntity.class.cast( t );
     return entity;
   }
 
@@ -89,6 +82,15 @@ public class DataStore
       Class<? extends T> p_persistEntityClass, java.lang.String p_condition,
       java.lang.Object p_value)
   {
+    return  getList(p_persistEntityClass, p_condition, p_value, 0, 0);
+  }
+  
+  static protected <T> com.googlecode.objectify.Query<T> getList(
+      Class<? extends T> p_persistEntityClass, java.lang.String p_condition,
+      java.lang.Object p_value,
+      int p_offset,
+      int p_limit)
+  {
     assert p_persistEntityClass != null;
 
     com.googlecode.objectify.Query<T> query = (com.googlecode.objectify.Query<T>)ObjectifyService.begin().query(p_persistEntityClass);
@@ -96,7 +98,12 @@ public class DataStore
     {
       query = query.filter(p_condition, p_value);
     }
-    
+    assert p_offset >= 0;
+    query.offset( p_offset );
+    if(p_limit > 0)
+    {
+      query.limit( p_limit );
+    }
     return query;
   }
 

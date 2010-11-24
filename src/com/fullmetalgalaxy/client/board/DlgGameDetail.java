@@ -43,6 +43,7 @@ import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -344,7 +345,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       {
         login = account.getPseudo();
       }
-      String html = "<a href='/profile.jsp?id=" + registration.getAccountId()
+      String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccountId() )
           + "' target='_blank'>" + login
           + "</a>";
       if( (!ModelFmpMain.model().getGame().isAsynchron())
@@ -389,7 +390,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
 
       // display email messages
-      if( account != null && account.isAllowPrivateMsg() )
+      if( account != null && account.isAllowPrivateMsg() && account.haveEmail())
       {
         String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
             + registration.getAccountId()

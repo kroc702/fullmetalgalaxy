@@ -256,7 +256,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowPrivateMsg()
   {
-    return m_allowPrivateMsg && haveEmail();
+    return m_allowPrivateMsg;
   }
 
 
@@ -274,7 +274,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowMailFromGame()
   {
-    return m_allowMailFromGame && haveEmail();
+    return m_allowMailFromGame;
   }
 
 
@@ -292,7 +292,7 @@ public class EbAccount extends EbBase
    */
   public boolean isAllowMailFromNewsLetter()
   {
-    return m_allowMailFromNewsLetter && haveEmail();
+    return m_allowMailFromNewsLetter;
   }
 
 

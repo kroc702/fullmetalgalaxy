@@ -30,7 +30,6 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
-import com.fullmetalgalaxy.model.persist.EbGamePreview;
 
 
 /**
@@ -39,7 +38,10 @@ import com.fullmetalgalaxy.model.persist.EbGamePreview;
  */
 public class FmgDataStore extends DataStore
 {
-
+  private final static int TTL = 50;
+  private static int s_countTtl = TTL;
+  private static int s_accountListCount = -1;
+  
   static public EbGame sgetGame(long p_id)
   {
     PersistEntity entity = DataStore.getEntity( PersistGame.class, p_id );
@@ -103,12 +105,28 @@ public class FmgDataStore extends DataStore
     return resultList.iterator().hasNext();
   }
 
+  static public int getAccountListCount()
+  {
+    if( s_countTtl < 0 || s_accountListCount < 0)
+    {
+      com.googlecode.objectify.Query<PersistAccount> query = getList( PersistAccount.class, null, null );
+      s_accountListCount = query.countAll(); // TODO change to count()
+      s_countTtl = TTL;
+    }
+    s_countTtl--;
+    return s_accountListCount; 
+  }
 
   static public Iterable<EbAccount> getAccountList()
   {
+    return getAccountList(0,0);
+  }
+  
+  static public Iterable<EbAccount> getAccountList(int p_offset, int p_limit)
+  {
     List<EbAccount> returnedList = new ArrayList<EbAccount>();
     Iterable<PersistAccount> accountList = null;
-    accountList = (Iterable<PersistAccount>)getList( PersistAccount.class, null, null );
+    accountList = (Iterable<PersistAccount>)getList( PersistAccount.class, null, null, p_offset, p_limit );
     // TODO this request could be optimized by a lot... I guess
     for( PersistAccount persistGame : accountList )
     {
@@ -130,19 +148,6 @@ public class FmgDataStore extends DataStore
     return gameList;
   }
 
-  @Deprecated
-  static public List<com.fullmetalgalaxy.model.persist.EbGamePreview> getGamePreviewList()
-  {
-    List<EbGamePreview> returnedList = new ArrayList<EbGamePreview>();
-    Iterable<PersistGame> gameList = getPersistGameList();
-    // TODO this request could be optimized by a lot... I guess
-    for( PersistGame persistGame : gameList )
-    {
-      returnedList.add( new EbGamePreview( persistGame.getGame() ) );
-    }
-
-    return returnedList;
-  }
 
 
   public FmgDataStore()

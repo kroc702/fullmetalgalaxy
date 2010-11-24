@@ -33,7 +33,7 @@ if( Auth.isUserAdmin( request, response ) )
 %>
 
 <h2> <%= account.getPseudo() %> </h2>
-<% if(account.isAllowPrivateMsg()) { %>
+<% if(account.isAllowPrivateMsg() && account.haveEmail()) { %>
 <a href="/privatemsg.jsp?id=<%= account.getId()%>">message privée</a><br/>
 <% } %>
 
