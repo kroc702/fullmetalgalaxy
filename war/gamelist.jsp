@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
-<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -55,7 +55,7 @@ if(tab < 0 || tab > 3 )
 		((com.googlecode.objectify.Query<PersistGame>)gameList).filter( "m_isOpen", true );
 	} else if( tab == 1 && !Auth.isUserLogged( request, response ) ) {
 		// my games but not logged
-		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
+		out.println("<center><h2>Vous n'Ãªtes pas connectÃ©</h2></center>");
 	} else if( tab == 1 && Auth.isUserLogged( request, response ) ) {
 		// my games
 		String myPseudo = " " + Auth.getUserPseudo( request, response ) + " ";

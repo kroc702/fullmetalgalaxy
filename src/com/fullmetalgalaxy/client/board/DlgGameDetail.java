@@ -455,7 +455,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       // want to ban player
       EbRegistration registration = m_banButtons.get( p_event.getSource() );
-      if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccountPseudo()
+      if( Window.confirm( "Voulez-vous rÃ©ellement banir " + registration.getAccountPseudo()
           + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
       {
         EbAdminBan gameLog = new EbAdminBan();

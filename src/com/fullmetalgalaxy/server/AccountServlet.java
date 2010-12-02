@@ -109,7 +109,7 @@ public class AccountServlet extends HttpServlet
           {
             isConnexion = true;
           }
-          params.put( item.getFieldName(), Streams.asString( item.openStream() ) );
+          params.put( item.getFieldName(), Streams.asString( item.openStream(), "UTF-8" ) );
         }
       }
     } catch( FileUploadException e )

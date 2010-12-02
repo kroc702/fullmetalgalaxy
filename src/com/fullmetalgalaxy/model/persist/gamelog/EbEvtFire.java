@@ -114,7 +114,7 @@ public class EbEvtFire extends AnEventPlay
     if( (getTokenTarget(p_game).canBeColored())
         && (getMyRegistration(p_game).getEnuColor().isColored( getTokenTarget(p_game).getColor() )) )
     {
-      throw new RpcFmpException( "Vous ne pouvez pas détruire vos propre pions" );
+      throw new RpcFmpException( "Vous ne pouvez pas dÃ©truire vos propre pions" );
     }
 
     // check the first destroyer is not tide deactivated

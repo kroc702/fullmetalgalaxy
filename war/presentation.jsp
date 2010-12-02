@@ -1,7 +1,8 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <HTML>
 <head>
-<title>Présentation de Full Metal Galaxy</title>
+<title>PrÃ©sentation de Full Metal Galaxy</title>
         
 <%@include file="include/meta.jsp"%>
 
@@ -10,14 +11,14 @@
 <%@include file="include/header.jsp"%>
 
 
-<h2>Mécanismes</h2>
+<h2>MÃ©canismes</h2>
 <p>
 Il s'agit d'un wargame (ou jeu de strategie) gratuit jouable dans un navigateur sans aucun
 plugin. La dur&eacute;e et la vitesse des parties sont configurables : 3 minutes 
 par coup pour une partie de 1h30 ou un coup par jour pour une partie
 d'un mois. <br/>
-Il est possible de jouer chacun à son tour
-ou tous en m&ecirc;me temps (mode asynchrone) à la fa&ccedil;on
+Il est possible de jouer chacun Ã  son tour
+ou tous en m&ecirc;me temps (mode asynchrone) Ã  la fa&ccedil;on
 des RTS.<BR/>
 Chaque partie est ind&eacute;pendante, il n'y a donc pas de monde
 persistant. La communaut&eacute; et le classement donnent une
@@ -26,38 +27,38 @@ jouer qu'une partie de temps &agrave; autre sans aucun d&eacute;savantage en
 jeu.
 </p>
 
-<h2>Résumé d'une partie</h2>
+<h2>RÃ©sumÃ© d'une partie</h2>
 
-Vous posez votre astronef sur une planète pour une campagne d'extraction. 
-Vous recevrez &agrave; intervalle régulier (en mode asynchrone) ou au début de votre tour
-(en mode tour par tour) un certain nombre de points d'action que vous pouvez dépenser 
-à tout instant pour :
+Vous posez votre astronef sur une planÃ¨te pour une campagne d'extraction. 
+Vous recevrez &agrave; intervalle rÃ©gulier (en mode asynchrone) ou au dÃ©but de votre tour
+(en mode tour par tour) un certain nombre de points d'action que vous pouvez dÃ©penser 
+Ã  tout instant pour :
 <ul>
-<li>Ramasser des minerais à l'aide de vos transporteurs et les ramener dans votre Astronef</li>
-<li>Créer des pièces supplémentaires à l'aide du minerai et de votre Pondeuse Météo,</li>
-<li>Affaiblir l'adversaire avec vos destructeurs en lui détruisant ou en lui capturant 
-des pièces</li>
-<li>Menacer ou gêner ses mouvements en occupant les zones appropriées</li>
-<li>Capturer un ou plusieurs Astronefs, pour augmenter le nombre de pièces sous votre contrôle, 
-bénéficier de points d'action supplémentaires et décoller en fin de partie avec plusieurs 
-astronefs et leur contenu (minerais et pièces).</li>
+<li>Ramasser des minerais Ã  l'aide de vos transporteurs et les ramener dans votre Astronef</li>
+<li>CrÃ©er des piÃ¨ces supplÃ©mentaires Ã  l'aide du minerai et de votre Pondeuse MÃ©tÃ©o,</li>
+<li>Affaiblir l'adversaire avec vos destructeurs en lui dÃ©truisant ou en lui capturant 
+des piÃ¨ces</li>
+<li>Menacer ou gÃªner ses mouvements en occupant les zones appropriÃ©es</li>
+<li>Capturer un ou plusieurs Astronefs, pour augmenter le nombre de piÃ¨ces sous votre contrÃ´le, 
+bÃ©nÃ©ficier de points d'action supplÃ©mentaires et dÃ©coller en fin de partie avec plusieurs 
+astronefs et leur contenu (minerais et piÃ¨ces).</li>
 </ul>
 <p>
-Les marées changeront, en cours de partie, la topologie de la carte rendant 
+Les marÃ©es changeront, en cours de partie, la topologie de la carte rendant 
 certaines zones inaccessibles par voie terrestre.
 </p>
 <p>
-Pendant toute la partie, vous pourrez aussi échanger avec vos adversaires (via mail, 
-messages privés ou chat intégré) pour 
+Pendant toute la partie, vous pourrez aussi Ã©changer avec vos adversaires (via mail, 
+messages privÃ©s ou chat intÃ©grÃ©) pour 
 lancer des actions communes.
 </p>
 <p>
-Si tout se passe bien pour vous, vous décollerez à la fin de la partie avec des véhicules 
+Si tout se passe bien pour vous, vous dÃ©collerez Ã  la fin de la partie avec des vÃ©hicules 
 (1 point chacun) et des minerais (2 points chacun). Le joueur totalisant le plus grand nombre 
-de points aura gagné.
+de points aura gagnÃ©.
 </p>
 
-<h2>Copies d'écrans</h2>
+<h2>Copies d'Ã©crans</h2>
 
 <a href="/images/screenshots/tutorial1.jpg" >
     <img src="/images/screenshots/min/tutorial1.jpg" /> 
@@ -66,21 +67,21 @@ de points aura gagné.
     <img src="/images/screenshots/min/tutorial2.jpg" />
 </a>
 
-<h2>Pour démarrer</h2>
+<h2>Pour dÃ©marrer</h2>
 <p>
-Le moyen le plus simple pour avoir un bon aperçu et s'initier au jeu est de faire le 
+Le moyen le plus simple pour avoir un bon aperÃ§u et s'initier au jeu est de faire le 
 <a href="/game.jsp?id=/puzzles/tutorial/model.bin" >tutorial</a>.
-Il ne dure qu'une dizaine de minutes et vous n'avez pas besoin de créer de compte.
+Il ne dure qu'une dizaine de minutes et vous n'avez pas besoin de crÃ©er de compte.
 </p>
 <p>
-Par la suite, vous pouvez tenter les quelques problèmes proposés ou vous inscrire &agrave; une
-partie regroupant des débutants. (Pour s'inscrire cliquez sur 
+Par la suite, vous pouvez tenter les quelques problÃ¨mes proposÃ©s ou vous inscrire &agrave; une
+partie regroupant des dÃ©butants. (Pour s'inscrire cliquez sur 
 <img src="/puzzles/tutorial/images/Register32.png" alt="Register" />)
 </p>
 
 <h2>Pour initier une partie</h2>
 <p>
-Il est possible qu'une petite explication vous soit utile pour la création d'une nouvelle partie.
+Il est possible qu'une petite explication vous soit utile pour la crÃ©ation d'une nouvelle partie.
 Pour cela jetez un coup d'&oelig;il <a href="help/newgame.jsp">ici</a>.
 </p>
 

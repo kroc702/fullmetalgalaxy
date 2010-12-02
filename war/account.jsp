@@ -1,9 +1,9 @@
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
-<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>Full Metal Galaxy - Détail du compte</title>
+<title>Full Metal Galaxy - DÃ©tail du compte</title>
         
 <%@include file="include/meta.jsp"%>
 
@@ -41,7 +41,7 @@ if(pAccount != null) {
 %>
 
 <% if( id == 0 ) { %>
-<h2>Création d'un nouveau compte</h2>
+<h2>CrÃ©ation d'un nouveau compte</h2>
 Vous pouvez aussi utiliser votre compte google pour vous 
 <a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
 <%}%>
@@ -51,7 +51,7 @@ Vous pouvez aussi utiliser votre compte google pour vous
 
 
 
-<form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data">
+<form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
 <input type="hidden" name="accountid" value="<%= pAccount.getId() %>"/>
 <input type="hidden" name="authprovider" value="<%= pAccount.getAuthProvider() %>"/>
@@ -86,9 +86,9 @@ email :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
 Autoriser FMG a envoyer un mail pour signaler votre tour de jeu
 <input type="checkbox" <%= account.isAllowMailFromGame() ? "checked" : "" %> name="AllowMailFromGame" value="1"><br/>
-Autoriser les autres joueurs a vous contacter par messages privés
+Autoriser les autres joueurs a vous contacter par messages privÃ©s
 <input type="checkbox" <%= account.isAllowPrivateMsg() ? "checked" : "" %> name="AllowPrivateMsg" value="1"><br/>
-Autoriser FMG a vous informer des évolutions majeurs
+Autoriser FMG a vous informer des Ã©volutions majeurs
 <input type="checkbox" <%= account.isAllowMailFromNewsLetter() ? "checked" : "" %> name="AllowMailFromNewsLetter" value="1"><br/>
 <br/>
 Description publique :<br/>

@@ -145,7 +145,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     }
     if( game.getMaxNumberOfPlayer() < 2 )
     {
-      Window.alert( "Il faut au moins deux joueurs pour créer une partie" );
+      Window.alert( "Il faut au moins deux joueurs pour crÃ©er une partie" );
       return;
     }
 
@@ -294,7 +294,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   {
     if( !ModelFmpMain.model().isLogged() )
     {
-      Window.alert( "Pour éditer une partie vous devez etre loggé" );
+      Window.alert( "Pour Ã©diter une partie vous devez etre loggÃ©" );
       AppMain.instance().gotoHome();
       return;
     }

@@ -26,7 +26,7 @@
 package com.fullmetalgalaxy.server.datastore;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -55,7 +55,14 @@ public class DataStore
     }
     PersistEntity entity = null;
     // find persist entity
-    T t = p_ofy.get( p_persistEntityClass, p_id );
+    T t = null;
+    try
+    {
+      t = p_ofy.get( p_persistEntityClass, p_id );
+    } catch( NotFoundException e )
+    {
+      e.printStackTrace();
+    }
     entity = PersistEntity.class.cast( t );
     return entity;
   }

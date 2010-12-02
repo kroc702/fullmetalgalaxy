@@ -34,10 +34,10 @@ if( Auth.isUserAdmin( request, response ) )
 
 <h2> <%= account.getPseudo() %> </h2>
 <% if(account.isAllowPrivateMsg() && account.haveEmail()) { %>
-<a href="/privatemsg.jsp?id=<%= account.getId()%>">message privée</a><br/>
+<a href="/privatemsg.jsp?id=<%= account.getId()%>">Ecrire un message</a><br/>
 <% } %>
 
-<p><%= account.getDescription() %></p>
+<pre><%= account.getDescription() %></pre>
 
 
 <%@include file="include/footer.jsp"%>
