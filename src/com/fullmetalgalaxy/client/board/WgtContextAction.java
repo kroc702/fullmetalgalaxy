@@ -36,10 +36,12 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
+import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -72,6 +74,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
   Image m_btnGrid = Icons.s_instance.grid32().createImage();
   Image m_btnRegister = Icons.s_instance.register32().createImage();
   FocusPanel m_pnlRegister = null;
+  FocusPanel m_pnlPause = null;
+  FocusPanel m_pnlEndTurn = null;
   Image m_btnInfo = Icons.s_instance.info32().createImage();
   Image m_btnTakeOff = Icons.s_instance.takeOff32().createImage();
   Image m_btnTimeMode = Icons.s_instance.time32().createImage();
@@ -131,7 +135,17 @@ public class WgtContextAction extends WgtView implements ClickHandler
     hPanel.add( new Label( "Cette partie recherche des joueurs. Inscrivez vous !" ) );
     m_pnlRegister = new FocusPanel( hPanel );
     m_pnlRegister.addClickHandler( this );
-
+    hPanel = new HorizontalPanel();
+    hPanel.add( Icons.s_instance.pause32().createImage() );
+    hPanel.add( new Label( "Pour permettre l'inscription d'un nouveau joueur vous devriez mettre la partie en pause" ) );
+    m_pnlPause = new FocusPanel( hPanel );
+    m_pnlPause.addClickHandler( this );
+    hPanel = new HorizontalPanel();
+    hPanel.add( Icons.s_instance.endTurn32().createImage() );
+    hPanel.add( new Label( "Vous devez maintenant terminez votre tour !" ) );
+    m_pnlEndTurn = new FocusPanel( hPanel );
+    m_pnlEndTurn.addClickHandler( this );
+    
     m_btnInfo.addClickHandler( this );
     m_btnInfo.setTitle( "Information detailles sur cette partie" );
     m_btnInfo.setStyleName( "fmp-button" );
@@ -241,7 +255,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         dlg.show();
         dlg.center();
       }
-      else if( sender == m_btnEndTurn )
+      else if( sender == m_btnEndTurn || sender == m_pnlEndTurn )
       {
         String msg = null;
         int oldPt = ModelFmpMain.model().getMyRegistration().getPtAction();
@@ -275,6 +289,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
           action.setToken( actionBuilder.getSelectedToken() );
           ModelFmpMain.model().runSingleAction( action );
         }
+      }
+      else if( sender == m_pnlPause )
+      {
+        AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccountId() );
+        gameLog.setGame( ModelFmpMain.model().getGame() );
+        ModelFmpMain.model().runSingleAction( gameLog );
       }
     } catch( RpcFmpException e )
     {
@@ -335,6 +355,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
                 .model().getMyRegistration()) )
         {
           m_panel.add( m_btnEndTurn );
+          if( ModelFmpMain.model().getMyRegistration().getPtAction() <= 0 
+              && (ModelFmpMain.model().getGame().getCurrentTimeStep() != ModelFmpMain.model().getGame().getEbConfigGameTime().getDeploymentTimeStep()
+              || ModelFmpMain.model().getGame().getFreighter( ModelFmpMain.model().getMyRegistration() ).getSetContain().isEmpty()))
+          {
+            MAppMessagesStack.s_instance.showMessage( m_pnlEndTurn );
+          }
         }
         if( ModelFmpMain.model().isLogged() && ModelFmpMain.model().getMyRegistration() == null
             && !ModelFmpMain.model().getGame().isStarted()
@@ -344,6 +370,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
           m_panel.add( m_btnRegister );
           MAppMessagesStack.s_instance.showMessage( m_pnlRegister );
         }
+        
+        if( (ModelFmpMain.model().getGame().getCurrentNumberOfRegiteredPlayer() < ModelFmpMain.model().getGame().getMaxNumberOfPlayer())
+          && (ModelFmpMain.model().getGame().isStarted()) )
+        {
+          MAppMessagesStack.s_instance.showMessage( m_pnlPause );
+        }
+        
       }
     }
     else if( ModelFmpMain.model().getMyRegistration() == null )

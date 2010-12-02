@@ -32,6 +32,7 @@ import javax.servlet.ServletException;
 
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -386,6 +387,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
       if( game.getCurrentNumberOfRegiteredPlayer() == game.getMaxNumberOfPlayer() )
       {
+        // TODO we may prefer starting game not in live mode only (slow game only)
         // if the last player is just connected, automatically launch the game.
         EbAdminTimePlay action = new EbAdminTimePlay();
         action.setAuto( true );
@@ -395,18 +397,20 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         action.checkedExec( game );
         game.addEvent( action );
       }
-    }
-    if(game.getCurrentTimeStep() == 0 
-        && game.getLastGameLog().getType() == GameLogType.AdminTimePlay
-        && !game.isAsynchron() )
-    {
-      // game is starting
-      EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
-      action.setLastUpdate( ServerUtil.currentDate() );
-      action.initRandomOrder( game );
-      action.setGame( game );
-      action.checkedExec( game );      
-      game.addEvent( action );
+
+      if(game.getCurrentTimeStep() == 0 
+          && game.getLastGameLog().getType() == GameLogType.AdminTimePlay
+          && !game.isAsynchron()
+          && game.getFreighter( game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Board )
+      {
+        // game is starting
+        EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
+        action.setLastUpdate( ServerUtil.currentDate() );
+        action.initRandomOrder( game );
+        action.setGame( game );
+        action.checkedExec( game );      
+        game.addEvent( action );
+      }
     }
     if(game.getCurrentTimeStep() == 1 
         && !game.isAsynchron()

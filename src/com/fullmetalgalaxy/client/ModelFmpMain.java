@@ -444,7 +444,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     public void onFailure(Throwable p_caught)
     {
       m_successiveRpcErrorCount++;
-      super.onFailure( p_caught );
+      //super.onFailure( p_caught );
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
