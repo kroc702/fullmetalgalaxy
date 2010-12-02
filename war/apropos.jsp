@@ -1,3 +1,4 @@
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <HTML>
 <head>
 <title>Full Metal Galaxy - A propos</title>
@@ -10,31 +11,31 @@
 <%@include file="include/header.jsp"%>
 
             <center>
+	        <p>Pour me contacter : <a href="mailto:admin@fullmetalgalaxy.com">admin@fullmetalgalaxy.com</a></p>
+	        
+            <p><small>
+            Full Metal Galaxy est une adaptation pour le web de Full Metal PlanÃ¨te.
+            Il s'agit d'un jeu de stratÃ©gie sur table de GÃ©rard Mathieu, GÃ©rard Delfanti et Pascal Trigaux, 
+            Ã©ditÃ© par LudodÃ©lire entre 1989 et 1996. 
+            Full Metal Galaxy est sous ma seule responsabilitÃ©, les auteurs n'ont pas pris 
+            part &agrave; son dÃ©veloppement. 
+            </small></p>            
+
             <h3>Version actuellement en production :</h3>
             <P> <%@include file="include/version.html"%> <br/>
-            Pour me contacter : <a href="mailto:admin@fullmetalgalaxy.com">admin@fullmetalgalaxy.com</a>
+            commit 
+            <a href="http://code.google.com/p/fullmetalgalaxy/source/detail?r=<%@include file="include/commitid.html"%>">
+            <%@include file="include/commitid.html"%></a>
             </P>
             
 			<p>
-			Logiciel libre publié sous 
+			Logiciel libre publiÃ© sous 
 			<a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="/images/agplv3-88x31.cache.png" alt="AGPL v3"/></a> 
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>
-			Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /><br/>
+			HÃ©bergÃ© par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /><br/>
 			Source disponible <a href="http://code.google.com/p/fullmetalgalaxy/">ici</a>.<br/>
 			<small>Copyright 2010 Vincent Legendre</small>
 			</p>
-            
-            <p>
-            Full Metal Galaxy est une adaptation pour le web de Full Metal Planète.
-            Il s'agit d'un jeu de stratégie sur table de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, 
-            édité par Ludodélire entre 1989 et 1996. 
-            Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris 
-            part &agrave; son développement. 
-            </p>            
-            
-            
-            
-           
             
             
             <%-- p>
@@ -43,16 +44,16 @@
             
             <h3>Remerciements :</h3>
             <p>
-            - A ma copine chérie qui en a entendu parler quelques heures...<br/>
-            - A Eric Alber pour m'avoir fourni les modèles blender des pions<br/>
-            - A Brice Vandemoortele pour m'avoir fourni la superbe illustration de pondeuse météo<br/>
+            - A ma copine chÃ©rie qui en a entendu parler quelques heures...<br/>
+            - A Eric Alber pour m'avoir fourni les modÃ¨les blender des pions<br/>
+            - A Brice Vandemoortele pour m'avoir fourni la superbe illustration de pondeuse mÃ©tÃ©o<br/>
             - A Jean-Marc Leroy, l'auteur de full metal program, pour m'avoir fourni son algorithme 
             de g&eacute;n&eacute;ration
-            de carte ainsi que les images des pions pour mes premières versions.</br>
-            - A isi.nc qui a hébergé gratuitement la version alpha en Nouvelle-Calédonie.<br/>
-            - A l'équipe des Alpha testeurs (et particulièrement &agrave; Quentin, Manu et Sergio) qui 
-            m'ont remonté la première série de bugs bloquants.<br/>
-            - A tous ceux qui m'ont encouragés de près ou de loin.<br/>
+            de carte ainsi que les images des pions pour mes premiÃ¨res versions.</br>
+            - A isi.nc qui a hÃ©bergÃ© gratuitement la version alpha en Nouvelle-CalÃ©donie.<br/>
+            - A l'Ã©quipe des Alpha testeurs (et particuliÃ¨rement &agrave; Quentin, Manu et Sergio) qui 
+            m'ont remontÃ© la premiÃ¨re sÃ©rie de bugs bloquants.<br/>
+            - A tous ceux qui m'ont encouragÃ©s de prÃ¨s ou de loin.<br/>
             </P>
             
             </center>

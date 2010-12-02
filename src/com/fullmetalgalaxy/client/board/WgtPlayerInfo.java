@@ -85,7 +85,7 @@ public class WgtPlayerInfo extends WgtView
     m_iconTide1.setTitle( "Marees actuelle:" );
     m_panel.add( m_iconTide2 );
     m_panel.setCellWidth( m_iconTide2, "20px" );
-    m_iconTide2.setTitle( "Marées futur:" );
+    m_iconTide2.setTitle( "MarÃ©es futur:" );
 
     // m_panel.setWidth( "100%" );
     // m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );

@@ -1,4 +1,4 @@
-/* *********************************************************************
+﻿/* *********************************************************************
  *
  *  This file is part of Full Metal Galaxy.
  *  http://www.fullmetalgalaxy.com
@@ -88,7 +88,7 @@ public class AdminServlet extends HttpServlet
 
     dataStore.close();
     // p_resp.getOutputStream().println( "game " + p_req.getParameter( "id" ) +
-    // " effac�" );
+    // " effacé" );
 
   }
 

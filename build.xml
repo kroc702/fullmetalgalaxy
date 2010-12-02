@@ -9,8 +9,10 @@ compilation file for Full Metal Planet
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
-	<property name="appenginesdkdir" value="C:\Sun\eclipse\plugins\com.google.appengine.eclipse.sdkbundle.1.3.8_1.3.8.v201010161055\appengine-java-sdk-1.3.8" />
-	<property name="gwtsdkdir" value="C:\Sun\eclipse\plugins\com.google.gwt.eclipse.sdkbundle.2.1.0_2.1.0.v201010280102\gwt-2.1.0" />
+	<property name="eclipsedir" value="C:\Sun\eclipse" />
+	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle.1.3.8_1.3.8.v201010161055\appengine-java-sdk-1.3.8" />
+	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle.2.1.0_2.1.0.v201010280102\gwt-2.1.0" />
+	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.4.3.v201005111545\os\win32" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
@@ -61,6 +63,8 @@ compilation file for Full Metal Planet
 		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
 			<jvmarg value="-Xmx512M" />
 			<sysproperty key="ENCODING" value="UTF-8" />
+			<arg value="-localWorkers" />
+			<arg value="8" />
 			<arg value="-style" />
 			<arg value="${jsstyle}" />
 			<arg value="-war" />
@@ -82,27 +86,29 @@ compilation file for Full Metal Planet
 
 	<target name="postimages" depends="">
 		<echo message="images bundle post traitment" level="info" />
-		<reducecolor filename="war/fullmetalgalaxy/1BC220DDAE3A0E7DD2AB36AC6D0F91FC.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/23DCEB7A71EAED4D59C5EFCE6FBC75B4.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/2D966E68BB76B352CA3DEB5EBA6BEBDE.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/343086729BAA3C320274EEFBEEE08BE5.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/3D9F1E8F8596DF774BC9E267BF40B658.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/3E94C7FDF3915D255ED393F0392D3ED9.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/44D36CD34907DB26651A026C0C2684AD.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/49F371730D5AD1CDEEC891BEE82B8F29.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/79BD1896F1542380BBC87905686107FD.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/7CE1D84C5BE11324C0FD35D2B942D5D4.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/870FB49E6FDE621EA20C9084E9E08BD9.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/8B6470246F748FE0D7BF0A73635BA3BA.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/903F26FDF120F010620CA336F75D8D58.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/95D976CDB2757F877AC2E46F009A301D.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/C25640596C0658D904C90CF4F26EF851.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/C9C99DF3EACAA39D3CD308E361D92913.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/D308AA6683C7C581896AC9D75ED4D073.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/DFBE352AE0539BB632855C8846F27FB0.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/E6A24DE240501AD0DE83788C984500A0.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/F568C2E7587BC6E66F3BD2FF16A68E41.cache.png" />
-		<reducecolor filename="war/fullmetalgalaxy/FA41BB8FF37AAB73BE5D6D3791BD0073.cache.png" />
+		<parallel>
+			<reducecolor filename="war/fullmetalgalaxy/1BC220DDAE3A0E7DD2AB36AC6D0F91FC.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/23DCEB7A71EAED4D59C5EFCE6FBC75B4.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/2D966E68BB76B352CA3DEB5EBA6BEBDE.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/343086729BAA3C320274EEFBEEE08BE5.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/3D9F1E8F8596DF774BC9E267BF40B658.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/3E94C7FDF3915D255ED393F0392D3ED9.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/44D36CD34907DB26651A026C0C2684AD.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/49F371730D5AD1CDEEC891BEE82B8F29.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/79BD1896F1542380BBC87905686107FD.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/7CE1D84C5BE11324C0FD35D2B942D5D4.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/870FB49E6FDE621EA20C9084E9E08BD9.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/8B6470246F748FE0D7BF0A73635BA3BA.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/903F26FDF120F010620CA336F75D8D58.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/95D976CDB2757F877AC2E46F009A301D.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/C25640596C0658D904C90CF4F26EF851.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/C9C99DF3EACAA39D3CD308E361D92913.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/D308AA6683C7C581896AC9D75ED4D073.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/DFBE352AE0539BB632855C8846F27FB0.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/E6A24DE240501AD0DE83788C984500A0.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/F568C2E7587BC6E66F3BD2FF16A68E41.cache.png" />
+			<reducecolor filename="war/fullmetalgalaxy/FA41BB8FF37AAB73BE5D6D3791BD0073.cache.png" />
+		</parallel>
 	</target>
 
 	<target name="runserver" depends="compilserver" description="Starts the development server.">
@@ -163,6 +169,13 @@ compilation file for Full Metal Planet
 			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
 		</tstamp>
 		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.html" />
+
+		<exec executable="${hgdir}/hg" outputproperty="hgid">
+		    <arg value="id"/>
+		    <arg value="-i"/>
+		</exec>
+		<echo message="${hgid}" file="war/include/commitid.html" />
+
 		<delete file="war/WEB-INF/appengine-web.xml" />
 		<copy file="war/WEB-INF/appengine-web.template" tofile="war/WEB-INF/appengine-web.xml" >
 			<filterset>
@@ -170,7 +183,7 @@ compilation file for Full Metal Planet
 			</filterset>
 		</copy>
 		<appcfg2 action="update" war="war" />
-		<echo message="${TODAY_FR} - update: ${build.number}" level="info" />
+		<echo message="${TODAY_FR} - update: ${build.number} - commit ${hgid}" level="info" />
 	</target>
 
 	<target name="upload" depends="clean,build,uploadonly" description="Uploads the application to App Engine.">

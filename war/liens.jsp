@@ -1,3 +1,4 @@
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <HTML>
 <head>
 <title>Full Metal Galaxy - Liens</title>
@@ -10,10 +11,10 @@
 <body >
 
 <%@include file="include/header.jsp"%>
-    <h2>Quelques liens autour de Full Metal Planète</h2>
+    <h2>Quelques liens autour de Full Metal PlanÃ¨te</h2>
     <p>
     <a href='http://jeuxstrategie.free.fr/Full_metal_planete_presentation.php' >
-      Une présentation du jeu de plateau 
+      Une prÃ©sentation du jeu de plateau 
     </a><br/>
     <br/>
     <A HREF="http://eric.alber.free.fr/wiki/doku.php/full_metal_planete">
@@ -25,7 +26,7 @@
     <A HREF="http://fullmetalplanete.com">
       Et le logiciel pour jouer par mail</a><br/>
     </p>
-    <h2>Les bannières du site</h2>
+    <h2>Les banniÃ¨res du site</h2>
     <p>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/146-60.jpg" /></a><br/>
