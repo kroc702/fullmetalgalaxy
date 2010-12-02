@@ -49,6 +49,7 @@ import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -80,6 +81,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   private Button m_btnPause = new Button( "Pause" );
   private Button m_btnEdit = new Button( "Edite" );
   private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
+  private Image m_btnSkipTurn = Icons.s_instance.endTurn32().createImage();
   private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
   private VerticalPanel m_panel = new VerticalPanel();
   private TabPanel m_tabPanel = new TabPanel();
@@ -109,7 +111,10 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_btnPause.addClickHandler( this );
     m_btnEdit.addClickHandler( this );
     m_btnGrid.addClickHandler( this );
-
+    m_btnSkipTurn.setTitle( "Fin de tour" );
+    m_btnSkipTurn.setStyleName( "fmp-button" );
+    m_btnSkipTurn.addClickHandler( this );
+    
     m_tabPanel.add( m_generalPanel, "general" );
     m_tabPanel.add( m_playerPanel, "joueurs" );
     m_wgtReserve.setStyleName( "fmp-log-panel" );
@@ -313,7 +318,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         .getRegistrationByPlayerOrder();
 
 
-    Grid m_playerGrid = new Grid( sortedRegistration.size() + 1, 8 );
+    Grid m_playerGrid = new Grid( sortedRegistration.size() + 1, 9 );
     m_playerGrid.setStyleName( "fmp-array" );
 
     m_playerGrid.setText( 0, 0, "" ); // avatar
@@ -324,6 +329,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_playerGrid.setText( 0, 5, "" ); // must play before
     m_playerGrid.setText( 0, 6, "" ); // messages
     m_playerGrid.setText( 0, 7, "" ); // ban
+    m_playerGrid.setText( 0, 8, "" ); // skip turn
     m_playerGrid.getRowFormatter().addStyleName( 0, "fmp-home-gameline-caption" );
 
     int index = 0;
@@ -398,20 +404,31 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         m_playerGrid.setHTML( index, 6, htmlMail );
       }
 
-      // display ban button
+      // display admin button
       if( (ModelFmpMain.model().getMyAccountId() == ModelFmpMain.model().getGame()
-          .getAccountCreatorId() || ModelFmpMain.model().iAmAdmin())
-          && registration.haveAccount() )
+          .getAccountCreatorId() || ModelFmpMain.model().iAmAdmin()) )
       {
-        // account
-        Image banImage = new Image();
-        banImage.setUrl( "/images/css/icon_ban.gif" );
-        banImage.setAltText( "BAN" );
-        banImage.setTitle( "Banir un joueur de cette partie" );
-        banImage.addClickHandler( this );
-        m_playerGrid.setWidget( index, 7, banImage );
-        m_banButtons.put( banImage, registration );
+        if( registration.haveAccount() )
+        {
+          // display ban button
+          Image banImage = new Image();
+          banImage.setUrl( "/images/css/icon_ban.gif" );
+          banImage.setAltText( "BAN" );
+          banImage.setTitle( "Banir un joueur de cette partie" );
+          banImage.addClickHandler( this );
+          m_playerGrid.setWidget( index, 7, banImage );
+          m_banButtons.put( banImage, registration );
+        }
+        
+        // display endTurn button
+        if( (!ModelFmpMain.model().getGame().isAsynchron())
+            && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
+        {
+          m_playerGrid.setWidget( index, 8, m_btnSkipTurn );
+        }
+        
       }
+      
     }
 
     m_playerPanel.add( m_playerGrid );
@@ -450,6 +467,21 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       AppMain.instance().gotoEditGame( ModelFmpMain.model().getGame().getId() );
       hide();
+    }
+    else if( p_event.getSource() == m_btnSkipTurn )
+    {
+      EbRegistration registration = ModelFmpMain.model().getGame().getCurrentPlayerRegistration();
+      if( Window.confirm( "Voulez-vous réellement sauter le tour de " + registration.getAccountPseudo()
+          + ", il lui reste "+registration.getPtAction()+" points d'action.") )
+      {
+        EbEvtPlayerTurn action = new EbEvtPlayerTurn();
+        action.setGame( ModelFmpMain.model().getGame() );
+        action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+        // ok itsn't an automatic action, but with this trick I can track of the guy which
+        // end this turn and pass through action checking
+        action.setAuto( true );
+        ModelFmpMain.model().runSingleAction( action );
+      }
     }
     else if( m_banButtons.get( p_event.getSource() ) != null )
     {
