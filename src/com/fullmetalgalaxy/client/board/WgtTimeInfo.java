@@ -144,7 +144,7 @@ public class WgtTimeInfo extends WgtView
     {
       // take off is allowed : display it !
       image = Icons.s_instance.takeOff16().createImage();
-      image.setTitle( "Decollage autorisé !" );
+      image.setTitle( "Decollage autorisÃ© !" );
       m_panel.add( image );
       m_panel.setCellWidth( image, "20px" );
     }

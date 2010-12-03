@@ -107,12 +107,12 @@ public class EbEvtMove extends AnEventPlay
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
+      throw new RpcFmpException( "vous ne pouvez pas dÃ©placer des pions incolores" );
     }
     // check that token is colored
     if( getToken(p_game).getType() == TokenType.Freighter )
     {
-      throw new RpcFmpException( "vous ne pouvez pas déplacer votre astronef" );
+      throw new RpcFmpException( "vous ne pouvez pas dÃ©placer votre astronef" );
     }
     // check no hexagon are skipped
     AnBoardPosition tokenPosition = getToken(p_game).getPosition();
@@ -147,7 +147,7 @@ public class EbEvtMove extends AnEventPlay
     {
       if( (token != getToken(p_game)) && (token.getType() != TokenType.Pontoon) )
       {
-        throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
+        throw new RpcFmpException( "Vous devez dÃ©placer votre pions sur une case libre" );
       }
       if( token.getType() == TokenType.Pontoon )
       {
