@@ -127,7 +127,7 @@ public class EbEvtUnLoad extends AnEventPlay
     if( !p_game.isTokenTideActive( getToken( p_game ).getCarrierToken() ) )
     {
       throw new RpcFmpException( getToken( p_game ).getCarrierToken()
-          + " est déactivé a cause de la marré" );
+          + " est dÃ©activÃ© a cause de la marrÃ©" );
     }
 
     // check token move to a 'clear' hexagon
@@ -137,7 +137,7 @@ public class EbEvtUnLoad extends AnEventPlay
     {
       if( (token != getToken(p_game)) && (token.getType() != TokenType.Pontoon) )
       {
-        throw new RpcFmpException( "Vous devez dï¿½placer votre pions sur une case libre" );
+        throw new RpcFmpException( "Vous devez dÃ¯Â¿Â½placer votre pions sur une case libre" );
       }
       if( token.getType() == TokenType.Pontoon )
       {
@@ -195,7 +195,7 @@ public class EbEvtUnLoad extends AnEventPlay
       }
       if( !turretFound )
       {
-        throw new RpcFmpException( "Vous ne pouvez pas décharger par un pod detruit." );
+        throw new RpcFmpException( "Vous ne pouvez pas dÃ©charger par un pod detruit." );
       }
     }
 

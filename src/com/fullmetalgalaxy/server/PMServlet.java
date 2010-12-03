@@ -96,7 +96,7 @@ public class PMServlet extends HttpServlet
         FileItemStream item = iter.next();
         if( item.isFormField() )
         {
-          params.put( item.getFieldName(), Streams.asString( item.openStream() ) );
+          params.put( item.getFieldName(), Streams.asString( item.openStream(), "UTF-8" ) );
         }
       }
 
@@ -149,6 +149,8 @@ public class PMServlet extends HttpServlet
       msg.setSubject( p_subject );
       msg.setContent( p_body, "text/plain" );
       msg.setRecipients( Message.RecipientType.TO, InternetAddress.parse( p_recipients ) );
+      msg.setRecipients( Message.RecipientType.BCC,
+          InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
       Transport.send( msg );
       log.fine( "Mail send to " + p_recipients + " subject:" + p_subject );
     } catch( AddressException e )

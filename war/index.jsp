@@ -1,4 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
@@ -15,7 +16,7 @@
 Full Metal Planete ou Full Metal Galaxy est un jeu web gratuit de strategie et tactique, 
 ou wargame online par navigateur.
 Il ce joue tour par tour ou en mode asynchrone.
-Vous déplacez vos pions sur une carte pavée d'hexagones.
+Vous dÃ©placez vos pions sur une carte pavÃ©e d'hexagones.
 </div>
 
 
@@ -30,7 +31,7 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
     metal pilote vendant vos comp&eacute;tences militaires au plus
     offrant.<br/>
     <br/>
-    FMG est un wargame (ou jeu de strategies) enti&egrave;rement gratuit jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
+    FMG est un wargame (ou jeu de strategies) enti&egrave;rement gratuit jouable dans un navigateur oÃ¹ chaque partie est ind&eacute;pendante.<BR/>
     Ici pas de formulaire, mais uniquement une carte sur laquelle vous d&eacute;placez vos
     unit&eacute;s.</p>
     <center>
