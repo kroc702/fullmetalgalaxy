@@ -83,6 +83,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   /** minimap stored here to save some ImageService's CPU time */
   private String m_minimapBlobKey = null;
   private String m_minimapUri = null;
+  private String m_mapUri = null;
 
   private long m_currentPlayerId = 0L;
 
@@ -2327,6 +2328,22 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public void setMinimapBlobKey(String p_minimapBlobKey)
   {
     m_minimapBlobKey = p_minimapBlobKey;
+  }
+
+  /**
+   * @return the mapUri
+   */
+  public String getMapUri()
+  {
+    return m_mapUri;
+  }
+
+  /**
+   * @param p_mapUri the mapUri to set
+   */
+  public void setMapUri(String p_mapUri)
+  {
+    m_mapUri = p_mapUri;
   }
 
 

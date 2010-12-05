@@ -269,6 +269,7 @@ public class EbGameJoin extends AnEventUser
       if( (freighter.getType() == TokenType.Freighter)
           && (registration.getEnuColor().isColored( freighter.getColor() )) )
       {
+        // TODO this isn't working !!!
         for( EbToken token : freighter.getSetContain() )
         {
           p_game.getSetToken().remove( token );

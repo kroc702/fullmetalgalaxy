@@ -130,6 +130,20 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
 
   public void moveHightLightHexagon(AnBoardPosition p_anBoardPosition)
   {
+    AnEventPlay evDeploy = ModelFmpMain.model().getActionBuilder().getSelectedAction();
+    if( evDeploy != null && evDeploy.getType() == GameLogType.EvtDeployment )
+    {
+      int distance = evDeploy.getToken( ModelFmpMain.model().getGame() ).getCarrierToken()
+          .getPosition().getHexDistance( p_anBoardPosition );
+      if( distance > ModelFmpMain.model().getGame().getEbConfigGameVariant().getDeploymentRadius() )
+      {
+        BoardIcons.hightlight_hexagon( getZoom().getValue() ).applyTo( m_hexagonHightlight );
+      }
+      else
+      {
+        getHighLightImage().applyTo( m_hexagonHightlight );
+      }
+    }
     setWidgetHexPosition( m_hexagonHightlight, p_anBoardPosition );
   }
 
