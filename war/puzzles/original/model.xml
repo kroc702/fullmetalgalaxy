@@ -10,13 +10,13 @@
     <m__nextTide>Medium</m__nextTide>
     <m__lastTideChange>0</m__lastTideChange>
     <m__currentTimeStep>0</m__currentTimeStep>
-    <m__lastTimeStepChange>2010-12-04 23:45:01.533 CET</m__lastTimeStepChange>
+    <m__lastTimeStepChange>2010-12-05 13:01:24.333 CET</m__lastTimeStepChange>
     <m__gameType>MultiPlayer</m__gameType>
     <m__planetType>Desert</m__planetType>
     <m__currentPlayerId>0</m__currentPlayerId>
     <m__accountCreatorId>0</m__accountCreatorId>
     <m__lands>RERFREQ0NFFVEURENERDREREREREREREMzNTRENERDQzM0RERERENDNEFEREM1NDREQ0QzNERERE
-VFU1ERRERFQ1RDQRMUQURUVFVEUTFBERRBQRERERERQVUUVEREQUERIRESQREREREVESEURERERE
+VFU1ERRERFQ1RDQRMUQURUVFVEUTFBERRBQRERERERQVUUVFREQUERIRESQREREREVESEURERERE
 ESFEJCISEREREREiUUNERERENEQiRCMREhISERERVDVERERDREMRQlMVQUIkEhERQUQzRERERDQR
 ETFDQURVFBESEUFEQ0RERDQREREUEURUREMUIRJBRDM0Q0RBERFEERFBRTNEFSERRFQzM1URJBER
 RBERRUMzRRERQRRDUzUTRCQiEREVQzREUSIUQRFEREU0RERCVBFRMkRDETISERREREREQ0RBEhEV
@@ -25,7 +25,7 @@ REQUEUQxRERFRFQzE0REMzNEREREFENENUREREQ1M0NERENEREREREQzFUNERERERERERDNBRFVF
 REREE0RERERERERERDREUVVVVEQ0Q0NEREQE</m__lands>
     <m__landWidth>37</m__landWidth>
     <m__landHeight>23</m__landHeight>
-    <m__creationDate>2010-12-04 23:45:01.533 CET</m__creationDate>
+    <m__creationDate>2010-12-05 13:01:24.333 CET</m__creationDate>
     <m__started>false</m__started>
     <m__configGameTime>Standard</m__configGameTime>
     <m__configGameVariant>Standard</m__configGameVariant>
@@ -56,6 +56,10 @@ REREE0RERERERERERDREUVVVVEQ0Q0NEREQE</m__lands>
       <m__description>l&apos;unique variante</m__description>
       <m__constructReserve>
         <entry>
+          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+          <int>4</int>
+        </entry>
+        <entry>
           <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
           <int>1</int>
         </entry>
@@ -63,13 +67,10 @@ REREE0RERERERERERDREUVVVVEQ0Q0NEREQE</m__lands>
           <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
           <int>1</int>
         </entry>
-        <entry>
-          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
-          <int>4</int>
-        </entry>
       </m__constructReserve>
     </m__ebConfigGameVariant>
-    <m__minimapUri>/puzzles/original/minimap.png</m__minimapUri>
+      <m__minimapUri>/puzzles/original/minimap.jpg</m__minimapUri>
+      <m__mapUri>/puzzles/original/map.jpg</m__mapUri>
     <m__setToken/>
     <m__setRegistration/>
     <m__setGameLog/>

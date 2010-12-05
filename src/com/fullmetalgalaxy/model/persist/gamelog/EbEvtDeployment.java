@@ -126,10 +126,14 @@ public class EbEvtDeployment extends AnEventPlay
 
     // check token move to a 'clear' hexagon
     EbToken tokensOnWay = p_game.getToken( getPosition() );
-    if( tokensOnWay != null && !tokensOnWay.canLoad( getToken( p_game ).getType() ) )
+    if( tokensOnWay != null )
     {
-      throw new RpcFmpException( RpcFmpException.CantLoad, tokensOnWay.getType().ordinal(),
-          getToken( p_game ).getType().ordinal() );
+      // check that new token carrier can load this token
+      if( !p_game.canTokenLoad( tokensOnWay, getToken( p_game ) ) )
+      {
+        throw new RpcFmpException( RpcFmpException.CantLoad, tokensOnWay.getType().ordinal(),
+            getToken( p_game ).getType().ordinal() );
+      }
     }
     else
     {
@@ -137,16 +141,7 @@ public class EbEvtDeployment extends AnEventPlay
       if( !p_game.canTokenMoveOn( getToken( p_game ), getPosition() ) )
       {
         throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken( p_game ).getType()
-            .ordinal(), p_game.getLand( getNewPosition() ).ordinal() );
-      }
-      // if deploy barge check the second hexagon
-      if( (getToken( p_game ).getHexagonSize() == 2)
-          && (!p_game.canTokenMoveOn( getToken( p_game ),
-              getPosition().getNeighbour( getPosition().getSector() ) )) )
-      {
-        throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken( p_game ).getType()
-            .ordinal(), p_game.getLand( getPosition().getNeighbour( getPosition().getSector() ) )
-            .ordinal() );
+            .ordinal(), p_game.getLand( getPosition() ).ordinal() );
       }
     }
 

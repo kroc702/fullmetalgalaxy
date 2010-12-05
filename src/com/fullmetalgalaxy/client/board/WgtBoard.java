@@ -68,6 +68,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   AbsolutePanel m_panel = new AbsolutePanel();
 
   WgtBoardLayerLand m_layerLand = new WgtBoardLayerLand();
+  WgtBoardLayerMap m_layerMap = new WgtBoardLayerMap();
   WgtBoardLayerFireCover m_layerCover = new WgtBoardLayerFireCover();
   WgtBoardLayerGrid m_layerGrid = new WgtBoardLayerGrid();
   WgtBoardLayerToken m_layerToken = new WgtBoardLayerToken();
@@ -83,6 +84,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   public WgtBoard()
   {
     addLayer( m_layerLand );
+    addLayer( m_layerMap );
     addLayer( m_layerCover );
     addLayer( m_layerGrid );
     addLayer( m_layerSelect );
@@ -121,8 +123,15 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       Window.enableScrolling( false );
     }
 
+    // map or standard land layer ?
+    // m_layerMap.setVisible( !ModelFmpMain.model().isStandardLandDisplayed() );
+    // m_layerLand.setVisible( ModelFmpMain.model().isStandardLandDisplayed() );
+
     // grid
     m_layerGrid.setVisible( p_state.containsKey( MAppBoard.s_TokenGrid ) );
+
+    // atmosphere
+    m_layerAtmosphere.setVisible( ModelFmpMain.model().isAtmosphereDisplayed() );
 
     // zoom
     EnuZoom zoom = new EnuZoom( p_state.getInt( MAppBoard.s_TokenZoom ) );

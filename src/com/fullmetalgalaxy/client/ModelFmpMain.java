@@ -115,6 +115,10 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   private boolean m_isFireCoverDisplayed = false;
 
   private EnuZoom m_zoomDisplayed = new EnuZoom( EnuZoom.Medium );
+  // cloud layer
+  private boolean m_isAtmosphereDisplayed = true;
+  // standard land layer or custom map image
+  private boolean m_isCustomMapDisplayed = false;
 
   /**
    * minimap or players connections informations
@@ -892,6 +896,40 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   public void setGridDisplayed(boolean p_isGridDisplayed)
   {
     m_isGridDisplayed = p_isGridDisplayed;
+    fireModelUpdate();
+  }
+
+  /**
+   * @return the isAtmosphereDisplayed
+   */
+  public boolean isAtmosphereDisplayed()
+  {
+    return m_isAtmosphereDisplayed;
+  }
+
+  /**
+   * @param p_isAtmosphereDisplayed the isAtmosphereDisplayed to set
+   */
+  public void setAtmosphereDisplayed(boolean p_isAtmosphereDisplayed)
+  {
+    m_isAtmosphereDisplayed = p_isAtmosphereDisplayed;
+    fireModelUpdate();
+  }
+
+  /**
+   * @return the isStandardLandDisplayed
+   */
+  public boolean isCustomMapDisplayed()
+  {
+    return m_isCustomMapDisplayed;
+  }
+
+  /**
+   * @param p_isCustomMapDisplayed the isStandardLandDisplayed to set
+   */
+  public void setCustomMapDisplayed(boolean p_isCustomMapDisplayed)
+  {
+    m_isCustomMapDisplayed = p_isCustomMapDisplayed;
     fireModelUpdate();
   }
 

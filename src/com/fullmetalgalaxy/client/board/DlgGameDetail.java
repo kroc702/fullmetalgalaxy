@@ -83,6 +83,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
   private Image m_btnSkipTurn = Icons.s_instance.endTurn32().createImage();
   private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
+  private ToggleButton m_btnAtmosphere = new ToggleButton( "Atmosphere" );
+  private ToggleButton m_btnCustomMap = new ToggleButton( "Affichage carte custom" );
   private VerticalPanel m_panel = new VerticalPanel();
   private TabPanel m_tabPanel = new TabPanel();
 
@@ -111,6 +113,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_btnPause.addClickHandler( this );
     m_btnEdit.addClickHandler( this );
     m_btnGrid.addClickHandler( this );
+    m_btnAtmosphere.addClickHandler( this );
+    m_btnCustomMap.addClickHandler( this );
     m_btnSkipTurn.setTitle( "Fin de tour" );
     m_btnSkipTurn.setStyleName( "fmp-button" );
     m_btnSkipTurn.addClickHandler( this );
@@ -204,6 +208,10 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         + game.getAccountCreatorId()
         + "' target='_blank'>"
         + ModelFmpMain.model().getAccount( game.getAccountCreatorId() ).getPseudo() + "</a>" ) );
+      // TODO i18n
+      m_generalPanel
+          .add( new HTML(
+              "Reporter un problème à <a href='mailto:admin@fullmetalgalaxy.com'>admin@fullmetalgalaxy.com</a>" ) );
     }
 
     if( ModelFmpMain.model().isJoined() )
@@ -235,6 +243,15 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     // grid button
     m_generalPanel.add( m_btnGrid );
     m_btnGrid.setDown( ModelFmpMain.model().isGridDisplayed() );
+    // atmosphere button
+    m_generalPanel.add( m_btnAtmosphere );
+    m_btnAtmosphere.setDown( ModelFmpMain.model().isAtmosphereDisplayed() );
+    // standard display button
+    if( game.getMapUri() != null )
+    {
+      m_generalPanel.add( m_btnCustomMap );
+      m_btnCustomMap.setDown( ModelFmpMain.model().isCustomMapDisplayed() );
+    }
 
     // display end game date
     if( !game.isAsynchron() )
@@ -451,6 +468,14 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       ModelFmpMain.model().setGridDisplayed( m_btnGrid.isDown() );
     }
+    else if( p_event.getSource() == m_btnAtmosphere )
+    {
+      ModelFmpMain.model().setAtmosphereDisplayed( m_btnAtmosphere.isDown() );
+    }
+    else if( p_event.getSource() == m_btnCustomMap )
+    {
+      ModelFmpMain.model().setCustomMapDisplayed( m_btnCustomMap.isDown() );
+    }
     else if( p_event.getSource() == m_btnPause )
     {
       AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccountId() );
@@ -471,7 +496,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     else if( p_event.getSource() == m_btnSkipTurn )
     {
       EbRegistration registration = ModelFmpMain.model().getGame().getCurrentPlayerRegistration();
-      if( Window.confirm( "Voulez-vous réellement sauter le tour de " + registration.getAccountPseudo()
+      if( Window.confirm( "Voulez-vous réellement sauter le tour de "
+          + registration.getAccountPseudo()
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();

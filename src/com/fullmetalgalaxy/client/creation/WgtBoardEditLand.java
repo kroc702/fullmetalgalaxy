@@ -149,6 +149,8 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
     {
       ModelFmpMain.model().getGame().setLand( position, m_rightClic );
     }
+    ModelFmpMain.model().getGame().setMinimapUri( null );
+    ModelFmpMain.model().getGame().setMapUri( null );
     onModelChange();
   }
 
