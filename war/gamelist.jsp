@@ -78,7 +78,7 @@ if(tab < 0 || tab > 3 )
 	    {
 	      out.println( "<tr>" );
 	      // minimap
-	      out.println( "<td style=\"width:100px;\"><a href=\"/game.jsp?id="+game.getId()+"\"><img src=\"/ImageServlet?minimap="+game.getId()+"\" height=\"50\"></a></td>" );
+	      out.println( "<td style=\"width:100px;\"><a href=\"/game.jsp?id="+game.getId()+"\"><img src=\""+game.getMinimapUri()+"\" height=\"50\"></a></td>" );
 	      // game name
 	      out.println( "<td><a href=\"/game.jsp?id="+game.getId()+"\"><big>"+ game.getName() + "</big><br/><small>" );
 	      // player name and number

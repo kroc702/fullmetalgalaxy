@@ -10,6 +10,7 @@
   <servlet>
     <servlet-name>Services</servlet-name>
     <servlet-class>com.fullmetalgalaxy.server.ServicesImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet-mapping>
@@ -25,6 +26,16 @@
     <servlet-mapping>
        <servlet-name>ImageServlet</servlet-name>
        <url-pattern>/ImageServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+       <servlet-name>BlobstoreCache</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.image.BlobstoreCache</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+       <servlet-name>BlobstoreCache</servlet-name>
+       <url-pattern>/BlobstoreCache</url-pattern>
     </servlet-mapping>
     
     <servlet>

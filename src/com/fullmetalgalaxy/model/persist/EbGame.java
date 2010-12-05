@@ -80,6 +80,9 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private ArrayList<Integer> m_takeOffTurns = null;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
+  /** minimap stored here to save some ImageService's CPU time */
+  private String m_minimapBlobKey = null;
+  private String m_minimapUri = null;
 
   private long m_currentPlayerId = 0L;
 
@@ -2292,6 +2295,38 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public void setPlanetType(PlanetType p_planetType)
   {
     m_planetType = p_planetType;
+  }
+
+  /**
+   * @return the minimapUri
+   */
+  public String getMinimapUri()
+  {
+    return m_minimapUri;
+  }
+
+  /**
+   * @param p_minimapUri the minimapUri to set
+   */
+  public void setMinimapUri(String p_minimapUri)
+  {
+    m_minimapUri = p_minimapUri;
+  }
+
+  /**
+   * @return the minimapBlobKey
+   */
+  public String getMinimapBlobKey()
+  {
+    return m_minimapBlobKey;
+  }
+
+  /**
+   * @param p_minimapBlobKey the minimapBlobKey to set
+   */
+  public void setMinimapBlobKey(String p_minimapBlobKey)
+  {
+    m_minimapBlobKey = p_minimapBlobKey;
   }
 
 

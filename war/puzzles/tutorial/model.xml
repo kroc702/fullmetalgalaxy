@@ -43,6 +43,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
       <m__roundActionPt>5</m__roundActionPt>
       <m__deploymentTimeStep>-1</m__deploymentTimeStep>
     </m__ebConfigGameTime>
+    <m__minimapUri>/puzzles/tutorial/minimap.png</m__minimapUri>
     <m__setToken>
       <com.fullmetalgalaxy.model.persist.EbToken>
         <m__id>32</m__id>

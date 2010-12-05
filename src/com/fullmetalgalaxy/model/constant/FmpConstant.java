@@ -58,11 +58,6 @@ public class FmpConstant
     return "http://fullmetalplanete.forum2jeux.com/programme-de-vincent-f33/";
   }
 
-  public static String getMiniMapUrl(String p_gameId)
-  {
-    return "ImageServlet?minimap=" + p_gameId;
-  }
-
   public static String getPMUrl(long p_accountId)
   {
     return "/privatemsg.jsp?id=" + p_accountId;

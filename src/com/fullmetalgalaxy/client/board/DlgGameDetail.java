@@ -471,7 +471,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     else if( p_event.getSource() == m_btnSkipTurn )
     {
       EbRegistration registration = ModelFmpMain.model().getGame().getCurrentPlayerRegistration();
-      if( Window.confirm( "Voulez-vous réellement sauter le tour de " + registration.getAccountPseudo()
+      if( Window.confirm( "Voulez-vous rÃ©ellement sauter le tour de " + registration.getAccountPseudo()
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
@@ -487,7 +487,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       // want to ban player
       EbRegistration registration = m_banButtons.get( p_event.getSource() );
-      if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccountPseudo()
+      if( Window.confirm( "Voulez-vous rÃ©ellement banir " + registration.getAccountPseudo()
           + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
       {
         EbAdminBan gameLog = new EbAdminBan();

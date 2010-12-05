@@ -630,7 +630,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   {
     if( m_isActionPending )
     {
-      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
+      Window.alert( "Une action a dÃ©jÃ  Ã©tÃ© envoyÃ© au serveur... sans rÃ©ponse pour l'instant" );
       return;
     }
     m_isActionPending = true;
@@ -679,7 +679,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   {
     if( m_isActionPending )
     {
-      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
+      Window.alert( "Une action a dï¿½jï¿½ ï¿½tï¿½ envoyï¿½ au serveur... sans rï¿½ponse pour l'instant" );
       return;
     }
     m_isActionPending = true;
