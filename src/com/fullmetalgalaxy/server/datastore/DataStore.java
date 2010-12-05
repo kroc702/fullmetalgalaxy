@@ -158,7 +158,7 @@ public class DataStore
 
 
 
-  protected PersistEntity getPersistEntity(Class<?> p_persistEntityClass,
+  public <T> T getPersistEntity(Class<T> p_persistEntityClass,
       long p_id)
   {
     assert m_isOpen == true;
@@ -166,7 +166,8 @@ public class DataStore
     {
       return null;
     }
-    return getPersistEntity( getThisObjectify(), p_persistEntityClass, p_id );
+    return p_persistEntityClass.cast( getPersistEntity( getThisObjectify(), p_persistEntityClass,
+        p_id ) );
   }
 
 

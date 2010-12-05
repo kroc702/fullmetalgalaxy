@@ -206,12 +206,14 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       GameGenerator.setLandPercent( percent );
       GameGenerator.setHexagonMap( m_chkRoundMap.getValue() );
       GameGenerator.generLands();
+      ModelFmpMain.model().getGame().setMinimapUri( null );
       ModelFmpMain.model().fireModelUpdate();
     }
     else if( p_event.getSource() == m_btnClear )
     {
       GameGenerator.setSize( landWidth, landHeight );
       GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
+      ModelFmpMain.model().getGame().setMinimapUri( null );
       ModelFmpMain.model().fireModelUpdate();
     }
     else if( p_event.getSource() == m_btnLoadMap )

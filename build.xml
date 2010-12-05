@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-compilation file for Full Metal Planet
+compilation file for Full Metal Galaxy
 -->
 
 <project name="FMG" default="upload">
@@ -53,7 +53,7 @@ compilation file for Full Metal Planet
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source">
+		<javac srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8">
 			<exclude name="**/client/**"/>
 		</javac>
 	</target>

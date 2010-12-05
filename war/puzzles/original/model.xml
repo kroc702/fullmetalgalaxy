@@ -1,0 +1,82 @@
+<com.fullmetalgalaxy.model.ModelFmpInit>
+  <m__game>
+    <m__id>0</m__id>
+    <m__version>0</m__version>
+    <m__name>upload</m__name>
+    <m__description></m__description>
+    <m__maxNumberOfPlayer>4</m__maxNumberOfPlayer>
+    <m__history>false</m__history>
+    <m__currentTide>Medium</m__currentTide>
+    <m__nextTide>Medium</m__nextTide>
+    <m__lastTideChange>0</m__lastTideChange>
+    <m__currentTimeStep>0</m__currentTimeStep>
+    <m__lastTimeStepChange>2010-12-04 23:45:01.533 CET</m__lastTimeStepChange>
+    <m__gameType>MultiPlayer</m__gameType>
+    <m__planetType>Desert</m__planetType>
+    <m__currentPlayerId>0</m__currentPlayerId>
+    <m__accountCreatorId>0</m__accountCreatorId>
+    <m__lands>RERFREQ0NFFVEURENERDREREREREREREMzNTRENERDQzM0RERERENDNEFEREM1NDREQ0QzNERERE
+VFU1ERRERFQ1RDQRMUQURUVFVEUTFBERRBQRERERERQVUUVEREQUERIRESQREREREVESEURERERE
+ESFEJCISEREREREiUUNERERENEQiRCMREhISERERVDVERERDREMRQlMVQUIkEhERQUQzRERERDQR
+ETFDQURVFBESEUFEQ0RERDQREREUEURUREMUIRJBRDM0Q0RBERFEERFBRTNEFSERRFQzM1URJBER
+RBERRUMzRRERQRRDUzUTRCQiEREVQzREUSIUQRFEREU0RERCVBFRMkRDETISERREREREQ0RBEhEV
+IRERESFTMVJBREREVFERIhFFIhEREREREURRRERERBVVIRExE0FEEREREUERVEVERFURIUIxM0FE
+REQUEUQxRERFRFQzE0REMzNEREREFENENUREREQ1M0NERENEREREREQzFUNERERERERERDNBRFVF
+REREE0RERERERERERDREUVVVVEQ0Q0NEREQE</m__lands>
+    <m__landWidth>37</m__landWidth>
+    <m__landHeight>23</m__landHeight>
+    <m__creationDate>2010-12-04 23:45:01.533 CET</m__creationDate>
+    <m__started>false</m__started>
+    <m__configGameTime>Standard</m__configGameTime>
+    <m__configGameVariant>Standard</m__configGameVariant>
+    <m__ebConfigGameTime>
+      <m__id>0</m__id>
+      <m__version>0</m__version>
+      <m__timeStepDurationInSec>0</m__timeStepDurationInSec>
+      <m__tideChangeFrequency>1</m__tideChangeFrequency>
+      <m__totalTimeStep>25</m__totalTimeStep>
+      <m__actionPtPerTimeStep>15</m__actionPtPerTimeStep>
+      <m__actionPtPerExtraShip>5</m__actionPtPerExtraShip>
+      <m__bulletCountIncrement>2</m__bulletCountIncrement>
+      <m__description>25 tours (pas de temps limite)</m__description>
+      <m__takeOffTurns>
+        <int>21</int>
+        <int>25</int>
+      </m__takeOffTurns>
+      <m__asynchron>false</m__asynchron>
+      <m__roundActionPt>5</m__roundActionPt>
+      <m__deploymentTimeStep>1</m__deploymentTimeStep>
+    </m__ebConfigGameTime>
+    <m__ebConfigGameVariant>
+      <m__id>0</m__id>
+      <m__version>0</m__version>
+      <m__actionPtMaxReserve>25</m__actionPtMaxReserve>
+      <m__minSpaceBetweenFreighter>8</m__minSpaceBetweenFreighter>
+      <m__deployementRadius>4</m__deployementRadius>
+      <m__description>l&apos;unique variante</m__description>
+      <m__constructReserve>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+          <int>4</int>
+        </entry>
+      </m__constructReserve>
+    </m__ebConfigGameVariant>
+    <m__minimapUri>/puzzles/original/minimap.png</m__minimapUri>
+    <m__setToken/>
+    <m__setRegistration/>
+    <m__setGameLog/>
+    <m__triggers/>
+    <m__nextLocalId>0</m__nextLocalId>
+    <m__lastTokenUpdate>1970-01-01 01:00:00.0 CET</m__lastTokenUpdate>
+    <m__allowedNodeGraphCache/>
+    <m__forbidenNodeGraphCache/>
+  </m__game>
+</com.fullmetalgalaxy.model.ModelFmpInit>

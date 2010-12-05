@@ -24,6 +24,7 @@
 	<m__started>true</m__started>
 	<m__configGameTime>Standard</m__configGameTime>
 	<m__configGameVariant>Standard</m__configGameVariant>
+	<m__minimapUri>/puzzles/unpontontroploin/minimap.png</m__minimapUri>
 	<m__setToken>
 		<com.fullmetalgalaxy.model.persist.EbToken>
 

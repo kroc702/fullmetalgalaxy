@@ -40,6 +40,7 @@ import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.appengine.api.blobstore.BlobKey;
 
 /**
  * @author Vincent
@@ -65,7 +66,13 @@ public class PersistGame extends PersistEntity
   private int m_landWidth = 0;
   private int m_landHeight = 0;
 
+  // TODO we will probably need a list here as query like '%player%' are infeasible
   private String m_players = null;
+
+  /** minimap stored here to save some ImageService's CPU time */
+  private BlobKey m_minimapBlobKey = null;
+  private String m_minimapUri = null;
+  
 
   public PersistGame()
   {
@@ -98,6 +105,11 @@ public class PersistGame extends PersistEntity
     setLandHeight( game.getLandHeight() );
     setPlayers( game );
     setOpen( false );
+    setMinimapUri( game.getMinimapUri() );
+    if( game.getMinimapBlobKey() != null )
+    {
+      setMinimapBlobKey( new BlobKey( game.getMinimapBlobKey() ) );
+    }
     if( !isStarted() && getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer() )
     {
       setOpen( true );
@@ -118,6 +130,10 @@ public class PersistGame extends PersistEntity
       game.setDescription( getDescription() );
       game.setCreationDate( getCreationDate() );
       game.setVersion( getVersion() );
+      if( game.getMinimapUri() == null )
+      {
+        game.setMinimapUri( getMinimapUri() );
+      }
     }
     return game;
   }
@@ -400,6 +416,38 @@ public class PersistGame extends PersistEntity
     }
     strBuf.append( " " );
     m_players = strBuf.toString();
+  }
+
+  /**
+   * @return the minimapData
+   */
+  public BlobKey getMinimapBlobKey()
+  {
+    return m_minimapBlobKey;
+  }
+
+  /**
+   * @param p_minimapData the minimapData to set
+   */
+  public void setMinimapBlobKey(BlobKey p_minimapData)
+  {
+    m_minimapBlobKey = p_minimapData;
+  }
+
+  /**
+   * @return the minimapUri
+   */
+  public String getMinimapUri()
+  {
+    return m_minimapUri;
+  }
+
+  /**
+   * @param p_minimapUri the minimapUri to set
+   */
+  public void setMinimapUri(String p_minimapUri)
+  {
+    m_minimapUri = p_minimapUri;
   }
 
 

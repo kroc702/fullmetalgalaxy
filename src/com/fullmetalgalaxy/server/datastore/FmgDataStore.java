@@ -30,6 +30,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 
 /**
@@ -207,7 +208,15 @@ public class FmgDataStore extends DataStore
 
   public void deleteGame(long p_id)
   {
-    delete( PersistGame.class, p_id );
+    PersistGame persitGame = getPersistEntity( PersistGame.class, p_id );
+    if( persitGame != null )
+    {
+      if( persitGame.getMinimapBlobKey() != null )
+      {
+        BlobstoreServiceFactory.getBlobstoreService().delete( persitGame.getMinimapBlobKey() );
+      }
+      delete( PersistGame.class, p_id );
+    }
   }
 
 

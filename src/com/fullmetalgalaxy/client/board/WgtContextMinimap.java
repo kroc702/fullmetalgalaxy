@@ -72,7 +72,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
     if( m_lastGameId == null || !m_lastGameId.equals( gameId ) )
     {
       m_lastGameId = gameId;
-      m_miniMapImage.setUrl( FmpConstant.getMiniMapUrl( gameId ) );
+      m_miniMapImage.setUrl( game.getMinimapUri() );
       m_miniMapImage.setPixelSize( FmpConstant.miniMapWidth, FmpConstant.miniMapHeight );
     }
     m_panel.add( m_miniMapImage );

@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -56,6 +57,10 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.image.BlobstoreCache;
+import com.fullmetalgalaxy.server.image.MiniMapProducer;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -144,22 +149,42 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   {
     FmgDataStore dataStore = new FmgDataStore();
     EbGame model = dataStore.getGame( p_gameId );
-    boolean isUpdated = false;
-
     if( model == null )
     {
       return null;
     }
+    boolean isUpdated = false;
 
+
+    // should we construct minimap image ?
+    if( model.getMinimapUri() == null )
+    {
+      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, model );
+      byte[] data = miniMapProducer.getImage();
+      BlobKey key = BlobstoreCache.store( "minimap.png", new ByteArrayInputStream( data ) );
+      try
+      {
+        // blobKey may be invalid and this will raise an exception
+        model.setMinimapUri( ImagesServiceFactory.getImagesService().getServingUrl( key ) );
+        model.setMinimapBlobKey( key.getKeyString() );
+        isUpdated = true;
+      } catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    // get last update time
     Date lastUpdate = new Date( System.currentTimeMillis() );
     if( model.getLastGameLog() != null )
     {
       lastUpdate = model.getLastGameLog().getLastUpdate();
     }
 
+    // anything to update ?
     try
     {
-      isUpdated = updateGame( model );
+      isUpdated |= updateGame( model );
     } catch( RpcFmpException e )
     {
       log.error( e );
