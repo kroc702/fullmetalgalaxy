@@ -99,13 +99,16 @@ public class WgtContextPlayers extends Composite implements ClickHandler
 
     for( EbRegistration player : sortedRegistration )
     {
-      if( player.haveAccount() )
+      if( player != null )
       {
-        addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccountId() ) );
-      }
-      else
-      {
-        addPlayer( player, false );
+        if( player.haveAccount() )
+        {
+          addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccountId() ) );
+        }
+        else 
+        {
+          addPlayer( player, false );
+        }
       }
     }
 
@@ -128,7 +131,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
   {
     for( EbRegistration player : p_players )
     {
-      if( player.haveAccount()
+      if( player != null && player.haveAccount()
           && ModelFmpMain.model().getAccount( player.getAccountId() ).getPseudo().equalsIgnoreCase(
               p_pseudo ) )
       {

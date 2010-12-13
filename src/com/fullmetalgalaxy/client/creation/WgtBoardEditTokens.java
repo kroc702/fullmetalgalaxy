@@ -150,7 +150,11 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
       {
         try
         {
-          if( game.canTokenLoad( oldToken, token ) )
+          if( token.getType() == TokenType.Turret && oldToken.getType() == TokenType.Freighter )
+          {
+            game.moveToken( token, position );
+          }
+          else if( game.canTokenLoad( oldToken, token ) )
           {
             if( oldToken.getType() == TokenType.Pontoon )
             {

@@ -396,7 +396,10 @@ public class PersistGame extends PersistEntity
     for( EbRegistration player : sortedRegistration )
     {
       playerCount++;
-      strBuf.append( player.getAccountPseudo() );
+      if(player != null)
+      {
+        strBuf.append( player.getAccountPseudo() );
+      }
       if( p_game.getCurrentPlayerRegistration() == player )
       {
         strBuf

@@ -48,8 +48,7 @@
             - A Eric Alber pour m'avoir fourni les modèles blender des pions<br/>
             - A Brice Vandemoortele pour m'avoir fourni la superbe illustration de pondeuse météo<br/>
             - A Jean-Marc Leroy, l'auteur de full metal program, pour m'avoir fourni son algorithme 
-            de g&eacute;n&eacute;ration
-            de carte ainsi que les images des pions pour mes premières versions.</br>
+            de g&eacute;n&eacute;ration de carte.</br>
             - A isi.nc qui a hébergé gratuitement la version alpha en Nouvelle-Calédonie.<br/>
             - A l'équipe des Alpha testeurs (et particulièrement &agrave; Quentin, Manu et Sergio) qui 
             m'ont remonté la première série de bugs bloquants.<br/>

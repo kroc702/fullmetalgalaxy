@@ -12,6 +12,15 @@
 <%@include file="include/header.jsp"%>
 
 <%
+final int COUNT_PER_PAGE = 20;
+int offset = 0;
+int gameCount = 0;
+try
+{
+  offset = Integer.parseInt( request.getParameter( "offset" ) );
+} catch( NumberFormatException e )
+{
+}
 long tab = 2;
 if( Auth.isUserLogged( request, response ) )
 {
@@ -49,30 +58,42 @@ if(tab < 0 || tab > 3 )
 	<%@include file="include/puzzleslist.html"%>
 <% } else { 
 	Iterable<PersistGame> gameList = new ArrayList<PersistGame>();
-	if( tab == 0 ) {
+	if( !Auth.isUserLogged( request, response ) && (tab <= 1) ) {
+		// my games or open games but not logged
+		out.println("<center><h2>Vous n'�tes pas connect�</h2></center>");
+	} else if( tab == 0 ) {
 		// new or open games
 		gameList = FmgDataStore.getPersistGameList();
 		((com.googlecode.objectify.Query<PersistGame>)gameList).filter( "m_isOpen", true );
-	} else if( tab == 1 && !Auth.isUserLogged( request, response ) ) {
-		// my games but not logged
-		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
+		gameCount = ((com.googlecode.objectify.Query<PersistGame>)gameList).countAll();
+		((com.googlecode.objectify.Query<PersistGame>)gameList).offset( offset );
 	} else if( tab == 1 && Auth.isUserLogged( request, response ) ) {
 		// my games
 		String myPseudo = " " + Auth.getUserPseudo( request, response ) + " ";
 		com.googlecode.objectify.Query<PersistGame> query = FmgDataStore.getPersistGameList();
 		query.filter( "m_history", false );
+		int startIndex = offset;
 		for( PersistGame game : query )
 	    {
 	    	if(game.getPlayers() != null && game.getPlayers().contains( myPseudo ))
 	    	{
-	    		((ArrayList<PersistGame>)gameList).add( game );
+	    		if( startIndex >= 0 )
+	    		{
+	    	  		((ArrayList<PersistGame>)gameList).add( game );
+	    		} else {
+	    		    startIndex--;
+	    		}
 	    	}
 	    }
+		gameCount = ((ArrayList<PersistGame>)gameList).size();
 	} else if( tab == 3 ) {
 		// all games
 		gameList = FmgDataStore.getPersistGameList();
+		gameCount = ((com.googlecode.objectify.Query<PersistGame>)gameList).countAll();
+		((com.googlecode.objectify.Query<PersistGame>)gameList).offset( offset );
 	}
 %>
+	<p><%= gameCount %> exploitation(s) trouvée(s) :</p>
 	<table class="fmp-array" style="width:100%;">
 	<%  for( PersistGame game : gameList )
 	    {
@@ -116,6 +137,17 @@ if(tab < 0 || tab > 3 )
 	    }
 	%>
 	</table>
+	<p>Pages :
+	<%
+		int p = 0;
+		while(gameCount > 0)
+		{
+		  out.println( "<a href='"+ request.getRequestURL() +"?tab="+tab+"&offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
+		  gameCount -= COUNT_PER_PAGE;
+		  p++;
+		}
+	%>
+	</p>
 	<% if( tab == 0 && Auth.isUserLogged(request, response)) { %>
 		<center><a href="editgame.jsp"><big>Cr&eacute;er une nouvelle partie</big></a></center>
 	<% } %>

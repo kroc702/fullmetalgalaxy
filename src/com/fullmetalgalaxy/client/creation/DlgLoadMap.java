@@ -37,8 +37,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * @author Vincent Legendre
@@ -50,6 +52,8 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
   // UI
   private Map<Image, String> m_maps = new HashMap<Image, String>();
   private Button m_btnCancel = new Button( "Cancel" );
+  private TextBox m_txtCustom = new TextBox();
+  private Button m_btnCustom = new Button( "Custom" );
   private Panel m_panel = new FlowPanel();
 
   // model
@@ -89,6 +93,7 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     setText( "Clickez sur la carte de votre choix" );
 
     m_btnCancel.addClickHandler( this );
+    m_btnCustom.addClickHandler( this );
     redraw();
     setWidget( m_panel );
   }
@@ -110,12 +115,20 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
   @Override
   public void onClick(ClickEvent p_event)
   {
+    String gameId = null;
     if( p_event.getSource() == m_btnCancel )
     {
       this.hide();
       return;
     }
-    String gameId = m_maps.get( p_event.getSource() );
+    else if( p_event.getSource() == m_btnCustom )
+    {
+      gameId = m_txtCustom.getText();
+    }
+    else
+    {
+      gameId = m_maps.get( p_event.getSource() );
+    }
     Services.Util.getInstance().getModelFmpInit( gameId, m_callbackFmpInit );
   }
 
@@ -133,6 +146,10 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     m_panel.add( image );
     
     
+    m_panel.add( new HTML("ou ID de la partie:<br/>") );
+    m_panel.add( m_txtCustom );
+    m_panel.add( m_btnCustom );
+    m_panel.add( new HTML("<br/>") );
     m_panel.add( m_btnCancel );
   }
 }

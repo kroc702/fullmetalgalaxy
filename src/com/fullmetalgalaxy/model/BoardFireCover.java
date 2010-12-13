@@ -264,7 +264,13 @@ public class BoardFireCover implements Serializable
       EnuColor color = new EnuColor( EnuColor.None );
       if( p_token.getColor() != EnuColor.None )
       {
-        color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
+        EbRegistration tokenOwner = m_game.getRegistrationByColor( p_token.getColor() );
+        if(tokenOwner != null)
+        {
+          color.setValue( tokenOwner.getOriginalColor() );
+        } else {
+          color.setValue( p_token.getColor() );
+        }
       }
       AnBoardPosition position = p_token.getPosition();
       for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
@@ -442,7 +448,13 @@ public class BoardFireCover implements Serializable
       EnuColor color = new EnuColor( EnuColor.None );
       if( p_token.getColor() != EnuColor.None )
       {
-        color.setValue( m_game.getRegistrationByColor( p_token.getColor() ).getOriginalColor() );
+        EbRegistration tokenOwner = m_game.getRegistrationByColor( p_token.getColor() );
+        if(tokenOwner != null)
+        {
+          color.setValue( tokenOwner.getOriginalColor() );
+        } else {
+          color.setValue( p_token.getColor() );
+        }
       }
       AnBoardPosition position = p_token.getPosition();
       for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )

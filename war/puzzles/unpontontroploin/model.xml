@@ -335,6 +335,7 @@
 			<m__turretsToRepair>0</m__turretsToRepair>
 			<m__game reference="../../.." />
 			<m__accountId>2</m__accountId>
+			<m__accountPseudo>CPU</m__accountPseudo>
 		</com.fullmetalgalaxy.model.persist.EbRegistration>
 
 		<com.fullmetalgalaxy.model.persist.EbRegistration>
@@ -347,6 +348,7 @@
 			<m__turretsToRepair>0</m__turretsToRepair>
 			<m__game reference="../../.." />
 			<m__accountId>1</m__accountId>
+			<m__accountPseudo>Vous</m__accountPseudo>
 		</com.fullmetalgalaxy.model.persist.EbRegistration>
 	</m__setRegistration>
 	<m__setGameLog />

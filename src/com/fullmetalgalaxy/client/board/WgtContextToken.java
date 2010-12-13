@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
@@ -86,10 +87,12 @@ public class WgtContextToken extends Composite
           + "</b>" ), 0, 0 );
       if( actionBuilder.getSelectedToken().getColor() != EnuColor.None )
       {
-        absPanel.add( new HTML( ModelFmpMain.model().getAccount(
-            ModelFmpMain.model().getGame().getRegistrationByColor(
-                    actionBuilder.getSelectedToken().getColor() ).getAccountId() ).getPseudo() ),
-                0, 20 );
+        EbRegistration player = ModelFmpMain.model().getGame().getRegistrationByColor(
+            actionBuilder.getSelectedToken().getColor() );
+        if(player != null && player.getAccountPseudo() != null)
+        {
+          absPanel.add( new HTML( player.getAccountPseudo() ), 0, 20 );
+        }
       }
       // m_panel.add( new HTML( "</center>" ) );
     }
