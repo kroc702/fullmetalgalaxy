@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.constant.*" %>
-<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -70,7 +70,7 @@ out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
 		int p = 0;
 		while(accountListCount > 0)
 		{
-		  out.println( "<a href='/halloffames.jsp?offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
+		  out.println( "<a href='"+ request.getRequestURL() +"?offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
 		  accountListCount -= COUNT_PER_PAGE;
 		  p++;
 		}
