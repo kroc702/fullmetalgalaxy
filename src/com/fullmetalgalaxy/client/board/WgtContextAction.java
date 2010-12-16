@@ -81,6 +81,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
   FocusPanel m_pnlDeploy = null;
   FocusPanel m_pnlPause = null;
   FocusPanel m_pnlEndTurn = null;
+  FocusPanel m_pnlTakeOff = null;
   Image m_btnInfo = Icons.s_instance.info32().createImage();
   Image m_btnTakeOff = Icons.s_instance.takeOff32().createImage();
   Image m_btnTimeMode = Icons.s_instance.time32().createImage();
@@ -166,6 +167,11 @@ public class WgtContextAction extends WgtView implements ClickHandler
     hPanel.add( new Label( "Vous devez maintenant terminez votre tour !" ) );
     m_pnlEndTurn = new FocusPanel( hPanel );
     m_pnlEndTurn.addClickHandler( this );
+    hPanel = new HorizontalPanel();
+    hPanel.add( Icons.s_instance.takeOff32().createImage() );
+    hPanel.add( new Label( "Clickez sur votre astronef pour le faire décoller" ) );
+    m_pnlTakeOff = new FocusPanel( hPanel );
+    m_pnlTakeOff.addClickHandler( this );
 
     m_btnInfo.addClickHandler( this );
     m_btnInfo.setTitle( "Information detailles sur cette partie" );
@@ -341,6 +347,21 @@ public class WgtContextAction extends WgtView implements ClickHandler
           ModelFmpMain.model().notifyModelUpdate();
         }
       }
+      else if( sender == m_pnlTakeOff )
+      {
+        ModelFmpMain.model().getActionBuilder().clear();
+        // search for my freighter to take off
+        for( EbToken token : ModelFmpMain.model().getGame()
+            .getAllFreighter( ModelFmpMain.model().getMyRegistration() ) )
+        {
+          if( token.getLocation() == Location.Board )
+          {
+            ModelFmpMain.model().getActionBuilder().userTokenClick( token );
+            break;
+          }
+        }
+        ModelFmpMain.model().notifyModelUpdate();
+      }
     } catch( RpcFmpException e )
     {
       MAppMessagesStack.s_instance.showWarning( Messages.getString( e ) );
@@ -357,7 +378,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     }
 
     EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
-    EbToken mainToken = action.getSelectedToken();
+    EbToken mainSelectedToken = action.getSelectedToken();
     EbRegistration myRegistration = model.getMyRegistration();
 
     if( !action.isTokenSelected() || ModelFmpMain.model().getGame().isFinished() )
@@ -462,6 +483,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           EbToken myFreighter = ModelFmpMain.model().getGame().getFreighter( myRegistration );
           if( myFreighter != null
+              && model.getGame().isStarted()
               && myFreighter.getLocation() == Location.Orbit
               && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
                   .getCurrentPlayerRegistration() == myRegistration) )
@@ -504,16 +526,16 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnCancel );
       }
 
-      if( ((ModelFmpMain.model().getGame().getTokenFireLength( action.getSelectedToken() ) > 0) 
-          || (action.getSelectedToken().getType() == TokenType.Freighter && ModelFmpMain.model().getGame().getToken( action.getSelectedPosition(), TokenType.Turret ) != null))
-          && (myRegistration.getEnuColor().isColored( action
-              .getSelectedToken().getColor() )) )
+      if( ((ModelFmpMain.model().getGame().getTokenFireLength( mainSelectedToken ) > 0) || (mainSelectedToken
+          .getType() == TokenType.Freighter && ModelFmpMain.model().getGame()
+          .getToken( action.getSelectedPosition(), TokenType.Turret ) != null))
+          && (myRegistration.getEnuColor().isColored( mainSelectedToken.getColor() )) )
       {
         try
         {
           action.exec();
-          if( (action.getSelectedToken().getBulletCount() > 0 )
-           || (action.getSelectedToken().getType() == TokenType.Freighter ) )
+          if( (mainSelectedToken.getBulletCount() > 0)
+              || (mainSelectedToken.getType() == TokenType.Freighter) )
           {
             m_panel.add( m_btnFire );
           }
@@ -535,12 +557,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
 
       if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
-          && (mainToken.getType() == TokenType.Freighter) && (myRegistration != null)
+          && (mainSelectedToken.getType() == TokenType.Freighter) && (myRegistration != null)
           && (myRegistration.getTurretsToRepair() > 0) && (myRegistration.getPtAction() >= 2)
-          && (!mainToken.getEnuColor().isColored( myRegistration.getOriginalColor() ))
-          && (myRegistration.getEnuColor().isColored( mainToken.getColor() ))
+          && (!mainSelectedToken.getEnuColor().isColored( myRegistration.getOriginalColor() ))
+          && (myRegistration.getEnuColor().isColored( mainSelectedToken.getColor() ))
           && (model.getGame().getToken( action.getSelectedPosition(), TokenType.Turret ) == null)
-          && (!mainToken.getPosition().equals( action.getSelectedPosition() )) )
+          && (!mainSelectedToken.getPosition().equals( action.getSelectedPosition() )) )
       {
         // player select a destroyed pod. of a freighter he own (but different
         // from the original one)
@@ -548,14 +570,24 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnRepairTurret );
       }
 
-      if( (action.isBoardTokenSelected())
-          && (!action.isActionsPending())
-          && (mainToken.getType() == TokenType.Freighter)
-          && (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
-              .getCurrentTimeStep() ))
-          && (mainToken.getEnuColor().isColored( myRegistration.getColor() )) )
+      if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() ))
+          && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
+              .getCurrentPlayerRegistration() == myRegistration) )
       {
-        m_panel.add( m_btnTakeOff );
+        for( EbToken token : ModelFmpMain.model().getGame().getAllFreighter( myRegistration ) )
+        {
+          if( token.getLocation() == Location.Board )
+          {
+            MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
+            break;
+          }
+        }
+        if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
+            && (mainSelectedToken.getType() == TokenType.Freighter)
+            && (mainSelectedToken.getEnuColor().isColored( myRegistration.getColor() )) )
+        {
+          m_panel.add( m_btnTakeOff );
+        }
       }
     }
 

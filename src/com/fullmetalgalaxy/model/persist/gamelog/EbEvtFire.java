@@ -130,8 +130,10 @@ public class EbEvtFire extends AnEventPlay
           .getType().ordinal() );
     }
 
-    if( (!(p_game.getLastLog() instanceof EbEvtMove))
-        || (((EbEvtMove)p_game.getLastLog()).getToken(p_game) != getTokenDestroyer1(p_game)) )
+    if( ((!(p_game.getLastLog() instanceof EbEvtMove)) || (((EbEvtMove)p_game.getLastLog())
+        .getToken( p_game ) != getTokenDestroyer1( p_game )))
+        && ((!(p_game.getLastLog() instanceof EbEvtFire)) || (((EbEvtFire)p_game.getLastLog())
+            .getTokenDestroyer1( p_game ) != getTokenDestroyer1( p_game ))) )
     {
       // check the first destroyer is not fire deactivated
       if( !p_game.isTokenFireActive( getMyRegistration(p_game).getEnuColor(), getTokenDestroyer1(p_game) ) )

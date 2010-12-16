@@ -129,6 +129,13 @@ public class EbEvtUnLoad extends AnEventPlay
       throw new RpcFmpException( getToken( p_game ).getCarrierToken()
           + " est déactivé a cause de la marré" );
     }
+    // check that carrier isn't fire deactivate
+    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getToken( p_game )
+        .getCarrierToken() ) )
+    {
+      throw new RpcFmpException( getToken( p_game ).getCarrierToken()
+          + " est déactivé a cause d'une zone de feu" );
+    }
 
     // check token move to a 'clear' hexagon
     boolean moveToPontoon = false;

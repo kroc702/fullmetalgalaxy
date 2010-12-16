@@ -374,6 +374,7 @@ public class EbToken extends EbBase
   {
     // first determine the token owner color
     EnuColor tokenOwnerColor = getGame().getTokenOwnerColor( this );
+    // TODO it's not optimal... we should look onto the six neighbor hexagons
     for( EbToken token : getGame().getSetToken() )
     {
       if( (token.canBeColored()) && (!tokenOwnerColor.isColored( token.getColor() ))

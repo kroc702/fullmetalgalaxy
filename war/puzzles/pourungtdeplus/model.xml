@@ -1,6 +1,6 @@
 <com.fullmetalgalaxy.model.ModelFmpInit>
   <m__game>
-    <m__id>15</m__id>
+    <m__id>0</m__id>
     <m__version>3</m__version>
     <m__name>Un GT de plus</m__name>
     <m__description></m__description>
@@ -429,6 +429,31 @@ AAAAAEQ0EQEAAABAQ0UhAAAAADQ1EQEAAAAAUBQAAAAAAA==</m__lands>
 			<m__andOperator>false</m__andOperator>
 			<m__name>welcome</m__name>
 		</com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
+		<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
+        <m__id>0</m__id>
+        <m__version>0</m__version>
+        <m__actions>
+          <com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__message>./puzzles/pourungtdeplus/succeed.html</m__message>
+            <m__title>controle GT</m__title>
+          </com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
+        </m__actions>
+        <m__conditions>
+          <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenColor>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__negative>false</m__negative>
+            <m__color>16</m__color>
+            <m__tokenId>8</m__tokenId>
+          </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenColor>
+        </m__conditions>
+        <m__enable>true</m__enable>
+        <m__autoDisable>true</m__autoDisable>
+        <m__andOperator>false</m__andOperator>
+        <m__name>controle GT</m__name>
+      </com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
 	</m__triggers>
 
     <m__nextLocalId>23</m__nextLocalId>

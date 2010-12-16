@@ -98,7 +98,7 @@ public class WgtPlayerInfo extends WgtView
   protected void redraw()
   {
     EbGame game = ModelFmpMain.model().getGame();
-    AnEvent lastEvent = game.getLastLog();
+    AnEvent lastEvent = game.getLastGameLog();
     if( (lastEvent != m_oldGameEvent) && (ModelFmpMain.model().getMyRegistration() != null) )
     {
       m_oldGameEvent = lastEvent;

@@ -1059,14 +1059,33 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     {
       return null;
     }
+    EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
-      if(token.getType() == TokenType.Freighter && p_registration.getEnuColor().isColored( token.getColor() ))
+      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
       {
         return token;
       }
     }
     return null;
+  }
+
+  public List<EbToken> getAllFreighter(EbRegistration p_registration)
+  {
+    List<EbToken> list = new ArrayList<EbToken>();
+    if( p_registration == null )
+    {
+      return list;
+    }
+    EnuColor color = p_registration.getEnuColor();
+    for( EbToken token : getSetToken() )
+    {
+      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
+      {
+        list.add( token );
+      }
+    }
+    return list;
   }
 
   /**
