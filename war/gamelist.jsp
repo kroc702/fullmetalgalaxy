@@ -115,14 +115,15 @@ if(tab < 0 || tab > 3 )
 	      	out.println( "<img src='/images/css/icon_pause.cache.png' title='En pause' />" );
 	      }
 	      if( game.getConfigGameTime() == ConfigGameTime.Standard || game.getConfigGameTime() == ConfigGameTime.QuickTurnBased ) {
-		    out.println( "<img src='/images/css/icon_tbt.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+		    out.println( "<img src='/images/css/icon_tbt.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+	      } else {
+	        out.println( "<img src='/images/css/icon_parallele.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
 	      }
-	      if( game.getConfigGameTime() == ConfigGameTime.StandardAsynch ) {
-		    out.println( "<img src='/images/css/icon_slow.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-		  }
-	      if( game.getConfigGameTime() == ConfigGameTime.QuickTurnBased || game.getConfigGameTime() == ConfigGameTime.QuickAsynch ) {
+	      if( game.getConfigGameTime() == ConfigGameTime.QuickTurnBased || game.getConfigGameTime() == ConfigGameTime.QuickAsynch  ) {
 		    out.println( "<img src='/images/css/icon_fast.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-		  }
+		  } else {
+	        out.println( "<img src='/images/css/icon_slow.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
+	      }
 	      if( game.isHistory() ) {
 	      	out.println( "<img src='/images/css/icon_history.cache.png' title='Archive' />" );
 	      }
@@ -153,10 +154,11 @@ if(tab < 0 || tab > 3 )
 	<% } %>
 	<br/><small>
 	<img src='/images/css/icon_pause.cache.png'/> : Partie en pause<br/>
-	<img src='/images/css/icon_tbt.cache.png'/> : Partie en mode tour par tour sans limite de temps<br/>
-	<img src='/images/css/icon_tbt.cache.png'/><img src='/images/css/icon_fast.cache.png'/> : Partie rapide en tour par tour (3 min pour jouer)<br/>
-	<img src='/images/css/icon_slow.cache.png'/> : Partie lente en mode asynchrone (25 jours)<br/>
-	<img src='/images/css/icon_fast.cache.png'/> : Partie rapide en mode asynchrone (1h20)<br/>
+	<img src='/images/css/icon_tbt.gif'/> : Partie en mode tour par tour<br/>
+	<img src='/images/css/icon_parallele.gif'/> : Partie en mode parallèle<br/>
+	<img src='/images/css/icon_slow.cache.png'/> : Partie lente (25 jours ou illimité)<br/>
+	<img src='/images/css/icon_fast.cache.png'/> : Partie rapide (1h30)<br/>
+	<img src='/images/css/icon_history.cache.png'/> : Partie archivé<br/>
 	</small>
 <% } %>
 

@@ -59,8 +59,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -99,6 +97,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
 
 
+  @Override
   public EbBase saveGame(EbGame p_game) throws RpcFmpException
   {
     return saveGame( p_game, null );
@@ -107,6 +106,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   /* (non-Javadoc)
   * @see com.fullmetalgalaxy.model.GameCreationServices#createGame(com.fullmetalgalaxy.model.DbbGame)
   */
+  @Override
   public EbBase saveGame(EbGame p_game, String p_modifDesc) throws RpcFmpException
   {
     if( !isLogged() )
@@ -139,9 +139,16 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     dataStore.save( p_game );
     dataStore.close();
 
+    // should we construct minimap image ?
+    if( p_game.getMinimapUri() == null )
+    {
+      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, p_game );
+      byte[] data = miniMapProducer.getImage();
+      BlobstoreCache.storeMinimap( p_game.getId(), new ByteArrayInputStream( data ) );
+    }
+
 
     return p_game.createEbBase();
-
   }
 
 
@@ -155,24 +162,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
     boolean isUpdated = false;
 
-
-    // should we construct minimap image ?
-    if( model.getMinimapUri() == null )
-    {
-      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, model );
-      byte[] data = miniMapProducer.getImage();
-      BlobKey key = BlobstoreCache.store( "minimap.png", new ByteArrayInputStream( data ) );
-      try
-      {
-        // blobKey may be invalid and this will raise an exception
-        model.setMinimapUri( ImagesServiceFactory.getImagesService().getServingUrl( key ) );
-        model.setMinimapBlobKey( key.getKeyString() );
-        isUpdated = true;
-      } catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
 
     // get last update time
     Date lastUpdate = new Date( System.currentTimeMillis() );
@@ -253,6 +242,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   }
 
 
+  @Override
   public ModelFmpInit getModelFmpInit(String p_gameId) throws RpcFmpException
   {
     ModelFmpInit modelInit = sgetModelFmpInit( p_gameId );
@@ -331,6 +321,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     ModelFmpUpdate modelUpdate = null;
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = dataStore.getGame( p_action.getIdGame() );
+    int oldTimeStep = game.getCurrentTimeStep();
 
     // security check
     /*if( p_action.getAccountId() != 0L )
@@ -380,7 +371,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
 
     if( (p_action.getType() == GameLogType.EvtPlayerTurn)
-        && (game.getCurrentPlayerRegistration().getOrderIndex() == 0) )
+        && (oldTimeStep != game.getCurrentTimeStep()) )
     {
       // new turn !
       if( game.getNextTideChangeTimeStep() <= game.getCurrentTimeStep() )

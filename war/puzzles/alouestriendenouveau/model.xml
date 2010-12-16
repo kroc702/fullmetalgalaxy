@@ -1,6 +1,6 @@
 <com.fullmetalgalaxy.model.ModelFmpInit>
   <m__game>
-    <m__id>17</m__id>
+    <m__id>0</m__id>
     <m__version>3</m__version>
     <m__name>A l'ouest, rien...</m__name>
     <m__description></m__description>
@@ -394,6 +394,31 @@ QUNUQERENBIxMwNENBEhMzNDEBEREVUTQwQQERERERFEAAAREUMhQQQAECFCREREAAARQlVFRAQ=
 			<m__andOperator>false</m__andOperator>
 			<m__name>welcome</m__name>
 		</com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
+		<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
+        <m__id>0</m__id>
+        <m__version>0</m__version>
+        <m__actions>
+          <com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__message>./puzzles/alouestriendenouveau/succeed.html</m__message>
+            <m__title>controle astronef</m__title>
+          </com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
+        </m__actions>
+        <m__conditions>
+          <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndPlayerColor>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__negative>true</m__negative>
+            <m__color>8</m__color>
+            <m__player reference="../../../../../m__setRegistration/com.fullmetalgalaxy.model.persist.EbRegistration[2]"/>
+          </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndPlayerColor>
+        </m__conditions>
+        <m__enable>true</m__enable>
+        <m__autoDisable>true</m__autoDisable>
+        <m__andOperator>false</m__andOperator>
+        <m__name>controle astronef</m__name>
+      </com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
 	</m__triggers>
     <m__nextLocalId>17</m__nextLocalId>
     <m__lastTokenUpdate>2010-12-13 16:56:06.115 CET</m__lastTokenUpdate>

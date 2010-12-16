@@ -2,26 +2,26 @@
 TODO :
 ======
 
-- trouver un moyen simple de gérer des messages i18n, paramettrés, persitable facilement 
+- trouver un moyen simple de gÃ©rer des messages i18n, paramettrÃ©s, persitable facilement 
 et transportable du serveur au client (package rpc).
 
 
-Communauté FMP int
+CommunautÃ© FMP int
 - i18n
 - collaboration pour la traduction du jeu et du site
 
 Finitions
-- travail réactivité: channel API + JVM
-- IHM léché
+- travail rÃ©activitÃ©: channel API + JVM
+- IHM lÃ©chÃ©
   - boites de dialogues
   - messages d'erreurs
   - graphismes
-- le site en général
+- le site en gÃ©nÃ©ral
 - liste des parties
 
 Ajouts fonctionels
 - variantes
-- communauté: 
+- communautÃ©: 
   - forum 
   - chat
   - fil rss des evenements (mise a jour, nouvelle partie, fin de partie)
@@ -31,119 +31,118 @@ Ajouts fonctionels
 
 bugs :
 ======
-- le flag fire disable n'est pas sauvegardé / remis à jours par exec/unexec.
+- le flag fire disable n'est pas sauvegardÃ© / remis Ã  jours par exec/unexec.
 - le marqueur "Tide" de la barge ne se met pas toujours a jours
-- après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
-- si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
+- aprÃ¨s le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
+- si le tour change juste aprÃ¨s qu'un joueur viens de se deconecter, le serveur le considÃ¨re encore comme connectÃ© et modifi sa date de fin de tour.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
-- lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
+- lorsque le champs original colors est diffÃ©rent de la couleurs des pions ca dÃ©conne (les pions se neutralisent eux mÃªmes ?)
 - les clic juste au dessus du widget ContextExtra ne fonctionnent pas
  
 Support des comptes :
 =====================
 - option perso: afficher/cacher l'email, avatar.
-- procédure en cas de perte de mot de passe.
+- procÃ©dure en cas de perte de mot de passe.
 - OpenID
 
-Améliorations de l'IHM:
+AmÃ©liorations de l'IHM:
 =======================
-- améliorer la page gamelist (utilise le cache, filtres, pages, ...)
+- amÃ©liorer la page gamelist (utilise le cache, filtres, pages, ...)
 - chat: laisser les derniers messages qqu heures ? a voir avec des messages sur le plateau
 - ammeliorer l'affichage du detail d'une partie + description partie + mail des joueurs
 - look plus fini du widget info, liste de partie, de la fin de partie
-- ammeliorer l'affichage des données contextuelles.
-- parties protégé par mot de passe
+- ammeliorer l'affichage des donnÃ©es contextuelles.
+- parties protÃ©gÃ© par mot de passe
 
-- minimap: affichage des unitées
-- amélioration des fonctions sociale, il faut 'sentir' les autres joueurs sur la partie.
-  - Une page discussion associé a chaque partie (lié au chat ?) -> avec flux rss
+- minimap: affichage des unitÃ©es
+- amÃ©lioration des fonctions sociale, il faut 'sentir' les autres joueurs sur la partie.
+  - Une page discussion associÃ© a chaque partie (liÃ© au chat ?) -> avec flux rss
   - ajout de marques sur la carte, pour le tutorial ou la comunication entre joueurs.
   - affichage de bulle d'aide indiquant le nom des joueurs sur les astronefs. 
 	  Bulles s'effacent (->ou s'affiche) a l'approche du hightlight hexagon 
 - possibilite d'avoir une image de fond pour le plateau.
 - associer a chaque type de planete une couleur/image de fond. grille hexagonale.
-- amélioration de la liste de partie
+- amÃ©lioration de la liste de partie
   -> localiser les exploitations sur une carte de la galaxie (en gros des sous repertoires 
      de partie)
-- En haut a droite, a coté de son nom, avoir la liste de ses astronefs. Un clic sur l'un d'eux, centre la vue dessus.
-- taille de plateau illimité
+- En haut a droite, a cotÃ© de son nom, avoir la liste de ses astronefs. Un clic sur l'un d'eux, centre la vue dessus.
+- taille de plateau illimitÃ©
 - rotation du plateau de jeu
-- chat privé, envoie de messages privé (@adresse mail sans afficher l'adresse mail)
+- chat privÃ©, envoie de messages privÃ© (@adresse mail sans afficher l'adresse mail)
 - gestion de l'atmosphere.
 
-- ajouter des préferences d'affichages sur le compte. (bulles d'aides, nom des joueurs)
+- ajouter des prÃ©ferences d'affichages sur le compte. (bulles d'aides, nom des joueurs)
 - Support des themes graphique (local et/ou distant)
-- pour gérer de belle carte, on pourait avoir un 2nd blob qui nous indiques les bmp a 
+- pour gÃ©rer de belle carte, on pourait avoir un 2nd blob qui nous indiques les bmp a 
 utiliser. donc des bmp de bord
 
 
-Amélioration de fond:
+AmÃ©lioration de fond:
 =====================
 - Dans ServicesImpl, fusionner les deux methodes runAction & runEvent
-- utiliser App Engine's High-Performance Image Serving System pour le chargement des images de fond de carte/mini-map.
-- sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sérialisers vers le client (taille 18Ko -> 200Ko)
+- sauvegarder la liste des actions (gamelogs) dans un autre blob et ne pas tous les sÃ©rialisers vers le client (taille 18Ko -> 200Ko)
 - utilisation de objectify a fond, optimisation du datastore et retirer les persistEntity.
-- création des parties par l'import des fichiers full metal programme
-- ne pas autoriser l'inscription a plus de 2 parties si aucune partie n'a été finis.
-- comptage des points d'actions perdu -> servira entre autre a détecter les abandons lache (malus de points *2 + mail ?)
-- ouverture au public de l'édition de scénario
-- gérer les couleurs comme une simple enum sur le pion. Créer une relation bidirectionel 
-  (table many2many) entre les pions et leurs propriétaires.
+- crÃ©ation des parties par l'import des fichiers full metal programme
+- ne pas autoriser l'inscription a plus de 2 parties si aucune partie n'a Ã©tÃ© finis.
+- comptage des points d'actions perdu -> servira entre autre a dÃ©tecter les abandons lache (malus de points *2 + mail ?)
+- ouverture au public de l'Ã©dition de scÃ©nario
+- gÃ©rer les couleurs comme une simple enum sur le pion. CrÃ©er une relation bidirectionel 
+  (table many2many) entre les pions et leurs propriÃ©taires.
   -> ou bien faire une table couleur (un enregistrement par couleur et par partie) et chaque 
-  pions pointe vers l'enregistrement approprié, de même pour les propriétaires.
+  pions pointe vers l'enregistrement appropriÃ©, de mÃªme pour les propriÃ©taires.
 - empiler les actions utilisateurs puis les annaliser avec un automate type parsseur de regexp.
 - implementer un veritable MVC avec un onModelChange donnant en parametre le ou les beans modifier. 
-    le controleur pourait ainsi gérer des transactions pour ne générer qu'un seul 
-    onModelChange pour plusieurs modifs simultané
-    -> ou le pojo est instrumenté pour prévenir le controleur des modifs
-    -> ou le modificateur du pojo prévient le controleur
-    -> ou le controleur permet de modifer la totalité du pojo. (généré ?)
-- implementer un 'language' d'interface/skin pour séparer définitivement l'interface 
+    le controleur pourait ainsi gÃ©rer des transactions pour ne gÃ©nÃ©rer qu'un seul 
+    onModelChange pour plusieurs modifs simultanÃ©
+    -> ou le pojo est instrumentÃ© pour prÃ©venir le controleur des modifs
+    -> ou le modificateur du pojo prÃ©vient le controleur
+    -> ou le controleur permet de modifer la totalitÃ© du pojo. (gÃ©nÃ©rÃ© ?)
+- implementer un 'language' d'interface/skin pour sÃ©parer dÃ©finitivement l'interface 
 (css + layout + html statique) de la logique metier.
     les history token ne sont plus des MAppId mais des lieux de l'appli.
-    chaques lieux est associé a un enssemble de widget et un layout
-  ->un veritable skin serait donc constitué des css et des layouts et identifiable par 
+    chaques lieux est associÃ© a un enssemble de widget et un layout
+  ->un veritable skin serait donc constituÃ© des css et des layouts et identifiable par 
   une url de base -> on telecharge ainsi un 'index' du skin, 
-    les nom des ressources étant généré par md5 comme les imagesBundles.
-  -> Autre possibilitée: implementer un générateur du type GWT.create("interface.html")
+    les nom des ressources Ã©tant gÃ©nÃ©rÃ© par md5 comme les imagesBundles.
+  -> Autre possibilitÃ©e: implementer un gÃ©nÃ©rateur du type GWT.create("interface.html")
   -> il y a qqch dans le genre dans l'incubateur
-  -> présent dans gwt2
+  -> prÃ©sent dans gwt2
 
 A voir:
 =======
-- pour éviter un grand nombre d'event (et exec/unexec) faire une action move de plusieurs cases.
+- pour Ã©viter un grand nombre d'event (et exec/unexec) faire une action move de plusieurs cases.
 - utilisation de la lib java informa pour la lecture des flux RSS
-- ou bien utiliser twiter pour les mises à jours
+- ou bien utiliser twiter pour les mises Ã  jours
 
 Variantes:
 ==========
 - gestion des alliances (zone de feu communes)
-- possibilité de configurer le stock de pion de base
+- possibilitÃ© de configurer le stock de pion de base
 - ajouter, en option, une pause de la partie le week-end.
-- fenêtres de décolage aléatoire et prévisible via la pondeuse meteo.
+- fenÃªtres de dÃ©colage alÃ©atoire et prÃ©visible via la pondeuse meteo.
 - comptabiliser les points d'actions perdu.
 - autre type de minerais
-- création de scénario (avec pion incolore, pion foret)
-- Variante de règle (pion supplémentaires, minerais supplémentaires, arbres, visibilité)
-- carte hexagonal, cylindrique, torique, shpèrique ?
+- crÃ©ation de scÃ©nario (avec pion incolore, pion foret)
+- Variante de rÃ¨gle (pion supplÃ©mentaires, minerais supplÃ©mentaires, arbres, visibilitÃ©)
+- carte hexagonal, cylindrique, torique, shpÃ¨rique ?
 - Regroupement des pilotes en corporations
 - En plus du tour par tour et de l'asynchrone: 
-  -> envoie des ordres en aveugle et résolution simulané (cf diplomacy)
-  -> tour/tour pour un grand nombre de joueur (plusieurs joueur en même temps)
+  -> envoie des ordres en aveugle et rÃ©solution simulanÃ© (cf diplomacy)
+  -> tour/tour pour un grand nombre de joueur (plusieurs joueur en mÃªme temps)
 
-nouvelles unités possible:
-- hovercraft: tir a 2 cases, ne peu être transporté, ce déplace sur toute les cases 
+nouvelles unitÃ©s possible:
+- hovercraft: tir a 2 cases, ne peu Ãªtre transportÃ©, ce dÃ©place sur toute les cases 
 sauf les montagnes (hoverchar ?)
 - et un hovercrabe
 - Tarask: une vedette qui tire a 3 cases
-- une tourelle de défense: ne tire pas, ne se déplace pas, zone de feu a 3 cases, 
+- une tourelle de dÃ©fense: ne tire pas, ne se dÃ©place pas, zone de feu a 3 cases, 
 interdiction d'en mettre 2 cote cote, transportable que par le crabe
-- un avion: termine tous ses déplacements sur une plaine, tir a 2 cases, pas de zone de feu
-- un dirigeable de transport: occupe 2 cases, transport de 4, pas affecté par le terrain, 
-2pt d'action par case de mvmt, transporte les unités marines ?
+- un avion: termine tous ses dÃ©placements sur une plaine, tir a 2 cases, pas de zone de feu
+- un dirigeable de transport: occupe 2 cases, transport de 4, pas affectÃ© par le terrain, 
+2pt d'action par case de mvmt, transporte les unitÃ©s marines ?
 - missile...
-- l'Ornitoptère, sorte de planeur qui bombarde, part de son astro et doit y rentrer dans le même tour, sous peine de se crasher.
-- Le scorpion - lorsqu'il prend un minerai, il en sort deux mais n'a pas de capacité de transport, il faut donc un crabe dans une case adjacente.
+- l'OrnitoptÃ¨re, sorte de planeur qui bombarde, part de son astro et doit y rentrer dans le mÃªme tour, sous peine de se crasher.
+- Le scorpion - lorsqu'il prend un minerai, il en sort deux mais n'a pas de capacitÃ© de transport, il faut donc un crabe dans une case adjacente.
   -> ou bien transport de 1 et tir a 2 cases (une seule munition), pas transportable.
   
 
