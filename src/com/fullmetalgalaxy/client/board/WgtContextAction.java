@@ -538,7 +538,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           {
             m_panel.add( m_btnFire );
           }
-          if( action.getSelectedToken().haveOponentNeighbor() )
+          if( action.getSelectedToken().canControlNeighbor( action.getSelectedPosition() ) )
           {
             m_panel.add( m_btnControl );
           }
