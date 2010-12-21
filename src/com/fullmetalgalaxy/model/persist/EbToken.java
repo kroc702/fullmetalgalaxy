@@ -461,7 +461,8 @@ public class EbToken extends EbBase
 
   /**
    * determine is this token is allowed to move on this kind of land
-   * @param p_land must be in [None,Sea,Plain,Montain]
+   * always true if p_land is reef or marsh
+   * @param p_land 
    * @return
    */
   public boolean canMoveOn(LandType p_land)
@@ -487,11 +488,14 @@ public class EbToken extends EbBase
       }
       break;
     case Crab:
-      for( EbToken token : getSetContain() )
+      if( p_land == LandType.Montain )
       {
-        if( (token.getType() == TokenType.Heap) && (p_land == LandType.Montain) )
+        for( EbToken token : getSetContain() )
         {
-          return false;
+          if( token.getType() == TokenType.Heap )
+          {
+            return false;
+          }
         }
       }
     case Tank:

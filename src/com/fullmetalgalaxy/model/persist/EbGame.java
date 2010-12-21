@@ -824,39 +824,21 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public List<EbRegistration> getRegistrationByPlayerOrder()
   {
     List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    if( !isAsynchron() )
+    // sort registration according to their order index.
+    for( EbRegistration registration : getSetRegistration() )
     {
-      // sort registration according to their order index.
-      for(EbRegistration registration : getSetRegistration() )
+      int index = 0;
+      while( index < sortedRegistration.size() )
       {
-        int index = 0;
-        while( index < sortedRegistration.size() )
+        if( registration.getOrderIndex() < sortedRegistration.get( index ).getOrderIndex() )
         {
-          if(registration.getOrderIndex() < sortedRegistration.get( index ).getOrderIndex())
-          {
-            break;
-          }
-          index++;
+          break;
         }
-        sortedRegistration.add(index, registration );
+        index++;
       }
+      sortedRegistration.add( index, registration );
+    }
 
-      /* old algorithm, may fail if orderIndex have arbitrary value (ie: 0,1,7,15)
-      for( int index = 0; index < getSetRegistration().size(); index++ )
-      {
-        for( EbRegistration registration : getSetRegistration() )
-        {
-          if( registration.getOrderIndex() == index )
-          {
-            sortedRegistration.add( registration );
-          }
-        }
-      }*/
-    }
-    else
-    {
-      sortedRegistration.addAll( getSetRegistration() );
-    }
     return sortedRegistration;
   }
 

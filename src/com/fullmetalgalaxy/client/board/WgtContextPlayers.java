@@ -25,7 +25,6 @@
  */
 package com.fullmetalgalaxy.client.board;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
@@ -83,19 +82,8 @@ public class WgtContextPlayers extends Composite implements ClickHandler
         .getCurrentNumberOfRegiteredPlayer() ) ) );
 
     // get player order
-    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    if( !ModelFmpMain.model().getGame().isAsynchron() )
-    {
-      for( int index = 0; index < ModelFmpMain.model().getGame().getSetRegistration().size(); index++ )
-      {
-        sortedRegistration
-            .add( ModelFmpMain.model().getGame().getRegistrationByOrderIndex( index ) );
-      }
-    }
-    else
-    {
-      sortedRegistration.addAll( ModelFmpMain.model().getGame().getSetRegistration() );
-    }
+    List<EbRegistration> sortedRegistration = ModelFmpMain.model().getGame()
+        .getRegistrationByPlayerOrder();
 
     for( EbRegistration player : sortedRegistration )
     {
@@ -180,8 +168,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
       htmlPlayers += "</b>";
     }
     // display current turn
-    if( (!p_player.getGame().isAsynchron())
-        && (p_player.getGame().getCurrentPlayerRegistration() == p_player) )
+    if( p_player.getGame().getCurrentPlayerRegistration() == p_player )
     {
       htmlPlayers += Icons.s_instance.action16().getHTML();
     }

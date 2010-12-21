@@ -1012,7 +1012,16 @@ public class EventsPlayBuilder implements GameEventStack
       EbEvtControl action = new EbEvtControl();
       action.setGame( getGame() );
       action.setAccountId( getAccountId() );
-      action.setTokenDestroyer1( getSelectedToken() );
+      EbToken token = getSelectedToken();
+      if( token.getType() == TokenType.Freighter )
+      {
+        token = getGame().getToken( getSelectedPosition(), TokenType.Turret );
+        if( token == null )
+        {
+          token = getSelectedToken();
+        }
+      }
+      action.setTokenDestroyer1( token );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.Updated;
     }

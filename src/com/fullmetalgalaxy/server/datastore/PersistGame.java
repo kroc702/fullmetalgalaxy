@@ -380,16 +380,9 @@ public class PersistGame extends PersistEntity
     StringBuffer strBuf = new StringBuffer( " " );
     // get player order
     List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    if( !p_game.isAsynchron() )
+    for( int index = 0; index < p_game.getSetRegistration().size(); index++ )
     {
-      for( int index = 0; index < p_game.getSetRegistration().size(); index++ )
-      {
-        sortedRegistration.add( p_game.getRegistrationByOrderIndex( index ) );
-      }
-    }
-    else
-    {
-      sortedRegistration.addAll( p_game.getSetRegistration() );
+      sortedRegistration.add( p_game.getRegistrationByOrderIndex( index ) );
     }
 
     int playerCount = 0;
@@ -400,7 +393,8 @@ public class PersistGame extends PersistEntity
       {
         strBuf.append( player.getAccountPseudo() );
       }
-      if( p_game.getCurrentPlayerRegistration() == player )
+      if( (!p_game.isAsynchron() || p_game.getCurrentTimeStep() == 0)
+          && (p_game.getCurrentPlayerRegistration() == player) )
       {
         strBuf
             .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );

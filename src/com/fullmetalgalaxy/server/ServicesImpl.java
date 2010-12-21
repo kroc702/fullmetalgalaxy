@@ -51,6 +51,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
@@ -286,16 +287,17 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
       {
-        if( p_update.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null )
-        {
-          log.fine( "player is connected: we don't need to send an email" );
-          return;
-        }
         EbAccount currentPlayer = p_update.getMapAccounts().get(
             p_game.getCurrentPlayerRegistration().getAccountId() );
         if( currentPlayer == null )
         {
+          // TODO send email to all players: it's an asynchron game
           log.error( "New turn email couldn't be send" );
+          return;
+        }
+        if( p_update.getConnectedUser( currentPlayer.getId() ) != null )
+        {
+          log.fine( "player is connected: we don't need to send an email" );
           return;
         }
         if( !currentPlayer.isAllowMailFromGame() || !currentPlayer.haveEmail() )
@@ -416,8 +418,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
       if(game.getCurrentTimeStep() == 0 
           && game.getLastGameLog().getType() == GameLogType.AdminTimePlay
-          && !game.isAsynchron()
-          && game.getFreighter( game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Board )
+          && game.getFreighter( game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
       {
         // game is starting
         EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
@@ -440,7 +441,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       action.checkedExec( game );      
       game.addEvent( action );
     }
-    
     
     dataStore.save( game );
     dataStore.close();
@@ -472,6 +472,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = null;
+    AnEvent lastAction = null;
 
     for( AnEvent action : p_actionList )
     {
@@ -501,7 +502,24 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       action.setLastUpdate( ServerUtil.currentDate() );
       action.checkedExec( game );
       game.addEvent( action );
+
+      lastAction = action;
     }
+
+
+    // Some special cases
+    // ///////////////////
+    if( game.isAsynchron() && lastAction != null && lastAction.getType() == GameLogType.EvtLand )
+    {
+      // a player is just landed and game is parallel: next player
+      EbEvtPlayerTurn action = new EbEvtPlayerTurn();
+      action.setLastUpdate( ServerUtil.currentDate() );
+      action.setAccountId( ((EbEvtLand)lastAction).getAccountId() );
+      action.setGame( game );
+      action.checkedExec( game );
+      game.addEvent( action );
+    }
+
 
     dataStore.save( game );
     dataStore.close();
@@ -535,7 +553,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   {
     assert p_game != null;
     boolean isUpdated = false;
-    if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer )
+    // in some case, game is never updated
+    if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
+        || p_game.getCurrentTimeStep() == 0 )
     {
       return isUpdated;
     }
@@ -548,19 +568,19 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
             && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
                 .getEbConfigGameTime().getTimeStepDurationInMili()) )
         {
+          // new time step
           EbEvtTimeStep event = new EbEvtTimeStep();
           event.setGame( p_game );
           event.checkedExec( p_game );
           p_game.addEvent( event );
-          // p_session.persist( event );
-          if( p_game.getNextTideChangeTimeStep() >= p_game.getCurrentTimeStep() )
+          if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
           {
+            // next tide
             EbEvtTide eventTide = new EbEvtTide();
             eventTide.setNextTide( Tide.getRandom() );
             eventTide.setGame( p_game );
             eventTide.checkedExec( p_game );
             p_game.addEvent( eventTide );
-            // p_session.persist( eventTide );
           }
           isUpdated = true;
         }
@@ -579,17 +599,16 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           event.setAuto( true );
           event.checkedExec( p_game );
           p_game.addEvent( event );
-          // p_session.persist( event );
           if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
           {
             // new turn !
             if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
             {
+              // next tide
               EbEvtTide eventTide = new EbEvtTide();
               eventTide.setGame( p_game );
               eventTide.setNextTide( Tide.getRandom() );
               eventTide.checkedExec( p_game );
-              // p_session.persist( eventTide );
             }
           }
           isUpdated = true;
@@ -623,7 +642,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       for( EbRegistration registration : p_game.getSetRegistration() )
       {
         registration.setStats( EbRegistrationStats.generate( registration, p_game ) );
-        // p_session.persist( registration.getStats() );
       }
       p_game.setHistory( true );
       isUpdated = true;

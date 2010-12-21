@@ -161,10 +161,12 @@ public class EbEvtControlFreighter extends AnEventPlay
       }
     }
 
-    
-    getOldRegistration( p_game ).setColor(
-        EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
+    if( getOldRegistration( p_game ) != null )
+    {
+      getOldRegistration( p_game ).setColor(
+          EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
             .getColor() ) );
+    }
     // the new color owner
     getMyRegistration(p_game).setColor(
         EnuColor.addColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
@@ -182,9 +184,12 @@ public class EbEvtControlFreighter extends AnEventPlay
     // the new color owner
     getMyRegistration(p_game).setColor(
         EnuColor.removeColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
-    getOldRegistration( p_game ).setColor(
+    if( getOldRegistration( p_game ) != null )
+    {
+      getOldRegistration( p_game ).setColor(
         EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
             .getColor() ) );
+    }
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
   }
 

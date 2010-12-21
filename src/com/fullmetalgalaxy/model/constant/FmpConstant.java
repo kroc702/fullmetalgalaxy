@@ -28,7 +28,6 @@ import com.fullmetalgalaxy.model.EnuZoom;
 
 public class FmpConstant
 {
-  public static final int initialActionPt = 5;
   public static final int maximumActionPtWithoutLanding = 10;
 
   // in second

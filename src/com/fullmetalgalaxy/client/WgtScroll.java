@@ -79,8 +79,8 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
 
   private int m_mouseScrollingSpaceNorth = 60;
   private int m_mouseScrollingSpaceEast = 230;
-  private int m_mouseScrollingSpaceSouth = 170;
-  private int m_mouseScrollingSpaceWest = 200;
+  private int m_mouseScrollingSpaceSouth = 200;
+  private int m_mouseScrollingSpaceWest = 210;
   private int m_mouseArrowSpaceNorth = 60;
   private int m_mouseArrowSpaceEast = 60;
   private int m_mouseArrowSpaceSouth = 60;

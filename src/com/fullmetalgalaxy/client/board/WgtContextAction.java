@@ -485,8 +485,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           if( myFreighter != null
               && model.getGame().isStarted()
               && myFreighter.getLocation() == Location.Orbit
-              && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
-                  .getCurrentPlayerRegistration() == myRegistration) )
+              && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == myRegistration) )
           {
             MAppMessagesStack.s_instance.showMessage( m_pnlLand );
           }
