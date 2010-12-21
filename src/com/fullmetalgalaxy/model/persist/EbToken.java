@@ -366,10 +366,9 @@ public class EbToken extends EbBase
   }
 
   /**
-   * 
+   * Not used anymore
    * @return true if an opponent token is a neighbor of this token.
    */
-  
   public boolean haveOponentNeighbor()
   {
     // first determine the token owner color
@@ -381,6 +380,28 @@ public class EbToken extends EbBase
           && (token.isNeighbor( this )) )
       {
         return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @return true if token have a unit next to p_position he can control (may be different color but same owner)
+   */
+  public boolean canControlNeighbor(AnBoardPosition p_position)
+  {
+    // first determine the token color
+    EnuColor tokenColor = getEnuColor();
+    for( Sector sector : Sector.values() )
+    {
+      AnBoardPosition position = p_position.getNeighbour( sector );
+      for( EbToken token : getGame().getAllToken( position ) )
+      {
+        if( (token.canBeColored()) && (!tokenColor.isColored( token.getColor() ))
+            && (token.isNeighbor( this )) )
+        {
+          return true;
+        }
       }
     }
     return false;
