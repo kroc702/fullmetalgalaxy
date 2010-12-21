@@ -164,7 +164,8 @@ public class EbEvtMove extends AnEventPlay
     if( !moveToPontoon )
     {
       // check this token is allowed to move to this hexagon
-      if( !p_game.canTokenMoveOn( getToken(p_game), getNewPosition() ) )
+      // any token are allowed to voluntary stuck themself into reef of marsh
+      if( !getToken( p_game ).canMoveOn( p_game.getLand( getNewPosition() ) ) )
       {
         throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
             p_game.getLand( getNewPosition() ).ordinal() );

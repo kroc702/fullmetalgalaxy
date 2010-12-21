@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -148,9 +149,15 @@ public class EbGameJoin extends AnEventUser
     registration.setColor( getColor() );
     registration.setOriginalColor( registration.getColor() );
     game.addRegistration( registration );
-    if( (game.isAsynchron()) || (game.getCurrentTimeStep() != 0) )
+    if( game.getCurrentTimeStep() != 0 )
     {
-      registration.setPtAction( FmpConstant.initialActionPt );
+      int pt = EbConfigGameTime.getDefaultActionInc( game )
+          * (game.getCurrentTimeStep() - p_game.getEbConfigGameTime().getDeploymentTimeStep());
+      if( pt > FmpConstant.maximumActionPtWithoutLanding )
+      {
+        pt = FmpConstant.maximumActionPtWithoutLanding;
+      }
+      registration.setPtAction( pt );
     }
     else
     {

@@ -85,10 +85,12 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     if( p_game.isFinished() )
     {
+      // no i18n
       throw new RpcFmpException( "Cette partie est termine" );
     }
-    if( p_game.isAsynchron() )
+    if( p_game.isAsynchron() && p_game.getCurrentTimeStep() > 0 )
     {
+      // no i18n
       throw new RpcFmpException(
           "Cette partie ne se joue pas en tour par tour mais en mode asynchrone" );
     }
@@ -152,16 +154,26 @@ public class EbEvtPlayerTurn extends AnEvent
       }
     }
 
-    int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
-    int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
-        * (nextPlayerRegistration.getEnuColor().getNbColor() - 1);
-    actionInc += actionExtraPoint;
-    int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
-    if( actionPt > game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint )
+    // if game is parallel (old asynchron) and turn 1, all players are landed:
+    // start parallel mode
+    if( game.isAsynchron() && game.getCurrentTimeStep() == 1 )
     {
-      actionPt = game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint;
+      nextPlayerRegistration = null;
     }
-    nextPlayerRegistration.setPtAction( actionPt );
+    else
+    {
+      int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
+      int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
+          * (nextPlayerRegistration.getEnuColor().getNbColor() - 1);
+      actionInc += actionExtraPoint;
+      int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
+      if( actionPt > game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint )
+      {
+        actionPt = game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint;
+      }
+      nextPlayerRegistration.setPtAction( actionPt );
+    }
+
     game.setCurrentPlayerRegistration( nextPlayerRegistration );
   }
 

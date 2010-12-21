@@ -104,8 +104,8 @@ public enum ConfigGameTime
     timeConfig.setDeploymentTimeStep( 1 );
     s_configMap.put( QuickTurnBased, timeConfig );
 
-    // Asynchron
-    // =========
+    // Parallel
+    // ========
     // time config : StandardAsynch
     timeConfig = new EbConfigGameTime();
     timeConfig.setTimeStepDurationInSec( 17280 ); // 1/5 day (4h50)
@@ -126,7 +126,7 @@ public enum ConfigGameTime
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
-    timeConfig.setDescription( "25 jours en asynchrone" );
+    timeConfig.setDescription( "25 jours en parallèle" );
     timeConfig.setDeploymentTimeStep( 8 );
     s_configMap.put( StandardAsynch, timeConfig );
 
@@ -145,7 +145,7 @@ public enum ConfigGameTime
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
-    timeConfig.setDescription( "1h20 en asynchrone" );
+    timeConfig.setDescription( "1h20 en parallèle" );
     timeConfig.setDeploymentTimeStep( 3 );
     s_configMap.put( QuickAsynch, timeConfig );
 

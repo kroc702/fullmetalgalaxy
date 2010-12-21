@@ -121,7 +121,8 @@ public class AnEventPlay extends AnEventUser
     {
       throw new RpcFmpException( RpcFmpException.NotEnouthActionPt );
     }
-    if( (!p_game.isAsynchron()) && (p_game.getCurrentPlayerRegistration() != registration) )
+    if( (!p_game.isAsynchron() || (p_game.getCurrentTimeStep() == 0))
+        && (p_game.getCurrentPlayerRegistration() != registration) )
     {
       throw new RpcFmpException( RpcFmpException.NotYourTurn );
     }
