@@ -128,30 +128,34 @@ public class EbEvtPlayerTurn extends AnEvent
     m_oldActionPt = currentPlayerRegistration.getPtAction();
     currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt() );
     
+    // update all his tokens bullets count
+    EnuColor currentPlayerColor = currentPlayerRegistration.getEnuColor();
+    for( EbToken token : p_game.getSetToken() )
+    {
+      if( token.getBulletCount() < token.getMaxBulletCount()
+          && currentPlayerColor.isColored( token.getColor() ) )
+      {
+        token.setBulletCount( token.getBulletCount()
+            + game.getEbConfigGameTime().getBulletCountIncrement() );
+        if( token.getBulletCount() > token.getMaxBulletCount() )
+        {
+          token.setBulletCount( token.getMaxBulletCount() );
+        }
+      }
+    }
+
     // reset all end turn date
     for( EbRegistration player : game.getSetRegistration() )
     {
       player.setEndTurnDate( null );
     }
+
     // next player
     EbRegistration nextPlayerRegistration = game.getNextPlayerRegistration();
     if( nextPlayerRegistration.getOrderIndex() <= currentPlayerRegistration.getOrderIndex() )
     {
       // next turn !
       game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
-      // update all tokens bullets count
-      for( EbToken token : p_game.getSetToken() )
-      {
-        if( token.getBulletCount() < token.getMaxBulletCount() )
-        {
-          token.setBulletCount( token.getBulletCount()
-              + game.getEbConfigGameTime().getBulletCountIncrement() );
-          if( token.getBulletCount() > token.getMaxBulletCount() )
-          {
-            token.setBulletCount( token.getMaxBulletCount() );
-          }
-        }
-      }
     }
 
     // if game is parallel (old asynchron) and turn 1, all players are landed:
