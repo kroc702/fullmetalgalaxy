@@ -131,6 +131,35 @@ public class EbEvtConstruct extends AnEventPlay
       // no i18n
       throw new RpcFmpException( getConstructType().toString() + " construct reserve is empty" );
     }
+    // Check bullet count: wheather hen can't construct more than 2 unit per
+    // turn
+    if( getTokenCarrier( p_game ).getBulletCount() <= 0 )
+    {
+      // TODO i18n
+      throw new RpcFmpException( getTokenDestroyer2( p_game )
+          + " ne peut pas construire plus de 2 vehicules par tour" );
+    }
+    // Check wheather hen do not construct two similar unit during same turn
+    int reverseIndex = p_game.getLogs().size() - 1;
+    while( getTokenCarrier( p_game ).getBulletCount() == 1 && reverseIndex > 0 )
+    {
+      AnEvent event = p_game.getLogs().get( reverseIndex );
+      if( event.getType() == GameLogType.EvtTimeStep
+          || event.getType() == GameLogType.EvtPlayerTurn )
+      {
+        break;
+      }
+      if( event.getType() == GameLogType.EvtConstruct
+          && ((EbEvtConstruct)event).getConstructType() == getConstructType()
+          && ((EbEvtConstruct)event).getPackedTokenCarrier().getId() == getPackedTokenCarrier()
+              .getId() )
+      {
+        // TODO i18n
+        throw new RpcFmpException(
+            "Une même pondeuse météo ne peut pas construire 2 fois le même vehicules dans le même tour" );
+      }
+      reverseIndex--;
+    }
   }
 
   /* (non-Javadoc)
@@ -140,6 +169,7 @@ public class EbEvtConstruct extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    getTokenCarrier( p_game ).setBulletCount( getTokenCarrier( p_game ).getBulletCount() - 1 );
     getToken(p_game).setType( getConstructType() );
     if( getToken(p_game).canBeColored() )
     {
@@ -156,6 +186,7 @@ public class EbEvtConstruct extends AnEventPlay
   public void unexec(EbGame p_game) throws RpcFmpException
   {
     super.unexec(p_game);
+    getTokenCarrier( p_game ).setBulletCount( getTokenCarrier( p_game ).getBulletCount() + 1 );
     getToken(p_game).setType( TokenType.Ore );
     getToken(p_game).setColor( EnuColor.None );
     getToken(p_game).setBulletCount( getToken(p_game).getMaxBulletCount() );
