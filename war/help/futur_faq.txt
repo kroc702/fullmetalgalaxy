@@ -1,7 +1,16 @@
 Q:Comment afficher full metal planete dans une autre langue.
-R:FMP sélectionne la langue en fonction du navigateur. Il est cependant possible de la modifier en ajoutant a la fin de l'url "?locale=fr" ou le code iso du language souhaité.
+R:FMP sï¿½lectionne la langue en fonction du navigateur. Il est cependant possible de la modifier en ajoutant a la fin de l'url "?locale=fr" ou le code iso du language souhaitï¿½.
 
-Q:Malgès la manipulation ci-dessus, je n'arrive toujours pas a afficher FMP dans ma langue.
-R:FMP n'est pour l'instant traduit qu'en anglais et français, vous pouvez nous aider a le porter dans votre language.
+Q:Malgï¿½s la manipulation ci-dessus, je n'arrive toujours pas a afficher FMP dans ma langue.
+R:FMP n'est pour l'instant traduit qu'en anglais et franï¿½ais, vous pouvez nous aider a le porter dans votre language.
 
 
+neutralisation
+
+parallele/tour par tour
+
+construction impossible (max 2 / tour)
+
+montagne
+
+construction de tourelle
