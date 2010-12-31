@@ -293,10 +293,10 @@ public class EbToken extends EbBase
     case Speedboat:
     case Tank:
     case Heap:
+    case WeatherHen:
       return 2;
     case Freighter:
     case Barge:
-    case WeatherHen:
     case Crab:
     case Pontoon:
     case Ore:

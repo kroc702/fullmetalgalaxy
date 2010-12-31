@@ -287,8 +287,12 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
       {
-        EbAccount currentPlayer = p_update.getMapAccounts().get(
+        EbAccount currentPlayer = null;
+        if( p_game.getCurrentPlayerRegistration() != null )
+        {
+          currentPlayer = p_update.getMapAccounts().get(
             p_game.getCurrentPlayerRegistration().getAccountId() );
+        }
         if( currentPlayer == null )
         {
           // TODO send email to all players: it's an asynchron game
