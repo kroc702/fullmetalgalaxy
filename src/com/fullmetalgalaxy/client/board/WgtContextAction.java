@@ -416,7 +416,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           m_panel.add( m_btnMiniMap );
         }
-        // display wait panel
+        // display wait panel advise
         if( (myRegistration != null) && (model.getGame().getCurrentTimeStep() <= 0)
             && (!model.getGame().isStarted()) )
         {
@@ -472,12 +472,14 @@ public class WgtContextAction extends WgtView implements ClickHandler
           MAppMessagesStack.s_instance.showMessage( m_pnlRegister );
         }
         
+        // should we display pause to allow subscription advise ?
         if( (ModelFmpMain.model().getGame().getCurrentNumberOfRegiteredPlayer() < ModelFmpMain.model().getGame().getMaxNumberOfPlayer())
           && (ModelFmpMain.model().getGame().isStarted()) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlPause );
         }
         
+        // should we display landing advise ?
         if( ModelFmpMain.model().getGame().getCurrentTimeStep() < ModelFmpMain.model()
             .getGame().getEbConfigGameTime().getDeploymentTimeStep())
         {
@@ -489,6 +491,15 @@ public class WgtContextAction extends WgtView implements ClickHandler
           {
             MAppMessagesStack.s_instance.showMessage( m_pnlLand );
           }
+        }
+
+        // should we display take off advise ?
+        if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
+            .getCurrentTimeStep() ))
+            && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
+                .getCurrentPlayerRegistration() == myRegistration) )
+        {
+          MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
         }
       }
     }
@@ -573,14 +584,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
           && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
               .getCurrentPlayerRegistration() == myRegistration) )
       {
-        for( EbToken token : ModelFmpMain.model().getGame().getAllFreighter( myRegistration ) )
-        {
-          if( token.getLocation() == Location.Board )
-          {
-            MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
-            break;
-          }
-        }
         if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
             && (mainSelectedToken.getType() == TokenType.Freighter)
             && (mainSelectedToken.getEnuColor().isColored( myRegistration.getColor() )) )

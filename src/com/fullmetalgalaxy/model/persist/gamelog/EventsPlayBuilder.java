@@ -406,7 +406,7 @@ public class EventsPlayBuilder implements GameEventStack
     setLastUserClick( p_position );
     if( getMyRegistration() == null || ModelFmpMain.model().isTimeLineMode() )
     {
-      // user isn't registred to this game or is viewing past actions
+      // user isn't registered to this game or is viewing past actions
       clear();
       isUpdated = EventBuilderMsg.Updated;
     }
