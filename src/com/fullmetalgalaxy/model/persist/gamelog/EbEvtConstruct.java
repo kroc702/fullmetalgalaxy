@@ -150,13 +150,14 @@ public class EbEvtConstruct extends AnEventPlay
         break;
       }
       if( event.getType() == GameLogType.EvtConstruct
+          && getConstructType() != TokenType.Tank
           && ((EbEvtConstruct)event).getConstructType() == getConstructType()
           && ((EbEvtConstruct)event).getPackedTokenCarrier().getId() == getPackedTokenCarrier()
               .getId() )
       {
         // TODO i18n
         throw new RpcFmpException(
-            "Une même pondeuse météo ne peut pas construire 2 fois le même vehicules dans le même tour" );
+            "Une même pondeuse météo ne peut pas construire 2 fois le même vehicules dans le même tour (sauf 2 tanks)" );
       }
       reverseIndex--;
     }
