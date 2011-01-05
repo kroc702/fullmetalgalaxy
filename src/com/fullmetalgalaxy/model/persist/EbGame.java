@@ -1282,6 +1282,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   /**
    * TODO half redundant with isTokenTideActive
+   * note that any token are allowed to voluntary stuck themself into reef of marsh
    * @param p_token
    * @param p_position
    * @return true if token can move to p_position according to tide
@@ -1296,31 +1297,25 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     if( p_token.getHexagonSize() == 2 )
     {
       AnBoardPosition position = p_position.getNeighbour( p_position.getSector() );
-      // determine, according to current tide, if the new position is sea,
-      // plain or montain
-      LandType land = getLand( position ).getLandValue( getCurrentTide() );
       EbToken tokenPontoon = getToken( position, TokenType.Pontoon );
       if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
       {
         return false;
       }
       // check this token is allowed to move on this hexagon
-      if( p_token.canMoveOn( land ) == false )
+      if( p_token.canMoveOn( getLand( position ) ) == false )
       {
         return false;
       }
     }
 
-    // determine, according to current tide, if the new position is sea,
-    // plain or montain
-    LandType land = getLand( p_position ).getLandValue( getCurrentTide() );
     EbToken tokenPontoon = getToken( p_position, TokenType.Pontoon );
     if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
     {
       return false;
     }
     // check this token is allowed to move on this hexagon
-    return p_token.canMoveOn( land );
+    return p_token.canMoveOn( getLand( p_position ) );
   }
 
   /**
