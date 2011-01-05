@@ -189,12 +189,18 @@ public class EbEvtFire extends AnEventPlay
     getTokenDestroyer1(p_game).incVersion();
     getTokenDestroyer2(p_game).setBulletCount( getTokenDestroyer2(p_game).getBulletCount() - 1 );
     getTokenDestroyer2(p_game).incVersion();
-    // if token is a pontoon, check that other pontoon are linked to ground
-    if(getTokenTarget(p_game).getType() != TokenType.Pontoon)
+    
+    AnBoardPosition position = getTokenTarget(p_game).getPosition();
+    if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
     {
+      // target isn't a pontoon: simply move it to graveyard
       p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
       getTokenTarget(p_game).incVersion();
-    } else {
+    }
+    EbToken pontoon = p_game.getToken( position, TokenType.Pontoon );
+    if( pontoon != null )
+    {
+      // these is still a pontoon here, check that other pontoon are linked to ground and remove all theses
       m_TokenIds = p_game.chainRemovePontoon( getTokenTarget(p_game) );
     }
   }
@@ -212,12 +218,15 @@ public class EbEvtFire extends AnEventPlay
     getTokenDestroyer2(p_game).decVersion();
     p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer1( p_game ) );
     p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer2( p_game ) );
-    if( getTokenIds() == null )
+    if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
     {
+      // target wasn't a pontoon: put it back from graveyard
       p_game.moveToken( getTokenTarget(p_game), getOldPosition() );
-      getTokenTarget(p_game).decVersion();      
-    } else {
-      // we fire on a pontoon
+      getTokenTarget(p_game).decVersion();   
+    }
+    if( getTokenIds() != null )
+    {
+      // we destroy a pontoon
       // put back other pontoon/token if there is some
       for( Long id : getTokenIds() )
       {
