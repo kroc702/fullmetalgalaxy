@@ -497,13 +497,13 @@ public class EbToken extends EbBase
     {
     case Barge:
     case Speedboat:
-      if( p_land != LandType.Sea )
+      if( p_land == LandType.Montain || p_land == LandType.Plain )
       {
         return false;
       }
       break;
     case Heap:
-      if( p_land != LandType.Plain )
+      if( p_land == LandType.Montain || p_land == LandType.Sea )
       {
         return false;
       }
