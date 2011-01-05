@@ -390,6 +390,10 @@ public class EbToken extends EbBase
    */
   public boolean canControlNeighbor(AnBoardPosition p_position)
   {
+    if( p_position == null || getLocation() != Location.Board )
+    {
+      return false;
+    }
     // first determine the token color
     EnuColor tokenColor = getEnuColor();
     for( Sector sector : Sector.values() )

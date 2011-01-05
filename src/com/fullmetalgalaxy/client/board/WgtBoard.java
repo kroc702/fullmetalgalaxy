@@ -262,7 +262,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       if( position.equals( ModelFmpMain.model().getActionBuilder().getLastUserClick() ) )
       {
         ModelFmpMain.model().getActionBuilder().check();
-        
+
         ModelFmpMain.model().getActionBuilder().userOk();
         ModelFmpMain.model().runCurrentAction();
       }
@@ -284,7 +284,10 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
 
     } catch( RpcFmpException ex )
     {
-      MAppMessagesStack.s_instance.showWarning( Messages.getString( ex ) );
+      if( Messages.getString( ex ) != null )
+      {
+        MAppMessagesStack.s_instance.showWarning( Messages.getString( ex ) );
+      }
       ModelFmpMain.model().getActionBuilder().cancel();
       try
       {

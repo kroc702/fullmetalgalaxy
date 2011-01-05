@@ -25,6 +25,9 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+
+
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
@@ -100,11 +103,20 @@ public class EbEvtRepair extends AnEventPlay
     }
     if( getMyRegistration(p_game).getTurretsToRepair() <= 0 )
     {
+      // no i18n
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
     if( getMyRegistration( p_game ).getOriginalColor() == freighter.getColor() )
     {
+      // no i18n
       throw new RpcFmpException( "you can't repair your original turrets" );
+    }
+    EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
+        getPosition() );
+    if( fireCoverColor.getValue() != EnuColor.None )
+    {
+      // TODO i18n
+      throw new RpcFmpException( "you can't repair turrets under opponent fire cover" );
     }
   }
 

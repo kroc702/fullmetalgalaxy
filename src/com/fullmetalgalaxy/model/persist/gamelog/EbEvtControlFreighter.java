@@ -65,6 +65,7 @@ public class EbEvtControlFreighter extends AnEventPlay
   private void init()
   {
     setCost( 0 );
+    setAuto( true );
     m_packedOldRegistration = null;
   }
 
@@ -139,7 +140,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     }
 
     // player have extra action points.
-    assert getCost() == -1 * p_game.getEbConfigGameTime().getActionPtPerExtraShip();
+    assert getCost() == -1 * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip();
 
   }
 

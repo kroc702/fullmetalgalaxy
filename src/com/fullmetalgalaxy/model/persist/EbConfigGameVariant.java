@@ -25,9 +25,7 @@
  */
 package com.fullmetalgalaxy.model.persist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -50,6 +48,7 @@ public class EbConfigGameVariant extends EbBase
   private int m_deployementRadius = 4;
   private String m_description = "";
   private Map<TokenType,Integer> m_constructReserve = new HashMap<TokenType,Integer>();
+  private int m_actionPtMaxPerExtraShip = 5;
   
   
   /**
@@ -74,6 +73,7 @@ public class EbConfigGameVariant extends EbBase
   private void init()
   {
     m_actionPtMaxReserve = 25;
+    m_actionPtMaxPerExtraShip = 5;
     m_minSpaceBetweenFreighter = 8;
     m_deployementRadius = 4;
     m_description = "";
@@ -205,6 +205,22 @@ public class EbConfigGameVariant extends EbBase
   public void setDescription(String p_description)
   {
     m_description = p_description;
+  }
+
+  /**
+   * @return the actionPtMaxPerExtraShip
+   */
+  public int getActionPtMaxPerExtraShip()
+  {
+    return m_actionPtMaxPerExtraShip;
+  }
+
+  /**
+   * @param p_actionPtMaxPerExtraShip the actionPtMaxPerExtraShip to set
+   */
+  public void setActionPtMaxPerExtraShip(int p_actionPtMaxPerExtraShip)
+  {
+    m_actionPtMaxPerExtraShip = p_actionPtMaxPerExtraShip;
   }
 
 }

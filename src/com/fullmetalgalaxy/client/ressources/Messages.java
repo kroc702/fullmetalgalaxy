@@ -26,7 +26,6 @@ package com.fullmetalgalaxy.client.ressources;
 
 import java.util.Date;
 
-
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.LandType;
@@ -313,6 +312,15 @@ public class Messages
       return s_rpcEx.CantMoveDisableFire( getTokenString( TokenType.getFromOrdinal( p_exception
           .getInt( 0 ) ) ), getColorString( p_exception.getInt( 1 ) ) );
     case RpcFmpException.CantLoad:
+      if( p_exception.getInt( 0 ) == p_exception.getInt( 1 ) )
+      {
+        // user likely click on one token part and then, another part of the
+        // same token.
+        // or click on a unit (a tank) an then click on a similar unit (a near
+        // tank)
+        // in these case, we don't bother user with useless messages
+        return null;
+      }
       return s_rpcEx.CantLoad(
           getTokenString( TokenType.getFromOrdinal( p_exception.getInt( 0 ) ) ),
           getTokenString( TokenType.getFromOrdinal( p_exception.getInt( 1 ) ) ) );
