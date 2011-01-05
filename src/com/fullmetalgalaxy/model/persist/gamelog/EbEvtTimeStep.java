@@ -121,10 +121,10 @@ public class EbEvtTimeStep extends AnEvent
           action = FmpConstant.maximumActionPtWithoutLanding;
         }
         if( action > game.getEbConfigGameVariant().getActionPtMaxReserve()
-            + ((nbColor - 1) * game.getEbConfigGameTime().getActionPtPerExtraShip()) )
+            + ((nbColor - 1) * game.getEbConfigGameVariant().getActionPtMaxPerExtraShip()) )
         {
           action = game.getEbConfigGameVariant().getActionPtMaxReserve()
-              + ((nbColor - 1) * game.getEbConfigGameTime().getActionPtPerExtraShip());
+              + ((nbColor - 1) * game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
         }
         registration.setPtAction( action );
       }

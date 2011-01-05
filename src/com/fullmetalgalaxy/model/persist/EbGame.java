@@ -670,18 +670,14 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
   /**
-   * 
+   * Warning: if you use this method with p_location == Board, you should be sure
+   * that his position is already set to the right value.
    * @param p_token
    * @param p_locationValue should be EnuLocation.Graveyard or EnuLocation.Orbit
    * @throws RpcFmpException
    */
   public void moveToken(EbToken p_token, Location p_location) throws RpcFmpException
   {
-    if( (p_location != Location.Graveyard) && (p_location != Location.Orbit)
-        && (p_location != Location.EndGame) )
-    {
-      throw new RpcFmpException( "you can't move a token in " + p_location + " with this method" );
-    }
     getBoardFireCover().decFireCover( p_token );
     if( p_token.getCarrierToken() != null )
     {

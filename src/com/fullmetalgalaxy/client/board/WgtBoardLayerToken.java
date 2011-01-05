@@ -89,18 +89,17 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
 
     for( EbToken token : tokenList )
     {
-      if( (token.getLocation() == Location.Board)
-          && (token.getPosition().getX() > hexPositionLeftTop.getX())
+      if( token.getLocation() != Location.Board )
+      {
+        // not visible token, but it may still need an update
+        updateTokenWidget( token, false );
+      }
+      else if( (token.getPosition().getX() > hexPositionLeftTop.getX())
           && (token.getPosition().getY() > hexPositionLeftTop.getY())
           && (token.getPosition().getX() < hexPositionRightBotom.getX())
           && (token.getPosition().getY() < hexPositionRightBotom.getY()) )
       {
         // for each visible token...
-        updateTokenWidget( token, false );
-      }
-      else if( token.getLocation() != Location.Board )
-      {
-        // not visible token, but it may still need an update
         updateTokenWidget( token, false );
       }
     }

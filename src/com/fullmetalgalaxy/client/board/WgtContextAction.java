@@ -586,7 +586,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
             && (mainSelectedToken.getType() == TokenType.Freighter)
-            && (mainSelectedToken.getEnuColor().isColored( myRegistration.getColor() )) )
+            && (mainSelectedToken.getEnuColor().contain( myRegistration.getColor() )) )
         {
           m_panel.add( m_btnTakeOff );
         }

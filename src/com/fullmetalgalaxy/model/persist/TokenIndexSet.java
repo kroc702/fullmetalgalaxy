@@ -30,14 +30,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 /**
  * @author Vincent Legendre
- *
+ * This class index all tokens with there position to find them quickly
  */
 public class TokenIndexSet implements IsSerializable
 {
@@ -94,17 +94,35 @@ public class TokenIndexSet implements IsSerializable
 
   public void setPosition(EbToken p_token, Location p_location)
   {
-    assert p_location != Location.Board;
-    if( m_positionIndex != null && p_token.getLocation() == Location.Board )
+    if( p_location == Location.Board )
     {
-      m_positionIndex.get( p_token.getPosition() ).remove( p_token );
+      setPosition( p_token, p_token.getPosition() );
+    }
+    else if( m_positionIndex != null && p_token.getLocation() == Location.Board )
+    {
+      Set<EbToken> index = m_positionIndex.get( p_token.getPosition() );
+      if( index != null )
+      {
+        index.remove( p_token );
+      }
+      else
+      {
+        RpcUtil.logError( "token " + p_token + " isn't referenced by position index" );
+      }
       for( AnBoardPosition position : p_token.getExtraPositions() )
       {
-        m_positionIndex.get( position ).remove( p_token );
+        index = m_positionIndex.get( position );
+        if( index != null )
+        {
+          index.remove( p_token );
+        }
+        else
+        {
+          RpcUtil.logError( "token " + p_token + " isn't referenced by position index" );
+        }
       }
+      p_token.setLocation( p_location );
     }
-    p_token.setLocation( p_location );
-    // p_token.setPosition( new AnBoardPosition( -1, -1 ) );
   }
 
   public void setPosition(EbToken p_token, AnBoardPosition p_position)

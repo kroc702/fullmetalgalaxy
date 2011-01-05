@@ -39,6 +39,9 @@ bugs :
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)
 - les clic juste au dessus du widget ContextExtra ne fonctionnent pas
  
+a vérifier:
+- la zone de feu après un déploiement de deux char cote cote sur une montagne 
+ 
 Support des comptes :
 =====================
 - option perso: afficher/cacher l'email, avatar.
