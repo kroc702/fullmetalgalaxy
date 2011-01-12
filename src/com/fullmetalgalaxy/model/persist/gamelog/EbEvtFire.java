@@ -136,7 +136,7 @@ public class EbEvtFire extends AnEventPlay
             .getTokenDestroyer1( p_game ) != getTokenDestroyer1( p_game ))) )
     {
       // check the first destroyer is not fire deactivated
-      if( !p_game.isTokenFireActive( getMyRegistration(p_game).getEnuColor(), getTokenDestroyer1(p_game) ) )
+      if( !p_game.isTokenFireActive( getTokenDestroyer1( p_game ) ) )
       {
         throw new RpcFmpException( RpcFmpException.CantFireDisableFire, getTokenDestroyer1(p_game)
             .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer1(p_game) ).getValue() );

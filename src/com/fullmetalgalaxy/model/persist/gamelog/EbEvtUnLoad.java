@@ -130,7 +130,7 @@ public class EbEvtUnLoad extends AnEventPlay
           + " est déactivé a cause de la marré" );
     }
     // check that carrier isn't fire deactivate
-    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getToken( p_game )
+    if( !p_game.isTokenFireActive( getToken( p_game )
         .getCarrierToken() ) )
     {
       throw new RpcFmpException( getToken( p_game ).getCarrierToken()
@@ -175,7 +175,7 @@ public class EbEvtUnLoad extends AnEventPlay
       throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken(p_game).getType()
           .ordinal(), fireCoverColor.getValue() );
     }
-    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getTokenCarrier(p_game) ) )
+    if( !p_game.isTokenFireActive( getTokenCarrier( p_game ) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableFire, getTokenCarrier(p_game).getType()
           .ordinal(), p_game.getOpponentFireCover( getTokenCarrier(p_game) ).getValue() );

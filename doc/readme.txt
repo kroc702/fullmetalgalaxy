@@ -1,4 +1,6 @@
 
+You should have a look here: http://code.google.com/p/fullmetalgalaxy/wiki/Welcome
+
 dependences directes:
 =====================
 - gwt
@@ -15,6 +17,8 @@ eclipse + ant (standard)
 	Plugin Google: http://dl.google.com/eclipse/plugin/3.6
 	Mylyn google code connector: http://knittig.de/googlecode-mylyn-connector/update/
 	
+eclipseCodeFormater.xml is used to format my java code
+
 plugin browser: http://gwt-dev-plugin-missing.appspot.com/
 
 

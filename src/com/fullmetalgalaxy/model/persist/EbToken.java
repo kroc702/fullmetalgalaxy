@@ -942,6 +942,8 @@ public class EbToken extends EbBase
   }
 
   /**
+   * Warning: unless you know what your are doing, don't use it !
+   * Use same function provided in EbGame to update fire cover. 
    * @param p_fireDisabled the fireDisabled to set
    */
   public void setFireDisabled(boolean p_fireDisabled)

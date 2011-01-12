@@ -166,12 +166,12 @@ public class EbEvtLoad extends AnEventPlay
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableTide, getTokenCarrier(p_game).getType()
           .ordinal() );
     }
-    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getTokenCarrier(p_game) ) )
+    if( !p_game.isTokenFireActive( getTokenCarrier( p_game ) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableFire, getTokenCarrier(p_game).getType()
           .ordinal(), p_game.getOpponentFireCover( getTokenCarrier(p_game) ).getValue() );
     }
-    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getToken(p_game) ) )
+    if( !p_game.isTokenFireActive( getToken( p_game ) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableFire, getToken(p_game).getType()
           .ordinal(), p_game.getOpponentFireCover( getToken(p_game) ).getValue() );

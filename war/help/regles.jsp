@@ -19,24 +19,23 @@
 			On peut noter les diff&eacute;rences ou interpr&eacute;tations
 			suivantes entre le jeu original et cette version en ligne :</P>
 			<ul>
-			  <li>Pas d'embourbement volontaire</li>
 			  <li>Prévisons de la prochaine marrée uniquement (même avec 2 pondeuses)</li>
 			</ul>
-			<p>La notion de tour de jeu est facultative (voir mode asynchrone). Dans ce cas, tous 
+			<p>La notion de tour de jeu est facultative (voir mode parallèle). Dans ce cas, tous 
 			les joueurs peuvent jouer en même temps. Ceci entraine la modification des règles
 			suivantes :</p>
 			<ul>
+			  <li>Neutralisation tournante: la neutralisation est automatique et n'empêche pas de 
+			  se déplacer.	En revanche, 
+			un pion en mouvement ne créer pas de zone de feu (un char  ne peut donc pas pénétrer 
+			dans la zone de feu du char qu'il neutralise).</li>
+			</ul>
 			  <li>La r&egrave;gle &quot;entre deux tours, deux chars ne peuvent pas	stationner 
 			c&ocirc;te &agrave; c&ocirc;te sur des montagnes.&quot;
 			a &eacute;t&eacute; adapt&eacute;e &agrave; &quot;si deux chars, du m&ecirc;me
 			propri&eacute;taire, sont c&ocirc;te &agrave; c&ocirc;te sur des montagnes, l'un des
 			deux ne produit pas de zone de feu&quot;
 			</li>
-			  <li>Neutralisation tournante: la neutralisation est automatique et n'empêche pas de 
-			  se déplacer.	En revanche, 
-			un pion en mouvement ne créer pas de zone de feu (un pion  ne peut donc pas pénétrer 
-			dans la zone de feu du pion qu'il neutralise).</li>
-			</ul>
 			<p>Si certaines de ces variations ne vous plaisent pas, je vous invite &agrave; me le 
 			faire savoir.</p>
 			<HR/>
