@@ -33,7 +33,6 @@ bugs :
 ======
 - le flag fire disable n'est pas sauvegardé / remis à jours par exec/unexec.
 - le marqueur "Tide" de la barge ne se met pas toujours a jours
-- après le controle d'un astronef, le navigateur du joueur victime plante (null ptr...)
 - si le tour change juste après qu'un joueur viens de se deconecter, le serveur le considère encore comme connecté et modifi sa date de fin de tour.
 - Sur les partie en mode puzzle, si on annule des actions, cela n'annule pas les actions automatiques du aux triggers
 - lorsque le champs original colors est différent de la couleurs des pions ca déconne (les pions se neutralisent eux mêmes ?)

@@ -25,6 +25,9 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -46,7 +49,10 @@ public class EbEvtMove extends AnEventPlay
 {
   static final long serialVersionUID = 1;
 
-
+  /**
+   * a backup of all fire disable flag that have been changed by this action
+   */
+  private Map<Long, Boolean> m_TokenOldFireDisableFlags = null;
 
 
   /**
@@ -205,6 +211,34 @@ public class EbEvtMove extends AnEventPlay
     setOldPosition( getToken(p_game).getPosition() );
     
     p_game.moveToken( getToken(p_game), getNewPosition() );
+
+    // fire range +1 to look for all tokens that may be impacted (ie enter or
+    // leave fire cover)
+    int fireRange = p_game.getTokenFireLength( getToken( p_game ) ) + 1;
+    AnBoardPosition position = getToken( p_game ).getPosition();
+    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+    {
+      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      {
+        EbToken token = p_game.getToken( new AnBoardPosition( ix, iy ) );
+        if( token != null )
+        {
+          boolean oldFlag = token.isFireDisabled();
+          if( p_game.getBoardFireCover().checkFireDisableFlag( token ) )
+          {
+            tokenOldFireDisableFlags().put( token.getId(), oldFlag );
+            token.incVersion();
+          }
+        }
+      }
+    }
+    // then, check for itself: he may have leaved an opponent fire cover
+    boolean oldFlag = getToken( p_game ).isFireDisabled();
+    if( p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game ) ) )
+    {
+      tokenOldFireDisableFlags().put( getToken( p_game ).getId(), oldFlag );
+    }
+    
     getToken(p_game).incVersion();
   }
 
@@ -217,6 +251,37 @@ public class EbEvtMove extends AnEventPlay
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), getOldPosition() );
     getToken(p_game).decVersion();
+    if( m_TokenOldFireDisableFlags != null )
+    {
+      // some fire disable have been changed by this action: undo this
+      for( Entry<Long, Boolean> entry : tokenOldFireDisableFlags().entrySet() )
+      {
+        EbToken token = p_game.getToken( entry.getKey() );
+        if( token != null )
+        {
+          token.setFireDisabled( entry.getValue() );
+          if( token.getId() != getToken( p_game ).getId() )
+          {
+            token.decVersion();
+          }
+        }
+      }
+    }
   }
+
+
+  /**
+   * @return the tokenOldFireDisableFlags
+   */
+  private Map<Long, Boolean> tokenOldFireDisableFlags()
+  {
+    if( m_TokenOldFireDisableFlags == null )
+    {
+      m_TokenOldFireDisableFlags = new HashMap<Long, Boolean>();
+    }
+    return m_TokenOldFireDisableFlags;
+  }
+
+
 
 }

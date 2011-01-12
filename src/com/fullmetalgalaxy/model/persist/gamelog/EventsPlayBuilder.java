@@ -1248,6 +1248,7 @@ public class EventsPlayBuilder implements GameEventStack
         && (((EbEvtUnLoad)lastAction).getTokenCarrier( m_game ) == action.getTokenCarrier( m_game ))
         && (((EbEvtUnLoad)lastAction).getToken( m_game ) == action.getNewTokenCarrier( m_game )) )
     {
+      action.setAuto( true );
       action.setCost( 0 );
     }
     if( (lastAction != null)
@@ -1258,6 +1259,7 @@ public class EventsPlayBuilder implements GameEventStack
         && (((EbEvtTransfer)lastAction).getNewTokenCarrier( m_game ) == action
             .getNewTokenCarrier( m_game )) )
     {
+      action.setAuto( true );
       action.setCost( 0 );
     }
 
@@ -1358,6 +1360,7 @@ public class EventsPlayBuilder implements GameEventStack
       transfer.setTokenCarrier( tokenContent.getCarrierToken() );
       transfer.setNewTokenCarrier( p_tokenCarrier );
       transfer.setCost( 0 );
+      transfer.setAuto( true );
       actionAdd( transfer );
     }
     

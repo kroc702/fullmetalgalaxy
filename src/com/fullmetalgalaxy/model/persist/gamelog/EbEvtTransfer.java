@@ -157,7 +157,7 @@ public class EbEvtTransfer extends AnEventPlay
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableTide, getTokenCarrier(p_game).getType()
           .ordinal() );
     }
-    if( !p_game.isTokenFireActive( myRegistration.getEnuColor(), getNewTokenCarrier(p_game) ) )
+    if( !p_game.isTokenFireActive( getNewTokenCarrier( p_game ) ) )
     {
       throw new RpcFmpException( RpcFmpException.CantUnloadDisableFire, getTokenCarrier(p_game).getType()
           .ordinal(), p_game.getOpponentFireCover( getTokenCarrier(p_game) ).getValue() );

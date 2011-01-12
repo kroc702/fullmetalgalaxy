@@ -115,6 +115,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   private List<com.fullmetalgalaxy.model.persist.triggers.EbTrigger> m_triggers = new ArrayList<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>();
 
+  private List<FireDisabling> m_listFireDisabling = new ArrayList<FireDisabling>();
+
   private long m_nextLocalId = 0L;
 
   transient private Date m_lastServerUpdate = null;
@@ -632,11 +634,11 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     p_token.setColor( p_newColor );
     if( getOpponentFireCover( p_token ).getValue() != EnuColor.None )
     {
-      p_token.setFireDisabled( true );
+      setTokenFireDisabled( p_token, true );
     }
     else
     {
-      p_token.setFireDisabled( false );
+      setTokenFireDisabled( p_token, false );
     }
     getBoardFireCover().incFireCover( p_token );
 
@@ -664,7 +666,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     getTokenIndexSet().setPosition( p_token, new AnBoardPosition( p_position ) );
     getBoardFireCover().incFireCover( p_token );
-    getBoardFireCover().checkFireDisableFlag( p_token );
+
     // this update is here only to refresh token display during time mode
     updateLastTokenUpdate( null );
   }
@@ -1266,14 +1268,54 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    * determine if this token is active depending of opponents fire cover.<br/>
    * note that even if we don't display any warning, this method will return false
    * for an uncolored token. 
-   * @param p_playerColor
    * @param p_token
    * @return
    */
-  public boolean isTokenFireActive(EnuColor p_playerColor, EbToken p_token)
+  public boolean isTokenFireActive(EbToken p_token)
   {
+    EnuColor playerColor = getTokenOwnerColor( p_token );
     return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret) || (getOpponentFireCover(
-        p_playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
+        playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
+  }
+
+
+  public void setTokenFireDisabled(EbToken p_token, boolean p_fireDisabled)
+  {
+    if( p_token.isFireDisabled() != p_fireDisabled )
+    {
+      getBoardFireCover().decFireCover( p_token );
+      p_token.setFireDisabled( p_fireDisabled );
+      getBoardFireCover().incFireCover( p_token );
+    }
+  }
+
+
+  /**
+   * determine weather the given token can produce or not a fire cover.
+   * If not, his fire cover will increment the disabled fire cover to show it to player
+   * @param p_token
+   * @return
+   */
+  public boolean isTokenFireCoverDisabled(EbToken p_token)
+  {
+    if( p_token == null || !p_token.isDestroyer() )
+    {
+      return false;
+    }
+    // if( !isTokenFireActive( p_token ) )
+    if( p_token.isFireDisabled() )
+    {
+      return true;
+    }
+    if( !isTokenTideActive( p_token ) )
+    {
+      return true;
+    }
+    if( isTankCheating( p_token ) )
+    {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -1316,6 +1358,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   /**
    * determine if this token can fire onto a given position
+   * Warning: it doesn't check tide or fire disable flag !
    * @param p_token
    * @param p_position
    * @return
@@ -1329,6 +1372,13 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return p_token.getPosition().getHexDistance( p_position ) <= (getTokenFireLength( p_token ));
   }
 
+  /**
+   *  determine if this token can fire onto a given token
+   * Warning: it doesn't check tide or fire disable flag !
+   * @param p_token
+   * @param p_tokenTarget
+   * @return
+   */
   public boolean canTokenFireOn(EbToken p_token, EbToken p_tokenTarget)
   {
     if( canTokenFireOn( p_token, p_tokenTarget.getPosition() ) )
@@ -1351,7 +1401,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public int getTokenFireLength(EbToken p_token)
   {
-    if( (p_token == null) || (!isTokenTideActive( p_token )) )
+    if( (p_token == null) )
     {
       return 0;
     }
@@ -2337,6 +2387,15 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   {
     m_mapUri = p_mapUri;
   }
+
+  /**
+   * @return the listFireDisabling
+   */
+  public List<FireDisabling> getListFireDisabling()
+  {
+    return m_listFireDisabling;
+  }
+
 
 
 }
