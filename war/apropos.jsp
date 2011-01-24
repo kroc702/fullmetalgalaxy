@@ -25,7 +25,8 @@
             <P> <%@include file="include/version.html"%> <br/>
             commit 
             <a href="http://code.google.com/p/fullmetalgalaxy/source/detail?r=<%@include file="include/commitid.html"%>">
-            <%@include file="include/commitid.html"%></a>
+            <%@include file="include/commitid.html"%></a> <br/>
+            <a href="http://code.google.com/p/fullmetalgalaxy/source/list"><small>Tous les commits</small></a>
             </P>
             
 			<p>
@@ -34,7 +35,7 @@
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>
 			Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /><br/>
 			Source disponible <a href="http://code.google.com/p/fullmetalgalaxy/">ici</a>.<br/>
-			<small>Copyright 2010 Vincent Legendre</small>
+			<small>Copyright 2010, 2011 Vincent Legendre</small>
 			</p>
             
             

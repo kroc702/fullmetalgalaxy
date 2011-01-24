@@ -28,6 +28,7 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -51,7 +52,8 @@ public class EbToken extends EbBase
   private Location m_location = Location.ToBeConstructed;
   private AnBoardPosition m_position = new AnBoardPosition();
   private int m_bulletCount = 0;
-  private boolean m_fireDisabled = false;
+
+  private List<FireDisabling> m_listFireDisabling = null;
 
   private EbGame m_game = null;
 
@@ -100,6 +102,7 @@ public class EbToken extends EbBase
     m_carrierTokenId = 0;
     m_game = null;
     m_setContain = null;
+    m_listFireDisabling = null;
   }
 
   @Override
@@ -938,7 +941,38 @@ public class EbToken extends EbBase
    */
   public boolean isFireDisabled()
   {
-    return m_fireDisabled;
+    if( m_listFireDisabling == null )
+    {
+      return false;
+    }
+    for( FireDisabling fd : m_listFireDisabling )
+    {
+      if( fd.getTargetId() == getId() )
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isFireDisabling()
+  {
+    if( m_listFireDisabling == null )
+    {
+      return false;
+    }
+    for( FireDisabling fd : m_listFireDisabling )
+    {
+      if( fd.getDestroyer1Id() == getId() )
+      {
+        return true;
+      }
+      if( fd.getDestroyer2Id() == getId() )
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -946,9 +980,48 @@ public class EbToken extends EbBase
    * Use same function provided in EbGame to update fire cover. 
    * @param p_fireDisabled the fireDisabled to set
    */
-  public void setFireDisabled(boolean p_fireDisabled)
+  public void addFireDisabling(FireDisabling p_fireDisabling)
   {
-    m_fireDisabled = p_fireDisabled;
+    if( m_listFireDisabling == null )
+    {
+      m_listFireDisabling = new ArrayList<FireDisabling>();
+    }
+    if( !m_listFireDisabling.contains( p_fireDisabling ) )
+    {
+      m_listFireDisabling.add( p_fireDisabling );
+    }
+  }
+
+  /**
+   * Should be called only by BoardFireCover class
+   * @param p_fireDisabling
+   */
+  public void removeFireDisabling(FireDisabling p_fireDisabling)
+  {
+    if( m_listFireDisabling != null )
+    {
+      m_listFireDisabling.remove( p_fireDisabling );
+      if( m_listFireDisabling.isEmpty() )
+      {
+        m_listFireDisabling = null;
+      }
+    }
+  }
+
+  /**
+   * Should be called only by BoardFireCover class
+  */
+  public void clearFireDisabling()
+  {
+    m_listFireDisabling = null;
+  }
+
+  /**
+   * Should be called only by BoardFireCover class
+   */
+  public List<FireDisabling> getFireDisablingList()
+  {
+    return m_listFireDisabling;
   }
 
 

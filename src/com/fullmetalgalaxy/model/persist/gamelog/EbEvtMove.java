@@ -25,11 +25,11 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -38,6 +38,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 
 
 
@@ -52,8 +53,10 @@ public class EbEvtMove extends AnEventPlay
   /**
    * a backup of all fire disable flag that have been changed by this action
    */
-  private Map<Long, Boolean> m_TokenOldFireDisableFlags = null;
-
+  List<FireDisabling> m_fdRemoved = new ArrayList<FireDisabling>();
+  List<FireDisabling> m_fdAdded = new ArrayList<FireDisabling>();
+  /** this flag is here to avoid recompute fire disabling action again and again */
+  boolean m_isFdComputed = false;
 
   /**
    * 
@@ -75,6 +78,9 @@ public class EbEvtMove extends AnEventPlay
   private void init()
   {
     setCost( 1 );
+    m_fdRemoved = null;
+    m_fdAdded = null;
+    m_isFdComputed = false;
   }
 
   @Override
@@ -212,33 +218,81 @@ public class EbEvtMove extends AnEventPlay
     
     p_game.moveToken( getToken(p_game), getNewPosition() );
 
-    // fire range +1 to look for all tokens that may be impacted (ie enter or
-    // leave fire cover)
-    int fireRange = p_game.getTokenFireLength( getToken( p_game ) ) + 1;
-    AnBoardPosition position = getToken( p_game ).getPosition();
-    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+
+    if( m_isFdComputed )
     {
-      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      // save CPU by avoiding recompute fire disabling flags
+      p_game.getBoardFireCover().addFireDisabling( m_fdAdded );
+      p_game.getBoardFireCover().removeFireDisabling( m_fdRemoved );
+    }
+    else
+    {
+      int fireRange = p_game.getTokenFireLength( getToken( p_game ) );
+      List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+      List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+
+      if( getToken( p_game ).isFireDisabling() )
       {
-        EbToken token = p_game.getToken( new AnBoardPosition( ix, iy ) );
-        if( token != null )
+        // lock current moving destroyer and remove all his fire disabling
+        // action
+        // to allow his target to defend themself
+        p_game.getBoardFireCover().decFireCover( getToken( p_game ) );
+        List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+        for( FireDisabling fd : getToken( p_game ).getFireDisablingList() )
         {
-          boolean oldFlag = token.isFireDisabled();
-          if( p_game.getBoardFireCover().checkFireDisableFlag( token ) )
+          fd2Remove.add( fd );
+          fdRemoved.add( fd );
+        }
+        p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
+        // check if old target can disable unit
+        for( FireDisabling fd : fd2Remove )
+        {
+          EbToken target = fd.getTarget( p_game );
+          if( !target.isFireDisabled() )
           {
-            tokenOldFireDisableFlags().put( token.getId(), oldFlag );
-            token.incVersion();
+            p_game.getBoardFireCover().checkFireDisableFlag( target.getPosition(),
+                p_game.getTokenFireLength( target ),
+                FdChange.fromDestroyerFireDisableStatus( target.isFireDisabled() ), fdRemoved,
+                fdAdded );
           }
         }
+        // now check if old target can be re-disable with other destroyer
+        for( FireDisabling fd : fd2Remove )
+        {
+          EbToken target = fd.getTarget( p_game );
+          if( !target.isFireDisabled() )
+          {
+            p_game.getBoardFireCover().recursiveCheckFireDisableFlag( target, FdChange.DISABLE,
+                fdRemoved, fdAdded );
+          }
+        }
+
+        // p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game
+        // ).getPosition(),
+        // fireRange - 1, fdRemoved, fdAdded );
+        p_game.getBoardFireCover().incFireCover( getToken( p_game ) );
       }
+
+      // fire range +1 to look for all tokens that may be impacted (ie enter or
+      // leave fire cover)
+      p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game ).getPosition(),
+          fireRange + 1,
+          FdChange.fromDestroyerFireDisableStatus( getToken( p_game ).isFireDisabled() ),
+          fdRemoved, fdAdded );
+
+      p_game.getBoardFireCover().cleanFireDisableCollection( fdRemoved, fdAdded );
+
+      if( !fdRemoved.isEmpty() )
+      {
+        m_fdRemoved = fdRemoved;
+      }
+      if( !fdAdded.isEmpty() )
+      {
+        m_fdAdded = fdAdded;
+      }
+      m_isFdComputed = true;
     }
-    // then, check for itself: he may have leaved an opponent fire cover
-    boolean oldFlag = getToken( p_game ).isFireDisabled();
-    if( p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game ) ) )
-    {
-      tokenOldFireDisableFlags().put( getToken( p_game ).getId(), oldFlag );
-    }
-    
+
     getToken(p_game).incVersion();
   }
 
@@ -248,39 +302,16 @@ public class EbEvtMove extends AnEventPlay
   @Override
   public void unexec(EbGame p_game) throws RpcFmpException
   {
+    assert m_isFdComputed;
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), getOldPosition() );
     getToken(p_game).decVersion();
-    if( m_TokenOldFireDisableFlags != null )
-    {
-      // some fire disable have been changed by this action: undo this
-      for( Entry<Long, Boolean> entry : tokenOldFireDisableFlags().entrySet() )
-      {
-        EbToken token = p_game.getToken( entry.getKey() );
-        if( token != null )
-        {
-          token.setFireDisabled( entry.getValue() );
-          if( token.getId() != getToken( p_game ).getId() )
-          {
-            token.decVersion();
-          }
-        }
-      }
-    }
+
+    p_game.getBoardFireCover().addFireDisabling( m_fdRemoved );
+    p_game.getBoardFireCover().removeFireDisabling( m_fdAdded );
+
   }
 
-
-  /**
-   * @return the tokenOldFireDisableFlags
-   */
-  private Map<Long, Boolean> tokenOldFireDisableFlags()
-  {
-    if( m_TokenOldFireDisableFlags == null )
-    {
-      m_TokenOldFireDisableFlags = new HashMap<Long, Boolean>();
-    }
-    return m_TokenOldFireDisableFlags;
-  }
 
 
 
