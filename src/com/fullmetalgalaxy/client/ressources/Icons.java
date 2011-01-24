@@ -295,6 +295,12 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disable_fire.png")
   public AbstractImagePrototype strategy_disable_fire();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/disabling_fire.png")
+  public AbstractImagePrototype tactic_disabling_fire();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disabling_fire.png")
+  public AbstractImagePrototype strategy_disabling_fire();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/disable_water.png")
   public AbstractImagePrototype tactic_disable_water();
 

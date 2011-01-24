@@ -286,6 +286,18 @@ public class BoardIcons
     }
   }
 
+  public static AbstractImagePrototype disabling_fire(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    default:
+    case EnuZoom.Medium:
+      return Icons.s_instance.tactic_disabling_fire();
+    case EnuZoom.Small:
+      return Icons.s_instance.strategy_disabling_fire();
+    }
+  }
+
   public static AbstractImagePrototype disable_water(int p_zoom)
   {
     switch( p_zoom )

@@ -683,7 +683,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   {
     if( m_isActionPending )
     {
-      Window.alert( "Une action a d�j� �t� envoy� au serveur... sans r�ponse pour l'instant" );
+      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
       return;
     }
     m_isActionPending = true;

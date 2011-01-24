@@ -26,13 +26,15 @@
 package com.fullmetalgalaxy.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 
 
 /**
@@ -55,8 +57,9 @@ public class BoardFireCover implements Serializable
   /**
    * contain all destroyer on board token which should be fire enable/disable/dec as it's during
    * one of his movement.
+   * Should allow duplicate elements
    */
-  private Set<EbToken> m_lockedToken = new HashSet<EbToken>();
+  private List<Long> m_lockedToken = new ArrayList<Long>();
   
   
   /**
@@ -201,11 +204,20 @@ public class BoardFireCover implements Serializable
 
   public void incFireCover(EbToken p_token)
   {
-    if( (m_fireCover == null) || (!p_token.isDestroyer())
-        || p_token.getLocation() != Location.Board )
+    assert p_token != null;
+    m_lockedToken.remove( p_token.getId() );
+    if( (!p_token.isDestroyer()) || p_token.getLocation() != Location.Board )
     {
-      m_lockedToken.remove( p_token );
       return;
+    }
+    if( m_lockedToken.contains( p_token.getId() ) )
+    {
+      RpcUtil.logDebug( "token " + p_token + " is still locked !!!" );
+      return;
+    }
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
     }
 
     // destroyer range
@@ -232,8 +244,6 @@ public class BoardFireCover implements Serializable
         }
       }
     }
-
-    m_lockedToken.remove( p_token );
   }
 
 
@@ -274,18 +284,20 @@ public class BoardFireCover implements Serializable
 
   public void decFireCover(EbToken p_token)
   {
-    if( m_lockedToken.contains( p_token ) )
+    if( m_lockedToken.contains( p_token.getId() ) )
     {
       RpcUtil.logDebug( "token " + p_token + " is already locked !!!" );
+      m_lockedToken.add( p_token.getId() );
+      return;
     }
-    else
-    {
-      m_lockedToken.add( p_token );
-    }
-    if( (m_fireCover == null) || (!p_token.isDestroyer())
-        || p_token.getLocation() != Location.Board )
+    m_lockedToken.add( p_token.getId() );
+    if( (!p_token.isDestroyer()) || p_token.getLocation() != Location.Board )
     {
       return;
+    }
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
     }
 
     // destroyer fire range
@@ -314,58 +326,280 @@ public class BoardFireCover implements Serializable
     }
   }
 
+
+
   /**
    * Check for a specific token if his fire disable flag isn't an error...
-   * not sure where theses errors may come from...
    * In this case, it can correct flag.
    * @param p_token
    * @return true if there where an error in flag disable
    */
-  public boolean checkFireDisableFlag(EbToken p_token)
+  protected boolean checkFireDisableFlag(EbToken p_token, FdChange p_fdChange,
+      Collection<FireDisabling> p_fdRemoved,
+      Collection<FireDisabling> p_fdAdded)
   {
+    boolean isFdUpdated = false;
     if( (p_token.getLocation() != Location.Board)
-        || (!p_token.canBeColored())
+        || (p_token.getColor() == EnuColor.None)
         || (p_token.getType() == TokenType.Freighter)
         || (p_token.getType() == TokenType.Turret) )
     {
       // all theses token can't be fire disabled
-      return false;
+      return isFdUpdated;
     }
     if( m_fireCover == null )
     {
       reComputeFireCover();
     }
+    // TODO allow two neutralisation with 4 tanks. recursive method ?
+    //
     EnuColor color = m_game.getOpponentFireCover( p_token );
-    if( p_token.isFireDisabled() && color.getValue() == EnuColor.None )
+    if( p_token.isFireDisabled() && p_fdChange != FdChange.DISABLE )
     {
-      // RpcUtil.logDebug( "token " + p_token +
-      // " has an error on his fire disbale flag" );
-      decFireCover( p_token );
-      p_token.setFireDisabled( false );
-      incFireCover( p_token );
-      return true;
+      // we can't use the list version of removeFireDisabling because of
+      // ConcurrentModificationException
+      List<FireDisabling> fd2Removed = new ArrayList<FireDisabling>();
+      for( FireDisabling fd : p_token.getFireDisablingList() )
+      {
+        if( !m_game.canTokenFireOn( fd.getDestroyer1( m_game ), p_token )
+            || !m_game.canTokenFireOn( fd.getDestroyer2( m_game ), p_token )
+            || m_game.isTokenFireCoverDisabled( fd.getDestroyer1( m_game ) )
+            || m_game.isTokenFireCoverDisabled( fd.getDestroyer2( m_game ) )
+            || m_lockedToken.contains( fd.getDestroyer1Id() )
+            || m_lockedToken.contains( fd.getDestroyer2Id() ) )
+        {
+          // one of his destroyer can't really fire on target: remove this FireDisabling
+          fd2Removed.add( fd );
+          isFdUpdated = true;
+        }
+      }
+      p_fdRemoved.addAll( fd2Removed );
+      removeFireDisabling( fd2Removed );
     }
-    else if( !p_token.isFireDisabled() && color.getValue() != EnuColor.None )
+
+    if( !p_token.isFireDisabled() && p_fdChange != FdChange.ENABLE
+        && color.getValue() != EnuColor.None )
     {
-      // RpcUtil.logDebug( "token " + p_token +
-      // " has an error on his fire disbale flag" );
       decFireCover( p_token );
-      p_token.setFireDisabled( true );
+      // now construct a fire disabling instance
+      FireDisabling fd = new FireDisabling();
+      fd.setTarget( p_token );
+      // look for destroyer unit that create this fire zone...
+      // ok this method may be somewhat inefficient
+      // Note that 3 is the maximum fire length
+      AnBoardPosition position = p_token.getPosition();
+      for( int ix = position.getX() - 3; ix < position.getX() + 4; ix++ )
+      {
+        for( int iy = position.getY() - 3; iy < position.getY() + 4; iy++ )
+        {
+          EbToken otherToken = m_game.getToken( new AnBoardPosition( ix, iy ) );
+          if( otherToken != null )
+          {
+            EnuColor tokenOwnerColor = m_game.getTokenOwnerColor( otherToken );
+
+            if( tokenOwnerColor.isColored( color )
+              && !m_game.isTokenFireCoverDisabled( otherToken )
+              && m_game.canTokenFireOn( otherToken, position )
+              && !m_lockedToken.contains( otherToken.getId() ) )
+            {
+              if( fd.getDestroyer1( m_game ) == null )
+              {
+                fd.setDestroyer1( otherToken );
+              }
+              else if( fd.getDestroyer2( m_game ) == null )
+              {
+                fd.setDestroyer2( otherToken );
+                break;
+              }
+              else
+              {
+                break;
+              }
+            }
+          }
+        }
+      }
+      assert fd.getDestroyer1( m_game ) != null && fd.getDestroyer2( m_game ) != null;
+
+      p_fdAdded.add( fd );
+      p_token.addFireDisabling( fd );
+      fd.getDestroyer1( m_game ).addFireDisabling( fd );
+      fd.getDestroyer2( m_game ).addFireDisabling( fd );
       incFireCover( p_token );
-      return true;
+      isFdUpdated = true;
     }
-    return false;
+    return isFdUpdated;
+  }
+
+  /**
+   * similar to 'checkFireDisableFlag' but recursively check token that may be impacted.
+   * @param p_token
+   * @param p_fdRemoved
+   * @param p_fdAdded
+   * @return
+   */
+  public boolean recursiveCheckFireDisableFlag(EbToken p_token, FdChange p_fdChange,
+      Collection<FireDisabling> p_fdRemoved, Collection<FireDisabling> p_fdAdded)
+  {
+    boolean isFd = p_token.isFireDisabled();
+    boolean isFdChanged = checkFireDisableFlag( p_token, p_fdChange, p_fdRemoved, p_fdAdded );
+    if( isFd != p_token.isFireDisabled() )
+    {
+      isFdChanged |= checkFireDisableFlag( p_token.getPosition(),
+          m_game.getTokenFireLength( p_token ),
+          FdChange.fromDestroyerFireDisableStatus( p_token.isFireDisabled() ), p_fdRemoved,
+          p_fdAdded );
+    }
+    return isFdChanged;
+  }
+
+
+  /**
+   * Check fire disable flag of all token in an area around p_position BUT NOT at p_position.
+   * Note that despite p_radius parameter, area ISN'T round but is square.
+   * @param p_position
+   * @param p_radius
+   * @param p_fdRemoved
+   * @param p_fdAdded
+   * @return
+   */
+  public boolean checkFireDisableFlag(AnBoardPosition p_position, int p_radius,
+      FdChange p_fdChange,
+      Collection<FireDisabling> p_fdRemoved, Collection<FireDisabling> p_fdAdded)
+  {
+    assert m_game != null;
+    boolean isFdChanged = false;
+    for( int ix = p_position.getX() - p_radius; ix <= p_position.getX() + p_radius; ix++ )
+    {
+      for( int iy = p_position.getY() - p_radius; iy <= p_position.getY() + p_radius; iy++ )
+      {
+        if( ix != p_position.getX() || iy != p_position.getY() )
+        {
+          EbToken token = m_game.getToken( new AnBoardPosition( ix, iy ) );
+          if( token != null )
+          {
+            isFdChanged |= recursiveCheckFireDisableFlag( token, p_fdChange, p_fdRemoved, p_fdAdded );
+          }
+        }
+      }
+    }
+    return isFdChanged;
+  }
+
+
+  /**
+   * Used to filter CheckFireDisableFlag result
+   * @author Vincent
+   *
+   */
+  public enum FdChange
+  {
+    ALL, DISABLE, ENABLE;
+
+    public static FdChange fromDestroyerFireDisableStatus(boolean p_isFireDisable)
+    {
+      if( p_isFireDisable )
+      {
+        return ENABLE;
+      }
+      return DISABLE;
+    }
+  }
+
+  /**
+   * If the two collection contain the same FireDisabling class, removed them both
+   * @param p_fdRemoved
+   * @param p_fdAdded
+   * @return
+   */
+  public void cleanFireDisableCollection(Collection<FireDisabling> p_fdRemoved,
+      Collection<FireDisabling> p_fdAdded)
+  {
+    Collection<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+    for( FireDisabling fd : p_fdRemoved )
+    {
+      if( p_fdAdded.contains( fd ) )
+      {
+        fd2Remove.add( fd );
+      }
+    }
+    p_fdRemoved.removeAll( fd2Remove );
+    p_fdAdded.removeAll( fd2Remove );
+  }
+
+
+  /**
+   * Warning: this method don't check if the old target is neutralizing other token !
+   * @param p_fireDisabling
+   */
+  public void removeFireDisabling(FireDisabling p_fireDisabling)
+  {
+    assert p_fireDisabling != null;
+    assert p_fireDisabling.getTarget( m_game ) != null;
+    assert p_fireDisabling.getDestroyer1( m_game ) != null;
+    assert p_fireDisabling.getDestroyer2( m_game ) != null;
+    decFireCover( p_fireDisabling.getTarget( m_game ) );
+    p_fireDisabling.getTarget( m_game ).removeFireDisabling( p_fireDisabling );
+    p_fireDisabling.getDestroyer1( m_game ).removeFireDisabling( p_fireDisabling );
+    p_fireDisabling.getDestroyer2( m_game ).removeFireDisabling( p_fireDisabling );
+    incFireCover( p_fireDisabling.getTarget( m_game ) );
+  }
+
+  /**
+   * Warning: this method don't check if the old target is neutralizing other token !
+   * @param p_fireDisabling
+   */
+  public void removeFireDisabling(Collection<FireDisabling> p_fireDisabling)
+  {
+    if( p_fireDisabling == null )
+    {
+      return;
+    }
+    for( FireDisabling fd : p_fireDisabling )
+    {
+      removeFireDisabling( fd );
+    }
+  }
+
+  /**
+   * Warning: this method don't check if the old target is neutralizing other token !
+   * @param p_fireDisabling
+   */
+  public void addFireDisabling(FireDisabling p_fireDisabling)
+  {
+    assert p_fireDisabling != null;
+    assert p_fireDisabling.getTarget( m_game ) != null;
+    assert p_fireDisabling.getDestroyer1( m_game ) != null;
+    assert p_fireDisabling.getDestroyer2( m_game ) != null;
+    decFireCover( p_fireDisabling.getTarget( m_game ) );
+    p_fireDisabling.getTarget( m_game ).addFireDisabling( p_fireDisabling );
+    p_fireDisabling.getDestroyer1( m_game ).addFireDisabling( p_fireDisabling );
+    p_fireDisabling.getDestroyer2( m_game ).addFireDisabling( p_fireDisabling );
+    incFireCover( p_fireDisabling.getTarget( m_game ) );
+  }
+
+  /**
+   * Warning: this method don't check if the old target is neutralizing other token !
+   * @param p_fireDisabling
+   */
+  public void addFireDisabling(Collection<FireDisabling> p_fireDisabling)
+  {
+    if( p_fireDisabling == null )
+    {
+      return;
+    }
+    for( FireDisabling fd : p_fireDisabling )
+    {
+      addFireDisabling( fd );
+    }
   }
 
 // TODO 
 
-  // EbGame a une liste de fireDisabling et chaque pion engagé dans une
-  // neutralisation ont une liste aussi
-  // un pion ne peut être neutralisé que par un seul couple du même proprio
   // le checkFireDisableFlag est récursive (ou en plusieurs passe) et renvoie
   // une nouvelle liste (complète ou simple mise à jour ?)
-  // faire aussi une version pour tous les pions pour recompute et
-  // EvtChangeTide.
+//  faire aussi une version pour tous les pions pour recompute et EvtChangeTide. 
+
   // Attention aux contrôles d'astronefs si une neutralisation implique 2
   // neutralisant de couleur différente
 
@@ -390,9 +624,14 @@ public class BoardFireCover implements Serializable
       incFireCover( token );
     }
     // some token may have to be fire enabled/disabled
+    Collection<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+    Collection<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
     for( EbToken token : m_game.getSetToken() )
     {
-      checkFireDisableFlag( token );
+      if( checkFireDisableFlag( token, FdChange.ALL, fdRemoved, fdAdded ) )
+      {
+        RpcUtil.logError( token + " fire disable flag was wrong." );
+      }
     }
   }
 

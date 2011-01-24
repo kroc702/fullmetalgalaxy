@@ -509,7 +509,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    * @param p_token
    * @return all color of this token owner. no color if p_token have no color
    */
-  protected EnuColor getTokenOwnerColor(EbToken p_token)
+  public EnuColor getTokenOwnerColor(EbToken p_token)
   {
     // first determine the token owner color
     EnuColor tokenOwnerColor = p_token.getEnuColor();
@@ -543,7 +543,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     // first determine the token owner color
     EnuColor tokenOwnerColor = getTokenOwnerColor( p_token );
     EnuColor fireCover = getOpponentFireCover( tokenOwnerColor.getValue(), p_token.getPosition() );
-    if( p_token.getType() == TokenType.Barge )
+    if( p_token.getHexagonSize() == 2 )
     {
       fireCover.addColor( getOpponentFireCover( tokenOwnerColor.getValue(),
           (AnBoardPosition)p_token.getExtraPositions().get( 0 ) ) );
@@ -628,18 +628,15 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     updateLastTokenUpdate( null );
   }
 
+  /**
+   * Warning: this method don't check anything about fire disabling flag.
+   * @param p_token
+   * @param p_newColor
+   */
   public void changeTokenColor(EbToken p_token, int p_newColor)
   {
     getBoardFireCover().decFireCover( p_token );
     p_token.setColor( p_newColor );
-    if( getOpponentFireCover( p_token ).getValue() != EnuColor.None )
-    {
-      setTokenFireDisabled( p_token, true );
-    }
-    else
-    {
-      setTokenFireDisabled( p_token, false );
-    }
     getBoardFireCover().incFireCover( p_token );
 
     for( EbToken token : p_token.getSetContain() )
@@ -1276,17 +1273,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     EnuColor playerColor = getTokenOwnerColor( p_token );
     return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret) || (getOpponentFireCover(
         playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
-  }
-
-
-  public void setTokenFireDisabled(EbToken p_token, boolean p_fireDisabled)
-  {
-    if( p_token.isFireDisabled() != p_fireDisabled )
-    {
-      getBoardFireCover().decFireCover( p_token );
-      p_token.setFireDisabled( p_fireDisabled );
-      getBoardFireCover().incFireCover( p_token );
-    }
   }
 
 

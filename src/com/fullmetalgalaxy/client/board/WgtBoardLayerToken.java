@@ -180,13 +180,18 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         tokenWidget.getTokenImage().addLoadListener( this );
       }*/
 
-      EbToken nearTank = null;
-
       // if token is under opponents fire cover, display a warning icon
       if( p_token.isFireDisabled() )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.disable_fire( getZoom()
             .getValue() ), p_token, landPixOffset );
+      }
+      else
+      // if token disabling other token, display icon
+      if( p_token.isFireDisabling() )
+      {
+        addWarningImage( tokenWidget.getIconWarningImage(),
+            BoardIcons.disabling_fire( getZoom().getValue() ), p_token, landPixOffset );
       }
       else
       // if the token isn't active (ie under water for land unit)
@@ -198,8 +203,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       }
       else
       // if two tank are neighbor on two montains, display a warning icon
-      if( ((nearTank = game.getTankCheating( p_token )) != null)
-          && (nearTank.getId() > p_token.getId()) )
+      if( game.isTankCheating( p_token ) )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.warning( getZoom()
               .getValue() ), p_token, landPixOffset );
@@ -234,6 +238,11 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   private void addWarningImage(Image p_image, AbstractImagePrototype p_absImage, EbToken p_token,
       int p_landPixOffset)
   {
+    if( p_absImage == null )
+    {
+      p_image.setVisible( false );
+      return;
+    }
     add( p_image );
     p_image.setVisible( true );
     p_absImage.applyTo( p_image );

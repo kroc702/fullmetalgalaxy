@@ -11,9 +11,15 @@
 <body >
 
 <%@include file="include/header.jsp"%>
+
+    <h2>Jeux conseillé</h2>
+    <p>
+    <a href='http://alonya.eu/' >Alonya</a> : Une version fantastique de civilisation
+    </p>
+    
     <h2>Quelques liens autour de Full Metal Planète</h2>
     <p>
-    <a href='http://jeuxstrategie.free.fr/Full_metal_planete_presentation.php' >
+    <a href='http://www.trictrac.net/index.php3?id=jeux&rub=detail&inf=detail&jeu=422' >
       Une présentation du jeu de plateau 
     </a><br/>
     <br/>

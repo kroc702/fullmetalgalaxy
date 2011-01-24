@@ -26,7 +26,9 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -34,6 +36,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 
 
 /**
@@ -49,6 +52,11 @@ public class EbEvtFire extends AnEventPlay
    */
   private ArrayList<Long> m_TokenIds = null;
 
+  /**
+   * a backup of all fire disable flag that have been changed by this action
+   */
+  List<FireDisabling> m_fdRemoved = new ArrayList<FireDisabling>();
+  List<FireDisabling> m_fdAdded = new ArrayList<FireDisabling>();
 
   /**
    * 
@@ -182,6 +190,9 @@ public class EbEvtFire extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+    List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+
     // backup for unexec
     setOldPosition( getTokenTarget(p_game).getPosition() );
     
@@ -196,12 +207,39 @@ public class EbEvtFire extends AnEventPlay
       // target isn't a pontoon: simply move it to graveyard
       p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
       getTokenTarget(p_game).incVersion();
+      // if it was a destroyer, it may disabling other token: check that
+      if( getTokenTarget( p_game ).isDestroyer() )
+      {
+        p_game.getBoardFireCover().checkFireDisableFlag( getTokenTarget( p_game ).getPosition(),
+            p_game.getTokenFireLength( getTokenTarget( p_game ) ), FdChange.ENABLE, fdRemoved,
+            fdAdded );
+      }
     }
     EbToken pontoon = p_game.getToken( position, TokenType.Pontoon );
     if( pontoon != null )
     {
       // these is still a pontoon here, check that other pontoon are linked to ground and remove all theses
       m_TokenIds = p_game.chainRemovePontoon( getTokenTarget(p_game) );
+
+      for( Long idToken : m_TokenIds )
+      {
+        EbToken token = p_game.getToken( idToken );
+        if( token != null && token.isDestroyer() )
+        {
+          p_game.getBoardFireCover().checkFireDisableFlag( token.getPosition(),
+              p_game.getTokenFireLength( token ), FdChange.ENABLE, fdRemoved, fdAdded );
+        }
+      }
+    }
+
+
+    if( !fdRemoved.isEmpty() )
+    {
+      m_fdRemoved = fdRemoved;
+    }
+    if( !fdAdded.isEmpty() )
+    {
+      m_fdAdded = fdAdded;
     }
   }
 
@@ -216,8 +254,7 @@ public class EbEvtFire extends AnEventPlay
     getTokenDestroyer1(p_game).decVersion();
     getTokenDestroyer2(p_game).setBulletCount( getTokenDestroyer2(p_game).getBulletCount() + 1 );
     getTokenDestroyer2(p_game).decVersion();
-    p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer1( p_game ) );
-    p_game.getBoardFireCover().checkFireDisableFlag( getTokenDestroyer2( p_game ) );
+
     if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
     {
       // target wasn't a pontoon: put it back from graveyard
@@ -238,6 +275,9 @@ public class EbEvtFire extends AnEventPlay
         }
       }
     }
+
+    p_game.getBoardFireCover().removeFireDisabling( m_fdRemoved );
+    p_game.getBoardFireCover().addFireDisabling( m_fdAdded );
   }
 
   private ArrayList<Long> getTokenIds()
