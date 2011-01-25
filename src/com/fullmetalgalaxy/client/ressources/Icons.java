@@ -46,9 +46,6 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/login.gif")
   public AbstractImagePrototype login();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/planet/desert/medium.png")
-  public AbstractImagePrototype desert_planet_medium();
-
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Pause32.png")
   public AbstractImagePrototype pause32();
 
@@ -124,9 +121,6 @@ public interface Icons extends ImageBundle
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Ore16.png")
   public AbstractImagePrototype ore16();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Time16.png")
-  public AbstractImagePrototype time16();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Time32.png")
   public AbstractImagePrototype time32();

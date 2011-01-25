@@ -1,3 +1,4 @@
+<%@page import="com.google.gwt.i18n.client.impl.ConstantMap"%>
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -60,7 +61,7 @@ if(tab < 0 || tab > 3 )
 	Iterable<PersistGame> gameList = new ArrayList<PersistGame>();
 	if( !Auth.isUserLogged( request, response ) && (tab <= 1) ) {
 		// my games or open games but not logged
-		out.println("<center><h2>Vous n'�tes pas connect�</h2></center>");
+		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
 	} else if( tab == 0 ) {
 		// new or open games
 		gameList = FmgDataStore.getPersistGameList();
@@ -127,7 +128,14 @@ if(tab < 0 || tab > 3 )
 	      if( game.isHistory() ) {
 	      	out.println( "<img src='/images/css/icon_history.cache.png' title='Archive' />" );
 	      }
-	      out.println("</tr>" );
+	      
+	      if( ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).isAsynchron() )
+	      {
+	        out.println(""+(game.getCurrentTimeStep()*100/ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).getTotalTimeStep())+"%");
+	      } else {
+	        out.println(""+game.getCurrentTimeStep()+"/"+ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).getTotalTimeStep());
+	      }
+	      out.println("</td>" );
 	      
 	      // admin option
 	      if(Auth.isUserAdmin(request, response))

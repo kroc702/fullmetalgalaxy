@@ -111,7 +111,8 @@ public class EbEvtTide extends AnEvent
     setOldTideChange( p_game.getLastTideChange() );
 
     game.setCurrentTide( game.getNextTide() );
-    game.setNextTide( getNextTide() );
+    game.setNextTide( game.getNextTide2() );
+    game.setNextTide2( getNextTide() );
     game.setLastTideChange( game.getCurrentTimeStep() );
     
     // check that all pontoon are still linked to ground
@@ -149,6 +150,7 @@ public class EbEvtTide extends AnEvent
     super.unexec(p_game);
     EbGame game = p_game;
     assert game != null;
+    game.setNextTide2( game.getNextTide() );
     game.setNextTide( game.getCurrentTide() );
     game.setCurrentTide( getOldTide() );
     game.setLastTideChange( getOldTideChange() );

@@ -25,16 +25,14 @@
  */
 package com.fullmetalgalaxy.client.board;
 
-import java.util.ArrayList;
-
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
-import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -46,7 +44,7 @@ import com.google.gwt.user.client.ui.Label;
 public class WgtTimeInfo extends WgtView
 {
   private HorizontalPanel m_panel = new HorizontalPanel();
-  private Image m_iconTime = Icons.s_instance.time16().createImage();
+  private Image m_iconTime = new Image();
 
   // private Label m_lblTurn = new Label( " " );
 
@@ -87,84 +85,80 @@ public class WgtTimeInfo extends WgtView
     m_gameLastVersion = game.getVersion();
 
     m_panel.clear();
+
+    if( game.getEbConfigGameTime().isAsynchron() )
+    {
+      m_iconTime.setUrl( "/images/css/icon_parallele.gif" );
+    }
+    else
+    {
+      m_iconTime.setUrl( "/images/css/icon_tbt.gif" );
+    }
     m_panel.add( m_iconTime );
 
     // display end game date or player's turn
     // ======================================
-    Label lblTurn = new Label( " : " + game.getCurrentTimeStep() + "/"
-        + game.getEbConfigGameTime().getTotalTimeStep() + "  " );
+    Label lblTurn = new HTML( "&nbsp;: " + game.getCurrentTimeStep() + "/"
+        + game.getEbConfigGameTime().getTotalTimeStep() );
     lblTurn.setStyleName( "fmp-status-text" );
     lblTurn.setTitle( "Tour actuel / Nombre total de tours" );
     m_panel.add( lblTurn );
 
-    if( !game.isAsynchron() )
+    EnuColor color = new EnuColor( EnuColor.None );
+    if( game.getCurrentPlayerRegistration() != null )
     {
-      EnuColor color = new EnuColor( EnuColor.None );
-      if( game.getCurrentPlayerRegistration() != null )
+      color = game.getCurrentPlayerRegistration().getEnuColor();
+      Label lbl = new HTML( "&nbsp;(" );
+      lbl.setStyleName( "fmp-status-text" );
+      lbl.setTitle( "Joueur actuel" );
+      m_panel.add( lbl );
+
+      int colorIndex = 0;
+      for( colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
       {
-        color = game.getCurrentPlayerRegistration().getEnuColor();
-        Label lbl = new Label( " (" );
-        lbl.setStyleName( "fmp-status-text" );
-        lbl.setTitle( "Joueur actuel" );
-        m_panel.add( lbl );
-
-        int colorIndex = 0;
-        for( colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
+        if( color.isColored( EnuColor.getColorFromIndex( colorIndex ) ) )
         {
-          if( color.isColored( EnuColor.getColorFromIndex( colorIndex ) ) )
-          {
-            Image image = BoardIcons.icon16( EnuColor.getColorFromIndex( colorIndex ).getValue() )
-                .createImage();
-            image.setTitle( "Joueur actuel" );
-            m_panel.add( image );
-          }
+          Image image = BoardIcons.icon16( EnuColor.getColorFromIndex( colorIndex ).getValue() )
+              .createImage();
+          image.setTitle( "Joueur actuel" );
+          m_panel.add( image );
         }
-
-        if( game.getCurrentPlayerRegistration().haveAccount() )
-        {
-          lbl = new Label( ModelFmpMain.model().getAccount(
-              game.getCurrentPlayerRegistration().getAccountId() ).getPseudo()
-              + ")" );
-        }
-        else
-        {
-          lbl = new Label( "unknown)" );
-        }
-        lbl.setStyleName( "fmp-status-text" );
-        lbl.setTitle( "Joueur actuel" );
-        m_panel.add( lbl );
       }
-      // m_panelMiniMap.add( new HTML( htmlTurn ) );
-    }
 
-    // Display tides
-    // =============
-    Image image = null;
-    if( game.getAllowedTakeOffTurns().contains( game.getCurrentTimeStep() ) )
-    {
-      // take off is allowed : display it !
-      image = Icons.s_instance.takeOff16().createImage();
-      image.setTitle( "Decollage autorisé !" );
-      m_panel.add( image );
-      m_panel.setCellWidth( image, "20px" );
-    }
+      if( game.getCurrentPlayerRegistration().haveAccount() )
+      {
+        lbl = new Label( ModelFmpMain.model()
+            .getAccount( game.getCurrentPlayerRegistration().getAccountId() ).getPseudo()
+            + ")" );
+      }
+      else
+      {
+        lbl = new Label( "unknown)" );
+      }
+      lbl.setStyleName( "fmp-status-text" );
+      lbl.setTitle( "Joueur actuel" );
+      m_panel.add( lbl );
 
-    if( game.isAsynchron() )
+
+      if( ModelFmpMain.model().isJoined()
+          && ModelFmpMain.model().getMyRegistration() == game.getCurrentPlayerRegistration() )
+      {
+        Label lblDate = new HTML( "&nbsp;- "
+            + ClientUtil.formatDateTime( game.getCurrentPlayerRegistration().getEndTurnDate() ) );
+        lblDate.setStyleName( "fmp-status-text" );
+        lblDate.setTitle( "Date de fin de tour" );
+        m_panel.add( lblDate );
+      }
+    }
+    else if( game.isAsynchron() )
     {
-      Label lblDate = new Label( ClientUtil.formatDateTime( game.estimateNextTimeStep() ) );
+      Label lblDate = new HTML( "&nbsp;- "
+          + ClientUtil.formatDateTime( game.estimateNextTimeStep() ) );
       lblDate.setStyleName( "fmp-status-text" );
       lblDate.setTitle( "Date du prochain increment de temps" );
       m_panel.add( lblDate );
     }
-    else if( ModelFmpMain.model().isJoined()
-        && ModelFmpMain.model().getMyRegistration() == game.getCurrentPlayerRegistration() )
-    {
-        Label lblDate = new Label( ClientUtil.formatDateTime( game.getCurrentPlayerRegistration()
-            .getEndTurnDate() ) );
-        lblDate.setStyleName( "fmp-status-text" );
-        lblDate.setTitle( "Date de fin de tour" );
-        m_panel.add( lblDate );
-    }
+
 
     if( (!game.isAsynchron()) && (ModelFmpMain.model().getMyRegistration() != null)
         && (ModelFmpMain.model().getMyRegistration() != game.getCurrentPlayerRegistration()) )
@@ -176,26 +170,6 @@ public class WgtTimeInfo extends WgtView
       m_panel.add( lblDate );
     }
 
-    // display next take off
-    // ===================
-    ArrayList<Integer> allowedTakeOff = game.getAllowedTakeOffTurns();
-    if( allowedTakeOff != null )
-    {
-      int index = 0;
-      int currentTurn = game.getCurrentTimeStep();
-      while( (index < allowedTakeOff.size())
-          && (currentTurn >= allowedTakeOff.get( index ).intValue()) )
-      {
-        index++;
-      }
-      if( index < allowedTakeOff.size() )
-      {
-        image = Icons.s_instance.takeOff16().createImage();
-        image.setTitle( "prochaine fenetre de decolage : tour " + allowedTakeOff.get( index ) );
-        m_panel.add( image );
-        m_panel.setCellWidth( image, "20px" );
-      }
-    }
   }
 
   /* (non-Javadoc)

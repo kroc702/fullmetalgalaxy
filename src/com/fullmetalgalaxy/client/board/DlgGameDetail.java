@@ -398,7 +398,15 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       m_playerGrid.setHTML( index, 2, htmlColors );
 
       // display action points
-      m_playerGrid.setText( index, 3, "" + registration.getPtAction() );
+      m_playerGrid
+          .setText(
+              index,
+              3,
+              ""  + registration.getPtAction()
+                  + "/"
+                  + (ModelFmpMain.model().getGame().getEbConfigGameVariant()
+                      .getActionPtMaxReserve() + ((registration.getEnuColor().getNbColor() - 1) * ModelFmpMain
+                      .model().getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
 
       // display Wining points
       m_playerGrid.setText( index, 4, "" + registration.getWinningPoint() );

@@ -220,7 +220,26 @@ public class EbToken extends EbBase
     }
     return loadingSize;
   }
-  
+
+  /**
+   * 
+   * @return contained ore count
+   */
+  public int getContainOre()
+  {
+    int loadingSize = 0;
+    for( EbToken token : getSetContain() )
+    {
+      if( token.getType() == TokenType.Ore )
+      {
+        loadingSize += 1;
+      }
+    }
+    return loadingSize;
+  }
+
+
+
   /**
    * @param p_token
    * @return the size of p_token and all his loaded token take inside another token.
