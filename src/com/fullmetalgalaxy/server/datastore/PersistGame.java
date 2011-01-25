@@ -56,6 +56,7 @@ public class PersistGame extends PersistEntity
   private boolean m_history = false;
   private int m_maxNumberOfPlayer = 0;
   private int m_currentNumberOfRegiteredPlayer = 0;
+  private int m_currentTimeStep = 0;
   private boolean m_isOpen = false;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
@@ -97,6 +98,7 @@ public class PersistGame extends PersistEntity
     setHistory( game.isHistory() );
     setMaxNumberOfPlayer( game.getMaxNumberOfPlayer() );
     setCurrentNumberOfRegiteredPlayer( game.getCurrentNumberOfRegiteredPlayer() );
+    setCurrentTimeStep( game.getCurrentTimeStep() );
     setGameType( game.getGameType() );
     setPlanetType( game.getPlanetType() );
     setConfigGameTime( game.getConfigGameTime() );
@@ -445,6 +447,22 @@ public class PersistGame extends PersistEntity
   public void setMinimapUri(String p_minimapUri)
   {
     m_minimapUri = p_minimapUri;
+  }
+
+  /**
+   * @return the currentTimeStep
+   */
+  public int getCurrentTimeStep()
+  {
+    return m_currentTimeStep;
+  }
+
+  /**
+   * @param p_currentTimeStep the currentTimeStep to set
+   */
+  public void setCurrentTimeStep(int p_currentTimeStep)
+  {
+    m_currentTimeStep = p_currentTimeStep;
   }
 
 

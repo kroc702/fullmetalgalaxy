@@ -26,18 +26,15 @@
 package com.fullmetalgalaxy.client.board;
 
 
-import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.MAppGameCreation;
-import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.fonts.ImageFont;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -49,7 +46,6 @@ public class MAppStatusBar extends MApp
   public static final String HISTORY_ID = "status";
 
   protected HorizontalPanel m_panel = new HorizontalPanel();
-  protected Image m_icon = Icons.s_instance.desert_planet_medium().createImage();
   protected HTML m_title = new HTML();
   private String m_strTitle = "";
 
@@ -76,8 +72,6 @@ public class MAppStatusBar extends MApp
 
     m_panel.add( vpanel );
     m_panel.setCellWidth( vpanel, "280px" );
-    m_panel.add( m_icon );
-    m_panel.setCellWidth( m_icon, "40px" );
     m_panel.add( m_title );
     m_panel.setCellHorizontalAlignment( m_title, HasHorizontalAlignment.ALIGN_LEFT );
     initWidget( m_panel );

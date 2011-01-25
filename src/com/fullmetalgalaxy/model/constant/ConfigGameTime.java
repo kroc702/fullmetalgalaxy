@@ -108,14 +108,15 @@ public enum ConfigGameTime
     // ========
     // time config : StandardAsynch
     timeConfig = new EbConfigGameTime();
-    timeConfig.setTimeStepDurationInSec( 17280 ); // 1/5 day (4h50)
+    timeConfig.setTimeStepDurationInSec( 21000 ); 
+    // (5h50) so 49h to get 25pts (DLA time is changing every day and user can skip one day)
     timeConfig.setTideChangeFrequency( 5 ); // tide change every days
     timeConfig.setTotalTimeStep( 125 ); // 125 time step (ie turn)
     timeConfig.setActionPtPerTimeStep( 3 ); // 3 pt per time step
     timeConfig.setActionPtPerExtraShip( 1 ); // 1 more pt per extra ship
-    // 1 more bullet every time step.. this is a problem as it can fire 5 times
-    // every days !
     timeConfig.setBulletCountIncrement( 1 );
+    // 1 more bullet every time step.. this is a problem as it can fire 5 times every days !
+    // TODO one solution is to give 0.5 bullet count !
     takeOffTurns = new ArrayList<Integer>();
     takeOffTurns.add( 103 );
     takeOffTurns.add( 104 );
@@ -126,7 +127,7 @@ public enum ConfigGameTime
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
-    timeConfig.setDescription( "25 jours en parallèle" );
+    timeConfig.setDescription( "30 jours en parallèle" );
     timeConfig.setDeploymentTimeStep( 8 );
     s_configMap.put( StandardAsynch, timeConfig );
 

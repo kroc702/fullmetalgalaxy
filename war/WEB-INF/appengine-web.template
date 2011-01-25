@@ -17,7 +17,7 @@
   
 	<static-files>
         <include path="/**.cache.**" expiration="365d" />
-        <include path="/**.nocache.**" expiration="300s" />
+        <include path="/**.nocache.**" expiration="60s" />
         <include path="/fullmetalgalaxy/**" expiration="10d" />
         <include path="/puzzles/**" expiration="10d" />
         <include path="/**images/**" expiration="10d" />

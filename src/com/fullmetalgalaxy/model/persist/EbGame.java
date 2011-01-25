@@ -74,6 +74,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private boolean m_history = false;
   private Tide m_currentTide = Tide.Medium;
   private Tide m_nextTide = Tide.Medium;
+  private Tide m_nextTide2 = Tide.Medium;
   private int m_lastTideChange = 0;
   private int m_currentTimeStep = 0;
   private Date m_lastTimeStepChange = new Date( System.currentTimeMillis() );
@@ -154,6 +155,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     m_history = false;
     m_currentTide = Tide.Medium;
     m_nextTide = Tide.Medium;
+    m_nextTide2 = Tide.Medium;
     m_lastTideChange = 0;
     m_currentTimeStep = 0;
     m_currentPlayerId = 0L;
@@ -623,6 +625,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       // if a token enter inside another token, it take his color
       p_tokenToMove.setColor( p_tokenCarrier.getColor() );
     }
+    getBoardFireCover().incFireCover( p_tokenToMove );
     // incFireCover( p_tokenToMove );
     // this update is here only to refresh token display during time mode
     updateLastTokenUpdate( null );
@@ -2077,6 +2080,24 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public void setNextTide(Tide p_nextTide)
   {
     m_nextTide = p_nextTide;
+  }
+
+
+  /**
+   * @return the nextTide
+   * @WgtHidden
+   */
+  public Tide getNextTide2()
+  {
+    return m_nextTide2;
+  }
+
+  /**
+   * @param p_nextTide the nextTide to set
+   */
+  public void setNextTide2(Tide p_nextTide)
+  {
+    m_nextTide2 = p_nextTide;
   }
 
 

@@ -26,6 +26,9 @@
 package com.fullmetalgalaxy.client.board;
 
 
+import java.util.ArrayList;
+
+import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
@@ -34,6 +37,7 @@ import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -45,14 +49,13 @@ import com.google.gwt.user.client.ui.Label;
 public class WgtPlayerInfo extends WgtView
 {
   HorizontalPanel m_panel = new HorizontalPanel();
+  HorizontalPanel m_panelTide = new HorizontalPanel();
   Image m_iconAction = Icons.s_instance.action16().createImage();
-  Label m_lblAction = new Label( " : 0  " );
+  HTML m_lblAction = new HTML( "&nbsp;: 0  " );
   Image m_iconOre = Icons.s_instance.ore16().createImage();
-  Label m_lblOre = new Label( " : 0  " );
+  HTML m_lblOre = new HTML( "&nbsp;: 0  " );
   Image m_iconMoon = Icons.s_instance.moon16().createImage();
-  Label m_lblMoon = new Label( " :  " );
-  Image m_iconTide1 = Icons.s_instance.tide_unknown().createImage();
-  Image m_iconTide2 = Icons.s_instance.tide_unknown().createImage();
+  Label m_lblMoon = new HTML( "&nbsp;:&nbsp;" );
 
   /**
    * 
@@ -80,12 +83,7 @@ public class WgtPlayerInfo extends WgtView
     m_panel.add( m_lblMoon );
     m_lblMoon.setTitle( "Marees" );
     m_lblMoon.setStyleName( "fmp-status-text" );
-    m_panel.add( m_iconTide1 );
-    m_panel.setCellWidth( m_iconTide1, "20px" );
-    m_iconTide1.setTitle( "Marees actuelle:" );
-    m_panel.add( m_iconTide2 );
-    m_panel.setCellWidth( m_iconTide2, "20px" );
-    m_iconTide2.setTitle( "Marées futur:" );
+    m_panel.add( m_panelTide );
 
     // m_panel.setWidth( "100%" );
     // m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
@@ -93,33 +91,88 @@ public class WgtPlayerInfo extends WgtView
   }
 
 
-  private AnEvent m_oldGameEvent = null;
+  private AnEvent m_oldGameEvent = new AnEvent();
 
   protected void redraw()
   {
     EbGame game = ModelFmpMain.model().getGame();
     AnEvent lastEvent = game.getLastGameLog();
-    if( (lastEvent != m_oldGameEvent) && (ModelFmpMain.model().getMyRegistration() != null) )
+
+    if( (lastEvent != m_oldGameEvent) )
     {
       m_oldGameEvent = lastEvent;
 
-      m_lblAction.setText( " : " + ModelFmpMain.model().getMyRegistration().getPtAction() + "  " );
-      m_lblOre.setText( " : " + ModelFmpMain.model().getMyRegistration().getOreCount() + "  " );
+      // Display current tides
+      m_panelTide.clear();
+      Image image = BoardIcons.iconTide( game.getCurrentTide() ).createImage();
+      image.setTitle( "maree actuelle: " + Messages.getTideString( game.getCurrentTide() ) );
+      m_panelTide.add( image );
+      m_panelTide.setCellWidth( image, "20px" );
 
-      // Display tides
-      // =============
-      BoardIcons.iconTide( game.getCurrentTide() ).applyTo( m_iconTide1 );
-      m_iconTide1.setTitle( "maree actuelle: " + Messages.getTideString( game.getCurrentTide() ) );
-
-      if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0 )
+      if( ModelFmpMain.model().getMyRegistration() != null )
       {
-        BoardIcons.iconTide( game.getNextTide() ).applyTo( m_iconTide2 );
-        m_iconTide2.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
+        m_lblAction.setHTML( "&nbsp;: "
+            + ModelFmpMain.model().getMyRegistration().getPtAction()
+            + "/"
+            + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((ModelFmpMain.model()
+                .getMyRegistration().getEnuColor().getNbColor() - 1) * game
+                .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
+        m_lblOre.setHTML( "&nbsp;: " + ModelFmpMain.model().getMyRegistration().getOreCount() );
+
+
+        // Display current take off turn
+        if( game.getAllowedTakeOffTurns().contains( game.getCurrentTimeStep() ) )
+        {
+          // take off is allowed : display it !
+          image = Icons.s_instance.takeOff16().createImage();
+          image.setTitle( "Decollage autorisé !" );
+          m_panelTide.add( image );
+          m_panelTide.setCellWidth( image, "20px" );
+        }
+
+
+        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 1 )
+        {
+          image = BoardIcons.iconTide( game.getNextTide() ).createImage();
+          image.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
+          if( game.getEbConfigGameTime().isAsynchron() )
+          {
+            image.setTitle( image.getTitle() + " - "
+                + ClientUtil.formatDateTime( game.estimateNextTideChange() ) );
+          }
+          m_panelTide.add( image );
+          m_panelTide.setCellWidth( image, "20px" );
+        }
+
+        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
+        {
+          image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
+          image.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
+          m_panelTide.add( image );
+          m_panelTide.setCellWidth( image, "20px" );
+        }
+
       }
-      else
+
+      // display next take off
+      // ===================
+      ArrayList<Integer> allowedTakeOff = game.getAllowedTakeOffTurns();
+      if( allowedTakeOff != null )
       {
-        Icons.s_instance.tide_unknown().applyTo( m_iconTide2 );
-        m_iconTide2.setTitle( MAppBoard.s_messages.noForecast() );
+        int index = 0;
+        int currentTurn = game.getCurrentTimeStep();
+        while( (index < allowedTakeOff.size())
+            && (currentTurn >= allowedTakeOff.get( index ).intValue()) )
+        {
+          index++;
+        }
+        if( index < allowedTakeOff.size() )
+        {
+          image = Icons.s_instance.takeOff16().createImage();
+          image.setTitle( "prochain decolage : tour " + allowedTakeOff.get( index ) );
+          m_panelTide.add( image );
+          m_panelTide.setCellWidth( image, "20px" );
+        }
       }
     }
 

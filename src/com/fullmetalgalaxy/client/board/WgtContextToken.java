@@ -31,7 +31,10 @@ import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
@@ -93,6 +96,22 @@ public class WgtContextToken extends Composite
         {
           absPanel.add( new HTML( player.getAccountPseudo() ), 0, 20 );
         }
+      }
+      
+      // display land under token
+      AnBoardPosition position = ModelFmpMain.model().getActionBuilder().getSelectedPosition();
+      if(position != null)
+      {
+        absPanel.add( new HTML( Messages.getLandString( ModelFmpMain.model().getGame().getLand( position ) ) ), 0, 40 );
+        
+      }
+
+      // display ore count for freither
+      EbToken token = ModelFmpMain.model().getActionBuilder().getSelectedToken();
+      if( token != null && token.getType() == TokenType.Freighter )
+      {
+        absPanel.add( new HTML( "minerais : " + token.getContainOre() ), 150, 0 );
+
       }
       // m_panel.add( new HTML( "</center>" ) );
     }
