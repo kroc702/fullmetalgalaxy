@@ -137,7 +137,7 @@ public class EbEvtTide extends AnEvent
       registration.setWorkingWeatherHenCount( p_game.haveWeatherHen( registration.getEnuColor() ) ? 1 : 0 );
     }
     
-    game.invalidateFireCover();
+    execFireDisabling( p_game );
   }
 
   /**
@@ -168,9 +168,9 @@ public class EbEvtTide extends AnEvent
         }
       }
     }
-    
-    game.invalidateFireCover();
     game.setLastTideChange( getOldTideChange() );
+    
+    unexecFireDisabling( p_game );
   }
 
 

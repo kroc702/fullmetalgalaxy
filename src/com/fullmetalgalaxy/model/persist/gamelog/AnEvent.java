@@ -25,11 +25,18 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
-import java.util.Date;
 
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 
@@ -52,7 +59,15 @@ public class AnEvent extends EbBase
   private long m_idGame = 0;
 
 
+  /**
+   * a backup of all fire disable flag that have been changed by this action
+   */
+  private List<FireDisabling> m_fdRemoved = new ArrayList<FireDisabling>();
+  private List<FireDisabling> m_fdAdded = new ArrayList<FireDisabling>();
+  /** this flag is here to avoid recompute fire disabling action again and again */
+  private boolean m_isFdComputed = false;
 
+  
   private boolean m_auto = false;
 
   transient private boolean m_isPersistent = false;
@@ -94,6 +109,9 @@ public class AnEvent extends EbBase
     m_idGame = 0;
     m_type = null;
 
+    m_fdRemoved = null;
+    m_fdAdded = null;
+    m_isFdComputed = false;
   }
 
   public GameLogType getType()
@@ -257,6 +275,164 @@ public class AnEvent extends EbBase
     m_lastUpdate = p_lastUpdate;
   }
 
+  /**
+   * @return the fdRemoved
+   */
+  protected List<FireDisabling> getFdRemoved()
+  {
+    return m_fdRemoved;
+  }
+
+
+  /**
+   * @param p_fdRemoved the fdRemoved to set
+   */
+  protected void setFdRemoved(List<FireDisabling> p_fdRemoved)
+  {
+    m_fdRemoved = p_fdRemoved;
+  }
+
+  protected void addFdRemoved(List<FireDisabling> p_fdRemoved)
+  {
+    if( p_fdRemoved == null || p_fdRemoved.isEmpty() )
+    {
+      return;
+    }
+    if( m_fdRemoved == null )
+    {
+      setFdRemoved( p_fdRemoved );
+    }
+    else
+    {
+      m_fdRemoved.addAll( p_fdRemoved );
+    }
+  }
+
+  /*protected void addFdRemoved(FireDisabling p_fdRemoved)
+  {
+    if( p_fdRemoved == null )
+    {
+      return;
+    }
+    if( m_fdRemoved == null )
+    {
+      m_fdRemoved = new ArrayList<FireDisabling>();
+    }
+    m_fdRemoved.add( p_fdRemoved );
+  }*/
+
+
+  /**
+   * @return the fdAdded
+   */
+  protected List<FireDisabling> getFdAdded()
+  {
+    return m_fdAdded;
+  }
+
+
+  /**
+   * @param p_fdAdded the fdAdded to set
+   */
+  protected void setFdAdded(List<FireDisabling> p_fdAdded)
+  {
+    m_fdAdded = p_fdAdded;
+  }
+
+  protected void addFdAdded(List<FireDisabling> p_fdAdded)
+  {
+    if( p_fdAdded == null || p_fdAdded.isEmpty() )
+    {
+      return;
+    }
+    if( m_fdAdded == null )
+    {
+      setFdAdded( p_fdAdded );
+    }
+    else
+    {
+      m_fdAdded.addAll( p_fdAdded );
+    }
+  }
+
+
+  /**
+   * @return the isFdComputed
+   */
+  protected boolean isFdComputed()
+  {
+    return m_isFdComputed;
+  }
+
+
+  /**
+   * @param p_isFdComputed the isFdComputed to set
+   */
+  protected void setFdComputed(boolean p_isFdComputed)
+  {
+    m_isFdComputed = p_isFdComputed;
+  }
+
+
+  /**
+   */
+  protected void unexecFireDisabling(EbGame p_game)
+  {
+    assert isFdComputed();
+    p_game.getBoardFireCover().addFireDisabling( getFdRemoved() );
+    p_game.getBoardFireCover().removeFireDisabling( getFdAdded() );
+
+  }
+
+  protected void execFireDisabling(EbGame p_game, AnBoardPosition p_position)
+  {
+    if( isFdComputed() )
+    {
+      // save CPU by avoiding recompute fire disabling flags
+      p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+    }
+    else
+    {
+      // TODO we may avoid useless computing if token wasn't a destroyer !
+      int fireRange = 3; // as it's the maximum fire length...
+      List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+      List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+
+      // fire range to look for all tokens that may be impacted
+      p_game.getBoardFireCover().checkFireDisableFlag( p_position, fireRange, FdChange.ALL,
+          fdRemoved, fdAdded );
+
+      p_game.getBoardFireCover().cleanFireDisableCollection( fdRemoved, fdAdded );
+
+      addFdRemoved( fdRemoved );
+      addFdAdded( fdAdded );
+      setFdComputed( true );
+    }
+  }
+
+  /**
+   * recompute fire cover and check for all token his fire disabled flag
+   * @param p_game
+   */
+  protected void execFireDisabling(EbGame p_game)
+  {
+    if( isFdComputed() )
+    {
+      // save CPU by avoiding recompute fire disabling flags
+      p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+    }
+    else
+    {
+      List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+      List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+      p_game.getBoardFireCover().reComputeFireCover( fdRemoved, fdAdded );
+      addFdRemoved( fdRemoved );
+      addFdAdded( fdAdded );
+      setFdComputed( true );
+    }
+  }
 
 
 }

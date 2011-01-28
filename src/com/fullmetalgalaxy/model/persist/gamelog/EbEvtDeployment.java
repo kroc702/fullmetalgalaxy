@@ -175,6 +175,8 @@ public class EbEvtDeployment extends AnEventPlay
       p_game.moveToken( getToken( p_game ), getPosition() );
     }
     getToken(p_game).incVersion();
+
+    execFireDisabling( p_game, getPosition() );
   }
 
   /* (non-Javadoc)
@@ -194,6 +196,7 @@ public class EbEvtDeployment extends AnEventPlay
     // this update is here only to refresh token display
     p_game.updateLastTokenUpdate( null );
 
+    unexecFireDisabling( p_game );
   }
 
 

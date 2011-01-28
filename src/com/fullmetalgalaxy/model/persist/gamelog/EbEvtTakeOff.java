@@ -159,6 +159,8 @@ public class EbEvtTakeOff extends AnEventPlay
       }
     }
 
+    execFireDisabling( p_game );
+
     // this update is here only to refresh token display
     p_game.updateLastTokenUpdate( null );
   }
@@ -186,6 +188,7 @@ public class EbEvtTakeOff extends AnEventPlay
       }
     }
 
+    unexecFireDisabling( p_game );
   }
 
 

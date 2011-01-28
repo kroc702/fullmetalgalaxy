@@ -612,27 +612,37 @@ public class BoardFireCover implements Serializable
 
   protected void reComputeFireCover()
   {
+    Collection<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+    Collection<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+    reComputeFireCover( fdRemoved, fdAdded );
+    if( !fdRemoved.isEmpty() || !fdAdded.isEmpty() )
+    {
+      RpcUtil.logError( "#### fire disable flag was wrong !" );
+    }
+  }
+
+  public void reComputeFireCover(Collection<FireDisabling> p_fdRemoved,
+      Collection<FireDisabling> p_fdAdded)
+  {
     // first clear fire cover
     m_fireCover = new byte[m_game.getLandWidth()][m_game.getLandHeight()][EnuColor
         .getTotalNumberOfColor()];
     m_disabledFireCover = new byte[m_game.getLandWidth()][m_game.getLandHeight()][EnuColor
         .getTotalNumberOfColor()];
     m_lockedToken.clear();
+
     // compute fire cover
     for( EbToken token : m_game.getSetToken() )
     {
       incFireCover( token );
     }
+
     // some token may have to be fire enabled/disabled
-    Collection<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
-    Collection<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
     for( EbToken token : m_game.getSetToken() )
     {
-      if( checkFireDisableFlag( token, FdChange.ALL, fdRemoved, fdAdded ) )
-      {
-        RpcUtil.logError( token + " fire disable flag was wrong." );
-      }
+      checkFireDisableFlag( token, FdChange.ALL, p_fdRemoved, p_fdAdded );
     }
+    cleanFireDisableCollection( p_fdRemoved, p_fdAdded );
   }
 
 
