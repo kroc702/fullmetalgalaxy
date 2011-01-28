@@ -51,14 +51,6 @@ public class EbEvtMove extends AnEventPlay
   static final long serialVersionUID = 1;
 
   /**
-   * a backup of all fire disable flag that have been changed by this action
-   */
-  List<FireDisabling> m_fdRemoved = new ArrayList<FireDisabling>();
-  List<FireDisabling> m_fdAdded = new ArrayList<FireDisabling>();
-  /** this flag is here to avoid recompute fire disabling action again and again */
-  boolean m_isFdComputed = false;
-
-  /**
    * 
    */
   public EbEvtMove()
@@ -78,9 +70,6 @@ public class EbEvtMove extends AnEventPlay
   private void init()
   {
     setCost( 1 );
-    m_fdRemoved = null;
-    m_fdAdded = null;
-    m_isFdComputed = false;
   }
 
   @Override
@@ -217,13 +206,31 @@ public class EbEvtMove extends AnEventPlay
     setOldPosition( getToken(p_game).getPosition() );
     
     p_game.moveToken( getToken(p_game), getNewPosition() );
+    checkFireDisabling( p_game );
+    getToken(p_game).incVersion();
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
+   */
+  @Override
+  public void unexec(EbGame p_game) throws RpcFmpException
+  {
+    super.unexec(p_game);
+    p_game.moveToken( getToken(p_game), getOldPosition() );
+    getToken(p_game).decVersion();
+
+    unexecFireDisabling( p_game );
+  }
 
 
-    if( m_isFdComputed )
+  private void checkFireDisabling(EbGame p_game)
+  {
+    if( isFdComputed() )
     {
       // save CPU by avoiding recompute fire disabling flags
-      p_game.getBoardFireCover().addFireDisabling( m_fdAdded );
-      p_game.getBoardFireCover().removeFireDisabling( m_fdRemoved );
+      p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
     }
     else
     {
@@ -282,37 +289,11 @@ public class EbEvtMove extends AnEventPlay
 
       p_game.getBoardFireCover().cleanFireDisableCollection( fdRemoved, fdAdded );
 
-      if( !fdRemoved.isEmpty() )
-      {
-        m_fdRemoved = fdRemoved;
-      }
-      if( !fdAdded.isEmpty() )
-      {
-        m_fdAdded = fdAdded;
-      }
-      m_isFdComputed = true;
+      addFdRemoved( fdRemoved );
+      addFdAdded( fdAdded );
+      setFdComputed( true );
     }
-
-    getToken(p_game).incVersion();
   }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
-   */
-  @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
-  {
-    assert m_isFdComputed;
-    super.unexec(p_game);
-    p_game.moveToken( getToken(p_game), getOldPosition() );
-    getToken(p_game).decVersion();
-
-    p_game.getBoardFireCover().addFireDisabling( m_fdRemoved );
-    p_game.getBoardFireCover().removeFireDisabling( m_fdAdded );
-
-  }
-
-
 
 
 }

@@ -218,6 +218,8 @@ public class EbEvtUnLoad extends AnEventPlay
     p_game.moveToken( getToken(p_game), getNewPosition() );
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
+
+    execFireDisabling( p_game, getToken( p_game ).getPosition() );
   }
 
   /* (non-Javadoc)
@@ -230,6 +232,8 @@ public class EbEvtUnLoad extends AnEventPlay
     p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );
     getToken(p_game).decVersion();
     getTokenCarrier(p_game).decVersion();
+
+    unexecFireDisabling( p_game );
   }
 
   // Bean getter / setter

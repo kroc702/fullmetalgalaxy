@@ -137,6 +137,8 @@ public class EbEvtRepair extends AnEventPlay
     turret.incVersion();
     EbRegistration registration = getMyRegistration(p_game);
     registration.setTurretsToRepair( registration.getTurretsToRepair() - 1 );
+
+    execFireDisabling( p_game, getPosition() );
   }
 
   /* (non-Javadoc)
@@ -151,6 +153,8 @@ public class EbEvtRepair extends AnEventPlay
     turret.decVersion();
     EbRegistration registration = getMyRegistration(p_game);
     registration.setTurretsToRepair( registration.getTurretsToRepair() + 1 );
+
+    unexecFireDisabling( p_game );
   }
 
 

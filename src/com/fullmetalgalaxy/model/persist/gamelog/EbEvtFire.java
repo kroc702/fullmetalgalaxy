@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
@@ -52,11 +53,6 @@ public class EbEvtFire extends AnEventPlay
    */
   private ArrayList<Long> m_TokenIds = null;
 
-  /**
-   * a backup of all fire disable flag that have been changed by this action
-   */
-  List<FireDisabling> m_fdRemoved = new ArrayList<FireDisabling>();
-  List<FireDisabling> m_fdAdded = new ArrayList<FireDisabling>();
 
   /**
    * 
@@ -190,8 +186,7 @@ public class EbEvtFire extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
-    List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+    boolean wasFdComputed = isFdComputed();
 
     // backup for unexec
     setOldPosition( getTokenTarget(p_game).getPosition() );
@@ -206,40 +201,60 @@ public class EbEvtFire extends AnEventPlay
     {
       // target isn't a pontoon: simply move it to graveyard
       p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
+      if( !isFdComputed() )
+      {
+        addFdRemoved( getTokenTarget( p_game ).getFireDisablingList() );
+        p_game.getBoardFireCover().removeFireDisabling(
+            getTokenTarget( p_game ).getFireDisablingList() );
+      }
       getTokenTarget(p_game).incVersion();
       // if it was a destroyer, it may disabling other token: check that
-      if( getTokenTarget( p_game ).isDestroyer() )
-      {
-        p_game.getBoardFireCover().checkFireDisableFlag( getTokenTarget( p_game ).getPosition(),
-            p_game.getTokenFireLength( getTokenTarget( p_game ) ), FdChange.ENABLE, fdRemoved,
-            fdAdded );
-      }
+      execFireDisabling( p_game, position );
     }
     EbToken pontoon = p_game.getToken( position, TokenType.Pontoon );
     if( pontoon != null )
     {
-      // these is still a pontoon here, check that other pontoon are linked to ground and remove all theses
-      m_TokenIds = p_game.chainRemovePontoon( getTokenTarget(p_game) );
+      // these is still a pontoon here, remove it from board
+      m_TokenIds = new ArrayList<Long>();
+      m_TokenIds.add( pontoon.getId() );
+      p_game.moveToken( pontoon, Location.Graveyard );
+      pontoon.incVersion();
 
-      for( Long idToken : m_TokenIds )
+      // check that other pontoon are linked to ground and remove all theses
+      for( Sector sector : Sector.values() )
       {
-        EbToken token = p_game.getToken( idToken );
-        if( token != null && token.isDestroyer() )
+        EbToken otherPontoon = p_game.getToken( getOldPosition().getNeighbour( sector ),
+            TokenType.Pontoon );
+        if( otherPontoon != null && !p_game.isPontoonLinkToGround( otherPontoon ) )
         {
-          p_game.getBoardFireCover().checkFireDisableFlag( token.getPosition(),
-              p_game.getTokenFireLength( token ), FdChange.ENABLE, fdRemoved, fdAdded );
+          m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon ) );
         }
       }
-    }
 
-
-    if( !fdRemoved.isEmpty() )
-    {
-      m_fdRemoved = fdRemoved;
-    }
-    if( !fdAdded.isEmpty() )
-    {
-      m_fdAdded = fdAdded;
+      // then, for all removed pontoon, check fire disabling change
+      if( wasFdComputed )
+      {
+        // save CPU by avoiding recompute fire disabling flags
+        p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+        p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+      }
+      else
+      {
+        List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+        List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+        for( Long idToken : m_TokenIds )
+        {
+          EbToken token = p_game.getToken( idToken );
+          if( token != null && token.isDestroyer() )
+          {
+            p_game.getBoardFireCover().checkFireDisableFlag( token.getPosition(),
+                p_game.getTokenFireLength( token ), FdChange.ENABLE, fdRemoved, fdAdded );
+          }
+        }
+        addFdRemoved( fdRemoved );
+        addFdAdded( fdAdded );
+        setFdComputed( true );
+      }
     }
   }
 
@@ -276,8 +291,7 @@ public class EbEvtFire extends AnEventPlay
       }
     }
 
-    p_game.getBoardFireCover().removeFireDisabling( m_fdRemoved );
-    p_game.getBoardFireCover().addFireDisabling( m_fdAdded );
+    unexecFireDisabling( p_game );
   }
 
   private ArrayList<Long> getTokenIds()

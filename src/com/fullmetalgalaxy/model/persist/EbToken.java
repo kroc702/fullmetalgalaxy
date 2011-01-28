@@ -423,7 +423,7 @@ public class EbToken extends EbBase
       AnBoardPosition position = p_position.getNeighbour( sector );
       for( EbToken token : getGame().getAllToken( position ) )
       {
-        if( (token.canBeColored()) && (!tokenColor.isColored( token.getColor() ))
+        if( (token.canBeColored()) && (tokenColor.getValue() != token.getColor())
             && (token.isNeighbor( this )) )
         {
           return true;

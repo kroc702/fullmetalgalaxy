@@ -172,7 +172,8 @@ public class EbEvtControlFreighter extends AnEventPlay
     getMyRegistration(p_game).setColor(
         EnuColor.addColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() + 3 );
-    p_game.invalidateFireCover();
+
+    execFireDisabling( p_game );
   }
 
   /* (non-Javadoc)
@@ -192,6 +193,8 @@ public class EbEvtControlFreighter extends AnEventPlay
             .getColor() ) );
     }
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
+
+    unexecFireDisabling( p_game );
   }
 
   /**

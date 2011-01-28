@@ -25,6 +25,8 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+
+
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
@@ -55,6 +57,7 @@ public class AnEventPlay extends AnEventUser
   private EbBase m_packedNewTokenCarrier = null;
   private EbBase m_packedTokenDestroyer1 = null;
   private EbBase m_packedTokenDestroyer2 = null;
+
 
 
   public AnEventPlay()

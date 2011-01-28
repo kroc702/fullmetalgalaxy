@@ -168,6 +168,12 @@ public class EbEvtControl extends AnEventPlay
     setOldColor( getTokenTarget( p_game).getColor() );
     
     p_game.changeTokenColor( getTokenTarget(p_game), getTokenDestroyer1(p_game).getColor() );
+    if( !isFdComputed() )
+    {
+      addFdRemoved( getTokenTarget( p_game ).getFireDisablingList() );
+      p_game.getBoardFireCover().removeFireDisabling(
+          getTokenTarget( p_game ).getFireDisablingList() );
+    }
     getTokenTarget(p_game).incVersion();
     for( EbToken token : getTokenTarget(p_game).getSetContain() )
     {
@@ -176,6 +182,8 @@ public class EbEvtControl extends AnEventPlay
         token.incVersion();
       }
     }
+
+    execFireDisabling( p_game, getTokenTarget( p_game ).getPosition() );
   }
 
   /* (non-Javadoc)
@@ -195,6 +203,8 @@ public class EbEvtControl extends AnEventPlay
         token.decVersion();
       }
     }
+
+    unexecFireDisabling( p_game );
   }
 
   /**

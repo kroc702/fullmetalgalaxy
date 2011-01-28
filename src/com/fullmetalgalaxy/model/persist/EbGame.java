@@ -116,8 +116,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   private List<com.fullmetalgalaxy.model.persist.triggers.EbTrigger> m_triggers = new ArrayList<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>();
 
-  private List<FireDisabling> m_listFireDisabling = new ArrayList<FireDisabling>();
-
   private long m_nextLocalId = 0L;
 
   transient private Date m_lastServerUpdate = null;
@@ -1390,7 +1388,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public int getTokenFireLength(EbToken p_token)
   {
-    if( (p_token == null) )
+    if( (p_token == null) || p_token.getLocation() != Location.Board )
     {
       return 0;
     }
@@ -2394,15 +2392,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   {
     m_mapUri = p_mapUri;
   }
-
-  /**
-   * @return the listFireDisabling
-   */
-  public List<FireDisabling> getListFireDisabling()
-  {
-    return m_listFireDisabling;
-  }
-
 
 
 }

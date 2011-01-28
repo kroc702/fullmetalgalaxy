@@ -26,7 +26,9 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
@@ -37,6 +39,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 
 
 /**
@@ -185,6 +188,8 @@ public class EbEvtLoad extends AnEventPlay
   public void exec(EbGame p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    boolean wasFdComputed = isFdComputed();
+
     // backup for unexec
     setOldColor( getToken(p_game).getColor() );
     setOldPosition( getToken(p_game).getPosition() );
@@ -193,6 +198,8 @@ public class EbEvtLoad extends AnEventPlay
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
       
+    execFireDisabling( p_game, getOldPosition() );
+
     // if token is a pontoon, check that other pontoon are linked to ground
     m_TokenIds = null ;
     if( getToken(p_game).getType() == TokenType.Pontoon )
@@ -214,6 +221,31 @@ public class EbEvtLoad extends AnEventPlay
           }
         }
       }
+    }
+
+    // then, for all removed pontoon, check fire disabling change
+    if( wasFdComputed )
+    {
+      // save CPU by avoiding recompute fire disabling flags
+      p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+    }
+    else
+    {
+      List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+      List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+      for( Long idToken : m_TokenIds )
+      {
+        EbToken token = p_game.getToken( idToken );
+        if( token != null && token.isDestroyer() )
+        {
+          p_game.getBoardFireCover().checkFireDisableFlag( token.getPosition(),
+              p_game.getTokenFireLength( token ), FdChange.ENABLE, fdRemoved, fdAdded );
+        }
+      }
+      addFdRemoved( fdRemoved );
+      addFdAdded( fdAdded );
+      setFdComputed( true );
     }
   }
 
@@ -244,6 +276,8 @@ public class EbEvtLoad extends AnEventPlay
         }
       }
     }
+
+    unexecFireDisabling( p_game );
   }
 
 
