@@ -69,7 +69,7 @@ public class WgtPlayerInfo extends WgtView
     m_iconAction.setTitle( "Point d'action restant" );
     m_panel.add( m_lblAction );
     m_lblAction.setTitle( "Point d'action restant" );
-    m_panel.setCellWidth( m_lblAction, "40px" );
+    m_panel.setCellWidth( m_lblAction, "50px" );
     m_lblAction.setStyleName( "fmp-status-text" );
     m_panel.add( m_iconOre );
     m_iconOre.setTitle( "Minerais en soute" );

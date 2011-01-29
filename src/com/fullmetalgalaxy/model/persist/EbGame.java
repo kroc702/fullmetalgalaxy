@@ -2069,6 +2069,10 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public Tide getNextTide()
   {
+    if( m_nextTide == null )
+    {
+      m_nextTide = Tide.getRandom();
+    }
     return m_nextTide;
   }
 
@@ -2087,6 +2091,10 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public Tide getNextTide2()
   {
+    if( m_nextTide2 == null )
+    {
+      m_nextTide2 = Tide.getRandom();
+    }
     return m_nextTide2;
   }
 

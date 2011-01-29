@@ -300,12 +300,9 @@ public class AnEvent extends EbBase
     }
     if( m_fdRemoved == null )
     {
-      setFdRemoved( p_fdRemoved );
+      setFdRemoved( new ArrayList<FireDisabling>() );
     }
-    else
-    {
-      m_fdRemoved.addAll( p_fdRemoved );
-    }
+    m_fdRemoved.addAll( p_fdRemoved );
   }
 
   /*protected void addFdRemoved(FireDisabling p_fdRemoved)
@@ -347,12 +344,9 @@ public class AnEvent extends EbBase
     }
     if( m_fdAdded == null )
     {
-      setFdAdded( p_fdAdded );
+      setFdAdded( new ArrayList<FireDisabling>() );
     }
-    else
-    {
-      m_fdAdded.addAll( p_fdAdded );
-    }
+    m_fdAdded.addAll( p_fdAdded );
   }
 
 
