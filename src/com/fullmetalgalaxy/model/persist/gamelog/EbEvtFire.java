@@ -204,8 +204,7 @@ public class EbEvtFire extends AnEventPlay
       if( !isFdComputed() )
       {
         addFdRemoved( getTokenTarget( p_game ).getFireDisablingList() );
-        p_game.getBoardFireCover().removeFireDisabling(
-            getTokenTarget( p_game ).getFireDisablingList() );
+        p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
       }
       getTokenTarget(p_game).incVersion();
       // if it was a destroyer, it may disabling other token: check that
@@ -238,7 +237,7 @@ public class EbEvtFire extends AnEventPlay
         p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
         p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
       }
-      else
+      else if( m_TokenIds != null )
       {
         List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
         List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
@@ -253,6 +252,10 @@ public class EbEvtFire extends AnEventPlay
         }
         addFdRemoved( fdRemoved );
         addFdAdded( fdAdded );
+        setFdComputed( true );
+      }
+      else
+      {
         setFdComputed( true );
       }
     }

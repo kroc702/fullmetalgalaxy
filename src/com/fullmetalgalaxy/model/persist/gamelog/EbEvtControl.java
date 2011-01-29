@@ -152,7 +152,7 @@ public class EbEvtControl extends AnEventPlay
     if( getTokenTarget(p_game).getType() == TokenType.Freighter )
     {
       throw new RpcFmpException(
-          "les astronefs ne peuvent etres control� de cette facon. Vous devez d�truire toute les tourelles puis entrer dedans" );
+          "les astronefs ne peuvent etres controlé de cette façon. Vous devez détruire toute les tourelles puis entrer dedans" );
     }
 
   }
@@ -171,8 +171,7 @@ public class EbEvtControl extends AnEventPlay
     if( !isFdComputed() )
     {
       addFdRemoved( getTokenTarget( p_game ).getFireDisablingList() );
-      p_game.getBoardFireCover().removeFireDisabling(
-          getTokenTarget( p_game ).getFireDisablingList() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
     }
     getTokenTarget(p_game).incVersion();
     for( EbToken token : getTokenTarget(p_game).getSetContain() )

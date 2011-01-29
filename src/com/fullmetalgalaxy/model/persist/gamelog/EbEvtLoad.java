@@ -230,7 +230,7 @@ public class EbEvtLoad extends AnEventPlay
       p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
       p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
     }
-    else
+    else if( m_TokenIds != null )
     {
       List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
       List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
@@ -245,6 +245,10 @@ public class EbEvtLoad extends AnEventPlay
       }
       addFdRemoved( fdRemoved );
       addFdAdded( fdAdded );
+      setFdComputed( true );
+    }
+    else
+    {
       setFdComputed( true );
     }
   }
