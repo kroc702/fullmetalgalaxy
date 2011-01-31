@@ -16,26 +16,24 @@
     <h1>Les r&egrave;gles du jeu</h1>
     
 			<P>La r&egrave;gle suivante correspond au jeu de plateau original.<br/>
-			On peut noter les diff&eacute;rences ou interpr&eacute;tations
-			suivantes entre le jeu original et cette version en ligne :</P>
-			<ul>
-			  <li>Prévisons de la prochaine marrée uniquement (même avec 2 pondeuses)</li>
-			</ul>
-			<p>La notion de tour de jeu est facultative (voir mode parallèle). Dans ce cas, tous 
+			Dans FMG, la notion de tour de jeu est facultative (voir mode parallèle). Dans ce cas, tous 
 			les joueurs peuvent jouer en même temps. Ceci entraine la modification des règles
 			suivantes :</p>
 			<ul>
-			  <li>Neutralisation tournante: la neutralisation est automatique et n'empêche pas de 
-			  se déplacer.	En revanche, 
-			un pion en mouvement ne créer pas de zone de feu (un char  ne peut donc pas pénétrer 
-			dans la zone de feu du char qu'il neutralise).</li>
-			</ul>
+			<li>Neutralisation : les neutralisations sont automatiques et n'empèche pas de déplacer
+			les neutralisants. En revanche, si l'un des neutralisants se déplace, la neutralisation
+			est imédiatement rompu. Il n'y a pas de différence tactique par rapport aux règles
+			originals.
+			</li>
 			  <li>La r&egrave;gle &quot;entre deux tours, deux chars ne peuvent pas	stationner 
 			c&ocirc;te &agrave; c&ocirc;te sur des montagnes.&quot;
 			a &eacute;t&eacute; adapt&eacute;e &agrave; &quot;si deux chars, du m&ecirc;me
 			propri&eacute;taire, sont c&ocirc;te &agrave; c&ocirc;te sur des montagnes, l'un des
-			deux ne produit pas de zone de feu&quot;
+			deux ne produit pas de zone de feu&quot;.<br/>
+			Avec cette règle, il n'est pas possible de neutraliser avec 2 char cote à cote sur une
+			même montagne.
 			</li>
+			</ul>
 			<p>Si certaines de ces variations ne vous plaisent pas, je vous invite &agrave; me le 
 			faire savoir.</p>
 			<HR/>
