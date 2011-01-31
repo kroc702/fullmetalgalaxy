@@ -22,8 +22,8 @@
 			<ul>
 			<li>Neutralisation : les neutralisations sont automatiques et n'empèche pas de déplacer
 			les neutralisants. En revanche, si l'un des neutralisants se déplace, la neutralisation
-			est imédiatement rompu. Il n'y a pas de différence tactique par rapport aux règles
-			originals.
+			est imédiatement rompu. Les différence tactiques par rapport aux règles
+			originales sont minimes.
 			</li>
 			  <li>La r&egrave;gle &quot;entre deux tours, deux chars ne peuvent pas	stationner 
 			c&ocirc;te &agrave; c&ocirc;te sur des montagnes.&quot;
@@ -31,7 +31,7 @@
 			propri&eacute;taire, sont c&ocirc;te &agrave; c&ocirc;te sur des montagnes, l'un des
 			deux ne produit pas de zone de feu&quot;.<br/>
 			Avec cette règle, il n'est pas possible de neutraliser avec 2 char cote à cote sur une
-			même montagne.
+			même montagne (mais il est parfaitement possible de tirer).
 			</li>
 			</ul>
 			<p>Si certaines de ces variations ne vous plaisent pas, je vous invite &agrave; me le 
