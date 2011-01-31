@@ -194,6 +194,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     }
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
 
+    p_game.invalidateFireCover();
     unexecFireDisabling( p_game );
   }
 

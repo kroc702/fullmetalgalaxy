@@ -1272,7 +1272,8 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   public boolean isTokenFireActive(EbToken p_token)
   {
     EnuColor playerColor = getTokenOwnerColor( p_token );
-    return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret) || (getOpponentFireCover(
+    return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret)
+        || (playerColor.getValue() == EnuColor.None) || (getOpponentFireCover(
         playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
   }
 
