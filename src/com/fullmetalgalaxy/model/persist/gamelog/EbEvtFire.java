@@ -115,7 +115,7 @@ public class EbEvtFire extends AnEventPlay
           .getColor(), getMyRegistration(p_game).getColor() );
     }
     // check that player control destroyers
-    if( (getTokenTarget(p_game).canBeColored())
+    if( (getTokenTarget( p_game ).getColor() != EnuColor.None)
         && (getMyRegistration(p_game).getEnuColor().isColored( getTokenTarget(p_game).getColor() )) )
     {
       throw new RpcFmpException( "Vous ne pouvez pas détruire vos propre pions" );
