@@ -48,6 +48,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.google.gwt.user.client.Window;
 
 
@@ -209,9 +210,19 @@ public class EventsPlayBuilder implements GameEventStack
           && (getSelectedToken() != null)
           && (getSelectedToken().getLocation() == Location.Board) )
       {
-        getGame().getBoardFireCover().decFireCover( getSelectedToken() );
+        List<FireDisabling> fdBackup = null;
+        if(getSelectedToken().isFireDisabling())
+        {
+          // backup a copy list to avoid concurrent access error
+          fdBackup = new ArrayList<FireDisabling>( getSelectedToken().getFireDisablingList() );
+          getGame().getBoardFireCover().removeFireDisabling( fdBackup );
+        }
         EnuColor fireCoverColor = getGame().getOpponentFireCover( getSelectedToken() );
-        getGame().getBoardFireCover().incFireCover( getSelectedToken() );
+        if( fdBackup != null )
+        {
+          getGame().getBoardFireCover().addFireDisabling( fdBackup );
+        }
+        
         if( fireCoverColor.getValue() != EnuColor.None )
         {
           if( getLastAction().getType() == GameLogType.EvtMove)
