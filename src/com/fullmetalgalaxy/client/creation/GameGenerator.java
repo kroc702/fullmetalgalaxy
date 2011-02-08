@@ -152,17 +152,17 @@ public class GameGenerator
     if( p_size != MapSize.Custom )
     {
       int hexagonCount = p_size.getHexagonPerPlayer() * getGame().getMaxNumberOfPlayer();
-      float fheight = (float)Math.sqrt( hexagonCount / 1.6 );
-      width = (int)Math.floor( 1.6 * fheight );
-      height = (int)Math.ceil( fheight );
+      
       if( isHexagonMap() )
       {
-        width = (int)Math.floor( 1.3 * fheight );
-        if( width % 2 == 0 )
-        {
-          width--;
-        }
+        width = (int)Math.floor( Math.sqrt( hexagonCount * 1.34 ) );
         height = width;
+      }
+      else
+      {
+        float fheight = (float)Math.sqrt( hexagonCount / 1.6 );
+        width = (int)Math.floor( 1.6 * fheight );
+        height = (int)Math.ceil( fheight );
       }
     }
     getGame().setLandSize( width, height );
