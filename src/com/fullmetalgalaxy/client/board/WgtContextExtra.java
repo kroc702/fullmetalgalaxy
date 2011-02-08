@@ -133,24 +133,27 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         && (action.getSelectedAction() == null) )
     {
       // so, no token is selected: find ship in orbit !
-      Set<EbToken> list = ModelFmpMain.model().getGame().getSetToken();
-      boolean isTitleDisplayed = false;
-      for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
+      if( model.getGame().getCurrentTimeStep() == 0 )
       {
-        EbToken token = (EbToken)it.next();
-
-        if( token.getLocation() == Location.Orbit
-            && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() )
-                .getAccountId() != 0 )
+        Set<EbToken> list = ModelFmpMain.model().getGame().getSetToken();
+        boolean isTitleDisplayed = false;
+        for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
         {
-          if( !isTitleDisplayed )
+          EbToken token = (EbToken)it.next();
+  
+          if( token.getLocation() == Location.Orbit
+              && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() )
+                  .getAccountId() != 0 )
           {
-            isTitleDisplayed = true;
-            m_panel.add( new Label( MAppBoard.s_messages.inOrbit() ) );
+            if( !isTitleDisplayed )
+            {
+              isTitleDisplayed = true;
+              m_panel.add( new Label( MAppBoard.s_messages.inOrbit() ) );
+            }
+            // this token is in orbit !
+            // and an account is associated with it
+            addToken( token );
           }
-          // this token is in orbit !
-          // and an account is associated with it
-          addToken( token );
         }
       }
     }
