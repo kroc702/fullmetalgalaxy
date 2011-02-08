@@ -25,6 +25,8 @@
  */
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.Date;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -78,6 +80,11 @@ public class EbEvtPlayerTurn extends AnEvent
   public void check(EbGame p_game) throws RpcFmpException
   {
     super.check(p_game);
+    if( isAuto() )
+    {
+      // no check !
+      return;
+    }
     if( !p_game.isStarted() )
     {
       // TODO i18n
@@ -94,7 +101,7 @@ public class EbEvtPlayerTurn extends AnEvent
       throw new RpcFmpException(
           "Cette partie ne se joue pas en tour par tour mais en mode asynchrone" );
     }
-    if( !isAuto() && (getAccountId() != p_game.getCurrentPlayerRegistration().getAccountId()) )
+    if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccountId() )
     {
       throw new RpcFmpException( "Seul le joueur dont c'est le tour peut ecourter sont tour de jeu" );
     }
@@ -163,6 +170,9 @@ public class EbEvtPlayerTurn extends AnEvent
     if( game.isAsynchron() && game.getCurrentTimeStep() == 1 )
     {
       nextPlayerRegistration = null;
+      // this is the real start time for parallele game
+      // as player may took a while to land
+      p_game.setLastTimeStepChange( new Date() );
     }
     else
     {

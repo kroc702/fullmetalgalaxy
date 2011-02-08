@@ -371,8 +371,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccountId() )
           + "' target='_blank'>" + login
           + "</a>";
-      if( (!ModelFmpMain.model().getGame().isAsynchron())
-          && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
+      if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )
       {
         html += Icons.s_instance.action16().getHTML();
       }
@@ -446,8 +445,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         }
         
         // display endTurn button
-        if( (!ModelFmpMain.model().getGame().isAsynchron())
-            && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
+        if( (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
         {
           m_playerGrid.setWidget( index, 8, m_btnSkipTurn );
         }

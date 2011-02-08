@@ -26,6 +26,7 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -122,6 +123,11 @@ public class EbEvtCancel extends AnEventUser
       }
       p_game.getLogs().remove( p_game.getLogs().size() -1 );
       m_eventsBackup.add( 0, action );
+    }
+    // this is to avoid timestep replay right after the cancel action.
+    if( p_game.isAsynchron() )
+    {
+      p_game.setLastTimeStepChange( new Date() );
     }
     p_game.addEvent( this );
   }
