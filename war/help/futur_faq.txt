@@ -1,4 +1,4 @@
-Q:Comment afficher full metal planete dans une autre langue.
+﻿Q:Comment afficher full metal planete dans une autre langue.
 R:FMP s�lectionne la langue en fonction du navigateur. Il est cependant possible de la modifier en ajoutant a la fin de l'url "?locale=fr" ou le code iso du language souhait�.
 
 Q:Malg�s la manipulation ci-dessus, je n'arrive toujours pas a afficher FMP dans ma langue.

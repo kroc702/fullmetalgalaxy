@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.GameGenerator;
 import com.fullmetalgalaxy.client.creation.MapSize;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -133,6 +134,21 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
   @Override
   public void onChange(Widget p_sender)
   {
+    if( p_sender == getMaxNumberOfPlayer() )
+    {
+      int max = ModelFmpMain.model().getGame().getMaxNumberOfPlayer();
+      if( max > FmpConstant.maximumPlayerNumber )
+      {
+        ModelFmpMain.model().getGame().setMaxNumberOfPlayer( FmpConstant.maximumPlayerNumber );
+        ModelFmpMain.model().notifyModelUpdate();
+      }
+      if( max < FmpConstant.minimumPlayerNumber )
+      {
+        ModelFmpMain.model().getGame().setMaxNumberOfPlayer( FmpConstant.minimumPlayerNumber );
+        ModelFmpMain.model().notifyModelUpdate();
+      }
+    }
+
     if( (p_sender == m_mapSize) || (p_sender == getMaxNumberOfPlayer()) )
     {
       GameGenerator.setSize( MapSize.getFromOrdinal( m_mapSize.getSelectedIndex() ) );

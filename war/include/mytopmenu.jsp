@@ -59,7 +59,7 @@ document.onclick = mclose;
 		      onmouseout="mclosetime()">
 			<a target="_blank" href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2">App Engine</a><br/>
 		    <a target="_blank" href="https://www.google.com/analytics/reporting/?reset=1&id=13711373">Analytics</a><br/>
-			<a target="_blank" href="http://code.google.com/p/fullmetalgalaxy/">Google code</a><br/>
+			<a target="_blank" href="http://code.google.com/p/fullmetalgalaxy/issues/list">Google code</a><br/>
 			<hr/>
 		    <a target="_blank" href="https://www.ovh.com/managerv3/">ManagerV3 OVH</a> <br/>
 		    <a target="_blank" href="https://www.google.com/webmasters/tools/">Web Tools</a><br/>

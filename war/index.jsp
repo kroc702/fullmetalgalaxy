@@ -29,20 +29,26 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
     <p>Aux confins de la galaxie, plus aucune loi ne r&eacute;gule les conflits
     entre m&eacute;gacorporations mini&egrave;res. Vous &ecirc;tes un full
     metal pilote vendant vos comp&eacute;tences militaires au plus
-    offrant.<br/>
+    offrant.</p>
+    <table><tr><td>
+    <a href="/images/screenshots/realmap1.jpg" >
+    <img src="/images/screenshots/min/realmap1.jpg" /> 
+	</a>
+    </td><td>
+    <div>
+    FMG est un wargame enti&egrave;rement gratuit, jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
+    </div>
+    </td></tr></table>
     <br/>
-    FMG est un wargame (ou jeu de strategies) enti&egrave;rement gratuit jouable dans un navigateur où chaque partie est ind&eacute;pendante.<BR/>
-    Ici pas de formulaire, mais uniquement une carte sur laquelle vous d&eacute;placez vos
-    unit&eacute;s.</p>
     <center>
-    <A HREF="/presentation.jsp" style="font-size:12pt; line-height:25px;">En savoir plus &amp; Screenshots...</A><br/>
     <A HREF="/game.jsp?id=/puzzles/tutorial/model.bin" style="font-size:12pt; line-height:25px;">Tutorial (15 min)</A><br/>
-    <A HREF="/account.jsp" style="font-size:12pt; line-height:25px;">Inscription</A>
+    <br/>
+    <A HREF="/account.jsp" style="font-size:12pt; line-height:25px;">Créer un compte</A>
     </center>
 </div>
 
 
-<div class="bloc" style="width:955px; height:50px; position:absolute; left:0px; top:450px;" >   
+<div class="bloc" style="width:955px; height:30px; position:absolute; left:0px; top:450px; font-size: 8pt;" >   
 Full Metal Galaxy est une adaptation jeu web de Full Metal Plan&egrave;te, un jeu
 de strat&eacute;gie sur table de G&eacute;rard Mathieu, G&eacute;rard Delfanti et Pascal
 Trigaux, &eacute;dit&eacute; par Ludod&eacute;lire entre 1989 et

@@ -1,7 +1,7 @@
 html, body {
   font-family: verdana;
-  font-weight: bold;
-  font-size: 10pt;
+  font-weight: normal;
+  font-size: 11pt;
   color: black;
   margin: 0px;
   padding: 0px;
@@ -16,6 +16,11 @@ body {
   text-align: center;
 }
 
+table{
+font-family: verdana;
+  font-size: 11pt;
+  color: black;
+  }
 
 .bloc {
   margin: 10px;
@@ -29,7 +34,7 @@ body {
 .bloc a {
   font-family: verdana;
   font-weight: bold;
-  font-size: 10pt;
+  font-size: 11pt;
   text-decoration:none;
   cursor: pointer;
   color: #75470d;
