@@ -13,6 +13,7 @@
     <m__lastTimeStepChange>2008-12-17 19:29:46.0 CET</m__lastTimeStepChange>
     <m__gameType>Puzzle</m__gameType>
     <m__planetType>Desert</m__planetType>
+    <m__minimapUri>/puzzles/tutorial/minimap.png</m__minimapUri>
     <m__currentPlayerId>1</m__currentPlayerId>
     <m__accountCreatorId>2</m__accountCreatorId>
     <m__lands>REREREREREQ0Q0RERDRERDRERERENERERERDRCRCRERERENURERERCQkITRDRERUREREREQjFBEy
@@ -43,88 +44,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
       <m__roundActionPt>5</m__roundActionPt>
       <m__deploymentTimeStep>-1</m__deploymentTimeStep>
     </m__ebConfigGameTime>
-    <m__minimapUri>/puzzles/tutorial/minimap.png</m__minimapUri>
     <m__setToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>32</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>9</x>
-          <y>12</y>
-          <sector>NorthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>15</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>3</m__id>
-        <m__version>0</m__version>
-        <m__type>Crab</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>2</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>67</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>9</x>
-          <y>3</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>28</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>18</x>
-          <y>0</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
       <com.fullmetalgalaxy.model.persist.EbToken>
         <m__id>31</m__id>
         <m__version>0</m__version>
@@ -137,640 +57,6 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <sector>NorthEast</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>14</m__id>
-        <m__version>0</m__version>
-        <m__type>Heap</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>34</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>12</y>
-          <sector>NorthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>53</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>6</x>
-          <y>15</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>10</m__id>
-        <m__version>0</m__version>
-        <m__type>Freighter</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>19</x>
-          <y>5</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-        <m__setContain>
-          <long>2</long>
-          <long>3</long>
-          <long>4</long>
-          <long>5</long>
-          <long>6</long>
-          <long>7</long>
-          <long>8</long>
-        </m__setContain>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>43</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>20</x>
-          <y>5</y>
-          <sector>NorthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>36</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>15</x>
-          <y>15</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>40</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>7</x>
-          <y>13</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>4</m__id>
-        <m__version>0</m__version>
-        <m__type>Barge</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>18</m__id>
-        <m__version>0</m__version>
-        <m__type>Tank</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>49</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>3</x>
-          <y>0</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>26</m__id>
-        <m__version>0</m__version>
-        <m__type>Tank</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>15</x>
-          <y>3</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>47</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>18</x>
-          <y>12</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>23</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>5</x>
-          <y>16</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>37</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>1</x>
-          <y>13</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>20</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>3</x>
-          <y>6</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>22</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>0</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>16</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>61</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>16</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>48</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>21</x>
-          <y>9</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>70</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>12</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>65</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>60</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>9</x>
-          <y>9</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>35</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>0</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>52</m__id>
-        <m__version>0</m__version>
-        <m__type>Tank</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>17</x>
-          <y>3</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>1</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>1</x>
-          <y>16</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>27</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>3</x>
-          <y>12</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>72</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>41</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>6</y>
-          <sector>NorthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>2</m__id>
-        <m__version>0</m__version>
-        <m__type>Heap</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>25</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>12</x>
-          <y>12</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>42</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>21</x>
-          <y>0</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>69</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>3</x>
-          <y>3</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>45</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>15</x>
-          <y>0</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>46</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>18</x>
-          <y>5</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>5</m__id>
-        <m__version>0</m__version>
-        <m__type>Tank</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>33</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>54</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>9</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>58</m__id>
-        <m__version>0</m__version>
-        <m__type>Speedboat</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>12</x>
-          <y>6</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>24</m__id>
-        <m__version>0</m__version>
-        <m__type>Tank</m__type>
-        <m__color>16</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>18</x>
-          <y>6</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
         <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
@@ -786,121 +72,38 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <sector>SouthEast</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
         <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
       <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>50</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>9</x>
-          <y>15</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>62</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>7</m__id>
-        <m__version>0</m__version>
-        <m__type>Pontoon</m__type>
-        <m__color>0</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>55</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>12</x>
-          <y>3</y>
-          <sector>NorthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>51</m__id>
+        <m__id>48</m__id>
         <m__version>0</m__version>
         <m__type>Ore</m__type>
         <m__color>0</m__color>
         <m__location>Board</m__location>
         <m__position>
           <x>21</x>
-          <y>15</y>
-          <sector>South</sector>
+          <y>9</y>
+          <sector>NorthWest</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
         <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
       <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>8</m__id>
+        <m__id>37</m__id>
         <m__version>0</m__version>
-        <m__type>WeatherHen</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
         <m__position>
-          <x>-1</x>
-          <y>-1</y>
+          <x>1</x>
+          <y>13</y>
           <sector>North</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>6</m__id>
-        <m__version>0</m__version>
-        <m__type>Speedboat</m__type>
-        <m__color>16</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>2</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>10</m__carrierTokenId>
+        <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
       <com.fullmetalgalaxy.model.persist.EbToken>
         <m__id>57</m__id>
@@ -914,240 +117,6 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <sector>North</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>38</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>6</x>
-          <y>0</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>11</m__id>
-        <m__version>0</m__version>
-        <m__type>Freighter</m__type>
-        <m__color>1</m__color>
-        <m__location>Orbit</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-        <m__setContain>
-          <long>17</long>
-          <long>16</long>
-          <long>18</long>
-          <long>12</long>
-          <long>13</long>
-          <long>14</long>
-          <long>15</long>
-        </m__setContain>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>71</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>9</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>59</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>15</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>44</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>3</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>29</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Graveyard</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>56</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>6</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>21</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>18</x>
-          <y>15</y>
-          <sector>SouthEast</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>30</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>24</x>
-          <y>3</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>12</m__id>
-        <m__version>0</m__version>
-        <m__type>WeatherHen</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>North</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>68</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>0</x>
-          <y>15</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>13</m__id>
-        <m__version>0</m__version>
-        <m__type>Turret</m__type>
-        <m__color>1</m__color>
-        <m__location>Token</m__location>
-        <m__position>
-          <x>-1</x>
-          <y>-1</y>
-          <sector>South</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>11</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>64</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>21</x>
-          <y>12</y>
-          <sector>NorthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
-        <m__game reference="../../.."/>
-        <m__carrierTokenId>0</m__carrierTokenId>
-      </com.fullmetalgalaxy.model.persist.EbToken>
-      <com.fullmetalgalaxy.model.persist.EbToken>
-        <m__id>63</m__id>
-        <m__version>0</m__version>
-        <m__type>Ore</m__type>
-        <m__color>0</m__color>
-        <m__location>Board</m__location>
-        <m__position>
-          <x>9</x>
-          <y>0</y>
-          <sector>SouthWest</sector>
-        </m__position>
-        <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
         <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1163,7 +132,780 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <sector>NorthWest</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>71</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>9</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>58</m__id>
+        <m__version>0</m__version>
+        <m__type>Speedboat</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>12</x>
+          <y>6</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>5</m__id>
+        <m__version>0</m__version>
+        <m__type>Tank</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>30</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>3</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>21</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>18</x>
+          <y>15</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>20</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>3</x>
+          <y>6</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>23</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>5</x>
+          <y>16</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>25</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>12</x>
+          <y>12</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>26</m__id>
+        <m__version>0</m__version>
+        <m__type>Tank</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>15</x>
+          <y>3</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>27</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>3</x>
+          <y>12</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>65</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>11</m__id>
+        <m__version>0</m__version>
+        <m__type>Freighter</m__type>
+        <m__color>1</m__color>
+        <m__location>Orbit</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+        <m__setContain>
+          <long>17</long>
+          <long>16</long>
+          <long>18</long>
+          <long>12</long>
+          <long>13</long>
+          <long>14</long>
+          <long>15</long>
+        </m__setContain>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>33</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>40</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>7</x>
+          <y>13</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>45</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>15</x>
+          <y>0</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>70</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>12</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>12</m__id>
+        <m__version>0</m__version>
+        <m__type>WeatherHen</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>44</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>3</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>42</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>21</x>
+          <y>0</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>53</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>6</x>
+          <y>15</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>29</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>49</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>3</x>
+          <y>0</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>15</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>35</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>0</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>14</m__id>
+        <m__version>0</m__version>
+        <m__type>Heap</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>64</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>21</x>
+          <y>12</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>62</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>2</m__id>
+        <m__version>0</m__version>
+        <m__type>Heap</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>54</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>9</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>38</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>6</x>
+          <y>0</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>16</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>24</m__id>
+        <m__version>0</m__version>
+        <m__type>Tank</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>18</x>
+          <y>6</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>8</m__id>
+        <m__version>0</m__version>
+        <m__type>WeatherHen</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>43</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>20</x>
+          <y>5</y>
+          <sector>NorthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>61</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>16</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>18</m__id>
+        <m__version>0</m__version>
+        <m__type>Tank</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>6</m__id>
+        <m__version>0</m__version>
+        <m__type>Speedboat</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>72</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Graveyard</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>67</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>9</x>
+          <y>3</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>34</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>12</y>
+          <sector>NorthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>32</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>9</x>
+          <y>12</y>
+          <sector>NorthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>13</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>1</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>11</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>63</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>9</x>
+          <y>0</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>56</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>6</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>52</m__id>
+        <m__version>0</m__version>
+        <m__type>Tank</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>17</x>
+          <y>3</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>60</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>9</x>
+          <y>9</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>7</m__id>
+        <m__version>0</m__version>
+        <m__type>Pontoon</m__type>
+        <m__color>0</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>46</m__id>
+        <m__version>0</m__version>
+        <m__type>Turret</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>18</x>
+          <y>5</y>
+          <sector>NorthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>3</m__id>
+        <m__version>0</m__version>
+        <m__type>Crab</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>2</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>55</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>12</x>
+          <y>3</y>
+          <sector>NorthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>51</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>21</x>
+          <y>15</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
         <m__game reference="../../.."/>
         <m__carrierTokenId>0</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1179,10 +921,198 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <sector>North</sector>
         </m__position>
         <m__bulletCount>0</m__bulletCount>
-        <m__fireDisabled>false</m__fireDisabled>
         <m__game reference="../../.."/>
         <m__carrierTokenId>11</m__carrierTokenId>
         <m__setContain/>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>59</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>15</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>22</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>24</x>
+          <y>0</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>68</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>15</y>
+          <sector>SouthWest</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>10</m__id>
+        <m__version>0</m__version>
+        <m__type>Freighter</m__type>
+        <m__color>16</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>19</x>
+          <y>5</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+        <m__setContain>
+          <long>2</long>
+          <long>3</long>
+          <long>4</long>
+          <long>5</long>
+          <long>6</long>
+          <long>7</long>
+          <long>8</long>
+        </m__setContain>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>36</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>15</x>
+          <y>15</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>50</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>9</x>
+          <y>15</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>69</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>3</x>
+          <y>3</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>1</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>1</x>
+          <y>16</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>2</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>47</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>18</x>
+          <y>12</y>
+          <sector>SouthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>28</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>18</x>
+          <y>0</y>
+          <sector>South</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>41</m__id>
+        <m__version>0</m__version>
+        <m__type>Ore</m__type>
+        <m__color>0</m__color>
+        <m__location>Board</m__location>
+        <m__position>
+          <x>0</x>
+          <y>6</y>
+          <sector>NorthEast</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>0</m__carrierTokenId>
+      </com.fullmetalgalaxy.model.persist.EbToken>
+      <com.fullmetalgalaxy.model.persist.EbToken>
+        <m__id>4</m__id>
+        <m__version>0</m__version>
+        <m__type>Barge</m__type>
+        <m__color>16</m__color>
+        <m__location>Token</m__location>
+        <m__position>
+          <x>-1</x>
+          <y>-1</y>
+          <sector>North</sector>
+        </m__position>
+        <m__bulletCount>0</m__bulletCount>
+        <m__game reference="../../.."/>
+        <m__carrierTokenId>10</m__carrierTokenId>
       </com.fullmetalgalaxy.model.persist.EbToken>
     </m__setToken>
     <m__setRegistration>
@@ -1207,7 +1137,7 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
         <m__ptAction>80</m__ptAction>
         <m__orderIndex>0</m__orderIndex>
         <m__turretsToRepair>0</m__turretsToRepair>
-        <m__workingWeatherHenCount>0</m__workingWeatherHenCount>
+        <m__workingWeatherHenCount>1</m__workingWeatherHenCount>
         <m__game reference="../../.."/>
         <m__accountId>1</m__accountId>
         <m__accountPseudo>Vous</m__accountPseudo>
@@ -1304,17 +1234,17 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
         <m__id>0</m__id>
         <m__version>0</m__version>
         <m__actions>
+          <com.fullmetalgalaxy.model.persist.triggers.actions.EbActChangeTide>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__nextTide>Hight</m__nextTide>
+          </com.fullmetalgalaxy.model.persist.triggers.actions.EbActChangeTide>
           <com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
             <m__id>0</m__id>
             <m__version>0</m__version>
             <m__message>./puzzles/tutorial/msg2.1.html</m__message>
             <m__title>creation crabe</m__title>
           </com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
-          <com.fullmetalgalaxy.model.persist.triggers.actions.EbActChangeTide>
-            <m__id>0</m__id>
-            <m__version>0</m__version>
-            <m__nextTide>Hight</m__nextTide>
-          </com.fullmetalgalaxy.model.persist.triggers.actions.EbActChangeTide>
         </m__actions>
         <m__conditions>
           <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenTypeZone>
@@ -1457,19 +1387,6 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
           <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>
             <m__id>0</m__id>
             <m__version>0</m__version>
-            <m__negative>true</m__negative>
-            <m__zone>
-              <m__location>Board</m__location>
-              <m__top>9</m__top>
-              <m__left>6</m__left>
-              <m__bottom>16</m__bottom>
-              <m__right>14</m__right>
-            </m__zone>
-            <m__tokenId>11</m__tokenId>
-          </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>
-          <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>
-            <m__id>0</m__id>
-            <m__version>0</m__version>
             <m__negative>false</m__negative>
             <m__zone>
               <m__location>Board</m__location>
@@ -1477,6 +1394,19 @@ REFERBQREkFERERERERERDQTERFBREREREREREQzEUFBREREREREREREVBFEREVEREQA</m__lands>
               <m__left>0</m__left>
               <m__bottom>17</m__bottom>
               <m__right>26</m__right>
+            </m__zone>
+            <m__tokenId>11</m__tokenId>
+          </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>
+          <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>
+            <m__id>0</m__id>
+            <m__version>0</m__version>
+            <m__negative>true</m__negative>
+            <m__zone>
+              <m__location>Board</m__location>
+              <m__top>9</m__top>
+              <m__left>6</m__left>
+              <m__bottom>16</m__bottom>
+              <m__right>14</m__right>
             </m__zone>
             <m__tokenId>11</m__tokenId>
           </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndTokenZone>

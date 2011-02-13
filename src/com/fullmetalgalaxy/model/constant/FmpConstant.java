@@ -29,6 +29,8 @@ import com.fullmetalgalaxy.model.EnuZoom;
 public class FmpConstant
 {
   public static final int maximumActionPtWithoutLanding = 10;
+  public static final int minimumPlayerNumber = 2;
+  public static final int maximumPlayerNumber = 9;
 
   // in second
   public static final int minimumResfreshingPeriod = 1;

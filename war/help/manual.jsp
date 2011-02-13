@@ -1,4 +1,4 @@
-<HTML>
+ï»¿<HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>
         
@@ -29,7 +29,7 @@
 </pre>
 
 <h2>Les tirs</h2>
-la cible doit être a porté des deux destructeurs.
+la cible doit Ãªtre a portÃ© des deux destructeurs.
 <pre>
 [Clic] destructeur 1
 [Clic] icon cible
@@ -38,22 +38,22 @@ la cible doit être a porté des deux destructeurs.
 [OK]
 </pre>
 
-<h3>Les tirs avancés</h3>
-Si l'un des destructeurs est trop éloigné de la cible, il est possible de déplacer le destructeur 1 juste avant le tir:
+<h3>Les tirs avancÃ©s</h3>
+Si l'un des destructeurs est trop Ã©loignÃ© de la cible, il est possible de dÃ©placer le destructeur 1 juste avant le tir:
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible
 [OK]
 </pre>
 
-<h3>Les tirs très avancés</h3>
-Il est même possible de faire deux tirs après le déplacement:
+<h3>Les tirs trÃ¨s avancÃ©s</h3>
+Il est mÃªme possible de faire deux tirs aprÃ¨s le dÃ©placement:
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible 1
@@ -63,7 +63,7 @@ Il est même possible de faire deux tirs après le déplacement:
 Ou bien :
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible 1
@@ -73,9 +73,9 @@ Ou bien :
 [OK]
 </pre>
 
-<h2>Les contrôles de pièce standard</h2>
+<h2>Les contrÃ´les de piÃ¨ce standard</h2>
 <pre>
-Les deux destructeurs doivent être au contact de la cible.
+Les deux destructeurs doivent Ãªtre au contact de la cible.
 [Clic] destructeur 1
 [Clic] icon main/controle
 [Clic] destructeur 2
@@ -83,27 +83,27 @@ Les deux destructeurs doivent être au contact de la cible.
 [OK]
 </pre>
 
-<h2>Les contrôles d'astronefs</h2>
+<h2>Les contrÃ´les d'astronefs</h2>
 <p>
-Détruisez les trois tourelles puis entrez dedans avec un destructeur, comme s'il s'agissait du votre.
+DÃ©truisez les trois tourelles puis entrez dedans avec un destructeur, comme s'il s'agissait du votre.
 </p>
 
-<h2>Le déchargement</h2>
+<h2>Le dÃ©chargement</h2>
 <p>
-Pour décharger un véhicule d'un autre:
+Pour dÃ©charger un vÃ©hicule d'un autre:
 </p>
 <pre>
 [Clic] transporteur
-[Clic] véhicule a décharger (en bas a droite)
-[Clic] case où positionner le véhicule
+[Clic] vÃ©hicule a dÃ©charger (en bas a droite)
+[Clic] case oÃ¹ positionner le vÃ©hicule
 [OK]
 </pre>
-Décharger un véhicule coûte un point d'action. Mais décharger un véhicule lui même chargé ne coûte aussi qu'un point d'action.
-ex pour décharger un crabe et deux char de la barge en un seul point d'action:
+DÃ©charger un vÃ©hicule coÃ»te un point d'action. Mais dÃ©charger un vÃ©hicule lui mÃªme chargÃ© ne coÃ»te aussi qu'un point d'action.
+ex pour dÃ©charger un crabe et deux char de la barge en un seul point d'action:
 <pre>
 [Clic] barge
 [Clic] crabe
-[Clic] case où positionner le crabe
+[Clic] case oÃ¹ positionner le crabe
 [OK] (-> 1pt d'action)
 [Clic] barge
 [Clic] char 1
@@ -114,6 +114,10 @@ ex pour décharger un crabe et deux char de la barge en un seul point d'action:
 [Clic] crabe
 [OK] (-> 0pt d'action)
 </pre>
+
+<h2>chat / joueurs connectÃ©</h2>
+<h2>timeline</h2>
+
 
 <%@include file="/include/footer.jsp"%>
 </body>

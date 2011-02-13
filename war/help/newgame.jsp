@@ -1,4 +1,4 @@
-<HTML>
+ï»¿<HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>
         
@@ -15,10 +15,10 @@
 
     <h1>Initier une nouvelle partie</h1>
     <p>
-    La création d'une partie est relativement simple. Cependant, cette partie du site
-    étant la moins aboutie, certain bug ou problème de mise en page peuvent surprendrent...
+    La crÃ©ation d'une partie est relativement simple. Cependant, cette partie du site
+    Ã©tant la moins aboutie, certain bug ou problÃ¨me de mise en page peuvent surprendrent...
     </p>
-    <h2>Création rapide</h2>
+    <h2>CrÃ©ation rapide</h2>
     <p>
     Sur la page "Tableau des missions" cliquez sur "Nouvelle exploitation".
     </p>
@@ -27,7 +27,7 @@
         <li>Nom : C'est le nom de la partie.</li>
         <li>Description : Ajoutez ici toute les info utiles aux futurs joueurs (ex: niveau des joueurs).</li>
         <li>Nombre max de joueur : Le maximum d'inscription.</li>
-        <li>Taille de la carte : Elle est calculé en fonction du nombre de joueur.</li>
+        <li>Taille de la carte : Elle est calculÃ© en fonction du nombre de joueur.</li>
         <li>Vitesse du jeu : </li>
         <ul>
         <li>Standard : tour par tour</li>
@@ -37,20 +37,20 @@
         </ul>
     </ul>
     Les autres champs sont de simples indications sur vos choix.<br/>
-    Note: Comme pour le jeu de plateau, pour être intéressant les parties de 
+    Note: Comme pour le jeu de plateau, pour Ãªtre intÃ©ressant les parties de 
     Full Metal Galaxy doivent comporter entre 3 et 9 joueurs.
     <p>
-    C'est tout, cliquez sur "Sauver/céer la partie" (utilisez l'ascenseur).
+    C'est tout, cliquez sur "Sauver/cÃ©er la partie" (utilisez l'ascenseur).
     </p>
     
     <h2>Personalisation</h2>
 	    <h3>Onglet "Carte"</h3>
 	    <p>
-	    Cet onglet vous permet d'éditer la carte case par case. Attention, dès que vous
-	    visité cet onglet, la génération automatique est déactivé.<br/>
+	    Cet onglet vous permet d'Ã©diter la carte case par case. Attention, dÃ¨s que vous
+	    visitÃ© cet onglet, la gÃ©nÃ©ration automatique est dÃ©activÃ©.<br/>
 	    Vous pouvez :</p>
 	    <ul>
-           <li>Modifier le thème de la planète.</li>
+           <li>Modifier le thÃ¨me de la planÃ¨te.</li>
            <li>Modifier la taille de la carte sans tenir compte du nombre de joueur.</li>
            <li>Modifier la forme de la carte. (utilisez le bouton "effacer")</li>
            <li>Editer chaque case comme un dessin.</li>
@@ -58,59 +58,59 @@
 	    </ul>
 	    <h3>Onglet "Pions"</h3>
 	    <p>
-	    Attention, dès que vous visité cet onglet, la pose automatique des minerais
-	    est déactivée.<br/>
-	    Cet onglet vous permet de positionner les minerais où bon vous semble.
-	    Vous pouvez aussi positioner n'importe quelle autre pièce avant le début de la partie.<br/>
+	    Attention, dÃ¨s que vous visitÃ© cet onglet, la pose automatique des minerais
+	    est dÃ©activÃ©e.<br/>
+	    Cet onglet vous permet de positionner les minerais oÃ¹ bon vous semble.
+	    Vous pouvez aussi positioner n'importe quelle autre piÃ¨ce avant le dÃ©but de la partie.<br/>
 	    Pour faire tourner un pion avant de le poser, cliquez dessus. (en haut a gauche)<br/>
 	    Pour effacer un pion, utilisez le clic droit de la souris.<br/>
 	    </p>
 	    <h3>Les autres onglets</h3>
 	    <p>
 	    Les autres onglets ne sont pour l'instant pas ouvert au public, ils m'ont, entre autre,
-	    servis à la saisie du tutorial.
+	    servis Ã  la saisie du tutorial.
 	    </p>
     
-    <h2>Démarrage</h2>
+    <h2>DÃ©marrage</h2>
     <p>
-    La partie est créé, mais personne n'est inscrit et elle n'est pas encore démaré. En fait
-    la partie est créé en pause.
+    La partie est crÃ©Ã©, mais personne n'est inscrit et elle n'est pas encore dÃ©marÃ©. En fait
+    la partie est crÃ©Ã© en pause.
     </p>
     <h3>Inscrivez-vous</h3>
     <p>
-    A priori, si vous avez créé une partie, c'est pour y jouer. Inscrivez vous en cliquant
+    A priori, si vous avez crÃ©Ã© une partie, c'est pour y jouer. Inscrivez vous en cliquant
     sur l'icone d'action <img src="/puzzles/tutorial/images/Register32.png" alt="Register" />. Choisissez
-    ensuite la couleur qui vous représentera durant toute la partie. 
+    ensuite la couleur qui vous reprÃ©sentera durant toute la partie. 
     Votre Astronef apparait en bas avec tous les Astronefs en orbite.
     </p>
     <p>
     Attendez que le nombre de joueur maximum soit atteint. En effet, il vous est parfaitement 
-    possible de jouer une partie à 3 joueurs sur une carte prévu pour 4, mais la partie
-    risque d'être moins intéressante.<br/>
+    possible de jouer une partie Ã  3 joueurs sur une carte prÃ©vu pour 4, mais la partie
+    risque d'Ãªtre moins intÃ©ressante.<br/>
     Note : Il n'est possible de s'inscrire que si la partie est en pause.
     </p>
     <h3>Lancez la partie</h3>
     <p>
-    Comme la partie est créé en pause il vous reste encore à retirer la pause pour pouvoir
-    jouer. Pour cela cliquez sur l'icon détail de la partie 
+    Comme la partie est crÃ©Ã© en pause il vous reste encore Ã  retirer la pause pour pouvoir
+    jouer. Pour cela cliquez sur l'icon dÃ©tail de la partie 
     <img src="/puzzles/tutorial/images/Info32.png" alt="Info" />, puis cliquez sur le bouton "Play".
     </p>
     
     <h2>Administration de la partie</h2>
     <p>
-    Tous les joueurs inscrit à une partie, peuvent activer/déactiver la pause. 
-    Cependant, et afin de détecter la triche, toutes les actions des joueurs sont enregistrées.
-    Vous pouvez avoir un apperçu en cliquant l'icon 
+    Tous les joueurs inscrit Ã  une partie, peuvent activer/dÃ©activer la pause. 
+    Cependant, et afin de dÃ©tecter la triche, toutes les actions des joueurs sont enregistrÃ©es.
+    Vous pouvez avoir un apperÃ§u en cliquant l'icon 
     <img src="/puzzles/tutorial/images/Info32.png" alt="Info" />
     puis l'onglet "log" et "admin log".
     </p>
     <p>
-    En tant que créateur de la partie, vous avez d'autres droits comme l'édition de case 
-    ou de pions. A priori vous n'aurez pas besoin de cette fonctionalité.<br/>
-    Si vous désirez banir un joueur (qui ne joue plus par exemple) contactez l'administrateur.
+    En tant que crÃ©ateur de la partie, vous avez d'autres droits comme l'Ã©dition de case 
+    ou de pions. A priori vous n'aurez pas besoin de cette fonctionalitÃ©.<br/>
+    Si vous dÃ©sirez banir un joueur (qui ne joue plus par exemple) contactez l'administrateur.
     </p>
     <p>
-    Cet aspect du jeu n'étant pas encore très développé, n'hésitez pas à faire vos demandent
+    Cet aspect du jeu n'Ã©tant pas encore trÃ¨s dÃ©veloppÃ©, n'hÃ©sitez pas Ã  faire vos demandent
     ou remarques sur le forum.
     </p>
     
