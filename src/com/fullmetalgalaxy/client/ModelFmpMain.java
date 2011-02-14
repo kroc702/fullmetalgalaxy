@@ -1114,19 +1114,30 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     {
       return false;
     }
-    if( getGame().getConfigGameTime()!=ConfigGameTime.Standard )
-    {
-      return false;
-    }
     if( m_lastTurnPlayed != getGame().getCurrentTimeStep() )
     {
       return false;
     }
-    if( getMyRegistration() != getGame().getCurrentPlayerRegistration())
+    if( getGame().getConfigGameTime() == ConfigGameTime.Standard
+        && getMyRegistration() == getGame().getCurrentPlayerRegistration() )
     {
-      return false;
+      return true;
     }
-    return true;
+    if( getGame().getConfigGameTime() == ConfigGameTime.StandardAsynch )
+    {
+      AnEvent event = null;
+      for( int i = m_currentActionIndex; i < getGame().getLogs().size(); i++ )
+      {
+        event = getGame().getLogs().get( i );
+        if( event == null || !(event instanceof AnEventPlay)
+            || ((AnEventPlay)event).getAccountId() != getMyAccountId() )
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
   
   /**
