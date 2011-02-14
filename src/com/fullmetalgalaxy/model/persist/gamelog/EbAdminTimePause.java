@@ -72,13 +72,7 @@ public class EbAdminTimePause extends EbAdmin
   public void check(EbGame p_game) throws RpcFmpException
   {
     super.check(p_game);
-    EbRegistration myRegistration = getMyRegistration(p_game);
-    if( myRegistration == null )
-    {
-      // TODO i18n
-      throw new RpcFmpException(
-          "Vous devez �tre inscrit a cette partie pour r�aliser cette action" );
-    }
+
     if( !p_game.isStarted() )
     {
       throw new RpcFmpException( "la partie est deja en pause" );
