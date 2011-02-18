@@ -204,7 +204,7 @@ public class EbEvtMove extends AnEventPlay
     super.exec(p_game);
     // backup for unexec
     setOldPosition( getToken(p_game).getPosition() );
-    
+
     p_game.moveToken( getToken(p_game), getNewPosition() );
     checkFireDisabling( p_game );
     getToken(p_game).incVersion();

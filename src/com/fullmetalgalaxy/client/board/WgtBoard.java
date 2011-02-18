@@ -298,8 +298,10 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       ModelFmpMain.model().notifyModelUpdate();
     } catch( Throwable ex )
     {
-      Window.alert( ex.getMessage() );
-      ModelFmpMain.model().getActionBuilder().cancel();
+      Window.alert( "Une erreur est survenu, la page va être rechargé \n" + ex.getMessage() );
+      ClientUtil.sendPM( "" + ModelFmpMain.model().getMyAccountId(), "5001", "js error",
+          ex.getMessage() );
+      ClientUtil.reload();
     }
   }
 
