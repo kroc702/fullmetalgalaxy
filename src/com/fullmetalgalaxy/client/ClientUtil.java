@@ -44,19 +44,15 @@ public class ClientUtil
 {
 
   private static native int jsGetNavigator() /*-{
-    if (!$doc.styleSheets) 
-    {
-      return -1;
-    }
-    if ($doc.styleSheets[0].cssRules)
-    {
-      return 0; // FF
-    }
-    else if ($doc.styleSheets[0].rules)
-    {
-      return 1; // IE
-    }
-    return -1;
+		if (!$doc.styleSheets) {
+			return -1;
+		}
+		if ($doc.styleSheets[0].cssRules) {
+			return 0; // FF
+		} else if ($doc.styleSheets[0].rules) {
+			return 1; // IE
+		}
+		return -1;
   }-*/;
 
   public static int getNavigator()
@@ -79,16 +75,16 @@ public class ClientUtil
    * @return language code or "" if no default language found.
    */
   public static native String getDefaultLanguage() /*-{
-    var language = "";
-    if (navigator.systemLanguage)
-      language = navigator.systemLanguage;
-    if (navigator.browserLanguage)
-      language = navigator.browserLanguage;
-    if (navigator.language)
-      language = navigator.language;
-    if (navigator.userLanguage)
-      language = navigator.userLanguage;
-    return language;
+		var language = "";
+		if (navigator.systemLanguage)
+			language = navigator.systemLanguage;
+		if (navigator.browserLanguage)
+			language = navigator.browserLanguage;
+		if (navigator.language)
+			language = navigator.language;
+		if (navigator.userLanguage)
+			language = navigator.userLanguage;
+		return language;
   }-*/;
 
 
@@ -97,7 +93,7 @@ public class ClientUtil
    * @param p_url destination URL.
    */
   public static native void gotoUrl(String p_url) /*-{
-    $wnd.location = p_url;
+		$wnd.location = p_url;
   }-*/;
 
   /**
@@ -105,19 +101,54 @@ public class ClientUtil
    * @return the full URL.
    */
   public static native String getUrl() /*-{
-    return $wnd.location.href;
+		return $wnd.location.href;
   }-*/;
 
   // document.location.href;
 
   public static native void reload() /*-{
-    $wnd.location.reload();
+		$wnd.location.reload();
   }-*/;
 
   public static native void scrollToTop() /*-{
-    $wnd.scrollTo(0, 0);
+		$wnd.scrollTo(0, 0);
   }-*/;
 
+
+  public static native void sendPM(String p_fromId, String p_toId, String p_subject, String p_msg) /*-{
+		// post to /PMServlet
+		var form = document.createElement("form");
+		form.setAttribute("method", "post");
+		form.setAttribute("action", "/PMServlet");
+		form.setAttribute("enctype", "multipart/form-data");
+
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type", "hidden");
+		hiddenField.setAttribute("name", "fromid");
+		hiddenField.setAttribute("value", p_fromId);
+		form.appendChild(hiddenField);
+
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type", "hidden");
+		hiddenField.setAttribute("name", "toid");
+		hiddenField.setAttribute("value", p_toId);
+		form.appendChild(hiddenField);
+
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type", "hidden");
+		hiddenField.setAttribute("name", "subject");
+		hiddenField.setAttribute("value", p_subject);
+		form.appendChild(hiddenField);
+
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type", "hidden");
+		hiddenField.setAttribute("name", "msg");
+		hiddenField.setAttribute("value", p_msg);
+		form.appendChild(hiddenField);
+
+		document.body.appendChild(form); // Not entirely sure if this is necessary
+		form.submit();
+  }-*/;
 
   /**
    * Disables the browsers default context menu for the specified element.
@@ -125,7 +156,9 @@ public class ClientUtil
    * @param elem the element whos context menu will be disabled
    */
   public static native void disableContextMenu(Element elem) /*-{
-    elem.oncontextmenu=function() {  return false};
+		elem.oncontextmenu = function() {
+			return false
+		};
   }-*/;
 
 
@@ -201,43 +234,42 @@ public class ClientUtil
 
 
   private static native int jsNewCssRules(String p_ruleName, String p_rule) /*-{
-    if (!$doc.styleSheets) 
-    {
-      return 0;
-    }
-    var oldlength = 0;
-    if ($doc.styleSheets[0].cssRules)
-    {
-      oldlength = $doc.styleSheets[0].cssRules.length;
-      $doc.styleSheets[0].insertRule(p_ruleName +' '+ p_rule,oldlength);
-    }
-    else if ($doc.styleSheets[0].rules)
-    {
-      oldlength = $doc.styleSheets[0].rules.length;
-      $doc.styleSheets[0].addRule(p_ruleName, p_rule);
-    }
-    return oldlength+1;
+		if (!$doc.styleSheets) {
+			return 0;
+		}
+		var oldlength = 0;
+		if ($doc.styleSheets[0].cssRules) {
+			oldlength = $doc.styleSheets[0].cssRules.length;
+			$doc.styleSheets[0]
+					.insertRule(p_ruleName + ' ' + p_rule, oldlength);
+		} else if ($doc.styleSheets[0].rules) {
+			oldlength = $doc.styleSheets[0].rules.length;
+			$doc.styleSheets[0].addRule(p_ruleName, p_rule);
+		}
+		return oldlength + 1;
   }-*/;
 
   private static native void jsSetCssRules(int p_ruleIndex, String p_rule) /*-{
-    var theRules = new Array();
-    if ($doc.styleSheets[0].cssRules)
-      theRules = $doc.styleSheets[0].cssRules
-    else if ($doc.styleSheets[0].rules)
-      theRules = $doc.styleSheets[0].rules
-    else return;
-    theRules[p_ruleIndex].style = p_rule;
+		var theRules = new Array();
+		if ($doc.styleSheets[0].cssRules)
+			theRules = $doc.styleSheets[0].cssRules
+		else if ($doc.styleSheets[0].rules)
+			theRules = $doc.styleSheets[0].rules
+		else
+			return;
+		theRules[p_ruleIndex].style = p_rule;
   }-*/;
 
   private static native void jsSetCssRules(int p_ruleIndex, String p_element, String p_value)/*-{
-    var theRules = new Array();
-    if ($doc.styleSheets[0].cssRules)
-      theRules = $doc.styleSheets[0].cssRules
-    else if ($doc.styleSheets[0].rules)
-      theRules = $doc.styleSheets[0].rules
-    else return;
-    theRules[p_ruleIndex].style.setProperty(p_element,p_value,null);
-    //theRules[p_ruleIndex].style.background-color = p_value;
+		var theRules = new Array();
+		if ($doc.styleSheets[0].cssRules)
+			theRules = $doc.styleSheets[0].cssRules
+		else if ($doc.styleSheets[0].rules)
+			theRules = $doc.styleSheets[0].rules
+		else
+			return;
+		theRules[p_ruleIndex].style.setProperty(p_element, p_value, null);
+		//theRules[p_ruleIndex].style.background-color = p_value;
   }-*/;
 
   private static Map<String, Integer> s_rules = new HashMap<String, Integer>();
