@@ -470,21 +470,23 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   /**
    * @return true if the colored player have at least one weather hen to predict future tides.
    */
-  public boolean haveWeatherHen(EnuColor p_color)
+  public int countWorkingWeatherHen(EnuColor p_color)
   {
+    int count = 0;
     for( Iterator<EbToken> it = getSetToken().iterator(); it.hasNext(); )
     {
       EbToken token = (EbToken)it.next();
       if( (p_color.isColored( token.getColor() ))
           && (token.getType() == TokenType.WeatherHen)
-          && (isTokenTideActive( token ))
+          && (token.getColor() != EnuColor.None)
           && (token.getLocation() == Location.Board)
+          && (isTokenTideActive( token ))
           && (getOpponentFireCover( p_color.getValue(), token.getPosition() ).getValue() == EnuColor.None) )
       {
-        return true;
+        count++;
       }
     }
-    return false;
+    return count;
   }
 
   /**
