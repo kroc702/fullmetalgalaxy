@@ -140,13 +140,13 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1" );
       setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() )
           .getPosition() );
-      if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
-      {
-        image = m_images.getNextImage();
-        BoardIcons.target( getZoom().getValue() ).applyTo( image );
-        DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-        setWidgetHexPosition( image, p_fireAction.getOldPosition() );
-      }
+    }
+    if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
+    {
+      Image image = m_images.getNextImage();
+      BoardIcons.target( getZoom().getValue() ).applyTo( image );
+      DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
+      setWidgetHexPosition( image, p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ).getPosition() );
     }
   }
 
@@ -160,14 +160,13 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1" );
       setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() )
           .getPosition() );
-      if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
-      {
-        image = m_images.getNextImage();
-        BoardIcons.target_control( getZoom().getValue() ).applyTo( image );
-        DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-        setWidgetHexPosition( image, p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() )
-            .getPosition() );
-      }
+    }
+    if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
+    {
+      Image image = m_images.getNextImage();
+      BoardIcons.target_control( getZoom().getValue() ).applyTo( image );
+      DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
+      setWidgetHexPosition( image, p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ).getPosition() );
     }
   }
 

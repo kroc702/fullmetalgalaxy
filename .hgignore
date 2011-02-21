@@ -27,3 +27,6 @@ syntax: regexp
 ^javadoc$
 syntax: regexp
 ^.*Thumbs\.db$
+
+syntax: regexp
+^war/WEB-INF/deploy$
