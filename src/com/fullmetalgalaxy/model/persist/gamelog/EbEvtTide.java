@@ -134,7 +134,8 @@ public class EbEvtTide extends AnEvent
     // update all players weather hen count
     for( EbRegistration registration : game.getSetRegistration() )
     {
-      registration.setWorkingWeatherHenCount( p_game.haveWeatherHen( registration.getEnuColor() ) ? 1 : 0 );
+      registration.setWorkingWeatherHenCount( p_game.countWorkingWeatherHen( registration
+          .getEnuColor() ) );
     }
     
     execFireDisabling( p_game );
