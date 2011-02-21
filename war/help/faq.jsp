@@ -39,6 +39,15 @@ ou bien [CTRL] + [+/-]. <br/>
 Pour les utilisateurs de mac: [Pomme] + [+]
 </p>
 <p>
+<b>Q: comment orienter la barge comme on veut quand elle sort de l''astronef ?</b><br/>
+R: La meilleure solution :<br/>
+clic sur le pod<br/>
+clic sur la barge<br/>
+clic une case adjacente<br/>
+clic la deuxième case (& vérifier que ça nous convient)<br/>
+valider le mouvement (clic même 2nd case ou bouton OK)
+</p>
+<p>
 Q: En mode tour par tour, je ne comprend pas comment sont calculés les dates limites de jeu.<br/>
 R: 
 </p>

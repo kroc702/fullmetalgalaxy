@@ -639,7 +639,9 @@ public class EventsPlayBuilder implements GameEventStack
               // he want a double shoot !
               userAction(GameLogType.EvtFire);
               ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( ((EbEvtFire)previousAction).getTokenDestroyer2( m_game ) );
-              actionFire( token, p_position );
+              // select target
+              ((EbEvtFire)getSelectedAction()).setTokenTarget( token );
+              actionFire();
             }
             else
             {
@@ -680,32 +682,51 @@ public class EventsPlayBuilder implements GameEventStack
           else if( getSelectedAction() instanceof EbEvtFire )
           {
             // a fire action...
-            if( ((EbEvtFire)getSelectedAction()).getTokenDestroyer2( m_game ) == null )
+            if( token.getColor() == EnuColor.None || !getMyRegistration().getEnuColor().isColored( token.getColor() ))
             {
-              // select second destroyer
-              ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+              // select target
+              ((EbEvtFire)getSelectedAction()).setTokenTarget( token );
               isUpdated = EventBuilderMsg.Updated;
             }
             else
             {
-              // select target and add action
-              actionFire( token, p_position );
+              // select second destroyer
+              // if destroyer is already selected, we may send an error message...
+              ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+              isUpdated = EventBuilderMsg.Updated;
+            }
+            
+            if( ((EbEvtFire)getSelectedAction()).getTokenDestroyer2( m_game ) != null 
+                && ((EbEvtFire)getSelectedAction()).getTokenTarget( m_game ) != null )
+            {
+              // and add action
+              actionFire();
               isUpdated = EventBuilderMsg.Updated;
             }
           }
           else if( getSelectedAction() instanceof EbEvtControl )
           {
             // a control action...
-            if( ((EbEvtControl)getSelectedAction()).getTokenDestroyer2( m_game ) == null )
+            if( token.getColor() == EnuColor.None || !getMyRegistration().getEnuColor().isColored( token.getColor() ))
             {
-              // select second destroyer
-              ((EbEvtControl)getSelectedAction()).setTokenDestroyer2( token );
+              // select target
+              ((EbEvtControl)getSelectedAction()).setTokenTarget( token );
               isUpdated = EventBuilderMsg.Updated;
             }
             else
             {
-              // select target and add action
-              actionControl( token, p_position );
+              // select second destroyer
+              // if( ((EbEvtControl)getSelectedAction()).getTokenDestroyer2( m_game ) == null )
+              // like for fire, we may send an error
+              ((EbEvtControl)getSelectedAction()).setTokenDestroyer2( token );
+              isUpdated = EventBuilderMsg.Updated;
+            }
+            
+            if( ((EbEvtControl)getSelectedAction()).getTokenDestroyer2( m_game ) != null 
+                && ((EbEvtControl)getSelectedAction()).getTokenTarget( m_game ) != null )
+            { 
+              // and add action
+              actionControl();
               isUpdated = EventBuilderMsg.Updated;
             }
           }
@@ -1138,7 +1159,7 @@ public class EventsPlayBuilder implements GameEventStack
   }
 
 
-  protected void actionControl(EbToken p_tokenTarget, AnBoardPosition p_position)
+  protected void actionControl()
       throws RpcFmpException
   {
     assert m_selectedToken != null;
@@ -1147,13 +1168,12 @@ public class EventsPlayBuilder implements GameEventStack
     assert getSelectedAction() instanceof EbEvtControl;
     EbEvtControl action = (EbEvtControl)getSelectedAction();
     RpcUtil.logDebug( "user control with " + action.getTokenDestroyer1( m_game ) + " and "
-        + action.getTokenDestroyer2( m_game ) + " onto " + p_tokenTarget + " " + p_position );
-    action.setTokenTarget( p_tokenTarget );
+        + action.getTokenDestroyer2( m_game ) + " onto " + action.getTokenTarget( m_game ) + " " + action.getPosition() );
     actionAdd( action );
     setSelectedAction( null );
   }
 
-  protected void actionFire(EbToken p_tokenTarget, AnBoardPosition p_position)
+  protected void actionFire()
       throws RpcFmpException
   {
     assert m_selectedToken != null;
@@ -1161,9 +1181,40 @@ public class EventsPlayBuilder implements GameEventStack
     assert m_selectedToken.getLocation() == Location.Board;
     assert getSelectedAction() instanceof EbEvtFire;
     EbEvtFire action = (EbEvtFire)getSelectedAction();
+
+    // if one destroyer must move forward and enter into a firecover to shoot
+    // target, then do it automatically
+    EbToken destroyer1 = action.getTokenDestroyer1( getGame() );
+    EbToken destroyer2 = action.getTokenDestroyer2( getGame() );
+    EbToken target = action.getTokenTarget( getGame() );
+    if( (getGame().getOpponentFireCover( destroyer1 ).getValue() == EnuColor.None)
+        && (getGame().getOpponentFireCover( destroyer2 ).getValue() == EnuColor.None) )
+    {
+      if( !getGame().canTokenFireOn( destroyer1, target ) )
+      {
+        EbEvtMove actionMove = new EbEvtMove();
+        actionMove.setGame( getGame() );
+        actionMove.setAccountId( getAccountId() );
+        actionMove.setToken( destroyer1 );
+        actionMove.setNewPosition( destroyer1.getPosition().getNeighbour(
+            destroyer1.getPosition().getNeighbourSector( target.getPosition() ) ) );
+        actionAdd( actionMove );
+      }
+      else if( !getGame().canTokenFireOn( destroyer2, target ) )
+      {
+        EbEvtMove actionMove = new EbEvtMove();
+        actionMove.setGame( getGame() );
+        actionMove.setAccountId( getAccountId() );
+        actionMove.setToken( destroyer2 );
+        actionMove.setNewPosition( destroyer2.getPosition().getNeighbour(
+            destroyer2.getPosition().getNeighbourSector( target.getPosition() ) ) );
+        actionAdd( actionMove );
+      }
+    }
+
+
     RpcUtil.logDebug( "user fire with " + action.getTokenDestroyer1( m_game ) + " and "
-        + action.getTokenDestroyer2( m_game ) + " onto " + p_tokenTarget + " " + p_position );
-    action.setTokenTarget( p_tokenTarget );
+        + action.getTokenDestroyer2( m_game ) + " onto " + action.getTokenTarget( m_game ) + " " + action.getPosition() );
     actionAdd( action );
     setSelectedAction( null );
   }
