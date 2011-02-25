@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.SerializationException;
 
 /**
@@ -58,7 +59,8 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
     {
       MAppMessagesStack.s_instance.showWarning( Messages.getString( (RpcFmpException)p_caught ) );
     }
-    else if( p_caught instanceof SerializationException )
+    else if( p_caught instanceof SerializationException
+        || p_caught instanceof IncompatibleRemoteServiceException )
     {
       Window.alert( "Une mise à jour serveur vient d'être effectué:\n la page va être rechargé" );
       ClientUtil.reload();

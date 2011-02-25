@@ -202,7 +202,7 @@ public class ClientUtil
     long shift = p_date.getTime() - System.currentTimeMillis();
     if( (shift < 0) || (shift > 24 * 60 * 60 * 1000) )
     {
-      return s_shortDateFormat.format( p_date );
+      return s_dateTimeFormat.format( p_date );
     }
     return s_timeFormat.format( p_date );
   }

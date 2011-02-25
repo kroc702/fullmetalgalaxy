@@ -185,16 +185,17 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       htmlTide += BoardIcons.iconTide( game.getNextTide() ).getHTML() + " ";
       // + Messages.getTideString( game.getNextTide() ) + "'>";
-      if( game.isAsynchron() )
-      {
-        htmlTide += " at " + ClientUtil.s_dateTimeFormat.format( game.estimateNextTideChange() );
-      }
     }
     else
     {
       htmlTide += Icons.s_instance.tide_unknown().getHTML();
       // + MAppBoard.s_messages.noForecast() + "'> ";
     }
+    if( game.isAsynchron() )
+    {
+      htmlTide += " at " + ClientUtil.s_dateTimeFormat.format( game.estimateNextTideChange() );
+    }
+
     HTMLPanel tidePanel = new HTMLPanel( htmlTide );
     tidePanel.setWidth( "100%" );
     m_generalPanel.add( tidePanel );
