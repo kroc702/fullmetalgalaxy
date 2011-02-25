@@ -367,6 +367,8 @@ public class BoardFireCover implements Serializable
             || m_game.isTokenFireCoverDisabled( fd.getDestroyer2( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer1( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer2( m_game ) )
+            || m_game.getTokenOwnerColor( fd.getDestroyer1( m_game ) ).equals(
+                m_game.getTokenOwnerColor( p_token ) )
             || m_lockedToken.contains( fd.getDestroyer1Id() )
             || m_lockedToken.contains( fd.getDestroyer2Id() ) )
         {

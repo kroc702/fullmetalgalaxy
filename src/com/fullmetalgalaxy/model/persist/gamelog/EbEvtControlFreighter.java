@@ -174,6 +174,9 @@ public class EbEvtControlFreighter extends AnEventPlay
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() + 3 );
 
     execFireDisabling( p_game );
+    // we need to force recomputing fire cover even if fire disabling flags was
+    // computed to merge the two cover into a single color
+    p_game.invalidateFireCover();
   }
 
   /* (non-Javadoc)
