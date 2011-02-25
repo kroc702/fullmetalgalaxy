@@ -245,11 +245,8 @@ public class EbEvtMove extends AnEventPlay
         // to allow his target to defend themself
         p_game.getBoardFireCover().decFireCover( getToken( p_game ) );
         List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
-        for( FireDisabling fd : getToken( p_game ).getFireDisablingList() )
-        {
-          fd2Remove.add( fd );
-          fdRemoved.add( fd );
-        }
+        fd2Remove.addAll( getToken( p_game ).getFireDisablingList() );
+        fdRemoved.addAll( getToken( p_game ).getFireDisablingList() );
         p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
         // check if old target can disable unit
         for( FireDisabling fd : fd2Remove )
@@ -278,6 +275,15 @@ public class EbEvtMove extends AnEventPlay
         // ).getPosition(),
         // fireRange - 1, fdRemoved, fdAdded );
         p_game.getBoardFireCover().incFireCover( getToken( p_game ) );
+      }
+      else if( getToken( p_game ).isFireDisabled() )
+      {
+        // if token was fire disabled, the only allowed moved is to leave a fire
+        // cover...
+        List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+        fd2Remove.addAll( getToken( p_game ).getFireDisablingList() );
+        fdRemoved.addAll( getToken( p_game ).getFireDisablingList() );
+        p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
       }
 
       // fire range +1 to look for all tokens that may be impacted (ie enter or
