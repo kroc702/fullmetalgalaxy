@@ -131,6 +131,10 @@ public class EbEvtTide extends AnEvent
       }
     }
     
+    execFireDisabling( p_game );
+    // TODO we may store tide disable flag to avoid recompute all fire cover
+    p_game.getBoardFireCover().reComputeFireCover();
+
     // update all players weather hen count
     for( EbRegistration registration : game.getSetRegistration() )
     {
@@ -138,7 +142,6 @@ public class EbEvtTide extends AnEvent
           .getEnuColor() ) );
     }
     
-    execFireDisabling( p_game );
   }
 
   /**
@@ -172,6 +175,8 @@ public class EbEvtTide extends AnEvent
     game.setLastTideChange( getOldTideChange() );
     
     unexecFireDisabling( p_game );
+    // cf same exec function
+    p_game.getBoardFireCover().reComputeFireCover();
   }
 
 

@@ -365,6 +365,8 @@ public class BoardFireCover implements Serializable
             || !m_game.canTokenFireOn( fd.getDestroyer2( m_game ), p_token )
             || m_game.isTokenFireCoverDisabled( fd.getDestroyer1( m_game ) )
             || m_game.isTokenFireCoverDisabled( fd.getDestroyer2( m_game ) )
+            || !m_game.isTokenTideActive( fd.getDestroyer1( m_game ) )
+            || !m_game.isTokenTideActive( fd.getDestroyer2( m_game ) )
             || m_lockedToken.contains( fd.getDestroyer1Id() )
             || m_lockedToken.contains( fd.getDestroyer2Id() ) )
         {
@@ -610,7 +612,7 @@ public class BoardFireCover implements Serializable
     m_lockedToken.clear();
   }
 
-  protected void reComputeFireCover()
+  public void reComputeFireCover()
   {
     Collection<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
     Collection<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
