@@ -35,6 +35,7 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
+import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.user.client.ui.HTML;
@@ -131,19 +132,27 @@ public class WgtPlayerInfo extends WgtView
         }
 
 
-        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 1 )
+        // display next tide (or no forecast)
+        // ==================================
+        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() <= 0 )
+        {
+          image = BoardIcons.iconTide( Tide.Unknown ).createImage();
+          image.setTitle( "pas de prévision" );
+        }
+        else
         {
           image = BoardIcons.iconTide( game.getNextTide() ).createImage();
           image.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
-          if( game.getEbConfigGameTime().isAsynchron() )
-          {
-            image.setTitle( image.getTitle() + " - "
-                + ClientUtil.formatDateTime( game.estimateNextTideChange() ) );
-          }
-          m_panelTide.add( image );
-          m_panelTide.setCellWidth( image, "20px" );
         }
+        if( game.getEbConfigGameTime().isAsynchron() )
+        {
+          image.setTitle( image.getTitle() + " - "
+              + ClientUtil.formatDateTime( game.estimateNextTideChange() ) );
+        }
+        m_panelTide.add( image );
+        m_panelTide.setCellWidth( image, "20px" );
 
+        
         if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
