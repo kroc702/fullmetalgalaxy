@@ -30,7 +30,9 @@ import com.fullmetalgalaxy.client.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.SerializationException;
 
 /**
  * @author Kroc
@@ -42,7 +44,6 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.rpc.AsyncCallback#onFailure(java.lang.Throwable)
    */
-  @SuppressWarnings("null")
   @Override
   public void onFailure(Throwable p_caught)
   {
@@ -53,28 +54,21 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
       RpcUtil.logError( p_caught.getMessage(), p_caught );
     }
 
-    try
+    if( p_caught instanceof RpcFmpException )
     {
       MAppMessagesStack.s_instance.showWarning( Messages.getString( (RpcFmpException)p_caught ) );
-    } catch( Throwable th )
-    {
-      try
-      {
-        if( (p_caught.getMessage() == null) || (p_caught.getMessage().length() == 0) )
-        {
-          // lets try it: don't display error to not confuse user...
-          MAppMessagesStack.s_instance.showWarning( "Unknown error or serveur is unreachable\n" );
-          // + p_caught.toString() );
-        }
-        else
-        {
-          MAppMessagesStack.s_instance.showWarning( p_caught.getMessage() );
-        }
-      } catch( Throwable th2 )
-      {
-        RpcUtil.logError( th2.getMessage(), th2 );
-      }
     }
+    else if( p_caught instanceof SerializationException )
+    {
+      Window.alert( "Une mise à jour serveur vient d'être effectué:\n la page va être rechargé" );
+      ClientUtil.reload();
+    }
+    else
+    {
+      // lets try it: don't display error to not confuse user...
+      MAppMessagesStack.s_instance.showWarning( "Unknown error or serveur is unreachable\n" );
+    }
+
   }
 
   /* (non-Javadoc)
