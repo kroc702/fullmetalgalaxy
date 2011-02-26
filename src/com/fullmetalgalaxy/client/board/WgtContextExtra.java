@@ -133,7 +133,8 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         && (action.getSelectedAction() == null) )
     {
       // so, no token is selected: find ship in orbit !
-      if( model.getGame().getCurrentTimeStep() == 0 )
+      if( model.getGame().getCurrentTimeStep() <= model.getGame().getEbConfigGameTime()
+          .getDeploymentTimeStep() )
       {
         Set<EbToken> list = ModelFmpMain.model().getGame().getSetToken();
         boolean isTitleDisplayed = false;

@@ -1,4 +1,4 @@
-#Mon Feb 07 20:08:50 CET 2011
+#Sat Feb 26 14:20:23 CET 2011
 eclipse.preferences.version=1
 encoding//src/com/fullmetalgalaxy/client/ressources/MessagesAppBoard_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/client/ressources/MessagesRpc_fr.properties=UTF-8
@@ -9,4 +9,5 @@ encoding//war/help/index.jsp=UTF-8
 encoding//war/help/misc.jsp=UTF-8
 encoding//war/help/rulesdeviations.jsp=UTF-8
 encoding//war/help/units.jsp=UTF-8
+encoding//war/include/version.html=ISO-8859-1
 encoding/<project>=UTF-8

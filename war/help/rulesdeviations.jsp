@@ -40,6 +40,11 @@ Les marées sont aléatoires et non plus moyenné sur l’ensemble de la partie.
 podes. (cela ajoute 3 cases)
 </p>
 
+<h3>Le décollage</h3>
+<p>Le décollage d'un astronef est gratuit (0PA) pour éviter les frustrations inutiles des nouveaux
+ joueurs ignorants de cette règle.
+</p>
+
 <%@include file="/include/footer.jsp"%>
 </body>
 </HTML>
