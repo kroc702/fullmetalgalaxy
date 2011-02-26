@@ -168,7 +168,7 @@ compilation file for Full Metal Galaxy
 			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
 			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
 		</tstamp>
-		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.html" />
+		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.html" encoding="UTF-16"/>
 
 		<exec executable="${hgdir}/hg" outputproperty="hgid">
 		    <arg value="id"/>

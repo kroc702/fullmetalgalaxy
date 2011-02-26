@@ -73,6 +73,9 @@ Ou bien :
 [Clic] Cible 2
 [OK]
 </pre>
+A noter: d'autre séquence fonctionnent, notaments la sélections des pions dans le désordre
+ou l'omission du déplacement initial. Mais dans certaine situation rare, seul les séquences
+proposé ici réalise l'action exactement comme vous le souhaitez.
 
 <h2>Les contrôles de pièce standard</h2>
 <pre>
@@ -114,6 +117,16 @@ ex pour décharger un crabe et deux char de la barge en un seul point d'action:
 [Clic] char 2
 [Clic] crabe
 [OK] (-> 0pt d'action)
+</pre>
+
+Pour positionner la barge comme on le souhaite, il est possible de sélectioner les deux cases qu'elle doit
+occuper:
+<pre>
+[Clic] pod de l'astronef
+[Clic] barge
+[Clic] 1iere case adjacente
+[Clic] 2nd case (& vérifier que ça nous convient)
+[OK] (-> 1pt d'action)
 </pre>
 
 <h2>chat / joueurs connecté</h2>

@@ -105,7 +105,7 @@ public class EbEvtPlayerTurn extends AnEvent
     {
       throw new RpcFmpException( "Seul le joueur dont c'est le tour peut ecourter sont tour de jeu" );
     }
-    if(p_game.getCurrentTimeStep() < 2)
+    if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       EbToken freighter = p_game.getFreighter( p_game.getCurrentPlayerRegistration() );
       if(freighter != null && freighter.getLocation() != Location.Board)

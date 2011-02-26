@@ -30,22 +30,24 @@ Si vous avez des remarques générales ou désirez m'aider,
 Pour signaler un bug ou proposer des évolutions, utilisez plutot ce 
 <a href="http://code.google.com/p/fullmetalgalaxy/issues/entry?template=Defect report from user">formulaire</a>.
 </p>
+<br/>
 
 <a name="start" ></a>
 <p>
 Il existe un <a href="/game.jsp?id=/puzzles/tutorial/model.bin">tutoriel</a> vous permettant de découvrir les mécanismes du jeu. 
 Au terme de celui-ci vous pouvez bien sûr vous inscrire à une partie, mais 
-certaines subtilités du jeu vous échapperont probablement.
+certaines subtilités du jeu vous échapperont encore.
+</p>
+<p>
+Le plus important à comprendre est sans doute le 
+<a href="firecovers.jsp">mécanisme des zones de feux</a> permettant de construire une défense efficace.
 </p>
 <p>
 Si vous connaissez le jeu de plateau full metal planete, il peut être utile
  de regarder les <a href="rulesdeviations.jsp">différences</a> entre FMG et FMP. J’espère que vous ne serez
   pas perdu et retrouvez rapidement vos réflexes de minier de l’espace !
 </p>
-<p>
-Pour les autres, le plus important à comprendre est sans doute le 
-<a href="firecovers.jsp">mécanisme des zones de feux</a> permettant de construire une défense efficace.
-</p>
+
 
 <%@include file="/include/footer.jsp"%>
 </body>

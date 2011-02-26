@@ -48,13 +48,16 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
 </div>
 
 
-<div class="bloc" style="width:955px; height:30px; position:absolute; left:0px; top:450px; font-size: 8pt;" >   
+<div class="bloc" style="width:955px; height:40px; position:absolute; left:0px; top:450px; font-size: 8pt;" >   
 Full Metal Galaxy est une adaptation jeu web de Full Metal Plan&egrave;te, un jeu
 de strat&eacute;gie sur table de G&eacute;rard Mathieu, G&eacute;rard Delfanti et Pascal
 Trigaux, &eacute;dit&eacute; par Ludod&eacute;lire entre 1989 et
 1996. Full Metal Galaxy est sous ma seule responsabilit&eacute;, les
 auteurs n'ont pas pris part &agrave; son d&eacute;veloppement. 
-<A HREF="/apropos.jsp">A propos...</A>
+<A HREF="/apropos.jsp" style="font-size: 8pt;">A propos...</A>
+<br/>
+FMG est open source, si vous désirez contribuer, contactez moi 
+<a href="mailto:admin@fullmetalgalaxy.com" style="font-size: 8pt;">admin@fullmetalgalaxy.com</a>. 
 </div>
 
 <div id="menu" class="bloc" style="width:180px; height:280px; position:absolute; top:130px; left:0px;" >

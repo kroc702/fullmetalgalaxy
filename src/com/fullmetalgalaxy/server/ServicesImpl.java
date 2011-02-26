@@ -39,11 +39,13 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbRegistrationStats;
+import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
@@ -53,6 +55,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
@@ -340,7 +343,31 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       }
     }*/
 
+    if( (p_action.getType() == GameLogType.EvtPlayerTurn)
+        && (game.getCurrentTimeStep() == game.getEbConfigGameTime().getTotalTimeStep()) )
+    {
+      // end turn action in the last turn...
+      // check that his freighter take off, if not, take off automatically
+      for( EbToken token : game.getSetToken() )
+      {
+        if( (token.getType() == TokenType.Freighter)
+            && (game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor()))
+            && (token.getLocation() == Location.Board) )
+        {
+          // automatic take off for this freighter
+          EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
+          eventTakeOff.setGame( game );
+          eventTakeOff.setToken( token );
+          eventTakeOff.setAccountId( game.getRegistrationByColor( token.getColor() ).getAccountId() );
+          eventTakeOff.setAuto( true );
+          eventTakeOff.checkedExec( game );
+          game.addEvent( eventTakeOff );
+        }
+      }
+    }
     
+    // real action
+    //
     if(p_action.getType() == GameLogType.EvtCancel)
     {
       // cancel action doesn't work in exact same way as other event
@@ -572,6 +599,26 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
             && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
                 .getEbConfigGameTime().getTimeStepDurationInMili()) )
         {
+          // automatic take off for all freighter just before end game
+          if( p_game.getCurrentTimeStep() > p_game.getEbConfigGameTime().getTotalTimeStep() )
+          {
+            for( EbToken token : p_game.getSetToken() )
+            {
+              if( (token.getType() == TokenType.Freighter)
+                  && (token.getLocation() == Location.Board) )
+              {
+                // automatic take off for this freighter
+                EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
+                eventTakeOff.setGame( p_game );
+                eventTakeOff.setToken( token );
+                eventTakeOff.setAccountId( p_game.getRegistrationByColor( token.getColor() )
+                    .getAccountId() );
+                eventTakeOff.setAuto( true );
+                eventTakeOff.checkedExec( p_game );
+                p_game.addEvent( eventTakeOff );
+              }
+            }
+          }
           // new time step
           EbEvtTimeStep event = new EbEvtTimeStep();
           event.setGame( p_game );

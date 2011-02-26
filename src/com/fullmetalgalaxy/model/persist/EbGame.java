@@ -817,8 +817,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-
-
   public List<EbRegistration> getRegistrationByPlayerOrder()
   {
     List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
@@ -886,6 +884,12 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return getNextPlayerRegistration( getCurrentPlayerRegistration().getOrderIndex() );
   }
 
+  /**
+   * return next registration which control at least one freighter on board.
+   * If no registration control any freighter on board, return the current players registration.
+   * @param p_currentIndex
+   * @return
+   */
   public EbRegistration getNextPlayerRegistration(int p_currentIndex)
   {
     EbRegistration registration = null;
@@ -901,7 +905,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
         registration = getRegistrationByOrderIndex( index );
       }
       assert registration != null;
-    } while( !haveBoardFreighter( registration ) );
+    } while( !haveBoardFreighter( registration ) && (index != p_currentIndex) );
     return registration;
   }
 
