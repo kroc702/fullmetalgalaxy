@@ -17,12 +17,9 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010 Vincent Legendre
+ *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-/**
- * 
- */
 package com.fullmetalgalaxy.client.board;
 
 import java.util.HashMap;
