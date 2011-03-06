@@ -998,13 +998,16 @@ public class EbToken extends EbBase
    */
   public void addFireDisabling(FireDisabling p_fireDisabling)
   {
-    if( m_listFireDisabling == null )
+    if( p_fireDisabling != null )
     {
-      m_listFireDisabling = new ArrayList<FireDisabling>();
-    }
-    if( !m_listFireDisabling.contains( p_fireDisabling ) )
-    {
-      m_listFireDisabling.add( p_fireDisabling );
+      if( m_listFireDisabling == null )
+      {
+        m_listFireDisabling = new ArrayList<FireDisabling>();
+      }
+      if( !m_listFireDisabling.contains( p_fireDisabling ) )
+      {
+        m_listFireDisabling.add( p_fireDisabling );
+      }
     }
   }
 
@@ -1014,7 +1017,7 @@ public class EbToken extends EbBase
    */
   public void removeFireDisabling(FireDisabling p_fireDisabling)
   {
-    if( m_listFireDisabling != null )
+    if( m_listFireDisabling != null && p_fireDisabling != null )
     {
       m_listFireDisabling.remove( p_fireDisabling );
       if( m_listFireDisabling.isEmpty() )

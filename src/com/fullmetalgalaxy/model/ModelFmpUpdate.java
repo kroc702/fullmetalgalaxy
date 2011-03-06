@@ -75,7 +75,7 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
     assert p_pseudo != null;
     for( Map.Entry<Long, EbAccount> entry : getMapAccounts().entrySet() )
     {
-      if( p_pseudo.equals( entry.getValue().getPseudo() ) )
+      if( entry.getValue() != null && p_pseudo.equals( entry.getValue().getPseudo() ) )
       {
         return entry.getValue();
       }

@@ -19,7 +19,7 @@
 <a target="_blank" href="http://latest.fullmetalgalaxy2.appspot.com/">Autre version</a><br/>
 <br/>
 
-<form name="myform" action="/GameXmlServlet" method="post" enctype="multipart/form-data">
+<form name="myform" action="/admin/Servlet" method="post" enctype="multipart/form-data">
 upload game file: <input type="file" name="gamefile"><br/>
 <input type="submit" name="Submit" value="Submit your game"/>
 </form>
