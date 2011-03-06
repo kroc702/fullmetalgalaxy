@@ -74,7 +74,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 {
   public static final long serialVersionUID = 1;
   private final static FmpLogger log = FmpLogger.getLogger( ServicesImpl.class.getName() );
-  private static String s_basePath = null;
+  protected static String s_basePath = null;
 
   /**
    * constructor: 

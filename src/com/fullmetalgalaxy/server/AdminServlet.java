@@ -22,16 +22,28 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.image.BlobstoreCache;
+import com.fullmetalgalaxy.server.image.MiniMapProducer;
 
 /**
  * @author Vincent
@@ -40,6 +52,7 @@ import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 public class AdminServlet extends HttpServlet
 {
   private static final long serialVersionUID = 533579014067656255L;
+  private final static FmpLogger log = FmpLogger.getLogger( AdminServlet.class.getName() );
 
   /**
    * 
@@ -93,11 +106,58 @@ public class AdminServlet extends HttpServlet
    * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
   @Override
-  protected void doPost(HttpServletRequest p_req, HttpServletResponse p_resp)
+  protected void doPost(HttpServletRequest p_request, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
-    // TODO Auto-generated method stub
-    super.doPost( p_req, p_resp );
+    ServletFileUpload upload = new ServletFileUpload();
+    Map<String, String> params = new HashMap<String, String>();
+    ModelFmpInit modelInit = null;
+
+    try
+    {
+      // Parse the request
+      FileItemIterator iter = upload.getItemIterator( p_request );
+      while( iter.hasNext() )
+      {
+        FileItemStream item = iter.next();
+        if( item.isFormField() )
+        {
+          params.put( item.getFieldName(), Streams.asString( item.openStream(), "UTF-8" ) );
+        }
+        else if( item.getFieldName().equalsIgnoreCase( "gamefile" ) )
+        {
+          ObjectInputStream in = new ObjectInputStream( item.openStream() );
+          modelInit = ModelFmpInit.class.cast( in.readObject() );
+          in.close();
+        }
+      }
+    } catch( FileUploadException e )
+    {
+      log.error( e );
+    } catch( ClassNotFoundException e2 )
+    {
+      log.error( e2 );
+    }
+
+
+    if( modelInit != null )
+    {
+      // set transient to avoid override data
+      modelInit.getGame().setTrancient();
+      modelInit.getGame().setMinimapBlobKey( null );
+      modelInit.getGame().setMinimapUri( null );
+
+      FmgDataStore dataStore = new FmgDataStore();
+      dataStore.save( modelInit.getGame() );
+      dataStore.close();
+
+      // construct minimap image
+      MiniMapProducer miniMapProducer = new MiniMapProducer( ServicesImpl.s_basePath,
+          modelInit.getGame() );
+      byte[] data = miniMapProducer.getImage();
+      BlobstoreCache.storeMinimap( modelInit.getGame().getId(), new ByteArrayInputStream( data ) );
+    }
+
   }
 
 

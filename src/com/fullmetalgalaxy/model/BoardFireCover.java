@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.google.gwt.core.client.GWT;
 
 
 /**
@@ -335,6 +336,7 @@ public class BoardFireCover implements Serializable
       Collection<FireDisabling> p_fdRemoved,
       Collection<FireDisabling> p_fdAdded)
   {
+    assert p_token != null;
     boolean isFdUpdated = false;
     if( (p_token.getLocation() != Location.Board)
         || (p_token.getColor() == EnuColor.None)
@@ -400,7 +402,7 @@ public class BoardFireCover implements Serializable
 
             if( tokenOwnerColor.isColored( color )
               && !m_game.isTokenFireCoverDisabled( otherToken )
-              && m_game.canTokenFireOn( otherToken, position )
+                && m_game.canTokenFireOn( otherToken, p_token )
               && !m_lockedToken.contains( otherToken.getId() ) )
             {
               if( fd.getDestroyer1( m_game ) == null )
@@ -420,12 +422,18 @@ public class BoardFireCover implements Serializable
           }
         }
       }
-      assert fd.getDestroyer1( m_game ) != null && fd.getDestroyer2( m_game ) != null;
 
-      p_fdAdded.add( fd );
-      p_token.addFireDisabling( fd );
-      fd.getDestroyer1( m_game ).addFireDisabling( fd );
-      fd.getDestroyer2( m_game ).addFireDisabling( fd );
+      if( fd.getDestroyer1( m_game ) != null && fd.getDestroyer2( m_game ) != null )
+      {
+        p_fdAdded.add( fd );
+        p_token.addFireDisabling( fd );
+        fd.getDestroyer1( m_game ).addFireDisabling( fd );
+        fd.getDestroyer2( m_game ).addFireDisabling( fd );
+      }
+      else
+      {
+        GWT.log( "BUG: a token should be set as fire disabled, but we didn't found destroyer" );
+      }
       incFireCover( p_token );
       isFdUpdated = true;
     }
