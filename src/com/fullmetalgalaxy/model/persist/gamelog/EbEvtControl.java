@@ -88,6 +88,13 @@ public class EbEvtControl extends AnEventPlay
   {
     super.check(p_game);
 
+    // check that target can be controled !
+    if( !getTokenTarget( p_game ).canBeColored() )
+    {
+      // no i18n
+      throw new RpcFmpException( "Ore can't be controled" );
+    }
+
     // check that player control destroyers
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer1(p_game).getColor() )
         || getTokenDestroyer1(p_game).getColor() == EnuColor.None )

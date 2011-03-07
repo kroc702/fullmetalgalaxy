@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
@@ -227,14 +228,34 @@ public class WgtContextAction extends WgtView implements ClickHandler
       else if( sender == m_btnFire )
       {
         actionBuilder.userAction( GameLogType.EvtFire );
-        MAppMessagesStack.s_instance
-            .showMessage( "Selectionez un second destructeur a porte, puis votre cible" );
+        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( ModelFmpMain.model()
+            .getGame() ) == null )
+        {
+          // TODO i18n
+          MAppMessagesStack.s_instance
+              .showMessage( "Selectionez un second destructeur à porté, puis votre cible" );
+        }
+        else
+        {
+          // TODO i18n
+          MAppMessagesStack.s_instance.showMessage( "Selectionez les deux destructeurs à porté" );
+        }
       }
       else if( sender == m_btnControl )
       {
         actionBuilder.userAction( GameLogType.EvtControl );
-        MAppMessagesStack.s_instance
-            .showMessage( "Selectionez un second destructeur au contact, puis votre cible" );
+        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( ModelFmpMain.model()
+            .getGame() ) == null )
+        {
+          // TODO i18n
+          MAppMessagesStack.s_instance
+              .showMessage( "Selectionez un second destructeur au contact, puis votre cible" );
+        }
+        else
+        {
+          // TODO i18n
+          MAppMessagesStack.s_instance.showMessage( "Selectionez les deux destructeurs au contact" );
+        }
       }
       else if( sender == m_btnFireCoverOn )
       {
@@ -533,10 +554,16 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnCancel );
       }
 
-      if( ((ModelFmpMain.model().getGame().getTokenFireLength( mainSelectedToken ) > 0) || (mainSelectedToken
+      if( !mainSelectedToken.getEnuColor().contain( myRegistration.getColor() ) )
+      {
+        if( mainSelectedToken.canBeATarget() )
+        {
+          m_panel.add( m_btnFire );
+        }
+      }
+      else if( ((ModelFmpMain.model().getGame().getTokenFireLength( mainSelectedToken ) > 0) || (mainSelectedToken
           .getType() == TokenType.Freighter && ModelFmpMain.model().getGame()
-          .getToken( action.getSelectedPosition(), TokenType.Turret ) != null))
-          && (myRegistration.getEnuColor().isColored( mainSelectedToken.getColor() )) )
+          .getToken( action.getSelectedPosition(), TokenType.Turret ) != null)) )
       {
         try
         {
@@ -545,10 +572,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
               || (mainSelectedToken.getType() == TokenType.Freighter) )
           {
             m_panel.add( m_btnFire );
-          }
-          if( action.getSelectedToken().canControlNeighbor( action.getSelectedPosition() ) )
-          {
-            m_panel.add( m_btnControl );
           }
         } catch( RpcFmpException e )
         {
@@ -561,6 +584,10 @@ public class WgtContextAction extends WgtView implements ClickHandler
           {
           }
         }
+      }
+      if( action.getSelectedToken().canControlNeighbor( action.getSelectedPosition() ) )
+      {
+        m_panel.add( m_btnControl );
       }
 
       if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
