@@ -48,8 +48,16 @@ clic la deuxième case (& vérifier que ça nous convient)<br/>
 valider le mouvement (clic même 2nd case ou bouton OK)
 </p>
 <p>
+<b>Q: Comment choisir la couleur d'une unité controlée par deux destructeurs de couleur différente ?</b><br/>
+R: Le premier destructeur sélectionné détermine la future couleur de l'unité contrôlée.
+</p>
+<p>
 Q: En mode tour par tour, je ne comprend pas comment sont calculés les dates limites de jeu.<br/>
 R: 
+</p>
+<p>
+<b>Q: .</b><br/>
+R: .
 </p>
 
 <%@include file="/include/footer.jsp"%>

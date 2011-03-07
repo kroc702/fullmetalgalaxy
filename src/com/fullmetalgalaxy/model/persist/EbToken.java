@@ -409,9 +409,14 @@ public class EbToken extends EbBase
    */
   public boolean canControlNeighbor(AnBoardPosition p_position)
   {
-    if( p_position == null || getLocation() != Location.Board )
+    if( p_position == null || getLocation() != Location.Board || !canBeColored() )
     {
       return false;
+    }
+    boolean isDestroyer = isDestroyer();
+    if( getType() == TokenType.Freighter && getGame().getToken( p_position, TokenType.Turret ) != null )
+    {
+      isDestroyer = true;
     }
     // first determine the token color
     EnuColor tokenColor = getEnuColor();
@@ -421,9 +426,36 @@ public class EbToken extends EbBase
       for( EbToken token : getGame().getAllToken( position ) )
       {
         if( (token.canBeColored()) && (tokenColor.getValue() != token.getColor())
-            && (token.isNeighbor( this )) )
+            && (token.isNeighbor( this ))
+            && ( isDestroyer || token.isDestroyer() ) )
         {
           return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @bug in this method, opponent only mean different color.
+   * @return true if at least one opponent destroyer can fire on this token
+   */
+  public boolean canBeATarget()
+  {
+    AnBoardPosition position = getPosition();
+    for( int ix = position.getX() - 3; ix < position.getX() + 4; ix++ )
+    {
+      for( int iy = position.getY() - 3; iy < position.getY() + 4; iy++ )
+      {
+        EbToken otherToken = m_game.getToken( new AnBoardPosition( ix, iy ) );
+        if( otherToken != null )
+        {
+          if( otherToken.getColor() != getColor()
+            && !m_game.isTokenFireCoverDisabled( otherToken )
+              && m_game.canTokenFireOn( otherToken, this ) )
+          {
+            return true;
+          }
         }
       }
     }

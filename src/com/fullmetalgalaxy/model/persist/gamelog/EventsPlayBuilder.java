@@ -459,6 +459,7 @@ public class EventsPlayBuilder implements GameEventStack
         if( token == null )
         {
           // user don't click on a token
+          //
           if( getSelectedAction() == null )
           {
             if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad)
@@ -628,6 +629,26 @@ public class EventsPlayBuilder implements GameEventStack
         else
         {
           // user click on another token
+          //
+          if( getSelectedAction() == null && p_searchPath )
+          {
+            // user clic on two token with CTRL or right clic
+            // search for an advanced action like fire or control
+            if( token.getColor() != getSelectedToken().getColor()
+                && token.isNeighbor( getSelectedToken() ) )
+            {
+              userAction( GameLogType.EvtControl );
+            }
+            else if( (getSelectedToken().isDestroyer() && token.isDestroyer())
+                || (getSelectedToken().canBeATarget() && token.isDestroyer() 
+                    && !getMyRegistration().getEnuColor().contain( getSelectedToken().getColor() ))
+                || (token.canBeATarget() && getSelectedToken().isDestroyer() 
+                    && !getMyRegistration().getEnuColor().contain( token.getColor() )) )
+            {
+              userAction( GameLogType.EvtFire );
+            }
+          }
+
           if( getSelectedAction() == null )
           {
             if( previousAction!=null && previousAction.getType()==GameLogType.EvtFire )
@@ -682,14 +703,29 @@ public class EventsPlayBuilder implements GameEventStack
             if( token.getColor() == EnuColor.None || !getMyRegistration().getEnuColor().isColored( token.getColor() ))
             {
               // select target
+              // like for destroyer, if target is already selected, we could send an error...
               ((EbEvtFire)getSelectedAction()).setTokenTarget( token );
               isUpdated = EventBuilderMsg.Updated;
             }
             else
             {
-              // select second destroyer
-              // if destroyer is already selected, we may send an error message...
-              ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+              // select a destroyer
+              if( ((EbEvtFire)getSelectedAction()).getTokenDestroyer1( getGame() ) == null )
+              {
+                // set as selected token
+                setSelectedPosition( p_position );
+                setSelectedToken( token );
+                // select first destroyer
+                ((EbEvtFire)getSelectedAction()).setTokenDestroyer1( token );
+              }
+              else
+              {
+                // select second destroyer
+                // if destroyer is already selected, we may send an error
+                // message...
+                // but its not a bug after all !
+                ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+              }
               isUpdated = EventBuilderMsg.Updated;
             }
             
@@ -712,10 +748,22 @@ public class EventsPlayBuilder implements GameEventStack
             }
             else
             {
-              // select second destroyer
-              // if( ((EbEvtControl)getSelectedAction()).getTokenDestroyer2( m_game ) == null )
-              // like for fire, we may send an error
-              ((EbEvtControl)getSelectedAction()).setTokenDestroyer2( token );
+              // select a destroyer
+              if( ((EbEvtControl)getSelectedAction()).getTokenDestroyer1( getGame() ) == null )
+              {
+                // set as selected token
+                setSelectedPosition( p_position );
+                setSelectedToken( token );
+                // select first destroyer
+                ((EbEvtControl)getSelectedAction()).setTokenDestroyer1( token );
+              }
+              else
+              {
+                // select second destroyer
+                // like for fire, we may send an error if destroyer is already
+                // selected...
+                ((EbEvtControl)getSelectedAction()).setTokenDestroyer2( token );
+              }
               isUpdated = EventBuilderMsg.Updated;
             }
             
@@ -1028,16 +1076,22 @@ public class EventsPlayBuilder implements GameEventStack
           token = getSelectedToken();
         }
       }
-      assert getGame().getTokenFireLength( token ) > 0;
+      if( getMyRegistration().getEnuColor().contain( token.getColor() ) )
+      {
+        action.setTokenDestroyer1( token );
+      }
+      else
+      {
+        action.setTokenTarget( token );
+      }
       setSelectedToken( token );
-      action.setTokenDestroyer1( token );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.Updated;
     }
     else if( p_type == GameLogType.EvtControl )
     {
       assert isBoardTokenSelected();
-      assert getGame().getTokenFireLength( getSelectedToken() ) > 0;
+      // assert getGame().getTokenFireLength( getSelectedToken() ) > 0;
       EbEvtControl action = new EbEvtControl();
       action.setGame( getGame() );
       action.setAccountId( getAccountId() );
@@ -1050,7 +1104,14 @@ public class EventsPlayBuilder implements GameEventStack
           token = getSelectedToken();
         }
       }
-      action.setTokenDestroyer1( token );
+      if( getMyRegistration().getEnuColor().contain( token.getColor() ) )
+      {
+        action.setTokenDestroyer1( token );
+      }
+      else
+      {
+        action.setTokenTarget( token );
+      }
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.Updated;
     }

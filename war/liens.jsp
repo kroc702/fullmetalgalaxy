@@ -19,8 +19,12 @@
     
     <h2>Quelques liens autour de Full Metal Planète</h2>
     <p>
+    <a href='http://fullmetalplanete.free.fr/fullmetalplanete.html' >
+      Une présentation et tout un tas de ressources
+    </a><br/>
+    <br/>
     <a href='http://www.trictrac.net/index.php3?id=jeux&rub=detail&inf=detail&jeu=422' >
-      Une présentation du jeu de plateau 
+      La fiche trictrac 
     </a><br/>
     <br/>
     <A HREF="http://eric.alber.free.fr/wiki/doku.php/full_metal_planete">
