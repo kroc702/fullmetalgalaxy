@@ -118,8 +118,8 @@ public class TokenIndexSet implements IsSerializable
           RpcUtil.logError( "token " + p_token + " isn't referenced by position index" );
         }
       }
-      p_token.setLocation( p_location );
     }
+    p_token.setLocation( p_location );
   }
 
   public void setPosition(EbToken p_token, AnBoardPosition p_position)

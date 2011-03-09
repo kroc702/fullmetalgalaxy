@@ -118,12 +118,11 @@ public class EbEvtTide extends AnEvent
     {
       for(EbToken token : p_game.getSetToken())
       {
-        if( token.getType() == TokenType.Pontoon )
+        if( token.getType() == TokenType.Pontoon 
+            && token.getLocation() == Location.Board
+            && !p_game.isPontoonLinkToGround( token ) )
         {
-          if( !p_game.isPontoonLinkToGround( token ) )
-          {
-            m_PontoonIds.addAll( p_game.chainRemovePontoon( token ) );
-          }
+          m_PontoonIds.addAll( p_game.chainRemovePontoon( token ) );
         }
       }
     }
