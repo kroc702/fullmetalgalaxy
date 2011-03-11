@@ -740,7 +740,8 @@ public class EventsPlayBuilder implements GameEventStack
           else if( getSelectedAction() instanceof EbEvtControl )
           {
             // a control action...
-            if( token.getColor() == EnuColor.None || !getMyRegistration().getEnuColor().isColored( token.getColor() ))
+            if( token.getColor() == EnuColor.None || !token.isDestroyer()
+                || token.getColor() != getSelectedToken().getColor() )
             {
               // select target
               ((EbEvtControl)getSelectedAction()).setTokenTarget( token );
