@@ -665,7 +665,7 @@ public class EventsPlayBuilder implements GameEventStack
             {
               boolean isPathFound = true;
               AnBoardPosition closePosition = p_position.getNeighbour( p_position
-                  .getNeighbourSector( getSelectedToken().getPosition() ) );
+                  .getNeighbourSector( getSelectedPosition() ) );
               if( !p_searchPath && !token.isNeighbor( getSelectedToken() ) )
               {
                 // user standard click far away: clear current action
@@ -675,7 +675,7 @@ public class EventsPlayBuilder implements GameEventStack
               else
               {
                 // user want to load a token into another
-                if( !closePosition.equals( getSelectedToken().getPosition() ) )
+                if( !closePosition.equals( getSelectedPosition() ) )
                 {
                   isPathFound = moveSelectedTo( closePosition );
                 }
