@@ -33,6 +33,7 @@ import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
@@ -130,8 +131,9 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         && (action.getSelectedAction() == null) )
     {
       // so, no token is selected: find ship in orbit !
-      if( model.getGame().getCurrentTimeStep() <= model.getGame().getEbConfigGameTime()
-          .getDeploymentTimeStep() )
+      if( model.getGame().getGameType() != GameType.MultiPlayer
+          || model.getGame().getCurrentTimeStep() <= model.getGame().getEbConfigGameTime()
+              .getDeploymentTimeStep() || !model.getGame().isStarted() )
       {
         Set<EbToken> list = ModelFmpMain.model().getGame().getSetToken();
         boolean isTitleDisplayed = false;
