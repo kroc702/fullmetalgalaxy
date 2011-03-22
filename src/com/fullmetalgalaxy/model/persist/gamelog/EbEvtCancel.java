@@ -100,6 +100,9 @@ public class EbEvtCancel extends AnEventUser
   {
     assert p_game != null;
     assert p_game.getId() == getIdGame();
+    boolean isTimeStepCanceled = false;
+    long timeSinceLastTimeStepChange = System.currentTimeMillis()
+        - p_game.getLastTimeStepChange().getTime();
     if( m_fromActionIndex != p_game.getLogs().size() -1 || m_toActionIndex < 0 )
     {
       throw new RpcFmpException( "this cancel action isn't for this game state" );
@@ -113,6 +116,11 @@ public class EbEvtCancel extends AnEventUser
         try
         {
           action.unexec( p_game );
+
+          if( action instanceof EbEvtTimeStep )
+          {
+            isTimeStepCanceled = true;
+          }
         } catch( RpcFmpException e )
         {
           RpcUtil.logError( "error ", e );
@@ -122,9 +130,10 @@ public class EbEvtCancel extends AnEventUser
       m_eventsBackup.add( 0, action );
     }
     // this is to avoid timestep replay right after the cancel action.
-    if( p_game.isAsynchron() )
+    if( p_game.isAsynchron() && isTimeStepCanceled )
     {
-      p_game.setLastTimeStepChange( new Date() );
+      p_game.setLastTimeStepChange( new Date( System.currentTimeMillis()
+          - timeSinceLastTimeStepChange ) );
     }
     p_game.addEvent( this );
   }
