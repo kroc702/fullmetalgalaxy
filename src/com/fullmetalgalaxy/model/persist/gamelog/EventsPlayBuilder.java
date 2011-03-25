@@ -741,7 +741,9 @@ public class EventsPlayBuilder implements GameEventStack
           {
             // a control action...
             if( token.getColor() == EnuColor.None || !token.isDestroyer()
-                || token.getColor() != getSelectedToken().getColor() )
+                || !getMyRegistration().getEnuColor().isColored( token.getColor() )
+                || (token.getColor() != getSelectedToken().getColor() && ((EbEvtControl)getSelectedAction())
+                    .getTokenDestroyer2( getGame() ) != null) )
             {
               // select target
               ((EbEvtControl)getSelectedAction()).setTokenTarget( token );
