@@ -24,11 +24,13 @@ package com.fullmetalgalaxy.model;
 
 import java.io.Serializable;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Kroc
  * this class, is to use Enum like type with GWT.
  */
-public class MyEnum implements Serializable
+public class MyEnum implements Serializable, IsSerializable
 {
   static final long serialVersionUID = 20;
 

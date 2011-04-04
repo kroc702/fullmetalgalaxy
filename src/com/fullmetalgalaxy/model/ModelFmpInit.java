@@ -22,47 +22,22 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author Vincent Legendre
  * All data client need to load a games
+ * 
+ * TODO get rid of this class
  */
-public class ModelFmpInit implements java.io.Serializable
+public class ModelFmpInit implements IsSerializable, java.io.Serializable
 {
   static final long serialVersionUID = 203;
 
   private EbGame m_game = null;
 
-  private Set<ConnectedUser> m_connectedUsers = null;
-
-  private Map<Long, EbAccount> m_accounts = null;
-
-
-  /**
-   * @return the accounts
-   */
-  public Map<Long, EbAccount> getMapAccounts()
-  {
-    if( m_accounts == null )
-    {
-      m_accounts = new HashMap<Long, EbAccount>();
-    }
-    return m_accounts;
-  }
-
-  /**
-   * @param p_accounts the accounts to set
-   */
-  public void setMapAccounts(Map<Long, EbAccount> p_accounts)
-  {
-    m_accounts = p_accounts;
-  }
+  private PresenceRoom m_presenceRoom = null;
 
 
 
@@ -82,21 +57,23 @@ public class ModelFmpInit implements java.io.Serializable
     m_game = p_game;
   }
 
+
   /**
-   * @return the connectedPlayer
+   * @return the presenceRoom
    */
-  public Set<ConnectedUser> getConnectedUsers()
+  public PresenceRoom getPresenceRoom()
   {
-    return m_connectedUsers;
+    return m_presenceRoom;
   }
 
   /**
-   * @param p_connectedPlayer the connectedPlayer to set
+   * @param p_presenceRoom the presenceRoom to set
    */
-  public void setConnectedUsers(Set<ConnectedUser> p_connectedUsers)
+  public void setPresenceRoom(PresenceRoom p_presenceRoom)
   {
-    m_connectedUsers = p_connectedUsers;
+    m_presenceRoom = p_presenceRoom;
   }
+
 
 
 }

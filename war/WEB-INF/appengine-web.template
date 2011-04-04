@@ -17,11 +17,13 @@
   
 	<static-files>
         <include path="/**.cache.**" expiration="365d" />
-        <include path="/**.nocache.**" expiration="60s" />
-        <include path="/fullmetalgalaxy/**" expiration="10d" />
+        <include path="/**.nocache.**" expiration="20s" />
+        <include path="/game/**" expiration="10d" />
+        <include path="/chat/**" expiration="10d" />
         <include path="/puzzles/**" expiration="10d" />
         <include path="/**images/**" expiration="10d" />
         <include path="/**.css" expiration="10d" />
+        <include path="/**.jsp" expiration="2h" />
         <include path="/*" expiration="10d" />
         <exclude path="/include/**" />
         <exclude path="/**.pspimage" />

@@ -20,7 +20,9 @@ syntax: regexp
 syntax: regexp
 ^war/WEB-INF/lib/jsr107cache.*\.jar$
 syntax: regexp
-^war/fullmetalgalaxy$
+^war/game$
+syntax: regexp
+^war/chat$
 syntax: regexp
 ^war/WEB-INF/appengine-generated$
 syntax: regexp

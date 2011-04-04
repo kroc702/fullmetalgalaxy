@@ -26,13 +26,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 /**
  * @author Vincent Legendre
  *
  */
-public enum ConfigGameTime
+public enum ConfigGameTime implements IsSerializable
 {
   Standard, QuickAsynch, QuickTurnBased, StandardAsynch;
 

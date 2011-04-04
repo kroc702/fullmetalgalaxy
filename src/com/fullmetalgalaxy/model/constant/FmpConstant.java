@@ -33,15 +33,9 @@ public class FmpConstant
   public static final int maximumPlayerNumber = 9;
 
   // in second
-  public static final int minimumResfreshingPeriod = 1;
-  public static final int maximumResfreshingPeriod = 2;
-  public static final int inactiveResfreshingPeriod = 60; // 1.40 min
   public static final int localResfreshingPeriod = 30;
 
-  public static final int chatMessagesLivePeriod = 100;
   public static final int clientMessagesLivePeriod = 15;
-  public static final int cometTimeout = 50;
-  public static final int chatConnectionTimeout = 120;
 
   public static final int miniMapWidth = 240;
   public static final int miniMapHeight = 160;

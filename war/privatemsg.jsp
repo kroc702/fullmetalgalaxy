@@ -14,14 +14,6 @@
 <h1>Message privé</h1>
 
 <%
-long id = 0;
-try
-{
-	id = Long.parseLong( request.getParameter( "id" ) );
-} catch( NumberFormatException e )
-{
-}
-
 EbAccount account = FmgDataStore.sgetAccount( id );
 if( account == null ) 
 { 

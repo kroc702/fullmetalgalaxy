@@ -109,7 +109,8 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
 
     EbGameJoin action = new EbGameJoin();
     action.setGame( ModelFmpMain.model().getGame() );
-    action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+    action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
+    action.setAccount( ModelFmpMain.model().getMyAccount() );
     action.setColor( color );
     ModelFmpMain.model().runSingleAction( action );
 

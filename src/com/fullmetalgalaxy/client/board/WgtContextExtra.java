@@ -237,7 +237,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           p_token.getColor() );
       if( registration.haveAccount() )
       {
-        label.setText( ModelFmpMain.model().getAccount( registration.getAccountId() ).getPseudo() );
+        label.setText( registration.getAccountPseudo() );
       }
       else
       {

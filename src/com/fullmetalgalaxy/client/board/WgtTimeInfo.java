@@ -124,9 +124,7 @@ public class WgtTimeInfo extends WgtView
 
       if( game.getCurrentPlayerRegistration().haveAccount() )
       {
-        lbl = new Label( ModelFmpMain.model()
-            .getAccount( game.getCurrentPlayerRegistration().getAccountId() ).getPseudo()
-            + ")" );
+        lbl = new Label( game.getCurrentPlayerRegistration().getAccountPseudo() + ")" );
       }
       else
       {

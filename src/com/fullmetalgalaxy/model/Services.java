@@ -24,10 +24,7 @@ package com.fullmetalgalaxy.model;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -77,6 +74,8 @@ public interface Services extends RemoteService
 
 
   /**
+   * This method shouldn't be used anymore as init is now injected in jsp.
+   * 
    * Get all informations concerning the specific game.
    * @param p_gameId Id of the requested game
    * @return
@@ -85,20 +84,27 @@ public interface Services extends RemoteService
 
 
 
-  public ModelFmpUpdate runEvent(AnEvent p_action, Date p_lastUpdate) throws RpcFmpException;
+  /**
+   * TODO we should merge runAction and runEvent and take in parameters a ModelFmpUpdate
+   * @param p_action
+   * @throws RpcFmpException
+   */
+  public void runEvent(AnEvent p_action) throws RpcFmpException;
 
-  public ModelFmpUpdate runAction(ArrayList<AnEventPlay> p_actionList, Date p_lastUpdate)
+  public void runAction(ArrayList<AnEventPlay> p_actionList)
       throws RpcFmpException;
 
 
   /**
+   * This method shouldn't be used anymore as update is now send with channel API.
+   * 
    * Get all changes in an fmp model since p_currentVersion and send back all needed data
    * to update the model.
    * @param p_lastVersion
    * @return model change between p_lastVersion date and current date.
    * @throws RpcFmpException
    */
-  public ModelFmpUpdate getModelFmpUpdate(long p_gameId, Date p_lastUpdate)
+  public ModelFmpUpdate getModelFmpUpdate(long p_gameId)
       throws RpcFmpException;
 
 
@@ -107,8 +113,15 @@ public interface Services extends RemoteService
    * @param p_message
    * @throws RpcFmpException
    */
-  public ModelFmpUpdate sendChatMessage(ChatMessage p_message, Date p_lastUpdate)
+  public void sendChatMessage(ChatMessage p_message)
       throws RpcFmpException;
 
+  public void disconnect(Presence p_presence);
 
+  /**
+   * return new channel token
+   * @param p_presence
+   * @return
+   */
+  public String reconnect(Presence p_presence);
 }

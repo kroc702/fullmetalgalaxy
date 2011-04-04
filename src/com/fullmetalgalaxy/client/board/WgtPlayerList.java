@@ -105,7 +105,7 @@ public class WgtPlayerList extends WgtView
       if( registration.haveAccount() )
       {
         point = registration.getWinningPoint();
-        String pseudo = ModelFmpMain.model().getAccount( registration.getAccountId() ).getPseudo();
+        String pseudo = registration.getAccountPseudo();
         if( point > winnerPoint )
         {
           winnerPoint = point;
@@ -113,15 +113,16 @@ public class WgtPlayerList extends WgtView
         }
         htmlPlayers += MAppBoard.s_messages.playerDescription( pseudo, point );
       }
-      else if( registration.getAccountId() == ModelFmpMain.model().getMyAccountId() )
+      else if( registration.getAccountId() == ModelFmpMain.model().getMyAccount().getId() )
       {
         point = registration.getWinningPoint();
         if( point > winnerPoint )
         {
           winnerPoint = point;
-          winnerLogin = ModelFmpMain.model().getMyPseudo();
+          winnerLogin = ModelFmpMain.model().getMyAccount().getPseudo();
         }
-        htmlPlayers += MAppBoard.s_messages.playerDescription( ModelFmpMain.model().getMyPseudo(),
+        htmlPlayers += MAppBoard.s_messages.playerDescription( ModelFmpMain.model().getMyAccount()
+            .getPseudo(),
             point );
       }
       else

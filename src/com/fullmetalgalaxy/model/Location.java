@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Kroc
  *
  */
-public enum Location
+public enum Location implements IsSerializable
 {
 
   ToBeConstructed, Orbit, Board, Token, Graveyard, EndGame;

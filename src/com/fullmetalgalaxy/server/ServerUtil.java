@@ -32,6 +32,10 @@ public class ServerUtil
 {
 
 
+  public static String getChannelKey(String p_userLogin, long p_gameId)
+  {
+    return p_userLogin + p_gameId;
+  }
 
   public static Date currentDate()
   {

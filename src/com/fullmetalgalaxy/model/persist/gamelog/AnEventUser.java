@@ -36,7 +36,9 @@ public class AnEventUser extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  // TODO use registration id to get pseudo
   private long m_accountId = 0L;
+  // TODO use a long to compress data
   private String m_remoteAddr = null;
 
   /**

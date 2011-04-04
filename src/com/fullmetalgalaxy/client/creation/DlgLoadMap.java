@@ -65,7 +65,6 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
       super.onSuccess( p_result );
       ModelFmpMain.model().getGame().setLandSize( p_result.getGame().getLandWidth(),
           p_result.getGame().getLandHeight() );
-      ModelFmpMain.model().addAllAccounts( p_result.getMapAccounts() );
       ModelFmpMain.model().getGame().setLands( p_result.getGame().getLands() );
       ModelFmpMain.model().getGame().setPlanetType( p_result.getGame().getPlanetType() );
       ModelFmpMain.model().getGame().setMinimapUri( p_result.getGame().getMinimapUri() );

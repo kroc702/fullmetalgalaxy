@@ -26,13 +26,14 @@ import java.io.Serializable;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 /**
  * @author Kroc
  *
  */
-public class TokenExtraLocation implements Serializable
+public class TokenExtraLocation implements Serializable, IsSerializable
 {
   static final long serialVersionUID = 16;
 

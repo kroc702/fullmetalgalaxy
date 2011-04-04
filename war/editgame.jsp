@@ -68,7 +68,7 @@
         
         <div id="debug" style="display:block; position:absolute; top:50px; left:50px; z-index:9999999999;"></div>
         
-        <script type="text/javascript" language="javascript" src="fullmetalgalaxy/fullmetalgalaxy.nocache.js"></script>
+        <script type="text/javascript" language="javascript" src="game/game.nocache.js"></script>
 
         <!-- OPTIONAL: include this if you want history support -->
         <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>

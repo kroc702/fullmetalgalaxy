@@ -47,7 +47,7 @@ public class MAppMessagesStack extends MApp
   private Map<Widget, PopupTimer> s_messagesPanels = new HashMap<Widget, PopupTimer>();
   private VerticalPanel m_panel = new VerticalPanel();
 
-  public static MAppMessagesStack s_instance = null;
+  public static MAppMessagesStack s_instance = new MAppMessagesStack();
 
   /**
    * 

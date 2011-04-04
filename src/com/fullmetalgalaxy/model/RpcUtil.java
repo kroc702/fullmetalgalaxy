@@ -43,8 +43,8 @@ public class RpcUtil
 
 
   private static native boolean isJs() /*-{
-          return true;
-         }-*/;
+		return true;
+  }-*/;
 
   public static boolean isJsEnable()
   {

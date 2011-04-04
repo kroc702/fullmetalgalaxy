@@ -47,10 +47,12 @@ public class LocalGame
    * This method is called after a successful load of a local game.
    * @param callback
    */
-  public static void loadGame(AsyncCallback<ModelFmpUpdate> callbackUpdates)
+  public static void loadGame(ModelFmpMain p_model)
   {
+    ModelFmpUpdate updates = new ModelFmpUpdate();
     List<AnEvent> events = new ArrayList<AnEvent>();
     EbGame game = ModelFmpMain.model().getGame();
+    updates.setFromVersion( game.getVersion() );
     for( EbTrigger trigger : game.getTriggers() )
     {
       if( trigger.isEnable() )
@@ -67,57 +69,65 @@ public class LocalGame
         }
       }
     }
-    ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    p_model.receiveModelUpdate( updates );
   }
 
-  public static void runEvent(AnEvent p_action, Date p_clientLastUpdate,
-      AsyncCallback<ModelFmpUpdate> callbackUpdates)
+  public static void runEvent(AnEvent p_action, AsyncCallback<Void> callbackUpdates,
+      ModelFmpMain p_model)
   {
     EbGame game = ModelFmpMain.model().getGame();
+    ModelFmpUpdate updates = new ModelFmpUpdate();
+    updates.setFromVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
     events.add( p_action );
     events.addAll( game.createTriggersEvents() );
-    ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    callbackUpdates.onSuccess( null );
+    p_model.receiveModelUpdate( updates );
+
     // check triggers
     events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     updates = new ModelFmpUpdate();
+    updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    callbackUpdates.onSuccess( null );
+    p_model.receiveModelUpdate( updates );
   }
 
-  public static void runAction(ArrayList<AnEventPlay> p_actionList, Date p_clientLastUpdate,
-      AsyncCallback<ModelFmpUpdate> callbackUpdates)
+  public static void runAction(ArrayList<AnEventPlay> p_actionList,
+      AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
   {
     EbGame game = ModelFmpMain.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
+    updates.setFromPageId( ModelFmpMain.model().getPageId() );
+    updates.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+    updates.setFromVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
     for( AnEvent eventPlay : p_actionList )
     {
       events.add( eventPlay );
     }
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    callbackUpdates.onSuccess( null );
+    p_model.receiveModelUpdate( updates );
+
     // check triggers
     events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     updates = new ModelFmpUpdate();
+    updates.setFromPageId( ModelFmpMain.model().getPageId() );
+    updates.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+    updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    callbackUpdates.onSuccess( null );
+    p_model.receiveModelUpdate( updates );
   }
 
 
@@ -129,17 +139,18 @@ public class LocalGame
    * @throws RpcFmpException
    */
   public static void modelUpdate(long p_gameId, Date p_lastVersion,
-      AsyncCallback<ModelFmpUpdate> callbackUpdates)
+      AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
   {
     // check triggers
     EbGame game = ModelFmpMain.model().getGame();
     List<AnEvent> events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     ModelFmpUpdate updates = new ModelFmpUpdate();
+    updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.getFromUpdate().setTime( game.getLastServerUpdate().getTime() );
-    updates.getLastUpdate().setTime( System.currentTimeMillis() );
-    callbackUpdates.onSuccess( updates );
+    updates.setToVersion( game.getVersion() );
+    callbackUpdates.onSuccess( null );
+    p_model.receiveModelUpdate( updates );
   }
 
 }

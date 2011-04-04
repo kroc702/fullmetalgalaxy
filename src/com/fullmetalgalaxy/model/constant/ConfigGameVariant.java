@@ -26,9 +26,10 @@ import java.util.HashMap;
 
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
-public enum ConfigGameVariant
+public enum ConfigGameVariant implements IsSerializable
 {
   Standard;
 

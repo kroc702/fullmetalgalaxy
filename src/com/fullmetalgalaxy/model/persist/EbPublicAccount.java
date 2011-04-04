@@ -20,80 +20,86 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.model;
+package com.fullmetalgalaxy.model.persist;
 
-import java.util.Date;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+
+
 
 /**
- * @author vincent
- *
+ * @author Kroc
+ * Account data that other people are allowed to see.
  */
-public class ConnectedUser implements IsSerializable, java.io.Serializable
+public class EbPublicAccount extends EbBase
 {
-  static final long serialVersionUID = 203;
+  private static final long serialVersionUID = 1L;
 
-  private long m_id = 0;
+  // theses data come from database (Account table)
+  // -------------------------------------------
   private String m_pseudo = "";
-  private Date m_lastConnexion = new Date( System.currentTimeMillis() );
-  private Date m_endTurnDate = null;
 
-  public ConnectedUser()
+  public EbPublicAccount()
   {
+    super();
+    init();
   }
 
-  public ConnectedUser(String p_pseudo, Date p_endTurn)
+  public EbPublicAccount(EbPublicAccount p_account)
   {
-    m_pseudo = p_pseudo;
-    m_endTurnDate = p_endTurn;
+    super();
+    init();
+    
+    setId( p_account.getId() );
+    setPseudo( p_account.getPseudo() );
+  }
+  
+
+  private void init()
+  {
+    m_pseudo = "";
   }
 
+  @Override
+  public void reinit()
+  {
+    super.reinit();
+    this.init();
+  }
+
+
+
+  public boolean isEmpty()
+  {
+    return getId() == 0;
+  }
+
+  public String getAvatarUrl()
+  {
+      return FmpConstant.getBaseUrl() + "/images/avatar-default.jpg";
+  }
+
+
+
+  // getters / setters
+  // -----------------
+  /**
+   * @return the pseudo
+   */
   public String getPseudo()
   {
     return m_pseudo;
   }
 
+
+  /**
+   * @param p_pseudo the pseudo to set
+   */
   public void setPseudo(String p_pseudo)
   {
     m_pseudo = p_pseudo;
   }
 
-  public Date getEndTurnDate()
-  {
-    return m_endTurnDate;
-  }
-
-  public void setEndTurnDate(Date p_endTurnDate)
-  {
-    m_endTurnDate = p_endTurnDate;
-  }
-
-  public Date getLastConnexion()
-  {
-    return m_lastConnexion;
-  }
-
-  public void setLastConnexion(Date p_lastConnexion)
-  {
-    m_lastConnexion = p_lastConnexion;
-  }
-
-  /**
-   * @return the id
-   */
-  public long getId()
-  {
-    return m_id;
-  }
-
-  /**
-   * @param p_id the id to set
-   */
-  public void setId(long p_id)
-  {
-    m_id = p_id;
-  }
 
 
 }

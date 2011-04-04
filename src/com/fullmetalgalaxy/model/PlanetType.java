@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Vincent Legendre
  * these enum represent different kind of landscape
  */
-public enum PlanetType
+public enum PlanetType implements IsSerializable
 {
   Desert, Grass, Ice, Lava;
 

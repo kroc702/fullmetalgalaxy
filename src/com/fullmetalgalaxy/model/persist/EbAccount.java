@@ -34,7 +34,7 @@ import com.fullmetalgalaxy.model.constant.FmpConstant;
  * @author Kroc
  * Account data that other people are allowed to see.
  */
-public class EbAccount extends EbBase
+public class EbAccount extends EbPublicAccount
 {
   private static final long serialVersionUID = -6721026137413400063L;
 
@@ -42,7 +42,6 @@ public class EbAccount extends EbBase
   // -------------------------------------------
   private String m_login = "";
   private String m_email = "";
-  private String m_pseudo = "";
   private Date m_subscriptionDate = new Date( System.currentTimeMillis() );
   private AuthProvider m_authProvider = AuthProvider.Fmg;
   private String m_description = "";
@@ -62,7 +61,6 @@ public class EbAccount extends EbBase
   {
     m_login = "";
     m_email = "";
-    m_pseudo = "";
     m_subscriptionDate = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
     m_description = "";
@@ -78,17 +76,6 @@ public class EbAccount extends EbBase
     this.init();
   }
 
-
-
-  public boolean isEmpty()
-  {
-    return getId() == 0;
-  }
-
-  public String getAvatarUrl()
-  {
-      return FmpConstant.getBaseUrl() + "/images/avatar-default.jpg";
-  }
 
   public boolean canChangePseudo()
   {
@@ -148,9 +135,9 @@ public class EbAccount extends EbBase
   public void setLogin(String p_login)
   {
     assert p_login != null;
-    if( m_pseudo == null || m_pseudo.isEmpty() )
+    if( getPseudo() == null || getPseudo().isEmpty() )
     {
-      m_pseudo = computePseudoFromMail( p_login );
+      setPseudo( computePseudoFromMail( p_login ) );
     }
     if( (m_email == null || m_email.isEmpty()) && p_login.contains( "@" ) )
     {
@@ -173,24 +160,6 @@ public class EbAccount extends EbBase
   public void setEmail(String p_email)
   {
     m_email = p_email;
-  }
-
-
-  /**
-   * @return the pseudo
-   */
-  public String getPseudo()
-  {
-    return m_pseudo;
-  }
-
-
-  /**
-   * @param p_pseudo the pseudo to set
-   */
-  public void setPseudo(String p_pseudo)
-  {
-    m_pseudo = p_pseudo;
   }
 
 

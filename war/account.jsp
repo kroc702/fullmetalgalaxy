@@ -12,7 +12,6 @@
 <%@include file="include/header.jsp"%>
 
 <%
-long id = 0;
 if( Auth.isUserAdmin( request, response ) )
 {
 	try

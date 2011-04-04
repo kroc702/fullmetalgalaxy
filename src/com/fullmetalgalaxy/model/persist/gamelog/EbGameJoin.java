@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
 
@@ -42,7 +43,7 @@ public class EbGameJoin extends AnEventUser
   static final long serialVersionUID = 1;
 
   private int m_color = EnuColor.None;
-
+  private EbPublicAccount m_account = null;
 
   /**
    * 
@@ -123,7 +124,7 @@ public class EbGameJoin extends AnEventUser
     {
       registration = createRegistration(p_game);
     }
-    registration.setAccountId( getAccountId() );
+    registration.setAccount( getAccount() );
 
   }
 
@@ -134,7 +135,7 @@ public class EbGameJoin extends AnEventUser
   public String toString()
   {
     String str = super.toString();
-    str += " : Join - color " + getEnuColor().toString();
+    str += getAccount().getPseudo() + " : Join - color " + getEnuColor().toString();
     return str;
   }
 
@@ -306,6 +307,22 @@ public class EbGameJoin extends AnEventUser
   public void setColor(int p_value)
   {
     m_color = p_value;
+  }
+
+  /**
+   * @return the account
+   */
+  public EbPublicAccount getAccount()
+  {
+    return m_account;
+  }
+
+  /**
+   * @param p_account the account to set
+   */
+  public void setAccount(EbPublicAccount p_account)
+  {
+    m_account = p_account;
   }
 
 

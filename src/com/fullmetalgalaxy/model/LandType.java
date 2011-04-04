@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 
 
 /**
@@ -32,7 +34,7 @@ package com.fullmetalgalaxy.model;
  * @author LEG88888
  *
  */
-public enum LandType
+public enum LandType implements IsSerializable
 {
   /**
    * Theses values are store as is in data base.

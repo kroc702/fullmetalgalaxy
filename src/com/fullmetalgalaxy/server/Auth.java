@@ -78,14 +78,14 @@ public class Auth
       HttpServletResponse p_response)
   {
     assert p_request != null;
-    assert p_response != null;
+    // assert p_response != null;
     return UserServiceFactory.getUserService().isUserLoggedIn();
   }
 
   public static boolean isUserLogged(HttpServletRequest p_request, HttpServletResponse p_response)
   {
     assert p_request != null;
-    assert p_response != null;
+    // assert p_response != null;
     if( p_request.getSession( true ).getAttribute( "login" ) != null )
     {
       return true;
@@ -107,7 +107,7 @@ public class Auth
   public static String getUserLogin(HttpServletRequest p_request, HttpServletResponse p_response)
   {
     assert p_request != null;
-    assert p_response != null;
+    // assert p_response != null;
     Object login = p_request.getSession( true ).getAttribute( "login" );
     if( login != null )
     {

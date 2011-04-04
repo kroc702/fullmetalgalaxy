@@ -284,6 +284,11 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
     }
   }
 
+  public boolean isLoading()
+  {
+    return m_isLoading > 0;
+  }
+
 
 
 }

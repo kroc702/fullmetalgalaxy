@@ -22,12 +22,14 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 
 /**
  * @author LEG88888
  *
  */
-public enum TokenType
+public enum TokenType implements IsSerializable
 {
   /**
    * Theses values are store as is in data base.
