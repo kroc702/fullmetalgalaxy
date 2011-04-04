@@ -35,6 +35,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -73,16 +74,36 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     setWidget( m_panel );
   }
 
+  private AsyncCallback<Void> m_sendMessageCallback = new AsyncCallback<Void>()
+  {
+
+    @Override
+    public void onFailure(Throwable p_caught)
+    {
+      // TODO i18n
+      MAppMessagesStack.s_instance.showWarning( m_text.getText() + "\nlast message failed" );
+    }
+
+    @Override
+    public void onSuccess(Void p_result)
+    {
+      // we will receive message through channel API
+    }
+
+  };
+
+
+
   protected void sendMessage()
   {
     if( m_text.getText().length() > 0 )
     {
       ChatMessage message = new ChatMessage();
       message.setGameId( ModelFmpMain.model().getGame().getId() );
-      message.setFromLogin( ModelFmpMain.model().getMyLogin() );
+      message.setFromPageId( ModelFmpMain.model().getPageId() );
+      message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
       message.setText( m_text.getText() );
-      Services.Util.getInstance().sendChatMessage( message,
-          ModelFmpMain.model().getLastServerUpdate(), ModelFmpMain.model().getCallbackEvents() );
+      Services.Util.getInstance().sendChatMessage( message, m_sendMessageCallback );
     }
     hide();
   }
@@ -128,9 +149,10 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
   @Override
   public void onKeyPress(KeyPressEvent p_event)
   {
-    if( p_event.getCharCode() == 13 )
+    if( p_event.getCharCode() == 13 || p_event.getCharCode() == 0 )
     {
       // KEY_ENTER
+      // on firefox getCharCode() return 0
       sendMessage();
     }
   }

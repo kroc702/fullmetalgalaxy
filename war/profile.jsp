@@ -12,14 +12,6 @@
 <%@include file="include/header.jsp"%>
 
 <%
-long id = 0;
-try
-{
-	id = Long.parseLong( request.getParameter( "id" ) );
-} catch( NumberFormatException e )
-{
-}
-
 EbAccount account = FmgDataStore.sgetAccount( id );
 if( account == null ) 
 { 

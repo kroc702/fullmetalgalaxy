@@ -28,7 +28,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author Vincent Legendre
- *
+ * If a ChatMessage is empty, it's only a keep alive message.
  */
 public class ChatMessage implements IsSerializable, java.io.Serializable
 {
@@ -38,7 +38,8 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
 
   private String m_text = "";
 
-  private String m_fromLogin = "";
+  private String m_fromPseudo = "";
+  private int m_fromPageId = 0;
 
   private Date m_date = new Date( System.currentTimeMillis() );
 
@@ -50,10 +51,15 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
   public ChatMessage(long p_gameId, String p_from, String p_text)
   {
     m_gameId = p_gameId;
-    m_fromLogin = p_from;
+    m_fromPseudo = p_from;
     m_text = p_text;
   }
 
+  public boolean isEmpty()
+  {
+    return m_text == null || m_text.isEmpty();
+  }
+  
   /**
    * @return the gameId
    */
@@ -89,17 +95,17 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
   /**
    * @return the fromLogin
    */
-  public String getFromLogin()
+  public String getFromPseudo()
   {
-    return m_fromLogin;
+    return m_fromPseudo;
   }
 
   /**
    * @param p_fromLogin the fromLogin to set
    */
-  public void setFromLogin(String p_fromLogin)
+  public void setFromPseudo(String p_fromLogin)
   {
-    m_fromLogin = p_fromLogin;
+    m_fromPseudo = p_fromLogin;
   }
 
   /**
@@ -127,7 +133,23 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
     // return "[" + getDate().getHours() + ":" + getDate().getMinutes() + "." +
     // getDate().getSeconds()
     // + "] " + getFromLogin() + ": " + getText();
-    return getFromLogin() + ": " + getText();
+    return getFromPseudo() + ": " + getText();
+  }
+
+  /**
+   * @return the fromPageId
+   */
+  public int getFromPageId()
+  {
+    return m_fromPageId;
+  }
+
+  /**
+   * @param p_fromPageId the fromPageId to set
+   */
+  public void setFromPageId(int p_fromPageId)
+  {
+    m_fromPageId = p_fromPageId;
   }
 
 }

@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -36,12 +37,14 @@ import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
+import com.fullmetalgalaxy.model.Presence;
+import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbRegistrationStats;
@@ -164,41 +167,40 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
       return null;
     }
-    boolean isUpdated = false;
 
-
-    // get last update time
-    Date lastUpdate = new Date( System.currentTimeMillis() );
-    if( model.getLastGameLog() != null )
-    {
-      lastUpdate = model.getLastGameLog().getLastUpdate();
-    }
 
     // anything to update ?
     try
     {
-      isUpdated |= updateGame( model );
+      ArrayList<AnEvent> events = updateGame( model );
+
+      if( !events.isEmpty() )
+      {
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+        modelUpdate.setGameId( model.getId() );
+        modelUpdate.setFromVersion( model.getVersion() );
+        modelUpdate.setGameEvents( events );
+
+        dataStore.save( model );
+        modelUpdate.setToVersion( model.getVersion() );
+
+        ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
+
+        // do we need to send an email ?
+        sendMail( model, modelUpdate );
+      }
     } catch( RpcFmpException e )
     {
       log.error( e );
     }
 
+
+    dataStore.close();
+
     if( model.getGameType() != GameType.MultiPlayer )
     {
-      // model.setLastUpdate( new Date( System.currentTimeMillis() ) );
       model.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
     }
-    if( isUpdated )
-    {
-      dataStore.save( model );
-      FmpUpdateStatus.broadCastGameUpdate( model );
-
-      // do we need to send an email ?
-      ModelFmpUpdate modelUpdate = new ModelFmpUpdate( model, lastUpdate );
-      FmpUpdateStatus.loadAllAccounts( modelUpdate.getMapAccounts(), model );
-      sendMail( model, modelUpdate );
-    }
-    dataStore.close();
     return model;
   }
 
@@ -238,7 +240,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       if( game != null )
       {
         modelInit.setGame( game );
-        FmpUpdateStatus.loadAllAccounts( modelInit.getMapAccounts(), game );
+        // FmpUpdateStatus.loadAllAccounts( modelInit.getMapAccounts(), game );
       }
     }
 
@@ -253,10 +255,12 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     if( modelInit.getGame() != null && modelInit.getGame().getId() != 0 )
     {
-      ModelFmpUpdate modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
-          getThreadLocalRequest(), getThreadLocalResponse() ), modelInit.getGame().getId(), null );
-      modelInit.setConnectedUsers( modelUpdate.getConnectedUsers() );
+      // ModelFmpUpdate modelUpdate = FmpUpdateStatus.getModelUpdate(
+      // Auth.getUserPseudo(
+      // getThreadLocalRequest(), getThreadLocalResponse() ),
+      // modelInit.getGame().getId(), null );
     }
+    modelInit.setPresenceRoom( ChannelManager.getRoom( modelInit.getGame().getId() ) );
     return modelInit;
   }
 
@@ -267,14 +271,17 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     return Auth.isUserLogged( getThreadLocalRequest(), getThreadLocalResponse() );
   }
 
-
+  /**
+   * This service is only here to serialize a ModelFmpUpdate class with RPC.encodeResponseForSuccess
+   */
   @Override
-  public ModelFmpUpdate getModelFmpUpdate(long p_gameId, Date p_lastUpdate) throws RpcFmpException
+  public ModelFmpUpdate getModelFmpUpdate(long p_gameId) throws RpcFmpException
   {
-    assert p_lastUpdate != null;
     assert p_gameId != 0;
-    return FmpUpdateStatus.waitForModelUpdate( Auth.getUserPseudo( getThreadLocalRequest(),
-        getThreadLocalResponse() ), p_gameId, p_lastUpdate );
+    // return FmpUpdateStatus.waitForModelUpdate( Auth.getUserPseudo(
+    // getThreadLocalRequest(),
+    // getThreadLocalResponse() ), p_gameId, p_lastUpdate );
+    return null;
   }
 
 
@@ -293,8 +300,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         EbAccount currentPlayer = null;
         if( p_game.getCurrentPlayerRegistration() != null )
         {
-          currentPlayer = p_update.getMapAccounts().get(
-            p_game.getCurrentPlayerRegistration().getAccountId() );
+          FmgDataStore dataStore = new FmgDataStore();
+          currentPlayer = dataStore.getAccount( p_game.getCurrentPlayerRegistration()
+              .getAccountId() );
         }
         if( currentPlayer == null )
         {
@@ -302,7 +310,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           log.error( "New turn email couldn't be send" );
           return;
         }
-        if( p_update.getConnectedUser( currentPlayer.getId() ) != null )
+        if( ChannelManager.getRoom( p_game.getId() ).isConnected( currentPlayer.getPseudo() ) )
         {
           log.fine( "player is connected: we don't need to send an email" );
           return;
@@ -324,13 +332,46 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
   }
 
-  @Override
-  public ModelFmpUpdate runEvent(AnEvent p_action, Date p_lastUpdate) throws RpcFmpException
+
+  /**
+   * load account 'p_id' into 'p_account'
+   * @param p_accounts
+   * @param p_id
+   * @return
+   */
+  private static boolean loadAccount(Map<Long, EbAccount> p_accounts, long p_id)
   {
-    ModelFmpUpdate modelUpdate = null;
+    if( p_id <= 0 )
+    {
+      return false;
+    }
+    if( p_accounts.containsKey( p_id ) )
+    {
+      return false;
+    }
+    FmgDataStore dataStore = new FmgDataStore();
+    EbAccount account = dataStore.getAccount( p_id );
+    p_accounts.put( p_id, account );
+    dataStore.close();
+    return true;
+  }
+
+
+
+  // TODO merge these two method and use a modelUpdate to get pageID
+  @Override
+  public void runEvent(AnEvent p_action) throws RpcFmpException
+  {
+    System.out.println( p_action );
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = dataStore.getGame( p_action.getIdGame() );
     int oldTimeStep = game.getCurrentTimeStep();
+
+    modelUpdate.setFromVersion( game.getVersion() );
+    modelUpdate.setGameId( game.getId() );
+    modelUpdate.setGameEvents( updateGame( game ) );
+    modelUpdate.getGameEvents().add( p_action );
 
     // security check
     /*if( p_action.getAccountId() != 0L )
@@ -391,16 +432,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     if( p_action.getType().isEventUser() )
     {
       ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-      if( p_action.getType() == GameLogType.GameJoin )
-      {
-        EbRegistration registration = game.getRegistrationByIdAccount( ((AnEventUser)p_action)
-            .getAccountId() );
-        String myPseudo = Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() );
-        if( registration != null && !myPseudo.equals( registration.getAccountPseudo() ) )
-        {
-          registration.setAccountPseudo( myPseudo );
-        }
-      }
     }
 
     if( (p_action.getType() == GameLogType.EvtPlayerTurn)
@@ -423,17 +454,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     /////////////////////
     if( p_action.getType() == GameLogType.GameJoin )
     {
-      // in case of join event, we must load corresponding account
-      ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
-          getThreadLocalRequest(), getThreadLocalResponse() ), p_action.getIdGame(), null );
-      FmpUpdateStatus.loadAllAccounts( updates.getMapAccounts(), game );
-      // set pseudo into registration
-      EbRegistration registration = game.getRegistrationByIdAccount( ((EbGameJoin)p_action).getAccountId() );
-      registration.setAccountPseudo( updates.getMapAccounts().get( ((EbGameJoin)p_action).getAccountId() )
-          .getPseudo() );
-
-      FmpUpdateStatus.broadCastGameUpdate( updates );
-
       if( game.getCurrentNumberOfRegiteredPlayer() == game.getMaxNumberOfPlayer() )
       {
         // TODO we may prefer starting game not in live mode only (slow game only)
@@ -475,32 +495,23 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     
     dataStore.save( game );
     dataStore.close();
-
-    // comet stuff
-    // //////////////
-    FmpUpdateStatus.broadCastGameUpdate( game );
-
-    // return model update since the last client version
-    if( modelUpdate == null )
-    {
-      modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo( getThreadLocalRequest(),
-          getThreadLocalResponse() ), game.getId(), p_lastUpdate );
-    }
+    modelUpdate.setToVersion( game.getVersion() );
 
     // do we need to send an email ?
     sendMail( game, modelUpdate );
 
-    return modelUpdate;
+    // broadcast changes to all clients
+    ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
   }
 
   @Override
-  public ModelFmpUpdate runAction(ArrayList<AnEventPlay> p_actionList, Date p_lastUpdate)
-      throws RpcFmpException
+  public void runAction(ArrayList<AnEventPlay> p_actionList) throws RpcFmpException
   {
     if( p_actionList.isEmpty() )
     {
       throw new RpcFmpException( "No actions provided" );
     }
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = null;
     AnEvent lastAction = null;
@@ -524,7 +535,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
     assert game != null;
 
-    updateGame( game );
+    modelUpdate.setGameId( game.getId() );
+    modelUpdate.setFromVersion( game.getVersion() );
+    modelUpdate.setGameEvents( updateGame( game ) );
+    modelUpdate.getGameEvents().addAll( p_actionList );
 
     // execute actions
     for( AnEvent action : p_actionList )
@@ -554,18 +568,13 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     dataStore.save( game );
     dataStore.close();
+    modelUpdate.setToVersion( game.getVersion() );
 
-    // comet stuff
-    // //////////////
-    FmpUpdateStatus.broadCastGameUpdate( game );
-
-    ModelFmpUpdate modelUpdate = FmpUpdateStatus.getModelUpdate( Auth.getUserPseudo(
-        getThreadLocalRequest(), getThreadLocalResponse() ), game.getId(), p_lastUpdate );
     // do we need to send an email ?
     sendMail( game, modelUpdate );
 
-    // return model update since the last client version
-    return modelUpdate;
+    // broadcast changes to all clients
+    ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
   }
 
 
@@ -580,15 +589,16 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
    * @param p_game
    * @return the getResultList of all event which occur during this update.
    */
-  static protected boolean updateGame(EbGame p_game) throws RpcFmpException
+  static protected ArrayList<AnEvent> updateGame(EbGame p_game) throws RpcFmpException
   {
     assert p_game != null;
-    boolean isUpdated = false;
+    ArrayList<AnEvent> events = new ArrayList<AnEvent>();
+
     // in some case, game is never updated
     if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
         || p_game.getCurrentTimeStep() == 0 )
     {
-      return isUpdated;
+      return events;
     }
     if( !p_game.isFinished() )
     {
@@ -616,6 +626,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
                 eventTakeOff.setAuto( true );
                 eventTakeOff.checkedExec( p_game );
                 p_game.addEvent( eventTakeOff );
+                events.add( eventTakeOff );
               }
             }
           }
@@ -624,6 +635,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           event.setGame( p_game );
           event.checkedExec( p_game );
           p_game.addEvent( event );
+          events.add( event );
           if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
           {
             // next tide
@@ -632,8 +644,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
             eventTide.setGame( p_game );
             eventTide.checkedExec( p_game );
             p_game.addEvent( eventTide );
+            events.add( eventTide );
           }
-          isUpdated = true;
         }
       }
       else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
@@ -650,6 +662,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           event.setAuto( true );
           event.checkedExec( p_game );
           p_game.addEvent( event );
+          events.add( event );
           if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
           {
             // new turn !
@@ -660,15 +673,18 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
               eventTide.setGame( p_game );
               eventTide.setNextTide( Tide.getRandom() );
               eventTide.checkedExec( p_game );
+              p_game.addEvent( eventTide );
+              events.add( eventTide );
             }
           }
-          isUpdated = true;
         }
+        /* TODO
         if( (p_game.getCurrentPlayerRegistration() != null)
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
         {
-          ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( null, p_game.getId(), null );
-          if( updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() ) != null )
+          ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
+                                        // p_game.getId(), null );
+          if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
           {
             // current player is connected, update his end turn
             p_game.getCurrentPlayerRegistration().setEndTurnDate(
@@ -682,7 +698,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
             isUpdated = true;
           }
-        }
+        }*/
       }
 
       // triggers
@@ -695,29 +711,36 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         registration.setStats( EbRegistrationStats.generate( registration, p_game ) );
       }
       p_game.setHistory( true );
-      isUpdated = true;
     }
 
-    return isUpdated;
+    return events;
   }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.Services#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
    */
   @Override
-  public ModelFmpUpdate sendChatMessage(ChatMessage p_message, Date p_lastUpdate)
-      throws RpcFmpException
+  public void sendChatMessage(ChatMessage p_message) throws RpcFmpException
   {
-    p_message
-        .setFromLogin( Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() ) );
+    // we could check pseudo to detect cheater...
+    //p_message
+    //    .setFromPseudo( Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() ) );
     p_message.setDate( ServerUtil.currentDate() );
-    ModelFmpUpdate updates = FmpUpdateStatus.getModelUpdate( p_message.getFromLogin(), p_message
-        .getGameId(), null );
-    updates.addChatMessages( p_message );
-    FmpUpdateStatus.broadCastGameUpdate( updates );
-    return updates.getNewModelUpdate( p_lastUpdate );
+    
+    PresenceRoom room = ChannelManager.getRoom( p_message.getGameId() );
+    ChannelManager.broadcast( room, p_message );
   }
 
-
+  @Override
+  public void disconnect(Presence p_presence)
+  {
+    ChannelManager.disconnect( p_presence );
+  }
+  
+  @Override
+  public String reconnect(Presence p_presence)
+  {
+    return ChannelManager.connect( p_presence );
+  }
 
 }

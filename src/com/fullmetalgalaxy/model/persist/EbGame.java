@@ -83,9 +83,12 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   private String m_minimapUri = null;
   private String m_mapUri = null;
 
+  /** registration ID */
   private long m_currentPlayerId = 0L;
 
+  // this id is kept only for backward compatibility with older game
   private Long m_accountCreatorId = 0L;
+  private EbPublicAccount m_accountCreator = null;
 
   /**
   * Land description. It's a two dimension array of landWitdh * landHeight
@@ -115,7 +118,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
 
   private long m_nextLocalId = 0L;
 
-  transient private Date m_lastServerUpdate = null;
   transient private TokenIndexSet m_tokenIndexSet = null;
   transient private GameEventStack m_eventStack = this;
   transient private BoardFireCover m_fireCover = null;
@@ -220,19 +222,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-  public Date getLastServerUpdate()
-  {
-    if( m_lastServerUpdate == null )
-    {
-      m_lastServerUpdate = getLastUpdate();
-    }
-    return m_lastServerUpdate;
-  }
-
-  public void setLastServerUpdate(Date p_update)
-  {
-    m_lastServerUpdate = p_update;
-  }
 
   public void addToken(EbToken p_token)
   {
@@ -253,31 +242,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       }
     }
     updateLastTokenUpdate( null );
-  }
-
-  private Date getLastUpdate()
-  {
-    Date lastUpdate = null;
-    if( getLogs().size() > 0 )
-    {
-      lastUpdate = getLogs().get( getLogs().size() - 1 ).getLastUpdate();
-    }
-    for( AnEvent event : getLogs() )
-    {
-      if( lastUpdate == null )
-      {
-        lastUpdate = event.getLastUpdate();
-      }
-      else if( lastUpdate.before( event.getLastUpdate() ) )
-      {
-        lastUpdate = event.getLastUpdate();
-      }
-    }
-    if( lastUpdate == null )
-    {
-      lastUpdate = new Date( System.currentTimeMillis() );
-    }
-    return lastUpdate;
   }
 
   public void addRegistration(EbRegistration p_registration)
@@ -1862,21 +1826,32 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
    */
   public long getAccountCreatorId()
   {
-    return m_accountCreatorId;
+    if( getAccountCreator() == null )
+    {
+      return m_accountCreatorId;
+    }
+    else
+    {
+      return getAccountCreator().getId();
+    }
+  }
+
+
+  /**
+   * @return the account
+   */
+  public EbPublicAccount getAccountCreator()
+  {
+    return m_accountCreator;
   }
 
   /**
-   * @param p_accountCreator the accountCreator to set
+   * @param p_account the account to set
    */
-  public void setAccountCreatorId(long p_id)
+  public void setAccountCreator(EbPublicAccount p_account)
   {
-    m_accountCreatorId = p_id;
+    m_accountCreator = p_account;
   }
-
-
-
-  // getters / setters
-  // -----------------
 
   /**
    * @return the creationDate

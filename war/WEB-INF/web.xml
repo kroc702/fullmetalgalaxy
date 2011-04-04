@@ -15,7 +15,7 @@
   
   <servlet-mapping>
     <servlet-name>Services</servlet-name>
-    <url-pattern>/fullmetalgalaxy/Services</url-pattern>
+    <url-pattern>/game/Services</url-pattern>
   </servlet-mapping>
   
     <servlet>
@@ -32,7 +32,18 @@
        <servlet-name>BlobstoreCache</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.image.BlobstoreCache</servlet-class>
     </servlet>
-    
+
+  <servlet>
+    <servlet-name>chatServlet</servlet-name>
+    <servlet-class>com.fullmetalgalaxy.server.ChatServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>chatServlet</servlet-name>
+    <url-pattern>/chat/chat</url-pattern>
+  </servlet-mapping>
+  
+      
     <servlet-mapping>
        <servlet-name>BlobstoreCache</servlet-name>
        <url-pattern>/BlobstoreCache</url-pattern>

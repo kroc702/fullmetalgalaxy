@@ -41,7 +41,6 @@ import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -205,7 +204,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         + " par <a href='/profile.jsp?id="
         + game.getAccountCreatorId()
         + "' target='_blank'>"
-        + ModelFmpMain.model().getAccount( game.getAccountCreatorId() ).getPseudo() + "</a>" ) );
+          + (game.getAccountCreator() == null ? "???" : game.getAccountCreator().getPseudo())
+          + "</a>" ) );
       // TODO i18n
       m_generalPanel
           .add( new HTML(
@@ -272,7 +272,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
     }
 
-    if( ModelFmpMain.model().getMyAccountId() == game.getAccountCreatorId()
+    if( ModelFmpMain.model().getMyAccount().getId() == game.getAccountCreatorId()
         || ModelFmpMain.model().iAmAdmin() )
     {
       // play / pause button
@@ -351,21 +351,16 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     for( EbRegistration registration : sortedRegistration )
     {
       index++;
-      EbAccount account = ModelFmpMain.model().getAccount( registration.getAccountId() );
 
       // display avatar
-      if( account != null )
+      if( registration.getAccount() != null )
       {
-        m_playerGrid.setHTML( index, 0, "<IMG SRC='" + account.getAvatarUrl()
+        m_playerGrid.setHTML( index, 0, "<IMG SRC='" + registration.getAccount().getAvatarUrl()
             + "' WIDTH=60 HEIGHT=60 BORDER=0 />" );
       }
 
       // display login
-      String login = "???";
-      if( account != null )
-      {
-        login = account.getPseudo();
-      }
+      String login = registration.getAccountPseudo();
       String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccountId() )
           + "' target='_blank'>" + login
           + "</a>";
@@ -418,16 +413,13 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
 
       // display email messages
-      if( account != null && account.isAllowPrivateMsg() && account.haveEmail())
-      {
-        String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
-            + registration.getAccountId()
-            + "'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
-        m_playerGrid.setHTML( index, 6, htmlMail );
-      }
+      String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
+          + registration.getAccountId() + "'><img src='"
+          + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
+      m_playerGrid.setHTML( index, 6, htmlMail );
 
       // display admin button
-      if( (ModelFmpMain.model().getMyAccountId() == ModelFmpMain.model().getGame()
+      if( (ModelFmpMain.model().getMyAccount().getId() == ModelFmpMain.model().getGame()
           .getAccountCreatorId() || ModelFmpMain.model().iAmAdmin()) )
       {
         if( registration.haveAccount() )
@@ -482,13 +474,15 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     }
     else if( p_event.getSource() == m_btnPause )
     {
-      AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccountId() );
+      AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccount()
+          .getId() );
       gameLog.setGame( ModelFmpMain.model().getGame() );
       ModelFmpMain.model().runSingleAction( gameLog );
     }
     else if( p_event.getSource() == m_btnPlay )
     {
-      AnEvent gameLog = GameLogFactory.newAdminTimePlay( ModelFmpMain.model().getMyAccountId() );
+      AnEvent gameLog = GameLogFactory.newAdminTimePlay( ModelFmpMain.model().getMyAccount()
+          .getId() );
       gameLog.setGame( ModelFmpMain.model().getGame() );
       ModelFmpMain.model().runSingleAction( gameLog );
     }
@@ -506,7 +500,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
         action.setGame( ModelFmpMain.model().getGame() );
-        action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+        action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
         // ok itsn't an automatic action, but with this trick I can track of the guy which
         // end this turn and pass through action checking
         action.setAuto( true );
@@ -521,7 +515,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
           + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
       {
         EbAdminBan gameLog = new EbAdminBan();
-        gameLog.setAccountId( ModelFmpMain.model().getMyAccountId() );
+        gameLog.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
         gameLog.setRegistrationId( registration.getId() );
         gameLog.setGame( ModelFmpMain.model().getGame() );
         ModelFmpMain.model().runSingleAction( gameLog );

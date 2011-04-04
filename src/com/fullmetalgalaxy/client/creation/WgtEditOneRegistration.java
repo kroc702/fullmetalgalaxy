@@ -23,7 +23,6 @@
 package com.fullmetalgalaxy.client.creation;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -73,7 +72,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     if( p_event.getSource() == m_btnBan )
     {
       // TODO ajouter un log admin
-      m_registration.setAccountId( 0 );
+      m_registration.setAccount( null );
       loadRegistration( m_registration );
     }
 
@@ -85,7 +84,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     m_lblAccount.setText( "" );
     if( p_reg.haveAccount() )
     {
-      m_lblAccount.setText( ModelFmpMain.model().getAccount( p_reg.getAccountId() ).getLogin() );
+      m_lblAccount.setText( p_reg.getAccountPseudo() );
     }
   }
 

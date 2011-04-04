@@ -23,33 +23,30 @@
 package com.fullmetalgalaxy.client;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.fullmetalgalaxy.client.board.DlgMessageEvent;
 import com.fullmetalgalaxy.client.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.ChatMessage;
-import com.fullmetalgalaxy.model.ConnectedUser;
+import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.GameFilter;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.ModelUpdateListener;
 import com.fullmetalgalaxy.model.ModelUpdateListenerCollection;
+import com.fullmetalgalaxy.model.Presence;
+import com.fullmetalgalaxy.model.Presence.ClientType;
+import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
@@ -60,17 +57,25 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.appengine.channel.client.Channel;
+import com.google.gwt.appengine.channel.client.ChannelFactory;
+import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
+import com.google.gwt.appengine.channel.client.SocketError;
+import com.google.gwt.appengine.channel.client.SocketListener;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.SerializationStreamFactory;
+import com.google.gwt.user.client.rpc.SerializationStreamReader;
 
 
 /**
  * @author Vincent Legendre
  *
  */
-public class ModelFmpMain implements SourceModelUpdateEvents
+public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHandler
 {
   private static ModelFmpMain s_ModelFmpMain = new ModelFmpMain();
 
@@ -90,20 +95,14 @@ public class ModelFmpMain implements SourceModelUpdateEvents
    */
   protected ModelUpdateListenerCollection m_listenerCollection = new ModelUpdateListenerCollection();
 
-  protected GameFilter m_gameFilter = new GameFilter();
-
   protected EventsPlayBuilder m_actionBuilder = new EventsPlayBuilder();
 
-  protected String m_myAccountLogin = null;
-  protected String m_myAccountPseudo = null;
-  protected long m_myAccountId = -1L;
+  protected EbPublicAccount m_myAccount = new EbPublicAccount();
+
   protected boolean m_myAccountAdmin = false;
 
-  protected Date m_lastServerUpdate = new Date();
-
   // connected players (or any other peoples)
-  protected Set<ConnectedUser> m_connectedUsers = new HashSet<ConnectedUser>();
-  private Map<Long, EbAccount> m_accounts = null;
+  protected PresenceRoom m_connectedUsers = new PresenceRoom( 0 );
 
 
   // interface
@@ -133,73 +132,16 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   /** game currentTimeStep at the moment we start time line mode */
   private int m_lastTurnPlayed = 0;
   
-  private boolean m_isModelUpdatePending = false;
-
 
   private int m_successiveRpcErrorCount = 0;
 
-
-  protected Map<Long, EbAccount> getAccounts()
-  {
-    if( m_accounts == null )
-    {
-      m_accounts = new HashMap<Long, EbAccount>();
-    }
-    return m_accounts;
-  }
-  
-  public EbAccount getAccount(long p_id)
-  {
-    
-    EbAccount account = getAccounts().get( p_id );
-    if( account == null )
-    {
-      account = new EbAccount();
-      account.setLogin( "Unknown" );
-    }
-    return account;
-  }
-  
-  public EbAccount getAccount(String p_pseudo)
-  {
-    for(Map.Entry<Long, EbAccount> account : getAccounts().entrySet())
-    {
-      if(account.getValue().getPseudo() != null && account.getValue().getPseudo().equals( p_pseudo ))
-      {
-        return account.getValue();
-      }
-    }
-    return null;
-  }
-  
   /**
-   * 
-   * @param p_accounts
-   * @return true if at least one account was added
+   * @see ModelFmpInit.m_channelToken
    */
-  public boolean addAllAccounts(Map<Long, EbAccount> p_accounts)
-  {
-    boolean added = false;
-    // add all new accounts
-    //
-    if( m_accounts == null )
-    {
-      m_accounts = p_accounts;
-      added = true;
-    }
-    else
-    {
-      for( Map.Entry<Long, EbAccount> entry : p_accounts.entrySet() )
-      {
-        if( !m_accounts.containsKey( entry.getKey() ) )
-        {
-          m_accounts.put( entry.getKey(), entry.getValue() );
-          added = true;
-        }
-      }
-    }
-    return added;
-  }
+  private String m_channelToken = null;
+  private int m_pageId = 0;
+
+
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.SourceModelUpdateEvents#subscribeModelUpdateEvent(com.fullmetalgalaxy.client.ModelUpdateListener)
@@ -240,7 +182,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents
    */
   public ModelFmpMain()
   {
-    getActionBuilder().setAccountId( getMyAccountId() );
+    // disconnect if leaving this page
+    Window.addWindowClosingHandler( this );
+
+    loadAccountInfoFromPage();
+    getActionBuilder().setAccountId( getMyAccount().getId() );
   }
 
   public void load(EbGame p_model)
@@ -251,30 +197,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       Window.alert( "Partie non trouve...\nVerifier l'url, mais il ce peut qu'elle ai ete suprime" );
       return;
     }
-    m_updatePeriodInMS = 0;
     m_game = p_model;
     getActionBuilder().setGame( getGame() );
-    m_lastServerUpdate = getGame().getLastServerUpdate();
     notifyModelUpdate();
     if( p_model.getGameType() != GameType.MultiPlayer )
     {
-      LocalGame.loadGame( m_callbackFmpUpdate );
+      LocalGame.loadGame( this );
     }
-    scheduleUpdateTimer( true );
   }
 
-  /**
-   * @return the gameFilter
-   */
-  public GameFilter getGameFilter()
-  {
-    return m_gameFilter;
-  }
-
-  public void setGameFilter(GameFilter p_filter)
-  {
-    m_gameFilter = p_filter;
-  }
 
   public EbRegistration getMyRegistration()
   {
@@ -289,7 +220,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     for( Iterator<EbRegistration> it = getGame().getSetRegistration().iterator(); it.hasNext(); )
     {
       EbRegistration registration = (EbRegistration)it.next();
-      if( registration.getAccountId() == getMyAccountId() )
+      if( registration.getAccountId() == getMyAccount().getId() )
       {
         return registration;
       }
@@ -300,89 +231,46 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   private void loadAccountInfoFromPage()
   {
-    RootPanel panel = RootPanel.get( "fmp_userlogin" );
-    if( panel == null )
-    {
-      m_myAccountLogin = "";
-    }
-    else
-    {
-      m_myAccountLogin = DOM.getElementAttribute( panel.getElement(), "content" );
-    }
-    panel = RootPanel.get( "fmp_userpseudo" );
-    if( panel == null )
-    {
-      m_myAccountPseudo = "";
-    }
-    else
-    {
-      m_myAccountPseudo = DOM.getElementAttribute( panel.getElement(), "content" );
-    }
-    panel = RootPanel.get( "fmp_userid" );
-    if( panel == null )
-    {
-      m_myAccountId = 0;
-    }
-    else
-    {
-      m_myAccountId = Long.parseLong( DOM.getElementAttribute( panel.getElement(), "content" ) );
-    }
-    panel = RootPanel.get( "fmp_useradmin" );
-    if( panel == null )
-    {
-      m_myAccountAdmin = false;
-    }
-    else
-    {
-      m_myAccountAdmin = true;
-    }
+    getMyAccount().setPseudo( ClientUtil.readGwtPropertyString( "fmp_userpseudo" ) );
+    getMyAccount().setId( ClientUtil.readGwtPropertyLong( "fmp_userid" ) );
+    m_myAccountAdmin = ClientUtil.readGwtPropertyBoolean( "fmp_useradmin" );
+    m_pageId = ClientUtil.readGwtPropertyLong( "fmp_pageid" ).intValue();
 
+    m_channelToken = ClientUtil.readGwtProperty( "fmp_channelToken" );
+    if(m_channelToken != null)
+    {
+      m_reconnectCallback.onSuccess( m_channelToken );
+    }
   }
 
-  /**
-   * @return the myAccount
-   */
-  public long getMyAccountId()
+
+  public EbPublicAccount getMyAccount()
   {
-    if( m_myAccountId == -1 )
-    {
-      loadAccountInfoFromPage();
-    }
-    return m_myAccountId;
+    return m_myAccount;
   }
 
   public boolean iAmAdmin()
   {
-    if( m_myAccountId == -1 )
-    {
-      loadAccountInfoFromPage();
-    }
     return m_myAccountAdmin;
   }
 
-  public String getMyPseudo()
+
+
+  /**
+   * create a new instance of my presence
+   * @return
+   */
+  public Presence getMyPresence()
   {
-    if( m_myAccountPseudo == null )
-    {
-      loadAccountInfoFromPage();
-    }
-    return m_myAccountPseudo;
+    Presence presence = new Presence( getMyAccount().getPseudo(), getPresenceRoom().getGameId(),
+        getPageId() );
+    presence.setClientType( ClientType.GAME );
+    return presence;
   }
-
-  public String getMyLogin()
-  {
-    if( m_myAccountLogin == null )
-    {
-      loadAccountInfoFromPage();
-    }
-    return m_myAccountLogin;
-  }
-
-
 
   public boolean isLogged()
   {
-    return getMyAccountId() != 0;
+    return getMyAccount().getId() != 0;
   }
 
 
@@ -428,17 +316,16 @@ public class ModelFmpMain implements SourceModelUpdateEvents
 
   private boolean m_isActionPending = false;
 
-  private FmpCallback<ModelFmpUpdate> m_callbackEvents = new FmpCallback<ModelFmpUpdate>()
+  private FmpCallback<Void> m_callbackEvents = new FmpCallback<Void>()
   {
     @Override
-    public void onSuccess(ModelFmpUpdate p_result)
+    public void onSuccess(Void p_result)
     {
       super.onSuccess( p_result );
       m_successiveRpcErrorCount = 0;
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
-      m_callbackFmpUpdate.onSuccess( p_result );
     }
 
     @Override
@@ -450,178 +337,237 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
-      m_callbackFmpUpdate.onFailure( p_caught );
       // maybe the action failed because the model isn't up to date
       if( m_successiveRpcErrorCount < 2 )
       {
-        serverUpdate();
+        // re send action rpc
+        // TODO we don't take in consideration runSingleAction method...
+        runCurrentAction();
       }
       else
       {
-        scheduleUpdateTimer( true );
+        // TODO are we sure about that ?
+        ClientUtil.reload();
       }
     }
   };
 
-  public FmpCallback<ModelFmpUpdate> getCallbackEvents()
+  private AsyncCallback<Void> m_dummyCallback = new AsyncCallback<Void>()
   {
-    return m_callbackEvents;
-  }
-
-  private FmpCallback<ModelFmpUpdate> m_callbackFmpUpdate = new FmpCallback<ModelFmpUpdate>()
-  {
-    @Override
-    public void onSuccess(ModelFmpUpdate p_result)
-    {
-      boolean isActive = false;
-      m_successiveRpcErrorCount = 0;
-      m_isModelUpdatePending = false;
-
-      if( p_result == null )
-      {
-        if( m_connectedUsers != null && m_connectedUsers.size() > 1 )
-        {
-          isActive = true;
-        }
-        scheduleUpdateTimer( isActive );
-        return;
-      }
-      if( m_isActionPending )
-      {
-        RpcUtil.logDebug( "model update while action is pending, ignore it." );
-        return;
-      }
-
-      try
-      {
-        super.onSuccess( p_result );
-
-        if( getLastServerUpdate().after( p_result.getFromUpdate() ) )
-        {
-          // this is probably because we send an action while a get update was
-          // pending
-          RpcUtil.logDebug( "model update 'from' is after 'lastUpdate', ignore it..." );
-          scheduleUpdateTimer( isActive );
-          return;
-        }
-
-        // add all new accounts
-        //
-        addAllAccounts( p_result.getMapAccounts() );
-        if( p_result.getMapAccounts().size() > 1 )
-        {
-          isActive = true;
-        }
-
-        // handle game events first
-        //
-        List<AnEvent> events = p_result.getGameEvents();
-        for( AnEvent event : events )
-        {
-          if( event.getType() == GameLogType.EvtMessage )
-          {
-            DlgMessageEvent dlgMsg = new DlgMessageEvent( (EbEvtMessage)event );
-            dlgMsg.center();
-            dlgMsg.show();
-          }
-          if( getGame() != null )
-          {
-            if( event.getType() == GameLogType.EvtCancel )
-            {
-              ((EbEvtCancel)event).execCancel( getGame() );
-            }
-            
-            event.exec( getGame() );
-            // getGame().getLastUpdate().setTime(
-            // event.getLastUpdate().getTime() );
-            if( event.getType() != GameLogType.EvtCancel )
-            {
-              getGame().addEvent( event );
-            }
-            getGame().getLastServerUpdate().setTime( event.getLastUpdate().getTime() );
-            getGame().updateLastTokenUpdate( null );
-          }
-          isActive = true;
-        }
-
-        // handle chat messages
-        //
-        if( p_result.getChatMessages() != null )
-        {
-          for( ChatMessage message : p_result.getChatMessages() )
-          {
-            MAppMessagesStack.s_instance.showMessage( message.getFromLogin() + " : "
-                + message.getText() );
-            isActive = true;
-          }
-        }
-
-        // handle connected player
-        // 
-        if( p_result.getConnectedUsers() != null )
-        {
-          m_connectedUsers = p_result.getConnectedUsers();
-          if( m_connectedUsers.size() > 1 )
-          {
-            isActive = true;
-          }
-          for( ConnectedUser connectedUser : m_connectedUsers )
-          {
-            if( connectedUser.getEndTurnDate() != null )
-            {
-              // update end turn date
-              EbRegistration registration = getGame().getRegistrationByIdAccount(
-                  getAccount( connectedUser.getPseudo() ).getId() );
-              if( registration != null )
-              {
-                registration.setEndTurnDate( connectedUser.getEndTurnDate() );
-              }
-            }
-          }
-        }
-
-        // last but not least... refresh general last server update
-        //
-        getLastServerUpdate().setTime( p_result.getLastUpdate().getTime() );
-
-        // if( !updates.getGameEvents().isEmpty() ||
-        // !updates.getChatMessages().isEmpty() )
-        // {
-        // assume that if we receive an update, something has changed !
-        ModelFmpMain.model().fireModelUpdate();
-        // }
-      } catch( Throwable e )
-      {
-        RpcUtil.logError( "error ", e );
-        Window.alert( "unexpected error : " + e );
-      }
-      // we just receive a model update, schedule next update later
-      scheduleUpdateTimer( isActive );
-    }
-
     @Override
     public void onFailure(Throwable p_caught)
     {
-      m_isModelUpdatePending = false;
-      m_successiveRpcErrorCount++;
-      super.onFailure( p_caught );
-      // maybe the action failed because the model isn't up to date
-      if( m_successiveRpcErrorCount < 2 )
+    }
+    @Override
+    public void onSuccess(Void p_result)
+    {
+    }
+  };
+
+  private AsyncCallback<String> m_reconnectCallback = new AsyncCallback<String>()
+  {
+    @Override
+    public void onFailure(Throwable p_caught)
+    {
+      Window.alert( "server (re)connexion error !!!" );
+    }
+    @Override
+    public void onSuccess(String p_result)
+    {
+      m_channelToken = p_result;
+      if( m_channelToken == null || m_channelToken.equalsIgnoreCase( "null" ) )
       {
-        serverUpdate();
+        Window.alert( "server (re)connexion error !!!" );
       }
       else
       {
-        scheduleUpdateTimer( true );
+        ChannelFactory.createChannel( m_channelToken, m_callbackChannel );
       }
     }
   };
 
-
-  public Date getLastServerUpdate()
+  private ChannelCreatedCallback m_callbackChannel = new ChannelCreatedCallback()
   {
-    return m_lastServerUpdate;
+    @Override
+    public void onChannelCreated(Channel channel)
+    {
+      channel.open( new SocketListener()
+      {
+        @Override
+        public void onOpen()
+        {
+          // Nothing special to do
+        }
+
+        @Override
+        public void onMessage(String message)
+        {
+          Object object = deserialize( message );
+
+          if( object instanceof ChatMessage )
+          {
+            receiveChatMessage( (ChatMessage)object );
+          }
+          else if( object instanceof PresenceRoom )
+          {
+            receivePresenceRoom( (PresenceRoom)object );
+          }
+          else if( object instanceof ModelFmpUpdate )
+          {
+            receiveModelUpdate( (ModelFmpUpdate)object );
+          }
+          else
+          {
+            MAppMessagesStack.s_instance.showWarning( "Error: " + message );
+          }
+
+        }
+
+        @Override
+        public void onError(SocketError error)
+        {
+          // This occur after two hours. in this case, we ask server for a new channel token
+          Services.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
+        }
+
+        @Override
+        public void onClose()
+        {
+          // Nothing special to do
+        }
+      } );
+    }
+  };
+
+
+  private Object deserialize(String p_serial)
+  {
+    Object object = null;
+    try
+    {
+      // Decode chat data
+      SerializationStreamFactory factory = GWT.create( ChatService.class );
+      SerializationStreamReader reader = factory.createStreamReader( p_serial );
+      object = reader.readObject();
+      if( object != null )
+      {
+        return object;
+      }
+    } catch( SerializationException e )
+    {
+    }
+
+    try
+    {
+      // Decode game data
+      SerializationStreamFactory factory = GWT.create( Services.class );
+      SerializationStreamReader reader = factory.createStreamReader( p_serial );
+      object = reader.readObject();
+      if( object != null )
+      {
+        return object;
+      }
+    } catch( SerializationException e )
+    {
+    }
+    return object;
   }
+
+
+  protected void receivePresenceRoom(PresenceRoom p_room)
+  {
+    if( p_room == null )
+    {
+      return;
+    }
+    // handle connected player
+    //
+    m_connectedUsers = p_room;
+    ModelFmpMain.model().fireModelUpdate();
+  }
+
+  
+  protected void receiveChatMessage(ChatMessage p_msg)
+  {
+    // handle chat messages
+    //
+    if( p_msg.isEmpty() )
+    {
+      // empty message: server ask if we are still connected
+      ChatMessage message = new ChatMessage();
+      message.setGameId( ModelFmpMain.model().getGame().getId() );
+      message.setFromPageId( ModelFmpMain.model().getPageId() );
+      message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+      Services.Util.getInstance().sendChatMessage( message, m_dummyCallback );
+    }
+    else
+    {
+      // real message
+      MAppMessagesStack.s_instance.showMessage( p_msg.getFromPseudo() + " : " + p_msg.getText() );
+    }
+  }
+
+
+  protected void receiveModelUpdate(ModelFmpUpdate p_result)
+  {
+    if( p_result == null )
+    {
+      // this shouldn't occur anymore !
+      return;
+    }
+
+    try
+    {
+      if( getGame().getVersion() != p_result.getFromVersion() )
+      {
+        Window.alert( "Error: receive incoherant model update. reload page" );
+        // RpcUtil.logDebug(
+        // "model update 'from' is after 'lastUpdate', ignore it..." );
+        ClientUtil.reload();
+        return;
+      }
+
+      // handle game events first
+      //
+      List<AnEvent> events = p_result.getGameEvents();
+      for( AnEvent event : events )
+      {
+        if( event.getType() == GameLogType.EvtMessage )
+        {
+          DlgMessageEvent dlgMsg = new DlgMessageEvent( (EbEvtMessage)event );
+          dlgMsg.center();
+          dlgMsg.show();
+        }
+        if( getGame() != null )
+        {
+          if( event.getType() == GameLogType.EvtCancel )
+          {
+            ((EbEvtCancel)event).execCancel( getGame() );
+          }
+
+          event.exec( getGame() );
+          // getGame().getLastUpdate().setTime(
+          // event.getLastUpdate().getTime() );
+          if( event.getType() != GameLogType.EvtCancel )
+          {
+            getGame().addEvent( event );
+          }
+          getGame().updateLastTokenUpdate( null );
+        }
+      }
+
+      // assume that if we receive an update, something has changed !
+      ModelFmpMain.model().fireModelUpdate();
+
+    } catch( Throwable e )
+    {
+      RpcUtil.logError( "error ", e );
+      Window.alert( "unexpected error : " + e );
+    }
+  }
+
+
+
 
   /**
    * rpc call to run the current action.
@@ -635,7 +581,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       return;
     }
     m_isActionPending = true;
-    m_updateTimer.cancel();
     AppMain.instance().startLoading();
 
     try
@@ -647,14 +592,13 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       }
       // do not check player is logged to let him join action
       // action.check();
-      cancelUpdateTimer();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        Services.Util.getInstance().runEvent( p_action, getLastServerUpdate(), m_callbackEvents );
+        Services.Util.getInstance().runEvent( p_action, m_callbackEvents );
       }
       else
       {
-        LocalGame.runEvent( p_action, getGame().getLastServerUpdate(), m_callbackEvents );
+        LocalGame.runEvent( p_action, m_callbackEvents, this );
       }
     } catch( RpcFmpException ex )
     {
@@ -684,7 +628,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       return;
     }
     m_isActionPending = true;
-    m_updateTimer.cancel();
     AppMain.instance().startLoading();
 
     try
@@ -695,17 +638,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents
         throw new RpcFmpException( "you didn't join this game." );
       }
       // action.check();
-      cancelUpdateTimer();
       getActionBuilder().unexec();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        Services.Util.getInstance().runAction( getActionBuilder().getActionList(),
-            getLastServerUpdate(), m_callbackEvents );
+        Services.Util.getInstance()
+            .runAction( getActionBuilder().getActionList(), m_callbackEvents );
       }
       else
       {
-        LocalGame.runAction( getActionBuilder().getActionList(), getGame().getLastServerUpdate(),
-            m_callbackEvents );
+        LocalGame.runAction( getActionBuilder().getActionList(), m_callbackEvents, this );
       }
     } catch( RpcFmpException ex )
     {
@@ -713,7 +654,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      scheduleUpdateTimer( true );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
@@ -721,14 +661,9 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
-      scheduleUpdateTimer( true );
     }
   }
 
-  public boolean isModelUpdatePending()
-  {
-    return m_isModelUpdatePending;
-  }
 
   /**
    * rpc call to run the current action.
@@ -737,139 +672,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents
   public void endTurn()
   {
     EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-    action.setAccountId( model().getMyAccountId() );
+    action.setAccountId( model().getMyAccount().getId() );
     action.setGame( model().getGame() );
     runSingleAction( action );
   }
 
 
-  private int m_updatePeriodInMS = 0;
-
-  private int getUpdatePeriodInMS()
-  {
-    if( ModelFmpMain.model().getGame().getGameType() == GameType.Puzzle )
-    {
-      return FmpConstant.localResfreshingPeriod * 1000;
-    }
-    // since comet stuff
-    // return 4000;
-    if( m_updatePeriodInMS <= 0 )
-    {
-      // compute period in second
-      m_updatePeriodInMS = ModelFmpMain.model().getGame().getEbConfigGameTime()
-          .getTimeStepDurationInSec()
-          / ModelFmpMain.model().getGame().getEbConfigGameTime().getActionPtPerTimeStep();
-      if( m_updatePeriodInMS < FmpConstant.minimumResfreshingPeriod )
-      {
-        m_updatePeriodInMS = FmpConstant.minimumResfreshingPeriod;
-      }
-      if( m_updatePeriodInMS > FmpConstant.maximumResfreshingPeriod
-          || ModelFmpMain.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() == 0 )
-      {
-        m_updatePeriodInMS = FmpConstant.maximumResfreshingPeriod;
-      }
-      if( getGame().isFinished() )
-      {
-        m_updatePeriodInMS = FmpConstant.maximumResfreshingPeriod;
-      }
-      // then transform in milisecond
-      m_updatePeriodInMS *= 1000;
-    }
-    return m_updatePeriodInMS;
-  }
-
-  /**
-   * 
-   * after this call, the timer is scheduled to refresh permanently
-   */
-  public void setUpdatePeriod2Minimum()
-  {
-    m_updatePeriodInMS = FmpConstant.minimumResfreshingPeriod * 1000;
-    cancelUpdateTimer();
-    m_updateTimer.run();
-  }
-
-  public boolean isUpdatePeriod2Minimum()
-  {
-    return m_updatePeriodInMS == FmpConstant.minimumResfreshingPeriod * 1000;
-  }
-
-  /**
-   * Create a new timer that calls Window.alert().
-   */
-  private Timer m_updateTimer = new Timer()
-  {
-    @Override
-    public void run()
-    {
-      cancelUpdateTimer();
-      serverUpdate();
-    }
-  };
 
 
-  protected void scheduleUpdateTimer(boolean p_isActive)
-  {
-    cancelUpdateTimer();
-    if( (getGame().getCurrentPlayerRegistration() != null)
-        && (getGame().getCurrentPlayerRegistration().getEndTurnDate() != null)
-        && (getGame().getCurrentPlayerRegistration().getEndTurnDate().getTime()
-            - System.currentTimeMillis() > 0)
-        && (getGame().getCurrentPlayerRegistration().getEndTurnDate().getTime()
-            - System.currentTimeMillis() < getUpdatePeriodInMS()) )
-    {
-      m_updateTimer.schedule( (int)(getGame().getCurrentPlayerRegistration().getEndTurnDate()
-          .getTime() - System.currentTimeMillis()) );
-    }
-    else
-    // if( p_isActive )
-    {
-      m_updateTimer.schedule( getUpdatePeriodInMS() );
-    }
-    /*else
-    {
-      m_updateTimer.schedule( FmpConstant.inactiveResfreshingPeriod * 1000 );
-    }*/
-  }
 
-  private void cancelUpdateTimer()
-  {
-    m_updateTimer.cancel();
-  }
-
-
-  /**
-   * rpc call to update the model from server.
-   * after this call, the timer is scheduled to refresh permanently
-   */
-  protected void serverUpdate()
-  {
-    cancelUpdateTimer();
-    // if player just send an action to server, cancel this update as it will
-    // come with action response
-    if( m_isActionPending )
-    {
-      return;
-    }
-    // if player is constructing an action, wait
-    if( !getActionList().isEmpty() )
-    {
-      m_updateTimer.schedule( 4 * 1000 );
-      return;
-    }
-    // then call the right service
-    if( getGame().getGameType() == GameType.MultiPlayer )
-    {
-      Services.Util.getInstance().getModelFmpUpdate( ModelFmpMain.model().getGame().getId(),
-          getLastServerUpdate(), m_callbackFmpUpdate );
-    }
-    else
-    {
-      LocalGame.modelUpdate( ModelFmpMain.model().getGame().getId(), getLastServerUpdate(),
-          m_callbackFmpUpdate );
-    }
-    m_isModelUpdatePending = true;
-  }
 
   /**
    * @return the actionBuilder
@@ -1127,7 +938,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents
       {
         event = getGame().getLogs().get( i );
         if( event == null || !(event instanceof AnEventPlay)
-            || ((AnEventPlay)event).getAccountId() != getMyAccountId() )
+            || ((AnEventPlay)event).getAccountId() != getMyAccount().getId() )
         {
           return false;
         }
@@ -1137,31 +948,58 @@ public class ModelFmpMain implements SourceModelUpdateEvents
     return false;
   }
   
-  /**
-   * @return the connectedPlayer
-   */
-  public Set<ConnectedUser> getConnectedUsers()
-  {
-    return m_connectedUsers;
-  }
+
 
   public boolean isUserConnected(String p_pseudo)
   {
     assert p_pseudo != null;
-    for( ConnectedUser connectedUser : getConnectedUsers() )
-    {
-      if( p_pseudo.equals( connectedUser.getPseudo() ) )
-      {
-        return true;
-      }
-    }
-    return false;
+    return m_connectedUsers.isConnected( p_pseudo );
   }
 
-  public boolean isUserConnected(long p_accountId)
+
+  public PresenceRoom getPresenceRoom()
   {
-    return isUserConnected( model().getAccount( p_accountId ).getPseudo() );
+    return m_connectedUsers;
   }
 
+
+  /**
+   * @return the channelToken
+   */
+  protected String getChannelToken()
+  {
+    return m_channelToken;
+  }
+
+  /**
+   * @param p_channelToken the channelToken to set
+   */
+  protected void setChannelToken(String p_channelToken)
+  {
+    m_channelToken = p_channelToken;
+  }
+
+  /**
+   * @return the pageId
+   */
+  public int getPageId()
+  {
+    return m_pageId;
+  }
+
+  /**
+   * @param p_pageId the pageId to set
+   */
+  public void setPageId(int p_pageId)
+  {
+    m_pageId = p_pageId;
+  }
+
+  @Override
+  public void onWindowClosing(ClosingEvent p_event)
+  {
+    Services.Util.getInstance().disconnect(
+        getMyPresence(), m_dummyCallback );
+  }
 
 }

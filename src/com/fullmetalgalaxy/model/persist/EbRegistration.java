@@ -82,8 +82,10 @@ public class EbRegistration extends EbBase
   private EbGame m_game = null;
 
 
+  // this id/pseudo are kept only for backward compatibility with older game
   private long m_accountId = 0L;
   private String m_accountPseudo = null;
+  private EbPublicAccount m_account = null;
 
   private EbRegistrationStats m_stats = null;
 
@@ -144,15 +146,14 @@ public class EbRegistration extends EbBase
    */
   public long getAccountId()
   {
-    return m_accountId;
-  }
-
-  /**
-   * @param p_account the account to set
-   */
-  public void setAccountId(long p_id)
-  {
-    m_accountId = p_id;
+    if( getAccount() == null )
+    {
+      return m_accountId;
+    }
+    else
+    {
+      return getAccount().getId();
+    }
   }
 
   /**
@@ -323,16 +324,39 @@ public class EbRegistration extends EbBase
    */
   public String getAccountPseudo()
   {
-    return m_accountPseudo;
+    if( getAccount() == null )
+    {
+      return m_accountPseudo;
+    }
+    else
+    {
+      return getAccount().getPseudo();
+    }
+  }
+
+
+
+  /**
+   * @return the account
+   */
+  public EbPublicAccount getAccount()
+  {
+    return m_account;
   }
 
   /**
-   * @param p_accountPseudo the accountPseudo to set
+   * @param p_account the account to set
    */
-  public void setAccountPseudo(String p_accountPseudo)
+  public void setAccount(EbPublicAccount p_account)
   {
-    m_accountPseudo = p_accountPseudo;
+    if( p_account == null )
+    {
+      m_accountId = 0;
+      m_accountPseudo = null;
+    }
+    m_account = p_account;
   }
+
 
   public int getWorkingWeatherHenCount()
   {

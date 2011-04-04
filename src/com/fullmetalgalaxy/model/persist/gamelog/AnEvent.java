@@ -34,7 +34,6 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
-import com.google.gwt.i18n.client.DateTimeFormat;
 
 
 /**
@@ -50,8 +49,6 @@ public class AnEvent extends EbBase
 
   // TODO is it really usefull now ?
   private GameLogType m_type = null;
-
-  private Date m_oldUpdate = null;
 
   private long m_idGame = 0;
 
@@ -102,7 +99,6 @@ public class AnEvent extends EbBase
   private void init()
   {
     setLastUpdate( new Date( System.currentTimeMillis() ) );
-    m_oldUpdate = null;
     m_idGame = 0;
     m_type = null;
 
@@ -123,28 +119,6 @@ public class AnEvent extends EbBase
     }
   }
 
-  /**
-   * used to change timestamp to notify modification
-   * we don't really need the original timestamp, but you can set it with 'setOldUpdate()'
-   * @return last update minus one second
-   */
-  protected Date getOldUpdate()
-  {
-    if( m_oldUpdate != null )
-    {
-      return m_oldUpdate;
-    }
-    if( getLastUpdate() == null )
-    {
-      return null;
-    }
-    return new Date( getLastUpdate().getTime() - 1000 );
-  }
-
-  protected void setOldUpdate(Date p_date)
-  {
-    m_oldUpdate = p_date;
-  }
 
 
   /**
@@ -207,7 +181,9 @@ public class AnEvent extends EbBase
   @Override
   public String toString()
   {
-    String str = DateTimeFormat.getFormat( "dd/MM/yy kk:mm" ).format( getLastUpdate() );
+    String str = getLastUpdate().getDay() + "/" + getLastUpdate().getMonth() + "/"
+        + getLastUpdate().getYear() + " " + getLastUpdate().getMinutes() + ":"
+        + getLastUpdate().getHours();
     str += " " + getType();
     return str;
   }

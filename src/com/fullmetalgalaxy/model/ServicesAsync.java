@@ -24,10 +24,7 @@ package com.fullmetalgalaxy.model;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -67,10 +64,9 @@ public interface ServicesAsync
   public void getModelFmpInit(String p_gameId, AsyncCallback<ModelFmpInit> callback);
 
 
-  public void runEvent(AnEvent p_action, Date p_lastUpdate, AsyncCallback<ModelFmpUpdate> callback);
+  public void runEvent(AnEvent p_action, AsyncCallback<Void> callback);
 
-  public void runAction(ArrayList<AnEventPlay> p_actionList, Date p_lastUpdate,
-      AsyncCallback<ModelFmpUpdate> callback);
+  public void runAction(ArrayList<AnEventPlay> p_actionList, AsyncCallback<Void> callback);
 
 
   /**
@@ -80,8 +76,7 @@ public interface ServicesAsync
    * @return model change between p_lastVersion date and current date.
    * @throws RpcFmpException
    */
-  public void getModelFmpUpdate(long p_gameId, Date p_lastUpdate,
-      AsyncCallback<ModelFmpUpdate> callback);
+  public void getModelFmpUpdate(long p_gameId, AsyncCallback<ModelFmpUpdate> callback);
 
 
   /**
@@ -89,8 +84,10 @@ public interface ServicesAsync
    * @param p_message
    * @throws RpcFmpException
    */
-  public void sendChatMessage(ChatMessage p_message, Date p_lastUpdate,
-      AsyncCallback<ModelFmpUpdate> callback);
+  public void sendChatMessage(ChatMessage p_message, AsyncCallback<Void> callback);
 
 
+  public void disconnect(Presence p_presence, AsyncCallback<Void> callback);
+
+  public void reconnect(Presence p_presence, AsyncCallback<String> callback);
 }

@@ -94,8 +94,7 @@ public class EbAdminBan extends EbAdmin
       m_oldAccountId = registration.getAccountId();
       m_oldAccountPseudo = registration.getAccountPseudo();
 
-      registration.setAccountId( 0 );
-      registration.setAccountPseudo( null );
+      registration.setAccount( null );
       registration.setEndTurnDate( null );
     }
 

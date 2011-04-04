@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Vincent Legendre
  *
  */
-public enum GameType
+public enum GameType implements IsSerializable
 {
   // Standard game
   MultiPlayer,

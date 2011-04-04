@@ -146,7 +146,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
       return;
     }
 
-    game.setAccountCreatorId( ModelFmpMain.model().getMyAccountId() );
+    game.setAccountCreator( ModelFmpMain.model().getMyAccount() );
 
     // tune configuration
     if(game.getConfigGameVariant() != null)
@@ -325,7 +325,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   private void initNewGame()
   {
     EbGame game = ModelFmpMain.model().getGame();
-    game.setAccountCreatorId( ModelFmpMain.model().getMyAccountId() );
+    game.setAccountCreator( ModelFmpMain.model().getMyAccount() );
 
     /*    ModelFmpMain.model().getGame().setTotalTimeStep( 120 );
         ModelFmpMain.model().getGame().setRegistrationEndDate(

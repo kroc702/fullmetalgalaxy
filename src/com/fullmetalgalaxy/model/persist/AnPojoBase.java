@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 
@@ -29,7 +30,7 @@ package com.fullmetalgalaxy.model.persist;
  * This is the base class for any persistence annotated pojo.
  * 
  */
-public class AnPojoBase /*extends LightEntity*/implements java.io.Serializable
+public class AnPojoBase /*extends LightEntity*/implements java.io.Serializable, IsSerializable
 {
   static final long serialVersionUID = 21;
 

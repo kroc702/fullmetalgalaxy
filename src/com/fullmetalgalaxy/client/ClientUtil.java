@@ -30,7 +30,9 @@ import com.fullmetalgalaxy.client.ressources.Misc;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * @author Kroc
@@ -84,6 +86,58 @@ public class ClientUtil
 		return language;
   }-*/;
 
+  /**
+   * get html element p_id and return his content property or null if not found.
+   * @param p_id
+   * @return 
+   */
+  public static String readGwtProperty(String p_id)
+  {
+    RootPanel panel = RootPanel.get( p_id );
+    if( panel == null )
+    {
+      return null;
+    }
+    else
+    {
+      return DOM.getElementAttribute( panel.getElement(), "content" );
+    }
+  }
+
+  public static String readGwtPropertyString(String p_id)
+  {
+    String str = readGwtProperty( p_id );
+    if( str == null )
+    {
+      str = "";
+    }
+    return str;
+  }
+
+  public static Long readGwtPropertyLong(String p_id)
+  {
+    String str = readGwtProperty( p_id );
+    if( str == null )
+    {
+      str = "0";
+    }
+    return Long.parseLong( str );
+  }
+
+  public static boolean readGwtPropertyBoolean(String p_id)
+  {
+    String str = readGwtProperty( p_id );
+    if( str == null )
+    {
+      return false;
+    }
+    return true;
+  }
+
+  // Client side JSNI helper
+  public static native String getJSString(String name) /*-{
+		return eval("$wnd." + name);
+  }-*/;
 
   /**
    * 

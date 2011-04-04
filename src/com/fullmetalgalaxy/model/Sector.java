@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Vincent Legendre
  *
  */
-public enum Sector
+public enum Sector implements IsSerializable
 {
   North, NorthEast, SouthEast, South, SouthWest, NorthWest;
 

@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 
@@ -29,7 +30,7 @@ package com.fullmetalgalaxy.model;
  * @author Kroc
  *
  */
-public enum Tide
+public enum Tide implements IsSerializable
 {
 
   Unknown, Low, Medium, Hight;

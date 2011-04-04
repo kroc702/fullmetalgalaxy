@@ -88,7 +88,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       EbRegistration winner = game.getWinnerRegistration();
       if( (winner != null) && (winner.haveAccount()) )
       {
-        strWinner = ModelFmpMain.model().getAccount( winner.getAccountId() ).getPseudo();
+        strWinner = winner.getAccountPseudo();
       }
       m_panel.add( new Label( strWinner ), 0, FmpConstant.miniMapHeight / 2 + 30 );
     }

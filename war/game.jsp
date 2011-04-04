@@ -10,9 +10,23 @@
         <meta http-equiv="pragma" content="no-cache">
 
         <%@include file="include/meta.jsp"%>
+	    <%
+		Presence presence = new Presence();
+		String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.GAME,presence);
+	    String room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
+	    String model = Serializer.escape(Serializer.toClient( ServicesImpl.sgetModelFmpInit(request.getParameter("id")) ));
+		%>
+		<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />
+		<meta name='gwt:property' id='fmp_pageid' content='<%= presence.getPageId() %>' />
+		<script type="text/javascript" language="javascript">
+			var fmp_room='<%= room %>';
+			var fmp_model='<%= model %>';
+		</script>
+
+
         <style type="text/css">@import url( /appMain.css );</style>
         
-        <meta name='gwt:property' id='app_history' content='idGame_<%= request.getParameter( "id" ) %>_status__context__advises__switch__board__messages__'>
+        <meta name='gwt:property' id='app_history' content='idGame_<%= request.getParameter( "id" ) %>_status__messages__context__advises__switch__board__'>
         
     </head>
 
@@ -68,7 +82,7 @@
         
         <div id="debug" style="display:block; position:absolute; top:50px; left:50px; z-index:9999999999;"></div>
         
-        <script type="text/javascript" language="javascript" src="fullmetalgalaxy/fullmetalgalaxy.nocache.js"></script>
+        <script type="text/javascript" language="javascript" src="game/game.nocache.js"></script>
 
         <!-- OPTIONAL: include this if you want history support -->
         <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>

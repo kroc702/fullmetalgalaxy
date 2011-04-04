@@ -319,7 +319,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           EbEvtPlayerTurn action = new EbEvtPlayerTurn();
           action.setGame( ModelFmpMain.model().getGame() );
-          action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+          action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
           ModelFmpMain.model().runSingleAction( action );
         }
       }
@@ -331,14 +331,15 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
           action.setGame( ModelFmpMain.model().getGame() );
-          action.setAccountId( ModelFmpMain.model().getMyAccountId() );
+          action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
           action.setToken( actionBuilder.getSelectedToken() );
           ModelFmpMain.model().runSingleAction( action );
         }
       }
       else if( sender == m_pnlPause )
       {
-        AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccountId() );
+        AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccount()
+            .getId() );
         gameLog.setGame( ModelFmpMain.model().getGame() );
         ModelFmpMain.model().runSingleAction( gameLog );
       }

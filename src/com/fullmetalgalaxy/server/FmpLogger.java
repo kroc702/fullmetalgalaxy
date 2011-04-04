@@ -77,7 +77,7 @@ public class FmpLogger
 
   public void error(Exception p_exception)
   {
-    error( p_exception.getMessage() );
+    error( p_exception.toString() );
   }
 
 }

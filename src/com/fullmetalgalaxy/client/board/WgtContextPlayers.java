@@ -28,9 +28,9 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
-import com.fullmetalgalaxy.model.ConnectedUser;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -88,7 +88,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
       {
         if( player.haveAccount() )
         {
-          addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccountId() ) );
+          addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccountPseudo() ) );
         }
         else 
         {
@@ -99,7 +99,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
 
     // other connected User
     m_playerPanel.add( new Label( "Visiteur(s) :" ) );
-    for( ConnectedUser user : ModelFmpMain.model().getConnectedUsers() )
+    for( Presence user : ModelFmpMain.model().getPresenceRoom() )
     {
       if( !contain( sortedRegistration, user.getPseudo() ) )
       {
@@ -109,6 +109,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     if( game.getGameType() == GameType.MultiPlayer )
     {
       m_playerPanel.add( m_btnChat );
+      m_playerPanel.add( new HTML("<a href='/chat.jsp?id="+game.getId()+"' target='_blank'><img src='/images/icon_new_window.gif'/></a>") );
     }
   }
 
@@ -117,8 +118,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     for( EbRegistration player : p_players )
     {
       if( player != null && player.haveAccount()
-          && ModelFmpMain.model().getAccount( player.getAccountId() ).getPseudo().equalsIgnoreCase(
-              p_pseudo ) )
+          && player.getAccountPseudo().equalsIgnoreCase( p_pseudo ) )
       {
         return true;
       }
@@ -154,7 +154,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     }
     if( p_player.haveAccount() )
     {
-      htmlPlayers += ModelFmpMain.model().getAccount( p_player.getAccountId() ).getPseudo();
+      htmlPlayers += p_player.getAccountPseudo();
     }
     else
     {
