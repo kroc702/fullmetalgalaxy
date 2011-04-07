@@ -1,4 +1,4 @@
-<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the    -->
@@ -17,6 +17,12 @@
     <%
 	Presence presence = new Presence();
 	String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.CHAT,presence);
+	EbGame game = FmgDataStore.sgetGame(id);
+	String title = "Full Metal Chat";
+	if( game != null )
+	{
+		title = game.getName();
+	}
 	%>
 	<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />
 	<meta name='gwt:property' id='fmp_pageid' content='<%= presence.getPageId() %>' />
@@ -48,10 +54,17 @@
       </div>
     </noscript>
 
-    <h3>Full Metal Chat</h3>
+    <h3><%= title %></h3>
 
 	<div id="wgtmessages" style="height:100%; width:100%;"></div>
 	
+	<% if( id == 0 ) { %>
+	<p>
+	Vous pouvez utiliser le client Jabber de votre choix comme gmail, <a href='http://www.pidgin.im'>pidgin</a> 
+	ou <a href='http://www.google.fr/search?q=client+jabber'>autres</a>.<br/>
+	Le contact (ou Jabber ID) est: <a href="xmpp:fullmetalgalaxy2@appspot.com">fullmetalgalaxy2@appspot.com</a>
+	</p>
+	<% } %>
 	<%@include file="include/footer.jsp"%>
   </body>
 </html>

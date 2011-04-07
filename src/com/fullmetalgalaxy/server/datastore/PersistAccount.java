@@ -39,6 +39,7 @@ public class PersistAccount extends PersistEntity
   private String m_pseudo = "";
   private String m_password = "";
   private AuthProvider m_authProvider = AuthProvider.Fmg;
+  private String m_jabberId = "";
 
   public PersistAccount()
   {
@@ -56,6 +57,7 @@ public class PersistAccount extends PersistEntity
     setPseudo( account.getPseudo() );
     account.setPseudo( null );
     setAuthProvider( account.getAuthProvider() );
+    setJabberId( account.getJabberId() );
     super.setEb( p_ebBase );
     account.setPseudo( getPseudo() );
   }
@@ -67,6 +69,12 @@ public class PersistAccount extends PersistEntity
     if( account != null )
     {
       account.setPseudo( getPseudo() );
+
+      if(account.getJabberId()==null && getAuthProvider()==AuthProvider.Google)
+      {
+        account.setJabberId( getLogin() );
+      }
+
     }
     return account;
   }
@@ -133,6 +141,16 @@ public class PersistAccount extends PersistEntity
   protected void setPseudo(String p_pseudo)
   {
     m_pseudo = p_pseudo;
+  }
+
+  public String getJabberId()
+  {
+    return m_jabberId;
+  }
+
+  public void setJabberId(String p_jabberId)
+  {
+    m_jabberId = p_jabberId;
   }
 
 

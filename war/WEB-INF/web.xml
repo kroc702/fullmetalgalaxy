@@ -12,17 +12,24 @@
     <servlet-class>com.fullmetalgalaxy.server.ServicesImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Services</servlet-name>
     <url-pattern>/game/Services</url-pattern>
   </servlet-mapping>
-  
+
+  <servlet>
+    <servlet-name>chatServlet</servlet-name>
+    <servlet-class>com.fullmetalgalaxy.server.ChatServiceImpl</servlet-class>
+  </servlet>  
+  <servlet-mapping>
+    <servlet-name>chatServlet</servlet-name>
+    <url-pattern>/chat/chat</url-pattern>
+  </servlet-mapping>
+    
     <servlet>
        <servlet-name>ImageServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.image.ImageServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
        <servlet-name>ImageServlet</servlet-name>
        <url-pattern>/ImageServlet</url-pattern>
@@ -32,28 +39,15 @@
        <servlet-name>BlobstoreCache</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.image.BlobstoreCache</servlet-class>
     </servlet>
-
-  <servlet>
-    <servlet-name>chatServlet</servlet-name>
-    <servlet-class>com.fullmetalgalaxy.server.ChatServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>chatServlet</servlet-name>
-    <url-pattern>/chat/chat</url-pattern>
-  </servlet-mapping>
-  
-      
     <servlet-mapping>
        <servlet-name>BlobstoreCache</servlet-name>
        <url-pattern>/BlobstoreCache</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
        <servlet-name>AccountServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.AccountServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
        <servlet-name>AccountServlet</servlet-name>
        <url-pattern>/AccountServlet</url-pattern>
@@ -63,7 +57,6 @@
        <servlet-name>PMServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.PMServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
        <servlet-name>PMServlet</servlet-name>
        <url-pattern>/PMServlet</url-pattern>
@@ -73,7 +66,6 @@
        <servlet-name>AdminServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.AdminServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
        <servlet-name>AdminServlet</servlet-name>
        <url-pattern>/admin/Servlet</url-pattern>
@@ -83,12 +75,65 @@
        <servlet-name>PingServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.PingServlet</servlet-class>
     </servlet>
-    
     <servlet-mapping>
        <servlet-name>PingServlet</servlet-name>
        <url-pattern>/ping</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+       <servlet-name>XMPPMessageServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPMessageServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>XMPPAvailableServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPAvailableServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPAvailableServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/presence/available/</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>XMPPUnavailableServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPUnavailableServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPUnavailableServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>XMPPProbeServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPProbeServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/presence/probe/</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>XMPPSuscribeServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPSuscribeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPSuscribeServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/subscription/subscribe/</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
+       <servlet-name>XMPPUnsuscribeServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPUnsuscribeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>XMPPUnsuscribeServlet</servlet-name>
+       <url-pattern>/_ah/xmpp/subscription/unsubscribe/</url-pattern>
+    </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

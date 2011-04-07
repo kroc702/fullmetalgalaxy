@@ -25,7 +25,6 @@ package com.fullmetalgalaxy.model.persist;
 import java.util.Date;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 
 
@@ -49,7 +48,9 @@ public class EbAccount extends EbPublicAccount
   /** to allow message like 'it your turn on game xxx' */
   private boolean m_allowMailFromGame = true;
   private boolean m_allowMailFromNewsLetter = true;
-
+  private String m_jabberId = null;
+  
+  
   public EbAccount()
   {
     super();
@@ -268,6 +269,18 @@ public class EbAccount extends EbPublicAccount
   public void setAllowMailFromNewsLetter(boolean p_allowMailFromNewsLetter)
   {
     m_allowMailFromNewsLetter = p_allowMailFromNewsLetter;
+  }
+
+
+  public String getJabberId()
+  {
+    return m_jabberId;
+  }
+
+
+  public void setJabberId(String p_jabberId)
+  {
+    m_jabberId = p_jabberId;
   }
 
 

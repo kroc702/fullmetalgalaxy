@@ -151,6 +151,7 @@ public class Auth
       // It's likely a new google user: create his account
       account = new EbAccount();
       account.setLogin( login );
+      account.setJabberId( login );
       account.setAuthProvider( AuthProvider.Google );
       FmgDataStore dataStore = new FmgDataStore();
       dataStore.save( account );

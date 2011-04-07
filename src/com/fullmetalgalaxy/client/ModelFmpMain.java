@@ -237,7 +237,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     m_pageId = ClientUtil.readGwtPropertyLong( "fmp_pageid" ).intValue();
 
     m_channelToken = ClientUtil.readGwtProperty( "fmp_channelToken" );
-    if(m_channelToken != null)
+    if( m_channelToken != null && getGame().getGameType() == GameType.MultiPlayer )
     {
       m_reconnectCallback.onSuccess( m_channelToken );
     }

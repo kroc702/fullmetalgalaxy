@@ -23,11 +23,7 @@
 package com.fullmetalgalaxy.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.user.client.rpc.IsSerializable;
 

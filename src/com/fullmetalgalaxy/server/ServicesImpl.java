@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -332,29 +331,6 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
   }
 
-
-  /**
-   * load account 'p_id' into 'p_account'
-   * @param p_accounts
-   * @param p_id
-   * @return
-   */
-  private static boolean loadAccount(Map<Long, EbAccount> p_accounts, long p_id)
-  {
-    if( p_id <= 0 )
-    {
-      return false;
-    }
-    if( p_accounts.containsKey( p_id ) )
-    {
-      return false;
-    }
-    FmgDataStore dataStore = new FmgDataStore();
-    EbAccount account = dataStore.getAccount( p_id );
-    p_accounts.put( p_id, account );
-    dataStore.close();
-    return true;
-  }
 
 
 

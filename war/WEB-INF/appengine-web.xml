@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>fullmetalgalaxy2</application>
-	<version>45</version>
+	<version>54</version>
 	
 	<sessions-enabled>true</sessions-enabled>
 	<precompilation-enabled>true</precompilation-enabled>
@@ -11,18 +11,25 @@
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 	</system-properties>
 	
+	<inbound-services>
+    	<service>xmpp_message</service>
+    	<service>xmpp_presence</service>
+    	<service>xmpp_subscribe</service>
+  	</inbound-services>
+  
 	<admin-console>
     	<page name="Index" url="/admin/index.jsp" />
   	</admin-console>
   
 	<static-files>
         <include path="/**.cache.**" expiration="365d" />
-        <include path="/**.nocache.**" expiration="60s" />
+        <include path="/**.nocache.**" expiration="20s" />
         <include path="/game/**" expiration="10d" />
         <include path="/chat/**" expiration="10d" />
         <include path="/puzzles/**" expiration="10d" />
         <include path="/**images/**" expiration="10d" />
         <include path="/**.css" expiration="10d" />
+        <include path="/**.jsp" expiration="2h" />
         <include path="/*" expiration="10d" />
         <exclude path="/include/**" />
         <exclude path="/**.pspimage" />

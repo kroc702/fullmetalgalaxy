@@ -11,6 +11,12 @@
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 	</system-properties>
 	
+	<inbound-services>
+    	<service>xmpp_message</service>
+    	<service>xmpp_presence</service>
+    	<service>xmpp_subscribe</service>
+  	</inbound-services>
+  
 	<admin-console>
     	<page name="Index" url="/admin/index.jsp" />
   	</admin-console>

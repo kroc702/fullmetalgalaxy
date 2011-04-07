@@ -90,6 +90,9 @@ Autoriser les autres joueurs a vous contacter par messages privés
 Autoriser FMG a vous informer des évolutions majeurs
 <input type="checkbox" <%= account.isAllowMailFromNewsLetter() ? "checked" : "" %> name="AllowMailFromNewsLetter" value="1"><br/>
 <br/>
+Jabber ID :
+<input type="text" name="jabberid" value="<%= account.getJabberId() %>"/><br/>
+<br/>
 Description publique :<br/>
 <textarea cols="50" rows="10" name="description">
 <%= account.getDescription() %>
