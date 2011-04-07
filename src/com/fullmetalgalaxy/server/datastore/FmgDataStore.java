@@ -81,6 +81,17 @@ public class FmgDataStore extends DataStore
     return resultList.iterator().next();
   }
 
+  static public PersistAccount getPersistAccountFromPseudo(String p_pseudo)
+  {
+    Iterable<PersistAccount> resultList = (Iterable<PersistAccount>)getList( PersistAccount.class,
+        "m_pseudo", p_pseudo );
+    if( !resultList.iterator().hasNext() )
+    {
+      return null;
+    }
+    return resultList.iterator().next();
+  }
+
   static public EbAccount getAccount(String p_login)
   {
     PersistAccount pAccount = getPersistAccount( p_login );

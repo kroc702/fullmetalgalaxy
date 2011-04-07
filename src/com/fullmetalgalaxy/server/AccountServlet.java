@@ -306,10 +306,11 @@ public class AccountServlet extends HttpServlet
     }
 
     account.setEmail( params.get( "email" ) );
-    account.setDescription( params.get( "description" ) );
     account.setAllowMailFromGame( params.get( "AllowMailFromGame" ) != null );
     account.setAllowMailFromNewsLetter( params.get( "AllowMailFromNewsLetter" ) != null );
     account.setAllowPrivateMsg( params.get( "AllowPrivateMsg" ) != null );
+    account.setJabberId( params.get( "jabberId" ) );
+    account.setDescription( params.get( "description" ) );
     if( pAccount == null )
     {
       account.setLogin( params.get( "login" ) );

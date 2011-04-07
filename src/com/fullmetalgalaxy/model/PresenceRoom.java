@@ -46,6 +46,23 @@ public class PresenceRoom implements IsSerializable, java.io.Serializable, List<
     return presences;
   }
 
+  public Presence getLastPresence(String p_pseudo)
+  {
+    Presence lastPresence = null;
+    for( Presence presence : getPresence(p_pseudo) )
+    {
+      if( lastPresence == null )
+      {
+        lastPresence = presence;
+      }
+      else if( lastPresence.getLastConnexion().before( presence.getLastConnexion() ))
+      {
+        lastPresence = presence;
+      }
+    }
+    return lastPresence;
+  }
+
   public Presence getPresence(String p_pseudo, int p_pageId)
   {
     for( Presence presence : this )

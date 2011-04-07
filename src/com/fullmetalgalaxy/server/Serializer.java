@@ -29,7 +29,6 @@ import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.PresenceRoom;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RPC;
 

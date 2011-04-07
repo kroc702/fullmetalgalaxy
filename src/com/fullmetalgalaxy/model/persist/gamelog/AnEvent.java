@@ -178,11 +178,12 @@ public class AnEvent extends EbBase
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @SuppressWarnings("deprecation")
   @Override
   public String toString()
   {
     String str = getLastUpdate().getDay() + "/" + getLastUpdate().getMonth() + "/"
-        + getLastUpdate().getYear() + " " + getLastUpdate().getMinutes() + ":"
+        + (getLastUpdate().getYear()+1900) + " " + getLastUpdate().getMinutes() + ":"
         + getLastUpdate().getHours();
     str += " " + getType();
     return str;

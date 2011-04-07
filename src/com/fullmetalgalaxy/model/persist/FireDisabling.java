@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Vincent
  * Describe a fire disabling action. in other word, it contain a target and two destroyer.
  */
-public class FireDisabling implements java.io.Serializable
+public class FireDisabling implements IsSerializable, java.io.Serializable
 {
   private static final long serialVersionUID = 4170862379330741389L;
 

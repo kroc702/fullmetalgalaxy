@@ -35,6 +35,8 @@ import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet;
+import com.fullmetalgalaxy.server.xmpp.XMPPProbeServlet;
 import com.google.appengine.api.channel.ChannelMessage;
 import com.google.appengine.api.channel.ChannelService;
 import com.google.appengine.api.channel.ChannelServiceFactory;
@@ -59,6 +61,8 @@ public class ChannelManager
   private final static int CACHE_PRESENCE_ASK_TTL_MS = 1000 * 60 * 15; // 15min
   /** if last connection is farer (older) than this value we will disconnect it. */
   private final static int CACHE_PRESENCE_TTL_MS = 1000 * 60 * 20; // 20min
+  /** if last connection is closer than this value, we don't need to update cache */
+  private final static int CONNECTION_MIN_DIFF_MS = 1000 * 5; // 5sec
 
   private static MemcacheService s_cache = MemcacheServiceFactory.getMemcacheService();
   private static ChannelService s_channelService = ChannelServiceFactory.getChannelService();
@@ -89,12 +93,24 @@ public class ChannelManager
     // set presence information
     p_presence.setPseudo( p_pseudo );
     p_presence.setGameId( p_gameId );
-    p_presence.setPageId( RpcUtil.random( Integer.MAX_VALUE ) );
+    p_presence.setPageId( RpcUtil.random( Integer.MAX_VALUE-1 )+1 );
     p_presence.setClientType( p_clientType );
+
+    PresenceRoom room = getRoom( p_presence.getGameId() );
+    Presence lastPresence = room.getLastPresence( p_pseudo );
+    if( lastPresence != null && lastPresence.getLastConnexion().after( new Date(System.currentTimeMillis()-CONNECTION_MIN_DIFF_MS) ) )
+    {
+      // these two connections are too close... consider as the same
+      // its a workaround because game.jsp is sometime called twice and I don't
+      // know why !
+      return null;
+    }
     
     // connect presence
     return connect(p_presence);
   }
+
+
 
   public static String connect(Presence p_presence)
   {
@@ -105,8 +121,12 @@ public class ChannelManager
     room.connect( p_presence );
 
     // reopen channel
-    String channelToken = s_channelService.createChannel( p_presence.getChannelId() );
-
+    String channelToken = null;
+    if( p_presence.getClientType() == ClientType.CHAT || p_presence.getClientType() == ClientType.GAME )
+    {
+      channelToken = s_channelService.createChannel( p_presence.getChannelId() );
+    }
+    
     // room was updated: update cache
     getCache().put( p_presence.getGameId(), room, Expiration.byDeltaSeconds( CACHE_ROOM_TTL_SEC ) );
 
@@ -164,12 +184,21 @@ public class ChannelManager
     {
       for( Presence presence : p_room )
       {
-        try
+        if( presence.getClientType() == ClientType.XMPP )
         {
-          s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
-        } catch( Exception e )
+          // send presence to xmpp clients
+          XMPPProbeServlet.sendPresence( presence.getPseudo() );
+        }
+        else
         {
-          log.error( e );
+          // send presence to web client
+          try
+          {
+            s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+          } catch( Exception e )
+          {
+            log.error( e );
+          }
         }
       }
     }
@@ -179,16 +208,12 @@ public class ChannelManager
    * @param p_room
    * @param p_msg if empty, don't send anything
    */
-  protected static void broadcast(PresenceRoom p_room, ChatMessage p_msg)
+  public static void broadcast(PresenceRoom p_room, ChatMessage p_msg)
   {
     boolean isRoomUpdated = false;
+    List<Presence> toRemove = new ArrayList<Presence>();
     isRoomUpdated |= updateLastConnexion( p_room, p_msg.getFromPseudo(), p_msg.getFromPageId() );
     isRoomUpdated |= removeTooOld( p_room );
-    if( isRoomUpdated )
-    {
-      // room was updated: update cache
-      getCache().put( p_room.getGameId(), p_room, Expiration.byDeltaSeconds( CACHE_ROOM_TTL_SEC ) );
-    }
     
     String response = Serializer.toClient( p_msg );
 
@@ -196,14 +221,47 @@ public class ChannelManager
     {
       for( Presence presence : p_room )
       {
-        try
+        if( presence.getClientType() == ClientType.XMPP )
         {
-          s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
-        } catch( Exception e )
+          // this presence is a Jabber client: if it is the sender
+          // we shouldn't send him back his message
+          if( !presence.getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ) )
+          {
+            // send chat message to a jabber client
+            boolean isSend = XMPPMessageServlet.sendXmppMessage( presence.getPseudo(), p_msg );
+            if( !isSend )
+            {
+              // message send fail: remove presence
+              toRemove.add( presence );
+            }
+          }
+        }
+        else
         {
-          log.error( e );
+          // send chat message to web client
+          try
+          {
+            s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+          } catch( Exception e )
+          {
+            log.error( e );
+            // message send fail: remove presence
+            toRemove.add( presence );
+          }
         }
       }
+    }
+    
+    if( !toRemove.isEmpty() )
+    {
+      p_room.removeAll( toRemove );
+      isRoomUpdated = true;
+    }
+    if( isRoomUpdated )
+    {
+      // room was updated: update cache
+      getCache().put( p_room.getGameId(), p_room, Expiration.byDeltaSeconds( CACHE_ROOM_TTL_SEC ) );
+      broadcast( p_room );
     }
   }
 
@@ -250,10 +308,24 @@ public class ChannelManager
    */
   private static boolean  updateLastConnexion(PresenceRoom p_room, String p_pseudo, int p_pageId)
   {
+    assert p_room != null && p_pseudo != null;
     boolean isRoomUpdated = false;
     Presence presence = p_room.getPresence( p_pseudo, p_pageId );
-    if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_MIN_DIFF_MS)) )
+    if( presence == null )
     {
+      // presence of the sender wasn't found in room...
+      presence = new Presence( p_pseudo, p_room.getGameId(), p_pageId );
+      presence.setClientType( ClientType.GAME );
+      if( p_pageId == 0 )
+      {
+        presence.setClientType( ClientType.XMPP );
+      }
+      p_room.connect( presence );
+      isRoomUpdated = true;
+    }
+    else if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_MIN_DIFF_MS)) )
+    {
+      // presence of sender was a bit old: refresh it 
       presence.setLastConnexion();
       isRoomUpdated = true;
     }
