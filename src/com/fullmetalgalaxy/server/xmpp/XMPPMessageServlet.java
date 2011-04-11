@@ -32,7 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ChatMessage;
+import com.fullmetalgalaxy.model.Presence;
+import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.server.ChannelManager;
+import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 import com.google.appengine.api.xmpp.JID;
 import com.google.appengine.api.xmpp.Message;
 import com.google.appengine.api.xmpp.MessageBuilder;
@@ -67,35 +70,52 @@ public class XMPPMessageServlet extends HttpServlet
 
     // Split the XMPP address (e.g., user@gmail.com)
     // from the resource (e.g., gmail.CD6EBC4A)
-    String fromJid = message.getFromJid().getId().split("/")[0];
+    String jid = message.getFromJid().getId();
+    String pseudo = FmgDataStore.getPseudoFromJid( jid );
     String body = message.getBody();
-    ChatMessage chatMessage = new ChatMessage( 0, fromJid, body );
-    
-    ChannelManager.broadcast( ChannelManager.getRoom( 0 ), chatMessage );
+    ChatMessage chatMessage = new ChatMessage( 0, pseudo, body );
+
+    PresenceRoom room = ChannelManager.getRoom( 0 );
+    Presence presence = room.getPresence( pseudo, 0 );
+    if( presence == null )
+    {
+      // presence of the sender wasn't found in room...
+      presence = new Presence( pseudo, 0, 0 );
+      presence.setJabberId( jid );
+      ChannelManager.connect( presence );
+    }
+
+    ChannelManager.broadcast( room, chatMessage );
   }
 
   
-  public static boolean sendXmppMessage(String p_pseudo, ChatMessage p_chatMessage)
+  public static boolean sendXmppMessage(String p_jabberId, ChatMessage p_chatMessage)
   {
     boolean messageSent = false;
-    // TODO well pseudo is different from JID !
-    // we should reaquest datastore
-    //PersistAccount account = FmgDataStore.getPersistAccountFromPseudo( p_pseudo );
-    //if( account == null )
-    //{
-    //  return messageSent;
-    //}
-    //JID jid = new JID(account.getJabberId());
-    JID jid = new JID(p_pseudo);
-    String msgBody = "[" + p_chatMessage.getFromPseudo() + "] " + p_chatMessage.getText();
-    Message msg = new MessageBuilder()
-        .withRecipientJids(jid)
-        .withBody(msgBody)
-        .build();
-            
-    XMPPService xmpp = XMPPServiceFactory.getXMPPService();
-    SendResponse status = xmpp.sendMessage(msg);
-    messageSent = (status.getStatusMap().get(jid) == SendResponse.Status.SUCCESS);
+    if( p_jabberId != null )
+    {
+      JID jid = new JID(p_jabberId);
+      String msgBody = "[" + p_chatMessage.getFromPseudo() + "] " + p_chatMessage.getText();
+      Message msg = new MessageBuilder()
+                        .withRecipientJids(jid)
+                        .withBody(msgBody)
+                        .build();
+              
+      XMPPService xmpp = XMPPServiceFactory.getXMPPService();
+      SendResponse status = xmpp.sendMessage(msg);
+      messageSent = (status.getStatusMap().get(jid) == SendResponse.Status.SUCCESS);
+    }
     return messageSent;
   }
+
+  public static boolean isPresent(String p_jabberId)
+  {
+    if( p_jabberId == null )
+    {
+      return false;
+    }
+    XMPPService xmpp = XMPPServiceFactory.getXMPPService();
+    return xmpp.getPresence( new JID( p_jabberId ) ).isAvailable();
+  }
+
 }

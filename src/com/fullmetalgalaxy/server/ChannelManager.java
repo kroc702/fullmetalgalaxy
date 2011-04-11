@@ -17,7 +17,7 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010 Vincent Legendre
+ *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
 /**
@@ -25,9 +25,15 @@
  */
 package com.fullmetalgalaxy.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
@@ -43,15 +49,19 @@ import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.xmpp.JID;
 
 /**
  * @author Vincent
  * This class keep track of all presences on all games/rooms and allow to broadcast any message to any room.
  * 
- * TODO use cron task to remove too old presence
+ * This class override HttpServlet to use task queue to remove too old presence
  */
-public class ChannelManager
+public class ChannelManager extends HttpServlet
 {
+  private static final long serialVersionUID = 1L;
   /**  */
   private final static int CACHE_ROOM_TTL_SEC = 60 * 60 * 2; // 2h
   /** if last connection is closer than this value, we don't need to update cache */
@@ -69,6 +79,54 @@ public class ChannelManager
   private final static FmpLogger log = FmpLogger.getLogger( ChannelManager.class.getName() );
 
 
+  static
+  {
+    // init first task
+    addTask();
+  }
+
+  /**
+   * entry point for task queue.
+   * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   */
+  @Override
+  protected void doGet(HttpServletRequest p_req, HttpServletResponse p_resp)
+      throws ServletException, IOException
+  {
+    // TODO do similar things for all presence room
+    PresenceRoom room = getRoom( 0 );
+    boolean isRoomUpdated = removeTooOld( room );
+    if( isRoomUpdated )
+    {
+      // room was updated: update cache
+      getCache().put( room.getGameId(), room, Expiration.byDeltaSeconds( CACHE_ROOM_TTL_SEC ) );
+      broadcast( room );
+    }
+    addTask();
+  }
+
+
+
+  /* (non-Javadoc)
+   * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   */
+  @Override
+  protected void doPost(HttpServletRequest p_req, HttpServletResponse p_resp)
+      throws ServletException, IOException
+  {
+    this.doGet( p_req, p_resp );
+  }
+
+
+  /**
+   * add a task to remove too old presence in a near future.
+   * This task stay alive by itself.
+   */
+  private static void addTask()
+  {
+    Queue queue = QueueFactory.getQueue( "channelmanager" );
+    queue.add();
+  }
 
   /**
    * WARNING p_presence shouldn't be modified after this call, as it's only copy.
@@ -143,7 +201,7 @@ public class ChannelManager
       return;
     }
     PresenceRoom room = getRoom( p_presence.getGameId() );
-    room.disconnect( p_presence.getPseudo(), p_presence.getPageId() );
+    room.remove( p_presence );
     if( room.isEmpty() )
     {
       // room empty: clear cache
@@ -186,8 +244,15 @@ public class ChannelManager
       {
         if( presence.getClientType() == ClientType.XMPP )
         {
-          // send presence to xmpp clients
-          XMPPProbeServlet.sendPresence( presence.getPseudo() );
+          if( presence.getJabberId() != null )
+          {
+            // send presence to xmpp clients
+            XMPPProbeServlet.sendPresence( new JID( presence.getJabberId() ) );
+          }
+          else
+          {
+            log.error( "Send a PresenceRoom, but his XMPP presence have a JabberId null !" );
+          }
         }
         else
         {
@@ -228,7 +293,7 @@ public class ChannelManager
           if( !presence.getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ) )
           {
             // send chat message to a jabber client
-            boolean isSend = XMPPMessageServlet.sendXmppMessage( presence.getPseudo(), p_msg );
+            boolean isSend = XMPPMessageServlet.sendXmppMessage( presence.getJabberId(), p_msg );
             if( !isSend )
             {
               // message send fail: remove presence
@@ -316,12 +381,9 @@ public class ChannelManager
       // presence of the sender wasn't found in room...
       presence = new Presence( p_pseudo, p_room.getGameId(), p_pageId );
       presence.setClientType( ClientType.GAME );
-      if( p_pageId == 0 )
-      {
-        presence.setClientType( ClientType.XMPP );
-      }
       p_room.connect( presence );
       isRoomUpdated = true;
+      log.warning( "a user send a chat message, but his presence isn't found in room" );
     }
     else if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_MIN_DIFF_MS)) )
     {
@@ -347,13 +409,27 @@ public class ChannelManager
     {
       if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_ASK_TTL_MS)) )
       {
-        if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_TTL_MS)) )
+        if( presence.getClientType() == ClientType.XMPP )
         {
-          toRemove.add( presence );
+          // for xmpp clients we can't ask presence with an empty message
+          if( XMPPMessageServlet.isPresent( presence.getJabberId() ) )
+          {
+            presence.setLastConnexion();
+          }
+          else
+          {
+            toRemove.add( presence );
+          }
+          isRoomUpdated = true;
         }
         else
         {
           toAsk.add( presence );
+          if( presence.getLastConnexion().before(
+              new Date( System.currentTimeMillis() - CACHE_PRESENCE_TTL_MS ) ) )
+          {
+            toRemove.add( presence );
+          }
         }
       }
     }

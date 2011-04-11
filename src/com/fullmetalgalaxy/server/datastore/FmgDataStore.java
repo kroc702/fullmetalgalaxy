@@ -28,6 +28,7 @@ import java.util.List;
 import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.QueryResultIterator;
 
 
 /**
@@ -39,6 +40,21 @@ public class FmgDataStore extends DataStore
   private final static int TTL = 50;
   private static int s_countTtl = TTL;
   private static int s_accountListCount = -1;
+  
+  static public String getPseudoFromJid(String p_jid)
+  {
+    String jid = p_jid.split("/")[0];
+    com.googlecode.objectify.Query<PersistAccount> query = DataStore.getList( PersistAccount.class, "m_jabberId", jid );
+    QueryResultIterator<PersistAccount> it = query.iterator();
+    if( !it.hasNext() )
+    {
+      // we could remove the end of jid @...
+      // but in this case someone can use a jid in the form of <existingPseudo>@anydomain
+      // to fool players !
+      return jid;
+    }
+    return it.next().getPseudo();
+  }
   
   static public EbGame sgetGame(long p_id)
   {

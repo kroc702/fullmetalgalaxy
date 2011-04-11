@@ -128,7 +128,7 @@ public class AnEvent extends EbBase
    */
   public void exec(EbGame p_game) throws RpcFmpException
   {
-    p_game.setVersion( p_game.getVersion() + 1 );
+    p_game.incVersion();
   }
 
   /**
@@ -141,7 +141,7 @@ public class AnEvent extends EbBase
    */
   public void unexec(EbGame p_game) throws RpcFmpException
   {
-    p_game.setVersion( p_game.getVersion() - 1 );
+    p_game.decVersion();
   }
 
   /**

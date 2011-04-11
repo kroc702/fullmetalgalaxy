@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.Presence;
-import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.server.ChannelManager;
+import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 import com.google.appengine.api.xmpp.Subscription;
 import com.google.appengine.api.xmpp.XMPPService;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
@@ -54,15 +54,12 @@ public class XMPPSuscribeServlet extends HttpServlet
     XMPPService xmppService = XMPPServiceFactory.getXMPPService();
     Subscription sub = xmppService.parseSubscription(req);
 
-    // Split the XMPP address (e.g., user@gmail.com)
-    // from the resource (e.g., gmail.CD6EBC4A)
-    String fromJID = sub.getFromJid().getId().split("/")[0];
-
+    String pseudo = FmgDataStore.getPseudoFromJid( sub.getFromJid().getId() );
     
     // TODO well pseudo is different from JID !
     // we should request datastore
-    Presence presence = new Presence( fromJID, 0, 0 );
-    presence.setClientType( ClientType.XMPP );
+    Presence presence = new Presence( pseudo, 0, 0 );
+    presence.setJabberId( sub.getFromJid().getId() );
     ChannelManager.connect( presence );
   }
 }

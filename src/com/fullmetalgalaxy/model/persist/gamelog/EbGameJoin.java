@@ -29,8 +29,8 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbGame;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
 
@@ -135,7 +135,11 @@ public class EbGameJoin extends AnEventUser
   public String toString()
   {
     String str = super.toString();
-    str += getAccount().getPseudo() + " : Join - color " + getEnuColor().toString();
+    if( getAccount() != null )
+    {
+      str += getAccount().getPseudo();
+    }
+    str += " : Join - color " + getEnuColor().toString();
     return str;
   }
 

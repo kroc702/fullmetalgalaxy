@@ -58,23 +58,17 @@ public class XMPPProbeServlet extends HttpServlet
     sendPresence(xmppPresence.getFromJid());
   }
   
-  public static void sendPresence(String p_pseudo)
-  {
-    // TODO well pseudo is different from JID !
-    // we should request datastore
-    sendPresence(new JID(p_pseudo));
-  }
   
-  
-  private static void sendPresence(JID p_jid)
+  public static void sendPresence(JID p_jid)
   {
     PresenceRoom room = ChannelManager.getRoom( 0 );
     PresenceType pt = PresenceType.AVAILABLE;
-    if( room.size() <= 1 )
+    int count = room.countPseudo();
+    if( count <= 1 )
     {
       pt = PresenceType.UNAVAILABLE;
     }
     XMPPService xmppService = XMPPServiceFactory.getXMPPService();
-    xmppService.sendPresence( p_jid, pt, PresenceShow.NONE, "" + room.size() + " joueurs" );
+    xmppService.sendPresence( p_jid, pt, PresenceShow.NONE, "" + count + " joueurs" );
   }
 }

@@ -63,6 +63,8 @@ public interface ServicesAsync
    */
   public void getModelFmpInit(String p_gameId, AsyncCallback<ModelFmpInit> callback);
 
+  public void checkUpdate(long p_gameId, AsyncCallback<Void> callback);
+
 
   public void runEvent(AnEvent p_action, AsyncCallback<Void> callback);
 

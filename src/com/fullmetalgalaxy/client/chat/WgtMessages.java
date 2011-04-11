@@ -3,12 +3,14 @@
  */
 package com.fullmetalgalaxy.client.chat;
 
+import com.fullmetalgalaxy.model.ChatMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -59,6 +61,13 @@ public class WgtMessages extends Composite implements ClickHandler, KeyPressHand
   public void addMessage(String p_msg)
   {
     Label label = new Label( p_msg );
+    m_msgList.add( label );
+    scrollPanel.ensureVisible( label );
+  }
+
+  public void addMessage(ChatMessage p_msg)
+  {
+    HTML label = new HTML( "<b>["+p_msg.getFromPseudo()+"]</b> "+p_msg.getText() );
     m_msgList.add( label );
     scrollPanel.ensureVisible( label );
   }
