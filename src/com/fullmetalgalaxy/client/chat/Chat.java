@@ -5,8 +5,8 @@ import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.ChatServiceAsync;
 import com.fullmetalgalaxy.model.Presence;
-import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.Presence.ClientType;
+import com.fullmetalgalaxy.model.PresenceRoom;
 import com.google.gwt.appengine.channel.client.Channel;
 import com.google.gwt.appengine.channel.client.ChannelFactory;
 import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
@@ -21,9 +21,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -40,7 +38,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
   private int m_pageId = 0;
   private ChatMessage m_lastMsg = new ChatMessage();
   WgtMessages m_wgtMessages = null;
-  VerticalPanel m_wgtPresence = new VerticalPanel();
+  WgtPresences m_wgtPresence = new WgtPresences();
 
   private String m_channelToken = "";
   private PresenceRoom m_presenceRoom = new PresenceRoom( 0 );
@@ -52,7 +50,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onFailure(Throwable p_caught)
     {
-      m_wgtMessages.addMessage( m_lastMsg.getText() );
+      m_wgtMessages.addMessage( m_lastMsg );
       m_wgtMessages.addMessage( "last message failed" );
     }
 
@@ -114,7 +112,19 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onSuccess(ChatMessage p_result)
     {
-      m_wgtMessages.addMessage( p_result.getFromPseudo() + ": " + p_result.getText() );
+      if( p_result.isEmpty() )
+      {
+        // empty message: server ask if we are still connected
+        ChatMessage message = new ChatMessage();
+        message.setGameId( m_presenceRoom.getGameId() );
+        message.setFromPageId( m_pageId );
+        message.setFromPseudo( m_pseudo );
+        s_chatService.sendChatMessage( message, m_sendMessageCallback );
+      }
+      else
+      {
+        m_wgtMessages.addMessage( p_result );
+      }
     }
 
   };
@@ -132,12 +142,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onSuccess(PresenceRoom p_result)
     {
-      //m_wgtMessages.addMessage( "receive presence list" );
-      m_wgtPresence.clear();
-      for( Presence presence : p_result )
-      {
-        m_wgtPresence.add( new Label( presence.getPseudo() ) );
-      }
+      m_wgtPresence.setPresenceRoom( p_result );
     }
 
   };
@@ -194,14 +199,15 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onError(SocketError error)
     {
-      // This occur after two hours. in this case, we ask server for a new channel token
-      s_chatService.reconnect( getMyPresence(), m_reconnectCallback );
+      // nothing to do
     }
 
     @Override
     public void onClose()
     {
-      // nothing to do
+      // This occur after two hours. in this case, we ask server for a new
+      // channel token
+      s_chatService.reconnect( getMyPresence(), m_reconnectCallback );
     }
   };
   
@@ -224,7 +230,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     m_lastMsg.setFromPageId( (int)m_pageId );
     m_lastMsg.setText( p_msg );
     m_lastMsg.getDate().setTime( System.currentTimeMillis() );
-    s_chatService.sendMessages( m_lastMsg, m_sendMessageCallback );
+    s_chatService.sendChatMessage( m_lastMsg, m_sendMessageCallback );
   }
 
   /**

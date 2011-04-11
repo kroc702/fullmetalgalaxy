@@ -31,7 +31,6 @@ import java.io.ObjectOutputStream;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.google.appengine.api.datastore.Blob;
@@ -46,21 +45,12 @@ public class PersistEntity
   @Id
   private Long m_id = null;
 
-  private long m_version = 1;
-
   /** serialized instance */
   private com.google.appengine.api.datastore.Blob m_data = null;
 
 
   public PersistEntity()
   {
-  }
-
-  @SuppressWarnings("unused")
-  @PrePersist
-  private void PrePersist()
-  {
-    m_version++;
   }
 
   /**
@@ -136,7 +126,6 @@ public class PersistEntity
     EbBase base = EbBase.class.cast( obj );
     if( base != null )
     {
-      base.setVersion( getVersion() );
       base.setId( getId() );
     }
     return base;
@@ -171,23 +160,6 @@ public class PersistEntity
     m_data = new Blob( p_data );
   }
 
-
-  /**
-   * @return the version
-   */
-  public long getVersion()
-  {
-    return m_version;
-  }
-
-
-  /**
-   * @param p_version the version to set
-   */
-  public void setVersion(long p_version)
-  {
-    m_version = p_version;
-  }
 
 
 }

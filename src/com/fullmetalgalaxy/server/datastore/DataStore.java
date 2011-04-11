@@ -201,7 +201,6 @@ public class DataStore
     entity.setEb( p_obj );
     save( entity );
 
-    p_obj.setVersion( entity.getVersion() );
     p_obj.setId( entity.getId() );
   }
 

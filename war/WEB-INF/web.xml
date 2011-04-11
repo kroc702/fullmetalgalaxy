@@ -81,6 +81,15 @@
     </servlet-mapping>
     
     <servlet>
+       <servlet-name>ChannelManager</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.ChannelManager</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>ChannelManager</servlet-name>
+       <url-pattern>/_ah/queue/channelmanager</url-pattern>
+    </servlet-mapping>
+  
+    <servlet>
        <servlet-name>XMPPMessageServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet</servlet-class>
     </servlet>

@@ -83,6 +83,13 @@ public interface Services extends RemoteService
   public ModelFmpInit getModelFmpInit(String p_gameId) throws RpcFmpException;
 
 
+  /**
+   * ask server to check update for  the corresponding game.
+   * If update are found, they will be send with channel connection.
+   * @param p_gameId
+   * @throws RpcFmpException
+   */
+  public void checkUpdate(long p_gameId) throws RpcFmpException;
 
   /**
    * TODO we should merge runAction and runEvent and take in parameters a ModelFmpUpdate

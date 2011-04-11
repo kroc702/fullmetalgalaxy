@@ -20,7 +20,7 @@ public class ChatServiceImpl extends RemoteServiceServlet implements ChatService
 
 
   @Override
-  public void sendMessages(ChatMessage p_msg) throws IllegalArgumentException
+  public void sendChatMessage(ChatMessage p_msg) throws IllegalArgumentException
   {
     // we could check pseudo to detect cheater...
     //p_msg.setFromPseudo( Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() ) );

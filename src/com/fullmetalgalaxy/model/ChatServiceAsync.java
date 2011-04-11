@@ -7,7 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface ChatServiceAsync
 {
-  void sendMessages(ChatMessage p_msg, AsyncCallback<Void> callback)
+  void sendChatMessage(ChatMessage p_msg, AsyncCallback<Void> callback)
       throws IllegalArgumentException;
 
   public void getChatMessage(long p_gameId, AsyncCallback<ChatMessage> callback);

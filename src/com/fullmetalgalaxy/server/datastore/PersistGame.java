@@ -128,7 +128,7 @@ public class PersistGame extends PersistEntity
       game.setName( getName() );
       game.setDescription( getDescription() );
       game.setCreationDate( getCreationDate() );
-      game.setVersion( getVersion() );
+      //game.setVersion( getVersion() );
       if( game.getMinimapUri() == null )
       {
         game.setMinimapUri( getMinimapUri() );

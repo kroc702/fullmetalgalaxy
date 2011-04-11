@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface ChatService extends RemoteService
 {
 
-  public void sendMessages(ChatMessage p_msg) throws IllegalArgumentException;
+  public void sendChatMessage(ChatMessage p_msg) throws IllegalArgumentException;
 
   public ChatMessage getChatMessage(long p_gameId);
 

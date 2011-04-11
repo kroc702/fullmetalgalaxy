@@ -37,6 +37,7 @@ public class Presence implements IsSerializable, java.io.Serializable
   private String m_pseudo = "";
   private long m_gameId = 0;
   private int m_pageId = 0;
+  private String m_jabberId = null;
   private Date m_lastConnexion = new Date( System.currentTimeMillis() );
   private ClientType m_clientType = ClientType.UNKNOWN;
   
@@ -62,6 +63,7 @@ public class Presence implements IsSerializable, java.io.Serializable
     setPseudo( "" );
     setGameId( 0 );
     setPageId( 0 );
+    m_jabberId = null;
     setLastConnexion();
   }
 
@@ -75,12 +77,15 @@ public class Presence implements IsSerializable, java.io.Serializable
   }
 
 
+
+
   @Override
   public int hashCode()
   {
     final int prime = 31;
     int result = 1;
     result = prime * result + (int)(m_gameId ^ (m_gameId >>> 32));
+    result = prime * result + ((m_jabberId == null) ? 0 : m_jabberId.hashCode());
     result = prime * result + m_pageId;
     result = prime * result + ((m_pseudo == null) ? 0 : m_pseudo.hashCode());
     return result;
@@ -97,6 +102,13 @@ public class Presence implements IsSerializable, java.io.Serializable
       return false;
     Presence other = (Presence)obj;
     if( m_gameId != other.m_gameId )
+      return false;
+    if( m_jabberId == null )
+    {
+      if( other.m_jabberId != null )
+        return false;
+    }
+    else if( !m_jabberId.equals( other.m_jabberId ) )
       return false;
     if( m_pageId != other.m_pageId )
       return false;
@@ -200,6 +212,20 @@ public class Presence implements IsSerializable, java.io.Serializable
   public void setClientType(ClientType p_clientType)
   {
     m_clientType = p_clientType;
+  }
+
+  public String getJabberId()
+  {
+    return m_jabberId;
+  }
+
+  public void setJabberId(String p_jabberId)
+  {
+    if( p_jabberId != null )
+    {
+      setClientType(ClientType.XMPP);
+    }
+    m_jabberId = p_jabberId;
   }
 
 

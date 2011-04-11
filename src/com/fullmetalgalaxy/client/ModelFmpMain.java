@@ -326,6 +326,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
+      ModelFmpMain.model().notifyModelUpdate();
     }
 
     @Override
@@ -338,15 +339,18 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       getActionBuilder().cancel();
       ModelFmpMain.model().notifyModelUpdate();
       // maybe the action failed because the model isn't up to date
-      if( m_successiveRpcErrorCount < 2 )
+      if( m_successiveRpcErrorCount <= 2 )
       {
-        // re send action rpc
-        // TODO we don't take in consideration runSingleAction method...
-        runCurrentAction();
+        if( p_caught instanceof RpcFmpException )
+        {
+          MAppMessagesStack.s_instance
+              .showWarning( Messages.getString( (RpcFmpException)p_caught ) );
+        }
       }
       else
       {
-        // TODO are we sure about that ?
+        // TODO i18n
+        Window.alert( "another error occur: reload page" );
         ClientUtil.reload();
       }
     }
@@ -426,14 +430,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         @Override
         public void onError(SocketError error)
         {
-          // This occur after two hours. in this case, we ask server for a new channel token
-          Services.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
+          // nothing to do
         }
 
         @Override
         public void onClose()
         {
-          // Nothing special to do
+          // This occur after two hours. in this case, we ask server for a new
+          // channel token
+          Services.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
         }
       } );
     }
@@ -926,7 +931,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     {
       return false;
     }
-    if( getGame().getConfigGameTime() == ConfigGameTime.Standard
+    if( !getGame().getEbConfigGameTime().isAsynchron()
         && getMyRegistration() == getGame().getCurrentPlayerRegistration() )
     {
       return true;

@@ -42,8 +42,8 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbAccount;
+import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbRegistrationStats;
@@ -171,13 +171,14 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     // anything to update ?
     try
     {
+      ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+      modelUpdate.setGameId( model.getId() );
+      modelUpdate.setFromVersion( model.getVersion() );
+
       ArrayList<AnEvent> events = updateGame( model );
 
       if( !events.isEmpty() )
       {
-        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-        modelUpdate.setGameId( model.getId() );
-        modelUpdate.setFromVersion( model.getVersion() );
         modelUpdate.setGameEvents( events );
 
         dataStore.save( model );
@@ -338,16 +339,16 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   @Override
   public void runEvent(AnEvent p_action) throws RpcFmpException
   {
-    System.out.println( p_action );
+    // System.out.println( p_action );
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = dataStore.getGame( p_action.getIdGame() );
     int oldTimeStep = game.getCurrentTimeStep();
 
+    p_action.setLastUpdate( ServerUtil.currentDate() );
     modelUpdate.setFromVersion( game.getVersion() );
     modelUpdate.setGameId( game.getId() );
-    modelUpdate.setGameEvents( updateGame( game ) );
-    modelUpdate.getGameEvents().add( p_action );
+
 
     // security check
     /*if( p_action.getAccountId() != 0L )
@@ -379,6 +380,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           eventTakeOff.setAuto( true );
           eventTakeOff.checkedExec( game );
           game.addEvent( eventTakeOff );
+          modelUpdate.getGameEvents().add( eventTakeOff );
         }
       }
     }
@@ -388,16 +390,16 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     if(p_action.getType() == GameLogType.EvtCancel)
     {
       // cancel action doesn't work in exact same way as other event
-      p_action.setLastUpdate( ServerUtil.currentDate() );
       ((EbEvtCancel)p_action).execCancel( game );
       
-      updateGame( game );
+      modelUpdate.getGameEvents().add( p_action );
+      modelUpdate.getGameEvents().addAll( updateGame( game ) );
     }
     else
     {
-      updateGame( game );
-      p_action.setLastUpdate( ServerUtil.currentDate() );
-  
+      modelUpdate.getGameEvents().addAll( updateGame( game ) );
+      modelUpdate.getGameEvents().add( p_action );
+
       // execute action
       p_action.checkedExec( game );
       game.addEvent( p_action );
@@ -421,6 +423,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         eventTide.setGame( game );
         eventTide.checkedExec( game );
         game.addEvent( eventTide );
+        modelUpdate.getGameEvents().add( eventTide );
       }
     }
 
@@ -441,6 +444,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         action.setGame( game );
         action.checkedExec( game );
         game.addEvent( action );
+        modelUpdate.getGameEvents().add( action );
       }
 
       if(game.getCurrentTimeStep() == 0 
@@ -454,6 +458,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         action.setGame( game );
         action.checkedExec( game );      
         game.addEvent( action );
+        modelUpdate.getGameEvents().add( action );
       }
     }
     if(game.getCurrentTimeStep() == 1 
@@ -467,6 +472,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       action.setGame( game );
       action.checkedExec( game );      
       game.addEvent( action );
+      modelUpdate.getGameEvents().add( action );
     }
     
     dataStore.save( game );
@@ -491,6 +497,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     FmgDataStore dataStore = new FmgDataStore();
     EbGame game = null;
     AnEvent lastAction = null;
+    RpcFmpException exception = null;
 
     for( AnEvent action : p_actionList )
     {
@@ -514,17 +521,23 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     modelUpdate.setGameId( game.getId() );
     modelUpdate.setFromVersion( game.getVersion() );
     modelUpdate.setGameEvents( updateGame( game ) );
-    modelUpdate.getGameEvents().addAll( p_actionList );
 
     // execute actions
-    for( AnEvent action : p_actionList )
+    try
     {
-      ((AnEventUser)action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-      action.setLastUpdate( ServerUtil.currentDate() );
-      action.checkedExec( game );
-      game.addEvent( action );
+      for( AnEvent action : p_actionList )
+      {
+        ((AnEventUser)action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+        action.setLastUpdate( ServerUtil.currentDate() );
+        action.checkedExec( game );
+        game.addEvent( action );
 
-      lastAction = action;
+        lastAction = action;
+      }
+      modelUpdate.getGameEvents().addAll( p_actionList );
+    } catch( RpcFmpException e )
+    {
+      exception = e;
     }
 
 
@@ -539,6 +552,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       action.setGame( game );
       action.checkedExec( game );
       game.addEvent( action );
+      modelUpdate.getGameEvents().add( action );
     }
 
 
@@ -551,6 +565,11 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
     // broadcast changes to all clients
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
+
+    if( exception != null )
+    {
+      throw exception;
+    }
   }
 
 
@@ -628,14 +647,15 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       {
         if( (p_game.getCurrentPlayerRegistration() != null)
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() < System
-                .currentTimeMillis())
+            && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() 
+                    <= System.currentTimeMillis())
             && (p_game.getCurrentTimeStep() != 0) ) // never skip first turn
         {
           // change player's turn
           int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
           EbEvtPlayerTurn event = new EbEvtPlayerTurn();
           event.setAuto( true );
+          event.setGame( p_game );
           event.checkedExec( p_game );
           p_game.addEvent( event );
           events.add( event );
@@ -717,6 +737,12 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   public String reconnect(Presence p_presence)
   {
     return ChannelManager.connect( p_presence );
+  }
+
+  @Override
+  public void checkUpdate(long p_gameId) throws RpcFmpException
+  {
+    getEbGame( p_gameId );
   }
 
 }

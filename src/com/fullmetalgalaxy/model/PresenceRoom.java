@@ -2,9 +2,11 @@ package com.fullmetalgalaxy.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -109,13 +111,22 @@ public class PresenceRoom implements IsSerializable, java.io.Serializable, List<
   }
 
 
-  public void disconnect(String p_pseudo, int p_pageId)
+  /**
+   * count number of different connected pseudo 
+   * @return
+   */
+  public int countPseudo()
   {
-    Presence presence2Remove = new Presence(p_pseudo,getGameId(),p_pageId);
-    remove( presence2Remove );
+    Set<String> pseudo = new HashSet<String>();
+    for( Presence presence : this )
+    {
+      if( !pseudo.contains( presence.getPseudo() ) )
+      {
+        pseudo.add( presence.getPseudo() );
+      }
+    }
+    return pseudo.size();
   }
-
-
 
   /**
    * 
