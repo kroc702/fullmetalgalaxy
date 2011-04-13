@@ -143,7 +143,8 @@ public class WgtTimeInfo extends WgtView
 
 
       if( ModelFmpMain.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0
-          && ModelFmpMain.model().getGame().isStarted() )
+          && ModelFmpMain.model().getGame().isStarted()
+          && !ModelFmpMain.model().getGame().isFinished() && !ModelFmpMain.model().isTimeLineMode() )
       {
         displayEndTurn( game.getCurrentPlayerRegistration().getEndTurnDate() );
         m_panel.add( m_lblDate );
@@ -153,7 +154,8 @@ public class WgtTimeInfo extends WgtView
       lbl.setStyleName( "fmp-status-text" );
       m_panel.add( lbl );
     }
-    else if( game.isAsynchron() && ModelFmpMain.model().getGame().isStarted() )
+    else if( game.isAsynchron() && ModelFmpMain.model().getGame().isStarted()
+        && !ModelFmpMain.model().getGame().isFinished() && !ModelFmpMain.model().isTimeLineMode() )
     {
       displayEndTurn( game.estimateNextTimeStep() );
       m_panel.add( m_lblDate );
