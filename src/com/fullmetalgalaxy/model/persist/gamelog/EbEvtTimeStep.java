@@ -86,6 +86,12 @@ public class EbEvtTimeStep extends AnEvent
     {
       throw new RpcFmpException( "Cette partie est termine" );
     }
+    if( getOldTimeStepChange() != null
+        && !getOldTimeStepChange().equals( p_game.getLastTimeStepChange() ) )
+    {
+      // no i18n as it shoudln't occur
+      throw new RpcFmpException( "EvtTimeStep have incoherant old time step change" );
+    }
   }
 
   /* (non-Javadoc)
@@ -97,6 +103,13 @@ public class EbEvtTimeStep extends AnEvent
     super.exec(p_game);
     EbGame game = p_game;
     assert game != null;
+
+    // first backup data
+    if( getOldTimeStepChange() == null )
+    {
+      setOldTimeStepChange( p_game.getLastTimeStepChange() );
+    }
+
     game.setLastTimeStepChange( new Date( getOldTimeStepChange().getTime()
         + game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
     game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
@@ -173,14 +186,6 @@ public class EbEvtTimeStep extends AnEvent
     }
   }
 
-
-  @Override
-  public void setGame(EbGame p_game)
-  {
-    setIdGame( p_game.getId() );
-
-    setOldTimeStepChange( p_game.getLastTimeStepChange() );
-  }
 
 
   // Bean getter / setter

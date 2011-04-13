@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
+ * 
+ * TODO it seems that after two hours, our reconnexion mechanism don't work.
  */
 public class Chat implements EntryPoint, Window.ClosingHandler
 {
@@ -105,8 +107,6 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onFailure(Throwable p_caught)
     {
-      // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -135,8 +135,6 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onFailure(Throwable p_caught)
     {
-      // TODO Auto-generated method stub
-
     }
 
     @Override

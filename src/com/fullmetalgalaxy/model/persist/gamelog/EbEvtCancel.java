@@ -103,6 +103,10 @@ public class EbEvtCancel extends AnEventUser
     boolean isTimeStepCanceled = false;
     long timeSinceLastTimeStepChange = System.currentTimeMillis()
         - p_game.getLastTimeStepChange().getTime();
+    if( timeSinceLastTimeStepChange > p_game.getEbConfigGameTime().getTimeStepDurationInMili() )
+    {
+      timeSinceLastTimeStepChange = 0;
+    }
     if( m_fromActionIndex != p_game.getLogs().size() -1 || m_toActionIndex < 0 )
     {
       throw new RpcFmpException( "this cancel action isn't for this game state" );
