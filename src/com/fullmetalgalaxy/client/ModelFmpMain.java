@@ -140,6 +140,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
    */
   private String m_channelToken = null;
   private int m_pageId = 0;
+  private boolean m_isChannelConnected = false;
 
 
 
@@ -321,6 +322,13 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     @Override
     public void onSuccess(Void p_result)
     {
+      if( !m_isChannelConnected
+          && ModelFmpMain.model().getGame().getGameType() == GameType.MultiPlayer )
+      {
+        // we just receive an action acknowledge but we arn't connected with
+        // channel. ie we won't receive update event... reload page
+        ClientUtil.reload();
+      }
       super.onSuccess( p_result );
       m_successiveRpcErrorCount = 0;
       m_isActionPending = false;
@@ -400,7 +408,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         @Override
         public void onOpen()
         {
-          // Nothing special to do
+          m_isChannelConnected = true;
         }
 
         @Override
@@ -430,12 +438,14 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         @Override
         public void onError(SocketError error)
         {
-          // nothing to do
+          m_isChannelConnected = false;
+          MAppMessagesStack.s_instance.showWarning( "Error: " + error.getDescription() );
         }
 
         @Override
         public void onClose()
         {
+          m_isChannelConnected = false;
           // This occur after two hours. in this case, we ask server for a new
           // channel token
           Services.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
