@@ -94,10 +94,11 @@ public class EbEvtLand extends AnEventPlay
   {
     super.check(p_game);
 
-    if( getToken(p_game).getType() != TokenType.Freighter )
+    if( getToken( p_game ).getType() != TokenType.Freighter
+        || getToken( p_game ).getLocation() != Location.Orbit )
     {
       // not probable error
-      throw new RpcFmpException( "Only Freighter can be landed." );
+      throw new RpcFmpException( "Only Freighter in orbit can be landed." );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);

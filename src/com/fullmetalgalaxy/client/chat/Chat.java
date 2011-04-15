@@ -95,6 +95,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
       }
       else
       {
+        m_wgtMessages.addMessage( "Wait server connexion..." );
         ChannelFactory.createChannel( m_channelToken, m_callbackChannel );
       }
     }
@@ -160,7 +161,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     public void onOpen()
     {
       // TODO i18n
-      m_wgtMessages.addMessage( "ready to chat..." );
+      m_wgtMessages.addMessage( "...ready to chat" );
     }
 
     @Override
@@ -197,7 +198,7 @@ public class Chat implements EntryPoint, Window.ClosingHandler
     @Override
     public void onError(SocketError error)
     {
-      // nothing to do
+      m_wgtMessages.addMessage( error.getDescription() );
     }
 
     @Override
