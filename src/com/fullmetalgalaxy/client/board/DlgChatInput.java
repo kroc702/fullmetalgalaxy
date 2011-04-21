@@ -31,8 +31,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,8 +44,7 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Vincent Legendre
  *
  */
-public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHandler,
-    KeyPressHandler
+public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHandler
 {
   // UI
   private Button m_btnOk = new Button( "OK" );
@@ -63,7 +60,6 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     // Set the dialog box's caption.
     setText( "tapez votre message" );
     m_text.addKeyDownHandler( this );
-    m_text.addKeyPressHandler( this );
     m_text.setWidth( "400px" );
     m_panel.add( m_text );
 
@@ -134,28 +130,15 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     case KeyCodes.KEY_ESCAPE:
       hide();
       break;
-    // case KeyCodes.KEY_ENTER:
-    // sendMessage();
-    // break;
+    case KeyCodes.KEY_ENTER:
+      sendMessage();
+      break;
     default:
       break;
     }
   }
 
 
-  /* (non-Javadoc)
-   * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
-   */
-  @Override
-  public void onKeyPress(KeyPressEvent p_event)
-  {
-    if( p_event.getCharCode() == 13 || p_event.getCharCode() == 0 )
-    {
-      // KEY_ENTER
-      // on firefox getCharCode() return 0
-      sendMessage();
-    }
-  }
 
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.PopupPanel#show()
