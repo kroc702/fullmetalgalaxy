@@ -6,8 +6,9 @@ package com.fullmetalgalaxy.client.chat;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -22,7 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Vincent
  * UI to send/receive message
  */
-public class WgtMessages extends Composite implements ClickHandler, KeyPressHandler
+public class WgtMessages extends Composite implements ClickHandler, KeyDownHandler
 {
   private Panel m_msgList = new VerticalPanel();
   private Button m_btnOk = new Button( "Envoyer" );
@@ -49,7 +50,7 @@ public class WgtMessages extends Composite implements ClickHandler, KeyPressHand
     hpanel.setSize( "100%", "100%" );
     hpanel.add( m_text );
     m_text.setWidth( "100%" );
-    m_text.addKeyPressHandler( this );
+    m_text.addKeyDownHandler( this );
     hpanel.add( m_btnOk );
     m_btnOk.addClickHandler( this );
     panel.add( hpanel );
@@ -82,16 +83,6 @@ public class WgtMessages extends Composite implements ClickHandler, KeyPressHand
     setFocus( true );
   }
 
-  @Override
-  public void onKeyPress(KeyPressEvent p_event)
-  {
-    // System.out.println( "char=" + (int)p_event.getUnicodeCharCode() );
-    if( p_event.getCharCode() == 13 || p_event.getCharCode() == 0 )
-    {
-      // KEY_ENTER
-      sendMessage();
-    }
-  }
 
   @Override
   public void onClick(ClickEvent p_event)
@@ -106,6 +97,16 @@ public class WgtMessages extends Composite implements ClickHandler, KeyPressHand
   public void setFocus(boolean p_focused)
   {
     m_text.setFocus( p_focused );
+  }
+
+
+  @Override
+  public void onKeyDown(KeyDownEvent p_event)
+  {
+    if( p_event.getNativeKeyCode() == KeyCodes.KEY_ENTER )
+    {
+      sendMessage();
+    }
   }
 
 }
