@@ -27,9 +27,9 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -72,7 +72,7 @@ public class EbEvtTakeOff extends AnEventPlay
 
 
   @Override
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     return null;
   }
@@ -81,7 +81,7 @@ public class EbEvtTakeOff extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     // check that token is a freighter
@@ -118,7 +118,7 @@ public class EbEvtTakeOff extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     // backup for unexec
@@ -166,7 +166,7 @@ public class EbEvtTakeOff extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), Location.Board );
@@ -175,13 +175,16 @@ public class EbEvtTakeOff extends AnEventPlay
     // unload three turrets
     // TODO turrets are not put back at the same place.
     int index = 0;
-    for( EbToken token : getToken(p_game).getSetContain() )
+    if( getToken( p_game ).containToken() )
     {
-      if( (token.getType() == TokenType.Turret) && (index < 3) )
+      for( EbToken token : getToken( p_game ).getCopyContains() )
       {
-        p_game.moveToken( token, getToken(p_game).getExtraPositions().get( index ) );
-        token.decVersion();
-        index++;
+        if( (token.getType() == TokenType.Turret) && (index < 3) )
+        {
+          p_game.moveToken( token, getToken( p_game ).getExtraPositions().get( index ) );
+          token.decVersion();
+          index++;
+        }
       }
     }
 

@@ -26,7 +26,7 @@ package com.fullmetalgalaxy.client.board;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Tide;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -69,7 +69,7 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
 
     if( (m_lastGameId != ModelFmpMain.model().getGame().getId()) || (p_forceRedraw) )
     {
-      EbGame game = ModelFmpMain.model().getGame();
+      Game game = ModelFmpMain.model().getGame();
       m_lastGameId = game.getId();
       m_lastTideValue = game.getCurrentTide();
 
@@ -93,7 +93,7 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
     // compute the size of the widget
     int pxW = game.getLandPixWidth( new EnuZoom( getZoom().getValue() ) );

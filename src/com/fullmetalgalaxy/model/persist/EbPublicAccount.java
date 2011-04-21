@@ -29,7 +29,9 @@ import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 /**
  * @author Kroc
- * Account data that other people are allowed to see.
+ * Account data that other people are allowed to see in game pages.
+ * More statistic can be seen in their profil, but this class is copied
+ * in game registration.
  */
 public class EbPublicAccount extends EbBase
 {
@@ -39,6 +41,15 @@ public class EbPublicAccount extends EbBase
   // -------------------------------------------
   private String m_pseudo = "";
 
+  /** level represent players skills.
+   * It is the sum of all it's finished game final score
+   * minus an erosion due to games ages.
+   * can't be lower than 1, as it is used as a divider for 
+   * final score processing
+   */
+  private int m_currentLevel = 1;
+
+  
   public EbPublicAccount()
   {
     super();
@@ -97,8 +108,27 @@ public class EbPublicAccount extends EbBase
    */
   public void setPseudo(String p_pseudo)
   {
-    m_pseudo = p_pseudo;
+    if( p_pseudo == null )
+    {
+      p_pseudo = "???";
+    }
+    m_pseudo = p_pseudo.trim();
   }
+
+  public int getCurrentLevel()
+  {
+    return m_currentLevel;
+  }
+
+  public void setCurrentLevel(int p_currentLevel)
+  {
+    m_currentLevel = p_currentLevel;
+    if( m_currentLevel <= 0 )
+    {
+      m_currentLevel = 1;
+    }
+  }
+
 
 
 

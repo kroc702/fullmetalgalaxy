@@ -28,7 +28,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
@@ -51,7 +51,7 @@ public class LocalGame
   {
     ModelFmpUpdate updates = new ModelFmpUpdate();
     List<AnEvent> events = new ArrayList<AnEvent>();
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     updates.setFromVersion( game.getVersion() );
     for( EbTrigger trigger : game.getTriggers() )
     {
@@ -77,7 +77,7 @@ public class LocalGame
   public static void runEvent(AnEvent p_action, AsyncCallback<Void> callbackUpdates,
       ModelFmpMain p_model)
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
@@ -102,7 +102,7 @@ public class LocalGame
   public static void runAction(ArrayList<AnEventPlay> p_actionList,
       AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromPageId( ModelFmpMain.model().getPageId() );
     updates.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
@@ -142,7 +142,7 @@ public class LocalGame
       AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
   {
     // check triggers
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     List<AnEvent> events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     ModelFmpUpdate updates = new ModelFmpUpdate();

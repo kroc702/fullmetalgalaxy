@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.model.persist.triggers.conditions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.triggers.AnGameZone;
 
 
@@ -66,7 +66,7 @@ public class EbCndTokenZone extends AnCondition
    * @see com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition#isTrue(com.fullmetalgalaxy.model.persist.EbGame)
    */
   @Override
-  public boolean isTrue(EbGame p_game)
+  public boolean isTrue(Game p_game)
   {
     if( m_tokenId == 0 || getZone() == null )
     {
@@ -79,7 +79,7 @@ public class EbCndTokenZone extends AnCondition
    * @see com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition#getActParams(com.fullmetalgalaxy.model.persist.EbGame)
    */
   @Override
-  public List<Object> getActParams(EbGame p_game)
+  public List<Object> getActParams(Game p_game)
   {
     List<Object> params = new ArrayList<Object>();
     params.add( p_game.getToken( m_tokenId ) );

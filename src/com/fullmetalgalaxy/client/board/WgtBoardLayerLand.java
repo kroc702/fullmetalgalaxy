@@ -29,7 +29,7 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -110,7 +110,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   }
 
 
-  private static String buildHtmlLand(EbGame p_game, int p_zoom)
+  private static String buildHtmlLand(Game p_game, int p_zoom)
   {
     StringBuffer html = new StringBuffer();
 
@@ -164,7 +164,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     setWidthRules( s_firstLandRuleIndex + LandType.Marsh.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Plain.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Montain.ordinal(), width );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
     setPixelSize( pxW, pxH );
@@ -180,7 +180,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
    */
   public void onTideChange()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     String baseUrl = "images/board/" + game.getPlanetType().getFolderName();
     if( getZoom().getValue() == EnuZoom.Small )
     {

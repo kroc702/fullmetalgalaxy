@@ -27,7 +27,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
@@ -75,7 +75,7 @@ public class EbEvtControlFreighter extends AnEventPlay
 
   @Override
   // @Transient
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     if( getToken(p_game) != null )
     {
@@ -88,7 +88,7 @@ public class EbEvtControlFreighter extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
 
@@ -145,7 +145,7 @@ public class EbEvtControlFreighter extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
 
@@ -180,7 +180,7 @@ public class EbEvtControlFreighter extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     // the new color owner
@@ -206,7 +206,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     return m_packedOldRegistration;
   }
 
-  public EbToken getTokenFreighter(EbGame p_game)
+  public EbToken getTokenFreighter(Game p_game)
   {
     return getTokenCarrier( p_game );
   }
@@ -221,7 +221,7 @@ public class EbEvtControlFreighter extends AnEventPlay
   // ===========================================
   transient private EbRegistration m_oldRegistration = null;
 
-  public EbRegistration getOldRegistration(EbGame p_game)
+  public EbRegistration getOldRegistration(Game p_game)
   {
     if( m_oldRegistration == null )
     {

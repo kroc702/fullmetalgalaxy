@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import javax.persistence.Id;
+
 
 
 /**
@@ -33,8 +35,8 @@ public class EbBase extends AnPojoBase
   private static final long serialVersionUID = 3533417036557857816L;
 
   private long m_id = 0;
-
-  private long m_version = 0;
+  @Id
+  private Long id = null;
 
   /**
    * default constructor, call the init method.
@@ -73,7 +75,7 @@ public class EbBase extends AnPojoBase
    */
   private void init()
   {
-    m_id = 0;
+    id = null;
   }
 
   /**
@@ -81,6 +83,7 @@ public class EbBase extends AnPojoBase
    * It simply call init() method, but it can be called by overloaded reinit without any risk of calling
    * init() several times.
    */
+  @Override
   public void reinit()
   {
     this.init();
@@ -137,16 +140,14 @@ public class EbBase extends AnPojoBase
    * if this token idn't save 'as this' in data base.
    * @return false if id==0 or lastUpdate==null
    */
-  // @Transient
   public boolean isTrancient()
   {
-    return(getId() == 0);
+    return(id == null);
   }
 
-  // @Transient
   public void setTrancient()
   {
-    setId( 0 );
+    id = null;
   }
 
   /**
@@ -161,39 +162,24 @@ public class EbBase extends AnPojoBase
 
   public long getId()
   {
-    return m_id;
+    if( id == null )
+    {
+      if( m_id == 0 )
+      {
+        return 0;
+      }
+      id = m_id;
+    }
+    return id;
   }
-
-  /**
-   * @return the version
-   */
-  public long getVersion()
-  {
-    return m_version;
-  }
-
-  /**
-   * @param p_version the version to set
-   */
-  public void setVersion(long p_version)
-  {
-    m_version = p_version;
-  }
-
 
   public void setId(long p_id)
   {
-    m_id = p_id;
-  }
-
-  public void incVersion()
-  {
-    m_version++;
-  }
-
-  public void decVersion()
-  {
-    m_version--;
+    id = p_id;
+    if( id == 0 )
+    {
+      id = null;
+    }
   }
 
 

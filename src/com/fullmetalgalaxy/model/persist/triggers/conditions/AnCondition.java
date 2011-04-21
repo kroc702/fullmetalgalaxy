@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.model.persist.triggers.conditions;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -73,7 +73,7 @@ public class AnCondition extends EbBase
    * @return true if that condition is verified on game p_game
    */
   // @Transient
-  protected boolean isTrue(EbGame p_game)
+  protected boolean isTrue(Game p_game)
   {
     return false;
   }
@@ -83,13 +83,13 @@ public class AnCondition extends EbBase
    * @return a list of parameters to pass to actions
    */
   // @Transient
-  public List<Object> getActParams(EbGame p_game)
+  public List<Object> getActParams(Game p_game)
   {
     return null;
   }
 
   // @Transient
-  public final boolean isVerify(EbGame p_game)
+  public final boolean isVerify(Game p_game)
   {
     if( isNegative() )
     {

@@ -33,9 +33,9 @@ public class BindedWgtGameInfo extends com.fullmetalgalaxy.client.widget.WgtGame
     addChangeListener();
   }
   
-  public com.fullmetalgalaxy.model.persist.EbGame getTypedBean()
+  public com.fullmetalgalaxy.model.persist.Game getTypedBean()
   {
-    return (com.fullmetalgalaxy.model.persist.EbGame)getObject();
+    return (com.fullmetalgalaxy.model.persist.Game)getObject();
   }
   
   protected void addChangeListener()

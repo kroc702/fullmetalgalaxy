@@ -23,9 +23,10 @@
 package com.fullmetalgalaxy.client.board;
 
 
+import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.LandType;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -77,7 +78,7 @@ public class TokenWidget
 
   public boolean isUpdateRequired(EbToken p_token)
   {
-    EbGame game = p_token.getGame();
+    Game game = ModelFmpMain.model().getGame();
     if( game == null )
     {
       return true;
@@ -133,7 +134,7 @@ public class TokenWidget
    */
   public void setLastTokenDrawn(EbToken p_token)
   {
-    EbGame game = p_token.getGame();
+    Game game = ModelFmpMain.model().getGame();
     assert game != null;
     m_lastVersion = p_token.getVersion();
     m_wasFireDisable = p_token.isFireDisabled();

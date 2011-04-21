@@ -33,7 +33,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.google.gwt.dom.client.NativeEvent;
@@ -332,7 +332,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     return ModelFmpMain.model().getZoomDisplayed();
   }
 
-  protected EbGame m_game = null;
+  protected Game m_game = null;
   private int m_oldZoom = -1;
 
   public void notifyModelUpdate(SourceModelUpdateEvents p_ctrModelSender)

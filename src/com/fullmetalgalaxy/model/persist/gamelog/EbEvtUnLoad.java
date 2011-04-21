@@ -30,7 +30,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
@@ -74,7 +74,7 @@ public class EbEvtUnLoad extends AnEventPlay
 
   @Override
   // @Transient
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     if( getTokenCarrier(p_game) != null )
     {
@@ -90,7 +90,7 @@ public class EbEvtUnLoad extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     // check both token is on board
@@ -209,7 +209,7 @@ public class EbEvtUnLoad extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     p_game.moveToken( getToken(p_game), getNewPosition() );
@@ -223,7 +223,7 @@ public class EbEvtUnLoad extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );

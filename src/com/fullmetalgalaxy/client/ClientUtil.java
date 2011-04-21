@@ -250,12 +250,39 @@ public class ClientUtil
     {
       return "";
     }
-    long shift = p_date.getTime() - System.currentTimeMillis();
+    long shift = p_date.getTime() - ClientUtil.serverTimeMillis();
     if( (shift < 0) || (shift > 24 * 60 * 60 * 1000) )
     {
       return s_dateTimeFormat.format( p_date );
     }
     return s_timeFormat.format( p_date );
+  }
+
+
+  private static long m_initialLoadDate = System.currentTimeMillis();
+  /**
+   * @return the initialLoadDate
+   */
+  public static long pageLoadTimeMillis()
+  {
+    return m_initialLoadDate;
+  }
+
+
+  private static long s_serverClientShiftMillis = Long.MAX_VALUE;
+
+  public static long serverTimeMillis()
+  {
+    if( s_serverClientShiftMillis == Long.MAX_VALUE )
+    {
+      // load time property
+      s_serverClientShiftMillis = readGwtPropertyLong( "fmp_servertime" );
+      if( s_serverClientShiftMillis != 0 )
+      {
+        s_serverClientShiftMillis -= pageLoadTimeMillis();
+      }
+    }
+    return System.currentTimeMillis() + s_serverClientShiftMillis;
   }
 
   /**

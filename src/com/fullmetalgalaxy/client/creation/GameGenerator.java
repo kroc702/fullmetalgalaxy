@@ -33,8 +33,8 @@ import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.Random;
 
 
@@ -48,7 +48,7 @@ public class GameGenerator
   {
   }
 
-  protected static EbGame getGame()
+  protected static Game getGame()
   {
     return ModelFmpMain.model().getGame();
   }
@@ -58,7 +58,7 @@ public class GameGenerator
    */
   public static void cleanToken()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
@@ -70,7 +70,6 @@ public class GameGenerator
     for( EbToken token : token2Remove )
     {
       game.getSetToken().remove( token );
-      token.setGame( null );
       token.incVersion();
     }
   }
@@ -80,7 +79,7 @@ public class GameGenerator
    */
   public static void clearOre()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
@@ -100,7 +99,6 @@ public class GameGenerator
         e.printStackTrace();
       }
       game.getSetToken().remove( token );
-      token.setGame( null );
       token.incVersion();
     }
   }

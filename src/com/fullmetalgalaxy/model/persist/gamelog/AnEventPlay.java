@@ -27,9 +27,9 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -92,7 +92,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game TODO
    * @return a board position where action is done or null if not relevant.
    */
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     return null;
   }
@@ -103,7 +103,7 @@ public class AnEventPlay extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     if( isAuto() )
@@ -136,7 +136,7 @@ public class AnEventPlay extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     EbRegistration registration = getMyRegistration(p_game);
@@ -151,7 +151,7 @@ public class AnEventPlay extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     EbRegistration registration = getMyRegistration(p_game);
@@ -296,7 +296,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game game to apply event
    * @return the token
    */
-  public EbToken getToken(EbGame p_game)
+  public EbToken getToken(Game p_game)
   {
     if( m_token == null && getPackedToken() != null )
     {
@@ -309,7 +309,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game game to apply event
    * @return the tokenCarrier
    */
-  public EbToken getTokenCarrier(EbGame p_game)
+  public EbToken getTokenCarrier(Game p_game)
   {
     if( m_tokenCarrier == null && getPackedTokenCarrier() != null )
     {
@@ -322,7 +322,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game game to apply event
    * @return the newTokenCarrier
    */
-  public EbToken getNewTokenCarrier(EbGame p_game)
+  public EbToken getNewTokenCarrier(Game p_game)
   {
     if( m_newTokenCarrier == null && getPackedNewTokenCarrier() != null )
     {
@@ -335,7 +335,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game game to apply event
    * @return the tokenDestroyer1
    */
-  public EbToken getTokenDestroyer1(EbGame p_game)
+  public EbToken getTokenDestroyer1(Game p_game)
   {
     if( m_tokenDestroyer1 == null && getPackedTokenDestroyer1() != null )
     {
@@ -348,7 +348,7 @@ public class AnEventPlay extends AnEventUser
    * @param p_game game to apply event
    * @return the tokenDestroyer2
    */
-  public EbToken getTokenDestroyer2(EbGame p_game)
+  public EbToken getTokenDestroyer2(Game p_game)
   {
     if( m_tokenDestroyer2 == null && getPackedTokenDestroyer2() != null )
     {

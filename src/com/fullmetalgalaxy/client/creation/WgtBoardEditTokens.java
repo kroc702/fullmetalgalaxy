@@ -38,7 +38,7 @@ import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -130,7 +130,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
     AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair( p_x,
         p_y ), getZoom() );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
     if( DOM.eventGetButton( DOM.eventGetCurrentEvent() ) == Event.BUTTON_LEFT )
     {
@@ -219,7 +219,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
 
   private int m_oldHashLand = 0;
 
-  private int hashLand(EbGame p_game)
+  private int hashLand(Game p_game)
   {
     int hash = 0;
     for( byte b : p_game.getLands() )

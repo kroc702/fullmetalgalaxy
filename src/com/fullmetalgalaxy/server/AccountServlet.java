@@ -38,10 +38,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.persist.EbAccount;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
-import com.fullmetalgalaxy.server.datastore.PersistAccount;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.googlecode.objectify.Query;
 
 /**
  * @author Vincent
@@ -188,7 +186,10 @@ public class AccountServlet extends HttpServlet
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
       return false;
     }
-    PersistAccount account = FmgDataStore.getPersistAccount( login );
+    FmgDataStore ds = new FmgDataStore(true);
+    Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_login", login );
+    EbAccount account = query.get();
+
     if( account == null )
     {
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
@@ -258,20 +259,22 @@ public class AccountServlet extends HttpServlet
     String strid = params.get( "accountid" );
     assert strid != null;
     long id = Long.parseLong( strid );
-    FmgDataStore store = new FmgDataStore();
-    PersistAccount pAccount = null;
+    FmgDataStore store = new FmgDataStore(false);
     EbAccount account = null;
     if( id == 0 )
     {
       // we are creating a new account
-      assert pAccount == null;
       account = new EbAccount();
       // lets check that login ins't took already
-      if( FmgDataStore.isLoginExist( params.get( "login" ) )
-          || FmgDataStore.isPseudoExist( params.get( "login" ) ) )
+      if( FmgDataStore.isPseudoExist( params.get( "login" ) ) )
       {
         store.rollback();
-        return "Ce login existe deja";
+        return "Ce pseudo existe deja";
+      }
+      if( EbAccount.isValidPseudo( params.get( "login" ) ) )
+      {
+        store.rollback();
+        return "Ce pseudo est invalide";
       }
     }
     else
@@ -283,8 +286,7 @@ public class AccountServlet extends HttpServlet
         return "Vous n'avez pas le droit de faire ces modifs";
       }
       // just update an account
-      pAccount = store.getPersistAccount( id );
-      account = pAccount.getAccount();
+      account = store.get( EbAccount.class, id );
       if( params.get( "pseudo" ) != null
           && (account.getPseudo() == null || !account.getPseudo().equalsIgnoreCase(
               params.get( "pseudo" ) )) )
@@ -311,29 +313,19 @@ public class AccountServlet extends HttpServlet
     account.setAllowPrivateMsg( params.get( "AllowPrivateMsg" ) != null );
     account.setJabberId( params.get( "jabberId" ) );
     account.setDescription( params.get( "description" ) );
-    if( pAccount == null )
-    {
-      account.setLogin( params.get( "login" ) );
-      account.setAuthProvider( AuthProvider.Fmg );
-      store.save( account );
-      // this is an artefact... store must be closed to commit data and get a
-      // PersistAcount
-      store.close();
-      store.open();
-      pAccount = store.getPersistAccount( account.getId() );
-    }
-    assert pAccount != null;
+    account.setLogin( params.get( "login" ) );
+    account.setAuthProvider( AuthProvider.Fmg );
+
     if( params.get( "password" ) != null )
     {
-      pAccount.setPassword( params.get( "password" ) );
+      account.setPassword( params.get( "password" ) );
     }
-    if( pAccount.getAuthProvider() == AuthProvider.Fmg && pAccount.getPassword().isEmpty() )
+    if( account.getAuthProvider() == AuthProvider.Fmg && account.getPassword().isEmpty() )
     {
       store.rollback();
       return "Vous devez definir un mot de passe";
     }
-    pAccount.setEb( account );
-    store.save( pAccount );
+    store.put( account );
     store.close();
     // to reload account data from datastore
     p_request.getSession().setAttribute( "account", null );

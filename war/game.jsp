@@ -11,11 +11,11 @@
 
         <%@include file="include/meta.jsp"%>
 	    <%
-		Presence presence = new Presence();
-		String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.GAME,presence);
-	    String room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
-	    String model = Serializer.escape(Serializer.toClient( ServicesImpl.sgetModelFmpInit(request.getParameter("id")) ));
-		%>
+	      Presence presence = new Presence();
+	    		String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.GAME,presence);
+	    	    String room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
+	    	    String model = Serializer.escape(Serializer.toClient( GameServicesImpl.sgetModelFmpInit(request.getParameter("id")) ));
+	    %>
 		<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />
 		<meta name='gwt:property' id='fmp_pageid' content='<%= presence.getPageId() %>' />
 		<script type="text/javascript" language="javascript">

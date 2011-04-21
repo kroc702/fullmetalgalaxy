@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
@@ -42,12 +43,11 @@ import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
@@ -88,7 +88,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   }
 
   protected String m_gameId = null;
-  protected EbGame m_game = new EbGame();
+  protected Game m_game = new Game();
 
   /**
    * the list of all widget which will be refreshed after any model change. 
@@ -190,7 +190,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     getActionBuilder().setAccountId( getMyAccount().getId() );
   }
 
-  public void load(EbGame p_model)
+  public void load(Game p_model)
   {
     if( p_model==null )
     {
@@ -221,7 +221,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     for( Iterator<EbRegistration> it = getGame().getSetRegistration().iterator(); it.hasNext(); )
     {
       EbRegistration registration = (EbRegistration)it.next();
-      if( registration.getAccountId() == getMyAccount().getId() )
+      if( registration.haveAccount() 
+          && registration.getAccount().getId() == getMyAccount().getId() )
       {
         return registration;
       }
@@ -290,12 +291,12 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
 
   public void reinitGame()
   {
-    m_game = new EbGame();
+    m_game = new Game();
     m_gameId = null;
     notifyModelUpdate();
   }
 
-  public EbGame getGame()
+  public Game getGame()
   {
     return m_game;
   }
@@ -448,7 +449,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
           m_isChannelConnected = false;
           // This occur after two hours. in this case, we ask server for a new
           // channel token
-          Services.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
+          GameServices.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
         }
       } );
     }
@@ -475,7 +476,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     try
     {
       // Decode game data
-      SerializationStreamFactory factory = GWT.create( Services.class );
+      SerializationStreamFactory factory = GWT.create( GameServices.class );
       SerializationStreamReader reader = factory.createStreamReader( p_serial );
       object = reader.readObject();
       if( object != null )
@@ -513,7 +514,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       message.setGameId( ModelFmpMain.model().getGame().getId() );
       message.setFromPageId( ModelFmpMain.model().getPageId() );
       message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
-      Services.Util.getInstance().sendChatMessage( message, m_dummyCallback );
+      GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
     }
     else
     {
@@ -540,6 +541,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         // "model update 'from' is after 'lastUpdate', ignore it..." );
         ClientUtil.reload();
         return;
+      }
+
+      if( p_result.getAccountId() == getMyAccount().getId() )
+      {
+        getActionBuilder().clear();
       }
 
       // handle game events first
@@ -609,7 +615,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       // action.check();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        Services.Util.getInstance().runEvent( p_action, m_callbackEvents );
+        GameServices.Util.getInstance().runEvent( p_action, m_callbackEvents );
       }
       else
       {
@@ -656,7 +662,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       getActionBuilder().unexec();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        Services.Util.getInstance()
+        GameServices.Util.getInstance()
             .runAction( getActionBuilder().getActionList(), m_callbackEvents );
       }
       else
@@ -1013,8 +1019,19 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   @Override
   public void onWindowClosing(ClosingEvent p_event)
   {
-    Services.Util.getInstance().disconnect(
+    GameServices.Util.getInstance().disconnect(
         getMyPresence(), m_dummyCallback );
   }
+
+  /**
+   * @return the isChannelConnected
+   */
+  public boolean isChannelConnected()
+  {
+    return m_isChannelConnected;
+  }
+
+
+
 
 }

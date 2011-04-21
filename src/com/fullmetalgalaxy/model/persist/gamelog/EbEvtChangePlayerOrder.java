@@ -30,7 +30,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
@@ -75,7 +75,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
   }
 
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     if(getNewRegistrationOrder().size() != p_game.getSetRegistration().size())
@@ -88,7 +88,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     // backup for unexec
@@ -112,7 +112,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     assert m_oldRegistrationOrder != null;
@@ -135,7 +135,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
    * Establish a new registration order at random
    * @param p_game
    */
-  public void initRandomOrder(EbGame p_game)
+  public void initRandomOrder(Game p_game)
   {
     getNewRegistrationOrder().clear();
     for(EbRegistration registration : p_game.getSetRegistration() )
@@ -150,7 +150,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
    * - then in clockwise order on board
    * @param p_game
    */
-  public void initBoardOrder(EbGame p_game)
+  public void initBoardOrder(Game p_game)
   {
     getNewRegistrationOrder().clear();
     // compute an angle for each player

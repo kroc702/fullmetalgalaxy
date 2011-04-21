@@ -33,7 +33,7 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.Tide;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -93,7 +93,7 @@ public class WgtPlayerInfo extends WgtView
 
   protected void redraw()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     AnEvent lastEvent = game.getLastGameLog();
 
     if( (lastEvent != m_oldGameEvent) )
@@ -115,7 +115,7 @@ public class WgtPlayerInfo extends WgtView
             + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((ModelFmpMain.model()
                 .getMyRegistration().getEnuColor().getNbColor() - 1) * game
                 .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
-        m_lblOre.setHTML( "&nbsp;: " + ModelFmpMain.model().getMyRegistration().getOreCount() );
+        m_lblOre.setHTML( "&nbsp;: " + ModelFmpMain.model().getMyRegistration().getOreCount(game) );
 
 
         // Display current take off turn

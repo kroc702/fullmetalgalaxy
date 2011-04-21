@@ -26,8 +26,8 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -71,7 +71,7 @@ public class EbEvtControl extends AnEventPlay
 
 
   @Override
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     if( getTokenDestroyer1(p_game) != null )
     {
@@ -84,7 +84,7 @@ public class EbEvtControl extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
 
@@ -165,7 +165,7 @@ public class EbEvtControl extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     // backup for unexec
@@ -178,11 +178,14 @@ public class EbEvtControl extends AnEventPlay
       p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
     }
     getTokenTarget(p_game).incVersion();
-    for( EbToken token : getTokenTarget(p_game).getSetContain() )
+    if( getTokenTarget( p_game ).containToken() )
     {
-      if( token.canBeColored() )
+      for( EbToken token : getTokenTarget( p_game ).getContains() )
       {
-        token.incVersion();
+        if( token.canBeColored() )
+        {
+          token.incVersion();
+        }
       }
     }
 
@@ -193,17 +196,20 @@ public class EbEvtControl extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
 
     getTokenTarget(p_game).decVersion();
     p_game.changeTokenColor( getTokenTarget(p_game), getOldColor() );
-    for( EbToken token : getTokenTarget(p_game).getSetContain() )
+    if( getTokenTarget( p_game ).containToken() )
     {
-      if( token.canBeColored() )
+      for( EbToken token : getTokenTarget( p_game ).getContains() )
       {
-        token.decVersion();
+        if( token.canBeColored() )
+        {
+          token.decVersion();
+        }
       }
     }
 
@@ -214,7 +220,7 @@ public class EbEvtControl extends AnEventPlay
    * @param p_game game to apply event
     * @return the tokenTarget
    */
-  public EbToken getTokenTarget(EbGame p_game)
+  public EbToken getTokenTarget(Game p_game)
   {
     return getToken( p_game );
   }

@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -26,16 +26,10 @@ else if( Auth.isUserLogged( request, response ) )
 {
   id = Auth.getUserAccount( request, response ).getId();
 }
-PersistAccount pAccount = FmgDataStore.sgetPersistAccount( id );
-EbAccount account = new EbAccount();
-account.reinit();
-if(pAccount != null) {
-	account = pAccount.getAccount();
-} else {
-    pAccount = new PersistAccount();
-    account.setAllowMailFromGame( true );
-    account.setAllowMailFromNewsLetter( true );
-    account.setAllowPrivateMsg( true );
+FmgDataStore ds = new FmgDataStore( true );
+EbAccount account = ds.get( EbAccount.class, id );
+if(account == null) {
+	account = new EbAccount();
 } 
 %>
 
@@ -52,18 +46,18 @@ Vous pouvez aussi utiliser votre compte google pour vous
 
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
-<input type="hidden" name="accountid" value="<%= pAccount.getId() %>"/>
-<input type="hidden" name="authprovider" value="<%= pAccount.getAuthProvider() %>"/>
+<input type="hidden" name="accountid" value="<%= account.getId() %>"/>
+<input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
 login :
 <input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
 <%= account.getAuthIconHtml() %><br/>
 
-<% if( pAccount.getAuthProvider() == AuthProvider.Fmg ) {%>
+<% if( account.getAuthProvider() == AuthProvider.Fmg ) {%>
 	<% if(Auth.isUserAdmin(request, response)) { %>
 		mot de passe :
-		<input type="text" name="password1" value="<%= pAccount.getPassword() %>"/><br/>
+		<input type="text" name="password1" value="<%= account.getPassword() %>"/><br/>
 		confirmation :
-		<input type="text" name="password2" value="<%= pAccount.getPassword() %>"/><br/>
+		<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
 		pseudo :
 		<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
 	<% } else { %>

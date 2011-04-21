@@ -28,10 +28,10 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -78,7 +78,7 @@ public class EbGameJoin extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     if( getMyRegistration(p_game) != null )
@@ -115,7 +115,7 @@ public class EbGameJoin extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
 
@@ -126,6 +126,8 @@ public class EbGameJoin extends AnEventUser
     }
     registration.setAccount( getAccount() );
 
+    // update isOpen flag
+    p_game.isOpen();
   }
 
   /* (non-Javadoc)
@@ -143,10 +145,10 @@ public class EbGameJoin extends AnEventUser
     return str;
   }
 
-  private EbRegistration createRegistration(EbGame p_game)
+  private EbRegistration createRegistration(Game p_game)
   {
     assert p_game != null;
-    EbGame game = p_game;
+    Game game = p_game;
     EbRegistration registration = new EbRegistration();
     registration.setColor( getColor() );
     registration.setOriginalColor( registration.getColor() );
@@ -268,7 +270,7 @@ public class EbGameJoin extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     EbRegistration registration = getMyRegistration(p_game);
@@ -278,10 +280,13 @@ public class EbGameJoin extends AnEventUser
       if( (freighter.getType() == TokenType.Freighter)
           && (registration.getEnuColor().isColored( freighter.getColor() )) )
       {
-        // TODO this isn't working !!!
-        for( EbToken token : freighter.getSetContain() )
+        if( freighter.containToken() )
         {
-          p_game.getSetToken().remove( token );
+          // TODO this isn't working !!!
+          for( EbToken token : freighter.getCopyContains() )
+          {
+            p_game.getSetToken().remove( token );
+          }
         }
         p_game.getSetToken().remove( freighter );
       }

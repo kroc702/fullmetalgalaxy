@@ -28,7 +28,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.ModelFmpInit;
-import com.fullmetalgalaxy.model.Services;
+import com.fullmetalgalaxy.model.GameServices;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -125,7 +125,7 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     {
       gameId = m_maps.get( p_event.getSource() );
     }
-    Services.Util.getInstance().getModelFmpInit( gameId, m_callbackFmpInit );
+    GameServices.Util.getInstance().getModelFmpInit( gameId, m_callbackFmpInit );
   }
 
 

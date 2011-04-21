@@ -142,8 +142,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           EbToken token = (EbToken)it.next();
   
           if( token.getLocation() == Location.Orbit
-              && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() )
-                  .getAccountId() != 0 )
+              && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() ).haveAccount() )
           {
             if( !isTitleDisplayed )
             {
@@ -176,47 +175,47 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     }
     else if( action.isBoardTokenSelected() )
     {
-      if( !mainToken.getSetContain().isEmpty() )
+      if( mainToken.containToken() )
       {
         m_panel.add( new Label( MAppBoard.s_messages.contain() ) );
-      }
-      // Add list of token contained by the selected token 
-      // and won't be unload during the preparing action
-      for( EbToken token : mainToken.getSetContain() )
-      {
-        if( !action.containUnload( token )
-            && (token.getType() != TokenType.Ore || mainToken.getType() != TokenType.Freighter) )
-        {
-          addToken( token );
-        }
-      }
-      if( (mainToken.getType() == TokenType.WeatherHen) && (!mainToken.getSetContain().isEmpty())
-          && !(action.getSelectedAction() instanceof EbEvtConstruct) )
-      {
-        // Add list of token that can be constructed
-        //
-        EbToken ore = mainToken.getSetContain().iterator().next();
-        m_panel.add( new Label( MAppBoard.s_messages.construct() ) );
 
-        EbConfigGameVariant variant = mainToken.getGame().getEbConfigGameVariant();
-        for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )
+        // Add list of token contained by the selected token
+        // and won't be unload during the preparing action
+        for( EbToken token : mainToken.getContains() )
         {
-          if( variant.canConstruct( entry.getKey() ) )
+          if( !action.containUnload( token )
+              && (token.getType() != TokenType.Ore || mainToken.getType() != TokenType.Freighter) )
           {
-            EbToken fakeToken = new EbToken( entry.getKey() );
-            fakeToken.setId( ore.getId() );
-            if( EbToken.canBeColored( entry.getKey()) )
-            {
-              fakeToken.setColor( mainToken.getColor() );
-            }
-            fakeToken.setVersion( ore.getVersion() );
-            fakeToken.setLocation( Location.ToBeConstructed );
-            fakeToken.setGame( mainToken.getGame() );
-            fakeToken.setCarrierToken( mainToken );
-            addToken( fakeToken );
+            addToken( token );
           }
         }
-        
+
+        if( (mainToken.getType() == TokenType.WeatherHen)
+            && !(action.getSelectedAction() instanceof EbEvtConstruct) )
+        {
+          // Add list of token that can be constructed
+          //
+          EbToken ore = mainToken.getCopyContains().iterator().next();
+          m_panel.add( new Label( MAppBoard.s_messages.construct() ) );
+
+          EbConfigGameVariant variant = model.getGame().getEbConfigGameVariant();
+          for( Entry<TokenType, Integer> entry : variant.getConstructReserve().entrySet() )
+          {
+            if( variant.canConstruct( entry.getKey() ) )
+            {
+              EbToken fakeToken = new EbToken( entry.getKey() );
+              fakeToken.setId( ore.getId() );
+              if( EbToken.canBeColored( entry.getKey() ) )
+              {
+                fakeToken.setColor( mainToken.getColor() );
+              }
+              fakeToken.setVersion( ore.getVersion() );
+              fakeToken.setLocation( Location.ToBeConstructed );
+              fakeToken.setCarrierToken( mainToken );
+              addToken( fakeToken );
+            }
+          }
+        }
       }
     }
   }
@@ -230,23 +229,31 @@ public class WgtContextExtra extends WgtView implements ClickHandler
   {
     FlowPanel panelToken = new FlowPanel();
     Image wgtToken = new Image();
-    Label label = new Label( "" );
+    HTML label = new HTML( "" );
     if( p_token.getType() == TokenType.Freighter )
     {
       EbRegistration registration = ModelFmpMain.model().getGame().getRegistrationByColor(
           p_token.getColor() );
       if( registration.haveAccount() )
       {
-        label.setText( registration.getAccountPseudo() );
+        label.setHTML( registration.getAccount().getPseudo() );
       }
       else
       {
-        label.setText( "unknown" );
+        label.setHTML( "???" );
       }
     }
     else
     {
-      label.setText( Messages.getTokenString( p_token.getType() ) );
+      String lblStr = Messages.getTokenString( p_token.getType() );
+      if( p_token.isDestroyer() )
+      {
+        if( p_token.getBulletCount() == 1 )
+          lblStr += "<br/>x";
+        if( p_token.getBulletCount() == 2 )
+          lblStr += "<br/>xx";
+      }
+      label.setHTML( lblStr );
     }
     TokenImages.getTokenImage( p_token.getEnuColor(), EnuZoom.Small, p_token.getType(),
         p_sectorValue ).applyTo( wgtToken );

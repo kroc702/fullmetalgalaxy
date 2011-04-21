@@ -31,7 +31,7 @@ import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -70,7 +70,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
   public void redraw()
   {
     assert ModelFmpMain.model() != null;
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
     // set player informations
     // -----------------------
@@ -88,7 +88,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
       {
         if( player.haveAccount() )
         {
-          addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccountPseudo() ) );
+          addPlayer( player, ModelFmpMain.model().isUserConnected( player.getAccount().getPseudo() ) );
         }
         else 
         {
@@ -118,7 +118,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     for( EbRegistration player : p_players )
     {
       if( player != null && player.haveAccount()
-          && player.getAccountPseudo().equalsIgnoreCase( p_pseudo ) )
+          && player.getAccount().getPseudo().equalsIgnoreCase( p_pseudo ) )
       {
         return true;
       }
@@ -154,7 +154,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     }
     if( p_player.haveAccount() )
     {
-      htmlPlayers += p_player.getAccountPseudo();
+      htmlPlayers += p_player.getAccount().getPseudo();
     }
     else
     {
@@ -165,7 +165,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
       htmlPlayers += "</b>";
     }
     // display current turn
-    if( p_player.getGame().getCurrentPlayerRegistration() == p_player )
+    if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == p_player )
     {
       htmlPlayers += Icons.s_instance.action16().getHTML();
     }

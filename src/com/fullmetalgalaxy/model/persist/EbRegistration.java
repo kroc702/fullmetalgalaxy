@@ -24,6 +24,8 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.Date;
 
+import javax.persistence.Embedded;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.TokenType;
 
@@ -55,9 +57,6 @@ public class EbRegistration extends EbBase
     m_color = EnuColor.None;
     m_ptAction = 0;
     m_orderIndex = 0;
-
-    m_game = null;
-    m_stats = null;
   }
 
   @Override
@@ -79,21 +78,18 @@ public class EbRegistration extends EbBase
   private int m_workingWeatherHenCount = 0;
   private Date m_endTurnDate = null;
 
-  private EbGame m_game = null;
-
 
   // this id/pseudo are kept only for backward compatibility with older game
-  private long m_accountId = 0L;
-  private String m_accountPseudo = null;
+  public long m_accountId = 0L;
+  public String m_accountPseudo = null;
+  @Embedded
   private EbPublicAccount m_account = null;
 
-  private EbRegistrationStats m_stats = null;
 
-
-  public int getOreCount()
+  public int getOreCount(Game p_game)
   {
     int count = 0;
-    for( EbToken token : getGame().getSetToken() )
+    for( EbToken token : p_game.getSetToken() )
     {
       if( (token.getType() == TokenType.Ore) && (token.getCarrierToken() != null)
           && (token.getCarrierToken().getType() == TokenType.Freighter)
@@ -105,10 +101,10 @@ public class EbRegistration extends EbBase
     return count;
   }
 
-  public int getTokenCount()
+  public int getTokenCount(Game p_game)
   {
     int count = 0;
-    for( EbToken token : getGame().getSetToken() )
+    for( EbToken token : p_game.getSetToken() )
     {
       if( token.getEnuColor().isSingleColor() && getEnuColor().isColored( token.getColor() )
           && token.getType() != TokenType.Freighter && token.getType() != TokenType.Turret )
@@ -119,14 +115,14 @@ public class EbRegistration extends EbBase
     return count;
   }
 
-  public int getWinningPoint()
+  public int getWinningPoint(Game p_game)
   {
     int winningPoint = 0;
-    for( EbToken token : getGame().getSetToken() )
+    for( EbToken token : p_game.getSetToken() )
     {
       if( (token.getType() == TokenType.Freighter) && (getEnuColor().isColored( token.getColor() )) )
       {
-        winningPoint += getGame().getWinningPoint( token );
+        winningPoint += p_game.getWinningPoint( token );
       }
     }
     return winningPoint;
@@ -138,32 +134,19 @@ public class EbRegistration extends EbBase
    */
   public boolean haveAccount()
   {
-    return getAccountId() > 0L;
+    return getAccount() != null && getAccount().getId() > 0L;
   }
 
-  /**
-   * @return the account
-   */
-  public long getAccountId()
-  {
-    if( getAccount() == null )
-    {
-      return m_accountId;
-    }
-    else
-    {
-      return getAccount().getId();
-    }
-  }
+
 
   /**
    * like getActionPt() but after been rounded according to selected time variant.
    * @return
    */
-  public int getRoundedActionPt()
+  public int getRoundedActionPt(Game p_game)
   {
-    int futurActionPt = getPtAction() / getGame().getEbConfigGameTime().getRoundActionPt();
-    futurActionPt *= getGame().getEbConfigGameTime().getRoundActionPt();
+    int futurActionPt = getPtAction() / p_game.getEbConfigGameTime().getRoundActionPt();
+    futurActionPt *= p_game.getEbConfigGameTime().getRoundActionPt();
     return futurActionPt;
   }
 
@@ -203,14 +186,6 @@ public class EbRegistration extends EbBase
     m_ptAction = p_ptAction;
   }
 
-  public long getIdGame()
-  {
-    if( getGame() == null )
-    {
-      return -1;
-    }
-    return getGame().getId();
-  }
 
 
   /**
@@ -236,22 +211,6 @@ public class EbRegistration extends EbBase
   public void setOrderIndex(int p_orderIndex)
   {
     m_orderIndex = p_orderIndex;
-  }
-
-  /**
-   * @return the game
-   */
-  public EbGame getGame()
-  {
-    return m_game;
-  }
-
-  /**
-   * @param p_game the game to set
-   */
-  public void setGame(EbGame p_game)
-  {
-    m_game = p_game;
   }
 
   /**
@@ -303,36 +262,6 @@ public class EbRegistration extends EbBase
     m_endTurnDate = p_endTurnDate;
   }
 
-  /**
-   * @return the stats
-   */
-  public EbRegistrationStats getStats()
-  {
-    return m_stats;
-  }
-
-  /**
-   * @param p_stats the stats to set
-   */
-  public void setStats(EbRegistrationStats p_stats)
-  {
-    m_stats = p_stats;
-  }
-
-  /**
-   * @return the accountPseudo
-   */
-  public String getAccountPseudo()
-  {
-    if( getAccount() == null )
-    {
-      return m_accountPseudo;
-    }
-    else
-    {
-      return getAccount().getPseudo();
-    }
-  }
 
 
 
@@ -349,11 +278,6 @@ public class EbRegistration extends EbBase
    */
   public void setAccount(EbPublicAccount p_account)
   {
-    if( p_account == null )
-    {
-      m_accountId = 0;
-      m_accountPseudo = null;
-    }
     m_account = p_account;
   }
 

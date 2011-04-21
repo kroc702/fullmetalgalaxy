@@ -24,11 +24,9 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Transient;
@@ -40,9 +38,7 @@ import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
-import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.PlanetType;
-import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.Tide;
@@ -50,21 +46,19 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.pathfinder.PathGraph;
-import com.fullmetalgalaxy.model.pathfinder.PathMobile;
-import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 
 /**
  * @author Kroc
- * This class represent the board model on both client/server side.
- * ie: all data needed by the board application on client side to run correctly.
+ * 
+ * this is an old game model used to deserialize old blob or files
  */
-public class EbGame extends EbBase implements PathGraph, GameEventStack
+public class EbGame extends AnPojoBase implements GameEventStack
 {
   static final long serialVersionUID = 11;
 
+  private long m_id = 0;
   private String m_name = "";
   private String m_description = "";
   private int m_maxNumberOfPlayer = 0;
@@ -128,26 +122,10 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     init();
   }
 
-  /**
-   * This constructor is used to build an AnGame instance which known only
-   * the map stuff.
-   * used for minimap generation.
-   * @param p_lands
-   * @param p_width
-   * @param p_height
-   */
-  public EbGame(byte[] p_lands, int p_landWidth, int p_landHeight, PlanetType p_planetType)
-  {
-    super();
-    init();
-    setLands( p_lands );
-    setLandWidth( p_landWidth );
-    setLandHeight( p_landHeight );
-    setPlanetType( p_planetType );
-  }
 
   private void init()
   {
+    m_id = 0;
     m_maxNumberOfPlayer = 0;
     m_history = false;
     m_currentTide = Tide.Medium;
@@ -175,39 +153,120 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     m_nextLocalId = 0L;
   }
 
-  @Override
+  // @Override
   public void reinit()
   {
-    super.reinit();
+    // super.reinit();
     this.init();
   }
 
+
   /**
-   * use this to generate any id local to this game.
+   * used for datastore migration
    * @return
    */
-  public long getNextLocalId()
+  private EbGamePreview createEbGamePreview()
   {
-    m_nextLocalId++;
-    return m_nextLocalId;
+    EbGamePreview preview = new EbGamePreview();
+    // preview.setId( getId() );
+    preview.setVersion( 1 );
+    preview.setName( getName() );
+    preview.setDescription( getDescription() );
+    preview.setMaxNumberOfPlayer( getMaxNumberOfPlayer() );
+    preview.setHistory( isHistory() );
+    preview.setCurrentTimeStep( getCurrentTimeStep() );
+    preview.setGameType( getGameType() );
+    preview.setPlanetType( getPlanetType() );
+    preview.setMinimapBlobKey( getMinimapBlobKey() );
+    preview.setMinimapUri( getMinimapUri() );
+    preview.setAccountCreator( getAccountCreator() );
+    if( preview.getAccountCreator() == null )
+    {
+      preview.setAccountCreator( new EbPublicAccount() );
+      preview.getAccountCreator().setId( getAccountCreatorId() );
+    }
+    preview.setLandWidth( getLandWidth() );
+    preview.setLandHeight( getLandHeight() );
+    preview.setCreationDate( getCreationDate() );
+    preview.setStarted( isStarted() );
+    preview.setConfigGameTime( getConfigGameTime() );
+    preview.setConfigGameVariant( getConfigGameVariant() );
+    preview.setSetRegistration( getSetRegistration() );
+
+    preview.setCurrentPlayerRegistration( getCurrentPlayerRegistration() );
+    preview.isOpen();
+
+    for( EbRegistration registration : preview.getSetRegistration() )
+    {
+      if( registration.getAccount() == null )
+      {
+        registration.setAccount( new EbPublicAccount() );
+      }
+      if( registration.getAccount().getId() == 0 )
+      {
+        registration.getAccount().setId( registration.m_accountId );
+      }
+      if( registration.getAccount().getPseudo() == null
+          || registration.getAccount().getPseudo().isEmpty() )
+      {
+        registration.getAccount().setPseudo( registration.m_accountPseudo );
+      }
+        // registration.m_accountPseudo = null;
+    }
+
+    return preview;
   }
+
+  /**
+   * used for datastore migration
+   * @return
+   */
+  private EbGameData createEbGameData()
+  {
+    EbGameData data = new EbGameData();
+    data.setCurrentTide( getCurrentTide() );
+    data.setNextTide( getNextTide() );
+    data.setNextTide2( getNextTide2() );
+    data.setLastTideChange( getLastTideChange() );
+    data.setLastTimeStepChange( getLastTimeStepChange() );
+    data.setTakeOffTurns( getAllowedTakeOffTurns() );
+    data.setMapUri( getMapUri() );
+    data.setLands( getLands() );
+    data.setSetToken( getSetToken() );
+    data.setLogs( getLogs() );
+    data.setTriggers( getTriggers() );
+    data.m_nextLocalId = m_nextLocalId;
+
+    return data;
+  }
+
+  /**
+   *   
+   */
+  public Game createGame()
+  {
+    Game game = new Game( createEbGamePreview(), createEbGameData() );
+    for( EbToken token : game.getSetToken() )
+    {
+      token.convertTokenId2Token( game );
+    }
+    return game;
+  }
+
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.EbBase#setTrancient()
    */
-  @Override
+  // @Override
   public void setTrancient()
   {
-    super.setTrancient();
+    // super.setTrancient();
+    m_id = 0;
     for( EbTrigger trigger : getTriggers() )
     {
       trigger.setTrancient();
     }
     setTriggers( new ArrayList<EbTrigger>( getTriggers() ) );
-    for( EbToken token : getSetToken() )
-    {
-      token.setTrancient();
-    }
     setSetToken( new HashSet<EbToken>( getSetToken() ) );
     for( EbRegistration registration : getSetRegistration() )
     {
@@ -222,40 +281,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-
-  public void addToken(EbToken p_token)
-  {
-    p_token.setGame( this );
-    if( p_token.getId() == 0 )
-    {
-      p_token.setId( getNextLocalId() );
-      p_token.setVersion( 1 );
-    }
-    if( !getSetToken().contains( p_token ) )
-    {
-      getSetToken().add( p_token );
-      getTokenIndexSet().addToken( p_token );
-      getBoardFireCover().incFireCover( p_token );
-      for( EbToken token : p_token.getSetContain() )
-      {
-        addToken( token );
-      }
-    }
-    updateLastTokenUpdate( null );
-  }
-
-  public void addRegistration(EbRegistration p_registration)
-  {
-    p_registration.setGame( this );
-    if( p_registration.getId() == 0 )
-    {
-      p_registration.setId( getNextLocalId() );
-    }
-    if( !getSetRegistration().contains( p_registration ) )
-    {
-      getSetRegistration().add( p_registration );
-    }
-  }
 
   public int getLandPixWidth(EnuZoom p_zoom)
   {
@@ -301,24 +326,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
   }
 
-
-
-  public void addEvent(AnEvent p_action)
-  {
-    p_action.setGame( this );
-    if( p_action.getId() == 0 )
-    {
-      p_action.setId( getNextLocalId() );
-    }
-    else if( p_action.getId() != getNextLocalId() )
-    {
-      RpcUtil.logError( "EbGame::addEvent(): p_action.getId() != getNextLocalId()" );
-    }
-    if( !getLogs().contains( p_action ) )
-    {
-      getLogs().add( p_action );
-    }
-  }
 
   @Override
   public AnEvent getLastGameLog()
@@ -416,39 +423,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return date;
   }
 
-  /**
-   * return the bitfields of all opponents fire cover at the given position.
-   * @param p_token
-   * @return
-   */
-  public EnuColor getOpponentFireCover(int p_myColorValue, AnBoardPosition p_position)
-  {
-    EnuColor fireCover = getBoardFireCover().getFireCover( p_position );
-    fireCover.removeColor( p_myColorValue );
-    return fireCover;
-  }
-
-  /**
-   * @return true if the colored player have at least one weather hen to predict future tides.
-   */
-  public int countWorkingWeatherHen(EnuColor p_color)
-  {
-    int count = 0;
-    for( Iterator<EbToken> it = getSetToken().iterator(); it.hasNext(); )
-    {
-      EbToken token = (EbToken)it.next();
-      if( (p_color.isColored( token.getColor() ))
-          && (token.getType() == TokenType.WeatherHen)
-          && (token.getColor() != EnuColor.None)
-          && (token.getLocation() == Location.Board)
-          && (isTokenTideActive( token ))
-          && (getOpponentFireCover( p_color.getValue(), token.getPosition() ).getValue() == EnuColor.None) )
-      {
-        count++;
-      }
-    }
-    return count;
-  }
 
   /**
    * @return true if the logged player have at least one Freighter landed.
@@ -489,29 +463,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       }
     }
     return tokenOwnerColor;
-  }
-
-  /**
-   * return the bitfields of all opponents fire cover on this token.<br/>
-   * note: if p_token is color less or not on board, always return EnuColor.None
-   * @param p_token
-   * @return
-   */
-  public EnuColor getOpponentFireCover(EbToken p_token)
-  {
-    if( p_token.getLocation() != Location.Board || p_token.getColor() == EnuColor.None )
-    {
-      return new EnuColor( EnuColor.None );
-    }
-    // first determine the token owner color
-    EnuColor tokenOwnerColor = getTokenOwnerColor( p_token );
-    EnuColor fireCover = getOpponentFireCover( tokenOwnerColor.getValue(), p_token.getPosition() );
-    if( p_token.getHexagonSize() == 2 )
-    {
-      fireCover.addColor( getOpponentFireCover( tokenOwnerColor.getValue(),
-          (AnBoardPosition)p_token.getExtraPositions().get( 0 ) ) );
-    }
-    return fireCover;
   }
 
   /**
@@ -562,96 +513,7 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return (nearTank!=null) && (nearTank.getId() > p_token.getId());
   }
   
-  /**
-   * Should be called only on server side.
-   * Move a token and all token he contain into any other token in the game.
-   * @param p_tokenToMove 
-   * @param p_tokenCarrier must be included in TokenList
-   * @throws RpcFmpException
-   *          
-   */
-  public void moveToken(EbToken p_tokenToMove, EbToken p_tokenCarrier) // throws
-                                                                       // RpcFmpException
-  {
-    getBoardFireCover().decFireCover( p_tokenToMove );
-    m_tokenIndexSet.setPosition( p_tokenToMove, Location.Token );
-    if( p_tokenToMove.getCarrierToken() != null )
-    {
-      // first unload from token
-      p_tokenToMove.getCarrierToken().unloadToken( p_tokenToMove );
-    }
-    p_tokenCarrier.loadToken( p_tokenToMove );
-    if( p_tokenToMove.canBeColored() )
-    {
-      // if a token enter inside another token, it take his color
-      p_tokenToMove.setColor( p_tokenCarrier.getColor() );
-    }
-    getBoardFireCover().incFireCover( p_tokenToMove );
-    // incFireCover( p_tokenToMove );
-    // this update is here only to refresh token display during time mode
-    updateLastTokenUpdate( null );
-  }
 
-  /**
-   * Warning: this method don't check anything about fire disabling flag.
-   * @param p_token
-   * @param p_newColor
-   */
-  public void changeTokenColor(EbToken p_token, int p_newColor)
-  {
-    getBoardFireCover().decFireCover( p_token );
-    p_token.setColor( p_newColor );
-    getBoardFireCover().incFireCover( p_token );
-
-    for( EbToken token : p_token.getSetContain() )
-    {
-      if( token.canBeColored() )
-      {
-        token.setColor( p_newColor );
-      }
-    }
-  }
-
-  /**
-   * Move a token to any other position on the board.
-   * @param p_token
-   * @param p_position have to be inside the board (no check are performed).
-   */
-  public void moveToken(EbToken p_token, AnBoardPosition p_position)
-  {
-    getBoardFireCover().decFireCover( p_token );
-    if( p_token.getCarrierToken() != null )
-    {
-      // first unload from token
-      p_token.getCarrierToken().unloadToken( p_token );
-    }
-    getTokenIndexSet().setPosition( p_token, new AnBoardPosition( p_position ) );
-    getBoardFireCover().incFireCover( p_token );
-
-    // this update is here only to refresh token display during time mode
-    updateLastTokenUpdate( null );
-  }
-
-  /**
-   * Warning: if you use this method with p_location == Board, you should be sure
-   * that his position is already set to the right value.
-   * @param p_token
-   * @param p_locationValue should be EnuLocation.Graveyard or EnuLocation.Orbit
-   * @throws RpcFmpException
-   */
-  public void moveToken(EbToken p_token, Location p_location) throws RpcFmpException
-  {
-    getBoardFireCover().decFireCover( p_token );
-    if( p_token.getCarrierToken() != null )
-    {
-      // first unload from token
-      p_token.getCarrierToken().unloadToken( p_token );
-    }
-    getTokenIndexSet().setPosition( p_token, p_location );
-    getBoardFireCover().incFireCover( p_token );
-    // this update is here only to refresh token display during time mode
-    updateLastTokenUpdate( null );
-  }
 
   /**
    * @param p_tokenFreighter should be one Freighter
@@ -679,21 +541,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-
-  public EbRegistration getWinnerRegistration()
-  {
-    EbRegistration winner = null;
-    int point = 0;
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      if( registration.getWinningPoint() > point )
-      {
-        winner = registration;
-        point = registration.getWinningPoint();
-      }
-    }
-    return winner;
-  }
 
   /**
    * @return null if p_idRegistration doesn't exist
@@ -726,40 +573,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
     return null;
   }
-
-  /**
-   * @return null if p_index doesn't exist
-   */
-  public EbRegistration getRegistrationByIdAccount(long p_idAccount)
-  {
-    for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
-    {
-      EbRegistration registration = (EbRegistration)it.next();
-      if( registration.getAccountId() == p_idAccount )
-      {
-        return registration;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * @return null if p_index doesn't exist
-   */
-  /*public EbRegistration getRegistrationByLogin(String p_login)
-  {
-    assert p_login != null;
-    for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
-    {
-      EbRegistration registration = (EbRegistration)it.next();
-      if( (registration.getAccount() != null)
-          && (p_login.equals( registration.getAccount().getLogin() )) )
-      {
-        return registration;
-      }
-    }
-    return null;
-  }*/
 
   /**
    * @return the registration which control p_color. (or null if it doesn't exist)
@@ -800,45 +613,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
   }
 
 
-  public List<EbRegistration> getRegistrationByWinningRank()
-  {
-    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    Map<EbRegistration, Integer> winningPoint = new HashMap<EbRegistration, Integer>();
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      int wp = registration.getWinningPoint();
-      int index = 0;
-      while( index < sortedRegistration.size() )
-      {
-        if( wp > winningPoint.get( sortedRegistration.get( index ) ) )
-        {
-          break;
-        }
-        index++;
-      }
-      winningPoint.put( registration, wp );
-      sortedRegistration.add( index, registration );
-    }
-    return sortedRegistration;
-  }
-
-
-  public EbRegistration getPreviousPlayerRegistration()
-  {
-    EbRegistration registration = null;
-    int index = getCurrentPlayerRegistration().getOrderIndex();
-    do
-    {
-      index--;
-      if( index < 0 )
-      {
-        index = getCurrentNumberOfRegiteredPlayer() - 1;
-      }
-      registration = getRegistrationByOrderIndex( index );
-      assert registration != null;
-    } while( registration.getColor() == EnuColor.None );
-    return registration;
-  }
 
   public EbRegistration getNextPlayerRegistration()
   {
@@ -1116,45 +890,19 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
       return false;
     }
     // ArrayList loadedTokenList = getAllTokenInside( p_carrier );
-    Set<EbToken> loadedTokenList = p_carrier.getSetContain();
     int freeLoadingSpace = p_carrier.getLoadingCapability();
-    for( Iterator<EbToken> it = loadedTokenList.iterator(); it.hasNext(); )
+    if( p_carrier.containToken() )
     {
-      EbToken token = (EbToken)it.next();
-      freeLoadingSpace -= token.getLoadingSize();
+      for( EbToken token : p_carrier.getContains() )
+      {
+        freeLoadingSpace -= token.getLoadingSize();
+      }
     }
     return freeLoadingSpace >= p_token.getFullLoadingSize();
   }
 
 
 
-  /**
-   * the number of destructor owned by p_registration which can fire on this hexagon
-   * @param p_x
-   * @param p_y
-   * @param p_registration
-   * @return
-   */
-  public int getFireCover(int p_x, int p_y, EbRegistration p_registration)
-  {
-    EnuColor regColor = new EnuColor( p_registration.getOriginalColor() );
-    return getBoardFireCover().getFireCover( p_x, p_y, regColor );
-  }
-
-  public void invalidateFireCover()
-  {
-    getBoardFireCover().invalidateFireCover();
-  }
-
-
-  public BoardFireCover getBoardFireCover()
-  {
-    if( m_fireCover == null )
-    {
-      m_fireCover = new BoardFireCover( this );
-    }
-    return m_fireCover;
-  }
 
   /**
    * determine if this token is active depending of current tide. 
@@ -1229,21 +977,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
   }
 
-  /**
-   * determine if this token is active depending of opponents fire cover.<br/>
-   * note that even if we don't display any warning, this method will return false
-   * for an uncolored token. 
-   * @param p_token
-   * @return
-   */
-  public boolean isTokenFireActive(EbToken p_token)
-  {
-    EnuColor playerColor = getTokenOwnerColor( p_token );
-    return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret)
-        || (playerColor.getValue() == EnuColor.None) || (getOpponentFireCover(
-        playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
-  }
-
 
   /**
    * determine weather the given token can produce or not a fire cover.
@@ -1273,43 +1006,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return false;
   }
 
-  /**
-   * TODO half redundant with isTokenTideActive
-   * note that any token are allowed to voluntary stuck themself into reef of marsh
-   * @param p_token
-   * @param p_position
-   * @return true if token can move to p_position according to tide
-   */
-  public boolean canTokenMoveOn(EbToken p_token, AnBoardPosition p_position)
-  {
-    if( (p_token == null) || (!isTokenTideActive( p_token )) || (p_position == null)
-        || (p_position.getX() < 0) || (p_position.getY() < 0) )
-    {
-      return false;
-    }
-    if( p_token.getHexagonSize() == 2 )
-    {
-      AnBoardPosition position = p_position.getNeighbour( p_position.getSector() );
-      EbToken tokenPontoon = getToken( position, TokenType.Pontoon );
-      if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
-      {
-        return false;
-      }
-      // check this token is allowed to move on this hexagon
-      if( p_token.canMoveOn( getLand( position ) ) == false )
-      {
-        return false;
-      }
-    }
-
-    EbToken tokenPontoon = getToken( p_position, TokenType.Pontoon );
-    if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
-    {
-      return false;
-    }
-    // check this token is allowed to move on this hexagon
-    return p_token.canMoveOn( getLand( p_position ) );
-  }
 
   /**
    * determine if this token can fire onto a given position
@@ -1462,152 +1158,9 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     return false;
   }
   
-  /**
-   * put p_token and all linked pontoon to graveyard.
-   * @param p_token must be a pontoon
-   * @return list of all tokens removed from board to graveyard (pontoons and token on them). 
-   *        Token have to be put back on board in the same order.
-   * @throws RpcFmpException
-   */
-  public ArrayList<Long> chainRemovePontoon(EbToken p_token) throws RpcFmpException
-  {
-    assert p_token.getType() == TokenType.Pontoon;
-    ArrayList<Long> pontoons = new ArrayList<Long>();
-    // backup pontoon's id first (to put back on board first)
-    pontoons.add( p_token.getId() );
-    AnBoardPosition position = p_token.getPosition();
-    // remove all tokens on pontoon
-    Set<EbToken> tokens = getAllToken( position );
-    for(EbToken token : tokens)
-    {
-      if(token != p_token)
-      {
-        // remove token on pontoon
-        pontoons.add( token.getId() );
-        moveToken( token, Location.Graveyard );
-        token.incVersion();
-      }
-    }
-    // then remove pontoon
-    moveToken( p_token, Location.Graveyard );
-    p_token.incVersion();
-
-    // finally remove other linked pontoons
-    for( Sector sector : Sector.values() )
-    {
-      EbToken otherPontoon = getToken( position.getNeighbour( sector ), TokenType.Pontoon );
-      if( otherPontoon != null )
-      {
-        pontoons.addAll( chainRemovePontoon( otherPontoon ) );
-      }
-    }
-    return pontoons;
-  }
 
 
 
-  // TODO move this to another class
-  @Transient
-  private Set<com.fullmetalgalaxy.model.persist.AnBoardPosition> m_allowedNodeGraphCache = new HashSet<com.fullmetalgalaxy.model.persist.AnBoardPosition>();
-  @Transient
-  private Set<com.fullmetalgalaxy.model.persist.AnBoardPosition> m_forbidenNodeGraphCache = new HashSet<com.fullmetalgalaxy.model.persist.AnBoardPosition>();
-
-  public void resetPathGraph()
-  {
-    m_allowedNodeGraphCache.clear();
-    m_forbidenNodeGraphCache.clear();
-  }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.pathfinder.PathGraph#getAvailableNode(com.fullmetalgalaxy.model.pathfinder.PathNode)
-   */
-  @Override
-  public Set<com.fullmetalgalaxy.model.pathfinder.PathNode> getAvailableNode(PathNode p_fromNode,
-      PathMobile p_mobile)
-  {
-    assert p_mobile != null;
-    AnBoardPosition position = (AnBoardPosition)p_fromNode;
-    Mobile mobile = (Mobile)p_mobile;
-    Set<com.fullmetalgalaxy.model.pathfinder.PathNode> nodes = new HashSet<com.fullmetalgalaxy.model.pathfinder.PathNode>();
-    Sector sectorValues[] = Sector.values();
-    for( int i = 0; i < sectorValues.length; i++ )
-    {
-      AnBoardPosition neighbourPosition = position.getNeighbour( sectorValues[i] );
-      if( mobile.getToken() == null )
-      {
-        nodes.add( neighbourPosition );
-      }
-      else
-      {
-        // looking in cache first
-        if( m_allowedNodeGraphCache.contains( neighbourPosition ) )
-        {
-          nodes.add( neighbourPosition );
-        }
-        else if( m_forbidenNodeGraphCache.contains( neighbourPosition ) )
-        {
-          // do nothing
-        }
-        else
-        {
-          // this position wasn't explored yet
-          if( mobile.getToken().canMoveOn( mobile.getRegistration(), neighbourPosition ) )
-          {
-            m_allowedNodeGraphCache.add( neighbourPosition );
-            nodes.add( neighbourPosition );
-          }
-          else
-          {
-            m_forbidenNodeGraphCache.add( neighbourPosition );
-          }
-        }
-      }
-    }
-    return nodes;
-  }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.pathfinder.PathGraph#heuristic(com.fullmetalgalaxy.model.pathfinder.PathNode, com.fullmetalgalaxy.model.pathfinder.PathNode)
-   */
-  @Override
-  public float heuristic(PathNode p_fromNode, PathNode p_toNode, PathMobile p_mobile)
-  {
-    return (float)((AnBoardPosition)p_fromNode).getRealDistance( (AnBoardPosition)p_toNode );
-  }
-
-  /**
-   */
-  public List<AnEvent> createTriggersEvents()
-  {
-    // get all events
-    List<AnEvent> events = new ArrayList<AnEvent>();
-    for( EbTrigger trigger : getTriggers() )
-    {
-      events.addAll( trigger.createEvents( this ) );
-    }
-    return events;
-  }
-
-  /**
-   * execute all game's trigger
-   * @return true if at least on trigger was executed.
-   */
-  public void execTriggers()
-  {
-    // execute new events
-    for( AnEvent event : createTriggersEvents() )
-    {
-      try
-      {
-        event.exec( this );
-        addEvent( event );
-      } catch( RpcFmpException e )
-      {
-        // print error and continue executing events
-        e.printStackTrace();
-      }
-    }
-  }
 
   /**
    * @return the tokenIndexSet. never return null;
@@ -1762,62 +1315,6 @@ public class EbGame extends EbBase implements PathGraph, GameEventStack
     }
   }
 
-  /**
-   * Warning: this method clear lands array.
-   * @param p_width
-   * @param p_height
-   */
-  public void setLandSize(int p_width, int p_height)
-  {
-    m_lands = new byte[(p_width * p_height) / 2 + 1];
-    setLandWidth( p_width );
-    setLandHeight( p_height );
-  }
-
-  /**
-   * 
-   * @param p_position
-   * @return true if p_position is on the board
-   */
-  public boolean isInsideBoard(AnBoardPosition p_position)
-  {
-    if( (p_position.getX() >= 0) && (p_position.getX() < getLandWidth())
-        && (p_position.getY() >= 0) && (p_position.getY() < getLandHeight())
-        && (getLand( p_position ) != LandType.None) )
-    {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 
-   * @return true if a player can join the game.
-   */
-
-  public boolean isOpen()
-  {
-    return((getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer()) && (!isStarted()));
-  }
-
-
-  /**
-   * @return the Number Of Registration associated with an account
-   * @WgtHidden
-   */
-
-  public int getCurrentNumberOfRegiteredPlayer()
-  {
-    int count = 0;
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      if( registration.getAccountId() != 0 || registration.haveAccount() )
-      {
-        count++;
-      }
-    }
-    return count;
-  }
 
 
 

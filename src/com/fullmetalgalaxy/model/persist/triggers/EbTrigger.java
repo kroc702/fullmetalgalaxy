@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.triggers.actions.AnAction;
 import com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition;
@@ -109,7 +109,7 @@ public class EbTrigger extends EbBase
    * If at least one condition is true, execute all actions.
    * @return the list of all executed events.
    */
-  public List<AnEvent> createEvents(EbGame p_game)
+  public List<AnEvent> createEvents(Game p_game)
   {
     List<AnEvent> events = new ArrayList<AnEvent>();
     List<Object> params = new ArrayList<Object>();

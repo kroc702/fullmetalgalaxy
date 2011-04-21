@@ -31,7 +31,7 @@ import com.googlecode.objectify.ObjectifyService;
  * @author Vincent
  *
  */
-public class DataStore
+public class OldDataStore
 {
 
   static
@@ -121,7 +121,7 @@ public class DataStore
   private boolean m_isOpen = false;
 
   
-  protected DataStore()
+  protected OldDataStore()
   {
     open();
   }
@@ -149,7 +149,7 @@ public class DataStore
     if( m_isOpen )
     {
       rollback();
-      throw new Exception( "A FmgDataStore wasn't close properly" );
+      throw new Exception( "A OldFmgDataStore wasn't close properly" );
     }
   }
 

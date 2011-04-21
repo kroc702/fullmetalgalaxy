@@ -42,10 +42,10 @@ import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.pathfinder.SimplePathFinder;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.Window;
 
 
@@ -66,7 +66,7 @@ public class EventsPlayBuilder implements GameEventStack
   private Date m_lastUpdate = new Date( System.currentTimeMillis() );
 
   private long m_accountId = 0L;
-  private EbGame m_game = null;
+  private Game m_game = null;
 
   /**
    * true if the action list is executed.
@@ -640,9 +640,9 @@ public class EventsPlayBuilder implements GameEventStack
               userAction( GameLogType.EvtControl );
             }
             else if( (getSelectedToken().isDestroyer() && token.isDestroyer())
-                || (getSelectedToken().canBeATarget() && token.isDestroyer() 
+                || (getSelectedToken().canBeATarget( getGame() ) && token.isDestroyer()
                     && !getMyRegistration().getEnuColor().contain( getSelectedToken().getColor() ))
-                || (token.canBeATarget() && getSelectedToken().isDestroyer() 
+                || (token.canBeATarget( getGame() ) && getSelectedToken().isDestroyer()
                     && !getMyRegistration().getEnuColor().contain( token.getColor() )) )
             {
               userAction( GameLogType.EvtFire );
@@ -1180,7 +1180,7 @@ public class EventsPlayBuilder implements GameEventStack
     assert p_token != null;
     assert p_token.getLocation() == Location.Token;
     EbEvtUnLoad action = new EbEvtUnLoad();
-    action.setGame( m_selectedToken.getGame() );
+    action.setGame( getGame() );
     action.setToken( p_token );
     action.setTokenCarrier( m_selectedToken );
     setSelectedAction( action );
@@ -1474,19 +1474,21 @@ public class EventsPlayBuilder implements GameEventStack
 
     actionAdd( action );
     // unload the content of action.getToken() to action.getTokenCarrier()
-    for( EbToken tokenContent : action.getToken( m_game ).getSetContain() )
+    if( action.getToken( m_game ).containToken() )
     {
-      EbEvtTransfer transfer = new EbEvtTransfer();
-      transfer.setAccountId( getAccountId() );
-      transfer.setGame( getGame() );
-      transfer.setToken( tokenContent );
-      transfer.setTokenCarrier( tokenContent.getCarrierToken() );
-      transfer.setNewTokenCarrier( p_tokenCarrier );
-      transfer.setCost( 0 );
-      transfer.setAuto( true );
-      actionAdd( transfer );
+      for( EbToken tokenContent : action.getToken( m_game ).getContains() )
+      {
+        EbEvtTransfer transfer = new EbEvtTransfer();
+        transfer.setAccountId( getAccountId() );
+        transfer.setGame( getGame() );
+        transfer.setToken( tokenContent );
+        transfer.setTokenCarrier( tokenContent.getCarrierToken() );
+        transfer.setNewTokenCarrier( p_tokenCarrier );
+        transfer.setCost( 0 );
+        transfer.setAuto( true );
+        actionAdd( transfer );
+      }
     }
-    
     // keep the first token selected to be ready to unload it
     // ie prepare unload action
     selectBoardToken( p_tokenCarrier, p_position );
@@ -1518,22 +1520,21 @@ public class EventsPlayBuilder implements GameEventStack
       actionMoveSelected( p_position );
       return true;
     }
-    EbGame game = getSelectedToken().getGame();
     EbRegistration registration = getMyRegistration();
 
     int actionPt = registration.getPtAction() - getCost();
     PathMobile mobile = new Mobile( registration, getSelectedToken() );
     // small optimisation
     // it's working only because heuristic is optimistic
-    float heuristic = game.heuristic( getSelectedToken().getPosition(), p_position, mobile );
+    float heuristic = getGame().heuristic( getSelectedToken().getPosition(), p_position, mobile );
     if( (heuristic > actionPt) || (heuristic > 9)
-        || (!getSelectedToken().canMoveOn( registration, p_position )) )
+        || (!getSelectedToken().canMoveOn( getGame(), registration, p_position )) )
     {
       // we know that no path will be found !
       return false;
     }
-    game.resetPathGraph();
-    PathFinder finder = new SimplePathFinder( game );
+    getGame().resetPathGraph();
+    PathFinder finder = new SimplePathFinder( getGame() );
     List<com.fullmetalgalaxy.model.pathfinder.PathNode> path = finder.findPath( getSelectedToken()
         .getPosition(), p_position, mobile );
     if( path.isEmpty() || (path.size() - 2 > actionPt) )
@@ -1578,7 +1579,7 @@ public class EventsPlayBuilder implements GameEventStack
   /**
    * @return the game
    */
-  public EbGame getGame()
+  public Game getGame()
   {
     return m_game;
   }
@@ -1586,7 +1587,7 @@ public class EventsPlayBuilder implements GameEventStack
   /**
    * @param m_game the game to set
    */
-  public void setGame(EbGame p_game)
+  public void setGame(Game p_game)
   {
     if( m_game != null )
     {

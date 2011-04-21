@@ -24,7 +24,9 @@ package com.fullmetalgalaxy.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -56,7 +58,21 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
   }
 
 
-
+  /**
+   * search for the first UserEvent and return his account id
+   * @return
+   */
+  public long getAccountId()
+  {
+    for( AnEvent event : getGameEvents() )
+    {
+      if( event instanceof AnEventUser )
+      {
+        return ((AnEventUser)event).getAccountId();
+      }
+    }
+    return 0;
+  }
 
   /**
    * @return the gameEvents

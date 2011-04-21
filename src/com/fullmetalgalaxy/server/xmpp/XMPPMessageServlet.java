@@ -35,7 +35,7 @@ import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.server.ChannelManager;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.xmpp.JID;
 import com.google.appengine.api.xmpp.Message;
 import com.google.appengine.api.xmpp.MessageBuilder;

@@ -15,6 +15,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
   <inherits name='com.google.gwt.appengine.channel.Channel'/>
+  <inherits name="com.googlecode.objectify.Objectify" />
 
   <!-- Specify the client translatable source               -->
   <source path="client"/> 
@@ -25,6 +26,6 @@
   <entry-point class='com.fullmetalgalaxy.client.AppMain'/>
   
   <!-- Specify the app Remote service for RPC.              -->
-  <servlet class="com.fullmetalgalaxy.server.ServicesImpl" path="/Services"/>
+  <servlet class="com.fullmetalgalaxy.server.GameServicesImpl" path="/Services"/>
   
 </module>

@@ -25,7 +25,8 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import java.util.Date;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 
 /**
@@ -37,8 +38,7 @@ public class EbAdminBan extends EbAdmin
   private static final long serialVersionUID = 1L;
 
   private long m_registrationId = -1;
-  private long m_oldAccountId = 0;
-  private String m_oldAccountPseudo = null;
+  private EbPublicAccount m_oldAccount = null;
 
   /**
    * 
@@ -58,8 +58,7 @@ public class EbAdminBan extends EbAdmin
   private void init()
   {
     m_registrationId = -1;
-    m_oldAccountId = 0;
-    m_oldAccountPseudo = null;
+    m_oldAccount = null;
   }
 
   @Override
@@ -72,7 +71,7 @@ public class EbAdminBan extends EbAdmin
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check( p_game );
     // only admin or game creator sould be able to do this
@@ -83,7 +82,7 @@ public class EbAdminBan extends EbAdmin
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec( p_game );
     p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
@@ -91,11 +90,13 @@ public class EbAdminBan extends EbAdmin
     if( registration != null )
     {
       // backup to keep track of this action
-      m_oldAccountId = registration.getAccountId();
-      m_oldAccountPseudo = registration.getAccountPseudo();
+      m_oldAccount = registration.getAccount();
 
       registration.setAccount( null );
       registration.setEndTurnDate( null );
+      
+      // update isOpen flag
+      p_game.isOpen();
     }
 
   }
@@ -107,7 +108,7 @@ public class EbAdminBan extends EbAdmin
   public String toString()
   {
     String str = super.toString();
-    str += " : " + m_oldAccountPseudo + "(" + m_oldAccountId + ")";
+    str += " : " + m_oldAccount.getPseudo() + "(" + m_oldAccount.getId() + ")";
     return str;
   }
 

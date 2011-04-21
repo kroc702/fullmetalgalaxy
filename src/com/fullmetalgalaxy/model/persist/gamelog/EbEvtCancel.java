@@ -28,7 +28,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 
 /**
  * @author vlegendr
@@ -72,19 +72,19 @@ public class EbEvtCancel extends AnEventUser
   }
 
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     // do nothing to let them run in timeline mode as any other actions
   }
 
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     // do nothing to let them run in timeline mode as any other actions
   }
 
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     // do nothing to let them run in timeline mode as any other actions
   }
@@ -96,7 +96,7 @@ public class EbEvtCancel extends AnEventUser
    * - it will unexec and removed some action and then registred itself
    * @param p_game
    */
-  public void execCancel(EbGame p_game) throws RpcFmpException
+  public void execCancel(Game p_game) throws RpcFmpException
   {
     assert p_game != null;
     assert p_game.getId() == getIdGame();
@@ -151,7 +151,7 @@ public class EbEvtCancel extends AnEventUser
     m_toActionIndex = p_toActionIndex;
   }
 
-  public void setFromActionIndex(EbGame p_game)
+  public void setFromActionIndex(Game p_game)
   {
     if( p_game != null && p_game.getLogs().size() > 0 )
     {

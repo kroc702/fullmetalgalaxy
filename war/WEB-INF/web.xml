@@ -9,7 +9,7 @@
   
   <servlet>
     <servlet-name>Services</servlet-name>
-    <servlet-class>com.fullmetalgalaxy.server.ServicesImpl</servlet-class>
+    <servlet-class>com.fullmetalgalaxy.server.GameServicesImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>

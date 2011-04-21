@@ -25,8 +25,8 @@ package com.fullmetalgalaxy.server.datastore;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.server.EbAccount;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.QueryResultIterator;
 
@@ -35,7 +35,7 @@ import com.google.appengine.api.datastore.QueryResultIterator;
  * @author vincent
  *
  */
-public class FmgDataStore extends DataStore
+public class OldFmgDataStore extends OldDataStore
 {
   private final static int TTL = 50;
   private static int s_countTtl = TTL;
@@ -44,7 +44,7 @@ public class FmgDataStore extends DataStore
   static public String getPseudoFromJid(String p_jid)
   {
     String jid = p_jid.split("/")[0];
-    com.googlecode.objectify.Query<PersistAccount> query = DataStore.getList( PersistAccount.class, "m_jabberId", jid );
+    com.googlecode.objectify.Query<PersistAccount> query = OldDataStore.getList( PersistAccount.class, "m_jabberId", jid );
     QueryResultIterator<PersistAccount> it = query.iterator();
     if( !it.hasNext() )
     {
@@ -58,7 +58,7 @@ public class FmgDataStore extends DataStore
   
   static public EbGame sgetGame(long p_id)
   {
-    PersistEntity entity = DataStore.getEntity( PersistGame.class, p_id );
+    PersistEntity entity = OldDataStore.getEntity( PersistGame.class, p_id );
     if( entity == null )
     {
       return null;
@@ -78,7 +78,7 @@ public class FmgDataStore extends DataStore
 
   static public PersistAccount sgetPersistAccount(long p_id)
   {
-    PersistEntity entity = DataStore.getEntity( PersistAccount.class, p_id );
+    PersistEntity entity = OldDataStore.getEntity( PersistAccount.class, p_id );
     if( entity == null )
     {
       return null;
@@ -135,7 +135,7 @@ public class FmgDataStore extends DataStore
     if( s_countTtl < 0 || s_accountListCount < 0)
     {
       com.googlecode.objectify.Query<PersistAccount> query = getList( PersistAccount.class, null, null );
-      s_accountListCount = query.countAll(); // TODO change to count()
+      s_accountListCount = query.count(); // TODO change to count()
       s_countTtl = TTL;
     }
     s_countTtl--;
@@ -175,7 +175,7 @@ public class FmgDataStore extends DataStore
 
 
 
-  public FmgDataStore()
+  public OldFmgDataStore()
   {
     super();
   }
@@ -220,10 +220,11 @@ public class FmgDataStore extends DataStore
     super.save( PersistAccount.class, p_account );
   }
 
+  /* we don't need to save anything after all !
   public void save(EbGame p_game)
   {
     super.save( PersistGame.class, p_game );
-  }
+  }*/
 
   public void deleteAccount(long p_id)
   {

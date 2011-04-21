@@ -27,7 +27,7 @@ import java.util.Date;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
@@ -73,7 +73,7 @@ public class EbEvtTimeStep extends AnEvent
 
 
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     assert p_game.getLastTimeStepChange().equals( getOldTimeStepChange() );
@@ -98,10 +98,10 @@ public class EbEvtTimeStep extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    EbGame game = p_game;
+    Game game = p_game;
     assert game != null;
 
     // first backup data
@@ -158,10 +158,10 @@ public class EbEvtTimeStep extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    EbGame game = p_game;
+    Game game = p_game;
     assert game != null;
     game.setLastTimeStepChange( getOldTimeStepChange() );
     game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
