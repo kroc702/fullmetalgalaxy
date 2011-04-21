@@ -44,6 +44,7 @@ public class EbToken extends EbBase
 {
   static final long serialVersionUID = 12;
 
+  private long m_version = 0;
   private TokenType m_type = TokenType.None;
   private int m_color = EnuColor.None;
   private Location m_location = Location.ToBeConstructed;
@@ -52,15 +53,25 @@ public class EbToken extends EbBase
 
   private List<FireDisabling> m_listFireDisabling = null;
 
-  private EbGame m_game = null;
-
+  /**
+   * TODO remove, as it is here only for backward serialization compatibility
+   */
   private long m_carrierTokenId = 0;
+  private EbToken m_carrierToken = null;
 
   /**
    * list of all Token local id (see m_localId) this token actually contain 
    * (empty if this token doesn't contain any other token)
+   * 
+   * TODO remove this set, as it is here only for backward serialization compatibility
    */
   private Set<Long> m_setContain = null;
+
+  /**
+   * list of all Token this token actually contain 
+   * (empty if this token doesn't contain any other token)
+   */
+  private Set<EbToken> m_setContainToken = null;
 
 
   /**
@@ -97,8 +108,9 @@ public class EbToken extends EbBase
     m_location = Location.ToBeConstructed;
     m_bulletCount = 0;
     m_carrierTokenId = 0;
-    m_game = null;
+    m_carrierToken = null;
     m_setContain = null;
+    m_setContainToken = null;
     m_listFireDisabling = null;
   }
 
@@ -109,7 +121,29 @@ public class EbToken extends EbBase
     this.init();
   }
 
-
+  /**
+   * TODO remove, as it is here only for backward serialization compatibility
+   * @param p_game
+   */
+  public void convertTokenId2Token(Game p_game)
+  {
+    if( m_carrierToken == null && m_carrierTokenId != 0 )
+    {
+      m_carrierToken = p_game.getToken( m_carrierTokenId );
+    }
+    if( m_setContainToken == null && m_setContain != null )
+    {
+      if( !m_setContain.isEmpty() )
+      {
+        m_setContainToken = new HashSet<EbToken>();
+        for( Long tokenId : m_setContain )
+        {
+          m_setContainToken.add( p_game.getToken( tokenId ) );
+        }
+      }
+      m_setContain = null;
+    }
+  }
 
   /**
    * @return the "z-index" style property of the image of this token.
@@ -154,7 +188,7 @@ public class EbToken extends EbBase
    * it represent the land height.
    * @return
    */  
-  public int getLandPixOffset()
+  public int getLandPixOffset(Game p_game)
   {
     switch( getType() )
     {
@@ -163,7 +197,7 @@ public class EbToken extends EbBase
     case Turret:
       return 0;
     case Ore:
-      return EbGame.getLandPixOffset( getGame().getLand( getPosition() ) );
+      return Game.getLandPixOffset( p_game.getLand( getPosition() ) );
     case Barge:
     case Crab:
     case WeatherHen:
@@ -171,7 +205,7 @@ public class EbToken extends EbBase
     case Tank:
     case Heap:
     case Pontoon:
-      return getGame().getLandPixOffset( getPosition() );
+      return p_game.getLandPixOffset( getPosition() );
     }
   }
 
@@ -211,9 +245,12 @@ public class EbToken extends EbBase
   public int getContainSize()
   {
     int loadingSize = 0;
-    for( EbToken token : getSetContain() )
+    if( containToken() )
     {
-      loadingSize += token.getLoadingSize();
+      for( EbToken token : getContains() )
+      {
+        loadingSize += token.getLoadingSize();
+      }
     }
     return loadingSize;
   }
@@ -225,11 +262,14 @@ public class EbToken extends EbBase
   public int getContainOre()
   {
     int loadingSize = 0;
-    for( EbToken token : getSetContain() )
+    if( containToken() )
     {
-      if( token.getType() == TokenType.Ore )
+      for( EbToken token : getContains() )
       {
-        loadingSize += 1;
+        if( token.getType() == TokenType.Ore )
+        {
+          loadingSize += 1;
+        }
       }
     }
     return loadingSize;
@@ -371,10 +411,10 @@ public class EbToken extends EbBase
   }
 
   
-  public ArrayList<EbToken> getNeighborTokens()
+  public ArrayList<EbToken> getNeighborTokens(Game p_game)
   {
     ArrayList<EbToken> neighbor = new ArrayList<EbToken>();
-    for( EbToken token : getGame().getSetToken() )
+    for( EbToken token : p_game.getSetToken() )
     {
       if( token.isNeighbor( this ) )
       {
@@ -388,12 +428,12 @@ public class EbToken extends EbBase
    * Not used anymore
    * @return true if an opponent token is a neighbor of this token.
    */
-  public boolean haveOponentNeighbor()
+  public boolean haveOponentNeighbor(Game p_game)
   {
     // first determine the token owner color
-    EnuColor tokenOwnerColor = getGame().getTokenOwnerColor( this );
+    EnuColor tokenOwnerColor = p_game.getTokenOwnerColor( this );
     // TODO it's not optimal... we should look onto the six neighbor hexagons
-    for( EbToken token : getGame().getSetToken() )
+    for( EbToken token : p_game.getSetToken() )
     {
       if( (token.canBeColored()) && (!tokenOwnerColor.isColored( token.getColor() ))
           && (token.isNeighbor( this )) )
@@ -407,14 +447,14 @@ public class EbToken extends EbBase
   /**
    * @return true if token have a unit next to p_position he can control (may be different color but same owner)
    */
-  public boolean canControlNeighbor(AnBoardPosition p_position)
+  public boolean canControlNeighbor(Game p_game, AnBoardPosition p_position)
   {
     if( p_position == null || getLocation() != Location.Board || !canBeColored() )
     {
       return false;
     }
     boolean isDestroyer = isDestroyer();
-    if( getType() == TokenType.Freighter && getGame().getToken( p_position, TokenType.Turret ) != null )
+    if( getType() == TokenType.Freighter && p_game.getToken( p_position, TokenType.Turret ) != null )
     {
       isDestroyer = true;
     }
@@ -423,7 +463,7 @@ public class EbToken extends EbBase
     for( Sector sector : Sector.values() )
     {
       AnBoardPosition position = p_position.getNeighbour( sector );
-      for( EbToken token : getGame().getAllToken( position ) )
+      for( EbToken token : p_game.getAllToken( position ) )
       {
         if( (token.canBeColored()) && (tokenColor.getValue() != token.getColor())
             && (token.isNeighbor( this ))
@@ -440,19 +480,19 @@ public class EbToken extends EbBase
    * @bug in this method, opponent only mean different color.
    * @return true if at least one opponent destroyer can fire on this token
    */
-  public boolean canBeATarget()
+  public boolean canBeATarget(Game p_game)
   {
     AnBoardPosition position = getPosition();
     for( int ix = position.getX() - 3; ix < position.getX() + 4; ix++ )
     {
       for( int iy = position.getY() - 3; iy < position.getY() + 4; iy++ )
       {
-        EbToken otherToken = m_game.getToken( new AnBoardPosition( ix, iy ) );
+        EbToken otherToken = p_game.getToken( new AnBoardPosition( ix, iy ) );
         if( otherToken != null )
         {
           if( otherToken.getColor() != getColor()
-            && !m_game.isTokenFireCoverDisabled( otherToken )
-              && m_game.canTokenFireOn( otherToken, this ) )
+ && !p_game.isTokenFireCoverDisabled( otherToken )
+              && p_game.canTokenFireOn( otherToken, this ) )
           {
             return true;
           }
@@ -541,7 +581,7 @@ public class EbToken extends EbBase
    * @param p_land 
    * @return
    */
-  public boolean canMoveOn(LandType p_land)
+  public boolean canMoveOn(Game p_game, LandType p_land)
   {
     if( p_land == LandType.None )
     {
@@ -564,9 +604,9 @@ public class EbToken extends EbBase
       }
       break;
     case Crab:
-      if( p_land == LandType.Montain )
+      if( p_land == LandType.Montain && containToken() )
       {
-        for( EbToken token : getSetContain() )
+        for( EbToken token : getContains() )
         {
           if( token.getType() == TokenType.Heap )
           {
@@ -598,13 +638,12 @@ public class EbToken extends EbBase
    * @param p_position
    * @return
    */
-  public boolean canMoveOn(EbRegistration p_player, AnBoardPosition p_position)
+  public boolean canMoveOn(Game p_game, EbRegistration p_player, AnBoardPosition p_position)
   {
     assert p_player != null;
     assert p_position != null;
-    EbGame game = getGame();
     // check that no token is already on this hexagon
-    EbToken newTokenOnWay = game.getToken( p_position );
+    EbToken newTokenOnWay = p_game.getToken( p_position );
     EnuColor myColor = p_player.getEnuColor();
 
     // if newTokenOnWay == this, this mean that barge head want to move on barge tail: this is allowed
@@ -612,7 +651,7 @@ public class EbToken extends EbBase
     {
       if( newTokenOnWay.getType() == TokenType.Pontoon )
       {
-        return game.canTokenLoad( newTokenOnWay, this );
+        return p_game.canTokenLoad( newTokenOnWay, this );
       }
       // disable load/unload action for path finder to search path
       return false;
@@ -665,7 +704,7 @@ public class EbToken extends EbBase
     else
     {
       // check this token is not under an opponent fire cover
-      EnuColor fireCoverColor = game.getOpponentFireCover( myColor.getValue(), p_position );
+      EnuColor fireCoverColor = p_game.getOpponentFireCover( myColor.getValue(), p_position );
       if( fireCoverColor.getValue() != EnuColor.None )
       {
         return false;
@@ -675,20 +714,21 @@ public class EbToken extends EbBase
 
       // determine, according to current tide, if the new position is sea,
       // plain or montain
-      LandType land = game.getLand( p_position ).getLandValue( game.getCurrentTide() );
-      EbToken tokenPontoon = game.getToken( p_position, TokenType.Pontoon );
+      LandType land = p_game.getLand( p_position ).getLandValue( p_game.getCurrentTide() );
+      EbToken tokenPontoon = p_game.getToken( p_position, TokenType.Pontoon );
       if( (tokenPontoon != null) && !(tokenPontoon.canLoad( getType() )) )
       {
         return false;
       }
       // check this token is allowed to move on this hexagon
-      if( canMoveOn( land ) == false )
+      if( canMoveOn( p_game, land ) == false )
       {
         return false;
       }
       // if last position is also a land, check that the token is colored
       // (not a minerais neither a pontoon)
-      if( ((game.getToken( getPosition() ) == null) || (game.getToken( getPosition() ).getColor() == EnuColor.None))
+      if( ((p_game.getToken( getPosition() ) == null) || (p_game.getToken( getPosition() )
+          .getColor() == EnuColor.None))
           && (getColor() == EnuColor.None) )
       {
         return false;
@@ -780,6 +820,7 @@ public class EbToken extends EbBase
 
   public void loadToken(EbToken p_token)
   {
+    assert p_token != null;
     if( p_token.getCarrierToken() != null )
     {
       // a token can be carried by only one carrier at a time
@@ -789,19 +830,23 @@ public class EbToken extends EbBase
     p_token.setLocation( Location.Token );
     p_token.setPosition( new AnBoardPosition( -1, -1 ) );
     assert p_token.getId() != 0;
-    if( m_setContain == null )
+    if( getContains() == null )
     {
-      m_setContain = new HashSet<Long>();
+      m_setContainToken = new HashSet<EbToken>();
     }
-    m_setContain.add( p_token.getId() );
+    getContains().add( p_token );
   }
 
   public void unloadToken(EbToken p_token)
   {
-    assert m_setContain != null;
-    m_setContain.remove( p_token.getId() );
+    assert p_token != null;
+    assert containToken();
+    getContains().remove( p_token );
     p_token.setCarrierToken( null );
-    // p_token.setLocation( Location.Board );
+    if( getContains().isEmpty() )
+    {
+      m_setContainToken = null;
+    }
   }
 
 
@@ -817,6 +862,10 @@ public class EbToken extends EbBase
     m_color = p_color.getValue();
   }
 
+  public boolean containToken()
+  {
+    return getContains() != null;
+  }
 
   // getters / setters
   // -----------------
@@ -854,22 +903,30 @@ public class EbToken extends EbBase
 
   /**
    * return a set of all contained token.
-   * compute this set from the set of local id. 
-   * @return the contain
+   * 
+   * This version, compare to getContains, make a copy
+   * of the set to allow function that use it to modify
+   * token content while iterating on this set.
+   * 
+   * @return a copy of token set contain (never null)
    */
-  public Set<EbToken> getSetContain()
+  public Set<EbToken> getCopyContains()
   {
-    Set<EbToken> setContain = new HashSet<EbToken>();
-    EbGame game = getGame();
-    if( (m_setContain == null) || (game == null) )
+    Set<EbToken> set = new HashSet<EbToken>();
+    if( getContains() != null )
     {
-      return setContain;
+      set.addAll( getContains() );
     }
-    for( Long localId : m_setContain )
-    {
-      setContain.add( game.getToken( localId ) );
-    }
-    return setContain;
+    return set;
+  }
+
+  /**
+   * return a set of all contained token.
+   * @return the contain token set or null
+   */
+  public Set<EbToken> getContains()
+  {
+    return m_setContainToken;
   }
 
 
@@ -889,32 +946,13 @@ public class EbToken extends EbBase
     m_location = p_location;
   }
 
-  /**
-   * @return the game
-   */
-  public EbGame getGame()
-  {
-    return m_game;
-  }
-
-  /**
-   * @param p_game the game to set
-   */
-  public void setGame(EbGame p_game)
-  {
-    m_game = p_game;
-  }
 
   /**
    * @return the carrierToken
    */
   public EbToken getCarrierToken()
   {
-    if( m_carrierTokenId == 0 || getGame() == null )
-    {
-      return null;
-    }
-    return getGame().getToken( m_carrierTokenId );
+    return m_carrierToken;
   }
 
   /**
@@ -922,14 +960,7 @@ public class EbToken extends EbBase
    */
   public void setCarrierToken(EbToken p_carrierToken)
   {
-    if( p_carrierToken == null )
-    {
-      m_carrierTokenId = 0;
-    }
-    else
-    {
-      m_carrierTokenId = p_carrierToken.getId();
-    }
+    m_carrierToken = p_carrierToken;
   }
 
   /**
@@ -1075,6 +1106,32 @@ public class EbToken extends EbBase
     return m_listFireDisabling;
   }
 
+  /**
+   * @return the version
+   */
+  public long getVersion()
+  {
+    return m_version;
+  }
+
+  /**
+   * @param p_version the version to set
+   */
+  public void setVersion(long p_version)
+  {
+    m_version = p_version;
+  }
+
+
+  public void incVersion()
+  {
+    m_version++;
+  }
+
+  public void decVersion()
+  {
+    m_version--;
+  }
 
 
 }

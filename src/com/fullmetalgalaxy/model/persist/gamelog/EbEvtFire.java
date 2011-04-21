@@ -32,7 +32,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 
@@ -81,7 +81,7 @@ public class EbEvtFire extends AnEventPlay
 
 
   @Override
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     if( getTokenDestroyer1(p_game) != null )
     {
@@ -94,7 +94,7 @@ public class EbEvtFire extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
 
@@ -180,7 +180,7 @@ public class EbEvtFire extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     boolean wasFdComputed = isFdComputed();
@@ -262,7 +262,7 @@ public class EbEvtFire extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     getTokenDestroyer1(p_game).setBulletCount( getTokenDestroyer1(p_game).getBulletCount() + 1 );
@@ -305,7 +305,7 @@ public class EbEvtFire extends AnEventPlay
    * @param p_game game to apply event
     * @return the tokenTarget
    */
-  public EbToken getTokenTarget(EbGame p_game)
+  public EbToken getTokenTarget(Game p_game)
   {
     return getToken( p_game );
   }

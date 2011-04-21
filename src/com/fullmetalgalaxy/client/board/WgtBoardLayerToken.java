@@ -34,8 +34,8 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
@@ -71,7 +71,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   {
     super.redraw();
 
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     Set<EbToken> tokenList = game.getSetToken();
 
     // little optimisation to avoid using isHexVisible for each token...
@@ -110,7 +110,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   {
     for( EbToken token : m_tokenMap.keySet() )
     {
-      if( token.getGame() == null )
+      if( ModelFmpMain.model().getGame().getToken( token.getId() ) == null )
       {
         // token was removed from the game, get rid of it
         TokenWidget tokenWidget = m_tokenMap.get( token );
@@ -154,13 +154,13 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // update is needed !
 
       // token is on board: display it !
-      EbGame game = ModelFmpMain.model().getGame();
+      Game game = ModelFmpMain.model().getGame();
       add( tokenWidget.getTokenImage() );
       tokenWidget.getTokenImage().setVisible( true );
       int landPixOffset = 0;
       if( getZoom().getValue() == EnuZoom.Medium )
       {
-        landPixOffset = p_token.getLandPixOffset();
+        landPixOffset = p_token.getLandPixOffset( game );
       }
       TokenImages.getTokenImage( p_token, getZoom().getValue() ).applyTo(
           tokenWidget.getTokenImage() );
@@ -209,7 +209,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // display a load count image ?
       if( (p_token.getType() != TokenType.Ore)
           && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
-          && (p_token.getType() != TokenType.Pontoon) && (p_token.getSetContain().size() > 0) )
+          && (p_token.getType() != TokenType.Pontoon) && (p_token.containToken()) )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconLoad( getZoom().getValue(),
             p_token.getContainSize() ), p_token, landPixOffset );
@@ -288,7 +288,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
     setPixelSize( pxW, pxH );
@@ -307,7 +307,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     if( m_lastGameId != game.getId() || p_forceRedraw )
     {
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();

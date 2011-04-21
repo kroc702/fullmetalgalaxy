@@ -49,11 +49,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.CacheKey;
-import com.fullmetalgalaxy.server.ServicesImpl;
+import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.fullmetalgalaxy.server.CacheKey.CacheKeyType;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -120,14 +120,15 @@ public class ImageServlet extends HttpServlet
     if( data == null )
     {
       // cache is empty, then load game from datastore
-      EbGame model = null;
+      Game model = null;
       if( gameId != 0 )
       {
-        model = FmgDataStore.sgetGame( gameId );
+        FmgDataStore ds = new FmgDataStore(true);
+        model = ds.getGame( gameId );
       }
       else if( p_gameId != null && !p_gameId.equals( "0" ) )
       {
-        ModelFmpInit modelInit = ServicesImpl.sgetModelFmpInit( p_gameId );
+        ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( p_gameId );
         model = modelInit.getGame();
       }
 

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 
@@ -77,7 +77,7 @@ public class EbActMessage extends AnAction
    * @see com.fullmetalgalaxy.model.persist.triggers.actions.AnAction#exec(com.fullmetalgalaxy.model.persist.EbGame)
    */
   @Override
-  public List<AnEvent> createEvents(EbGame p_game, List<Object> p_params)
+  public List<AnEvent> createEvents(Game p_game, List<Object> p_params)
   {
     List<AnEvent> events = new ArrayList<AnEvent>();
     if( !getMessage().trim().equals( "" ) )

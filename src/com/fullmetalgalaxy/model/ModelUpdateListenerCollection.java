@@ -25,6 +25,9 @@ package com.fullmetalgalaxy.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.board.MAppMessagesStack;
+
 /**
  * @author Kroc
  * A helper class for implementers of the SourcesChangeEvents interface. This subclass of ArrayList assumes that
@@ -52,6 +55,13 @@ public class ModelUpdateListenerCollection extends ArrayList<ModelUpdateListener
       {
         RpcUtil.logError( "the listener " + listener.getClass()
             + " bug while notify a model update", e );
+        // TODO remove this client package dependency
+        MAppMessagesStack.s_instance.showWarning( "js error" );
+        if( ModelFmpMain.model().iAmAdmin() )
+        {
+          MAppMessagesStack.s_instance.showWarning( listener.getClass().toString() + "\n"
+              + e.getMessage() );
+        }
       }
     }
   }

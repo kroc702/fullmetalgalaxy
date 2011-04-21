@@ -28,7 +28,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 
@@ -74,7 +74,7 @@ public class EbEvtPlayerTurn extends AnEvent
 
 
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     if( isAuto() )
@@ -98,7 +98,7 @@ public class EbEvtPlayerTurn extends AnEvent
       throw new RpcFmpException(
           "Cette partie ne se joue pas en tour par tour mais en mode asynchrone" );
     }
-    if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccountId() )
+    if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccount().getId() )
     {
       throw new RpcFmpException( "Seul le joueur dont c'est le tour peut ecourter sont tour de jeu" );
     }
@@ -119,10 +119,10 @@ public class EbEvtPlayerTurn extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    EbGame game = p_game;
+    Game game = p_game;
     assert game != null;
     
     // round down players action point
@@ -130,7 +130,7 @@ public class EbEvtPlayerTurn extends AnEvent
     assert currentPlayerRegistration != null;
     // backup for unexec
     m_oldActionPt = currentPlayerRegistration.getPtAction();
-    currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt() );
+    currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt(p_game) );
     
     // update all his tokens bullets count
     EnuColor currentPlayerColor = currentPlayerRegistration.getEnuColor();
@@ -205,10 +205,10 @@ public class EbEvtPlayerTurn extends AnEvent
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    EbGame game = p_game;
+    Game game = p_game;
     assert game != null;
 
     // current player action points

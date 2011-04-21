@@ -122,7 +122,7 @@ public class EbConfigGameTime extends EbBase
   }
 
 
-  public static int getDefaultActionInc(EbGame p_game)
+  public static int getDefaultActionInc(Game p_game)
   {
     int timeStep = p_game.getCurrentTimeStep();
     if( p_game.getEbConfigGameTime().getDeploymentTimeStep() > 0

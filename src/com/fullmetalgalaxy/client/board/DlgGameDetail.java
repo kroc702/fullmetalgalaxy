@@ -41,7 +41,7 @@ import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
@@ -150,7 +150,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   public void show()
   {
     super.show();
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
     // Set the dialog box's caption.
     setText( game.getName() );
@@ -202,7 +202,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       m_generalPanel.add( new HTML( MAppBoard.s_messages.gameCreation( ClientUtil.s_dateTimeFormat
         .format( game.getCreationDate() ) )
         + " par <a href='/profile.jsp?id="
-        + game.getAccountCreatorId()
+        + (game.getAccountCreator() == null ? "0" : game.getAccountCreator().getId())
         + "' target='_blank'>"
           + (game.getAccountCreator() == null ? "???" : game.getAccountCreator().getPseudo())
           + "</a>" ) );
@@ -272,7 +272,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
     }
 
-    if( ModelFmpMain.model().getMyAccount().getId() == game.getAccountCreatorId()
+    if( (game.getAccountCreator() != null &&
+        ModelFmpMain.model().getMyAccount().getId() == game.getAccountCreator().getId() )
         || ModelFmpMain.model().iAmAdmin() )
     {
       // play / pause button
@@ -360,8 +361,8 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
 
       // display login
-      String login = registration.getAccountPseudo();
-      String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccountId() )
+      String login = registration.getAccount().getPseudo();
+      String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccount().getId() )
           + "' target='_blank'>" + login
           + "</a>";
       if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )
@@ -401,7 +402,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
                       .model().getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
 
       // display Wining points
-      m_playerGrid.setText( index, 4, "" + registration.getWinningPoint() );
+      m_playerGrid.setText( index, 4, "" + registration.getWinningPoint(ModelFmpMain.model().getGame()) );
 
       // display 'must play before'
       if( (!ModelFmpMain.model().getGame().isAsynchron())
@@ -414,13 +415,14 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
 
       // display email messages
       String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
-          + registration.getAccountId() + "'><img src='"
+          + registration.getAccount().getId() + "'><img src='"
           + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
       m_playerGrid.setHTML( index, 6, htmlMail );
 
       // display admin button
-      if( (ModelFmpMain.model().getMyAccount().getId() == ModelFmpMain.model().getGame()
-          .getAccountCreatorId() || ModelFmpMain.model().iAmAdmin()) )
+      if( (ModelFmpMain.model().getGame().getAccountCreator() != null
+          && ModelFmpMain.model().getMyAccount().getId() == ModelFmpMain.model().getGame()
+          .getAccountCreator().getId()) || ModelFmpMain.model().iAmAdmin() ) 
       {
         if( registration.haveAccount() )
         {
@@ -495,7 +497,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       EbRegistration registration = ModelFmpMain.model().getGame().getCurrentPlayerRegistration();
       if( Window.confirm( "Voulez-vous réellement sauter le tour de "
-          + registration.getAccountPseudo()
+          + registration.getAccount().getPseudo()
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
@@ -511,7 +513,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       // want to ban player
       EbRegistration registration = m_banButtons.get( p_event.getSource() );
-      if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccountPseudo()
+      if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccount().getPseudo()
           + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
       {
         EbAdminBan gameLog = new EbAdminBan();

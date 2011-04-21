@@ -29,9 +29,9 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.Services;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -77,7 +77,7 @@ public class WgtTimeInfo extends WgtView
 
   protected void redraw()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     if( game == null )
     {
       return;
@@ -131,7 +131,7 @@ public class WgtTimeInfo extends WgtView
 
       if( game.getCurrentPlayerRegistration().haveAccount() )
       {
-        lbl = new Label( game.getCurrentPlayerRegistration().getAccountPseudo() );
+        lbl = new Label( game.getCurrentPlayerRegistration().getAccount().getPseudo() );
       }
       else
       {
@@ -243,7 +243,7 @@ public class WgtTimeInfo extends WgtView
     }
     m_endTurn = p_endTurn;
     m_clockTimer.cancel();
-    long sec = (m_endTurn.getTime() - System.currentTimeMillis()) / 1000;
+    long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
     if( sec >= 60 * 60 )
     {
       // if end turn is farrer than one hour, simply display date
@@ -263,11 +263,11 @@ public class WgtTimeInfo extends WgtView
     @Override
     public void run()
     {
-      long sec = (m_endTurn.getTime() - System.currentTimeMillis()) / 1000;
+      long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
       m_lblDate.setHTML( "&nbsp; -" + secToStr( sec ) );
       if( sec == 0 )
       {
-        Services.Util.getInstance().checkUpdate( ModelFmpMain.model().getGame().getId(),
+        GameServices.Util.getInstance().checkUpdate( ModelFmpMain.model().getGame().getId(),
             m_dummyCallback );
       }
       m_clockTimer.schedule( 1000 );

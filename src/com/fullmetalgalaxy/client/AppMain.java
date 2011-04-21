@@ -36,7 +36,7 @@ import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelUpdateListener;
 import com.fullmetalgalaxy.model.PresenceRoom;
-import com.fullmetalgalaxy.model.Services;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
@@ -104,7 +104,7 @@ public class AppMain extends AppRoot implements ModelUpdateListener
     {
       try
       {
-        SerializationStreamFactory factory = GWT.create( Services.class );
+        SerializationStreamFactory factory = GWT.create( GameServices.class );
         SerializationStreamReader reader;
         reader = factory.createStreamReader( strModel );
         Object object = reader.readObject();
@@ -143,7 +143,7 @@ public class AppMain extends AppRoot implements ModelUpdateListener
     if( AppMain.instance().isLoading() )
     {
       // well, model init wasn't found in jsp => ask it with standard RPC call
-      Services.Util.getInstance().getModelFmpInit( p_gameId, loadGameCallback );
+      GameServices.Util.getInstance().getModelFmpInit( p_gameId, loadGameCallback );
     }
   }
 

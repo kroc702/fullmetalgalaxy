@@ -34,12 +34,12 @@ import com.fullmetalgalaxy.client.widget.BindedWgtGameInfo;
 import com.fullmetalgalaxy.client.widget.WgtBean;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.LandType;
-import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -123,7 +123,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
 
   public void createGame()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     if( game.getName().compareTo( "" ) == 0 )
     {
       Window.alert( s_messages.errorName() );
@@ -195,7 +195,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
 
     // (4) Make the call. Control flow will continue immediately and later
     // 'callback' will be invoked when the RPC completes.
-    Services.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), callback );
+    GameServices.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), callback );
 
   }
 
@@ -227,10 +227,10 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
 
     // (4) Make the call. Control flow will continue immediately and later
     // 'callback' will be invoked when the RPC completes.
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     GameEventStack stack = game.getGameEventStack();
     game.setGameEventStack( game ); // as stack may be client specific class
-    Services.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), comment, callback );
+    GameServices.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), comment, callback );
     game.setGameEventStack( stack );
   }
 
@@ -239,6 +239,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   {
     if( p_event.getSource() == m_btnCreateGame )
     {
+      AppMain.instance().startLoading();
       if( ModelFmpMain.model().getGame().isTrancient() )
       {
         createGame();
@@ -324,19 +325,9 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
    */
   private void initNewGame()
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     game.setAccountCreator( ModelFmpMain.model().getMyAccount() );
 
-    /*    ModelFmpMain.model().getGame().setTotalTimeStep( 120 );
-        ModelFmpMain.model().getGame().setRegistrationEndDate(
-            new Date( System.currentTimeMillis() + 2021760000 ) );
-        ModelFmpMain.model().getGame().setStartingDate( new Date( System.currentTimeMillis() ) );
-        ModelFmpMain.model().getGame().setTimeStepDurationInSec( 17280 );
-        ModelFmpMain.model().getGame().setActionPtPerTimeStep( 3 );
-        ModelFmpMain.model().getGame().setActionPtPerExtraShip( 1 );
-        ModelFmpMain.model().getGame().setTideChangeFrequency( 5 );
-        ModelFmpMain.model().getGame().setMinNumberOfPlayer( 2 );
-    */
     game.setConfigGameTime( ConfigGameTime.Standard );
     game.setConfigGameVariant( ConfigGameVariant.Standard );
     game.setMaxNumberOfPlayer( 4 );

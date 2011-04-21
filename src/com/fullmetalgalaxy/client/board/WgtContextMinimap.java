@@ -26,7 +26,7 @@ package com.fullmetalgalaxy.client.board;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
@@ -61,7 +61,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   public void redraw()
   {
     assert ModelFmpMain.model() != null;
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     String gameId = ModelFmpMain.model().getGameId();
 
     m_panel.clear();
@@ -88,7 +88,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       EbRegistration winner = game.getWinnerRegistration();
       if( (winner != null) && (winner.haveAccount()) )
       {
-        strWinner = winner.getAccountPseudo();
+        strWinner = winner.getAccount().getPseudo();
       }
       m_panel.add( new Label( strWinner ), 0, FmpConstant.miniMapHeight / 2 + 30 );
     }

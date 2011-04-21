@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.model.persist.triggers.conditions;
 
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 
@@ -65,7 +65,7 @@ public class EbCndTokenColor extends AnCondition
    * @see com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition#isTrue(com.fullmetalgalaxy.model.persist.EbGame)
    */
   @Override
-  public boolean isTrue(EbGame p_game)
+  public boolean isTrue(Game p_game)
   {
     if( m_tokenId == 0 )
     {

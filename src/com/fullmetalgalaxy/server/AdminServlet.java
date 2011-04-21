@@ -41,9 +41,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.server.datastore.OldFmgDataStore;
+import com.fullmetalgalaxy.server.datastore.PersistGame;
 import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
+import com.googlecode.objectify.Key;
 
 /**
  * @author Vincent
@@ -69,26 +72,28 @@ public class AdminServlet extends HttpServlet
       throws ServletException, IOException
   {
     String strid = null;
-    FmgDataStore dataStore = new FmgDataStore();
-
     strid = p_req.getParameter( "deletegame" );
     if( strid != null )
     {
-      dataStore.deleteGame( Long.parseLong( strid ) );
+      FmgDataStore dataStore = new FmgDataStore(false);
+      dataStore.delete( Game.class, Long.parseLong( strid ) );
+      dataStore.close();
       p_resp.sendRedirect( "/gamelist.jsp" );
     }
 
     strid = p_req.getParameter( "deleteaccount" );
     if( strid != null )
     {
-      dataStore.deleteAccount( Long.parseLong( strid ) );
+      FmgDataStore dataStore = new FmgDataStore(false);
+      dataStore.delete( EbAccount.class, Long.parseLong( strid ) );
+      dataStore.close();
       p_resp.sendRedirect( "/halloffames.jsp" );
     }
 
     strid = p_req.getParameter( "downloadgame" );
     if( strid != null )
     {
-      ModelFmpInit modelInit = ServicesImpl.sgetModelFmpInit( strid );
+      ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( strid );
       if( modelInit != null )
       {
         ObjectOutputStream out = new ObjectOutputStream( p_resp.getOutputStream() );
@@ -96,9 +101,47 @@ public class AdminServlet extends HttpServlet
       }
     }
 
-    dataStore.close();
-    // p_resp.getOutputStream().println( "game " + p_req.getParameter( "id" ) +
-    // " effacé" );
+    strid = p_req.getParameter( "migratedata" );
+    if( strid != null )
+    {
+      FmgDataStore ds = null;
+
+      // first clean datastore
+      for( Key<EbAccount> accountkey : FmgDataStore.dao().query( EbAccount.class ).fetchKeys() )
+      {
+        ds = new FmgDataStore( false );
+        ds.delete( EbAccount.class, accountkey.getId() );
+        ds.commit();
+      }
+
+      /* NO don't !
+       * as it will also remove mimimap blob
+      for( EbGamePreview game : FmgDataStore.dao().query( EbGamePreview.class ) )
+      {
+        ds = new FmgDataStore( false );
+        ds.delete( game );
+        ds.commit();
+      }*/
+
+      // account migration
+      for( EbAccount account : OldFmgDataStore.getAccountList() )
+      {
+        ds = new FmgDataStore( false );
+        ds.put( account );
+        ds.commit();
+      }
+
+      // game migration
+      for( PersistGame pgame : OldFmgDataStore.getPersistGameList() )
+      {
+        ds = new FmgDataStore( false );
+        Game game = pgame.getGame().createGame();
+        game.isOpen();
+        ds.put( game );
+        ds.commit();
+      }
+
+    }
 
   }
 
@@ -147,12 +190,12 @@ public class AdminServlet extends HttpServlet
       modelInit.getGame().setMinimapBlobKey( null );
       modelInit.getGame().setMinimapUri( null );
 
-      FmgDataStore dataStore = new FmgDataStore();
-      dataStore.save( modelInit.getGame() );
+      FmgDataStore dataStore = new FmgDataStore(false);
+      dataStore.put( modelInit.getGame() );
       dataStore.close();
 
       // construct minimap image
-      MiniMapProducer miniMapProducer = new MiniMapProducer( ServicesImpl.s_basePath,
+      MiniMapProducer miniMapProducer = new MiniMapProducer( GameServicesImpl.s_basePath,
           modelInit.getGame() );
       byte[] data = miniMapProducer.getImage();
       BlobstoreCache.storeMinimap( modelInit.getGame().getId(), new ByteArrayInputStream( data ) );

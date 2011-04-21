@@ -25,8 +25,8 @@ package com.fullmetalgalaxy.server.datastore;
 import javax.persistence.Entity;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.server.EbAccount;
 
 /**
  * @author Vincent
@@ -74,7 +74,7 @@ public class PersistAccount extends PersistEntity
       {
         account.setJabberId( getLogin() );
       }
-
+      account.setPassword( getPassword() );
     }
     return account;
   }

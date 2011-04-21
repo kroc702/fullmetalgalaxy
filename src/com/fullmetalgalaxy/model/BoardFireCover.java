@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
@@ -50,7 +50,7 @@ public class BoardFireCover implements Serializable
    * same as above but for disabled tokens
    */
   private byte m_disabledFireCover[][][] = null;
-  private EbGame m_game = null;
+  private Game m_game = null;
 
   /**
    * contain all destroyer on board token which should be fire enable/disable/dec as it's during
@@ -70,7 +70,7 @@ public class BoardFireCover implements Serializable
   /**
    * 
    */
-  public BoardFireCover(EbGame p_game)
+  public BoardFireCover(Game p_game)
   {
     assert p_game != null;
     m_game = p_game;

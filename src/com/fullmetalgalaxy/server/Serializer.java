@@ -52,8 +52,8 @@ public class Serializer
     {
       s_getRoom = ChatServiceImpl.class.getMethod( "getRoom", Long.TYPE );
       s_getChatMessage = ChatServiceImpl.class.getMethod( "getChatMessage", Long.TYPE );
-      s_getModelFmpUpdate = ServicesImpl.class.getMethod( "getModelFmpUpdate", Long.TYPE );
-      s_getModelFmpInit = ServicesImpl.class.getMethod( "getModelFmpInit", String.class );
+      s_getModelFmpUpdate = GameServicesImpl.class.getMethod( "getModelFmpUpdate", Long.TYPE );
+      s_getModelFmpInit = GameServicesImpl.class.getMethod( "getModelFmpInit", String.class );
     } catch( Exception e )
     {
       // in that case, server push through channel api wont work.
@@ -71,7 +71,8 @@ public class Serializer
     String response = null;
     try
     {
-      response = RPC.encodeResponseForSuccess( s_getRoom, p_room );
+      response = RPC.encodeResponseForSuccess( s_getRoom, p_room,
+          FmgSerializationPolicy.getPolicy() );
     } catch( SerializationException e )
     {
       log.error( e );
@@ -89,7 +90,8 @@ public class Serializer
     String response = null;
     try
     {
-      response = RPC.encodeResponseForSuccess( s_getChatMessage, p_msg );
+      response = RPC.encodeResponseForSuccess( s_getChatMessage, p_msg,
+          FmgSerializationPolicy.getPolicy() );
     } catch( SerializationException e )
     {
       log.error( e );
@@ -107,7 +109,8 @@ public class Serializer
     String response = null;
     try
     {
-      response = RPC.encodeResponseForSuccess( s_getModelFmpUpdate, p_modelUpdate );
+      response = RPC.encodeResponseForSuccess( s_getModelFmpUpdate, p_modelUpdate,
+          FmgSerializationPolicy.getPolicy() );
     } catch( SerializationException e )
     {
       log.error( e );
@@ -126,7 +129,8 @@ public class Serializer
     String response = null;
     try
     {
-      response = RPC.encodeResponseForSuccess( s_getModelFmpInit, p_model );
+      response = RPC.encodeResponseForSuccess( s_getModelFmpInit, p_model,
+          FmgSerializationPolicy.getPolicy() );
     } catch( SerializationException e )
     {
       log.error( e );

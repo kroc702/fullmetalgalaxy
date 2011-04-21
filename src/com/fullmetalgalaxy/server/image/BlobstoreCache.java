@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fullmetalgalaxy.model.persist.EbGame;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -123,8 +123,8 @@ public class BlobstoreCache extends HttpServlet
         BlobKey blobKey = firstEntry.getValue();
         // load corresponding game
         gameId = Long.parseLong( idParam );
-        FmgDataStore dataStore = new FmgDataStore();
-        EbGame game = dataStore.getGame( gameId );
+        FmgDataStore dataStore = new FmgDataStore(false);
+        Game game = dataStore.getGame( gameId );
         if( game == null )
         {
           // erase minimap...
@@ -135,7 +135,7 @@ public class BlobstoreCache extends HttpServlet
           // update game
           game.setMinimapUri( ImagesServiceFactory.getImagesService().getServingUrl( blobKey ) );
           game.setMinimapBlobKey( blobKey.getKeyString() );
-          dataStore.save( game );
+          dataStore.put( game );
           dataStore.close();
         }
       }

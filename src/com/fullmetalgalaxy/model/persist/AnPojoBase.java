@@ -30,7 +30,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * This is the base class for any persistence annotated pojo.
  * 
  */
-public class AnPojoBase /*extends LightEntity*/implements java.io.Serializable, IsSerializable
+public class AnPojoBase implements java.io.Serializable, IsSerializable
 {
   static final long serialVersionUID = 21;
 
@@ -39,6 +39,8 @@ public class AnPojoBase /*extends LightEntity*/implements java.io.Serializable, 
     super();
   }
 
-
+  public void reinit()
+  {
+  }
 
 }

@@ -60,7 +60,7 @@ public class FireDisabling implements IsSerializable, java.io.Serializable
   /**
    * @return the target
    */
-  public EbToken getTarget(EbGame p_game)
+  public EbToken getTarget(Game p_game)
   {
     if( m_target == null && m_targetId != 0 )
     {
@@ -88,7 +88,7 @@ public class FireDisabling implements IsSerializable, java.io.Serializable
   /**
    * @return the destroyer1
    */
-  public EbToken getDestroyer1(EbGame p_game)
+  public EbToken getDestroyer1(Game p_game)
   {
     if( m_destroyer1 == null && m_destroyer1Id != 0 )
     {
@@ -116,7 +116,7 @@ public class FireDisabling implements IsSerializable, java.io.Serializable
   /**
    * @return the destroyer2
    */
-  public EbToken getDestroyer2(EbGame p_game)
+  public EbToken getDestroyer2(Game p_game)
   {
     if( m_destroyer2 == null && m_destroyer2Id != 0 )
     {

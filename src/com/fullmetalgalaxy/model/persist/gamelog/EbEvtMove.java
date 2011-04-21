@@ -32,10 +32,10 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 
@@ -77,7 +77,7 @@ public class EbEvtMove extends AnEventPlay
 
 
   @Override
-  public AnBoardPosition getSelectedPosition(EbGame p_game)
+  public AnBoardPosition getSelectedPosition(Game p_game)
   {
     if(getOldPosition() != null)
     {
@@ -90,7 +90,7 @@ public class EbEvtMove extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
 
@@ -179,7 +179,7 @@ public class EbEvtMove extends AnEventPlay
     p_game.getBoardFireCover().incFireCover( getToken(p_game) );
     if( (fireCoverColorOld.getValue() != EnuColor.None)
         && (p_game.getLastLog().getType() == GameLogType.EvtMove)
-        && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId())  )
+        && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId()) )
     {
       throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken( p_game ).getType()
           .ordinal(), fireCoverColorOld.getValue() );
@@ -196,7 +196,7 @@ public class EbEvtMove extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     // backup for unexec
@@ -211,7 +211,7 @@ public class EbEvtMove extends AnEventPlay
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
     p_game.moveToken( getToken(p_game), getOldPosition() );
@@ -221,7 +221,7 @@ public class EbEvtMove extends AnEventPlay
   }
 
 
-  private void checkFireDisabling(EbGame p_game)
+  private void checkFireDisabling(Game p_game)
   {
     if( isFdComputed() )
     {

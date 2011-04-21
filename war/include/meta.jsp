@@ -24,7 +24,9 @@ String pseudo = Auth.getUserPseudo(request,response);
 <% } else { %>
 <% } %>
 
+
 <%-- 
 <meta name="gwt:property" content="locale=<%=request.getLocale().getLanguage()%>_<%=request.getLocale().getCountry()%>" />
  --%>
 <meta name="gwt:property" content="locale=fr" />
+<meta name='gwt:property' id='fmp_servertime' content='<%= System.currentTimeMillis() %>' />

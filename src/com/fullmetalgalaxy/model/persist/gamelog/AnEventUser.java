@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 
 
@@ -63,7 +63,7 @@ public class AnEventUser extends AnEvent
     m_remoteAddr = null;
   }
 
-  public EbRegistration getMyRegistration(EbGame p_game)
+  public EbRegistration getMyRegistration(Game p_game)
   {
     if( p_game.getGameType() == GameType.MultiPlayer )
     {
@@ -82,7 +82,7 @@ public class AnEventUser extends AnEvent
    * @throws RpcFmpException
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     if( ((getAccountId() == 0)) && (!isAuto())

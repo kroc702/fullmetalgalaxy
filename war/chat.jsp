@@ -1,4 +1,4 @@
-<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the    -->
@@ -17,7 +17,7 @@
     <%
 	Presence presence = new Presence();
 	String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.CHAT,presence);
-	EbGame game = FmgDataStore.sgetGame(id);
+	EbGamePreview game = FmgDataStore.dao().find( EbGamePreview.class, id);
 	String title = "Full Metal Chat";
 	if( game != null )
 	{

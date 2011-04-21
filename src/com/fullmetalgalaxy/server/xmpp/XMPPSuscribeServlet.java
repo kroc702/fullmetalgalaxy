@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.server.ChannelManager;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.xmpp.Subscription;
 import com.google.appengine.api.xmpp.XMPPService;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;

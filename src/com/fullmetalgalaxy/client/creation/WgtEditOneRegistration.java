@@ -84,7 +84,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     m_lblAccount.setText( "" );
     if( p_reg.haveAccount() )
     {
-      m_lblAccount.setText( p_reg.getAccountPseudo() );
+      m_lblAccount.setText( p_reg.getAccount().getPseudo() );
     }
   }
 

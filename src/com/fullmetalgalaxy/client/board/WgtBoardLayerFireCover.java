@@ -32,7 +32,7 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.user.client.ui.HTML;
 
@@ -65,7 +65,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
    */
   public void displayFireCover(boolean p_isVisible)
   {
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     for( EbRegistration registration : game.getSetRegistration() )
     {
       displayFireCover( p_isVisible, registration );
@@ -115,7 +115,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
     if( game.getId() != m_lastGameId || p_forceRedraw )
     {
       m_lastGameId = game.getId();
@@ -196,7 +196,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   private String getFireCoverHtml(EbRegistration p_registration)
   {
     StringBuffer html = new StringBuffer();
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
 
     // compute the size of the widget

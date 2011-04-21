@@ -26,7 +26,7 @@ package com.fullmetalgalaxy.model;
 import java.util.ArrayList;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.google.gwt.core.client.GWT;
@@ -37,7 +37,8 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
  * @author Kroc
  * 
  */
-public interface Services extends RemoteService
+// @RemoteServiceRelativePath("GameServices")
+public interface GameServices extends RemoteService
 {
 
   public static final String SERVICE_URI = "Services";
@@ -45,9 +46,9 @@ public interface Services extends RemoteService
   public static class Util
   {
 
-    public static ServicesAsync getInstance()
+    public static GameServicesAsync getInstance()
     {
-      ServicesAsync instance = (ServicesAsync)GWT.create( Services.class );
+      GameServicesAsync instance = (GameServicesAsync)GWT.create( GameServices.class );
       ServiceDefTarget target = (ServiceDefTarget)instance;
       target.setServiceEntryPoint( GWT.getModuleBaseURL() + SERVICE_URI );
       // AppMain.instance().startLoading();
@@ -61,7 +62,7 @@ public interface Services extends RemoteService
    * @param game description of the game.
    * @return id/lastUpdate of the created/saved game
    */
-  public EbBase saveGame(EbGame game) throws RpcFmpException;
+  public EbBase saveGame(Game game) throws RpcFmpException;
 
   /**
    * same as above, but let user set a message about his modifications
@@ -70,7 +71,7 @@ public interface Services extends RemoteService
    * @return id/lastUpdate of the created/saved game
    * @throws RpcFmpException
    */
-  public EbBase saveGame(EbGame game, String p_modifDesc) throws RpcFmpException;
+  public EbBase saveGame(Game game, String p_modifDesc) throws RpcFmpException;
 
 
   /**

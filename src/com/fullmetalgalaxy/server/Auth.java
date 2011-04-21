@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.persist.EbAccount;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.googlecode.objectify.Query;
 
 
 /**
@@ -142,7 +142,9 @@ public class Auth
     if( account == null )
     {
       // look account into datastore
-      account = FmgDataStore.getAccount( login );
+      FmgDataStore ds = new FmgDataStore(true);
+      Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_login", login );
+      account = query.get();
       p_request.getSession().setAttribute( "account", account );
     }
     if( account == null )
@@ -153,15 +155,15 @@ public class Auth
       account.setLogin( login );
       account.setJabberId( login );
       account.setAuthProvider( AuthProvider.Google );
-      FmgDataStore dataStore = new FmgDataStore();
-      dataStore.save( account );
+      FmgDataStore dataStore = new FmgDataStore(false);
+      dataStore.put( account );
       dataStore.close();
     }
     else if( account.getPseudo() == null )
     {
       account.setLogin( account.getLogin() );
-      FmgDataStore dataStore = new FmgDataStore();
-      dataStore.save( account );
+      FmgDataStore dataStore = new FmgDataStore(false);
+      dataStore.put( account );
       dataStore.close();
     }
 

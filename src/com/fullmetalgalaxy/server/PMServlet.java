@@ -46,8 +46,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
-import com.fullmetalgalaxy.model.persist.EbAccount;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgDataStore;
 
 /**
  * @author Vincent
@@ -113,8 +112,9 @@ public class PMServlet extends HttpServlet
     EbAccount accountTo = null;
     EbAccount accountFrom = null;
 
-    accountTo = FmgDataStore.sgetAccount( Long.parseLong( params.get( "toid" ) ) );
-    accountFrom = FmgDataStore.sgetAccount( Long.parseLong( params.get( "fromid" ) ) );
+    FmgDataStore ds = new FmgDataStore(true);
+    accountTo = ds.get( EbAccount.class, Long.parseLong( params.get( "toid" ) ) );
+    accountFrom = ds.get( EbAccount.class, Long.parseLong( params.get( "fromid" ) ) );
     assert accountTo != null;
     assert accountFrom != null;
     String body = "Vous avez recu un message de "

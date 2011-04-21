@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import java.util.Date;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 
 
@@ -68,7 +68,7 @@ public class EbAdminTimePlay extends EbAdmin
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
   @Override
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
     // only admin or game creator sould be able to do this
@@ -89,7 +89,7 @@ public class EbAdminTimePlay extends EbAdmin
    * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
     p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );

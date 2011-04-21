@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.board;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.ChatMessage;
-import com.fullmetalgalaxy.model.Services;
+import com.fullmetalgalaxy.model.GameServices;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -103,7 +103,7 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
       message.setFromPageId( ModelFmpMain.model().getPageId() );
       message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
       message.setText( m_text.getText() );
-      Services.Util.getInstance().sendChatMessage( message, m_sendMessageCallback );
+      GameServices.Util.getInstance().sendChatMessage( message, m_sendMessageCallback );
     }
     hide();
   }

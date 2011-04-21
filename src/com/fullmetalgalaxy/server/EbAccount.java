@@ -20,11 +20,19 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.model.persist;
+package com.fullmetalgalaxy.server;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.model.persist.EbAccountStats;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
+import com.googlecode.objectify.annotation.Serialized;
+import com.googlecode.objectify.annotation.Unindexed;
 
 
 
@@ -39,16 +47,74 @@ public class EbAccount extends EbPublicAccount
 
   // theses data come from database (Account table)
   // -------------------------------------------
+  /**
+   * For this version of pseudo we removed all non alphabetical char.
+   * and transform to lower case.
+   * This is used to check similar pseudo.
+   */
+  private String m_compactPseudo = "";
   private String m_login = "";
   private String m_email = "";
   private Date m_subscriptionDate = new Date( System.currentTimeMillis() );
+  @Unindexed
   private AuthProvider m_authProvider = AuthProvider.Fmg;
+  @Unindexed
   private String m_description = "";
+  @Unindexed
   private boolean m_allowPrivateMsg = true;
   /** to allow message like 'it your turn on game xxx' */
+  @Unindexed
   private boolean m_allowMailFromGame = true;
   private boolean m_allowMailFromNewsLetter = true;
   private String m_jabberId = null;
+
+  /**
+   * A VIP already finished one game and wasn't banned for a while.
+   */
+  private boolean m_isVip = false;
+  
+  
+  /** because of this data, EbAccount shoudln't be send on client side ! */
+  private String m_password = null;
+
+  /**
+   * maximum level reach by this account
+   */
+  private int m_maxLevel = 1;
+  @Serialized
+  private List<EbAccountStats> m_stats = new ArrayList<EbAccountStats>();
+  
+  
+  private static Pattern s_pattern = Pattern.compile( "^((?:[\\w]+\\p{Graph}?)+\\w){3,32}$" );
+  
+  /**
+   * check if p_pseudo can be used as a valid username.
+   * It is very permissive, but disallow two special char
+   * and special char at extremity
+   * @param p_pseudo
+   * @return
+   */
+  public static boolean isValidPseudo(String p_pseudo)
+  {
+    Matcher matcher = s_pattern.matcher( p_pseudo );
+    return matcher.matches();
+  }
+
+  /**
+   * TODO remove this server package dependency. We can move EbAccount to server !
+   * compute a compacted pseudo
+   * @param p_pseudo
+   * @return
+   */
+  public static String compactPseudo(String p_pseudo)
+  {
+    // remove accentuated char
+    String compact = ServerUtil.convertNonAscii( p_pseudo );
+    compact = compact.toLowerCase();
+    // remove all non word char
+    compact = compact.replaceAll( "[^\\w]", "" );
+    return compact;
+  }
   
   
   public EbAccount()
@@ -119,7 +185,29 @@ public class EbAccount extends EbPublicAccount
     return getEmail() != null && !getEmail().trim().isEmpty() && getEmail().contains( "@" );
   }
 
+  @Override
+  public void setCurrentLevel(int p_currentLevel)
+  {
+    super.setCurrentLevel( p_currentLevel );
+    if( getCurrentLevel() > getMaxLevel() )
+    {
+      setMaxLevel( getCurrentLevel() );
+    }
+  }
   
+
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.EbPublicAccount#setPseudo(java.lang.String)
+   */
+  @Override
+  public void setPseudo(String p_pseudo)
+  {
+    super.setPseudo( p_pseudo );
+    m_compactPseudo = compactPseudo( p_pseudo );
+  }
+
+
   // getters / setters
   // -----------------
   /**
@@ -281,6 +369,54 @@ public class EbAccount extends EbPublicAccount
   public void setJabberId(String p_jabberId)
   {
     m_jabberId = p_jabberId;
+  }
+
+
+  public int getMaxLevel()
+  {
+    return m_maxLevel;
+  }
+
+
+  public void setMaxLevel(int p_maxLevel)
+  {
+    m_maxLevel = p_maxLevel;
+  }
+
+
+  public List<EbAccountStats> getStats()
+  {
+    return m_stats;
+  }
+
+
+  public void setStats(List<EbAccountStats> p_stats)
+  {
+    m_stats = p_stats;
+  }
+
+
+  public String getPassword()
+  {
+    return m_password;
+  }
+
+
+  public void setPassword(String p_password)
+  {
+    m_password = p_password;
+  }
+
+
+  public boolean isVip()
+  {
+    return m_isVip;
+  }
+
+
+  public void setVip(boolean p_isVip)
+  {
+    m_isVip = p_isVip;
   }
 
 

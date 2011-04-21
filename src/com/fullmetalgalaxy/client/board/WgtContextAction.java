@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.client.board;
 
 
+import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.Icons;
@@ -80,6 +81,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
   FocusPanel m_pnlPause = null;
   FocusPanel m_pnlEndTurn = null;
   FocusPanel m_pnlTakeOff = null;
+  FocusPanel m_pnlChannelDisconnected = null;
   Image m_btnInfo = Icons.s_instance.info32().createImage();
   Image m_btnTakeOff = Icons.s_instance.takeOff32().createImage();
   Image m_btnTimeMode = Icons.s_instance.time32().createImage();
@@ -170,6 +172,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
     hPanel.add( new Label( "Clickez sur votre astronef pour le faire décoller" ) );
     m_pnlTakeOff = new FocusPanel( hPanel );
     m_pnlTakeOff.addClickHandler( this );
+    hPanel = new HorizontalPanel();
+    hPanel.add( Icons.s_instance.takeOff32().createImage() );
+    hPanel.add( new Label( "Déconnecté du serveur" ) );
+    m_pnlChannelDisconnected = new FocusPanel( hPanel );
+    m_pnlChannelDisconnected.addClickHandler( this );
+
 
     m_btnInfo.addClickHandler( this );
     m_btnInfo.setTitle( "Information detailles sur cette partie" );
@@ -304,7 +312,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         String msg = null;
         int oldPt = ModelFmpMain.model().getMyRegistration().getPtAction();
-        int newPt = ModelFmpMain.model().getMyRegistration().getRoundedActionPt();
+        int newPt = ModelFmpMain.model().getMyRegistration().getRoundedActionPt(ModelFmpMain.model().getGame());
         // TODO i18n
         if( oldPt == newPt )
         {
@@ -359,9 +367,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // search for any unit to deploy
         EbToken myFreighter = ModelFmpMain.model().getGame()
             .getFreighter( ModelFmpMain.model().getMyRegistration() );
-        EbToken firstToken = myFreighter.getSetContain().iterator().next();
-        if( firstToken != null )
+        if( myFreighter.containToken() )
         {
+          EbToken firstToken = myFreighter.getContains().iterator().next();
           ModelFmpMain.model().getActionBuilder().userTokenClick( firstToken );
           ModelFmpMain.model().notifyModelUpdate();
         }
@@ -399,6 +407,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
     EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
     EbToken mainSelectedToken = action.getSelectedToken();
     EbRegistration myRegistration = model.getMyRegistration();
+
+    if( !model.isChannelConnected()
+        && (System.currentTimeMillis() - ClientUtil.pageLoadTimeMillis()) > 2000 )
+    {
+      MAppMessagesStack.s_instance.showMessage( m_pnlChannelDisconnected );
+    }
 
     if( !action.isTokenSelected() || ModelFmpMain.model().getGame().isFinished() )
     {
@@ -469,7 +483,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
               else if( (ModelFmpMain.model().getGame().getCurrentTimeStep() == ModelFmpMain.model()
                   .getGame().getEbConfigGameTime().getDeploymentTimeStep()) )
               {
-                if( myFreighter.getSetContain().isEmpty() )
+                if( !myFreighter.containToken() )
                 {
                   MAppMessagesStack.s_instance.showMessage( m_pnlEndTurn );
                 }
@@ -557,7 +571,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
 
       if( !mainSelectedToken.getEnuColor().contain( myRegistration.getColor() ) )
       {
-        if( mainSelectedToken.canBeATarget() )
+        if( mainSelectedToken.canBeATarget( ModelFmpMain.model().getGame() ) )
         {
           m_panel.add( m_btnFire );
         }
@@ -586,7 +600,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
           }
         }
       }
-      if( action.getSelectedToken().canControlNeighbor( action.getSelectedPosition() ) )
+      if( action.getSelectedToken().canControlNeighbor( ModelFmpMain.model().getGame(),
+          action.getSelectedPosition() ) )
       {
         m_panel.add( m_btnControl );
       }

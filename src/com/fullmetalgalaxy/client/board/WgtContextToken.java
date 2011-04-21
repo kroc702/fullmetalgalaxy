@@ -89,9 +89,9 @@ public class WgtContextToken extends Composite
       {
         EbRegistration player = ModelFmpMain.model().getGame().getRegistrationByColor(
             actionBuilder.getSelectedToken().getColor() );
-        if(player != null && player.getAccountPseudo() != null)
+        if(player != null && player.haveAccount() )
         {
-          absPanel.add( new HTML( player.getAccountPseudo() ), 0, 20 );
+          absPanel.add( new HTML( player.getAccount().getPseudo() ), 0, 20 );
         }
       }
       
@@ -99,7 +99,13 @@ public class WgtContextToken extends Composite
       AnBoardPosition position = ModelFmpMain.model().getActionBuilder().getSelectedPosition();
       if(position != null)
       {
-        absPanel.add( new HTML( Messages.getLandString( ModelFmpMain.model().getGame().getLand( position ) ) ), 0, 40 );
+        String landStr = Messages
+            .getLandString( ModelFmpMain.model().getGame().getLand( position ) );
+        if( ModelFmpMain.model().getGame().getToken( position, TokenType.Pontoon ) != null )
+        {
+          landStr += " & " + Messages.getTokenString( TokenType.Pontoon );
+        }
+        absPanel.add( new HTML( landStr ), 0, 40 );
         
       }
 
@@ -108,7 +114,14 @@ public class WgtContextToken extends Composite
       if( token != null && token.getType() == TokenType.Freighter )
       {
         absPanel.add( new HTML( "minerais : " + token.getContainOre() ), 150, 0 );
-
+      }
+      else if( token != null && token.isDestroyer() )
+      {
+        absPanel.add( new HTML( "munitions : " + token.getBulletCount() ), 150, 0 );
+      }
+      else if( token != null && token.getType() == TokenType.WeatherHen )
+      {
+        absPanel.add( new HTML( "contruction : " + token.getBulletCount() ), 150, 0 );
       }
       // m_panel.add( new HTML( "</center>" ) );
     }

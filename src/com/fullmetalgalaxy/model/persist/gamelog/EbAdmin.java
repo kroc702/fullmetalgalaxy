@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -62,7 +62,7 @@ public class EbAdmin extends AnEventUser
    * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
    */
   @Override
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     throw new RpcFmpException( "les actions d'administrations ne peuvent �tre d�faite" );
   }

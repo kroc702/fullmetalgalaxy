@@ -32,6 +32,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 
 import com.fullmetalgalaxy.model.ChatMessage;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.ModelFmpInit;
@@ -39,15 +40,11 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Services;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbAccount;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
-import com.fullmetalgalaxy.model.persist.EbRegistrationStats;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
@@ -62,7 +59,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
-import com.fullmetalgalaxy.server.datastore.FmgDataStore;
 import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -72,16 +68,16 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author Vincent
  *
  */
-public class ServicesImpl extends RemoteServiceServlet implements Services
+public class GameServicesImpl extends RemoteServiceServlet implements GameServices
 {
   public static final long serialVersionUID = 1;
-  private final static FmpLogger log = FmpLogger.getLogger( ServicesImpl.class.getName() );
+  private final static FmpLogger log = FmpLogger.getLogger( GameServicesImpl.class.getName() );
   protected static String s_basePath = null;
 
   /**
    * constructor: 
    */
-  public ServicesImpl()
+  public GameServicesImpl()
   {
     super();
   }
@@ -104,7 +100,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
 
 
   @Override
-  public EbBase saveGame(EbGame p_game) throws RpcFmpException
+  public EbBase saveGame(Game p_game) throws RpcFmpException
   {
     return saveGame( p_game, null );
   }
@@ -113,14 +109,14 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   * @see com.fullmetalgalaxy.model.GameCreationServices#createGame(com.fullmetalgalaxy.model.DbbGame)
   */
   @Override
-  public EbBase saveGame(EbGame p_game, String p_modifDesc) throws RpcFmpException
+  public EbBase saveGame(Game p_game, String p_modifDesc) throws RpcFmpException
   {
     if( !isLogged() )
     {
       throw new RpcFmpException(
           "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
     }
-    FmgDataStore dataStore = new FmgDataStore();
+    FmgDataStore dataStore = new FmgDataStore(false);
     if( !p_game.isTrancient() )
     {
       // then add an admin event
@@ -132,8 +128,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       adminEvent.setGame( p_game );
       adminEvent.setMessage( p_modifDesc );
       EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
-      if( (!Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ))
-          && !(p_game.getAccountCreatorId() != account.getId()) )
+      if( (!Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )) )
       {
         throw new RpcFmpException(
             "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
@@ -142,7 +137,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       p_game.addEvent( adminEvent );
     }
 
-    dataStore.save( p_game );
+    dataStore.put( p_game );
     dataStore.close();
 
     // should we construct minimap image ?
@@ -158,10 +153,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   }
 
 
-  static protected EbGame getEbGame(long p_gameId)
+  static protected Game getEbGame(long p_gameId)
   {
-    FmgDataStore dataStore = new FmgDataStore();
-    EbGame model = dataStore.getGame( p_gameId );
+    FmgDataStore dataStore = new FmgDataStore(false);
+    Game model = dataStore.getGame( p_gameId );
     if( model == null )
     {
       return null;
@@ -181,7 +176,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       {
         modelUpdate.setGameEvents( events );
 
-        dataStore.save( model );
+        dataStore.put( model );
         modelUpdate.setToVersion( model.getVersion() );
 
         ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
@@ -214,7 +209,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     {
     }
     ModelFmpInit modelInit = new ModelFmpInit();
-    EbGame game = null;
+    Game game = null;
     if( gameId == 0 )
     {
       FileInputStream fis = null;
@@ -291,7 +286,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
    * This method have to be called after p_action have been successfully ran.
    * @param action
    */
-  protected static void sendMail(EbGame p_game, ModelFmpUpdate p_update)
+  protected static void sendMail(Game p_game, ModelFmpUpdate p_update)
   {
     for( AnEvent action : p_update.getGameEvents() )
     {
@@ -300,9 +295,9 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
         EbAccount currentPlayer = null;
         if( p_game.getCurrentPlayerRegistration() != null )
         {
-          FmgDataStore dataStore = new FmgDataStore();
-          currentPlayer = dataStore.getAccount( p_game.getCurrentPlayerRegistration()
-              .getAccountId() );
+          FmgDataStore dataStore = new FmgDataStore(true);
+          currentPlayer = dataStore.get( EbAccount.class, p_game.getCurrentPlayerRegistration()
+              .getAccount().getId() );
         }
         if( currentPlayer == null )
         {
@@ -341,8 +336,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   {
     // System.out.println( p_action );
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-    FmgDataStore dataStore = new FmgDataStore();
-    EbGame game = dataStore.getGame( p_action.getIdGame() );
+    FmgDataStore dataStore = new FmgDataStore(false);
+    Game game = dataStore.getGame( p_action.getIdGame() );
     int oldTimeStep = game.getCurrentTimeStep();
 
     p_action.setLastUpdate( ServerUtil.currentDate() );
@@ -376,7 +371,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
           EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
           eventTakeOff.setGame( game );
           eventTakeOff.setToken( token );
-          eventTakeOff.setAccountId( game.getRegistrationByColor( token.getColor() ).getAccountId() );
+          eventTakeOff.setAccountId( game.getRegistrationByColor( token.getColor() ).getAccount().getId() );
           eventTakeOff.setAuto( true );
           eventTakeOff.checkedExec( game );
           game.addEvent( eventTakeOff );
@@ -427,7 +422,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       }
     }
 
-    dataStore.save( game );
+    dataStore.put( game );
 
     // Some special cases
     /////////////////////
@@ -475,7 +470,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       modelUpdate.getGameEvents().add( action );
     }
     
-    dataStore.save( game );
+    dataStore.put( game );
     dataStore.close();
     modelUpdate.setToVersion( game.getVersion() );
 
@@ -494,8 +489,8 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
       throw new RpcFmpException( "No actions provided" );
     }
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-    FmgDataStore dataStore = new FmgDataStore();
-    EbGame game = null;
+    FmgDataStore dataStore = new FmgDataStore(false);
+    Game game = null;
     AnEvent lastAction = null;
     RpcFmpException exception = null;
 
@@ -556,7 +551,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
 
 
-    dataStore.save( game );
+    dataStore.put( game );
     dataStore.close();
     modelUpdate.setToVersion( game.getVersion() );
 
@@ -584,7 +579,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
    * @param p_game
    * @return the getResultList of all event which occur during this update.
    */
-  static protected ArrayList<AnEvent> updateGame(EbGame p_game) throws RpcFmpException
+  static protected ArrayList<AnEvent> updateGame(Game p_game) throws RpcFmpException
   {
     assert p_game != null;
     ArrayList<AnEvent> events = new ArrayList<AnEvent>();
@@ -617,7 +612,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
                 eventTakeOff.setGame( p_game );
                 eventTakeOff.setToken( token );
                 eventTakeOff.setAccountId( p_game.getRegistrationByColor( token.getColor() )
-                    .getAccountId() );
+                    .getAccount().getId() );
                 eventTakeOff.setAuto( true );
                 eventTakeOff.checkedExec( p_game );
                 p_game.addEvent( eventTakeOff );
@@ -702,10 +697,10 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
     }
     else if( !p_game.isHistory() )
     {
-      for( EbRegistration registration : p_game.getSetRegistration() )
+      /*for( EbRegistration registration : p_game.getSetRegistration() )
       {
-        registration.setStats( EbRegistrationStats.generate( registration, p_game ) );
-      }
+        registration.setStats( EbAccountStats.generate( registration, p_game ) );
+      }*/
       p_game.setHistory( true );
     }
 
@@ -713,7 +708,7 @@ public class ServicesImpl extends RemoteServiceServlet implements Services
   }
 
   /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.Services#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
+   * @see com.fullmetalgalaxy.model.GameServices#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
    */
   @Override
   public void sendChatMessage(ChatMessage p_message) throws RpcFmpException

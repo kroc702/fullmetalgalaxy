@@ -34,7 +34,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.appengine.api.images.Composite;
 import com.google.appengine.api.images.Composite.Anchor;
 import com.google.appengine.api.images.Image;
@@ -52,13 +52,13 @@ public class MiniMapProducer implements ImageProducer
   protected static final long MAX_COMPOSITION = ImagesService.MAX_COMPOSITES_PER_REQUEST;
   static private Map<PlanetType, Map<LandType, Image>> s_landImage = null;
 
-  private EbGame m_game = null;
+  private Game m_game = null;
 
 
   /**
    * 
    */
-  public MiniMapProducer(String p_servletBasePath, EbGame p_game)
+  public MiniMapProducer(String p_servletBasePath, Game p_game)
   {
     synchronized( IMAGE_TYPE )
     {
@@ -118,7 +118,7 @@ public class MiniMapProducer implements ImageProducer
   /**
    * @return the game
    */
-  private EbGame getGame()
+  private Game getGame()
   {
     return m_game;
   }

@@ -32,8 +32,8 @@ import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -98,7 +98,7 @@ public class AnEvent extends EbBase
 
   private void init()
   {
-    setLastUpdate( new Date( System.currentTimeMillis() ) );
+    setLastUpdate( new Date() );
     m_idGame = 0;
     m_type = null;
 
@@ -126,7 +126,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
-  public void exec(EbGame p_game) throws RpcFmpException
+  public void exec(Game p_game) throws RpcFmpException
   {
     p_game.incVersion();
   }
@@ -139,7 +139,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
-  public void unexec(EbGame p_game) throws RpcFmpException
+  public void unexec(Game p_game) throws RpcFmpException
   {
     p_game.decVersion();
   }
@@ -150,7 +150,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
-  public final void checkedExec(EbGame p_game) throws RpcFmpException
+  public final void checkedExec(Game p_game) throws RpcFmpException
   {
     check( p_game );
     exec( p_game );
@@ -162,7 +162,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
-  public void check(EbGame p_game) throws RpcFmpException
+  public void check(Game p_game) throws RpcFmpException
   {
     if( p_game == null )
     {
@@ -183,8 +183,8 @@ public class AnEvent extends EbBase
   public String toString()
   {
     String str = getLastUpdate().getDay() + "/" + getLastUpdate().getMonth() + "/"
-        + (getLastUpdate().getYear()+1900) + " " + getLastUpdate().getMinutes() + ":"
-        + getLastUpdate().getHours();
+        + (getLastUpdate().getYear() + 1900) + " " + getLastUpdate().getHours() + ":"
+        + getLastUpdate().getMinutes() + ":" + getLastUpdate().getSeconds();
     str += " " + getType();
     return str;
   }
@@ -210,7 +210,7 @@ public class AnEvent extends EbBase
   }
 
 
-  public void setGame(EbGame p_game)
+  public void setGame(Game p_game)
   {
     m_idGame = p_game.getId();
   }
@@ -344,7 +344,7 @@ public class AnEvent extends EbBase
 
   /**
    */
-  protected void unexecFireDisabling(EbGame p_game)
+  protected void unexecFireDisabling(Game p_game)
   {
     assert isFdComputed();
     p_game.getBoardFireCover().addFireDisabling( getFdRemoved() );
@@ -352,7 +352,7 @@ public class AnEvent extends EbBase
 
   }
 
-  protected void execFireDisabling(EbGame p_game, AnBoardPosition p_position)
+  protected void execFireDisabling(Game p_game, AnBoardPosition p_position)
   {
     if( isFdComputed() )
     {
@@ -383,7 +383,7 @@ public class AnEvent extends EbBase
    * recompute fire cover and check for all token his fire disabled flag
    * @param p_game
    */
-  protected void execFireDisabling(EbGame p_game)
+  protected void execFireDisabling(Game p_game)
   {
     if( isFdComputed() )
     {

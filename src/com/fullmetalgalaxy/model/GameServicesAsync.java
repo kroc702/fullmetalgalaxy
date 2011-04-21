@@ -26,7 +26,7 @@ package com.fullmetalgalaxy.model;
 import java.util.ArrayList;
 
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Kroc
  * 
  */
-public interface ServicesAsync
+public interface GameServicesAsync
 {
 
   /**
@@ -44,7 +44,7 @@ public interface ServicesAsync
    * @param game description of the game.
    * @return id of the created game
    */
-  public void saveGame(EbGame game, AsyncCallback<EbBase> callback);
+  public void saveGame(Game game, AsyncCallback<EbBase> callback);
 
   /**
    * same as above, but let user set a message about his modifications
@@ -53,7 +53,7 @@ public interface ServicesAsync
    * @return
    * @throws RpcFmpException
    */
-  public void saveGame(EbGame game, String p_modifDesc, AsyncCallback<EbBase> callback);
+  public void saveGame(Game game, String p_modifDesc, AsyncCallback<EbBase> callback);
 
 
   /**

@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.datastore.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -14,7 +14,7 @@
 <h1>Message privé</h1>
 
 <%
-EbAccount account = FmgDataStore.sgetAccount( id );
+EbAccount account = FmgDataStore.dao().find( EbAccount.class, id );
 if( account == null ) 
 { 
 	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'existe pas.</h2>" );

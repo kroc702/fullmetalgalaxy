@@ -28,7 +28,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -81,7 +81,7 @@ public class WgtEditForces extends Composite implements ClickHandler, ChangeList
   {
     if( p_event.getSource() == m_btnNewReg )
     {
-      EbGame game = ModelFmpMain.model().getGame();
+      Game game = ModelFmpMain.model().getGame();
 
       if( game.getSetRegistration().size() >= game.getMaxNumberOfPlayer() )
       {
@@ -93,7 +93,6 @@ public class WgtEditForces extends Composite implements ClickHandler, ChangeList
         EnuColor color = (EnuColor)game.getFreeColors4Registration().toArray()[0];
         registration.setEnuColor( color );
         game.getSetRegistration().add( registration );
-        registration.setGame( game );
         registration.setOriginalColor( color.getValue() );
         refreshRegistrationList();
         m_lstReg.setSelectedIndex( game.getSetRegistration().size() - 1 );

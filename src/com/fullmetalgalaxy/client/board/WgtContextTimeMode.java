@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.board;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.model.persist.EbGame;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -89,7 +89,7 @@ public class WgtContextTimeMode extends Composite implements ClickHandler
   public void redraw()
   {
     assert ModelFmpMain.model() != null;
-    EbGame game = ModelFmpMain.model().getGame();
+    Game game = ModelFmpMain.model().getGame();
 
     m_panel.clear();
     

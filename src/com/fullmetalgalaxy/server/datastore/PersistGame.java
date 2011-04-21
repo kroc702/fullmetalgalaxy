@@ -24,6 +24,10 @@ package com.fullmetalgalaxy.server.datastore;
 
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,7 +98,7 @@ public class PersistGame extends PersistEntity
     setStarted( game.isStarted() );
     setHistory( game.isHistory() );
     setMaxNumberOfPlayer( game.getMaxNumberOfPlayer() );
-    setCurrentNumberOfRegiteredPlayer( game.getCurrentNumberOfRegiteredPlayer() );
+    setCurrentNumberOfRegiteredPlayer( game.getSetRegistration().size() );
     setCurrentTimeStep( game.getCurrentTimeStep() );
     setGameType( game.getGameType() );
     setPlanetType( game.getPlanetType() );
@@ -121,8 +125,38 @@ public class PersistGame extends PersistEntity
 
   public EbGame getGame()
   {
-    EbBase base = getEb();
-    EbGame game = EbGame.class.cast( base );
+    if( getData() == null )
+    {
+      return null;
+    }
+    Object obj = null;
+    InputStream inStream = null;
+    ObjectInputStream in = null;
+    try
+    {
+      inStream = new ByteArrayInputStream( getData() );
+      in = new ObjectInputStream( inStream );
+      obj = in.readObject();
+    } catch( IOException e )
+    {
+      e.printStackTrace();
+    } catch( ClassNotFoundException e )
+    {
+      e.printStackTrace();
+    } finally
+    {
+      try
+      {
+        if( in != null )
+        {
+          in.close();
+        }
+      } catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
+    EbGame game = EbGame.class.cast( obj );
     if( game != null )
     {
       game.setName( getName() );
@@ -388,9 +422,9 @@ public class PersistGame extends PersistEntity
     for( EbRegistration player : sortedRegistration )
     {
       playerCount++;
-      if(player != null)
+      if( player != null && player.haveAccount() )
       {
-        strBuf.append( player.getAccountPseudo() );
+        strBuf.append( player.getAccount().getPseudo() );
       }
       if( (!p_game.isAsynchron() || p_game.getCurrentTimeStep() == 0)
           && (p_game.getCurrentPlayerRegistration() == player) )
