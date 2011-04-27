@@ -58,6 +58,10 @@ import com.google.appengine.api.xmpp.JID;
  * This class keep track of all presences on all games/rooms and allow to broadcast any message to any room.
  * 
  * This class override HttpServlet to use task queue to remove too old presence
+ * 
+ * TODO implement a proper request presence mechanism:
+ *  - server ask for presence, if after 15 seconds, no answer are received, remove from room.
+ *  - similar mechanism on client to detect channel connection lost.
  */
 public class ChannelManager extends HttpServlet
 {
@@ -202,6 +206,27 @@ public class ChannelManager extends HttpServlet
     }
     PresenceRoom room = getRoom( p_presence.getGameId() );
     room.remove( p_presence );
+    
+    // ask all other presence with similar pseudo to send a presence empty
+    // message
+    String response = Serializer.toClient( new ChatMessage() );
+    for(Presence presence : room)
+    {
+      if( presence.getClientType() != ClientType.XMPP
+          && presence.getPseudo().equalsIgnoreCase( p_presence.getPseudo() ) )
+      {
+        try
+        {
+          presence.getLastConnexion().setTime(
+              presence.getLastConnexion().getTime() + CACHE_PRESENCE_TTL_MS - 4000 );
+          s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+        } catch( Exception e )
+        {
+          log.error( e );
+        }
+      }
+    }
+    
     if( room.isEmpty() )
     {
       // room empty: clear cache

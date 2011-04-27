@@ -22,11 +22,12 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -152,9 +153,9 @@ public class Auth
       // user is logged but his account wasn't found in database.
       // It's likely a new google user: create his account
       account = new EbAccount();
+      account.setAuthProvider( AuthProvider.Google );
       account.setLogin( login );
       account.setJabberId( login );
-      account.setAuthProvider( AuthProvider.Google );
       FmgDataStore dataStore = new FmgDataStore(false);
       dataStore.put( account );
       dataStore.close();
@@ -165,6 +166,16 @@ public class Auth
       FmgDataStore dataStore = new FmgDataStore(false);
       dataStore.put( account );
       dataStore.close();
+    }
+
+    // if last connexion is older than one day, update it
+    if( account.getLastConnexion().before(
+        new Date( System.currentTimeMillis() - (1000 * 60 * 60 * 24) ) ) )
+    {
+      account.getLastConnexion().setTime( System.currentTimeMillis() );
+      FmgDataStore ds = new FmgDataStore( false );
+      ds.put( account );
+      ds.close();
     }
 
     return account;

@@ -55,7 +55,8 @@ public class EbAccount extends EbPublicAccount
   private String m_compactPseudo = "";
   private String m_login = "";
   private String m_email = "";
-  private Date m_subscriptionDate = new Date( System.currentTimeMillis() );
+  private Date m_subscriptionDate = new Date();
+  private Date m_lastConnexion = new Date();
   @Unindexed
   private AuthProvider m_authProvider = AuthProvider.Fmg;
   @Unindexed
@@ -224,6 +225,7 @@ public class EbAccount extends EbPublicAccount
   public void setLogin(String p_login)
   {
     assert p_login != null;
+    m_login = p_login;
     if( getPseudo() == null || getPseudo().isEmpty() )
     {
       setPseudo( computePseudoFromMail( p_login ) );
@@ -232,7 +234,11 @@ public class EbAccount extends EbPublicAccount
     {
       m_email = p_login;
     }
-    m_login = p_login;
+    if( (getJabberId() == null || getJabberId().isEmpty())
+        && getAuthProvider() == AuthProvider.Google )
+    {
+      setJabberId( getLogin() );
+    }
   }
 
   /**
@@ -419,6 +425,13 @@ public class EbAccount extends EbPublicAccount
     m_isVip = p_isVip;
   }
 
+  /**
+   * @return the lastConnexion
+   */
+  public Date getLastConnexion()
+  {
+    return m_lastConnexion;
+  }
 
 
 

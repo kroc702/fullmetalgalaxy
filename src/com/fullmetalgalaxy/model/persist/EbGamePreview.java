@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Embedded;
+import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -81,6 +82,8 @@ public class EbGamePreview extends EbBase
   private Date m_creationDate = new Date( System.currentTimeMillis() );
   private boolean m_started = false;
 
+  private Date m_lastUpdate = new Date();
+
   /**
    * only VIP people can join VIP game.
    */
@@ -127,6 +130,12 @@ public class EbGamePreview extends EbBase
   {
     super.reinit();
     this.init();
+  }
+
+  @PrePersist
+  void onPersist()
+  { /* do something before persisting */
+    getLastUpdate().setTime( System.currentTimeMillis() );
   }
 
 
@@ -831,6 +840,15 @@ public class EbGamePreview extends EbBase
   public void setVip(boolean p_isVip)
   {
     m_isVip = p_isVip;
+  }
+
+
+  /**
+   * @return the lastUpdate
+   */
+  public Date getLastUpdate()
+  {
+    return m_lastUpdate;
   }
 
 

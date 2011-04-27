@@ -307,6 +307,7 @@ public class AccountServlet extends HttpServlet
       }
     }
 
+    account.setAuthProvider( AuthProvider.Fmg );
     account.setEmail( params.get( "email" ) );
     account.setAllowMailFromGame( params.get( "AllowMailFromGame" ) != null );
     account.setAllowMailFromNewsLetter( params.get( "AllowMailFromNewsLetter" ) != null );
@@ -314,7 +315,6 @@ public class AccountServlet extends HttpServlet
     account.setJabberId( params.get( "jabberId" ) );
     account.setDescription( params.get( "description" ) );
     account.setLogin( params.get( "login" ) );
-    account.setAuthProvider( AuthProvider.Fmg );
 
     if( params.get( "password" ) != null )
     {

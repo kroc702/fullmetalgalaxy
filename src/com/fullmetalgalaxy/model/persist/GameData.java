@@ -49,6 +49,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public class GameData implements java.io.Serializable, IsSerializable
 {
+  private static final long serialVersionUID = -7121387606249451938L;
+
   private EbGamePreview m_preview = null;
   private EbGameData m_data = null;
   
@@ -82,9 +84,23 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_data;
   }
   
-  
   // data access that need both class
   // ================================
+
+  /**
+   * this only an estimation
+   * @return
+   */
+  public int getNumberOfHexagon()
+  {
+    int hexagonCount = getLandHeight() * getLandWidth();
+    if( getLand( 0, 0 ) == LandType.None )
+    {
+      // assume map is an hexagon
+      hexagonCount *= 3 / 4;
+    }
+    return hexagonCount;
+  }
 
   /**
    * if getTakeOffTurns() is defined, return it. 
