@@ -59,6 +59,8 @@ import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
  */
 public class Game extends GameData implements PathGraph, GameEventStack
 {
+  private static final long serialVersionUID = -717221858626185781L;
+
   transient private TokenIndexSet m_tokenIndexSet = null;
   transient private GameEventStack m_eventStack = this;
   transient private BoardFireCover m_fireCover = null;

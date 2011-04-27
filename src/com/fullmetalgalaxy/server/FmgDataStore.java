@@ -103,6 +103,30 @@ public class FmgDataStore extends DataStore
   }
   
   
+  public static boolean updatePseudo(long p_accountId, String p_newPseudo)
+  {
+    if( !EbAccount.isValidPseudo( p_newPseudo ) )
+    {
+      return false;
+    }
+    FmgDataStore ds = new FmgDataStore( false );
+    EbAccount account = ds.find( EbAccount.class, p_accountId );
+    String oldPseudo = account.getPseudo();
+    if( !EbAccount.compactPseudo( oldPseudo ).equals( EbAccount.compactPseudo( p_newPseudo ) )
+        && isPseudoExist( p_newPseudo ) )
+    {
+      ds.rollback();
+      return false;
+    }
+    account.setPseudo( p_newPseudo );
+    ds.put( account );
+    ds.commit();
+
+    // TODO change all pseudo in all games...
+
+    return true;
+  }
+
   /**
    * @param p_isReadOnly
    */
