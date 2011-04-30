@@ -42,11 +42,8 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.server.datastore.OldFmgDataStore;
-import com.fullmetalgalaxy.server.datastore.PersistGame;
 import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
-import com.googlecode.objectify.Key;
 
 /**
  * @author Vincent
@@ -99,48 +96,6 @@ public class AdminServlet extends HttpServlet
         ObjectOutputStream out = new ObjectOutputStream( p_resp.getOutputStream() );
         out.writeObject( modelInit );
       }
-    }
-
-    strid = p_req.getParameter( "migratedata" );
-    if( strid != null )
-    {
-      FmgDataStore ds = null;
-
-      // first clean datastore
-      for( Key<EbAccount> accountkey : FmgDataStore.dao().query( EbAccount.class ).fetchKeys() )
-      {
-        ds = new FmgDataStore( false );
-        ds.delete( EbAccount.class, accountkey.getId() );
-        ds.commit();
-      }
-
-      /* NO don't !
-       * as it will also remove mimimap blob
-      for( EbGamePreview game : FmgDataStore.dao().query( EbGamePreview.class ) )
-      {
-        ds = new FmgDataStore( false );
-        ds.delete( game );
-        ds.commit();
-      }*/
-
-      // account migration
-      for( EbAccount account : OldFmgDataStore.getAccountList() )
-      {
-        ds = new FmgDataStore( false );
-        ds.put( account );
-        ds.commit();
-      }
-
-      // game migration
-      for( PersistGame pgame : OldFmgDataStore.getPersistGameList() )
-      {
-        ds = new FmgDataStore( false );
-        Game game = pgame.getGame().createGame();
-        game.isOpen();
-        ds.put( game );
-        ds.commit();
-      }
-
     }
 
   }

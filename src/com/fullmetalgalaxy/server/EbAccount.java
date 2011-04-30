@@ -52,6 +52,7 @@ public class EbAccount extends EbPublicAccount
    * and transform to lower case.
    * This is used to check similar pseudo.
    */
+  @SuppressWarnings("unused")
   private String m_compactPseudo = "";
   private String m_login = "";
   private String m_email = "";
@@ -431,6 +432,11 @@ public class EbAccount extends EbPublicAccount
   public Date getLastConnexion()
   {
     return m_lastConnexion;
+  }
+
+  public void setLastConnexion(Date p_date)
+  {
+    m_lastConnexion = p_date;
   }
 
 
