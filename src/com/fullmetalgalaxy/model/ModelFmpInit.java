@@ -22,7 +22,6 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
-import com.fullmetalgalaxy.model.persist.EbGame;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -36,8 +35,6 @@ public class ModelFmpInit implements IsSerializable, java.io.Serializable
 {
   static final long serialVersionUID = 203;
 
-  private EbGame m_game = null;
-
   private Game game = null;
 
   private PresenceRoom m_presenceRoom = null;
@@ -49,11 +46,6 @@ public class ModelFmpInit implements IsSerializable, java.io.Serializable
    */
   public Game getGame()
   {
-    if( game == null && m_game != null )
-    {
-      game = m_game.createGame();
-      m_game = null;
-    }
     return game;
   }
 

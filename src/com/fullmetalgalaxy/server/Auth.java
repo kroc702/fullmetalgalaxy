@@ -169,10 +169,11 @@ public class Auth
     }
 
     // if last connexion is older than one day, update it
-    if( account.getLastConnexion().before(
+    if( account.getLastConnexion() == null
+        || account.getLastConnexion().before(
         new Date( System.currentTimeMillis() - (1000 * 60 * 60 * 24) ) ) )
     {
-      account.getLastConnexion().setTime( System.currentTimeMillis() );
+      account.setLastConnexion( new Date() );
       FmgDataStore ds = new FmgDataStore( false );
       ds.put( account );
       ds.close();
