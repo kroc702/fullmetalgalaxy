@@ -83,12 +83,6 @@ public class ChannelManager extends HttpServlet
   private final static FmpLogger log = FmpLogger.getLogger( ChannelManager.class.getName() );
 
 
-  static
-  {
-    // init first task
-    addTask();
-  }
-
   /**
    * entry point for task queue.
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -126,7 +120,7 @@ public class ChannelManager extends HttpServlet
    * add a task to remove too old presence in a near future.
    * This task stay alive by itself.
    */
-  private static void addTask()
+  public static void addTask()
   {
     Queue queue = QueueFactory.getQueue( "channelmanager" );
     queue.add();

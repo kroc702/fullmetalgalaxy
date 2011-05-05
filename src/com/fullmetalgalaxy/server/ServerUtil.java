@@ -76,10 +76,6 @@ public class ServerUtil
   }
 
 
-  public static String getChannelKey(String p_userLogin, long p_gameId)
-  {
-    return p_userLogin + p_gameId;
-  }
 
   public static Date currentDate()
   {
@@ -89,5 +85,10 @@ public class ServerUtil
     return date;
   }
 
+  private static ForumConector s_forumConnector = new ForumConectorImpl();
 
+  public static ForumConector forumConnector()
+  {
+    return s_forumConnector;
+  }
 }

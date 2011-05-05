@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -129,6 +131,21 @@ public class ClientHttpRequest
     }
   }
 
+  
+  public void setCookie(Collection<HttpCookie> p_cookies) throws IOException
+  {
+    for( HttpCookie cookie : p_cookies )
+    {
+      setCookie( cookie );
+    }
+  }
+  
+  
+  public void setCookie(HttpCookie p_cookie) throws IOException
+  {
+    setCookie(p_cookie.getName(), p_cookie.getValue());
+  }
+  
   /**
    * adds a cookie to the requst
    * @param name cookie name

@@ -48,6 +48,7 @@ Vous pouvez aussi utiliser votre compte google pour vous
 
 <input type="hidden" name="accountid" value="<%= account.getId() %>"/>
 <input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
+<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' width='32' height='32'><br/>
 login :
 <input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
 <%= account.getAuthIconHtml() %><br/>
@@ -93,6 +94,16 @@ Description publique :<br/>
 </textarea><br/>
 
 
+<% if(Auth.isUserAdmin(request, response)) {
+  if( account.getForumId() != null )
+  {
+	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
+	out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
+  } else {
+	out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
+    out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );
+  }
+} %> <br/>
 
 <input type="submit" name="Submit" value="Enregistrer"/>
 <input type="reset" value="Annuler">

@@ -5,14 +5,12 @@
 <head>
 <title>Full Metal Galaxy - Liste des joueurs</title>
         
-<%@include file="include/meta.jsp"%>
 
 </head>
 <body>
-<%@include file="include/header.jsp"%>
 
 <%
-final int COUNT_PER_PAGE = 20;
+final int COUNT_PER_PAGE = 100;
 int offset = 0;
 try
 {
@@ -21,46 +19,60 @@ try
 {
 }
 
+String pseudo = request.getParameter( "pseudo" );
+
 Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
+
+if( pseudo != null && !pseudo.isEmpty() )
+{
+  accountQuery.filter("m_pseudo >=",pseudo).filter("m_pseudo <", pseudo + "\uFFFD"); ;
+}
+else
+{
+  pseudo = "";
+}
+
 int accountListCount = accountQuery.count();
 out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
 
 %>
 
+<form name="myform" action="/admin/accounts.jsp" method="get">
+search pseudo: <input type="text" name="pseudo" value="<%= pseudo %>">
+<input type="submit" name="Submit" value="search"/>
+</form>
+
 	<table class="fmp-array" style="width:100%;">
-	<tr><td>Date d'inscription</td><td>Pseudo</td><td>Message</td></tr>
+	<tr><td>Inscription</td><td>Connexion</td><td>Auth</td><td>Mail</td><td>Pseudo</td></tr>
 	<%
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
 	    for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
 	    {
 	      out.println("<tr>" );
 	      // subscribtion date
-	      out.println("<td style='width:150px;''>"+ simpleFormat.format(account.getSubscriptionDate()) + "</td>" );
+	      out.println("<td style='width:110px;''>"+ simpleFormat.format(account.getSubscriptionDate()) + "</td>" );
+	      // connection date
+	      if( account.getLastConnexion() != null ) {
+	      	out.println("<td style='width:110px;'>"+ simpleFormat.format(account.getLastConnexion()) + "</td>" );
+	      } else {
+	        out.println("<td style='width:110px;'>???</td>" );
+	      }
+	    	
+	      // AuthProvider
+	      out.println("<td style='width:30px;'>"+account.getAuthIconHtml()+"</td>" );
+	   
+	      // account email
+	      out.println("<td style='width:30px;'><a href='mailto:"+ account.getEmail() + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
 	      
 	      // Pseudo 
 	      out.println("<td><a href='"+account.getProfileUrl()+"'>"+ account.getPseudo() + "</a></td>" );
 	      
-	      // Message
-	      if( account.isAllowPrivateMsg() && account.haveEmail() )
-	      {
-	      	out.println("<td><a href='"+FmpConstant.getPMUrl(account.getId())+"'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
-	      }
-	      else
-	      {
-	        out.println("<td></td>" );
-	      }
+	      // Edit
+	      out.println("<td><a href=\"/account.jsp?id="+account.getId()+"\"><img style='border=none' border=0 src='/images/css/icon_edit.gif' alt='edit' /></a></td>" );
+	
+	      // Avatar
+	      out.println("<td><img src='"+account.getAvatarUrl()+"' border=0 alt='Avatar' width='32' height='32'></td>" );
 	      
-	      // admin option
-	      if(Auth.isUserAdmin(request, response))
-	      {
-	      	out.println("<td><a href=\"/account.jsp?id="+account.getId()+"\"><img style='border=none' border=0 src='/images/css/icon_edit.gif' alt='edit' /></a></td>" );
-
-	      	// AuthProvider
-	      	out.println("<td>"+account.getAuthIconHtml()+"</td>" );
-	      	
-	      	// account email
-	      	out.println("<td><a href='mailto:"+ account.getEmail() + "'>"+ account.getEmail()+"</a></td>" );
-	      }
 	      out.println("</tr>" );
 	    }
 	%>
@@ -78,6 +90,6 @@ out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
 	%>
 	</p>
 	
-<%@include file="include/footer.jsp"%>
+
 </body>
 </html>
