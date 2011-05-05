@@ -1,5 +1,14 @@
 <queue-entries>
   <queue>
+    <!-- multi purpose queue for task that need to be processed quite quickly -->
+    <name>default</name>
+    <rate>1/s</rate>
+    <bucket-size>40</bucket-size>
+    <max-concurrent-requests>50</max-concurrent-requests>
+  </queue>
+  
+  <queue>
+    <!-- auto keep alive task -->
     <name>channelmanager</name>
     <rate>15/h</rate>
     <bucket-size>1</bucket-size>
@@ -8,4 +17,17 @@
       <task-retry-limit>1</task-retry-limit>
     </retry-parameters>
   </queue>
+  
+  <queue>
+    <!-- auto keep alive task. real job is send to default queue -->
+    <name>synchroforum</name>
+    <rate>1/d</rate>
+    <bucket-size>1</bucket-size>
+    <max-concurrent-requests>1</max-concurrent-requests>
+    <retry-parameters>
+      <task-retry-limit>1</task-retry-limit>
+    </retry-parameters>
+  </queue>
+  
+  
 </queue-entries>

@@ -307,7 +307,6 @@ public class AccountServlet extends HttpServlet
       }
     }
 
-    account.setAuthProvider( AuthProvider.Fmg );
     account.setEmail( params.get( "email" ) );
     account.setAllowMailFromGame( params.get( "AllowMailFromGame" ) != null );
     account.setAllowMailFromNewsLetter( params.get( "AllowMailFromNewsLetter" ) != null );

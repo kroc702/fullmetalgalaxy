@@ -29,6 +29,7 @@
         <include path="/puzzles/**" expiration="10d" />
         <include path="/**images/**" expiration="10d" />
         <include path="/**.css" expiration="10d" />
+        <include path="/ImageServlet" expiration="1d" />
         <!-- We can't cache game.jsp since game data is now embedded -->
         <include path="/game.jsp" expiration="1s" />
         <include path="/**.jsp" expiration="2h" />

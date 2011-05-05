@@ -90,6 +90,16 @@
     </servlet-mapping>
   
     <servlet>
+       <servlet-name>SynchroForum</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.SynchroForum</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>SynchroForum</servlet-name>
+       <url-pattern>/_ah/queue/synchroforum</url-pattern>
+    </servlet-mapping>
+  
+  
+    <servlet>
        <servlet-name>XMPPMessageServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet</servlet-class>
     </servlet>

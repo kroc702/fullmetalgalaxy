@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccountStats;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.googlecode.objectify.annotation.Serialized;
@@ -57,7 +58,7 @@ public class EbAccount extends EbPublicAccount
   private String m_login = "";
   private String m_email = "";
   private Date m_subscriptionDate = new Date();
-  private Date m_lastConnexion = new Date();
+  private Date m_lastConnexion = null;
   @Unindexed
   private AuthProvider m_authProvider = AuthProvider.Fmg;
   @Unindexed
@@ -86,6 +87,18 @@ public class EbAccount extends EbPublicAccount
   @Serialized
   private List<EbAccountStats> m_stats = new ArrayList<EbAccountStats>();
   
+  /**
+   * link with forum identity
+   */
+  private String m_forumId = null;
+  /**
+   * True if we are sure that forum id correspond to the same user.
+   * It can be set even if m_forumId isn't filled to allow FMG to automatically link with forum
+   */
+  @Unindexed
+  private boolean m_isforumIdConfirmed = false;
+  @Unindexed
+  private String m_forumAvatarUrl = null;
   
   private static Pattern s_pattern = Pattern.compile( "^((?:[\\w]+\\p{Graph}?)+\\w){3,32}$" );
   
@@ -143,6 +156,16 @@ public class EbAccount extends EbPublicAccount
   {
     super.reinit();
     this.init();
+  }
+
+  @Override
+  public String getProfileUrl()
+  {
+    if( getForumId() == null )
+    {
+      return super.getProfileUrl();
+    }
+    return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
   }
 
 
@@ -437,6 +460,54 @@ public class EbAccount extends EbPublicAccount
   public void setLastConnexion(Date p_date)
   {
     m_lastConnexion = p_date;
+  }
+
+  /**
+   * @return the forumId
+   */
+  public String getForumId()
+  {
+    return m_forumId;
+  }
+
+  /**
+   * @param p_forumId the forumId to set
+   */
+  public void setForumId(String p_forumId)
+  {
+    m_forumId = p_forumId;
+  }
+
+  /**
+   * @return the forumAvatarUrl
+   */
+  public String getForumAvatarUrl()
+  {
+    return m_forumAvatarUrl;
+  }
+
+  /**
+   * @param p_forumAvatarUrl the forumAvatarUrl to set
+   */
+  public void setForumAvatarUrl(String p_forumAvatarUrl)
+  {
+    m_forumAvatarUrl = p_forumAvatarUrl;
+  }
+
+  /**
+   * @return the isforumIdConfirmed
+   */
+  public boolean isIsforumIdConfirmed()
+  {
+    return m_isforumIdConfirmed;
+  }
+
+  /**
+   * @param p_isforumIdConfirmed the isforumIdConfirmed to set
+   */
+  public void setIsforumIdConfirmed(boolean p_isforumIdConfirmed)
+  {
+    m_isforumIdConfirmed = p_isforumIdConfirmed;
   }
 
 

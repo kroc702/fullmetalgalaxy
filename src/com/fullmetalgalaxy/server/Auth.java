@@ -41,6 +41,15 @@ import com.googlecode.objectify.Query;
  */
 public class Auth
 {
+  static
+  {
+    // init first tasks
+    // this is done here to be sure that task are initialized at least once
+    ChannelManager.addTask();
+    SynchroForum.addTask();
+  }
+
+
   private static String getFullURI(HttpServletRequest p_request)
   {
     assert p_request != null;

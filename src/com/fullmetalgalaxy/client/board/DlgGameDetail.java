@@ -40,9 +40,8 @@ import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
@@ -362,7 +361,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
 
       // display login
       String login = registration.getAccount().getPseudo();
-      String html = "<a href='" + FmpConstant.getProfileUrl( registration.getAccount().getId() )
+      String html = "<a href='" + registration.getAccount().getProfileUrl()
           + "' target='_blank'>" + login
           + "</a>";
       if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )

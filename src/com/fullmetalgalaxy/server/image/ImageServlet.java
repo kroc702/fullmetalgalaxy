@@ -51,9 +51,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.CacheKey;
-import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.fullmetalgalaxy.server.CacheKey.CacheKeyType;
+import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -81,11 +82,28 @@ public class ImageServlet extends HttpServlet
   {
     try
     {
+      String avatarid = request.getParameter( "avatar" );
       String gameid = request.getParameter( "minimap" );
 
-      String type = createMinimap( response.getOutputStream(), gameid );
+      if( avatarid != null )
+      {
+        EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( avatarid ) );
+        if( account.getForumAvatarUrl() != null )
+        {
+          response.sendRedirect( account.getForumAvatarUrl() );
+        }
+        else
+        {
+          response.sendRedirect( "/images/avatar-default.jpg" );
+        }
+      }
+      else if( gameid != null )
+      {
+        String type = createMinimap( response.getOutputStream(), gameid );
+        response.setContentType( type );
+      }
 
-      response.setContentType( type );
+      
     } catch( Exception e )
     {
       throw new ServletException( e );

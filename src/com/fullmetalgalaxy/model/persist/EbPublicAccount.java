@@ -22,7 +22,6 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 
 
@@ -87,10 +86,13 @@ public class EbPublicAccount extends EbBase
 
   public String getAvatarUrl()
   {
-      return FmpConstant.getBaseUrl() + "/images/avatar-default.jpg";
+    return "/ImageServlet?avatar=" + getId();
   }
 
-
+  public String getProfileUrl()
+  {
+    return "/profile.jsp?id=" + getId();
+  }
 
   // getters / setters
   // -----------------

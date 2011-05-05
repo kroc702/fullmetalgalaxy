@@ -33,8 +33,6 @@ public class FmpConstant
   public static final int maximumPlayerNumber = 9;
 
   // in second
-  public static final int localResfreshingPeriod = 30;
-
   public static final int clientMessagesLivePeriod = 15;
 
   public static final int miniMapWidth = 240;
@@ -48,6 +46,11 @@ public class FmpConstant
     return "";// http://fullmetalgalaxy.com";
   }
 
+  public static String getForumHost()
+  {
+    return "fullmetalplanete.forum2jeux.com";
+  }
+
   public static String getForumUrl()
   {
     return "http://fullmetalplanete.forum2jeux.com/programme-de-vincent-f33/";
@@ -58,10 +61,6 @@ public class FmpConstant
     return "/privatemsg.jsp?id=" + p_accountId;
   }
 
-  public static String getProfileUrl(long p_accountId)
-  {
-    return "/profile.jsp?id=" + p_accountId;
-  }
 
   /**
    * @param p_zoom

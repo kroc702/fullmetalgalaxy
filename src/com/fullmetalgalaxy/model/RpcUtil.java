@@ -58,7 +58,6 @@ public class RpcUtil
     return ret;
   }
 
-
   // TODO send error to server - use log4j
   public static void logError(String p_message)
   {

@@ -26,9 +26,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.cache.Cache;
+import javax.cache.CacheException;
+import javax.cache.CacheFactory;
+import javax.cache.CacheManager;
+import javax.cache.CacheStatistics;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -69,24 +75,87 @@ public class AdminServlet extends HttpServlet
       throws ServletException, IOException
   {
     String strid = null;
+
+    // delete game
+    // ===========
     strid = p_req.getParameter( "deletegame" );
     if( strid != null )
     {
-      FmgDataStore dataStore = new FmgDataStore(false);
+      FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.delete( Game.class, Long.parseLong( strid ) );
       dataStore.close();
       p_resp.sendRedirect( "/gamelist.jsp" );
     }
 
+    // delete account
+    // ==============
     strid = p_req.getParameter( "deleteaccount" );
     if( strid != null )
     {
-      FmgDataStore dataStore = new FmgDataStore(false);
+      FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.delete( EbAccount.class, Long.parseLong( strid ) );
       dataStore.close();
       p_resp.sendRedirect( "/halloffames.jsp" );
     }
 
+    // pull account from forum
+    // =======================
+    strid = p_req.getParameter( "pullaccount" );
+    if( strid != null )
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        ServerUtil.forumConnector().pullAccount( account );
+        ds.put( account );
+      }
+      else
+      {
+        p_resp.getOutputStream().println( "account " + strid + " not found" );
+      }
+      ds.close();
+    }
+
+    // push account to forum
+    // =======================
+    strid = p_req.getParameter( "pushaccount" );
+    if( strid != null )
+    {
+      // TODO
+      p_resp.getOutputStream().println( "TODO" );
+    }
+
+    // link forum account
+    // ==================
+    strid = p_req.getParameter( "linkaccount" );
+    if( strid != null )
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        String forumId = ServerUtil.forumConnector().getUserId( account.getPseudo() );
+        if( forumId == null )
+        {
+          p_resp.getOutputStream().println(
+              "username " + account.getPseudo() + " not found on forum" );
+        }
+        else
+        {
+          account.setForumId( forumId );
+          ds.put( account );
+        }
+      }
+      else
+      {
+        p_resp.getOutputStream().println( "account " + strid + " not found" );
+      }
+      ds.close();
+    }
+
+    // download game
+    // =============
     strid = p_req.getParameter( "downloadgame" );
     if( strid != null )
     {
@@ -95,6 +164,30 @@ public class AdminServlet extends HttpServlet
       {
         ObjectOutputStream out = new ObjectOutputStream( p_resp.getOutputStream() );
         out.writeObject( modelInit );
+      }
+    }
+
+    // delete session from datastore
+    // =============================
+    strid = p_req.getParameter( "deletesession" );
+    if( strid != null )
+    {
+      // TODO
+      p_resp.getOutputStream().println( "TODO" );
+    }
+
+    // delete cache
+    // ============
+    strid = p_req.getParameter( "deletecache" );
+    if( strid != null )
+    {
+      try
+      {
+        clearCache();
+        p_resp.getOutputStream().println( "delete cache Succeed" );
+      } catch( CacheException e )
+      {
+        e.printStackTrace( p_resp.getWriter() );
       }
     }
 
@@ -145,7 +238,7 @@ public class AdminServlet extends HttpServlet
       modelInit.getGame().setMinimapBlobKey( null );
       modelInit.getGame().setMinimapUri( null );
 
-      FmgDataStore dataStore = new FmgDataStore(false);
+      FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.put( modelInit.getGame() );
       dataStore.close();
 
@@ -159,5 +252,13 @@ public class AdminServlet extends HttpServlet
   }
 
 
+  private void clearCache() throws CacheException
+  {
+    CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+    Cache cache = cacheFactory.createCache( Collections.emptyMap() );
+    CacheStatistics stats = cache.getCacheStatistics();
+    log.info( "Clearing " + stats.getObjectCount() + " objects in cache" );
+    cache.clear();
+  }
 
 }
