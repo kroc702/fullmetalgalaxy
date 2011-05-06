@@ -12,7 +12,7 @@
         <%@include file="include/meta.jsp"%>
         <style type="text/css">@import url( /appMain.css );</style>
         
-        <meta name='gwt:property' id='app_history' content='new__status__'>
+        <meta name='gwt:property' id='app_history' content='new__'>
         
     </head>
 
