@@ -88,7 +88,7 @@ public class ImageServlet extends HttpServlet
       if( avatarid != null )
       {
         EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( avatarid ) );
-        if( account.getForumAvatarUrl() != null )
+        if( account != null && account.getForumAvatarUrl() != null )
         {
           response.sendRedirect( account.getForumAvatarUrl() );
         }

@@ -174,7 +174,14 @@ public class WgtPlayerInfo extends WgtView
         }
         if( index < allowedTakeOff.size() )
         {
-          image = Icons.s_instance.takeOff16().createImage();
+          if( allowedTakeOff.get( index ).intValue() == currentTurn + 1 )
+          {
+            image = Icons.s_instance.takeOff16().createImage();
+          }
+          else
+          {
+            image = Icons.s_instance.takeOffBW16().createImage();
+          }
           image.setTitle( "prochain decolage : tour " + allowedTakeOff.get( index ) );
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );

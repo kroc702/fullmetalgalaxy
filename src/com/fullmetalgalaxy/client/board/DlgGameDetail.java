@@ -33,7 +33,6 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.ressources.Messages;
-import com.fullmetalgalaxy.client.widget.BindedWgtConfigGameTime;
 import com.fullmetalgalaxy.client.widget.BindedWgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameTime;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
@@ -86,7 +85,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
   private Panel m_generalPanel = new FlowPanel();
   private Panel m_playerPanel = new FlowPanel();
   private WgtConstructReserve m_wgtReserve = new WgtConstructReserve();
-  private WgtConfigGameTime m_wgtConfigTime = new BindedWgtConfigGameTime();
+  private WgtConfigGameTime m_wgtConfigTime = new WgtConfigGameTime();
   private WgtConfigGameVariant m_wgtConfigVariant = new BindedWgtConfigGameVariant();
   private WgtGameLogs m_wgtLogs = new WgtGameLogs();
   private WgtGameAdminLogs m_wgtAdminLogs = new WgtGameAdminLogs();
@@ -120,6 +119,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_wgtReserve.setSize( "650px", "400px" );
     m_tabPanel.add( m_wgtReserve, "reserve" );
     
+    m_wgtConfigTime.setReadOnly( true );
     m_tabPanel.add( m_wgtConfigTime, "temps" );
     m_tabPanel.add( m_wgtConfigVariant, "variantes" );
     m_wgtLogs.setStyleName( "fmp-log-panel" );

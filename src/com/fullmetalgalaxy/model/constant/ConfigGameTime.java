@@ -48,9 +48,45 @@ public enum ConfigGameTime implements IsSerializable
     return values()[p_value];
   }
 
+  public static ConfigGameTime getFromProperties(boolean p_isQuick, boolean p_isParallel)
+  {
+    if( p_isQuick )
+    {
+      if( p_isParallel )
+      {
+        return QuickAsynch;
+      }
+      else
+      {
+        return QuickTurnBased;
+      }
+    }
+    else
+    {
+      if( p_isParallel )
+      {
+        return StandardAsynch;
+      }
+      else
+      {
+        return Standard;
+      }
+    }
+  }
+
   public static EbConfigGameTime getEbConfigGameTime(ConfigGameTime p_config)
   {
     return s_configMap.get( p_config );
+  }
+
+  public boolean isParallele()
+  {
+    return this == QuickAsynch || this == StandardAsynch;
+  }
+
+  public boolean isQuick()
+  {
+    return this == QuickAsynch || this == QuickTurnBased;
   }
 
   public EbConfigGameTime getEbConfigGameTime()

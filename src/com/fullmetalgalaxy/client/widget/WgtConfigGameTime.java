@@ -24,24 +24,36 @@ package com.fullmetalgalaxy.client.widget;
 
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.safehtml.shared.OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Vincent Legendre
  * @BeanClass com.fullmetalgalaxy.model.EbConfigGameTime
  */
-public class WgtConfigGameTime extends WgtBean
+public class WgtConfigGameTime extends WgtBean implements ValueChangeHandler<Boolean>
 {
   // UI
   private VerticalPanel m_panel = new VerticalPanel();
-  private WgtTextBox m_description = new WgtTextBox();
-  private WgtIntBox m_timeStepDurationInSec = new WgtIntBox();
-  private WgtIntBox m_tideChangeFrequency = new WgtIntBox();
-  private WgtIntBox m_totalTimeStep = new WgtIntBox();
-  private WgtIntBox m_actionPtPerTimeStep = new WgtIntBox();
-  private WgtIntBox m_actionPtPerExtraShip = new WgtIntBox();
+
+  private RadioButton m_modeTbtButton = new RadioButton( "mode",
+      new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
+          " <img src='/images/css/icon_tbt.gif'/> : Partie en mode tour par tour" ) );
+  private RadioButton m_modeParallelButton = new RadioButton( "mode",
+      new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
+          " <img src='/images/css/icon_parallele.gif'/> : Partie en mode parallèle" ) );
+  private RadioButton m_speedSlowButton = new RadioButton( "speed",
+      new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
+          " <img src='/images/css/icon_slow.cache.png'/> : Partie lente (25 jours ou illimité)" ) );
+  private RadioButton m_speedQuickButton = new RadioButton( "speed",
+      new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
+          " <img src='/images/css/icon_fast.cache.png'/> : Partie rapide (1h30)" ) );
 
 
   /**
@@ -51,37 +63,21 @@ public class WgtConfigGameTime extends WgtBean
   {
     super();
 
-    HorizontalPanel hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Description :" ) );
-    getDescription().setMaxLength( 50 );
-    hPanel.add( getDescription() );
-    m_panel.add( hPanel );
 
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "increment de temps en seconde :" ) );
-    hPanel.add( getTimeStepDurationInSec() );
-    m_panel.add( hPanel );
+    m_panel.add( new Label( "Mode de jeu" ) );
+    m_modeTbtButton.addValueChangeHandler( this );
+    m_panel.add( m_modeTbtButton );
+    m_modeParallelButton.addValueChangeHandler( this );
+    m_panel.add( m_modeParallelButton );
 
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Nombre d'increment de temps :" ) );
-    hPanel.add( getTotalTimeStep() );
-    m_panel.add( hPanel );
+    m_panel.add( new Label( "Vitesse" ) );
+    m_speedSlowButton.addValueChangeHandler( this );
+    m_panel.add( m_speedSlowButton );
+    m_speedQuickButton.addValueChangeHandler( this );
+    m_panel.add( m_speedQuickButton );
 
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Frequence des changements de marrees :" ) );
-    hPanel.add( getTideChangeFrequency() );
-    m_panel.add( hPanel );
-
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Point d'action par increment de temps :" ) );
-    hPanel.add( getActionPtPerTimeStep() );
-    m_panel.add( hPanel );
-
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Point d'action supplementaire par astronef :" ) );
-    hPanel.add( getActionPtPerExtraShip() );
-    m_panel.add( hPanel );
-
+    m_panel.add( new HTML( "<br/><a href='/help/gamemodes.jsp'>plus de détail ici</a>" ) );
+    initUI();
 
     initWidget( m_panel );
 
@@ -89,6 +85,14 @@ public class WgtConfigGameTime extends WgtBean
     ModelFmpMain.model().subscribeModelUpdateEvent( this );
   }
 
+  @Override
+  public void setReadOnly(boolean p_readOnly)
+  {
+    m_modeTbtButton.setEnabled( !p_readOnly );
+    m_modeParallelButton.setEnabled( !p_readOnly );
+    m_speedSlowButton.setEnabled( !p_readOnly );
+    m_speedQuickButton.setEnabled( !p_readOnly );
+  }
 
   /**
    * @return the panel
@@ -98,58 +102,27 @@ public class WgtConfigGameTime extends WgtBean
     return m_panel;
   }
 
-
-  /**
-   * @return the timeStepDurationInSec
-   */
-  protected WgtIntBox getTimeStepDurationInSec()
+  protected void initUI()
   {
-    return m_timeStepDurationInSec;
+    ConfigGameTime config = ModelFmpMain.model().getGame().getConfigGameTime();
+    m_modeParallelButton.setValue( config.isParallele(), false );
+    m_modeTbtButton.setValue( !config.isParallele(), false );
+
+    m_speedQuickButton.setValue( config.isQuick(), false );
+    m_speedSlowButton.setValue( !config.isQuick(), false );
   }
 
 
-  /**
-   * @return the tideChangeFrequency
-   */
-  protected WgtIntBox getTideChangeFrequency()
+  @Override
+  public void onValueChange(ValueChangeEvent<Boolean> p_event)
   {
-    return m_tideChangeFrequency;
-  }
-
-
-  /**
-   * @return the totalTimeStep
-   */
-  protected WgtIntBox getTotalTimeStep()
-  {
-    return m_totalTimeStep;
-  }
-
-
-  /**
-   * @return the actionPtPerTimeStep
-   */
-  protected WgtIntBox getActionPtPerTimeStep()
-  {
-    return m_actionPtPerTimeStep;
-  }
-
-
-  /**
-   * @return the actionPtPerExtraShip
-   */
-  protected WgtIntBox getActionPtPerExtraShip()
-  {
-    return m_actionPtPerExtraShip;
-  }
-
-
-  /**
-   * @return the description
-   */
-  protected WgtTextBox getDescription()
-  {
-    return m_description;
+    ModelFmpMain
+        .model()
+        .getGame()
+        .setConfigGameTime(
+            ConfigGameTime.getFromProperties( m_speedQuickButton.getValue(),
+                m_modeParallelButton.getValue() ) );
+    ModelFmpMain.model().fireModelUpdate();
   }
 
 

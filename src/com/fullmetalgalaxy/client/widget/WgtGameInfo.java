@@ -26,7 +26,6 @@ package com.fullmetalgalaxy.client.widget;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.GameGenerator;
 import com.fullmetalgalaxy.client.creation.MapSize;
-import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -49,10 +48,9 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
   private WgtIntBox m_landWidth = new WgtIntBox();
   private WgtIntBox m_landHeight = new WgtIntBox();
   private WgtDateBox m_creationDate = new WgtDateBox();
-  private WgtConfigGameTime m_configTime = new BindedWgtConfigGameTime();
+  private WgtConfigGameTime m_configTime = new WgtConfigGameTime();
 
   private ListBox m_mapSize = new ListBox();
-  private ListBox m_gameSpeed = new ListBox();
 
   /**
    * @param p_bean
@@ -94,15 +92,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
     m_panel.add( hPanel );
 
     hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Vitesse du jeu :" ) );
-    for( ConfigGameTime config : ConfigGameTime.values() )
-    {
-      m_gameSpeed.addItem( config.name() );
-    }
-    m_gameSpeed.setVisibleItemCount( 1 );
-    m_gameSpeed.setItemSelected( 0, true );
-    m_gameSpeed.addChangeListener( this );
-    hPanel.add( m_gameSpeed );
     m_panel.add( hPanel );
     m_panel.add( getConfigTime() );
 
@@ -149,12 +138,6 @@ public class WgtGameInfo extends WgtBean implements ChangeListener
     if( (p_sender == m_mapSize) || (p_sender == getMaxNumberOfPlayer()) )
     {
       GameGenerator.setSize( MapSize.getFromOrdinal( m_mapSize.getSelectedIndex() ) );
-      ModelFmpMain.model().notifyModelUpdate();
-    }
-    else if( p_sender == m_gameSpeed )
-    {
-      ModelFmpMain.model().getGame().setConfigGameTime(
-          ConfigGameTime.getFromOrdinal( m_gameSpeed.getSelectedIndex() ) );
       ModelFmpMain.model().notifyModelUpdate();
     }
   }

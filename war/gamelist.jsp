@@ -104,12 +104,12 @@ if(tab < 0 || tab > 3 )
 	      if( !game.isStarted() ) {
 	      	out.println( "<img src='/images/css/icon_pause.cache.png' title='En pause' />" );
 	      }
-	      if( game.getConfigGameTime() == ConfigGameTime.Standard || game.getConfigGameTime() == ConfigGameTime.QuickTurnBased ) {
+	      if( !game.getConfigGameTime().isParallele() ) {
 		    out.println( "<img src='/images/css/icon_tbt.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
 	      } else {
 	        out.println( "<img src='/images/css/icon_parallele.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
 	      }
-	      if( game.getConfigGameTime() == ConfigGameTime.QuickTurnBased || game.getConfigGameTime() == ConfigGameTime.QuickAsynch  ) {
+	      if( game.getConfigGameTime().isQuick() ) {
 		    out.println( "<img src='/images/css/icon_fast.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
 		  } else {
 	        out.println( "<img src='/images/css/icon_slow.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );

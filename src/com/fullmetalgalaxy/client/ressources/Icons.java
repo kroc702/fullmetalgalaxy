@@ -125,6 +125,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOff16.png")
   public AbstractImagePrototype takeOff16();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOffBW16.png")
+  public AbstractImagePrototype takeOffBW16();
+
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/moon16.png")
   public AbstractImagePrototype moon16();

@@ -46,7 +46,6 @@ public class BindedWgtGameInfo extends com.fullmetalgalaxy.client.widget.WgtGame
     getLandWidth().addChangeListener( this );
     getLandHeight().addChangeListener( this );
     getCreationDate().setReadOnly( true );
-    getConfigTime().setReadOnly( true );
   }
   
   @Override
