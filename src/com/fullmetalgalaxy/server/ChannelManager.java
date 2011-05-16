@@ -41,6 +41,7 @@ import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.server.xmpp.ChatCommand;
 import com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet;
 import com.fullmetalgalaxy.server.xmpp.XMPPProbeServlet;
 import com.google.appengine.api.channel.ChannelMessage;
@@ -299,12 +300,18 @@ public class ChannelManager extends HttpServlet
     isRoomUpdated |= updateLastConnexion( p_room, p_msg.getFromPseudo(), p_msg.getFromPageId() );
     isRoomUpdated |= removeTooOld( p_room );
     
+    boolean isCommand = ChatCommand.process( p_msg );
     String response = Serializer.toClient( p_msg );
 
     if( response != null && !p_msg.isEmpty() )
     {
       for( Presence presence : p_room )
       {
+        if( isCommand && !p_msg.getFromPseudo().equals( presence.getPseudo() ) )
+        {
+          continue;
+        }
+        
         if( presence.getClientType() == ClientType.XMPP )
         {
           // this presence is a Jabber client: if it is the sender

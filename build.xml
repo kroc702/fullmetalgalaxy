@@ -161,6 +161,8 @@ compilation file for Full Metal Galaxy
 				<exclude name="commons-fileupload*.jar"/>
 				<exclude name="objectify*.jar"/>
 				<exclude name="gwt-gae-channel*.jar"/>
+				<exclude name="antlr*.jar"/>
+				<exclude name="charabia.jar"/>
 			</fileset>
 		</delete>
 		<delete dir="${javadocDir}" />
