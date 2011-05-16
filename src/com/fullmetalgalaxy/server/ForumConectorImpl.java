@@ -69,7 +69,7 @@ public class ForumConectorImpl implements ForumConector
       s_forumConfig.load( ForumConectorImpl.class.getResourceAsStream( "forumaccount.properties" ) );
       FORUM_USERNAME = s_forumConfig.getProperty( "username" );
       FORUM_PASS = s_forumConfig.getProperty( "password" );
-    } catch( IOException e )
+    } catch( Exception e )
     {
       log.error( e );
     }
