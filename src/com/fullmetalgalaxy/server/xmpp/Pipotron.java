@@ -85,16 +85,13 @@ aeiouy
   private static String concatDeterminant(String p_in)
   {
     String out = p_in;
-    out = out.replace( "de les une", "des" );
-    out = out.replace( "de les un", "des" );
-    out = out.replace( "de le un", "du" );
-    out = out.replace( "le une", "la" );
-    out = out.replace( "le un", "le" );
-    out = out.replace( "les une", "les" );
-    out = out.replace( "les un", "les" );
-    out = out.replace( "de un", "d'un" );
-    out = out.replace( "des une", "des" );
-    out = out.replace( "des un", "des" );
+    out = out.replace( "de un ", "d'un " );
+    out = out.replace( "de le un ", "du " );
+    out = out.replaceAll( "des? (les? )?une? ", "des " );
+    
+    out = out.replace( "le une ", "la " );
+    out = out.replace( "le un ", "le " );
+    out = out.replaceAll( "les une? ", "les " );
     // probably useless...
     out = out.replace( "le l'", "l'" );
 
