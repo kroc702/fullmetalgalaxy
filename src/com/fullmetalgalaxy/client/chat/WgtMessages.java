@@ -3,6 +3,7 @@
  */
 package com.fullmetalgalaxy.client.chat;
 
+import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -68,7 +69,9 @@ public class WgtMessages extends Composite implements ClickHandler, KeyDownHandl
 
   public void addMessage(ChatMessage p_msg)
   {
-    HTML label = new HTML( "<b>["+p_msg.getFromPseudo()+"]</b> "+p_msg.getText() );
+    String text = p_msg.getText().replace( "\n", "<br/>" );
+    text = SmileyCollection.INSTANCE.remplace( text );
+    HTML label = new HTML( "<b>["+p_msg.getFromPseudo()+"]</b> "+text );
     m_msgList.add( label );
     scrollPanel.ensureVisible( label );
   }
