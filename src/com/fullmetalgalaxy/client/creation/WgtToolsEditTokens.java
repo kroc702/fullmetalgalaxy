@@ -28,12 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -77,7 +77,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     while( i < EnuColor.getTotalNumberOfColor() )
     {
       color = EnuColor.getColorFromIndex( i );
-      m_lstColor.addItem( Messages.getColorString( color.getValue() ) );
+      m_lstColor.addItem( Messages.getColorString( 0, color.getValue() ) );
       m_colors.add( i, color );
       if( color.getValue() == m_wgtBoardEditTokens.getColor().getValue() )
       {
@@ -86,7 +86,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
       i++;
     }
     color = new EnuColor( EnuColor.None );
-    m_lstColor.addItem( Messages.getColorString( color.getValue() ) );
+    m_lstColor.addItem( Messages.getColorString( 0, color.getValue() ) );
     m_colors.add( i, color );
     if( color.getValue() == m_wgtBoardEditTokens.getColor().getValue() )
     {

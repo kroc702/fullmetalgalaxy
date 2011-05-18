@@ -27,9 +27,10 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -114,16 +115,17 @@ public class EbEvtControlFreighter extends AnEventPlay
     assert myRegistration != null;
     if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check that token isn't under opponents fire covers
     EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getColor(),
         getToken(p_game).getPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken(p_game).getType()
-          .ordinal(), fireCoverColor.getValue() );
+      throw new RpcFmpException( errMsg().CantMoveDisableFire( Messages.getTokenString( getAccountId(), getToken(p_game).getType()),
+          ( Messages.getColorString( getAccountId(),  fireCoverColor.getValue() ))));
     }
     // check presence of turrets
     for( AnBoardPosition position : getTokenCarrier(p_game).getExtraPositions() )

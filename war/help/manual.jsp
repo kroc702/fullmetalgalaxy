@@ -4,14 +4,12 @@
         
 <%@include file="/include/meta.jsp"%>
 
-<meta name='gwt:property' id='app_history' content='loginbtn__newlogin__'>
-
 </head>
 <body >
 
 <%@include file="/include/header.jsp"%>
 
-<%@include file="menu.html"%>
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
 
     <h1>Manuel d'utilisation</h1>
 

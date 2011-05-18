@@ -27,14 +27,13 @@ import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.EnuNavigator;
 import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -281,9 +280,9 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
 
     } catch( RpcFmpException ex )
     {
-      if( Messages.getString( ex ) != null )
+      if( ex.getLocalizedMessage() != null )
       {
-        MAppMessagesStack.s_instance.showWarning( Messages.getString( ex ) );
+        MAppMessagesStack.s_instance.showWarning( ex.getLocalizedMessage() );
       }
       ModelFmpMain.model().getActionBuilder().cancel();
       try

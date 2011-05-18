@@ -1,63 +1,61 @@
-ï»¿<HTML>
+<HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>
         
 <%@include file="/include/meta.jsp"%>
-
-<meta name='gwt:property' id='app_history' content='loginbtn__newlogin__'>
 
 </head>
 <body >
 
 <%@include file="/include/header.jsp"%>
 
-<%@include file="menu.html"%>
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
 
     <h1>Conseils aux d&eacute;butants</h1>
 
 <p>
-Ces conseils Ã©taits donnÃ©es Ã  la fin du livre de rÃ¨gle.
+Ces conseils étaits données à la fin du livre de règle.
 </p>
 
 <ul>
   <li>
     Lors de l'inscription &agrave; une partie, bien regardez le type de partie (nombre de joueurs, 
-    mode asynchrone, vitesse du jeu, etc...). N'hÃ©sitez pas &agrave; contacter les autres joueurs
-    pour connaÃ®tre leurs niveaux, leurs frÃ©quences de jeu. 
+    mode asynchrone, vitesse du jeu, etc...). N'hésitez pas &agrave; contacter les autres joueurs
+    pour connaître leurs niveaux, leurs fréquences de jeu. 
   </li>
   <li>
-    Avant d'entammer une sÃ©rie d'action, ou un plan machiavelique, vÃ©rifiez bien que votre 
+    Avant d'entammer une série d'action, ou un plan machiavelique, vérifiez bien que votre 
     stock de point d'action vous permet de mener &agrave; bien votre plan.
   </li>
   <li>
-Lisez la rÃ¨gle : vos partenaires ont sÃ»rement omis de vous expliquer quelques dÃ©tails. En
-outre, des questions trop prÃ©cises de votre part risquent de dÃ©voiler vos intentions.
+Lisez la règle : vos partenaires ont sûrement omis de vous expliquer quelques détails. En
+outre, des questions trop précises de votre part risquent de dévoiler vos intentions.
   </li>
   <li>  
-N'exposez pas inutilement votre Pondeuse MÃ©tÃ©o, votre Gros Tas ou votre Barge : ce sont des piÃ¨ces
-difficilement remplaÃ§ables.
+N'exposez pas inutilement votre Pondeuse Météo, votre Gros Tas ou votre Barge : ce sont des pièces
+difficilement remplaçables.
   </li>
   <li>
 En fonction de votre position et de la position de vos adversaires (et de leur niveau), 
 faites-vous
-une stratÃ©gie dÃ¨s les premiers tours de jeu et essayez de vous y tenir.
+une stratégie dès les premiers tours de jeu et essayez de vous y tenir.
   </li>
   <li>
-Ã‰conomisez vos points d'actions
-dÃ¨s que vous le pourrez : la possibilitÃ© de rÃ©pliquer avec 20 ou
-25 points au lieu de 15 peut constituer, de maniÃ¨re dissuasive, votre meilleure dÃ©fense. Si
-vous dÃ©cidez d'attaquer, ces points supplÃ©mentaires vous seront prÃ©cieux.
+Économisez vos points d'actions
+dès que vous le pourrez : la possibilité de répliquer avec 20 ou
+25 points au lieu de 15 peut constituer, de manière dissuasive, votre meilleure défense. Si
+vous décidez d'attaquer, ces points supplémentaires vous seront précieux.
   </li>
   <li>
-Si un adversaire vous jure qu'il ne serait pas assez rat pour s'attaquer Ã  l'Astronef 
-d'un dÃ©butant,
+Si un adversaire vous jure qu'il ne serait pas assez rat pour s'attaquer à l'Astronef 
+d'un débutant,
 ne le croyez jamais.
   </li>
 </ul>
 
 <p>
 <a href="http://fullmetalplanete.forum2jeux.com/trucs-et-astuces-f16/les-lecons-d-alpha-t203.htm">
-Il y a aussi de vÃ©ritables cours !</a>
+Il y a aussi de véritables cours !</a>
 </p>
 
 <%@include file="/include/footer.jsp"%>

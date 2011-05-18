@@ -8,7 +8,7 @@
 <table style="width:100%; ">
 <tr><td style="vertical-align:top; width:180px;" >
 <div id="menu" class="bloc" style="width:180px; height:300px; " >
-    <%@include file="menu.html"%>
+    <jsp:include page="<%= I18n.localize(request,response,\"/menu.html\") %>" />
 </div>
 </td><td>
 <div class="bloc" >

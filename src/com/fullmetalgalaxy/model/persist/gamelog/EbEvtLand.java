@@ -34,6 +34,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -103,8 +104,9 @@ public class EbEvtLand extends AnEventPlay
     assert myRegistration != null;
     if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getType()
-          .ordinal(), myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check freighter isn't landing on sea neither montain
     // get the 4 landing hexagon
@@ -136,7 +138,8 @@ public class EbEvtLand extends AnEventPlay
       if( (land == LandType.None) || (land == LandType.Sea) || (land == LandType.Reef)
           || (land == LandType.Montain) )
       {
-        throw new RpcFmpException( RpcFmpException.CantLandOn, land.ordinal() );
+        throw new RpcFmpException( errMsg().CantLandOn(
+            Messages.getLandString( getAccountId(), land ) ) );
       }
     }
     // check that freighter isn't landing close to another freighter
@@ -148,8 +151,8 @@ public class EbEvtLand extends AnEventPlay
           && (landingPosition[0].getRealDistance( currentToken.getPosition() ) < p_game
               .getEbConfigGameVariant().getMinSpaceBetweenFreighter() + 0.1) )
       {
-        throw new RpcFmpException( RpcFmpException.CantLandCloser, p_game
-            .getEbConfigGameVariant().getMinSpaceBetweenFreighter() );
+        throw new RpcFmpException( errMsg().CantLandCloser(
+            p_game.getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) );
       }
     }
   }

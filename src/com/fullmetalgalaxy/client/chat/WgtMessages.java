@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -69,8 +70,9 @@ public class WgtMessages extends Composite implements ClickHandler, KeyDownHandl
 
   public void addMessage(ChatMessage p_msg)
   {
-    String text = p_msg.getText().replace( "\n", "<br/>" );
+    String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
     text = SmileyCollection.INSTANCE.remplace( text );
+    text = text.replace( "\n", "<br/>" );
     HTML label = new HTML( "<b>["+p_msg.getFromPseudo()+"]</b> "+text );
     m_msgList.add( label );
     scrollPanel.ensureVisible( label );

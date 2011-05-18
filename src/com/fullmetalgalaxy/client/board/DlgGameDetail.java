@@ -32,7 +32,6 @@ import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.widget.BindedWgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameTime;
 import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
@@ -45,6 +44,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -164,7 +164,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       if( ModelFmpMain.model().getMyRegistration() != null )
       {
         m_generalPanel.add( new Label( ", vous controllez les pions "
-            + Messages.getColorString( ModelFmpMain.model().getMyRegistration().getColor() ) ) );
+            + Messages.getColorString( 0, ModelFmpMain.model().getMyRegistration().getColor() ) ) );
       }
     }
 
@@ -385,7 +385,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       if( color.getValue() == EnuColor.None )
       {
         htmlColors += " <IMG SRC='images/board/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
-            + Messages.getColorString( color.getValue() ) + "'> ";
+            + Messages.getColorString( 0, color.getValue() ) + "'> ";
       }
       m_playerGrid.setHTML( index, 2, htmlColors );
 

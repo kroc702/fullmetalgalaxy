@@ -114,7 +114,7 @@ public class Auth
     return UserServiceFactory.getUserService().isUserAdmin();
   }
 
-  public static String getUserLogin(HttpServletRequest p_request, HttpServletResponse p_response)
+  private static String getUserLogin(HttpServletRequest p_request, HttpServletResponse p_response)
   {
     assert p_request != null;
     // assert p_response != null;
@@ -190,17 +190,21 @@ public class Auth
 
     return account;
   }
-
+  
   public static String getUserPseudo(HttpServletRequest p_request, HttpServletResponse p_response)
   {
     assert p_request != null;
     assert p_response != null;
     if( !isUserLogged( p_request, p_response ) )
     {
+      String pseudo = p_request.getParameter( "pseudo" );
+      if( pseudo != null )
+      {
+        return pseudo + "?";
+      }
       return p_request.getRemoteAddr();
     }
-    String login = getUserAccount( p_request, p_response ).getPseudo();
-    return login;
+    return getUserAccount( p_request, p_response ).getPseudo();
   }
 
   public static void connectUser(HttpServletRequest p_request, String p_login)

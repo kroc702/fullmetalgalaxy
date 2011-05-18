@@ -24,7 +24,6 @@ package com.fullmetalgalaxy.client.board;
 
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -33,6 +32,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -74,7 +74,7 @@ public class WgtContextToken extends Composite
           wgtToken );
       /*wgtToken.setUrl( FmpConstant.getTokenUrl( selectedToken, new EnuZoom( EnuZoom.Medium ) ) );
       wgtToken.setPixelSize( 70, 70 );*/
-      wgtToken.setTitle( Messages.getTokenString( actionBuilder.getSelectedToken() ) );
+      wgtToken.setTitle( Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) );
 
       // m_panel.add( new HTML( "<center>" ) );
       AbsolutePanel absPanel = new AbsolutePanel();
@@ -83,7 +83,7 @@ public class WgtContextToken extends Composite
       absPanel.add( wgtToken, absPanel.getOffsetWidth() / 2 - wgtToken.getWidth() / 2, absPanel
           .getOffsetHeight()
           / 2 - wgtToken.getHeight() / 2 + 30 );
-      absPanel.add( new HTML( "<b>" + Messages.getTokenString( actionBuilder.getSelectedToken() )
+      absPanel.add( new HTML( "<b>" + Messages.getTokenString( 0, actionBuilder.getSelectedToken() )
           + "</b>" ), 0, 0 );
       if( actionBuilder.getSelectedToken().getColor() != EnuColor.None )
       {
@@ -100,10 +100,10 @@ public class WgtContextToken extends Composite
       if(position != null)
       {
         String landStr = Messages
-            .getLandString( ModelFmpMain.model().getGame().getLand( position ) );
+            .getLandString( 0, ModelFmpMain.model().getGame().getLand( position ) );
         if( ModelFmpMain.model().getGame().getToken( position, TokenType.Pontoon ) != null )
         {
-          landStr += " & " + Messages.getTokenString( TokenType.Pontoon );
+          landStr += " & " + Messages.getTokenString( 0, TokenType.Pontoon );
         }
         absPanel.add( new HTML( landStr ), 0, 40 );
         
@@ -113,15 +113,18 @@ public class WgtContextToken extends Composite
       EbToken token = ModelFmpMain.model().getActionBuilder().getSelectedToken();
       if( token != null && token.getType() == TokenType.Freighter )
       {
-        absPanel.add( new HTML( "minerais : " + token.getContainOre() ), 150, 0 );
+        absPanel.add( new HTML( Messages.getTokenString( 0, TokenType.Ore ) +" : " 
+            + token.getContainOre() ), 150, 0 );
       }
       else if( token != null && token.isDestroyer() )
       {
-        absPanel.add( new HTML( "munitions : " + token.getBulletCount() ), 150, 0 );
+        absPanel.add( new HTML( MAppBoard.s_messages.bullet() + " : " + token.getBulletCount() ),
+            150, 0 );
       }
       else if( token != null && token.getType() == TokenType.WeatherHen )
       {
-        absPanel.add( new HTML( "contruction : " + token.getBulletCount() ), 150, 0 );
+        absPanel.add(
+            new HTML( MAppBoard.s_messages.construct() + " : " + token.getBulletCount() ), 150, 0 );
       }
       // m_panel.add( new HTML( "</center>" ) );
     }

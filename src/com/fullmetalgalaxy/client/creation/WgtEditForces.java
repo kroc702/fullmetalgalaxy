@@ -26,10 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -121,8 +121,8 @@ public class WgtEditForces extends Composite implements ClickHandler, ChangeList
     m_lstReg.clear();
     for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
     {
-      m_lstReg.addItem( Messages.getColorString( registration.getColor() ) );
-      m_mapReg.put( Messages.getColorString( registration.getColor() ), registration );
+      m_lstReg.addItem( Messages.getColorString( 0, registration.getColor() ) );
+      m_mapReg.put( Messages.getColorString( 0, registration.getColor() ), registration );
     }
     m_lstReg.setSelectedIndex( selectedIndex );
   }

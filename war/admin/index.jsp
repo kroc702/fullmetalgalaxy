@@ -29,6 +29,8 @@ upload game file: <input type="file" name="gamefile"><br/>
 <br/>
 <a href="/admin/Servlet?deletesession=1" >delete session from datastore</a><br/>
 <br/>
+<a href="/admin/accounts.jsp" >accounts list</a><br/>
+<br/>
 
 </body>
 </HTML>

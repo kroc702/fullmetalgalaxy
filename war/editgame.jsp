@@ -52,7 +52,7 @@
 
         <div class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" >
             <div id="menu" style="float:left; width:180px;">
-                <%@include file="include/menu.html"%>
+                <jsp:include page="<%= I18n.localize(request,response,\"/menu.html\") %>" />
             </div>
             <div style="height:100%; background-color:black; cursor: pointer; cursor: hand; float:left;" >
                 <div id="switch" style="display:none; width:7px; height:100%;"></div>

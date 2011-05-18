@@ -71,6 +71,9 @@ public class EbAccount extends EbPublicAccount
   private boolean m_allowMailFromNewsLetter = true;
   private String m_jabberId = null;
 
+  @Unindexed
+  private String m_locale = "";
+  
   /**
    * A VIP already finished one game and wasn't banned for a while.
    */
@@ -508,6 +511,16 @@ public class EbAccount extends EbPublicAccount
   public void setIsforumIdConfirmed(boolean p_isforumIdConfirmed)
   {
     m_isforumIdConfirmed = p_isforumIdConfirmed;
+  }
+
+  public String getLocale()
+  {
+    return m_locale;
+  }
+
+  public void setLocale(String p_locale)
+  {
+    m_locale = p_locale;
   }
 
 

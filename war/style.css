@@ -96,12 +96,10 @@ font-family: verdana;
 	position:relative;
 	top:-20px;
 	height:41px;
-	background-image: url(/images/css/tab_text_bw.png);
 }
 
 .icon-gamelisttab:hover img.text {
 	top:-10px;
-	background-image: url(/images/css/tab_text.png);
 }
 
 .selected-gamelisttab img.icon {
@@ -115,7 +113,6 @@ font-family: verdana;
 .selected-gamelisttab img.text {
 	width:170px; 
 	height:41px;
-	background-image: url(/images/css/tab_text.png);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
 }

@@ -30,11 +30,11 @@ import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -103,7 +103,7 @@ public class WgtPlayerInfo extends WgtView
       // Display current tides
       m_panelTide.clear();
       Image image = BoardIcons.iconTide( game.getCurrentTide() ).createImage();
-      image.setTitle( "maree actuelle: " + Messages.getTideString( game.getCurrentTide() ) );
+      image.setTitle( "maree actuelle: " + Messages.getTideString( 0, game.getCurrentTide() ) );
       m_panelTide.add( image );
       m_panelTide.setCellWidth( image, "20px" );
 
@@ -139,7 +139,7 @@ public class WgtPlayerInfo extends WgtView
         else
         {
           image = BoardIcons.iconTide( game.getNextTide() ).createImage();
-          image.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
+          image.setTitle( "maree futur: " + Messages.getTideString( 0, game.getNextTide() ) );
         }
         if( game.getEbConfigGameTime().isAsynchron() )
         {
@@ -153,7 +153,7 @@ public class WgtPlayerInfo extends WgtView
         if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
-          image.setTitle( "maree futur: " + Messages.getTideString( game.getNextTide() ) );
+          image.setTitle( "maree futur: " + Messages.getTideString( 0, game.getNextTide() ) );
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );
         }

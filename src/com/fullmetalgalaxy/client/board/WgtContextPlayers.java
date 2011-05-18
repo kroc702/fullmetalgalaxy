@@ -27,12 +27,12 @@ import java.util.List;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -144,7 +144,7 @@ public class WgtContextPlayers extends Composite implements ClickHandler
     if( color.getValue() == EnuColor.None )
     {
       htmlPlayers += " <IMG SRC='images/board/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
-          + Messages.getColorString( color.getValue() ) + "'> ";
+          + Messages.getColorString( 0, color.getValue() ) + "'> ";
     }
     htmlPlayers += " ";
     // display name

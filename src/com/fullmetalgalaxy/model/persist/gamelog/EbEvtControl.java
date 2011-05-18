@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -99,14 +100,16 @@ public class EbEvtControl extends AnEventPlay
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer1(p_game).getColor() )
         || getTokenDestroyer1(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenDestroyer1(p_game)
-          .getColor(), getMyRegistration(p_game).getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenDestroyer1( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
     }
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer2(p_game).getColor() )
         || getTokenDestroyer2(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenDestroyer2(p_game)
-          .getColor(), getMyRegistration(p_game).getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenDestroyer2( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
     }
 
     // check that two token are destroyer
@@ -119,14 +122,14 @@ public class EbEvtControl extends AnEventPlay
     // check the first destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer1(p_game) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantFireDisableTide, getTokenDestroyer1(p_game)
-          .getType().ordinal() );
+      throw new RpcFmpException( errMsg().CantFireDisableTide(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
     }
     // check the second destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer2(p_game) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantFireDisableTide, getTokenDestroyer2(p_game)
-          .getType().ordinal() );
+      throw new RpcFmpException( errMsg().CantFireDisableTide(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
     }
 
     // check first, second destroyer and target are not under opponents fires

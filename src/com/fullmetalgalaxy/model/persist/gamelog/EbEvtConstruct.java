@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -113,8 +114,9 @@ public class EbEvtConstruct extends AnEventPlay
     if( !myRegistration.getEnuColor().isColored( getTokenCarrier(p_game).getColor() )
         || getTokenCarrier(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenCarrier(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check that player have one more action point to unload that token
     if( myRegistration.getPtAction() <= 0 )

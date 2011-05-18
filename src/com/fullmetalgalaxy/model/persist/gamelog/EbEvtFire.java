@@ -32,9 +32,10 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -102,14 +103,16 @@ public class EbEvtFire extends AnEventPlay
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer1(p_game).getColor() )
         || getTokenDestroyer1(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenDestroyer1(p_game)
-          .getColor(), getMyRegistration(p_game).getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenDestroyer1( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
     }
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer2(p_game).getColor() )
         || getTokenDestroyer2(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenDestroyer2(p_game)
-          .getColor(), getMyRegistration(p_game).getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenDestroyer2( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
     }
     // check that player control destroyers
     if( (getTokenTarget( p_game ).getColor() != EnuColor.None)
@@ -121,14 +124,14 @@ public class EbEvtFire extends AnEventPlay
     // check the first destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer1(p_game) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantFireDisableTide, getTokenDestroyer1(p_game)
-          .getType().ordinal() );
+      throw new RpcFmpException( errMsg().CantFireDisableTide(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
     }
     // check the second destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer2(p_game) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantFireDisableTide, getTokenDestroyer2(p_game)
-          .getType().ordinal() );
+      throw new RpcFmpException( errMsg().CantFireDisableTide(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
     }
 
     if( ((!(p_game.getLastLog() instanceof EbEvtMove)) || (((EbEvtMove)p_game.getLastLog())
@@ -139,15 +142,18 @@ public class EbEvtFire extends AnEventPlay
       // check the first destroyer is not fire deactivated
       if( !p_game.isTokenFireActive( getTokenDestroyer1( p_game ) ) )
       {
-        throw new RpcFmpException( RpcFmpException.CantFireDisableFire, getTokenDestroyer1(p_game)
-            .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer1(p_game) ).getValue() );
+        throw new RpcFmpException( errMsg().CantFireDisableFire(
+            Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ),
+            Messages.getColorString( getAccountId(),
+                p_game.getOpponentFireCover( getTokenDestroyer1( p_game ) ).getValue() ) ) );
       }
     }
     if( getTokenDestroyer2( p_game ).isFireDisabled() )
     {
-      throw new RpcFmpException( RpcFmpException.CantFireDisableFire, getTokenDestroyer2( p_game )
-          .getType().ordinal(), p_game.getOpponentFireCover( getTokenDestroyer2( p_game ) )
-          .getValue() );
+      throw new RpcFmpException( errMsg().CantFireDisableFire(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ),
+          Messages.getColorString( getAccountId(),
+              p_game.getOpponentFireCover( getTokenDestroyer2( p_game ) ).getValue() ) ) );
     }
 
     if( !p_game.canTokenFireOn( getTokenDestroyer1(p_game), getTokenTarget(p_game) ) )
@@ -171,7 +177,7 @@ public class EbEvtFire extends AnEventPlay
     // check that target isn't freighter
     if( getTokenTarget(p_game).getType() == TokenType.Freighter )
     {
-      throw new RpcFmpException( RpcFmpException.CantDestroyFreighter );
+      throw new RpcFmpException( errMsg().CantDestroyFreighter() );
     }
 
   }

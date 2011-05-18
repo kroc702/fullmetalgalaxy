@@ -12,6 +12,7 @@ public interface Smiley extends ClientBundle
 
   ImageResource cool();
 
+  @Source("sad.png")
   ImageResource cry();
 
   ImageResource devil();
@@ -20,6 +21,7 @@ public interface Smiley extends ClientBundle
 
   ImageResource heart();
 
+  @Source("robot.png")
   ImageResource indifferent();
 
   ImageResource lol();

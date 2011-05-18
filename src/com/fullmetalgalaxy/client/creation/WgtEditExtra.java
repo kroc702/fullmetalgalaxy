@@ -24,14 +24,8 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.FmpCallback;
-import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.GameServices;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -68,7 +62,7 @@ public class WgtEditExtra extends Composite
     {
       try
       {
-        Window.alert( Messages.getString( (RpcFmpException)p_caught ) );
+        Window.alert( ((RpcFmpException)p_caught).getLocalizedMessage() );
       } catch( Throwable th )
       {
         if( (p_caught.getMessage() == null) || (p_caught.getMessage().length() == 0) )

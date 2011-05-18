@@ -119,16 +119,16 @@ public class AnEventPlay extends AnEventUser
     }
     if( registration.getPtAction() < getCost() )
     {
-      throw new RpcFmpException( RpcFmpException.NotEnouthActionPt );
+      throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
     if( (!p_game.isAsynchron() || (p_game.getCurrentTimeStep() == 0))
         && (p_game.getCurrentPlayerRegistration() != registration) )
     {
-      throw new RpcFmpException( RpcFmpException.NotYourTurn );
+      throw new RpcFmpException( errMsg().NotYourTurn() );
     }
     if( !p_game.isStarted() )
     {
-      throw new RpcFmpException( RpcFmpException.GameNotStarted );
+      throw new RpcFmpException( errMsg().GameNotStarted() );
     }
   }
 

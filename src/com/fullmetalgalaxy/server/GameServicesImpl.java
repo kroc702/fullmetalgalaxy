@@ -344,7 +344,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     modelUpdate.setFromVersion( game.getVersion() );
     modelUpdate.setGameId( game.getId() );
 
-
     // security check
     /*if( p_action.getAccountId() != 0L )
     {
@@ -494,7 +493,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     AnEvent lastAction = null;
     RpcFmpException exception = null;
 
-    for( AnEvent action : p_actionList )
+    for( AnEventPlay action : p_actionList )
     {
       if( !action.getType().isEventUser() )
       {

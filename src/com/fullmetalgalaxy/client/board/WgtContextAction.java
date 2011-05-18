@@ -27,7 +27,6 @@ import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
@@ -44,6 +43,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -335,7 +335,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         // TODO i18n
         if( Window.confirm( "Confirmez-vous le decolage de "
-            + Messages.getTokenString( actionBuilder.getSelectedToken() ) + " ?" ) )
+            + Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) + " ?" ) )
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
           action.setGame( ModelFmpMain.model().getGame() );
@@ -391,7 +391,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
     } catch( RpcFmpException e )
     {
-      MAppMessagesStack.s_instance.showWarning( Messages.getString( e ) );
+      MAppMessagesStack.s_instance.showWarning( e.getLocalizedMessage() );
     }
   }
 

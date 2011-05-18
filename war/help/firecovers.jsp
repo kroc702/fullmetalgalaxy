@@ -2,16 +2,14 @@
 <head>
 <title>Aide de Full Metal Galaxy</title>
         
-<%@include file="/include/meta.jsp"%>
-
-<meta name='gwt:property' id='app_history' content='loginbtn__newlogin__'>
+<style type="text/css">@import url( /style.css );</style>
 
 </head>
 <body >
 
 <%@include file="/include/header.jsp"%>
 
-<%@include file="menu.html"%>
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
 
 <p>
 Le mécanisme des zones de feu est la clef de voute du jeu. Bien comprises,
