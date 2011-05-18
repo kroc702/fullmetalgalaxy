@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 
@@ -128,15 +129,17 @@ public class EbEvtMove extends AnEventPlay
     assert myRegistration != null;
     if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
 
     // check this token is allowed to move from this hexagon
     if( !p_game.isTokenTideActive( getToken(p_game) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
-              p_game.getLand( tokenPosition ).ordinal() );
+      throw new RpcFmpException( errMsg().CantMoveOn(
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+          Messages.getLandString( getAccountId(), p_game.getLand( tokenPosition ) ) ) );
     }
     // check token move to a 'clear' hexagon
     boolean moveToPontoon = false;
@@ -165,8 +168,9 @@ public class EbEvtMove extends AnEventPlay
       // note that any token are allowed to voluntary stuck themself into reef of marsh
       if( !p_game.canTokenMoveOn( getToken( p_game ), getNewPosition() ) )
       {
-        throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
-            p_game.getLand( getNewPosition() ).ordinal() );
+        throw new RpcFmpException( errMsg().CantMoveOn(
+            Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+            Messages.getLandString( getAccountId(), p_game.getLand( getNewPosition() ) ) ) );
       }
       
     }
@@ -181,14 +185,16 @@ public class EbEvtMove extends AnEventPlay
         && (p_game.getLastLog().getType() == GameLogType.EvtMove)
         && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId()) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken( p_game ).getType()
-          .ordinal(), fireCoverColorOld.getValue() );
+      throw new RpcFmpException( errMsg().CantMoveDisableFire(
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+          Messages.getColorString( getAccountId(), fireCoverColorOld.getValue() ) ) );
     }
     if( (fireCoverColorOld.getValue() != EnuColor.None)
         && (fireCoverColorNew.getValue() != EnuColor.None) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken(p_game).getType()
-          .ordinal(), fireCoverColorNew.getValue() );
+      throw new RpcFmpException( errMsg().CantMoveDisableFire(
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ) );
     }
   }
 

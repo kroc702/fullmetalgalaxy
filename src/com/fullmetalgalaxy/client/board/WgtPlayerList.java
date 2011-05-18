@@ -26,10 +26,10 @@ import java.util.List;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -86,13 +86,13 @@ public class WgtPlayerList extends WgtView
         {
           htmlPlayers += " <IMG SRC='" + EnuColor.getColorFromIndex( colorIndex ).toString()
               + "/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
-              + Messages.getColorString( color.getValue() ) + "'> ";
+              + Messages.getColorString( 0, color.getValue() ) + "'> ";
         }
       }
       if( color.getValue() == EnuColor.None )
       {
         htmlPlayers += " <IMG SRC='icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
-            + Messages.getColorString( color.getValue() ) + "'> ";
+            + Messages.getColorString( 0, color.getValue() ) + "'> ";
       }
 
       // display player login

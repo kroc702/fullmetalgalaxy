@@ -28,9 +28,10 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -88,8 +89,9 @@ public class EbEvtDeployment extends AnEventPlay
     assert myRegistration != null;
     if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getType()
-          .ordinal(), myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
 
     // check token is contained by a landed freighter
@@ -128,8 +130,9 @@ public class EbEvtDeployment extends AnEventPlay
       // check that new token carrier can load this token
       if( !p_game.canTokenLoad( tokensOnWay, getToken( p_game ) ) )
       {
-        throw new RpcFmpException( RpcFmpException.CantLoad, tokensOnWay.getType().ordinal(),
-            getToken( p_game ).getType().ordinal() );
+        throw new RpcFmpException( errMsg().CantLoad(
+            Messages.getTokenString( getAccountId(), tokensOnWay ),
+            Messages.getTokenString( getAccountId(), getToken( p_game ) ) ) );
       }
     }
     else
@@ -137,8 +140,9 @@ public class EbEvtDeployment extends AnEventPlay
       // check this token is allowed to move to this hexagon
       if( !p_game.canTokenMoveOn( getToken( p_game ), getPosition() ) )
       {
-        throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken( p_game ).getType()
-            .ordinal(), p_game.getLand( getPosition() ).ordinal() );
+        throw new RpcFmpException( errMsg().CantMoveOn(
+            Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+            Messages.getLandString( getAccountId(), p_game.getLand( getPosition() ) ) ) );
       }
     }
 

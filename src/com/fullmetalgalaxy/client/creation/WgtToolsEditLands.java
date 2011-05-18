@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -98,7 +98,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     m_lstPlanet.setVisibleItemCount( 1 );
     for( PlanetType planet : PlanetType.values() )
     {
-      m_lstPlanet.addItem( Messages.getPlanetString( planet ) );
+      m_lstPlanet.addItem( Messages.getPlanetString( 0, planet ) );
       m_planets.add( planet );
     }
     m_panel.add( m_lstPlanet );

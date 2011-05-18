@@ -24,7 +24,6 @@ package com.fullmetalgalaxy.client;
 
 
 import com.fullmetalgalaxy.client.board.MAppMessagesStack;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.Window;
@@ -54,7 +53,7 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
 
     if( p_caught instanceof RpcFmpException )
     {
-      MAppMessagesStack.s_instance.showWarning( Messages.getString( (RpcFmpException)p_caught ) );
+      MAppMessagesStack.s_instance.showWarning( ((RpcFmpException)p_caught).getLocalizedMessage() );
     }
     else if( p_caught instanceof SerializationException
         || p_caught instanceof IncompatibleRemoteServiceException )

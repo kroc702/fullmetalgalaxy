@@ -38,14 +38,20 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
   
   public SmileyCollection()
   {
-    put( "+/\\", AbstractImagePrototype.create( Smiley.INSTANCE.bell() ) );
+    put( ":/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
+    put( ":-/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
+    put( "/'\\", AbstractImagePrototype.create( Smiley.INSTANCE.bell() ) );
+    put( "/&#39;\\", AbstractImagePrototype.create( Smiley.INSTANCE.bell() ) );
     put( "B-)", AbstractImagePrototype.create( Smiley.INSTANCE.cool() ) );
+    put( "B)", AbstractImagePrototype.create( Smiley.INSTANCE.cool() ) );
     put( ":'(", AbstractImagePrototype.create( Smiley.INSTANCE.cry() ) );
     put( "}:-)", AbstractImagePrototype.create( Smiley.INSTANCE.devil() ) );
     put( "}:)", AbstractImagePrototype.create( Smiley.INSTANCE.devil() ) );
-    put( "x-)", AbstractImagePrototype.create( Smiley.INSTANCE.grimace() ) );
+    put( "x-(", AbstractImagePrototype.create( Smiley.INSTANCE.grimace() ) );
     put( "<3", AbstractImagePrototype.create( Smiley.INSTANCE.heart() ) );
+    put( "&lt;3", AbstractImagePrototype.create( Smiley.INSTANCE.heart() ) );
     put( ":-|", AbstractImagePrototype.create( Smiley.INSTANCE.indifferent() ) );
+    put( ":|", AbstractImagePrototype.create( Smiley.INSTANCE.indifferent() ) );
     put( ":-D", AbstractImagePrototype.create( Smiley.INSTANCE.lol() ) );
     put( ":D", AbstractImagePrototype.create( Smiley.INSTANCE.lol() ) );
     put( ":-o", AbstractImagePrototype.create( Smiley.INSTANCE.no() ) );
@@ -55,8 +61,6 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
     put( "\\m/", AbstractImagePrototype.create( Smiley.INSTANCE.rock() ) );
     put( ":-(", AbstractImagePrototype.create( Smiley.INSTANCE.sad() ) );
     put( ":(", AbstractImagePrototype.create( Smiley.INSTANCE.sad() ) );
-    put( ":-/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
-    put( ":/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
     put( ":-)", AbstractImagePrototype.create( Smiley.INSTANCE.smile() ) );
     put( ":)", AbstractImagePrototype.create( Smiley.INSTANCE.smile() ) );
     put( ":-p", AbstractImagePrototype.create( Smiley.INSTANCE.tongue() ) );

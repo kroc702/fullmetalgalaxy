@@ -28,9 +28,9 @@ import java.util.Set;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -80,7 +80,7 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
     {
       Image image = new Image();
       BoardIcons.icon64( color.getValue() ).applyTo( image );
-      image.setTitle( Messages.getColorString( color.getValue() ) );
+      image.setTitle( Messages.getColorString( 0, color.getValue() ) );
       image.addStyleName( "fmp-button" );
       image.addClickHandler( this );
       m_icons.put( image, color.getValue() );

@@ -60,6 +60,7 @@
 	
 	<% if( id == 0 ) { %>
 	<p>
+	Tapez '/?' pour avoir la liste des commandes.<br/>
 	Vous pouvez utiliser le client Jabber de votre choix comme gmail, <a href='http://www.pidgin.im'>pidgin</a> 
 	ou <a href='http://www.google.fr/search?q=client+jabber'>autres</a>.<br/>
 	Le contact (ou Jabber ID) est: <a href="xmpp:fullmetalgalaxy2@appspot.com">fullmetalgalaxy2@appspot.com</a>

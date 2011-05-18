@@ -30,7 +30,6 @@ import java.util.Set;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.WgtView;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameType;
@@ -45,6 +44,7 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -105,7 +105,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       actionBuilder.userTokenClick( token );
     } catch( RpcFmpException e )
     {
-      MAppMessagesStack.s_instance.showWarning( Messages.getString( e ) );
+      MAppMessagesStack.s_instance.showWarning( e.getLocalizedMessage() );
     }
     ModelFmpMain.model().notifyModelUpdate();
   }
@@ -168,7 +168,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       }
       else
       {
-        m_panel.add( new HTML( MAppBoard.s_messages.deployment( Messages.getTokenString( token
+        m_panel.add( new HTML( MAppBoard.s_messages.deployment( Messages.getTokenString( 0, token
             .getType() ) ) ) );
       }
       addToken( token, token.getPosition().getSector() );
@@ -245,7 +245,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     }
     else
     {
-      String lblStr = Messages.getTokenString( p_token.getType() );
+      String lblStr = Messages.getTokenString( 0, p_token.getType() );
       if( p_token.isDestroyer() )
       {
         if( p_token.getBulletCount() == 1 )
@@ -258,7 +258,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     TokenImages.getTokenImage( p_token.getEnuColor(), EnuZoom.Small, p_token.getType(),
         p_sectorValue ).applyTo( wgtToken );
     wgtToken.addClickHandler( this );
-    wgtToken.setTitle( Messages.getTokenString( p_token ) );
+    wgtToken.setTitle( Messages.getTokenString( 0, p_token ) );
     m_wgtTokenLink.put( wgtToken, p_token );
     panelToken.add( wgtToken );
     panelToken.add( label );

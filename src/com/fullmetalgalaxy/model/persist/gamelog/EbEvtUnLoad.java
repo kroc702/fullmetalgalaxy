@@ -30,9 +30,10 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.Messages;
 
 
 /**
@@ -106,19 +107,22 @@ public class EbEvtUnLoad extends AnEventPlay
     assert myRegistration != null;
     if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     if( getToken(p_game).canBeColored() && getToken(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getToken(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     if( !myRegistration.getEnuColor().isColored( getTokenCarrier(p_game).getColor() )
         || getTokenCarrier(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDontControl, getTokenCarrier(p_game).getColor(),
-          myRegistration.getColor() );
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check that carrier isn't tide deactivate
     if( !p_game.isTokenTideActive( getToken( p_game ).getCarrierToken() ) )
@@ -160,8 +164,9 @@ public class EbEvtUnLoad extends AnEventPlay
       // check this token is allowed to move to this hexagon
       if( !p_game.canTokenMoveOn( getToken( p_game ), getNewPosition() ) )
       {
-        throw new RpcFmpException( RpcFmpException.CantMoveOn, getToken(p_game).getType().ordinal(),
-            p_game.getLand( getNewPosition() ).ordinal() );
+        throw new RpcFmpException( errMsg().CantMoveOn(
+            Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+            Messages.getLandString( getAccountId(), p_game.getLand( getNewPosition() ) ) ) );
       }
     }
     // check this token is not going to an opponent fire cover
@@ -169,13 +174,16 @@ public class EbEvtUnLoad extends AnEventPlay
         getNewPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
-      throw new RpcFmpException( RpcFmpException.CantMoveDisableFire, getToken(p_game).getType()
-          .ordinal(), fireCoverColor.getValue() );
+      throw new RpcFmpException( errMsg().CantMoveDisableFire(
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+          Messages.getColorString( getAccountId(), fireCoverColor.getValue() ) ) );
     }
     if( !p_game.isTokenFireActive( getTokenCarrier( p_game ) ) )
     {
-      throw new RpcFmpException( RpcFmpException.CantUnloadDisableFire, getTokenCarrier(p_game).getType()
-          .ordinal(), p_game.getOpponentFireCover( getTokenCarrier(p_game) ).getValue() );
+      throw new RpcFmpException( errMsg().CantUnloadDisableFire(
+          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
+          Messages.getColorString( getAccountId(),
+              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
     }
     // if a pontoon, check it is linked to ground
     if( (getToken(p_game).getType() == TokenType.Pontoon)

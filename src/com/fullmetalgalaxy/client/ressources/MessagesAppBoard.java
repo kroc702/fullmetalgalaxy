@@ -34,6 +34,8 @@ public interface MessagesAppBoard extends Messages
 
   String construct();
 
+  String bullet();
+
   String landing();
 
   String deployment(String p_token);

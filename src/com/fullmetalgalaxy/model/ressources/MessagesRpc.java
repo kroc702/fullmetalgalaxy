@@ -20,7 +20,7 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.ressources;
+package com.fullmetalgalaxy.model.ressources;
 
 import com.google.gwt.i18n.client.Messages;
 

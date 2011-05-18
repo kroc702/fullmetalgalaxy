@@ -28,7 +28,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.client.board.DlgMessageEvent;
 import com.fullmetalgalaxy.client.board.MAppMessagesStack;
-import com.fullmetalgalaxy.client.ressources.Messages;
+import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -63,12 +63,14 @@ import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCall
 import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
+import com.google.gwt.user.client.ui.HTML;
 
 
 /**
@@ -353,7 +355,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         if( p_caught instanceof RpcFmpException )
         {
           MAppMessagesStack.s_instance
-              .showWarning( Messages.getString( (RpcFmpException)p_caught ) );
+.showWarning( ((RpcFmpException)p_caught)
+              .getLocalizedMessage() );
         }
       }
       else
@@ -519,7 +522,11 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     else
     {
       // real message
-      MAppMessagesStack.s_instance.showMessage( p_msg.getFromPseudo() + " : " + p_msg.getText() );
+      String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
+      text = SmileyCollection.INSTANCE.remplace( text );
+      text = text.replace( "\n", "<br/>" );
+      HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
+      MAppMessagesStack.s_instance.showMessage( label );
     }
   }
 
@@ -623,7 +630,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       }
     } catch( RpcFmpException ex )
     {
-      Window.alert( Messages.getString( ex ) );
+      Window.alert( ex.getLocalizedMessage() );
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
@@ -671,7 +678,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       }
     } catch( RpcFmpException ex )
     {
-      Window.alert( Messages.getString( ex ) );
+      Window.alert( ex.getLocalizedMessage() );
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();

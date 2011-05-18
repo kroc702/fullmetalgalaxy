@@ -62,11 +62,11 @@
         </table>
 
         <div id="board" style="display:none; width:100%; height:100%; background-color:#d09750;"></div>
-        <div id="advises" style="display:none; position:absolute; top:50px; right:10px; z-index:9999999999;"></div>
+        <div id="advises" style="display:none; position:absolute; top:50px; right:50px; z-index:9999999999;"></div>
 
         <div class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" >
             <div id="menu" style="float:left; width:180px;">
-                <%@include file="include/menu.html"%>
+                <jsp:include page="<%= I18n.localize(request,response,\"/menu.html\") %>" />
             </div>
             <div style="height:100%; background-color:black; cursor: pointer; cursor: hand; float:left;" >
                 <div id="switch" style="display:none; width:7px; height:100%;"></div>
@@ -84,9 +84,6 @@
         
         <script type="text/javascript" language="javascript" src="game/game.nocache.js"></script>
 
-        <!-- OPTIONAL: include this if you want history support -->
-        <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
-        
 <%@include file="include/analiticscript.html"%>
  
     </body>

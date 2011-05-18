@@ -24,8 +24,11 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.MessagesRpc;
+import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 
 
 /**
@@ -61,6 +64,20 @@ public class AnEventUser extends AnEvent
   {
     m_accountId = 0;
     m_remoteAddr = null;
+  }
+
+  /**
+   * conveniance function
+   * @return
+   */
+  protected MessagesRpcException errMsg()
+  {
+    return SharedI18n.getMessagesError( getAccountId() );
+  }
+
+  protected MessagesRpc msg()
+  {
+    return SharedI18n.getMessages( getAccountId() );
   }
 
   public EbRegistration getMyRegistration(Game p_game)

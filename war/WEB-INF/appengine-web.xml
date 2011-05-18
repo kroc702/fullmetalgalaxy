@@ -40,6 +40,7 @@
     
     <resource-files>
         <include path="/puzzles/**.bin" />
+        <include path="/i18n/**.html" />
         <include path="/include/*" />
         <include path="/*txt" />
         <include path="/**rpc" />

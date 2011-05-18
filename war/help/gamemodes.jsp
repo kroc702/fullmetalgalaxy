@@ -4,14 +4,12 @@
         
 <%@include file="/include/meta.jsp"%>
 
-<meta name='gwt:property' id='app_history' content='loginbtn__newlogin__'>
-
 </head>
 <body >
 
 <%@include file="/include/header.jsp"%>
 
-<%@include file="menu.html"%>
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
 
 <h2>Mode "tour par tour" & "parallèle"</h2>
 <p>Full Metal Planete, le jeu de plateau qui inspire FMG, se joue chacun à tour de rôle. 

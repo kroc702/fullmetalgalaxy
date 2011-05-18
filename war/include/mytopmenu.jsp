@@ -1,10 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
 
-<div id="mymenu" style="margin:5px; float:right; color:white;  z-index:9999999998;">
-	<% if(Auth.isUserLogged(request,response)) { %> 
-	    <%= Auth.getUserPseudo(request,response) %> :
-	    <% if(Auth.isUserAdmin(request, response)) { %>
-	    
 <SCRIPT language="Javascript">
   <!--
 var timeout = 500;
@@ -50,11 +45,15 @@ function mcancelclosetime()
 document.onclick = mclose; 
   // -->
 </SCRIPT>
+
+<div id="mymenu" style="margin:5px; float:right; color:white;  z-index:9999999998;">
+	<% if(Auth.isUserLogged(request,response)) { %> 
+	    <%= Auth.getUserPseudo(request,response) %> :
+	    <% if(Auth.isUserAdmin(request, response)) { %>
 		<span style="position: relative;">
-	    
 	    	<a href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2"
 	    	onmouseover="mopen('menuAdmin')" onmouseout="mclosetime()">Admin</a> |
-	    	<div id="menuAdmin" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-10px; width:150px;"
+		    	<div id="menuAdmin" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-10px; width:150px; z-index:9999999999;"
 		      onmouseover="mcancelclosetime()" 
 		      onmouseout="mclosetime()">
 			<a target="_blank" href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2">App Engine</a><br/>
@@ -81,5 +80,16 @@ document.onclick = mclose;
 		<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
 	        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion 
 	    </a>
-	<% } %>
+	<% } %> |
+	<span style="position: relative;">
+    	<a href="#"	onmouseover="mopen('menuLocale')" onmouseout="mclosetime()">
+    	<img src="<%= I18n.localize(request,response,"/images/icon_locale.png") %>" border="0"/></a>
+    	<div id="menuLocale" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-30px; z-index:9999999999;"
+	      onmouseover="mcancelclosetime()" 
+	      onmouseout="mclosetime()">
+	      <% for(String locale : I18n.getLocales()) {
+	        out.println("<a href='"+I18n.getURI(request,locale)+"'><img src='/i18n/"+locale+"/images/icon_locale.png' border='0'/></a><br/><br/>");
+	      } %>
+	  </div>
+	</span>	    	
 </div>

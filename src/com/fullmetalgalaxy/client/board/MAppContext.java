@@ -27,7 +27,6 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.ressources.Messages;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -166,7 +165,7 @@ public final class MAppContext extends MApp implements NativePreviewHandler
           ModelFmpMain.model().notifyModelUpdate();
         } catch( RpcFmpException e )
         {
-          MAppMessagesStack.s_instance.showWarning( Messages.getString( e ) );
+          MAppMessagesStack.s_instance.showWarning( e.getLocalizedMessage() );
         }
         // cancel action
         return;

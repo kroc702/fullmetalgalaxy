@@ -7,6 +7,7 @@
 <title>Full Metal Galaxy - Liste des parties</title>
         
 <%@include file="include/meta.jsp"%>
+<style type="text/css">@import url( <%= I18n.localize(request,response,"/style.css") %> );</style>
 
 </head>
 <body>
@@ -56,7 +57,7 @@ if(tab < 0 || tab > 3 )
 	<br/><br/>
 	
 <% if(tab==2) { /* solo games */ %>
-	<%@include file="include/puzzleslist.html"%>
+	<jsp:include page="<%= I18n.localize(request,response,\"/puzzleslist.html\") %>" />
 <% } else { 
 	Iterable<EbGamePreview> gameList = new ArrayList<EbGamePreview>();
 	if( !Auth.isUserLogged( request, response ) && (tab <= 1) ) {
