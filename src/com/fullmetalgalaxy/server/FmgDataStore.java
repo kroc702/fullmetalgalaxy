@@ -199,8 +199,9 @@ public class FmgDataStore extends DataStore
         BlobKey blobKey = new BlobKey( p_gamePreview.getMinimapBlobKey() );
         BlobstoreServiceFactory.getBlobstoreService().delete( blobKey );
       }
-      delete( EbGameData.class, id );
-      delete( EbGamePreview.class, id );
+      Key<EbGamePreview> keyPreview = new Key<EbGamePreview>(EbGamePreview.class, id );
+      Key<EbGameData> keyData = new Key<EbGameData>(keyPreview, EbGameData.class, id );
+      super.delete( keyPreview, keyData );
     }
   }
 

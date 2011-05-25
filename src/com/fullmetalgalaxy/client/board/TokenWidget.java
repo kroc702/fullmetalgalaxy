@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.board;
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.Image;
@@ -87,7 +88,8 @@ public class TokenWidget
         || (p_token.isFireDisabled() != m_wasFireDisable)
         || (p_token.isFireDisabling() != m_wasFireDisabling)
         || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != getLastLand())
-        || (game.isTankCheating( p_token ) != m_wasTankCheating) )
+        || (game.isTankCheating( p_token ) != m_wasTankCheating)
+        || ((p_token.getType() == TokenType.Freighter) && (game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep()+1)) )
     {
       return true;
     }

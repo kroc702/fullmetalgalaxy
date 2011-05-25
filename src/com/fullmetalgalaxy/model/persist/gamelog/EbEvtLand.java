@@ -93,6 +93,12 @@ public class EbEvtLand extends AnEventPlay
   {
     super.check(p_game);
 
+    if( getPosition().getX() == -1 )
+    {
+      // landing position isn't choose yet...
+      throw new RpcFmpException("");
+    }
+    
     if( getToken( p_game ).getType() != TokenType.Freighter
         || getToken( p_game ).getLocation() != Location.Orbit )
     {
@@ -148,8 +154,8 @@ public class EbEvtLand extends AnEventPlay
       if( (currentToken.getType() == TokenType.Freighter)
           && (currentToken.getLocation() == Location.Board)
           && (currentToken.getId() != getToken(p_game).getId())
-          && (landingPosition[0].getRealDistance( currentToken.getPosition() ) < p_game
-              .getEbConfigGameVariant().getMinSpaceBetweenFreighter() + 0.1) )
+          && (landingPosition[0].getHexDistance( currentToken.getPosition() ) <= p_game
+              .getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) )
       {
         throw new RpcFmpException( errMsg().CantLandCloser(
             p_game.getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) );

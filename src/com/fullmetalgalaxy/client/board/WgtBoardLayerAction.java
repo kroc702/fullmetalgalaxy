@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtUnLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -96,30 +97,41 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   }
 
 
-
-  private void drawFoot(AnBoardPosition p_position)
+  private void drawImage(AbstractImagePrototype p_image, AnBoardPosition p_position)
   {
     Image image = m_images.getNextImage();
-    BoardIcons.arrow( getZoom().getValue(), p_position.getSector() ).applyTo( image );
+    p_image.applyTo( image );
     DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
     image.removeStyleName( "transparent50" );
     setWidgetHexPosition( image, p_position );
   }
 
-  private void drawTransparentToken(TokenType p_type, EnuColor p_color, AnBoardPosition p_position)
+  private void drawTransparentImage(AbstractImagePrototype p_image, AnBoardPosition p_position)
   {
     Image image = m_images.getNextImage();
-    if( EbToken.canBeColored( p_type ) )
-    {
-      TokenImages.getTokenImage( p_color, getZoom().getValue(), p_type, p_position.getSector() )
-        .applyTo( image );
-    } else {
-      TokenImages.getTokenImage( new EnuColor(EnuColor.None), getZoom().getValue(), p_type, p_position.getSector() )
-      .applyTo( image );
-    }
+    p_image.applyTo( image );
     DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
     image.addStyleName( "transparent50" );
     setWidgetHexPosition( image, p_position );
+  }
+
+  
+
+  private void drawFoot(AnBoardPosition p_position)
+  {
+    drawImage( BoardIcons.arrow( getZoom().getValue(), p_position.getSector() ), p_position );
+  }
+
+  private void drawTransparentToken(TokenType p_type, EnuColor p_color, AnBoardPosition p_position)
+  {
+    AbstractImagePrototype image = null;
+    if( EbToken.canBeColored( p_type ) )
+    {
+      image = TokenImages.getTokenImage( p_color, getZoom().getValue(), p_type, p_position.getSector() );
+    } else {
+      image = TokenImages.getTokenImage( new EnuColor(EnuColor.None), getZoom().getValue(), p_type, p_position.getSector() );
+    }
+    drawTransparentImage( image, p_position );
   }
 
   private void drawTransparentToken(EbToken p_token, AnBoardPosition p_position)
@@ -334,15 +346,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
     if( ModelFmpMain.model().getActionBuilder().getSelectedAction() != null )
     {
       AnEventPlay action = ModelFmpMain.model().getActionBuilder().getSelectedAction();
-      if( action instanceof EbEvtLand )
-      {
-        if( ((EbEvtLand)action).getPosition() != null )
-        {
-          drawTransparentToken( ((EbEvtLand)action).getToken( ModelFmpMain.model().getGame() ),
-              ((EbEvtLand)action).getPosition() );
-        }
-      }
-      else if( action instanceof EbEvtConstruct )
+      if( action instanceof EbEvtConstruct )
       {
         assert ((EbEvtConstruct)action).getTokenCarrier( ModelFmpMain.model().getGame() ) != null;
         drawTransparentToken( ((EbEvtConstruct)action).getConstructType(),
@@ -380,8 +384,15 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       }
       else if( action instanceof EbEvtLand || action instanceof EbEvtDeployment )
       {
-        drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
-            ((AnEventPlay)action).getPosition() );
+        if( ((AnEventPlay)action).getPosition() != null && ((AnEventPlay)action).getPosition().getX() >= 0 )
+        {
+          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+              ((AnEventPlay)action).getPosition() );
+          if( action instanceof EbEvtLand )
+          {
+            drawTransparentImage( BoardIcons.deployment4( getZoom().getValue() ), ((AnEventPlay)action).getPosition() );
+          }
+        }
       }
     }
     m_images.hideOtherImage();

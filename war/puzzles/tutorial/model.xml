@@ -7,7 +7,7 @@
       <m__description>partie de presentation du jeu</m__description>
       <m__maxNumberOfPlayer>2</m__maxNumberOfPlayer>
       <m__history>false</m__history>
-      <m__currentTimeStep>0</m__currentTimeStep>
+      <m__currentTimeStep>10</m__currentTimeStep>
       <m__gameType>Puzzle</m__gameType>
       <m__planetType>Desert</m__planetType>
       <m__isOpen>false</m__isOpen>
