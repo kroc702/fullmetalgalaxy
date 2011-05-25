@@ -97,22 +97,24 @@ public class BoardIcons
     case EnuZoom.Medium:
       switch( p_bulletCount )
       {
+      case 0:
+        return null;
       case 1:
         return Icons.s_instance.tactic_icon_bullet1();
+      default:
       case 2:
         return Icons.s_instance.tactic_icon_bullet2();
-      default:
-        return null;
       }
     case EnuZoom.Small:
       switch( p_bulletCount )
       {
+      case 0:
+        return null;
       case 1:
         return Icons.s_instance.strategy_icon_bullet1();
+      default:
       case 2:
         return Icons.s_instance.strategy_icon_bullet2();
-      default:
-        return null;
       }
     }
   }
