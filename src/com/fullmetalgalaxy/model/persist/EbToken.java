@@ -49,6 +49,10 @@ public class EbToken extends EbBase
   private int m_color = EnuColor.None;
   private Location m_location = Location.ToBeConstructed;
   private AnBoardPosition m_position = new AnBoardPosition();
+  /**
+   * due to legacy, we must keep bullet count as integer.
+   * So, it represent 1/10th of a bullet.
+   */
   private int m_bulletCount = 0;
 
   private List<FireDisabling> m_listFireDisabling = null;
@@ -983,18 +987,26 @@ public class EbToken extends EbBase
   /**
    * @return the bulletCount
    */
-  public int getBulletCount()
+  public float getBulletCount()
   {
-    return m_bulletCount;
+    return (m_bulletCount/10f);
   }
 
 
   /**
    * @param p_bulletCount the bulletCount to set
    */
-  public void setBulletCount(int p_bulletCount)
+  public void setBulletCount(float p_bulletCount)
   {
-    m_bulletCount = p_bulletCount;
+    m_bulletCount = (int)Math.round(p_bulletCount*10);
+    if( m_bulletCount < 0 )
+    {
+      m_bulletCount = 0;
+    }
+    if( m_bulletCount > getMaxBulletCount()*10 )
+    {
+      m_bulletCount = getMaxBulletCount()*10;
+    }
   }
 
 

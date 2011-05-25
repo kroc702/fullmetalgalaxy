@@ -35,7 +35,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public enum ConfigGameTime implements IsSerializable
 {
-  Standard, QuickAsynch, QuickTurnBased, StandardAsynch;
+  Standard, QuickAsynch, QuickTurnBased, StandardAsynch, Custom;
 
   /**
    * not sure that this way is a very good idea...
@@ -148,9 +148,7 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig.setTotalTimeStep( 125 ); // 125 time step (ie turn)
     timeConfig.setActionPtPerTimeStep( 3 ); // 3 pt per time step
     timeConfig.setActionPtPerExtraShip( 1 ); // 1 more pt per extra ship
-    timeConfig.setBulletCountIncrement( 1 );
-    // 1 more bullet every time step.. this is a problem as it can fire 5 times every days !
-    // TODO one solution is to give 0.5 bullet count !
+    timeConfig.setBulletCountIncrement( 0.5f );
     takeOffTurns = new ArrayList<Integer>();
     takeOffTurns.add( 103 );
     takeOffTurns.add( 104 );

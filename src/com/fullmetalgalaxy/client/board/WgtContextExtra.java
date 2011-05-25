@@ -246,11 +246,11 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     else
     {
       String lblStr = Messages.getTokenString( 0, p_token.getType() );
-      if( p_token.isDestroyer() )
+      if( (p_token.getMaxBulletCount() > 0) && (p_token.getBulletCount() != p_token.getMaxBulletCount()))
       {
-        if( p_token.getBulletCount() == 1 )
+        if( p_token.getMaxBulletCount() - p_token.getBulletCount() >= 1 )
           lblStr += "<br/>x";
-        if( p_token.getBulletCount() == 2 )
+        else 
           lblStr += "<br/>xx";
       }
       label.setHTML( lblStr );

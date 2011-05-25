@@ -43,7 +43,7 @@ public class EbConfigGameTime extends EbBase
   private int m_totalTimeStep = 25;
   private int m_actionPtPerTimeStep = 15;
   private int m_actionPtPerExtraShip = 5;
-  private int m_bulletCountIncrement = 2;
+  private int m_bulletCountIncrement = 20;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
   /** if true, players can all play at same time */
@@ -250,17 +250,17 @@ public class EbConfigGameTime extends EbBase
   /**
    * @return the bulletCountIncrement
    */
-  public int getBulletCountIncrement()
+  public float getBulletCountIncrement()
   {
-    return m_bulletCountIncrement;
+    return m_bulletCountIncrement/10f;
   }
 
   /**
    * @param p_bulletCountIncrement the bulletCountIncrement to set
    */
-  public void setBulletCountIncrement(int p_bulletCountIncrement)
+  public void setBulletCountIncrement(float p_bulletCountIncrement)
   {
-    m_bulletCountIncrement = p_bulletCountIncrement;
+    m_bulletCountIncrement = (int)Math.round(p_bulletCountIncrement*10);
   }
 
   /**

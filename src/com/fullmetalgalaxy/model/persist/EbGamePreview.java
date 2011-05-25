@@ -747,6 +747,7 @@ public class EbGamePreview extends EbBase
   public void setEbConfigGameTime(EbConfigGameTime p_config)
   {
     m_ebConfigGameTime = p_config;
+    setConfigGameTime( ConfigGameTime.Custom );
   }
 
   /**
@@ -755,12 +756,12 @@ public class EbGamePreview extends EbBase
    */
   public EbConfigGameTime getEbConfigGameTime()
   {
-    // this patch is to handle old data game
-    if(m_ebConfigGameTime == null && getConfigGameTime() != null)
+    if( getConfigGameTime() == ConfigGameTime.Custom )
     {
-      setConfigGameTime( getConfigGameTime() );
+      return m_ebConfigGameTime;
     }
-    return m_ebConfigGameTime;
+    m_ebConfigGameTime = null;
+    return getConfigGameTime().getEbConfigGameTime();
   }
 
 

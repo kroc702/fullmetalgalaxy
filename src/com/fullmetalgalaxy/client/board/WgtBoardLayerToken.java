@@ -216,12 +216,12 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       }
       else
       // display a bullet count image ?
-      if( (p_token.getType() != TokenType.Ore)
-          && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
-          && (p_token.getType() != TokenType.Pontoon) && (p_token.getBulletCount() > 0) )
+      if( (p_token.getMaxBulletCount() > 0)
+          && (p_token.getType() != TokenType.Turret)
+          && (p_token.getBulletCount() != p_token.getMaxBulletCount()) )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconBullet( getZoom().getValue(),
-            p_token.getBulletCount() ), p_token, landPixOffset );
+            (int)Math.ceil(p_token.getMaxBulletCount() - p_token.getBulletCount()) ), p_token, landPixOffset );
       }
       else
       // display a deployment image ?
