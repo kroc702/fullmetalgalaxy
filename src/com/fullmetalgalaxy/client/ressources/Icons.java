@@ -215,6 +215,12 @@ public interface Icons extends ImageBundle
 
 
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/deployment4.png")
+  public AbstractImagePrototype tactic_deployment4();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/deployment4.png")
+  public AbstractImagePrototype strategy_deployment4();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/hightlight_hexagon.png")
   public AbstractImagePrototype tactic_hightlight_hexagon();
 

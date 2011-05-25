@@ -885,6 +885,12 @@ public class EventsPlayBuilder implements GameEventStack
         AnEventPlay action = (AnEventPlay)getSelectedAction();
         action.getPosition().setX( p_position.getX() );
         action.getPosition().setY( p_position.getY() );
+        if( getSelectedAction().getType() == GameLogType.EvtDeployment && action.getPosition().getSector()==Sector.North
+            && action.getToken( m_game ).getHexagonSize()==1 )
+        {
+          EbToken freighter = action.getToken( m_game ).getCarrierToken();
+          action.getPosition().setSector( freighter.getPosition().getNeighbourSector( action.getPosition() ) );
+        }
         setLastUpdate( new Date( System.currentTimeMillis() ) );
         isUpdated = EventBuilderMsg.Updated;
       }

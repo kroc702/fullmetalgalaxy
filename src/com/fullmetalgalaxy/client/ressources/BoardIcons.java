@@ -181,6 +181,18 @@ public class BoardIcons
     }
   }
 
+  public static AbstractImagePrototype deployment4(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    default:
+    case EnuZoom.Medium:
+      return Icons.s_instance.tactic_deployment4();
+    case EnuZoom.Small:
+      return Icons.s_instance.strategy_deployment4();
+    }
+  }
+
   public static AbstractImagePrototype select_hexagon(int p_zoom)
   {
     switch( p_zoom )
