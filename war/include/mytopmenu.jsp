@@ -64,6 +64,9 @@ document.onclick = mclose;
 		    <a target="_blank" href="https://www.google.com/webmasters/tools/">Web Tools</a><br/>
 			<a target="_blank" href="https://www.google.com/a/fullmetalgalaxy.com">Apps FMG</a><br/>
 			<a target="_blank" href="http://latest.fullmetalgalaxy2.appspot.com/">Autre version</a><br/>
+			<hr/>
+		    <a href="/auth.jsp">log to other user</a> <br/>
+		    <a href="/AccountServlet?logout=fmgonly">log back to admin</a> <br/>
 		  </div>
 		</span>	    	
 	    <% } %>

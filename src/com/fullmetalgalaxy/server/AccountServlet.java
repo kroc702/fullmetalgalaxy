@@ -71,6 +71,10 @@ public class AccountServlet extends HttpServlet
         continueUrl = "/";
       }
       String redirectUrl = UserServiceFactory.getUserService().createLogoutURL( continueUrl );
+      if( p_request.getParameter( "logout" ).equalsIgnoreCase( "fmgonly" ) )
+      {
+        redirectUrl = continueUrl;
+      }
       p_response.sendRedirect( redirectUrl );
     }
     else
@@ -115,10 +119,7 @@ public class AccountServlet extends HttpServlet
     if( isConnexion )
     {
       boolean isConnected = true;
-      if( !Auth.isUserLogged( p_request, p_response ) )
-      {
-        isConnected = connectFmgUser( p_request, p_response, params );
-      }
+      isConnected = connectFmgUser( p_request, p_response, params );
       if( isConnected )
       {
         String continueUrl = params.get( "continue" );
@@ -189,30 +190,40 @@ public class AccountServlet extends HttpServlet
     FmgDataStore ds = new FmgDataStore(true);
     Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_login", login );
     EbAccount account = query.get();
-
+    if( account == null )
+    {
+      query = ds.query( EbAccount.class ).filter( "m_compactPseudo", EbAccount.compactPseudo( login ) );
+      account = query.get();
+    }
+    
     if( account == null )
     {
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
       return false;
     }
-    if( account.getAuthProvider() != AuthProvider.Fmg )
+    
+    // if user is already connected as admin: don't check password and allow connect to another user
+    if( !Auth.isUserAdmin( p_request, p_response ))
     {
-      p_response.sendRedirect( Auth.getGoogleLoginURL( p_request, p_response ) );
-      return false;
+      if( account.getAuthProvider() != AuthProvider.Fmg )
+      {
+        p_response.sendRedirect( Auth.getGoogleLoginURL( p_request, p_response ) );
+        return false;
+      }
+      String password = params.get( "password" );
+      if( password == null )
+      {
+        p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+        return false;
+      }
+      if( account == null || account.getPassword() == null
+          || !account.getPassword().equals( password ) )
+      {
+        p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
+        return false;
+      }
     }
-    String password = params.get( "password" );
-    if( password == null )
-    {
-      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
-      return false;
-    }
-    if( account == null || account.getPassword() == null
-        || !account.getPassword().equals( password ) )
-    {
-      p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
-      return false;
-    }
-
+    
     // all seams ok: connect user
     Auth.connectUser( p_request, login );
     return true;
