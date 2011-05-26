@@ -97,6 +97,13 @@ public class SynchroForum extends HttpServlet
             // copy data from FMG to forum
             ServerUtil.forumConnector().pushAccount( account );
           }
+          
+          // some account update for legacy
+          if( account.getCompactPseudo() == null || account.getCompactPseudo().isEmpty() )
+          {
+            account.setPseudo( account.getPseudo() );
+          }
+          
           // TODO we can optimize by doing this datastore put only if required
           ds.put( account );
         }

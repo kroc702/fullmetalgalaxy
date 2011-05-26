@@ -53,7 +53,6 @@ public class EbAccount extends EbPublicAccount
    * and transform to lower case.
    * This is used to check similar pseudo.
    */
-  @SuppressWarnings("unused")
   private String m_compactPseudo = "";
   private String m_login = "";
   private String m_email = "";
@@ -521,6 +520,11 @@ public class EbAccount extends EbPublicAccount
   public void setLocale(String p_locale)
   {
     m_locale = p_locale;
+  }
+
+  public String getCompactPseudo()
+  {
+    return m_compactPseudo;
   }
 
 

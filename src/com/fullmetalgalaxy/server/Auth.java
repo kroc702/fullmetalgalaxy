@@ -191,6 +191,12 @@ public class Auth
     return account;
   }
   
+  /**
+   * Always return something even if user isn't connected
+   * @param p_request
+   * @param p_response
+   * @return
+   */
   public static String getUserPseudo(HttpServletRequest p_request, HttpServletResponse p_response)
   {
     assert p_request != null;
@@ -210,6 +216,8 @@ public class Auth
   public static void connectUser(HttpServletRequest p_request, String p_login)
   {
     p_request.getSession( true ).setAttribute( "login", p_login );
+    // this is useful in case of reconnexion without deconnexion (admin function)
+    p_request.getSession().setAttribute( "account", null );
   }
 
   public static void disconnectFmgUser(HttpServletRequest p_request)
