@@ -5,8 +5,6 @@
         
 <%@include file="include/meta.jsp"%>
 
-<meta name='gwt:property' id='app_history' content='loginbtn__newlogin__'>
-
 </head>
 <body >
 

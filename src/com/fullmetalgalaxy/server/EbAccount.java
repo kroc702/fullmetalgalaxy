@@ -79,9 +79,16 @@ public class EbAccount extends EbPublicAccount
   private boolean m_isVip = false;
   
   
-  /** because of this data, EbAccount shoudln't be send on client side ! */
+  /** because of this data, EbAccount shoudln't be send on client side ! 
+   * We may have to encrypt this data.
+   * */
   private String m_password = null;
 
+  /**
+   * last time user ask for his password.
+   */
+  private Date m_lastPasswordAsk = null;
+  
   /**
    * maximum level reach by this account
    */
@@ -525,6 +532,16 @@ public class EbAccount extends EbPublicAccount
   public String getCompactPseudo()
   {
     return m_compactPseudo;
+  }
+
+  public Date getLastPasswordAsk()
+  {
+    return m_lastPasswordAsk;
+  }
+
+  public void setLastPasswordAsk(Date p_lastPasswordAsk)
+  {
+    m_lastPasswordAsk = p_lastPasswordAsk;
   }
 
 

@@ -94,6 +94,7 @@ public class AccountServlet extends HttpServlet
     ServletFileUpload upload = new ServletFileUpload();
     Map<String, String> params = new HashMap<String, String>();
     boolean isConnexion = false;
+    boolean isPassword = false;
 
     try
     {
@@ -108,6 +109,10 @@ public class AccountServlet extends HttpServlet
           {
             isConnexion = true;
           }
+          if( item.getFieldName().equalsIgnoreCase( "password" ) )
+          {
+            isPassword = true;
+          }
           params.put( item.getFieldName(), Streams.asString( item.openStream(), "UTF-8" ) );
         }
       }
@@ -118,6 +123,7 @@ public class AccountServlet extends HttpServlet
 
     if( isConnexion )
     {
+      // user try to connect with an FMG account
       boolean isConnected = true;
       isConnected = connectFmgUser( p_request, p_response, params );
       if( isConnected )
@@ -130,6 +136,51 @@ public class AccountServlet extends HttpServlet
         }
         p_response.sendRedirect( continueUrl );
       }
+      return;
+    }
+    else if( isPassword )
+    {
+      // user ask for his password
+      String msg = "";
+      FmgDataStore ds = new FmgDataStore( false );
+      ds.query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
+      QueryResultIterator<EbAccount> it = query.iterator();
+      if( !it.hasNext() )
+      {
+        msg = "l'adresse mail "+params.get( "email" )+" n'a pas été trouvé";
+      }
+      else
+      {
+        EbAccount account = it.next();
+        if( account.getLastPasswordAsk() != null 
+            && account.getLastPasswordAsk().getTime() > System.currentTimeMillis() - (1000*60*60*24) )
+        {
+          msg = "une seule demande par jour";
+        }
+        else if( account.getAuthProvider() != AuthProvider.Fmg )
+        {
+          msg = "ce compte FMG est associé a un compte google";
+        }
+        else
+        {
+          // all is ok, send a mail
+          PMServlet.sendMail( "[FMG] demande de mot de passe", 
+              "Bonjour,\n"
+              +"Votre mot de passe est le suivant:\n"
+              +" login: "+account.getLogin()+"\n"
+              +" password: "+account.getPassword()+"\n"
+              +"\n"
+              +"Cordialement"
+              , account.getEmail() );
+          
+          msg = "un mail à été envoyé a l'adresse "+account.getEmail();
+          account.setLastPasswordAsk( new Date() );
+          ds.put( account );
+        }
+      }
+      ds.close();
+      
+      p_response.sendRedirect( "/password.jsp?msg="+msg );
       return;
     }
     else
