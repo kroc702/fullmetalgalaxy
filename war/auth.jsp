@@ -31,12 +31,18 @@ mot de passe :
 </form>
 </center>
 
+
 <p>
 Si vous n'avez pas de compte, vous pouvez 
 <a href="<%= Auth.getGoogleLoginURL(request,response) %>" >utiliser votre compte google</a>
  ou bien 
 <A HREF="/account.jsp">cr&eacute;er un nouveau compte</A>. 
 </p>
+
+<p>
+Si vous avez oublié votre mot de passe, <a href="/password.jsp">vous pouvez en demandez un autre</a>.
+</p>
+
 
 <%@include file="include/footer.jsp"%>
 </body>
