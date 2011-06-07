@@ -1194,11 +1194,12 @@ public class Game extends GameData implements PathGraph, GameEventStack
   /**
    * put p_token and all linked pontoon to graveyard.
    * @param p_token must be a pontoon
+   * @param p_fdRemoved fire disabling that was removed are added to this list
    * @return list of all tokens removed from board to graveyard (pontoons and token on them). 
    *        Token have to be put back on board in the same order.
    * @throws RpcFmpException
    */
-  public ArrayList<Long> chainRemovePontoon(EbToken p_token) throws RpcFmpException
+  public ArrayList<Long> chainRemovePontoon(EbToken p_token, List<FireDisabling> p_fdRemoved) throws RpcFmpException
   {
     assert p_token.getType() == TokenType.Pontoon;
     ArrayList<Long> pontoons = new ArrayList<Long>();
@@ -1211,6 +1212,14 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       if(token != p_token)
       {
+        // remove his fire disabling list
+        if( token.getFireDisablingList() != null )
+        {
+          List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+          fdRemoved.addAll( token.getFireDisablingList() );
+          p_fdRemoved.addAll( fdRemoved );
+          getBoardFireCover().removeFireDisabling( fdRemoved );
+        }
         // remove token on pontoon
         pontoons.add( token.getId() );
         moveToken( token, Location.Graveyard );
@@ -1227,7 +1236,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
       EbToken otherPontoon = getToken( position.getNeighbour( sector ), TokenType.Pontoon );
       if( otherPontoon != null )
       {
-        pontoons.addAll( chainRemovePontoon( otherPontoon ) );
+        pontoons.addAll( chainRemovePontoon( otherPontoon, p_fdRemoved ) );
       }
     }
     return pontoons;

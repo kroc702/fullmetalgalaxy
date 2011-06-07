@@ -57,6 +57,12 @@ public class FireDisabling implements IsSerializable, java.io.Serializable
         || ((m_destroyer1Id == fd.m_destroyer2Id) && (m_destroyer2Id == fd.m_destroyer1Id));
   }
 
+  @Override
+  public String toString()
+  {
+    return "FD[" + m_destroyer1+ "+"+ m_destroyer2+" -> "+m_target+"]";
+  }
+
   /**
    * @return the target
    */

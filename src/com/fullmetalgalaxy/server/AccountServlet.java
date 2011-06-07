@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.server;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
 
@@ -143,7 +145,7 @@ public class AccountServlet extends HttpServlet
       // user ask for his password
       String msg = "";
       FmgDataStore ds = new FmgDataStore( false );
-      ds.query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
+      Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {

@@ -225,9 +225,9 @@ public class EbEvtLoad extends AnEventPlay
           {
             if(m_TokenIds == null)
             {
-              m_TokenIds = p_game.chainRemovePontoon( otherPontoon );
+              m_TokenIds = p_game.chainRemovePontoon( otherPontoon, getFdRemoved() );
             } else {
-              m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon ) );
+              m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon, getFdRemoved() ) );
             }
           }
         }

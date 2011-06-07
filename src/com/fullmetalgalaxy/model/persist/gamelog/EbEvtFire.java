@@ -203,15 +203,18 @@ public class EbEvtFire extends AnEventPlay
     if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
     {
       // target isn't a pontoon: simply move it to graveyard
-      p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
       if( !isFdComputed() )
       {
         addFdRemoved( getTokenTarget( p_game ).getFireDisablingList() );
         p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
       }
+      p_game.moveToken( getTokenTarget(p_game), Location.Graveyard );
       getTokenTarget(p_game).incVersion();
-      // if it was a destroyer, it may disabling other token: check that
-      execFireDisabling( p_game, position );
+      //if( !isFdComputed() )
+      {
+        // if it was a destroyer, it may disabling other token: check that
+        execFireDisabling( p_game, position );
+      }
     }
     EbToken pontoon = p_game.getToken( position, TokenType.Pontoon );
     if( pontoon != null )
@@ -229,7 +232,9 @@ public class EbEvtFire extends AnEventPlay
             TokenType.Pontoon );
         if( otherPontoon != null && !p_game.isPontoonLinkToGround( otherPontoon ) )
         {
-          m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon ) );
+          List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+          m_TokenIds.addAll( p_game.chainRemovePontoon( otherPontoon, fdRemoved ) );
+          addFdRemoved( fdRemoved );
         }
       }
 
@@ -237,8 +242,8 @@ public class EbEvtFire extends AnEventPlay
       if( wasFdComputed )
       {
         // save CPU by avoiding recompute fire disabling flags
-        p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
-        p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+        //p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+        //p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
       }
       else if( m_TokenIds != null )
       {
@@ -276,12 +281,6 @@ public class EbEvtFire extends AnEventPlay
     getTokenDestroyer2(p_game).setBulletCount( getTokenDestroyer2(p_game).getBulletCount() + 1 );
     getTokenDestroyer2(p_game).decVersion();
 
-    if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
-    {
-      // target wasn't a pontoon: put it back from graveyard
-      p_game.moveToken( getTokenTarget(p_game), getOldPosition() );
-      getTokenTarget(p_game).decVersion();   
-    }
     if( getTokenIds() != null )
     {
       // we destroy a pontoon
@@ -295,6 +294,12 @@ public class EbEvtFire extends AnEventPlay
           token.decVersion();
         }
       }
+    }
+    if( getTokenTarget(p_game).getType() != TokenType.Pontoon )
+    {
+      // target wasn't a pontoon: put it back from graveyard
+      p_game.moveToken( getTokenTarget(p_game), getOldPosition() );
+      getTokenTarget(p_game).decVersion();   
     }
 
     unexecFireDisabling( p_game );
