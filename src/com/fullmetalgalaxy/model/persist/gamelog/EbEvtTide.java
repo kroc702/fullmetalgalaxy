@@ -122,7 +122,7 @@ public class EbEvtTide extends AnEvent
             && token.getLocation() == Location.Board
             && !p_game.isPontoonLinkToGround( token ) )
         {
-          m_PontoonIds.addAll( p_game.chainRemovePontoon( token ) );
+          m_PontoonIds.addAll( p_game.chainRemovePontoon( token, getFdRemoved() ) );
         }
       }
     }

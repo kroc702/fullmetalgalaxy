@@ -797,7 +797,6 @@ public class EbGamePreview extends EbBase
   public void setConfigGameTime(ConfigGameTime p_configGameTime)
   {
     m_configGameTime = p_configGameTime;
-    setEbConfigGameTime( new EbConfigGameTime(m_configGameTime.getEbConfigGameTime()) );
   }
 
   /**
