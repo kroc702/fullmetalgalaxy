@@ -63,6 +63,8 @@ public class AccountServlet extends HttpServlet
   {
     if( p_request.getParameter( "logout" ) != null )
     {
+      // user logout
+      // ===========
       if( Auth.isUserLogged( p_request, p_response ) )
       {
         Auth.disconnectFmgUser( p_request );
@@ -79,8 +81,44 @@ public class AccountServlet extends HttpServlet
       }
       p_response.sendRedirect( redirectUrl );
     }
+    else if( p_request.getParameter( "link" ) != null )
+    {
+      // user link FMG and Forum account
+      // ===============================
+      FmgDataStore ds = new FmgDataStore( false );
+      Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_forumKey", p_request.getParameter( "link" ) );
+      QueryResultIterator<EbAccount> it = query.iterator();
+      if( !it.hasNext() )
+      {
+        p_response.getWriter().println("Erreur: clef non trouvé");
+        return;
+      }
+      EbAccount account = it.next();
+      if( !Auth.isUserLogged( p_request, p_response ) )
+      {
+        // arg, user must be connected for this !
+        String redirectUrl = Auth.getFmgLoginURL( p_request, p_response );
+        if( account.getAuthProvider() == AuthProvider.Google )
+        {
+          redirectUrl = Auth.getGoogleLoginURL( p_request, p_response );
+        }
+        p_response.sendRedirect( redirectUrl );
+        return;
+      }
+      if( Auth.getUserAccount( p_request, p_response ).getId() != account.getId() )
+      {
+        p_response.getWriter().println("Erreur: la clef ne correspond pas au compte "+Auth.getUserPseudo( p_request, p_response ));
+        return;
+      }
+      account.setIsforumIdConfirmed( true );
+      ds.put( account );
+      ds.close();
+      p_response.getWriter().println("les comptes "+account.getPseudo()+" de FMG et du Forum sont liés");
+      return;
+    }
     else
     {
+      // Unknown user action
       p_response.sendRedirect( "/" );
     }
   }
