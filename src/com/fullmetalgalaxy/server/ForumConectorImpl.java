@@ -319,7 +319,7 @@ public class ForumConectorImpl implements ForumConector
       
       // a list of many parameters
       // TODO
-      clientPostRequest.setParameter( "profile_field_2_-20", "test FMG 3 !!!" );
+      //clientPostRequest.setParameter( "profile_field_2_-20", "test FMG 3 !!!" );
       
       
       clientPostRequest.setParameter( "submit", "Enregistrer" );

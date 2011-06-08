@@ -108,6 +108,13 @@ public class EbAccount extends EbPublicAccount
   private boolean m_isforumIdConfirmed = false;
   @Unindexed
   private String m_forumAvatarUrl = null;
+  /**
+   * To make a link between an FMG account and his corresponding forum account,
+   * we send a key by private message. If user give us back this key (through an url)
+   * then both account are the same people.
+   * If m_forumKey is null, we never send it. Otherwise, PM was sended don't resent it.
+   */
+  private String m_forumKey = null;
   
   private static Pattern s_pattern = Pattern.compile( "^((?:[\\w]+\\p{Graph}?)+\\w){3,32}$" );
   
@@ -140,6 +147,14 @@ public class EbAccount extends EbPublicAccount
     return compact;
   }
   
+  /**
+   * @return a random generated string
+   */
+  public static String generateForumKey()
+  {
+    return Double.toString( Math.random() );
+  }
+  
   
   public EbAccount()
   {
@@ -168,13 +183,23 @@ public class EbAccount extends EbPublicAccount
   }
 
   @Override
+  public String getAvatarUrl()
+  {
+    if( getForumAvatarUrl() != null )
+    {
+      return getForumAvatarUrl();
+    }
+    return "/images/avatar-default.jpg";
+  }
+
+  @Override
   public String getProfileUrl()
   {
-    if( getForumId() == null )
+    if( isIsforumIdConfirmed() && getForumId() != null )
     {
-      return super.getProfileUrl();
+      return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
     }
-    return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
+    return super.getProfileUrl();
   }
 
 
@@ -542,6 +567,16 @@ public class EbAccount extends EbPublicAccount
   public void setLastPasswordAsk(Date p_lastPasswordAsk)
   {
     m_lastPasswordAsk = p_lastPasswordAsk;
+  }
+
+  public String getForumKey()
+  {
+    return m_forumKey;
+  }
+
+  public void setForumKey(String p_forumKey)
+  {
+    m_forumKey = p_forumKey;
   }
 
 

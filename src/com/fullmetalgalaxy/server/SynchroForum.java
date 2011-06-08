@@ -81,17 +81,36 @@ public class SynchroForum extends HttpServlet
         EbAccount account = ds.find( iterator.next() );
         if( account != null )
         {
-          if( account.getForumId() == null && account.isIsforumIdConfirmed() )
+          if( account.getForumId() == null )//&& account.isIsforumIdConfirmed() )
           {
-            // no forum connection but it is flag as same user
+            // no Forum account found: search one
+            //
             account.setForumId( ServerUtil.forumConnector().getUserId( account.getPseudo() ) );
           }
-          if( account.getForumId() == null )
+          
+          if( account.getForumId() != null && !account.isIsforumIdConfirmed() )
           {
-            account.setIsforumIdConfirmed( false );
+            // A Forum account is found, but we're not sure it belong to the same people
+            //
+            if( account.getForumKey() == null )
+            {
+              // we never send PM to link both account: let's do it
+              //
+              account.setForumKey( EbAccount.generateForumKey() );
+              ServerUtil.forumConnector().sendPMessage( "[FMG] lier les deux comptes", 
+                  "Bonjour\n" +
+                  "Pour lier les deux comptes '"+account.getPseudo()+"' entre FMG et le Forum veuillez visiter cette URL:\n" +
+                  "http://www.fullmetalgalaxy.com/AccountServlet?link="+account.getForumKey()+" \n" +
+                  "\n" +
+                  "Cordialement\n" +
+                  "Full Metal Galaxy", 
+                  account.getPseudo() );
+            }
           }
-          else
+          else if( account.getForumId() != null && account.isIsforumIdConfirmed() )
           {
+            // FMG and Forum account belong to the same people
+            //
             // copy data from forum to FMG
             ServerUtil.forumConnector().pullAccount( account );
             // copy data from FMG to forum
