@@ -19,7 +19,7 @@ if( account == null )
 	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'existe pas.</h2>" );
 	return;
 }
-if( account.getForumId() != null )
+if( account.isIsforumIdConfirmed() && account.getForumId() != null )
 {
   response.sendRedirect( account.getProfileUrl() );
   return;

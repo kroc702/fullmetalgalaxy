@@ -27,6 +27,7 @@ import java.util.Date;
 import javax.persistence.Embedded;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.TokenType;
 
 
@@ -115,19 +116,35 @@ public class EbRegistration extends EbBase
     return count;
   }
 
-  public int getWinningPoint(Game p_game)
+  public int estimateWinningScore(Game p_game)
   {
     int winningPoint = 0;
     for( EbToken token : p_game.getSetToken() )
     {
-      if( (token.getType() == TokenType.Freighter) && (getEnuColor().isColored( token.getColor() )) )
+      if( (getEnuColor().isColored( token.getColor() )) )
       {
-        winningPoint += p_game.getWinningPoint( token );
+        winningPoint += token.getWinningPoint();
       }
     }
+    winningPoint -= p_game.getEbConfigGameVariant().getInitialScore();
     return winningPoint;
   }
 
+
+  public int getWinningScore(Game p_game)
+  {
+    int winningPoint = 0;
+    for( EbToken token : p_game.getSetToken() )
+    {
+      if( (token.getType() == TokenType.Freighter) && getEnuColor().isColored( token.getColor() )
+          && (token.getLocation() == Location.EndGame) )
+      {
+        winningPoint += token.getWinningPoint();
+      }
+    }
+    winningPoint -= p_game.getEbConfigGameVariant().getInitialScore();
+    return winningPoint;
+  }
 
   /**
    * @return the account

@@ -90,6 +90,21 @@ public class Game extends GameData implements PathGraph, GameEventStack
   }
   
 
+  public String getPMUrl()
+  {
+    String[] pseudo = new String[getCurrentNumberOfRegiteredPlayer()];
+    int i = 0;
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( registration.haveAccount() )
+      {
+        pseudo[i] = registration.getAccount().getPseudo();
+        i++;
+      }
+    }
+    return EbPublicAccount.getPMUrl( getName(), pseudo );
+  }
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.EbBase#setTrancient()
    */
@@ -160,6 +175,15 @@ public class Game extends GameData implements PathGraph, GameEventStack
   public boolean isFinished()
   {
     return(getCurrentTimeStep() > getEbConfigGameTime().getTotalTimeStep());
+  }
+
+  /**
+   * 
+   * @return true if this game was aborted before the end. ie not finished but history
+   */
+  public boolean isAborted()
+  {
+    return !isFinished() && isHistory();
   }
 
  
@@ -503,32 +527,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
     updateLastTokenUpdate( null );
   }
 
-  /**
-   * @param p_tokenFreighter should be one Freighter
-   * @return all winning point contained by p_token
-   */
-  public int getWinningPoint(EbToken p_tokenFreighter)
-  {
-    int winningPoint = 0;
-    for( Iterator<EbToken> it = getSetToken().iterator(); it.hasNext(); )
-    {
-      EbToken token = (EbToken)it.next();
-      if( (token.getLocation() == Location.Token) && (token.getCarrierToken() == p_tokenFreighter) )
-      {
-        if( token.getType() == TokenType.Ore )
-        {
-          winningPoint += 2;
-        }
-        else
-        {
-          winningPoint += 1;
-        }
-      }
-    }
-    return winningPoint;
-  }
-
-
 
   public EbRegistration getWinnerRegistration()
   {
@@ -536,10 +534,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
     int point = 0;
     for( EbRegistration registration : getSetRegistration() )
     {
-      if( registration.getWinningPoint(this) > point )
+      if( registration.estimateWinningScore(this) > point )
       {
         winner = registration;
-        point = registration.getWinningPoint(this);
+        point = registration.getWinningScore( this );
       }
     }
     return winner;
@@ -552,7 +550,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     Map<EbRegistration, Integer> winningPoint = new HashMap<EbRegistration, Integer>();
     for( EbRegistration registration : getSetRegistration() )
     {
-      int wp = registration.getWinningPoint(this);
+      int wp = registration.estimateWinningScore(this);
       int index = 0;
       while( index < sortedRegistration.size() )
       {

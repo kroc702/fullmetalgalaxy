@@ -401,7 +401,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
                       .model().getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
 
       // display Wining points
-      m_playerGrid.setText( index, 4, "" + registration.getWinningPoint(ModelFmpMain.model().getGame()) );
+      m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(ModelFmpMain.model().getGame()) );
 
       // display 'must play before'
       if( (!ModelFmpMain.model().getGame().isAsynchron())
@@ -427,7 +427,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
         {
           // display ban button
           Image banImage = new Image();
-          banImage.setUrl( "/images/css/icon_ban.gif" );
+          banImage.setUrl( "/images/icons/ban.gif" );
           banImage.setAltText( "BAN" );
           banImage.setTitle( "Banir un joueur de cette partie" );
           banImage.addClickHandler( this );

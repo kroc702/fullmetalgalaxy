@@ -29,7 +29,7 @@ import java.util.Date;
  * @author Vincent Legendre
  *
  */
-public class EbAccountStats extends EbBase
+public class EbAccountStats extends AnPojoBase implements Comparable
 {
   static final long serialVersionUID = 1;
 
@@ -52,17 +52,17 @@ public class EbAccountStats extends EbBase
   private int m_finalScore = 0;
 
 
+  public boolean lastUpdateCanChange()
+  {
+    return false;
+  }
+
   public EbAccountStats()
   {
     super();
     init();
   }
 
-  public EbAccountStats(EbBase p_base)
-  {
-    super( p_base );
-    init();
-  }
 
 
   private void init()
@@ -74,6 +74,21 @@ public class EbAccountStats extends EbBase
   {
     super.reinit();
     this.init();
+  }
+
+
+  /**
+   * compare only lastupdate to sort a list of stat
+   */
+  @Override
+  public int compareTo(Object p_arg0)
+  {
+    if( !(p_arg0 instanceof EbAccountStats) )
+    {
+      return -1;
+    }
+    Date otherDate = ((EbAccountStats)p_arg0).getLastUpdate();
+    return getLastUpdate().compareTo( otherDate );
   }
 
 
@@ -100,6 +115,7 @@ public class EbAccountStats extends EbBase
   {
     m_finalScore = p_finalScore;
   }
+
 
 
 

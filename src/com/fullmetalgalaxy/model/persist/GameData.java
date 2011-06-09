@@ -563,6 +563,33 @@ public class GameData implements java.io.Serializable, IsSerializable
     m_preview.decVersion();
   }
 
+  /**
+   * @return
+   * @see com.fullmetalgalaxy.model.persist.EbGamePreview#getScoreBonus()
+   */
+  public int getScoreBonus()
+  {
+    return m_preview.getScoreBonus();
+  }
+
+  /**
+   * @return
+   * @see com.fullmetalgalaxy.model.persist.EbGamePreview#isVip()
+   */
+  public boolean isVip()
+  {
+    return m_preview.isVip();
+  }
+
+  /**
+   * @param p_isVip
+   * @see com.fullmetalgalaxy.model.persist.EbGamePreview#setVip(boolean)
+   */
+  public void setVip(boolean p_isVip)
+  {
+    m_preview.setVip( p_isVip );
+  }
+
   public long getNextLocalId()
   {
     return m_data.getNextLocalId();

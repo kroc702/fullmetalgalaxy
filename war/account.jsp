@@ -95,7 +95,7 @@ Description publique :<br/>
 
 
 <% if(Auth.isUserAdmin(request, response)) {
-  if( account.getForumId() != null )
+  if( account.isIsforumIdConfirmed() && account.getForumId() != null )
   {
 	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
 	out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );

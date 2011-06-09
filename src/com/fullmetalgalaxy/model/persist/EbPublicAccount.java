@@ -22,6 +22,10 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 
 
@@ -77,7 +81,11 @@ public class EbPublicAccount extends EbBase
     this.init();
   }
 
-
+  public int getScoreBonus()
+  {
+    return FmpConstant.SCORE_BONUS_MIN
+        + (getCurrentLevel() * FmpConstant.SCORE_BONUS_REF / FmpConstant.SCORE_REF);
+  }
 
   public boolean isEmpty()
   {
@@ -92,6 +100,47 @@ public class EbPublicAccount extends EbBase
   public String getProfileUrl()
   {
     return "/profile.jsp?id=" + getId();
+  }
+
+  public static String getPMUrl(String p_subject, String... p_pseudo)
+  {
+    if( p_subject == null )
+    {
+      p_subject = "[FMG] ";
+    }
+    else if( !p_subject.startsWith( "[FMG]" ) )
+    {
+      p_subject = "[FMG] " + p_subject;
+    }
+    try
+    {
+      p_subject = URLEncoder.encode( p_subject, "UTF-8" );
+      p_subject = p_subject.replace( "+", "%20" );
+      for( String pseudo : p_pseudo )
+      {
+        pseudo = URLEncoder.encode( pseudo, "UTF-8" );
+        pseudo = pseudo.replace( "+", "%20" );
+      }
+    } catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
+    String url = "http://" + FmpConstant.getForumHost() + "/privmsg?mode=post&subject=" + p_subject;
+    for( String pseudo : p_pseudo )
+    {
+      url += "&user=" + pseudo;
+    }
+    return url;
+  }
+
+  public String getPMUrl(String p_subject)
+  {
+    return getPMUrl( p_subject, getPseudo() );
+  }
+
+  public String getPMUrl()
+  {
+    return getPMUrl( "" );
   }
 
   // getters / setters

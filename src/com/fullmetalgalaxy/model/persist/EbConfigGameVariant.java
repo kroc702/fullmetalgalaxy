@@ -46,7 +46,7 @@ public class EbConfigGameVariant extends EbBase
   private String m_description = "";
   private Map<TokenType,Integer> m_constructReserve = new HashMap<TokenType,Integer>();
   private int m_actionPtMaxPerExtraShip = 5;
-  
+  private int m_initialScore = 20;
   
   /**
    * 
@@ -75,6 +75,7 @@ public class EbConfigGameVariant extends EbBase
     m_deployementRadius = 4;
     m_description = "";
     m_constructReserve = new HashMap<TokenType,Integer>();
+    m_initialScore = 20;
   }
 
   @Override
@@ -218,6 +219,22 @@ public class EbConfigGameVariant extends EbBase
   public void setActionPtMaxPerExtraShip(int p_actionPtMaxPerExtraShip)
   {
     m_actionPtMaxPerExtraShip = p_actionPtMaxPerExtraShip;
+  }
+
+  /**
+   * @return the initialScore
+   */
+  public int getInitialScore()
+  {
+    return m_initialScore;
+  }
+
+  /**
+   * @param p_initialScore the initialScore to set
+   */
+  public void setInitialScore(int p_initialScore)
+  {
+    m_initialScore = p_initialScore;
   }
 
 }

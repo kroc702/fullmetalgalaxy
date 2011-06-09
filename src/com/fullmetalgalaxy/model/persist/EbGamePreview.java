@@ -138,6 +138,18 @@ public class EbGamePreview extends EbBase
     getLastUpdate().setTime( System.currentTimeMillis() );
   }
 
+  public int getScoreBonus()
+  {
+    int bonus = 0;
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( registration.getAccount() != null )
+      {
+        bonus += registration.getAccount().getScoreBonus();
+      }
+    }
+    return bonus;
+  }
 
   public int getLandPixWidth(EnuZoom p_zoom)
   {
