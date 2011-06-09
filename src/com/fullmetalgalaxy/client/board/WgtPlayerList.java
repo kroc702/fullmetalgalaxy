@@ -104,7 +104,7 @@ public class WgtPlayerList extends WgtView
       int point = 0;
       if( registration.haveAccount() )
       {
-        point = registration.getWinningPoint(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
         String pseudo = registration.getAccount().getPseudo();
         if( point > winnerPoint )
         {
@@ -115,7 +115,7 @@ public class WgtPlayerList extends WgtView
       }
       else if( registration.getAccount().getId() == ModelFmpMain.model().getMyAccount().getId() )
       {
-        point = registration.getWinningPoint(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
         if( point > winnerPoint )
         {
           winnerPoint = point;
@@ -127,7 +127,7 @@ public class WgtPlayerList extends WgtView
       }
       else
       {
-        point = registration.getWinningPoint(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
         if( point > winnerPoint )
         {
           winnerPoint = point;

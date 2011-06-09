@@ -44,7 +44,7 @@ public class StatsGame extends EbAccountStats
     /** game is finished */
     Finished,
     /** game was canceled */
-    Canceled,
+    Aborted,
     /** account was banned from this game */
     Banned;
   }
@@ -53,6 +53,7 @@ public class StatsGame extends EbAccountStats
   private long m_gameId = 0;
   private String m_gameName = null;
   private int m_numberOfPlayer = 0;
+  private int m_maxNumberOfPlayer = 0;
   private int m_numberOfHexagon = 0;
   private ConfigGameTime m_configGameTime = null;
   private ConfigGameVariant m_configGameVariant = null;
@@ -70,11 +71,14 @@ public class StatsGame extends EbAccountStats
     init();
   }
 
-  public StatsGame(EbBase p_base)
+  public StatsGame(Game p_game)
   {
-    super( p_base );
-    init();
+    super();
+    setGame( p_game );
+
+    m_isCreator = false;
   }
+
 
 
   private void init()
@@ -82,6 +86,7 @@ public class StatsGame extends EbAccountStats
     m_gameId = 0;
     m_gameName = null;
     m_numberOfPlayer = 0;
+    m_maxNumberOfPlayer = 0;
     m_numberOfHexagon = 0;
     m_configGameTime = null;
     m_configGameVariant = null;
@@ -90,6 +95,11 @@ public class StatsGame extends EbAccountStats
     m_isCreator = false;
   }
 
+  @Override
+  public boolean lastUpdateCanChange()
+  {
+    return m_status == Status.Running;
+  }
 
   @Override
   public void reinit()
@@ -103,10 +113,21 @@ public class StatsGame extends EbAccountStats
     m_gameId = p_game.getId();
     m_gameName = p_game.getName();
     m_numberOfPlayer = p_game.getCurrentNumberOfRegiteredPlayer();
+    m_maxNumberOfPlayer = p_game.getMaxNumberOfPlayer();
     m_numberOfHexagon = p_game.getNumberOfHexagon();
     m_configGameTime = p_game.getConfigGameTime();
     m_configGameVariant = p_game.getConfigGameVariant();
     m_gameCreation = p_game.getCreationDate();
+
+    m_status = Status.Running;
+    if( p_game.isAborted() )
+    {
+      m_status = Status.Aborted;
+    }
+    else if( p_game.isFinished() )
+    {
+      m_status = Status.Finished;
+    }
   }
 
   // getters / setters
@@ -230,6 +251,22 @@ public class StatsGame extends EbAccountStats
   public void setStatus(Status p_status)
   {
     m_status = p_status;
+  }
+
+  /**
+   * @return the maxNumberOfPlayer
+   */
+  public int getMaxNumberOfPlayer()
+  {
+    return m_maxNumberOfPlayer;
+  }
+
+  /**
+   * @param p_maxNumberOfPlayer the maxNumberOfPlayer to set
+   */
+  public void setMaxNumberOfPlayer(int p_maxNumberOfPlayer)
+  {
+    m_maxNumberOfPlayer = p_maxNumberOfPlayer;
   }
 
 

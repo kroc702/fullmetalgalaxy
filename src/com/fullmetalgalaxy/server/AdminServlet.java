@@ -144,6 +144,35 @@ public class AdminServlet extends HttpServlet
         else
         {
           account.setForumId( forumId );
+          account.setIsforumIdConfirmed( true );
+          ds.put( account );
+        }
+      }
+      else
+      {
+        p_resp.getOutputStream().println( "account " + strid + " not found" );
+      }
+      ds.close();
+    }
+
+    // create forum account
+    // ====================
+    strid = p_req.getParameter( "createforumaccount" );
+    if( strid != null )
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        String forumId = ServerUtil.forumConnector().getUserId( account.getPseudo() );
+        if( forumId != null )
+        {
+          p_resp.getOutputStream().println( "username " + account.getPseudo() + " exist on forum" );
+        }
+        else
+        {
+          ServerUtil.forumConnector().createAccount( account );
+          account.setIsforumIdConfirmed( true );
           ds.put( account );
         }
       }

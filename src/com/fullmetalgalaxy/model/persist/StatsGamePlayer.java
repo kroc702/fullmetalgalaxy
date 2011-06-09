@@ -25,6 +25,13 @@ package com.fullmetalgalaxy.model.persist;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControl;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
+import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 
 
 /**
@@ -43,8 +50,10 @@ public class StatsGamePlayer extends StatsGame
   private int m_unitControlCount = 0;
   /** freighter control action count during game */
   private int m_freighterControlCount = 0;
-  /** unit losed due to opponent control or fire action */
+  /** unit loosed due to opponent control or fire action */
   private int m_losedUnitCount = 0;
+  /** freighter loosed due to opponent control */
+  private int m_losedFreighterCount = 0;
   /** players color at beginning of game */
   private int m_initialColor = EnuColor.None;
   /** players color at end of game */
@@ -63,12 +72,19 @@ public class StatsGamePlayer extends StatsGame
     init();
   }
 
-  public StatsGamePlayer(EbBase p_base)
+  public StatsGamePlayer(Game p_game)
   {
-    super( p_base );
+    super( p_game );
     init();
   }
 
+  public StatsGamePlayer(Game p_game, EbRegistration p_registration)
+  {
+    super( p_game );
+    init();
+
+    setPlayer( p_game, p_registration );
+  }
 
   private void init()
   {
@@ -76,6 +92,11 @@ public class StatsGamePlayer extends StatsGame
     m_fireCount = 0;
     m_unitControlCount = 0;
     m_freighterControlCount = 0;
+    m_losedUnitCount = 0;
+    m_losedFreighterCount = 0;
+    m_initialColor = EnuColor.None;
+    m_finalColor = EnuColor.None;
+    m_constructionCount = 0;
     m_oreCount = 0;
     m_tokenCount = 0;
   }
@@ -88,34 +109,70 @@ public class StatsGamePlayer extends StatsGame
     this.init();
   }
 
-  public static StatsGamePlayer generate(EbRegistration p_registration, Game p_game)
+  public void setPlayer(Game p_game, EbRegistration p_registration)
   {
-    StatsGamePlayer stats = new StatsGamePlayer();
-    stats.setGame( p_game );
+    /*
+     * TODO set final score !
+     */
+    setOreCount( p_registration.getOreCount( p_game ) );
+    setTokenCount( p_registration.getTokenCount( p_game ) );
+    setFinalColor( p_registration.getColor() );
+    
+    EnuColor currentColor = new EnuColor(EnuColor.None);
+    
+    // stats.setWinningPoints( p_registration.getWinningPoint() );
 
-    stats.setOreCount( p_registration.getOreCount(p_game) );
-    stats.setTokenCount( p_registration.getTokenCount(p_game) );
-    //stats.setWinningPoints( p_registration.getWinningPoint() );
-
-    /*for( AnEvent event : p_game.getLogs() )
+    for( AnEvent event : p_game.getLogs() )
     {
-      if( event instanceof EbEvtControl )
+      if( event instanceof AnEventPlay )
       {
-        EbEvtControl control = (EbEvtControl)event;
-        if( control.getRegistration().getId() == p_registration.getId() )
+        // TODO getMyRegistration depend of account id...
+        // this code will fail in case of replacement
+        if( ((AnEventPlay)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
         {
-          stats.setControlCount( stats.getControlCount() + 1 );
+          if( event instanceof EbEvtControl )
+          {
+            setUnitControlCount( getUnitControlCount() + 1 );
+          }
+          else if( event instanceof EbEvtFire )
+          {
+            setFireCount( getFireCount() + 1 );
+          }
+          else if( event instanceof EbEvtConstruct )
+          {
+            setConstructionCount( getConstructionCount() + 1 );
+          }
+          else if( event instanceof EbEvtControlFreighter )
+          {
+            setFreighterControlCount( getFreighterControlCount() + 1 );
+            currentColor.addColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() );
+          }
+        }
+        else if( (event instanceof EbGameJoin)
+            && ((EbGameJoin)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
+        {
+          // here because original color can change if he lose his original freighter
+          setInitialColor( ((EbGameJoin)event).getColor() );
+          currentColor.setValue( getInitialColor() );
+        }
+        if( event instanceof EbEvtControlFreighter
+            && currentColor.isColored( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() ) )
+        {
+          setLosedFreighterCount( getLosedFreighterCount() + 1 );
+          currentColor.removeColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() );
+        }
+        else if( event instanceof EbEvtControl
+            && currentColor.isColored( ((EbEvtControl)event).getTokenTarget( p_game ).getColor() ) )
+        {
+          setLosedUnitCount( getLosedUnitCount() + 1 );
+        }
+        else if( event instanceof EbEvtFire
+            && currentColor.isColored( ((EbEvtFire)event).getTokenTarget( p_game ).getColor() ) )
+        {
+          setLosedUnitCount( getLosedUnitCount() + 1 );
         }
       }
-      else if( event instanceof EbEvtFire )
-      {
-        EbEvtFire fire = (EbEvtFire)event;
-        if( fire.getRegistration().getId() == p_registration.getId() )
-        {
-          stats.setFireCount( stats.getFireCount() + 1 );
-        }
-      }
-    }*/
+    }
 
     List<EbRegistration> sortedRegistration = p_game.getRegistrationByWinningRank();
     int index = 0;
@@ -123,14 +180,43 @@ public class StatsGamePlayer extends StatsGame
     {
       if( sortedRegistration.get( index ) == p_registration )
       {
-        stats.setGameRank( index + 1 );
+        setGameRank( index + 1 );
         break;
       }
       index++;
     }
 
-    return stats;
   }
+
+
+
+  public PlayerStyle getPlayerStyle()
+  {
+    int attack = getUnitControlCount() + getFireCount() + getFreighterControlCount() * 2;
+    int nbColor = new EnuColor( getFinalColor() ).getNbColor();
+    if( nbColor == 0 )
+    {
+      // oups, player was captured...
+      return PlayerStyle.Sheep;
+    }
+    float mine = getOreCount() / nbColor;
+    if( mine == 0 )
+    {
+      return PlayerStyle.Aggressive;
+    }
+    float balance = attack / mine;
+    if( balance > 1.9 )
+    {
+      return PlayerStyle.Aggressive;
+    }
+    if( balance < 0.5 )
+    {
+      return PlayerStyle.Pacific;
+    }
+    return PlayerStyle.Balanced;
+  }
+
+
 
   // getters / setters
   // -----------------
@@ -193,6 +279,22 @@ public class StatsGamePlayer extends StatsGame
     m_losedUnitCount = p_losedUnitCount;
   }
 
+
+  /**
+   * @return the losedFreighterCount
+   */
+  public int getLosedFreighterCount()
+  {
+    return m_losedFreighterCount;
+  }
+
+  /**
+   * @param p_losedFreighterCount the losedFreighterCount to set
+   */
+  public void setLosedFreighterCount(int p_losedFreighterCount)
+  {
+    m_losedFreighterCount = p_losedFreighterCount;
+  }
 
   public int getInitialColor()
   {

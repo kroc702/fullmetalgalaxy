@@ -187,7 +187,7 @@ public class AccountServlet extends HttpServlet
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {
-        msg = "l'adresse mail "+params.get( "email" )+" n'a pas été trouvé";
+        msg = "l'adresse mail " + params.get( "email" ) + " n'a pas été trouvé";
       }
       else
       {
@@ -213,7 +213,7 @@ public class AccountServlet extends HttpServlet
               +"Cordialement"
               , account.getEmail() );
           
-          msg = "un mail à été envoyé a l'adresse "+account.getEmail();
+          msg = "un mail à été envoyé a l'adresse " + account.getEmail();
           account.setLastPasswordAsk( new Date() );
           ds.put( account );
         }

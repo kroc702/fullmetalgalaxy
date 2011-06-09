@@ -28,6 +28,12 @@ import com.fullmetalgalaxy.model.EnuZoom;
 
 public class FmpConstant
 {
+  public final static int SCORE_REF = 2000;
+  public final static int SCORE_EROSION_REF = -150;
+  public final static int SCORE_EROSION_MIN = 100;
+  public final static int SCORE_BONUS_REF = 15;
+  public final static int SCORE_BONUS_MIN = 2;
+
   public static final int maximumActionPtWithoutLanding = 10;
   public static final int minimumPlayerNumber = 2;
   public static final int maximumPlayerNumber = 9;
@@ -53,12 +59,7 @@ public class FmpConstant
 
   public static String getForumUrl()
   {
-    return "http://fullmetalplanete.forum2jeux.com/programme-de-vincent-f33/";
-  }
-
-  public static String getPMUrl(long p_accountId)
-  {
-    return "/privatemsg.jsp?id=" + p_accountId;
+    return "http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy";
   }
 
 

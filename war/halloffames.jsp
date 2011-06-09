@@ -43,7 +43,7 @@ out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
 	      // Message
 	      if( account.isAllowPrivateMsg() && account.haveEmail() )
 	      {
-	      	out.println("<td><a href='"+FmpConstant.getPMUrl(account.getId())+"'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
+	      	out.println("<td><a href='"+account.getPMUrl()+"'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
 	      }
 	      else
 	      {

@@ -32,6 +32,8 @@ import com.fullmetalgalaxy.model.AuthProvider;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccountStats;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
+import com.fullmetalgalaxy.model.persist.PlayerFiability;
+import com.fullmetalgalaxy.model.persist.PlayerStyle;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -76,8 +78,12 @@ public class EbAccount extends EbPublicAccount
   /**
    * A VIP already finished one game and wasn't banned for a while.
    */
-  private boolean m_isVip = false;
+  private PlayerFiability m_fiability = PlayerFiability.Normal;
   
+  /**
+   * player style to recognize people
+   */
+  private PlayerStyle m_playerStyle = PlayerStyle.Sheep;
   
   /** because of this data, EbAccount shoudln't be send on client side ! 
    * We may have to encrypt this data.
@@ -202,7 +208,15 @@ public class EbAccount extends EbPublicAccount
     return super.getProfileUrl();
   }
 
+  @Override
+  public String getPMUrl(String p_subject)
+  {
+    String url = super.getPMUrl( p_subject );
+    url += "&u=" + getForumId();
+    return url;
+  }
 
+  
   public boolean canChangePseudo()
   {
     if( (getAuthProvider() == AuthProvider.Google)
@@ -472,17 +486,6 @@ public class EbAccount extends EbPublicAccount
   }
 
 
-  public boolean isVip()
-  {
-    return m_isVip;
-  }
-
-
-  public void setVip(boolean p_isVip)
-  {
-    m_isVip = p_isVip;
-  }
-
   /**
    * @return the lastConnexion
    */
@@ -554,11 +557,22 @@ public class EbAccount extends EbPublicAccount
     m_locale = p_locale;
   }
 
-  public String getCompactPseudo()
+  /**
+   * @return the playerStyle
+   */
+  public PlayerStyle getPlayerStyle()
   {
-    return m_compactPseudo;
+    return m_playerStyle;
   }
 
+  /**
+   * @param p_playerStyle the playerStyle to set
+   */
+  public void setPlayerStyle(PlayerStyle p_playerStyle)
+  {
+    m_playerStyle = p_playerStyle;
+  }
+  
   public Date getLastPasswordAsk()
   {
     return m_lastPasswordAsk;
@@ -567,6 +581,27 @@ public class EbAccount extends EbPublicAccount
   public void setLastPasswordAsk(Date p_lastPasswordAsk)
   {
     m_lastPasswordAsk = p_lastPasswordAsk;
+  }
+
+  /**
+   * @return the fiability
+   */
+  public PlayerFiability getFiability()
+  {
+    return m_fiability;
+  }
+
+  /**
+   * @param p_fiability the fiability to set
+   */
+  public void setFiability(PlayerFiability p_fiability)
+  {
+    m_fiability = p_fiability;
+  }
+
+  public String getCompactPseudo()
+  {
+    return m_compactPseudo;
   }
 
   public String getForumKey()
@@ -578,7 +613,5 @@ public class EbAccount extends EbPublicAccount
   {
     m_forumKey = p_forumKey;
   }
-
-
 
 }

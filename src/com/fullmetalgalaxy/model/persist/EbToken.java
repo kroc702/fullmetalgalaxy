@@ -149,6 +149,36 @@ public class EbToken extends EbBase
     }
   }
 
+  public static int getWinningPoint(TokenType p_type)
+  {
+    switch( p_type )
+    {
+    case Freighter:
+      return 0;
+    case Ore:
+      return 2;
+    default:
+      return 1;
+    }
+  }
+
+  /**
+   * @param p_token
+   * @return all winning point contained by p_token
+   */
+  public int getWinningPoint()
+  {
+    int winningPoint = getWinningPoint( getType() );
+    if( containToken() )
+    {
+      for( EbToken token : getContains() )
+      {
+        winningPoint += token.getWinningPoint();
+      }
+    }
+    return winningPoint;
+  }
+
   /**
    * @return the "z-index" style property of the image of this token.
    * This value is also used to determine with token to select in case of several
