@@ -202,7 +202,7 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
             <y>3</y>
             <sector>SouthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -280,7 +280,7 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
             <y>2</y>
             <sector>SouthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -328,7 +328,7 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
             <y>3</y>
             <sector>SouthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>

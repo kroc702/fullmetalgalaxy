@@ -40,7 +40,7 @@ public class EbEvtControl extends AnEventPlay
   static final long serialVersionUID = 1;
 
   private int m_oldColor = EnuColor.None;
-
+  private float m_oldBulletCount = 0;
 
   /**
    * 
@@ -173,7 +173,9 @@ public class EbEvtControl extends AnEventPlay
     super.exec(p_game);
     // backup for unexec
     setOldColor( getTokenTarget( p_game).getColor() );
+    m_oldBulletCount = getTokenTarget( p_game ).getBulletCount();
     
+    getTokenTarget( p_game ).setBulletCount( getTokenTarget( p_game ).getMaxBulletCount() );
     p_game.changeTokenColor( getTokenTarget(p_game), getTokenDestroyer1(p_game).getColor() );
     if( !isFdComputed() )
     {
@@ -205,6 +207,7 @@ public class EbEvtControl extends AnEventPlay
 
     getTokenTarget(p_game).decVersion();
     p_game.changeTokenColor( getTokenTarget(p_game), getOldColor() );
+    getTokenTarget( p_game ).setBulletCount( m_oldBulletCount );
     if( getTokenTarget( p_game ).containToken() )
     {
       for( EbToken token : getTokenTarget( p_game ).getContains() )
