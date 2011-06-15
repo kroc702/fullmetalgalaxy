@@ -153,14 +153,7 @@ public class EbAccount extends EbPublicAccount
     return compact;
   }
   
-  /**
-   * @return a random generated string
-   */
-  public static String generateForumKey()
-  {
-    return Double.toString( Math.random() );
-  }
-  
+
   
   public EbAccount()
   {
@@ -173,6 +166,7 @@ public class EbAccount extends EbPublicAccount
   {
     m_login = "";
     m_email = "";
+    m_password = null;
     m_subscriptionDate = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
     m_description = "";

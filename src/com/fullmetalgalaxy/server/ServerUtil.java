@@ -24,6 +24,8 @@ package com.fullmetalgalaxy.server;
 
 import java.util.Date;
 
+import com.fullmetalgalaxy.model.RpcUtil;
+
 /**
  * @author Kroc
  *
@@ -49,6 +51,9 @@ public class ServerUtil
       + "\u00C5\u00E5"
       + "\u00C7\u00E7" 
       + "\u0150\u0151\u0170\u0171";
+
+  private static final String ALPHABET = "azertyuiopqsdfghjklmwxcvbn0123456789";
+
 
   /**
    * remove accentued from a string and replace with ascii equivalent
@@ -76,6 +81,17 @@ public class ServerUtil
   }
 
 
+
+  public static String randomString(int p_length)
+  {
+    StringBuffer str = new StringBuffer();
+    while( p_length > 0 )
+    {
+      str.append( ALPHABET.charAt( RpcUtil.random( ALPHABET.length() ) ) );
+      p_length--;
+    }
+    return str.toString();
+  }
 
   public static Date currentDate()
   {

@@ -12,6 +12,7 @@
 <%@include file="include/header.jsp"%>
 
 <%
+EbAccount account = null;
 if( Auth.isUserAdmin( request, response ) )
 {
 	try
@@ -21,15 +22,20 @@ if( Auth.isUserAdmin( request, response ) )
 	{
 		id = Auth.getUserAccount( request, response ).getId();
 	}
+	if( id != 0 )
+	{
+		account = FmgDataStore.dao().get(EbAccount.class, id );
+	}
 }
 else if( Auth.isUserLogged( request, response ) )
 {
-  id = Auth.getUserAccount( request, response ).getId();
+  account = Auth.getUserAccount( request, response );
+  id = account.getId();
 }
-FmgDataStore ds = new FmgDataStore( true );
-EbAccount account = ds.get( EbAccount.class, id );
 if(account == null) {
 	account = new EbAccount();
+	account.setPassword("");
+	id = 0;
 } 
 %>
 
@@ -78,23 +84,25 @@ login :
 <br/>
 email :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
-Autoriser FMG a envoyer un mail pour signaler votre tour de jeu
-<input type="checkbox" <%= account.isAllowMailFromGame() ? "checked" : "" %> name="AllowMailFromGame" value="1"><br/>
-Autoriser les autres joueurs a vous contacter par messages privés
-<input type="checkbox" <%= account.isAllowPrivateMsg() ? "checked" : "" %> name="AllowPrivateMsg" value="1"><br/>
-Autoriser FMG a vous informer des évolutions majeurs
-<input type="checkbox" <%= account.isAllowMailFromNewsLetter() ? "checked" : "" %> name="AllowMailFromNewsLetter" value="1"><br/>
-<br/>
-Jabber ID :
-<input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
-<br/>
-Description publique :<br/>
-<textarea cols="50" rows="10" name="description">
-<%= account.getDescription() %>
-</textarea><br/>
 
 
-<% if(Auth.isUserAdmin(request, response)) {
+<% if(Auth.isUserAdmin(request, response)) { %>
+  Autoriser FMG a envoyer un mail pour signaler votre tour de jeu
+  <input type="checkbox" <%= account.isAllowMailFromGame() ? "checked" : "" %> name="AllowMailFromGame" value="1"><br/>
+  Autoriser les autres joueurs a vous contacter par messages privés
+  <input type="checkbox" <%= account.isAllowPrivateMsg() ? "checked" : "" %> name="AllowPrivateMsg" value="1"><br/>
+  Autoriser FMG a vous informer des évolutions majeurs
+  <input type="checkbox" <%= account.isAllowMailFromNewsLetter() ? "checked" : "" %> name="AllowMailFromNewsLetter" value="1"><br/>
+  <br/>
+  Jabber ID :
+  <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
+  <br/>
+  Description publique :<br/>
+  <textarea cols="50" rows="10" name="description">
+  <%= account.getDescription() %>
+  </textarea><br/>
+  
+<%
   if( account.isIsforumIdConfirmed() && account.getForumId() != null )
   {
 	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
