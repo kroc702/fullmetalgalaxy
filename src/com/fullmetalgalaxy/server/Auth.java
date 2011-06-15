@@ -46,7 +46,7 @@ public class Auth
     // init first tasks
     // this is done here to be sure that task are initialized at least once
     ChannelManager.addTask();
-    SynchroForum.addTask();
+    // SynchroForum.addTask();
   }
 
 

@@ -22,9 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 
@@ -112,18 +110,10 @@ public class EbPublicAccount extends EbBase
     {
       p_subject = "[FMG] " + p_subject;
     }
-    try
+    p_subject = SharedMethods.encodePathSegment( p_subject );
+    for( String pseudo : p_pseudo )
     {
-      p_subject = URLEncoder.encode( p_subject, "UTF-8" );
-      p_subject = p_subject.replace( "+", "%20" );
-      for( String pseudo : p_pseudo )
-      {
-        pseudo = URLEncoder.encode( pseudo, "UTF-8" );
-        pseudo = pseudo.replace( "+", "%20" );
-      }
-    } catch( UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
+      pseudo = SharedMethods.encodePathSegment( pseudo );
     }
     String url = "http://" + FmpConstant.getForumHost() + "/privmsg?mode=post&subject=" + p_subject;
     for( String pseudo : p_pseudo )

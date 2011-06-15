@@ -96,7 +96,7 @@ public class SynchroForum extends HttpServlet
             {
               // we never send PM to link both account: let's do it
               //
-              account.setForumKey( EbAccount.generateForumKey() );
+              account.setForumKey( ServerUtil.randomString( 10 ) );
               ServerUtil.forumConnector().sendPMessage( "[FMG] lier les deux comptes", 
                   "Bonjour\n" +
                   "Pour lier les deux comptes '"+account.getPseudo()+"' entre FMG et le Forum veuillez visiter cette URL:\n" +

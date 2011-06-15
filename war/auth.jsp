@@ -40,7 +40,7 @@ Si vous n'avez pas de compte, vous pouvez
 </p>
 
 <p>
-Si vous avez oublié votre mot de passe, <a href="/password.jsp">vous pouvez en demandez un autre</a>.
+Si vous avez oublié votre mot de passe, <a href="/password.jsp">vous pouvez en demandez un autre</a> ou <a href="mailto:admin@fullmetalgalaxy.com">me contacter par mail</a>.
 </p>
 
 

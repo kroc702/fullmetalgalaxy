@@ -139,7 +139,8 @@ public class ForumConectorImpl implements ForumConector
     // we don't need to be connected
     
     Pattern pattern = Pattern.compile(".*<td class=\"row1\" .* href=\"/u(.*)\"><span style=\"color:#E.....\"><strong>"
-        + Pattern.quote(p_pseudo) + "</strong></span></a></span></td>.*", Pattern.CASE_INSENSITIVE);
+            + Pattern.quote( p_pseudo ) + "</strong></span></a></span></td>.*",
+        Pattern.CASE_INSENSITIVE | Pattern.DOTALL );
     
     try {
       URL url = new URL( "http://" + FmpConstant.getForumHost() + "/memberlist?username="
@@ -213,12 +214,47 @@ public class ForumConectorImpl implements ForumConector
   }
 
  
+  private static Pattern s_charsetPattern = Pattern.compile( ".*charset=(.+)[; $].*" );
+
+  private static String getCharset(HTTPResponse p_response)
+  {
+    String responseCharset = "UTF-8";
+    
+
+    for( HTTPHeader header : p_response.getHeaders() )
+    {
+      if( "Content-Type".equalsIgnoreCase( header.getName() ) )
+      {
+        Matcher matcher = s_charsetPattern.matcher( header.getValue() );
+        if( matcher.matches() )
+        {
+          responseCharset = matcher.group( 1 );
+        }
+      }
+    }
+    return responseCharset;
+  }
+
+
+  private static Pattern s_confirmPassPattern = Pattern.compile(
+      ".*<input type=\"hidden\" name=\"confirm_pass\" value=\"(.+)\" />.*", Pattern.DOTALL );
+  private static Pattern s_addHiddenFieldsPattern = Pattern.compile(
+          ".*addHiddenFields\\('form_confirm', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*",
+          Pattern.DOTALL );
+
 
   @Override
   public void createAccount(EbAccount p_account)
   {
     // we don't need to be connected
     
+    // we need a password to create forum account
+    if( p_account.getPassword() == null )
+    {
+      p_account.setPassword( ServerUtil.randomString( 8 ) );
+    }
+
+
     // first request: send username, email and password
     // ================================================
     FmgCookieStore cookieStore = new FmgCookieStore();
@@ -226,11 +262,9 @@ public class ForumConectorImpl implements ForumConector
     try
     {
       URL url = new URL( "http://" + FmpConstant.getForumHost() + "/register?agreed=true&step=2" );
-      String payload = "username="+p_account.getPseudo()
-                      +"&email="+p_account.getEmail()
-                      +"&password="+p_account.getPassword()
-                      +"&submit=Enregistrer";
-      payload = URLEncoder.encode( payload, "UTF-8" );
+      String payload = "username=" + URLEncoder.encode( p_account.getPseudo(), "UTF-8" )
+          + "&email=" + URLEncoder.encode( p_account.getEmail(), "UTF-8" ) + "&password="
+          + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) + "&submit=Enregistrer";
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
@@ -240,46 +274,53 @@ public class ForumConectorImpl implements ForumConector
       request.setPayload( payload.getBytes("UTF-8") );
       
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
-      
-      //System.out.println( "response code: "+ response.getResponseCode() );
-      //System.out.println( "final url: "+ response.getFinalUrl() );
+
+      // System.out.println( "response code: " + response.getResponseCode() );
+      // System.out.println( "final url: " + response.getFinalUrl() );
       for( HTTPHeader header : response.getHeaders() )
       {
-        //System.out.println( header.getName() + ": " + header.getValue() );
+        // System.out.println( header.getName() + ": " + header.getValue() );
         if( "Set-Cookie".equalsIgnoreCase( header.getName() ) )
         {
           cookieStore.add( header.getValue() );
         }
       }
+
       
       // read auth variable used by forum for security
       // =============================================
-      Pattern pattern = Pattern.compile( ".*<input type=\"hidden\" name=\"confirm_pass\" value=(.+) />"
-          +".*addHiddenFields\\('form_confirm', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*" );
       String confirm_pass = "";
-      String auth1 = "";
-      String auth2 = "";
-      String page = new String( response.getContent(), "UTF-8" );
-      Matcher matcher = pattern.matcher( page);
+      String auth1 = null;
+      String auth2 = null;
+      String page = new String( response.getContent(), getCharset( response ) );
+
+      Matcher matcher = s_confirmPassPattern.matcher( page );
       if( matcher.matches() )
       {
         confirm_pass = matcher.group( 1 );
-        auth1 = decrypt( matcher.group( 2 ) , Integer.parseInt(matcher.group( 3 )) );
-        auth2 = decrypt( matcher.group( 4 ) , Integer.parseInt(matcher.group( 5 )) );
       }
-        
+      matcher = s_addHiddenFieldsPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        auth1 = decrypt( matcher.group( 1 ), Integer.parseInt( matcher.group( 2 ) ) );
+        auth2 = decrypt( matcher.group( 3 ), Integer.parseInt( matcher.group( 4 ) ) );
+      }
       
       // second request: confirm password
       // ================================
-      payload = "auth[]=" + auth1
-      		    +"&auth[]=" + auth2
-      		    +"&password_confirm=" + p_account.getPassword()
-      		    +"&username=" +p_account.getPseudo()
-      		    +"&email=" +p_account.getEmail()
-      		    +"&password=" + p_account.getPassword()
-      		    +"&confirm_pass=" + confirm_pass
-      		    +"&submit=Enregistrer";
-      payload = URLEncoder.encode( payload, "UTF-8" );
+      payload = "";
+      if( auth1 != null && auth2 != null )
+      {
+        payload += "auth[]=" + URLEncoder.encode( auth1, "UTF-8" ) + "&auth[]="
+            + URLEncoder.encode( auth2, "UTF-8" );
+      }
+      payload += "&password_confirm=" + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) 
+        + "&username=" + URLEncoder.encode( p_account.getPseudo(), "UTF-8" ) 
+        + "&email=" + URLEncoder.encode( p_account.getEmail(), "UTF-8" ) 
+        + "&password=" + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) 
+        + "&confirm_pass=" + URLEncoder.encode( confirm_pass, "UTF-8" )
+        + "&submit=Enregistrer";
+
       // in theory we should parse response to get second url. but it's the same.
       request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
@@ -291,6 +332,8 @@ public class ForumConectorImpl implements ForumConector
       
       response = URLFetchServiceFactory.getURLFetchService().fetch( request );
       
+      page = new String( response.getContent(), getCharset( response ) );
+
     } catch( Exception e )
     {
       log.error( e );
@@ -362,7 +405,9 @@ public class ForumConectorImpl implements ForumConector
       reader.close();
 
       Pattern pattern = Pattern
-          .compile( ".*<span class=\"gen\">Avatar:......</span></td><td width=\"80.\"><b><span class=\"gen\"><img src=\"(.*)\" alt=\"\" /></span></b>.*" );
+          .compile(
+              ".*<span class=\"gen\">Avatar:......</span></td><td width=\"80.\"><b><span class=\"gen\"><img src=\"(.*)\" alt=\"\" /></span></b>.*",
+              Pattern.DOTALL );
       // Pattern pattern = Pattern.compile( ".*" );
       Matcher matcher = pattern.matcher( page );
       if( matcher.matches() )
@@ -401,7 +446,7 @@ public class ForumConectorImpl implements ForumConector
         
         HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
         Pattern pattern = Pattern.compile( ".*" );
-        String page = new String( response.getContent(), "UTF-8" );
+        String page = new String( response.getContent(), getCharset(response) );
         Matcher matcher = pattern.matcher( page);
         if( matcher.matches() )
         {
