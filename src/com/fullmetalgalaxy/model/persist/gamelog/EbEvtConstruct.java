@@ -101,12 +101,14 @@ public class EbEvtConstruct extends AnEventPlay
     // check that token is an ore
     if( getToken(p_game).getType() != TokenType.Ore )
     {
-      throw new RpcFmpException( "le pion de matiere premiere doit etre un minerai" );
+      // no i18n
+      throw new RpcFmpException( "you need an ore to construct" );
     }
     // check that tokencarrier is a weather hen
     if( getTokenCarrier(p_game).getType() != TokenType.WeatherHen )
     {
-      throw new RpcFmpException( "seul les pondeuses meteo peuvent construire des pions" );
+      // no i18n
+      throw new RpcFmpException( "only weather hen can construct units" );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -132,15 +134,15 @@ public class EbEvtConstruct extends AnEventPlay
     }
     // Check bullet count: wheather hen can't construct more than 2 unit per
     // turn
-    if( getTokenCarrier( p_game ).getBulletCount() <= 0 )
+    if( getTokenCarrier( p_game ).getBulletCount() < 1 )
     {
       // TODO i18n
-      throw new RpcFmpException( getTokenDestroyer2( p_game )
-          + " ne peut pas construire plus de 2 vehicules par tour" );
+      throw new RpcFmpException(
+          "Une pondeuse météo ne peut pas construire plus de 2 vehicules par tour" );
     }
     // Check wheather hen do not construct two similar unit during same turn
     int reverseIndex = p_game.getLogs().size() - 1;
-    while( getTokenCarrier( p_game ).getBulletCount() == 1 && reverseIndex > 0 )
+    while( getTokenCarrier( p_game ).getBulletCount() < 2 && reverseIndex > 0 )
     {
       AnEvent event = p_game.getLogs().get( reverseIndex );
       if( event.getType() == GameLogType.EvtTimeStep

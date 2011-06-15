@@ -28,9 +28,9 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -132,22 +132,6 @@ public class EbEvtPlayerTurn extends AnEvent
     m_oldActionPt = currentPlayerRegistration.getPtAction();
     currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt(p_game) );
     
-    // update all his tokens bullets count
-    EnuColor currentPlayerColor = currentPlayerRegistration.getEnuColor();
-    for( EbToken token : p_game.getSetToken() )
-    {
-      if( token.getBulletCount() < token.getMaxBulletCount()
-          && currentPlayerColor.isColored( token.getColor() ) )
-      {
-        token.setBulletCount( token.getBulletCount()
-            + game.getEbConfigGameTime().getBulletCountIncrement() );
-        if( token.getBulletCount() > token.getMaxBulletCount() )
-        {
-          token.setBulletCount( token.getMaxBulletCount() );
-        }
-      }
-    }
-
     // reset all end turn date
     for( EbRegistration player : game.getSetRegistration() )
     {
@@ -160,6 +144,18 @@ public class EbEvtPlayerTurn extends AnEvent
     {
       // next turn !
       game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
+    }
+
+    // update all his tokens bullets count
+    EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
+    for( EbToken token : p_game.getSetToken() )
+    {
+      if( token.getBulletCount() < token.getMaxBulletCount()
+          && nextPlayerColor.isColored( token.getColor() ) )
+      {
+        token.setBulletCount( token.getBulletCount()
+            + game.getEbConfigGameTime().getBulletCountIncrement() );
+      }
     }
 
     // if game is parallel (old asynchron) and turn 1, all players are landed:

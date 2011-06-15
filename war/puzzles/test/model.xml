@@ -134,7 +134,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>-1</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>17</m__carrierTokenId>
           <m__carrierToken>
             <m__id>17</m__id>
@@ -164,7 +164,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>17</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -180,7 +180,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>17</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -196,7 +196,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>17</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -228,7 +228,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>17</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -244,7 +244,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>17</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -323,7 +323,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>11</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -368,7 +368,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>7</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -383,7 +383,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>6</y>
             <sector>NorthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -398,7 +398,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>9</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -413,7 +413,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>12</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -428,7 +428,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>-1</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>13</m__carrierTokenId>
           <m__carrierToken>
             <m__id>13</m__id>
@@ -457,7 +457,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -473,7 +473,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -489,7 +489,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -522,7 +522,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -538,7 +538,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -554,7 +554,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>13</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -588,7 +588,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>16</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken reference="../com.fullmetalgalaxy.model.persist.EbToken/m__carrierToken"/>
@@ -619,7 +619,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>13</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -709,7 +709,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -800,7 +800,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>3</y>
             <sector>South</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -830,7 +830,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>14</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -845,7 +845,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>10</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -875,7 +875,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>NorthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -920,7 +920,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>South</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__listFireDisabling/>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
@@ -937,7 +937,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>12</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -983,7 +983,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>15</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1073,7 +1073,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>41</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1090,7 +1090,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
                   <y>-1</y>
                   <sector>North</sector>
                 </m__position>
-                <m__bulletCount>2</m__bulletCount>
+                <m__bulletCount>20</m__bulletCount>
                 <m__carrierTokenId>41</m__carrierTokenId>
                 <m__carrierToken reference="../../.."/>
               </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1124,7 +1124,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>15</y>
             <sector>NorthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1155,7 +1155,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>7</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__listFireDisabling/>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1202,7 +1202,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>South</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__listFireDisabling/>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
@@ -1219,7 +1219,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken reference="../com.fullmetalgalaxy.model.persist.EbToken[13]/m__carrierToken/m__setContainToken/com.fullmetalgalaxy.model.persist.EbToken[5]"/>
@@ -1250,7 +1250,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>2</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1282,7 +1282,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>2</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1343,7 +1343,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>12</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1388,7 +1388,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>8</y>
             <sector>NorthWest</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1478,7 +1478,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>11</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1493,7 +1493,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>1</y>
             <sector>North</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
@@ -1557,7 +1557,7 @@ REREREREREREREREREREREREREREREREREREREREREREAA==</m__lands>
             <y>15</y>
             <sector>NorthEast</sector>
           </m__position>
-          <m__bulletCount>2</m__bulletCount>
+          <m__bulletCount>20</m__bulletCount>
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
