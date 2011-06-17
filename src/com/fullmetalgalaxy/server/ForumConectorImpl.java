@@ -249,7 +249,7 @@ public class ForumConectorImpl implements ForumConector
     // we don't need to be connected
     
     // we need a password to create forum account
-    if( p_account.getPassword() == null )
+    if( p_account.getPassword() == null || p_account.getPassword().isEmpty() )
     {
       p_account.setPassword( ServerUtil.randomString( 8 ) );
     }

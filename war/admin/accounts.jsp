@@ -25,7 +25,8 @@ Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
 
 if( pseudo != null && !pseudo.isEmpty() )
 {
-  accountQuery.filter("m_pseudo >=",pseudo).filter("m_pseudo <", pseudo + "\uFFFD"); ;
+  pseudo = EbAccount.compactPseudo(pseudo);
+  accountQuery.filter("m_compactPseudo >=",pseudo).filter("m_compactPseudo <", pseudo + "\uFFFD"); ;
 }
 else
 {

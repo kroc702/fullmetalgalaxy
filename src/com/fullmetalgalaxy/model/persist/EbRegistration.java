@@ -121,7 +121,8 @@ public class EbRegistration extends EbBase
     int winningPoint = 0;
     for( EbToken token : p_game.getSetToken() )
     {
-      if( (getEnuColor().isColored( token.getColor() )) )
+      if( (token.getColor() != EnuColor.None) && (getEnuColor().isColored( token.getColor() )) 
+          && (token.getLocation() == Location.Board || token.getLocation() == Location.EndGame) )
       {
         winningPoint += token.getWinningPoint();
       }
