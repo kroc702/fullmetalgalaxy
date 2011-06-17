@@ -58,4 +58,11 @@ public interface ForumConector
    */
   public void sendPMessage( String p_subject, String p_body, String ... p_usernames );
   
+  /**
+   * post a news to be included in main RSS stream
+   * @param p_subject
+   * @param p_body
+   */
+  public void postNews( String p_subject, String p_body );
+  
 }
