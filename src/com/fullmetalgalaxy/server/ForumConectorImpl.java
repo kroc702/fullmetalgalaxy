@@ -54,6 +54,7 @@ public class ForumConectorImpl implements ForumConector
   private static String COOKIE_SID = "fa_" + FmpConstant.getForumHost().replace( '.', '_' ) + "_sid";
   private static String FORUM_USERNAME = "";
   private static String FORUM_PASS = "";
+  private static String FORUM_NEWS_ID = "3";
   
   private FmgCookieStore m_cookieStore = new FmgCookieStore();
   
@@ -239,7 +240,7 @@ public class ForumConectorImpl implements ForumConector
   private static Pattern s_confirmPassPattern = Pattern.compile(
       ".*<input type=\"hidden\" name=\"confirm_pass\" value=\"(.+)\" />.*", Pattern.DOTALL );
   private static Pattern s_addHiddenFieldsPattern = Pattern.compile(
-          ".*addHiddenFields\\('form_confirm', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*",
+          ".*addHiddenFields\\('.+', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*",
           Pattern.DOTALL );
 
 
@@ -497,6 +498,101 @@ public class ForumConectorImpl implements ForumConector
     {
       log.error( e );
     } 
+  }
+
+
+  @Override
+  public void postNews(String p_subject, String p_body)
+  {
+    // we need to be connected as admin
+    connect();
+    
+    try
+    {
+      // first request: simply ask for posting page
+      // ==========================================
+      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/post?f="+FORUM_NEWS_ID+"&mode=newtopic" );
+      HTTPRequest request = new HTTPRequest( url, HTTPMethod.GET, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
+      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
+      request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
+      
+      HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+
+      // System.out.println( "response code: " + response.getResponseCode() );
+      // System.out.println( "final url: " + response.getFinalUrl() );
+      for( HTTPHeader header : response.getHeaders() )
+      {
+        // System.out.println( header.getName() + ": " + header.getValue() );
+        if( "Set-Cookie".equalsIgnoreCase( header.getName() ) )
+        {
+          m_cookieStore.add( header.getValue() );
+        }
+      }
+
+      
+      // read auth variable used by forum for security
+      // =============================================
+      String auth1 = null;
+      String auth2 = null;
+      String page = new String( response.getContent(), getCharset( response ) );
+
+      Matcher matcher = s_addHiddenFieldsPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        auth1 = decrypt( matcher.group( 1 ), Integer.parseInt( matcher.group( 2 ) ) );
+        auth2 = decrypt( matcher.group( 3 ), Integer.parseInt( matcher.group( 4 ) ) );
+      }
+      
+      
+      // second request: post data
+      // =========================
+      url = new URL( "http://" + FmpConstant.getForumHost() + "/post" );
+
+      ClientHttpRequest clientPostRequest = null;
+      clientPostRequest = new ClientHttpRequest( url );
+
+      clientPostRequest.setParameter("subject",p_subject);
+      clientPostRequest.setParameter("message",p_body);
+      clientPostRequest.setParameter("lt","0");
+      clientPostRequest.setParameter("mode","newtopic");
+      clientPostRequest.setParameter("f",FORUM_NEWS_ID);
+      clientPostRequest.setParameter("post","Envoyer");
+      clientPostRequest.setParameter("notify","off");
+      clientPostRequest.setParameter("topictype","0");
+      clientPostRequest.setParameter("topic_calendar_day","0");
+      clientPostRequest.setParameter("topic_calendar_month","0");
+      clientPostRequest.setParameter("topic_calendar_year","0");
+      clientPostRequest.setParameter("topic_calendar_hour","");
+      clientPostRequest.setParameter("topic_calendar_min","");
+      clientPostRequest.setParameter("topic_calendar_duration_day","");
+      clientPostRequest.setParameter("topic_calendar_duration_hour","");
+      clientPostRequest.setParameter("topic_calendar_duration_min","");
+      clientPostRequest.setParameter("create_event","0");
+      clientPostRequest.setParameter("calendar_d","0");
+      clientPostRequest.setParameter("poll_title","");
+      clientPostRequest.setParameter("poll_option_text","");
+      clientPostRequest.setParameter("poll_length","");
+      clientPostRequest.setParameter("poll_multiple","0");
+      clientPostRequest.setParameter("poll_cancel_vote","0");
+      if( auth1 != null )
+      {
+        clientPostRequest.setParameter("auth[]",auth1);
+      }
+      if( auth2 != null )
+      {
+        clientPostRequest.setParameter("auth[]",auth2);
+      }
+      
+
+      clientPostRequest.setCookie( m_cookieStore.getCookies() );
+      clientPostRequest.post();
+      
+    } catch( IOException e )
+    {
+      log.error( e );
+    }   
   }
 
 
