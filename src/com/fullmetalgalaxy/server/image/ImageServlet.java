@@ -50,8 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.server.CacheKey;
-import com.fullmetalgalaxy.server.CacheKey.CacheKeyType;
+import com.fullmetalgalaxy.server.image.CacheKey.CacheKeyType;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.GameServicesImpl;

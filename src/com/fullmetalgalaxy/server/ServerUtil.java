@@ -25,6 +25,9 @@ package com.fullmetalgalaxy.server;
 import java.util.Date;
 
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.server.forum.ConectorImpl;
+import com.fullmetalgalaxy.server.forum.ForumConector;
+import com.fullmetalgalaxy.server.forum.NewsConector;
 
 /**
  * @author Kroc
@@ -101,9 +104,14 @@ public class ServerUtil
     return date;
   }
 
-  private static ForumConector s_forumConnector = new ForumConectorImpl();
+  private static ConectorImpl s_forumConnector = new ConectorImpl();
 
   public static ForumConector forumConnector()
+  {
+    return s_forumConnector;
+  }
+
+  public static NewsConector newsConnector()
   {
     return s_forumConnector;
   }

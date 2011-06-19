@@ -1,0 +1,9 @@
+
+// This file should be renamed to .properties 
+// and configured correctly according to forum connection
+// original file is hidden for security reason
+
+// username and password for FMG admin account
+username=xxx
+password=xxx
+

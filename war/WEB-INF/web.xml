@@ -91,7 +91,7 @@
   
     <servlet>
        <servlet-name>SynchroForum</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.SynchroForum</servlet-class>
+       <servlet-class>com.fullmetalgalaxy.server.forum.SynchroForum</servlet-class>
     </servlet>
     <servlet-mapping>
        <servlet-name>SynchroForum</servlet-name>
@@ -160,7 +160,7 @@
 
 	<security-constraint>
 	   <web-resource-collection>
-	       <url-pattern>/admin/index.jsp</url-pattern>
+	       <url-pattern>/admin/*</url-pattern>
 	   </web-resource-collection>
 	   <auth-constraint>
 	       <role-name>admin</role-name>

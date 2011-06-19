@@ -85,8 +85,9 @@ public class AccountServlet extends HttpServlet
     {
       // user link FMG and Forum account
       // ===============================
-      FmgDataStore ds = new FmgDataStore( false );
-      Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_forumKey", p_request.getParameter( "link" ) );
+
+      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class )
+          .filter( "m_forumKey", p_request.getParameter( "link" ) );
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {
@@ -111,10 +112,11 @@ public class AccountServlet extends HttpServlet
         return;
       }
       account.setIsforumIdConfirmed( true );
+      FmgDataStore ds = new FmgDataStore( false );
       ds.put( account );
       ds.close();
       p_response.getWriter().println(
-          "les comptes " + account.getPseudo() + " de FMG et du Forum sont liés" );
+          "les comptes '" + account.getPseudo() + "' de FMG et du Forum sont liés" );
       return;
     }
     else

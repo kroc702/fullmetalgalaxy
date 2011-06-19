@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 public class I18n
 {
 
-  private static String[] s_validLocale = { "en", "fr" };
+  private static String[] s_validLocale = { /*"en",*/"fr" };
 
   /**
    * 
@@ -52,7 +52,7 @@ public class I18n
   private static String validLocale(String p_locale)
   {
     assert p_locale != null;
-    if( p_locale.length() < 2 )
+    /*if( p_locale.length() < 2 )
       return "en";
     p_locale = p_locale.substring( 0, 2 ).toLowerCase();
     for( String locale : getLocales() )
@@ -62,7 +62,8 @@ public class I18n
         return p_locale;
       }
     }
-    return "en";
+    return "en";*/
+    return "fr";
   }
 
   @SuppressWarnings("unchecked")

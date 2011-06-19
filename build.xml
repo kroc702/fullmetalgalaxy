@@ -165,6 +165,7 @@ compilation file for Full Metal Galaxy
 				<exclude name="gwt-gae-channel*.jar"/>
 				<exclude name="antlr*.jar"/>
 				<exclude name="charabia.jar"/>
+				<exclude name="jdom.jar"/>
 			</fileset>
 		</delete>
 		<delete dir="${javadocDir}" />
