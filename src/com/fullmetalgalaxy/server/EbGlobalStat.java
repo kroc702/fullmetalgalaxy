@@ -61,6 +61,10 @@ public class EbGlobalStat
     {
       s_instance = FmgDataStore.dao().get( EbGlobalStat.class, ID );
     }
+    if( s_instance == null )
+    {
+      s_instance = new EbGlobalStat();
+    }
     return s_instance;
   }
   

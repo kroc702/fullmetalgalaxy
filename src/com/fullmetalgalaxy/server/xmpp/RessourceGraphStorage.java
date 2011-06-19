@@ -19,9 +19,14 @@
 */
 package com.fullmetalgalaxy.server.xmpp;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StreamTokenizer;
+import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.io.*;
 
 import net.charabia.generation.Graph;
 import net.charabia.generation.GraphStorage;
@@ -37,7 +42,7 @@ import net.charabia.generation.GraphStorage;
 
 public class RessourceGraphStorage implements GraphStorage
 {
-  protected Hashtable _binding = new Hashtable();
+  protected Hashtable<String, Graph> _binding = new Hashtable<String, Graph>();
   protected String m_initialGraph = null;
 
 
@@ -54,14 +59,16 @@ public class RessourceGraphStorage implements GraphStorage
       p_ressource += ".graph";
     }
     m_initialGraph = p_defaultGraph;
-    // System.out.println("Storage : " + p_ressource);
+    System.err.println( "RessourceGraphStorage : " + p_ressource );
     try
     {
       InputStreamReader fr = new InputStreamReader( getInputStream( p_ressource ), "iso-8859-1" );
       load( fr );
       fr.close();
+      System.err.println( "graph " + p_ressource + " loaded" );
     } catch( Exception iox )
-    { iox.printStackTrace();
+    {
+      iox.printStackTrace( System.err );
     }
   }
 
@@ -75,7 +82,8 @@ public class RessourceGraphStorage implements GraphStorage
       load( fr );
       fr.close();
     } catch( Exception iox )
-    { iox.printStackTrace();
+    {
+      iox.printStackTrace( System.err );
     }
   }
 
@@ -84,11 +92,8 @@ public class RessourceGraphStorage implements GraphStorage
   {
     InputStream in = null;
     ClassLoader cl;
-    cl = Thread.currentThread().getContextClassLoader();
-    if( cl != null )
+    try
     {
-      in = cl.getResourceAsStream( s );
-    }
     if( in == null )
     {
       cl = RessourceGraphStorage.class.getClassLoader();
@@ -99,7 +104,7 @@ public class RessourceGraphStorage implements GraphStorage
     }
     if( in == null )
     {
-      cl = ClassLoader.getSystemClassLoader();
+      cl = Thread.currentThread().getContextClassLoader();
       if( cl != null )
       {
         in = cl.getResourceAsStream( s );
@@ -127,6 +132,23 @@ public class RessourceGraphStorage implements GraphStorage
         in = cl.getResourceAsStream( s );
       }
     }
+    if( in == null )
+    {
+        // in fact this is forbidden by GAE
+      cl = ClassLoader.getSystemClassLoader();
+      if( cl != null )
+      {
+        in = cl.getResourceAsStream( s );
+      }
+    }
+    } catch( Exception e )
+    {
+      e.printStackTrace( System.err );
+    }
+    if( in == null )
+    {
+      System.err.println( "getInputStream: failed to load " + s );
+    }
     return in;
   }
 
@@ -144,7 +166,7 @@ public class RessourceGraphStorage implements GraphStorage
 
 
   @Override
-  public Enumeration availableNames()
+  public Enumeration<String> availableNames()
   {
     return _binding.keys();
   }
@@ -187,7 +209,7 @@ public class RessourceGraphStorage implements GraphStorage
       StreamTokenizer tokenizer = new StreamTokenizer( reader );
 
       int tok = tokenizer.nextToken();
-      while( tok != tokenizer.TT_EOF )
+      while( tok != StreamTokenizer.TT_EOF )
       {
         if( tok == '$' )
         {
@@ -208,7 +230,7 @@ public class RessourceGraphStorage implements GraphStorage
       }
     } catch( IOException iox )
     {
-      iox.printStackTrace();
+      iox.printStackTrace( System.err );
     }
   }
 

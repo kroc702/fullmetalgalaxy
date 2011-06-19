@@ -59,9 +59,15 @@ public class Pipotron
 
   public static String pipo(String p_ressource)
   {
+    // System.out.println( "pipo " + p_ressource );
     Generator g = generator( p_ressource );
     g.generate();
-    return concatDeterminant( g.buildText() );
+    String pipo = concatDeterminant( g.buildText() );
+    if( pipo == null || pipo.isEmpty() )
+    {
+      return p_ressource + " failed";
+    }
+    return pipo;
   }
 
 

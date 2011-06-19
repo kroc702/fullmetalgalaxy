@@ -340,7 +340,7 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_playerGrid.setText( 0, 1, "login" );
     m_playerGrid.setText( 0, 2, "couleur(s)" );
     m_playerGrid.setText( 0, 3, "pt d'action" );
-    m_playerGrid.setText( 0, 4, "pt de victoire" );
+    m_playerGrid.setHTML( 0, 4, "pt de victoire<br/>(estimation)" );
     m_playerGrid.setText( 0, 5, "" ); // must play before
     m_playerGrid.setText( 0, 6, "" ); // messages
     m_playerGrid.setText( 0, 7, "" ); // ban

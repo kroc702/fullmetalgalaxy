@@ -19,6 +19,7 @@
   
 	<admin-console>
     	<page name="Index" url="/admin/index.jsp" />
+    	<page name="Accounts" url="/admin/accounts.jsp" />
   	</admin-console>
   
 	<static-files>

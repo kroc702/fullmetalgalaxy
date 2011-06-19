@@ -57,7 +57,7 @@ if(tab < 0 || tab > 3 )
 	<br/><br/>
 	
 <% if(tab==2) { /* solo games */ %>
-	<jsp:include page="<%= I18n.localize(request,response,\"/puzzleslist.html\") %>" />
+	<jsp:include page="<%= I18n.localize(request,response,\"/puzzleslist.jsp\") %>" />
 <% } else { 
 	Iterable<EbGamePreview> gameList = new ArrayList<EbGamePreview>();
 	if( !Auth.isUserLogged( request, response ) && (tab <= 1) ) {

@@ -76,7 +76,7 @@ Il ne dure qu'une dizaine de minutes et vous n'avez pas besoin de créer de comp
 <p>
 Par la suite, vous pouvez tenter les quelques problèmes proposés ou vous inscrire &agrave; une
 partie regroupant des débutants. (Pour s'inscrire cliquez sur 
-<img src="/puzzles/tutorial/images/Register32.png" alt="Register" />)
+<img src="/help/images/Register32.png" alt="Register" />)
 </p>
 
 <h2>Pour initier une partie</h2>
