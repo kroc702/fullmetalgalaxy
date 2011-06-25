@@ -121,8 +121,13 @@ public class EbAccount extends EbPublicAccount
    * If m_forumKey is null, we never send it. Otherwise, PM was sended don't resent it.
    */
   private String m_forumKey = null;
+  /**
+   * these data is used by forum connector to avoid override some information while pushing data
+   */
+  @Serialized
+  private Object m_forumConnectorData = null;
   
-  private static Pattern s_pattern = Pattern.compile( "^((?:[\\w]+\\p{Graph}?)+\\w){3,32}$" );
+  private static Pattern s_pattern = Pattern.compile( "^(((\\w)+(\\p{Graph})?)+\\w)$" );
   
   /**
    * check if p_pseudo can be used as a valid username.
@@ -133,6 +138,10 @@ public class EbAccount extends EbPublicAccount
    */
   public static boolean isValidPseudo(String p_pseudo)
   {
+    if( p_pseudo == null || p_pseudo.length() < 4 || p_pseudo.length() > 25 )
+    {
+      return false;
+    }
     Matcher matcher = s_pattern.matcher( p_pseudo );
     return matcher.matches();
   }
@@ -607,5 +616,17 @@ public class EbAccount extends EbPublicAccount
   {
     m_forumKey = p_forumKey;
   }
+
+  public Object getForumConnectorData()
+  {
+    return m_forumConnectorData;
+  }
+
+  public void setForumConnectorData(Object p_forumConnectorData)
+  {
+    m_forumConnectorData = p_forumConnectorData;
+  }
+
+
 
 }

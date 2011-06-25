@@ -376,7 +376,7 @@ public class AccountServlet extends HttpServlet
         store.rollback();
         return "Ce pseudo existe deja";
       }
-      if( EbAccount.isValidPseudo( params.get( "login" ) ) )
+      if( !EbAccount.isValidPseudo( params.get( "login" ) ) )
       {
         store.rollback();
         return "Ce pseudo est invalide";

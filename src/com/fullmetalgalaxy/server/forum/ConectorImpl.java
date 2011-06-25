@@ -24,11 +24,17 @@ package com.fullmetalgalaxy.server.forum;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,19 +57,73 @@ import com.myjavatools.web.ClientHttpRequest;
  * TODO removed many hard coded constant and password !!!
  * 
  * I used firefox livehttpheaders extension to help constructing this
- */ 
+ */
 
 public class ConectorImpl implements ForumConector, NewsConector
 {
   private final static FmpLogger log = FmpLogger.getLogger( ConectorImpl.class.getName() );
-  private static String COOKIE_SID = "fa_" + FmpConstant.getForumHost().replace( '.', '_' ) + "_sid";
+  private static String COOKIE_SID = "fa_" + FmpConstant.getForumHost().replace( '.', '_' )
+      + "_sid";
   private static String FORUM_USERNAME = "";
   private static String FORUM_PASS = "";
-  private static String FORUM_NEWS_ID = "33";
+  private static String FORUM_NEWS_ID = "40";
+
+  // various pattern on forum pages
+  private static Pattern s_confirmPassPattern = Pattern.compile(
+      ".*<input type=\"hidden\" name=\"confirm_pass\" value=\"(.+)\" />.*", Pattern.DOTALL );
+  private static Pattern s_addHiddenFieldsPattern = Pattern
+      .compile(
+          ".*addHiddenFields\\('.+', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*",
+          Pattern.DOTALL );
   
+
+  // profil field
+  private static final String FIELD_USERNAME = "username_edit";
+  private static final String FIELD_EMAIL = "email";
+  private static final String FIELD_LEVEL = "profile_field_10_2";
+  private static final String FIELD_JABBER = "profile_field_3_1";
+
+  // field pattern for profil forum page
+  private static final Pattern s_usernamePattern = fieldTextPattern( FIELD_USERNAME );
+  private static final Pattern s_emailPattern = fieldTextPattern( FIELD_EMAIL );
+  private static final Pattern s_jabberPattern = fieldTextPattern( FIELD_JABBER );
+  private static final Pattern s_avatarUrlPattern = Pattern.compile(
+      ".*Image Actuelle</span><br /><img src=\"([^\"]*)\".*", Pattern.DOTALL );
+  
+
+  // field pattern for profil page that we need to backup to avoid override
+  private static Map<String, Pattern> s_fieldPatternMap = new HashMap<String, Pattern>();
+  static
+  {
+    s_fieldPatternMap.put( "viewemail", fieldRadioPattern( "viewemail" ) );
+    s_fieldPatternMap.put( "newsletter", fieldRadioPattern( "newsletter" ) );
+    s_fieldPatternMap.put( "hideonline", fieldRadioPattern( "hideonline" ) );
+    s_fieldPatternMap.put( "notifyreply", fieldRadioPattern( "notifyreply" ) );
+    s_fieldPatternMap.put( "notifypm", fieldRadioPattern( "notifypm" ) );
+    s_fieldPatternMap.put( "popup_pm", fieldRadioPattern( "popup_pm" ) );
+    s_fieldPatternMap.put( "post_prevent", fieldRadioPattern( "post_prevent" ) );
+    s_fieldPatternMap.put( "no_report_popup", fieldRadioPattern( "no_report_popup" ) );
+    s_fieldPatternMap.put( "no_report_mail", fieldRadioPattern( "no_report_mail" ) );
+    s_fieldPatternMap.put( "attachsig", fieldRadioPattern( "attachsig" ) );
+    s_fieldPatternMap.put( "language", fieldSelectPattern( "language" ) );
+    // s_fieldPatternMap.put( "timezone", fieldSelectPattern( "timezone" ) );
+    s_fieldPatternMap.put( "dateformat", fieldSelectPattern( "dateformat" ) );
+    s_fieldPatternMap.put( "next_birthday_greeting", fieldTextPattern( "next_birthday_greeting" ) );
+    s_fieldPatternMap.put( "user_status", fieldRadioPattern( "user_status" ) );
+    s_fieldPatternMap.put( "user_allowpm", fieldRadioPattern( "user_allowpm" ) );
+    s_fieldPatternMap.put( "user_allowavatar", fieldRadioPattern( "user_allowavatar" ) );
+    s_fieldPatternMap.put( "user_allow_att", fieldRadioPattern( "user_allow_att" ) );
+    s_fieldPatternMap.put( "user_rank", Pattern.compile(
+        ".*<select name=\"user_rank\">.*<option value=\"([^\"]*)\" selected=\"selected\">.*",
+        Pattern.DOTALL ) );
+  }
+  
+
   private FmgCookieStore m_cookieStore = new FmgCookieStore();
-  
-  
+  private String m_adminUrl = "http://" + FmpConstant.getForumHost()
+      + "/admin/index.forum?part=admin";
+
+
 
   private static Properties s_forumConfig = new Properties();
 
@@ -82,12 +142,34 @@ public class ConectorImpl implements ForumConector, NewsConector
   }
 
 
+  private static Pattern fieldTextPattern(String p_field)
+  {
+    return Pattern.compile( ".*<input[^>]*type=\"text\"[^>]*name=\"" + p_field
+        + "\"[^>]*value=\"([^\"]*)\" />.*", Pattern.DOTALL );
+  }
+
+  private static Pattern fieldRadioPattern(String p_field)
+  {
+    return Pattern.compile( ".*<input type=\"radio\"[^>]*name=\"" + p_field
+        + "\"[^>]*value=\"([^\"]*)\" checked=\"checked\".*",
+        Pattern.DOTALL );
+  }
+
+  private static Pattern fieldSelectPattern(String p_field)
+  {
+    return Pattern.compile( ".*<select name=\"" + p_field
+        + "\"(?:[^<]*|</?o){0,20}<option value=\"([^\"]*)\" selected.*",
+        Pattern.DOTALL );
+  }
+
+
+
   protected boolean isConnected()
   {
-    return (m_cookieStore.getCookie( COOKIE_SID ) != null);
+    return(m_cookieStore.getCookie( COOKIE_SID ) != null);
   }
-  
-  
+
+
   /**
    * 
    */
@@ -101,37 +183,68 @@ public class ConectorImpl implements ForumConector, NewsConector
     URL url = null;
     try
     {
+      // post login to get cookies
+      // =========================
       url = new URL( "http://" + FmpConstant.getForumHost() + "/login" );
-    
-      HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, 
-          FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
-      request.setPayload( ("username=" + FORUM_USERNAME + "&password=" + FORUM_PASS 
-          + "&redirect=&query=&login=Connexion").getBytes( "UTF-8" ) );
+
+      HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder
+          .withDefaults().doNotFollowRedirects() );
+      request
+          .setPayload( ("username=" + FORUM_USERNAME + "&password=" + FORUM_PASS + "&redirect=&query=&login=Connexion")
+              .getBytes( "UTF-8" ) );
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
-      //request.addHeader( new HTTPHeader( "User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9) Gecko/2008052906 (CK-Ifremer) Firefox/3.0 ( .NET CLR 3.5.30729; .NET4.0E)" ) );
-      //request.addHeader( new HTTPHeader( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" ) );
-      //request.addHeader( new HTTPHeader( "Accept-Language", "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3" ) );
-      ///request.addHeader( new HTTPHeader( "Accept-Encoding", "gzip,deflate" ) );
+      // request.addHeader( new HTTPHeader( "User-Agent",
+      // "Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9) Gecko/2008052906 (CK-Ifremer) Firefox/3.0 ( .NET CLR 3.5.30729; .NET4.0E)"
+      // ) );
+      // request.addHeader( new HTTPHeader( "Accept",
+      // "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" ) );
+      // request.addHeader( new HTTPHeader( "Accept-Language",
+      // "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3" ) );
+      // /request.addHeader( new HTTPHeader( "Accept-Encoding", "gzip,deflate" )
+      // );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
-      //request.addHeader( new HTTPHeader( "Keep-Alive", "300" ) );
-      //request.addHeader( new HTTPHeader( "Connection", "keep-alive" ) );
+      // request.addHeader( new HTTPHeader( "Keep-Alive", "300" ) );
+      // request.addHeader( new HTTPHeader( "Connection", "keep-alive" ) );
       request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost()
           + "/login" ) );
-      //request.addHeader( new HTTPHeader( "Cookie", "extendedview=; __utma=197449400.1261798819.1301581035.1301581035.1301581035.1; __utmz=197449400.1301581035.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _csuid=X8b6019a8aa1ad" ) );
-      //request.addHeader( new HTTPHeader( "Content-Type", "application/x-www-form-urlencoded" ) );
-  
+      // request.addHeader( new HTTPHeader( "Cookie",
+      // "extendedview=; __utma=197449400.1261798819.1301581035.1301581035.1301581035.1; __utmz=197449400.1301581035.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _csuid=X8b6019a8aa1ad"
+      // ) );
+      // request.addHeader( new HTTPHeader( "Content-Type",
+      // "application/x-www-form-urlencoded" ) );
+
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
-    
-      //System.out.println( "response code: "+ response.getResponseCode() );
-      //System.out.println( "final url: "+ response.getFinalUrl() );
+
+      // System.out.println( "response code: "+ response.getResponseCode() );
+      // System.out.println( "final url: "+ response.getFinalUrl() );
       for( HTTPHeader header : response.getHeaders() )
       {
-        //System.out.println( header.getName() + ": " + header.getValue() );
+        // System.out.println( header.getName() + ": " + header.getValue() );
         if( "Set-Cookie".equalsIgnoreCase( header.getName() ) )
         {
           m_cookieStore.add( header.getValue() );
         }
       }
+
+      // get admin panel to read tid param
+      // =================================
+      url = new URL( m_adminUrl );
+      request = new HTTPRequest( url );
+      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
+      request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
+      response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+
+      if( m_cookieStore.getCookie( COOKIE_SID ) != null )
+      {
+        m_adminUrl += "&sid=" + m_cookieStore.getCookie( COOKIE_SID ).getValue();
+      }
+      if( response.getFinalUrl() != null )
+      {
+        m_adminUrl = response.getFinalUrl().toString();
+      }
+
+
     } catch( IOException e )
     {
       log.error( e );
@@ -143,36 +256,40 @@ public class ConectorImpl implements ForumConector, NewsConector
   public String getUserId(String p_pseudo)
   {
     // we don't need to be connected
-    
-    Pattern pattern = Pattern.compile(".*<td class=\"row1\" .* href=\"/u(.*)\"><span style=\"color:#E.....\"><strong>"
+
+    Pattern pattern = Pattern.compile(
+        ".*<td class=\"row1\" .* href=\"/u(.*)\"><span style=\"color:#E.....\"><strong>"
             + Pattern.quote( p_pseudo ) + "</strong></span></a></span></td>.*",
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL );
-    
-    try {
+
+    try
+    {
       URL url = new URL( "http://" + FmpConstant.getForumHost() + "/memberlist?username="
           + URLEncoder.encode( p_pseudo, "UTF-8" ) );
-      BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-      
+      BufferedReader reader = new BufferedReader( new InputStreamReader( url.openStream() ) );
+
       StringBuffer page = new StringBuffer();
       String line;
-      while ((line = reader.readLine()) != null) {
+      while( (line = reader.readLine()) != null )
+      {
         page.append( line );
       }
       reader.close();
 
-      Matcher matcher = pattern.matcher( page);
+      Matcher matcher = pattern.matcher( page );
       if( matcher.matches() )
       {
         return matcher.group( 1 );
       }
-      
-    } catch (IOException e) {
+
+    } catch( IOException e )
+    {
       log.error( e );
     }
     return null;
   }
 
-  
+
   /**
    * This method was reverse engineering from forum page.
    * <code>
@@ -189,29 +306,29 @@ public class ConectorImpl implements ForumConector, NewsConector
     String decrypted = "";
     try
     {
-      char code = (char)Integer.parseInt( ""+s.charAt(n) );
-      //System.out.println( "code="+(int)code );
-      String s1 = s.substring(0,n);
-      s1 += s.substring(n+1, s.length());
-      //System.out.println( s );
-      //System.out.println( s1 );
+      char code = (char)Integer.parseInt( "" + s.charAt( n ) );
+      // System.out.println( "code="+(int)code );
+      String s1 = s.substring( 0, n );
+      s1 += s.substring( n + 1, s.length() );
+      // System.out.println( s );
+      // System.out.println( s1 );
       s1 = URLDecoder.decode( s1, "UTF-8" );
-      // not sure why this... 
+      // not sure why this...
       // maybe javascript escape don't behave the same as URLDecoder
-      s1 = s1.replace( ' ', (char)('%'+code) );
-      //System.out.println( s1 );
-      
+      s1 = s1.replace( ' ', (char)('%' + code) );
+      // System.out.println( s1 );
+
       StringBuffer t = new StringBuffer();
-      
-      for(int i=0; i<s1.length(); i++)
+
+      for( int i = 0; i < s1.length(); i++ )
       {
-        t.append( (char)(s1.charAt(i)-code) );
+        t.append( (char)(s1.charAt( i ) - code) );
       }
-      
-      decrypted = URLDecoder.decode(t.toString(), "UTF-8");
-      //System.out.println( t.toString() );
-      //System.out.println();
-      //System.out.println("===========================");
+
+      decrypted = URLDecoder.decode( t.toString(), "UTF-8" );
+      // System.out.println( t.toString() );
+      // System.out.println();
+      // System.out.println("===========================");
     } catch( UnsupportedEncodingException e )
     {
       log.error( e );
@@ -219,13 +336,13 @@ public class ConectorImpl implements ForumConector, NewsConector
     return decrypted;
   }
 
- 
+
   private static Pattern s_charsetPattern = Pattern.compile( ".*charset=(.+)[; $].*" );
 
   private static String getCharset(HTTPResponse p_response)
   {
     String responseCharset = "UTF-8";
-    
+
 
     for( HTTPHeader header : p_response.getHeaders() )
     {
@@ -242,18 +359,12 @@ public class ConectorImpl implements ForumConector, NewsConector
   }
 
 
-  private static Pattern s_confirmPassPattern = Pattern.compile(
-      ".*<input type=\"hidden\" name=\"confirm_pass\" value=\"(.+)\" />.*", Pattern.DOTALL );
-  private static Pattern s_addHiddenFieldsPattern = Pattern.compile(
-          ".*addHiddenFields\\('.+', \\{'auth\\[\\]':\\[\\['(.+)',(.+)\\],\\['(.+)',(.+)\\]\\]\\}\\);\\}.*",
-          Pattern.DOTALL );
-
 
   @Override
-  public void createAccount(EbAccount p_account)
+  public boolean createAccount(EbAccount p_account)
   {
     // we don't need to be connected
-    
+
     // we need a password to create forum account
     if( p_account.getPassword() == null || p_account.getPassword().isEmpty() )
     {
@@ -264,21 +375,22 @@ public class ConectorImpl implements ForumConector, NewsConector
     // first request: send username, email and password
     // ================================================
     FmgCookieStore cookieStore = new FmgCookieStore();
-    
+
     try
     {
       URL url = new URL( "http://" + FmpConstant.getForumHost() + "/register?agreed=true&step=2" );
       String payload = "username=" + URLEncoder.encode( p_account.getPseudo(), "UTF-8" )
           + "&email=" + URLEncoder.encode( p_account.getEmail(), "UTF-8" ) + "&password="
           + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) + "&submit=Enregistrer";
-      HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
+      HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder
+          .withDefaults().doNotFollowRedirects() );
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost()
           + "/register?agreed=true&step=2" ) );
       request.addHeader( new HTTPHeader( "Content-Type", "application/x-www-form-urlencoded" ) );
-      request.setPayload( payload.getBytes("UTF-8") );
-      
+      request.setPayload( payload.getBytes( "UTF-8" ) );
+
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
 
       // System.out.println( "response code: " + response.getResponseCode() );
@@ -292,7 +404,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         }
       }
 
-      
+
       // read auth variable used by forum for security
       // =============================================
       String confirm_pass = "";
@@ -311,7 +423,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         auth1 = decrypt( matcher.group( 1 ), Integer.parseInt( matcher.group( 2 ) ) );
         auth2 = decrypt( matcher.group( 3 ), Integer.parseInt( matcher.group( 4 ) ) );
       }
-      
+
       // second request: confirm password
       // ================================
       payload = "";
@@ -320,136 +432,144 @@ public class ConectorImpl implements ForumConector, NewsConector
         payload += "auth[]=" + URLEncoder.encode( auth1, "UTF-8" ) + "&auth[]="
             + URLEncoder.encode( auth2, "UTF-8" );
       }
-      payload += "&password_confirm=" + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) 
-        + "&username=" + URLEncoder.encode( p_account.getPseudo(), "UTF-8" ) 
-        + "&email=" + URLEncoder.encode( p_account.getEmail(), "UTF-8" ) 
-        + "&password=" + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) 
-        + "&confirm_pass=" + URLEncoder.encode( confirm_pass, "UTF-8" )
-        + "&submit=Enregistrer";
+      payload += "&password_confirm=" + URLEncoder.encode( p_account.getPassword(), "UTF-8" )
+          + "&username=" + URLEncoder.encode( p_account.getPseudo(), "UTF-8" ) + "&email="
+          + URLEncoder.encode( p_account.getEmail(), "UTF-8" ) + "&password="
+          + URLEncoder.encode( p_account.getPassword(), "UTF-8" ) + "&confirm_pass="
+          + URLEncoder.encode( confirm_pass, "UTF-8" ) + "&submit=Enregistrer";
 
-      // in theory we should parse response to get second url. but it's the same.
-      request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
+      // in theory we should parse response to get second url. but it's the
+      // same.
+      request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
+          .doNotFollowRedirects() );
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost()
           + "/register?agreed=true&step=2" ) );
       request.addHeader( new HTTPHeader( "Content-Type", "application/x-www-form-urlencoded" ) );
-      request.setPayload( payload.getBytes("UTF-8") );
-      
+      request.setPayload( payload.getBytes( "UTF-8" ) );
+
       response = URLFetchServiceFactory.getURLFetchService().fetch( request );
-      
+
       page = new String( response.getContent(), getCharset( response ) );
 
     } catch( Exception e )
     {
       log.error( e );
+      return false;
     }
+    return true;
   }
-
-
-  private static Pattern fieldPattern(String p_field)
-  {
-    return Pattern.compile( ".*<input type=\"text\" class=\"post\" id=\"" + p_field + "\" name=\""
-        + p_field + "\" value=\"(.*)\" />.*", Pattern.DOTALL );
-  }
-
-
-  private static final String FIELD_LEVEL = "profile_field_10_2";
-  private static final String FIELD_JABBER = "profile_field_3_1";
-
-  private static final Pattern s_jabberPattern = fieldPattern( FIELD_JABBER );
-  private static final Pattern s_avatarUrlPattern = Pattern.compile(
-      ".*Image Actuelle</span><br /><img src=\"(.*)\".*", Pattern.DOTALL );
 
 
 
   @Override
-  public void pushAccount(EbAccount p_account)
+  public boolean pushAccount(EbAccount p_account)
   {
     // we need to be connected as admin
     connect();
-    
+
     try
     {
-      URL url = new URL( "http://" + FmpConstant.getForumHost()
-          + "/admin/index.forum?part=users_groups&sub=users&mode=edit&u="
-          + p_account.getForumId()+"&extended_admin=1&sid="+m_cookieStore.getCookie( COOKIE_SID ) );
+      URL url = new URL( m_adminUrl + "&part=users_groups&sub=users&mode=edit&u="
+          + p_account.getForumId() + "&extended_admin=1" );
 
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
-      //clientPostRequest.setParameter( "username_edit", "kroc" );
-      //clientPostRequest.setParameter( "email", "vincent.legendre@gmail.com" );
-      //clientPostRequest.setParameter( "password", "" );
-      //clientPostRequest.setParameter( "password_confirm", "" );
-      
+      clientPostRequest.setParameter( FIELD_USERNAME, p_account.getPseudo() );
+      clientPostRequest.setParameter( FIELD_EMAIL, p_account.getEmail() );
+      clientPostRequest.setParameter( "password", "" );
+      clientPostRequest.setParameter( "password_confirm", "" );
+
       // a list of many parameters
-      // TODO
       clientPostRequest.setParameter( FIELD_LEVEL, p_account.getCurrentLevel() );
 
+      Map<String,String> forumData = new HashMap<String,String>();
+      if( p_account.getForumConnectorData() != null 
+          && p_account.getForumConnectorData() instanceof HashMap<?,?> )
+      {
+        forumData = (HashMap<String,String>)p_account.getForumConnectorData();
+      }
+      
+
+      // for dateformat if == "D j M - G:i" set to "D j M Y - G:i"
+      if( forumData.get( "dateformat" ) == null
+          || forumData.get( "dateformat" ).equals( "D j M - G:i" ) )
+      {
+        forumData.put( "dateformat", "D j M Y - G:i" );
+      }
+      if( forumData.get( "user_status" ) == null )
+      {
+        forumData.put( "user_status", "1" );
+      }
+      if( forumData.get( "user_allowpm" ) == null )
+      {
+        forumData.put( "user_allowpm", "1" );
+      }
+      if( forumData.get( "user_allowavatar" ) == null )
+      {
+        forumData.put( "user_allowavatar", "1" );
+      }
+      if( forumData.get( "user_allow_att" ) == null )
+      {
+        forumData.put( "user_allow_att", "1" );
+      }
+
+      // put back saved field
+      for( Entry<String, Pattern> entry : s_fieldPatternMap.entrySet() )
+      {
+        if( forumData.get( entry.getKey() ) != null )
+        {
+          clientPostRequest.setParameter( entry.getKey(), forumData.get( entry.getKey() ) );
+        }
+      }
 
       clientPostRequest.setParameter( "submit", "Enregistrer" );
       clientPostRequest.setParameter( "mode", "save" );
       clientPostRequest.setParameter( "agreed", "true" );
       clientPostRequest.setParameter( "id", p_account.getForumId() );
-      
+
       clientPostRequest.setCookie( m_cookieStore.getCookies() );
-      clientPostRequest.post();
+      InputStream is = clientPostRequest.post();
+      
+      // look for "Le profil de l'utilisateur a été mis à jour avec succès"
+      // read response
+      if( is != null )
+      {
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try
+        {
+          InputStreamReader reader = new InputStreamReader( is, "iso-8859-1" );
+          int n;
+          while( (n = reader.read( buffer )) != -1 )
+          {
+            writer.write( buffer, 0, n );
+          }
+        } finally
+        {
+          is.close();
+        }
+        //System.out.println( writer.toString() );
+        if( !writer.toString().contains( "Le profil de l'utilisateur a été mis à jour avec succès" ) )
+        {
+          return false;
+        }
+      }
+
+      
     } catch( IOException e )
     {
       log.error( e );
+      return false;
     }
+    return true;
   }
 
-  /*
-    @Override
-    public void pullAccount(EbAccount p_account)
-    {
-      // this light version don't have to be connected
 
-      if( p_account.getForumId() == null )
-      {
-        // no forum account
-        return;
-      }
-
-      try
-      {
-        // we should have all we want on this page
-        URL url = new URL( p_account.getProfileUrl() );
-        BufferedReader reader = new BufferedReader( new InputStreamReader( url.openStream() ) );
-
-        StringBuffer page = new StringBuffer();
-        String line;
-        while( (line = reader.readLine()) != null )
-        {
-          page.append( line );
-        }
-        reader.close();
-
-        Pattern pattern = Pattern
-            .compile(
-                ".*<span class=\"gen\">Avatar:......</span></td><td width=\"80.\"><b><span class=\"gen\"><img src=\"(.*)\" alt=\"\" /></span></b>.*",
-                Pattern.DOTALL );
-        // Pattern pattern = Pattern.compile( ".*" );
-        Matcher matcher = pattern.matcher( page );
-        if( matcher.matches() )
-        {
-          String avatarUrl = matcher.group( 1 );
-          if( avatarUrl != null )
-          {
-            p_account.setForumAvatarUrl( avatarUrl );
-          }
-        }
-
-      } catch( IOException e )
-      {
-        log.error( e );
-      }
-    }
-  */
   
   @Override
-  public void pullAccount(EbAccount p_account)
+  public boolean pullAccount(EbAccount p_account)
   {
     // we need to be connected as admin
     connect();
@@ -457,22 +577,51 @@ public class ConectorImpl implements ForumConector, NewsConector
     try
     {
       // we should have all we want on this page
-      URL url = new URL( "http://" + FmpConstant.getForumHost()
-          + "/admin/index.forum?part=users_groups&sub=users&mode=edit&u=" + p_account.getForumId()
-          + "&extended_admin=1&sid=" + m_cookieStore.getCookie( COOKIE_SID ) );
+      //
+      String urlStr = m_adminUrl + "&part=users_groups&sub=users&mode=edit&u="
+          + p_account.getForumId() + "&extended_admin=1";
+      URL url = new URL( urlStr );
 
       HTTPRequest request = new HTTPRequest( url );
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
-      
+
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
       String page = new String( response.getContent(), getCharset( response ) );
-      Matcher matcher = s_avatarUrlPattern.matcher( page );
+
+
+      Matcher matcher = s_usernamePattern.matcher( page );
       if( matcher.matches() )
       {
-        p_account.setForumAvatarUrl( matcher.group( 1 ) );
+        p_account.setPseudo( matcher.group( 1 ) );
       }
+      else
+      {
+        // if username isn't found, consider this method as failed
+        return false;
+      }
+
+      matcher = s_emailPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        p_account.setEmail( matcher.group( 1 ) );
+      }
+      else
+      {
+        log.error( "pattern 'email' failed" );
+      }
+
+      matcher = s_avatarUrlPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        p_account.setForumAvatarUrl( "http://" + FmpConstant.getForumHost() + matcher.group( 1 ) );
+      }
+      else
+      {
+        log.error( "pattern 'avatar url' failed" );
+      }
+
       matcher = s_jabberPattern.matcher( page );
       if( matcher.matches() )
       {
@@ -482,24 +631,61 @@ public class ConectorImpl implements ForumConector, NewsConector
           p_account.setJabberId( jabberId );
         }
       }
+      else
+      {
+        log.error( "pattern 'jabber id' failed" );
+      }
+
+      
+      // backup some forum field to avoid override
+      //
+      Map<String,String> forumData = new HashMap<String,String>();
+      if( p_account.getForumConnectorData() != null 
+          && p_account.getForumConnectorData() instanceof HashMap<?,?> )
+      {
+        forumData = (HashMap<String,String>)p_account.getForumConnectorData();
+      }
+      
+
+      for( Entry<String, Pattern> entry : s_fieldPatternMap.entrySet() )
+      {
+        matcher = entry.getValue().matcher( page );
+        if( matcher.matches() )
+        {
+          String data = matcher.group( 1 );
+          if( data != null && !data.isEmpty() )
+          {
+            forumData.put( entry.getKey(), data );
+          }
+        }
+        else
+        {
+          log.error( "pattern '" + entry.getKey() + "' failed" );
+        }
+      }
+
+       
+      p_account.setForumConnectorData( forumData );
 
     } catch( IOException e )
     {
       log.error( e );
+      return false;
     }
+    return true;
   }
 
 
   @Override
-  public void sendPMessage( String p_subject, String p_body, String ... p_usernames )
+  public boolean sendPMessage(String p_subject, String p_body, String... p_usernames)
   {
     // we need to be connected as admin
     connect();
-    
+
     try
     {
       URL url = new URL( "http://" + FmpConstant.getForumHost() + "/privmsg?" );
-      
+
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
       for( String username : p_usernames )
@@ -509,24 +695,26 @@ public class ConectorImpl implements ForumConector, NewsConector
           clientPostRequest.setParameter( "username[]", username );
         }
       }
-      
+
       clientPostRequest.setParameter( "subject", p_subject );
       clientPostRequest.setParameter( "message", p_body );
       clientPostRequest.setParameter( "lt", "" );
-      
+
       clientPostRequest.setParameter( "folder", "inbox" );
       clientPostRequest.setParameter( "mode", "post" );
-      clientPostRequest.setParameter( "new_pm_time", ""+(System.currentTimeMillis()/1000) );
+      clientPostRequest.setParameter( "new_pm_time", "" + (System.currentTimeMillis() / 1000) );
       clientPostRequest.setParameter( "post", "Envoyer" );
 
-      
+
       clientPostRequest.setCookie( m_cookieStore.getCookies() );
       clientPostRequest.post();
-      
+
     } catch( IOException e )
     {
       log.error( e );
-    } 
+      return false;
+    }
+    return true;
   }
 
 
@@ -535,18 +723,20 @@ public class ConectorImpl implements ForumConector, NewsConector
   {
     // we need to be connected as admin
     connect();
-    
+
     try
     {
       // first request: simply ask for posting page
       // ==========================================
-      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/post?f="+FORUM_NEWS_ID+"&mode=newtopic" );
-      HTTPRequest request = new HTTPRequest( url, HTTPMethod.GET, FetchOptions.Builder.withDefaults().doNotFollowRedirects() ); 
+      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/post?f=" + FORUM_NEWS_ID
+          + "&mode=newtopic" );
+      HTTPRequest request = new HTTPRequest( url, HTTPMethod.GET, FetchOptions.Builder
+          .withDefaults().doNotFollowRedirects() );
       request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
-      
+
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
 
       // System.out.println( "response code: " + response.getResponseCode() );
@@ -560,7 +750,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         }
       }
 
-      
+
       // read auth variable used by forum for security
       // =============================================
       String auth1 = null;
@@ -573,8 +763,8 @@ public class ConectorImpl implements ForumConector, NewsConector
         auth1 = decrypt( matcher.group( 1 ), Integer.parseInt( matcher.group( 2 ) ) );
         auth2 = decrypt( matcher.group( 3 ), Integer.parseInt( matcher.group( 4 ) ) );
       }
-      
-      
+
+
       // second request: post data
       // =========================
       url = new URL( "http://" + FmpConstant.getForumHost() + "/post" );
@@ -582,47 +772,47 @@ public class ConectorImpl implements ForumConector, NewsConector
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
 
-      clientPostRequest.setParameter("subject",p_subject);
-      clientPostRequest.setParameter("message",p_body);
-      clientPostRequest.setParameter("lt","0");
-      clientPostRequest.setParameter("mode","newtopic");
-      clientPostRequest.setParameter("f",FORUM_NEWS_ID);
-      clientPostRequest.setParameter("post","Envoyer");
-      clientPostRequest.setParameter("notify","off");
-      clientPostRequest.setParameter("topictype","0");
-      clientPostRequest.setParameter("topic_calendar_day","0");
-      clientPostRequest.setParameter("topic_calendar_month","0");
-      clientPostRequest.setParameter("topic_calendar_year","0");
-      clientPostRequest.setParameter("topic_calendar_hour","");
-      clientPostRequest.setParameter("topic_calendar_min","");
-      clientPostRequest.setParameter("topic_calendar_duration_day","");
-      clientPostRequest.setParameter("topic_calendar_duration_hour","");
-      clientPostRequest.setParameter("topic_calendar_duration_min","");
-      clientPostRequest.setParameter("create_event","0");
-      clientPostRequest.setParameter("calendar_d","0");
-      clientPostRequest.setParameter("poll_title","");
-      clientPostRequest.setParameter("poll_option_text","");
-      clientPostRequest.setParameter("poll_length","");
-      clientPostRequest.setParameter("poll_multiple","0");
-      clientPostRequest.setParameter("poll_cancel_vote","0");
+      clientPostRequest.setParameter( "subject", p_subject );
+      clientPostRequest.setParameter( "message", p_body );
+      clientPostRequest.setParameter( "lt", "0" );
+      clientPostRequest.setParameter( "mode", "newtopic" );
+      clientPostRequest.setParameter( "f", FORUM_NEWS_ID );
+      clientPostRequest.setParameter( "post", "Envoyer" );
+      clientPostRequest.setParameter( "notify", "off" );
+      clientPostRequest.setParameter( "topictype", "0" );
+      clientPostRequest.setParameter( "topic_calendar_day", "0" );
+      clientPostRequest.setParameter( "topic_calendar_month", "0" );
+      clientPostRequest.setParameter( "topic_calendar_year", "0" );
+      clientPostRequest.setParameter( "topic_calendar_hour", "" );
+      clientPostRequest.setParameter( "topic_calendar_min", "" );
+      clientPostRequest.setParameter( "topic_calendar_duration_day", "" );
+      clientPostRequest.setParameter( "topic_calendar_duration_hour", "" );
+      clientPostRequest.setParameter( "topic_calendar_duration_min", "" );
+      clientPostRequest.setParameter( "create_event", "0" );
+      clientPostRequest.setParameter( "calendar_d", "0" );
+      clientPostRequest.setParameter( "poll_title", "" );
+      clientPostRequest.setParameter( "poll_option_text", "" );
+      clientPostRequest.setParameter( "poll_length", "" );
+      clientPostRequest.setParameter( "poll_multiple", "0" );
+      clientPostRequest.setParameter( "poll_cancel_vote", "0" );
       if( auth1 != null )
       {
-        clientPostRequest.setParameter("auth[]",auth1);
+        clientPostRequest.setParameter( "auth[]", auth1 );
       }
       if( auth2 != null )
       {
-        clientPostRequest.setParameter("auth[]",auth2);
+        clientPostRequest.setParameter( "auth[]", auth2 );
       }
-      
+
 
       clientPostRequest.setCookie( m_cookieStore.getCookies() );
       clientPostRequest.post();
-      
+
     } catch( IOException e )
     {
       log.error( e );
       return false;
-    }   
+    }
     return true;
   }
 
@@ -630,7 +820,7 @@ public class ConectorImpl implements ForumConector, NewsConector
   @Override
   public String getNewsRssUrl()
   {
-    return "http://fmptest.forumgratuit.fr/feed?f=" + FORUM_NEWS_ID;
+    return "http://" + FmpConstant.getForumHost() + "/feed?f=" + FORUM_NEWS_ID;
   }
 
 

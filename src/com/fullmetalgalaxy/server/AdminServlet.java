@@ -107,8 +107,15 @@ public class AdminServlet extends HttpServlet
       EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
       if( account != null )
       {
-        ServerUtil.forumConnector().pullAccount( account );
-        ds.put( account );
+        if( ServerUtil.forumConnector().pullAccount( account ) )
+        {
+          ds.put( account );
+          p_resp.sendRedirect( "/account.jsp?id="+account.getId() );
+        }
+        else
+        {
+          p_resp.getOutputStream().println( "pullAccount failed" );
+        }
       }
       else
       {
@@ -122,8 +129,22 @@ public class AdminServlet extends HttpServlet
     strid = p_req.getParameter( "pushaccount" );
     if( strid != null )
     {
-      // TODO
-      p_resp.getOutputStream().println( "TODO" );
+      EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        if( ServerUtil.forumConnector().pushAccount( account ) )
+        {
+          p_resp.sendRedirect( "/account.jsp?id="+account.getId() );
+        }
+        else
+        {
+          p_resp.getOutputStream().println( "pushAccount failed" );
+        }
+      }
+      else
+      {
+        p_resp.getOutputStream().println( "account " + strid + " not found" );
+      }
     }
 
     // link forum account
@@ -146,6 +167,7 @@ public class AdminServlet extends HttpServlet
           account.setForumId( forumId );
           account.setIsforumIdConfirmed( true );
           ds.put( account );
+          p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
         }
       }
       else
@@ -171,9 +193,16 @@ public class AdminServlet extends HttpServlet
         }
         else
         {
-          ServerUtil.forumConnector().createAccount( account );
-          account.setIsforumIdConfirmed( true );
-          ds.put( account );
+          if( ServerUtil.forumConnector().createAccount( account ) )
+          {
+            account.setIsforumIdConfirmed( true );
+            ds.put( account );
+            p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
+          }
+          else
+          {
+            p_resp.getOutputStream().println( "createAccount failed");
+          }
         }
       }
       else

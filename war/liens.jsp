@@ -2,7 +2,7 @@
 <HTML>
 <head>
 <title>Full Metal Galaxy - Liens</title>
-        
+
 <%@include file="include/meta.jsp"%>
 
 </head>

@@ -37,28 +37,32 @@ public interface ForumConector
   /**
    * create corresponding account on forum
    * @param p_account
+   * @return false if failed
    */
-  public void createAccount(EbAccount p_account);
+  public boolean createAccount(EbAccount p_account);
   
   /**
    * push account data from FMG to forum
    * @param p_account
+   * @return false if failed
    */
-  public void pushAccount(EbAccount p_account);
+  public boolean pushAccount(EbAccount p_account);
   
   /**
    * pull account data from forum to FMG
    * @param p_account
+   * @return false if failed
    */
-  public void pullAccount(EbAccount p_account);
+  public boolean pullAccount(EbAccount p_account);
   
   /**
    * send a private message using forum 
    * @param p_account
    * @param p_subject
    * @param p_body
+   * @return false if failed
    */
-  public void sendPMessage( String p_subject, String p_body, String ... p_usernames );
+  public boolean sendPMessage( String p_subject, String p_body, String ... p_usernames );
   
 
   

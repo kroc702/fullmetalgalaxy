@@ -33,4 +33,4 @@ syntax: regexp
 syntax: regexp
 ^war/WEB-INF/deploy$
 syntax: regexp
-^src/com/fullmetalgalaxy/server/forumaccount\.properties$
+^src/com/fullmetalgalaxy/server/forum/forumaccount\.properties$

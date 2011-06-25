@@ -50,8 +50,6 @@ import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.xmpp.JID;
 
 /**
@@ -101,7 +99,6 @@ public class ChannelManager extends HttpServlet
       getCache().put( room.getGameId(), room, Expiration.byDeltaSeconds( CACHE_ROOM_TTL_SEC ) );
       broadcast( room );
     }
-    addTask();
   }
 
 
@@ -116,16 +113,6 @@ public class ChannelManager extends HttpServlet
     this.doGet( p_req, p_resp );
   }
 
-
-  /**
-   * add a task to remove too old presence in a near future.
-   * This task stay alive by itself.
-   */
-  public static void addTask()
-  {
-    Queue queue = QueueFactory.getQueue( "channelmanager" );
-    queue.add();
-  }
 
   /**
    * WARNING p_presence shouldn't be modified after this call, as it's only copy.

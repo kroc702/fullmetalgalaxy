@@ -31,11 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.taskqueue.DeferredTask;
-import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.googlecode.objectify.Key;
@@ -49,12 +49,12 @@ import com.googlecode.objectify.Query;
 public class SynchroForum extends HttpServlet
 {
   private static final long serialVersionUID = 1L;
-
+  private final static FmpLogger log = FmpLogger.getLogger( SynchroForum.class.getName() );
 
   protected class SynchroForumCommand implements DeferredTask
   {
     private static final long serialVersionUID = 1L;
-    public static final long LIMIT_MILLIS = 1000 * 15; // provide a little
+    public static final long LIMIT_MILLIS = 1000 * 20; // provide a little
                                                        // leeway
 
     Cursor m_cursor = null;
@@ -84,6 +84,8 @@ public class SynchroForum extends HttpServlet
         EbAccount account = ds.find( iterator.next() );
         if( account != null )
         {
+          log.info( "start synchro for " + account.getPseudo() );
+
           if( account.getForumId() == null )//&& account.isIsforumIdConfirmed() )
           {
             // no Forum account found: search one
@@ -91,7 +93,7 @@ public class SynchroForum extends HttpServlet
             account.setForumId( ServerUtil.forumConnector().getUserId( account.getPseudo() ) );
           }
           
-          /*if( account.getForumId() != null && !account.isIsforumIdConfirmed() )
+          if( account.getForumId() != null && !account.isIsforumIdConfirmed() && "anne".equalsIgnoreCase( account.getCompactPseudo() ) )
           {
             // A Forum account is found, but we're not sure it belong to the same people
             //
@@ -108,16 +110,29 @@ public class SynchroForum extends HttpServlet
                   "Cordialement\n" +
                   "Full Metal Galaxy", 
                   account.getPseudo() );
+              log.info( "send PM for " + account.getPseudo() );
             }
           }
-          else*/ if( account.getForumId() != null && account.isIsforumIdConfirmed() )
+          else if( account.getForumId() != null && account.isIsforumIdConfirmed() )
           {
             // FMG and Forum account belong to the same people
             //
             // copy data from forum to FMG
-            ServerUtil.forumConnector().pullAccount( account );
-            // copy data from FMG to forum
-            ServerUtil.forumConnector().pushAccount( account );
+            boolean succeed = ServerUtil.forumConnector().pullAccount( account );
+            if( succeed )
+            {
+              // copy data from FMG to forum
+              succeed = ServerUtil.forumConnector().pushAccount( account );
+            }
+            if( !succeed )
+            {
+              log.error( "synchro for " + account.getPseudo() + " failed" );
+            }
+          }
+          else
+          {
+            // well, forumId is confirmed but no forumId was found...
+            // Forum account was probably created by FMG, but it's still not activated
           }
           
           // some account update for legacy
@@ -155,20 +170,10 @@ public class SynchroForum extends HttpServlet
   {
     QueueFactory.getDefaultQueue()
       .add( TaskOptions.Builder.withPayload( new SynchroForumCommand( null ) ) );
-    addTask();
   }
 
   
 
-  /**
-   * add a task to remove too old presence in a near future.
-   * This task stay alive by itself.
-   */
-  public static void addTask()
-  {
-    Queue queue = QueueFactory.getQueue( "synchroforum" );
-    queue.add();
-  }
 
 
 

@@ -86,7 +86,7 @@
     </servlet>
     <servlet-mapping>
        <servlet-name>ChannelManager</servlet-name>
-       <url-pattern>/_ah/queue/channelmanager</url-pattern>
+       <url-pattern>/cron/channelmanager</url-pattern>
     </servlet-mapping>
   
     <servlet>
@@ -95,7 +95,7 @@
     </servlet>
     <servlet-mapping>
        <servlet-name>SynchroForum</servlet-name>
-       <url-pattern>/_ah/queue/synchroforum</url-pattern>
+       <url-pattern>/cron/synchroforum</url-pattern>
     </servlet-mapping>
   
   
@@ -161,6 +161,7 @@
 	<security-constraint>
 	   <web-resource-collection>
 	       <url-pattern>/admin/*</url-pattern>
+	       <!-- url-pattern>/cron/*</url-pattern-->
 	   </web-resource-collection>
 	   <auth-constraint>
 	       <role-name>admin</role-name>
