@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.server.forum.SynchroForum;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -42,14 +41,6 @@ import com.googlecode.objectify.Query;
  */
 public class Auth
 {
-  static
-  {
-    // init first tasks
-    // this is done here to be sure that task are initialized at least once
-    ChannelManager.addTask();
-    SynchroForum.addTask();
-  }
-
 
   private static String getFullURI(HttpServletRequest p_request)
   {

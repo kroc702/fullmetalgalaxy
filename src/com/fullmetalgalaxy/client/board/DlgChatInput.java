@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -129,9 +130,12 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     {
     case KeyCodes.KEY_ESCAPE:
       hide();
+      p_event.stopPropagation();
       break;
     case KeyCodes.KEY_ENTER:
       sendMessage();
+      p_event.stopPropagation();
+      p_event.getNativeEvent().stopPropagation();
       break;
     default:
       break;
@@ -164,6 +168,19 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     super.show();
   }
 
+  /**
+   * this timer is here to avoid show event right after hide event
+   */
+  private Timer m_setChatFalseTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      m_isChatMode = false;
+    }
+  };
+
+
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.PopupPanel#hide()
    */
@@ -171,8 +188,20 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
   public void hide()
   {
     super.hide();
-    m_isChatMode = false;
+    m_setChatFalseTimer.schedule( 300 );
   }
+
+
+  /* (non-Javadoc)
+   * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
+   */
+  @Override
+  public void hide(boolean p_autoClosed)
+  {
+    super.hide( p_autoClosed );
+    m_setChatFalseTimer.schedule( 300 );
+  }
+
 
   public boolean isChatMode()
   {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/cron/channelmanager</url>
+    <description>remove too old presences in chat</description>
+    <schedule>every 3 minutes</schedule>
+  </cron>
+  <cron>
+    <url>/cron/synchroforum</url>
+    <description>Mail out a weekly report</description>
+    <schedule>every day 04:00</schedule>
+    <timezone>Europe/Paris</timezone>
+  </cron>
+</cronentries>
