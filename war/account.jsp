@@ -107,8 +107,11 @@ email :
   {
 	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
 	out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
-  } else {
+	out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test private message</a><br/>" );
+  } else if( account.getForumId() != null ){
 	out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
+  } else {
+    out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">pull account ID</a><br/>" );
     out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );
   }
 } %> <br/>

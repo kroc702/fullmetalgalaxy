@@ -23,6 +23,11 @@
 			var fmp_model='<%= model %>';
 		</script>
 
+		<script type="text/javascript" language="javascript">
+			document.body.addEventListener('touchmove', function(e){ e.preventDefault(); }); 
+			document.body.addEventListener('touchstart', function(e){ e.preventDefault(); });
+			document.ontouchmove = function(e){ e.preventDefault(); }
+		</script>
 
         <style type="text/css">@import url( /appMain.css );</style>
         

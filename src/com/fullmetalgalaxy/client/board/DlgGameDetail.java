@@ -38,6 +38,7 @@ import com.fullmetalgalaxy.client.widget.WgtConfigGameVariant;
 import com.fullmetalgalaxy.client.widget.WgtConstructReserve;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -325,8 +326,21 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     m_banButtons.clear();
 
     m_playerPanel.clear();
-    m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( ModelFmpMain.model().getGame()
-        .getSetRegistration().size() ) ) );
+    int PlayerCount = ModelFmpMain.model().getGame().getSetRegistration().size();
+    m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( PlayerCount ) ) );
+
+    // message to all link
+    String pseudoList[] = new String[PlayerCount];
+    int i = 0;
+    for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
+    {
+      pseudoList[i] = registration.getAccount().getPseudo();
+      i++;
+    }
+    m_playerPanel.add( new HTML( "<a href='"
+        + EbPublicAccount
+            .getPMUrl( "[FMG] " + ModelFmpMain.model().getGame().getName(), pseudoList )
+        + "' >Envoyer un message à tous</a>" ) );
 
     // get player order
     List<EbRegistration> sortedRegistration = ModelFmpMain.model().getGame()

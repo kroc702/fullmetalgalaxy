@@ -31,7 +31,11 @@ if( Auth.isUserAdmin( request, response ) )
 %>
 
 <h2> <%= account.getPseudo() %> </h2>
+<% if(account.getForumId() != null) { %>
+Un compte similaire existe sur le forum, mais n'est pas lié à FMG.<br/>
+<% } else { %>
 Ce compte FMG n'est pas lié a un compte du forum.<br/>
+<% } %>
 <% if(account.isAllowPrivateMsg() && account.haveEmail()) { %>
 <a href="/privatemsg.jsp?id=<%= account.getId()%>">Ecrire un message</a><br/>
 <% } %>
