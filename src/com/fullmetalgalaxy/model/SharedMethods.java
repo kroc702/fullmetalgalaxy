@@ -46,6 +46,10 @@ public class SharedMethods
    */
   public static String encodePathSegment(String decodedURLComponent)
   {
+    if( decodedURLComponent == null )
+    {
+      return null;
+    }
     return URL.encodePathSegment( decodedURLComponent );
   }
 }

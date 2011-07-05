@@ -177,6 +177,27 @@ public class AdminServlet extends HttpServlet
       ds.close();
     }
 
+    // send a test private message
+    // ===========================
+    strid = p_req.getParameter( "testpm" );
+    if( strid != null )
+    {
+      EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        if( ServerUtil.forumConnector().sendPMessage( "[FMG] Test", "Just to test forum link",
+            account.getPseudo() ) )
+        {
+          p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
+        }
+        else
+        {
+          p_resp.getOutputStream().println( "PM failed" );
+        }
+      }
+    }
+
+
     // create forum account
     // ====================
     strid = p_req.getParameter( "createforumaccount" );

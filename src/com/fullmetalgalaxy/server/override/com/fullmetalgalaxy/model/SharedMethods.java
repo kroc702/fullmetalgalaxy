@@ -47,6 +47,10 @@ public class SharedMethods
    */
   public static String encodePathSegment(String decodedURLComponent)
   {
+    if( decodedURLComponent == null )
+    {
+      return null;
+    }
     try
     {
       decodedURLComponent = URLEncoder.encode( decodedURLComponent, "UTF-8" );

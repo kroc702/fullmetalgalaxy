@@ -54,9 +54,11 @@ import com.myjavatools.web.ClientHttpRequest;
 
 
 /**
- * TODO removed many hard coded constant and password !!!
  * 
- * I used firefox livehttpheaders extension to help constructing this
+ * I used firefox livehttpheaders extension to help constructing this.
+ * 
+ * As google infrastructure change his IP address every request, we arn't able to connect to forum.
+ * To bypass this limitation, I usea web proxy located on another server.
  */
 
 public class ConectorImpl implements ForumConector, NewsConector
@@ -66,6 +68,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       + "_sid";
   private static String FORUM_USERNAME = "";
   private static String FORUM_PASS = "";
+  private static String PROXY_KEY = "";
   private static String FORUM_NEWS_ID = "40";
 
   // various pattern on forum pages
@@ -102,8 +105,8 @@ public class ConectorImpl implements ForumConector, NewsConector
     s_fieldPatternMap.put( "notifypm", fieldRadioPattern( "notifypm" ) );
     s_fieldPatternMap.put( "popup_pm", fieldRadioPattern( "popup_pm" ) );
     s_fieldPatternMap.put( "post_prevent", fieldRadioPattern( "post_prevent" ) );
-    s_fieldPatternMap.put( "no_report_popup", fieldRadioPattern( "no_report_popup" ) );
-    s_fieldPatternMap.put( "no_report_mail", fieldRadioPattern( "no_report_mail" ) );
+    //s_fieldPatternMap.put( "no_report_popup", fieldRadioPattern( "no_report_popup" ) );
+    //s_fieldPatternMap.put( "no_report_mail", fieldRadioPattern( "no_report_mail" ) );
     s_fieldPatternMap.put( "attachsig", fieldRadioPattern( "attachsig" ) );
     s_fieldPatternMap.put( "language", fieldSelectPattern( "language" ) );
     // s_fieldPatternMap.put( "timezone", fieldSelectPattern( "timezone" ) );
@@ -113,6 +116,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     s_fieldPatternMap.put( "user_allowpm", fieldRadioPattern( "user_allowpm" ) );
     s_fieldPatternMap.put( "user_allowavatar", fieldRadioPattern( "user_allowavatar" ) );
     s_fieldPatternMap.put( "user_allow_att", fieldRadioPattern( "user_allow_att" ) );
+    // s_fieldPatternMap.put( "user_rank", fieldSelectPattern( "user_rank" ) );
     s_fieldPatternMap.put( "user_rank", Pattern.compile(
         ".*<select name=\"user_rank\">.*<option value=\"([^\"]*)\" selected=\"selected\">.*",
         Pattern.DOTALL ) );
@@ -120,8 +124,9 @@ public class ConectorImpl implements ForumConector, NewsConector
   
 
   private FmgCookieStore m_cookieStore = new FmgCookieStore();
-  private String m_adminUrl = "http://" + FmpConstant.getForumHost()
+  private static final String DEFAULT_ADMIN_URL = "http://" + FmpConstant.getForumHost()
       + "/admin/index.forum?part=admin";
+  private String m_adminUrl = DEFAULT_ADMIN_URL;
 
 
 
@@ -135,6 +140,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       s_forumConfig.load( ConectorImpl.class.getResourceAsStream( "forumaccount.properties" ) );
       FORUM_USERNAME = s_forumConfig.getProperty( "username" );
       FORUM_PASS = s_forumConfig.getProperty( "password" );
+      PROXY_KEY = s_forumConfig.getProperty( "proxykey" );
     } catch( Exception e )
     {
       log.error( e );
@@ -164,11 +170,57 @@ public class ConectorImpl implements ForumConector, NewsConector
 
 
 
-  protected boolean isConnected()
+  private static final String PROXY_HOST = "www.fullmetalgalaxy.web-address.fr";
+
+
+  private static String proxyfyUrl(String p_url)
   {
-    return(m_cookieStore.getCookie( COOKIE_SID ) != null);
+    if( !p_url.startsWith( "http://" ) )
+    {
+      p_url = "http://" + p_url;
+    }
+    try
+    {
+      return "http://" + PROXY_HOST + "/browse.php?url="
+          + URLEncoder.encode( p_url, "UTF-8" ) + "&b=12";
+    } catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace( System.err );
+    }
+    return "http://" + PROXY_HOST + "/browse.php?url=" + p_url;
   }
 
+  private static Pattern s_deproxyfyPattern = Pattern.compile( ".*url=([^&]*)($|&.*)" );
+
+  private static String deproxyfyUrl(String p_url)
+  {
+    Matcher matcher = s_deproxyfyPattern.matcher( p_url );
+    if( !matcher.matches() )
+    {
+      return p_url;
+    }
+    p_url = matcher.group( 1 );
+    try
+    {
+      p_url = URLDecoder.decode( p_url, "UTF-8" );
+    } catch( UnsupportedEncodingException e )
+    {
+      log.error( e );
+    }
+    return p_url;
+  }
+
+  protected boolean isConnected()
+  {
+    return (m_cookieStore.getCookie( COOKIE_SID ) != null)
+        || (!m_adminUrl.equals( DEFAULT_ADMIN_URL ));
+  }
+
+  protected void disconnect()
+  {
+    m_cookieStore = new FmgCookieStore();
+    m_adminUrl = DEFAULT_ADMIN_URL;
+  }
 
   /**
    * 
@@ -185,14 +237,14 @@ public class ConectorImpl implements ForumConector, NewsConector
     {
       // post login to get cookies
       // =========================
-      url = new URL( "http://" + FmpConstant.getForumHost() + "/login" );
+      url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/login" ) );
 
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder
           .withDefaults().doNotFollowRedirects() );
       request
           .setPayload( ("username=" + FORUM_USERNAME + "&password=" + FORUM_PASS + "&redirect=&query=&login=Connexion")
               .getBytes( "UTF-8" ) );
-      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Host", PROXY_HOST ) );
       // request.addHeader( new HTTPHeader( "User-Agent",
       // "Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9) Gecko/2008052906 (CK-Ifremer) Firefox/3.0 ( .NET CLR 3.5.30729; .NET4.0E)"
       // ) );
@@ -210,27 +262,29 @@ public class ConectorImpl implements ForumConector, NewsConector
       // request.addHeader( new HTTPHeader( "Cookie",
       // "extendedview=; __utma=197449400.1261798819.1301581035.1301581035.1301581035.1; __utmz=197449400.1301581035.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _csuid=X8b6019a8aa1ad"
       // ) );
-      // request.addHeader( new HTTPHeader( "Content-Type",
-      // "application/x-www-form-urlencoded" ) );
+      request.addHeader( new HTTPHeader( "Content-Type", "application/x-www-form-urlencoded" ) );
 
       HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
 
-      // System.out.println( "response code: "+ response.getResponseCode() );
-      // System.out.println( "final url: "+ response.getFinalUrl() );
+      System.out.println( "response code: " + response.getResponseCode() );
+      System.out.println( "final url: " + response.getFinalUrl() );
       for( HTTPHeader header : response.getHeaders() )
       {
-        // System.out.println( header.getName() + ": " + header.getValue() );
+        System.out.println( header.getName() + ": " + header.getValue() );
         if( "Set-Cookie".equalsIgnoreCase( header.getName() ) )
         {
           m_cookieStore.add( header.getValue() );
+          // System.out.println( "Set-Cookie: " + header.getValue() );
         }
       }
+      System.out.println( new String( response.getContent(), getCharset( response ) ) );
+      
 
       // get admin panel to read tid param
       // =================================
-      url = new URL( m_adminUrl );
+      url = new URL( proxyfyUrl( m_adminUrl ) );
       request = new HTTPRequest( url );
-      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Host", PROXY_HOST ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
       response = URLFetchServiceFactory.getURLFetchService().fetch( request );
@@ -242,12 +296,15 @@ public class ConectorImpl implements ForumConector, NewsConector
       if( response.getFinalUrl() != null )
       {
         m_adminUrl = response.getFinalUrl().toString();
+        // m_adminUrl is now a proxyfied url: we need to deproxyfy it
+        m_adminUrl = deproxyfyUrl( m_adminUrl );
       }
 
 
     } catch( IOException e )
     {
       log.error( e );
+      disconnect();
     }
   }
 
@@ -258,14 +315,15 @@ public class ConectorImpl implements ForumConector, NewsConector
     // we don't need to be connected
 
     Pattern pattern = Pattern.compile(
-        ".*<td class=\"row1\" .* href=\"/u(.*)\"><span style=\"color:#E.....\"><strong>"
-            + Pattern.quote( p_pseudo ) + "</strong></span></a></span></td>.*",
+        ".*href=\"[^\"]*(?:/|%2F)u([^\"&]*)[^\"]*\">(?:<span style=\"color:#E.....\">)?(?:<strong>)?"
+            + Pattern.quote( p_pseudo ) + "<.*",
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL );
 
     try
     {
-      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/memberlist?username="
-          + URLEncoder.encode( p_pseudo, "UTF-8" ) );
+      URL url = new URL(
+          ("http://" + FmpConstant.getForumHost()
+          + "/memberlist?username=" + URLEncoder.encode( p_pseudo, "UTF-8" ) ) );
       BufferedReader reader = new BufferedReader( new InputStreamReader( url.openStream() ) );
 
       StringBuffer page = new StringBuffer();
@@ -275,10 +333,12 @@ public class ConectorImpl implements ForumConector, NewsConector
         page.append( line );
       }
       reader.close();
+      System.out.println( page.toString() );
 
       Matcher matcher = pattern.matcher( page );
       if( matcher.matches() )
       {
+        // System.out.println( matcher.group( 1 ) );
         return matcher.group( 1 );
       }
 
@@ -471,8 +531,8 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     try
     {
-      URL url = new URL( m_adminUrl + "&part=users_groups&sub=users&mode=edit&u="
-          + p_account.getForumId() + "&extended_admin=1" );
+      URL url = new URL( proxyfyUrl( m_adminUrl + "&part=users_groups&sub=users&mode=edit&u="
+          + p_account.getForumId() + "&extended_admin=1" ) );
 
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
@@ -553,6 +613,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         //System.out.println( writer.toString() );
         if( !writer.toString().contains( "Le profil de l'utilisateur a été mis à jour avec succès" ) )
         {
+          disconnect();
           return false;
         }
       }
@@ -561,6 +622,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     } catch( IOException e )
     {
       log.error( e );
+      disconnect();
       return false;
     }
     return true;
@@ -580,10 +642,10 @@ public class ConectorImpl implements ForumConector, NewsConector
       //
       String urlStr = m_adminUrl + "&part=users_groups&sub=users&mode=edit&u="
           + p_account.getForumId() + "&extended_admin=1";
-      URL url = new URL( urlStr );
+      URL url = new URL( proxyfyUrl( urlStr ) );
 
       HTTPRequest request = new HTTPRequest( url );
-      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Host", PROXY_HOST ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
 
@@ -599,6 +661,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       else
       {
         // if username isn't found, consider this method as failed
+        disconnect();
         return false;
       }
 
@@ -615,7 +678,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       matcher = s_avatarUrlPattern.matcher( page );
       if( matcher.matches() )
       {
-        p_account.setForumAvatarUrl( "http://" + FmpConstant.getForumHost() + matcher.group( 1 ) );
+        p_account.setForumAvatarUrl( deproxyfyUrl( matcher.group( 1 ) ) );
       }
       else
       {
@@ -660,6 +723,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         }
         else
         {
+          forumData.remove( entry.getKey() );
           log.error( "pattern '" + entry.getKey() + "' failed" );
         }
       }
@@ -670,6 +734,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     } catch( IOException e )
     {
       log.error( e );
+      disconnect();
       return false;
     }
     return true;
@@ -684,7 +749,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     try
     {
-      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/privmsg?" );
+      URL url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/privmsg?" ) );
 
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
@@ -712,6 +777,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     } catch( IOException e )
     {
       log.error( e );
+      disconnect();
       return false;
     }
     return true;
@@ -728,11 +794,11 @@ public class ConectorImpl implements ForumConector, NewsConector
     {
       // first request: simply ask for posting page
       // ==========================================
-      URL url = new URL( "http://" + FmpConstant.getForumHost() + "/post?f=" + FORUM_NEWS_ID
-          + "&mode=newtopic" );
+      URL url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/post?f="
+          + FORUM_NEWS_ID + "&mode=newtopic" ) );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.GET, FetchOptions.Builder
           .withDefaults().doNotFollowRedirects() );
-      request.addHeader( new HTTPHeader( "Host", FmpConstant.getForumHost() ) );
+      request.addHeader( new HTTPHeader( "Host", PROXY_HOST ) );
       request.addHeader( new HTTPHeader( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" ) );
       request.addHeader( new HTTPHeader( "Referer", "http://" + FmpConstant.getForumHost() ) );
       request.addHeader( new HTTPHeader( "Cookie", m_cookieStore.getCookies().toString() ) );
@@ -767,7 +833,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
       // second request: post data
       // =========================
-      url = new URL( "http://" + FmpConstant.getForumHost() + "/post" );
+      url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/post" ) );
 
       ClientHttpRequest clientPostRequest = null;
       clientPostRequest = new ClientHttpRequest( url );
@@ -811,6 +877,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     } catch( IOException e )
     {
       log.error( e );
+      disconnect();
       return false;
     }
     return true;
