@@ -163,6 +163,26 @@ public class FmgDataStore extends DataStore
     return new Game( p_preview, data );
   }
   
+  public Game getGame( Key<EbGamePreview> p_keyPreview )
+  {
+    if( p_keyPreview == null )
+    {
+      return null;
+    }
+    EbGamePreview preview = find(p_keyPreview); 
+    if( preview == null )
+    {
+      return null;
+    }
+    Key<EbGameData> keyData = new Key<EbGameData>(p_keyPreview, EbGameData.class, preview.getId());
+    EbGameData data = find( keyData );
+    if( data == null )
+    {
+      return null;
+    }
+    return new Game( preview, data );
+  }
+  
   /**
    * put a game and his associated game preview
    * @param p_game

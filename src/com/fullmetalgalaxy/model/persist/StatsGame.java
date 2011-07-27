@@ -62,7 +62,7 @@ public class StatsGame extends EbAccountStats
   /** current account status for this game */
   private Status m_status = Status.Running;
   private boolean m_isCreator = false;
-  
+
 
 
   public StatsGame()

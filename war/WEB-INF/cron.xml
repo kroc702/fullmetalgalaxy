@@ -7,8 +7,14 @@
   </cron>
   <cron>
     <url>/cron/synchroforum</url>
-    <description>Mail out a weekly report</description>
+    <description>Synchronize game and forum</description>
     <schedule>every day 04:00</schedule>
+    <timezone>Europe/Paris</timezone>
+  </cron>
+  <cron>
+    <url>/cron/gameupdate</url>
+    <description>Check for any game update</description>
+    <schedule>every day 05:00</schedule>
     <timezone>Europe/Paris</timezone>
   </cron>
 </cronentries>

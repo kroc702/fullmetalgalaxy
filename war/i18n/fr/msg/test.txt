@@ -1,0 +1,5 @@
+Test
+Bonjour {pseudo},
+Ce message viens d'être envoyer pour tester le fonctionement du site.
+Cordialement
+FullMetalGalaxy

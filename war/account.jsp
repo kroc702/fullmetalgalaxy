@@ -1,3 +1,4 @@
+<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -88,11 +89,9 @@ email :
 
 <% if(Auth.isUserAdmin(request, response)) { %>
   Autoriser FMG a envoyer un mail pour signaler votre tour de jeu
-  <input type="checkbox" <%= account.isAllowMailFromGame() ? "checked" : "" %> name="AllowMailFromGame" value="1"><br/>
+  <input type="checkbox" <%= account.getAllowMsgFromGame()==AllowMessage.No ? "" : "checked" %> name="AllowMailFromGame" value="1"><br/>
   Autoriser les autres joueurs a vous contacter par messages privés
   <input type="checkbox" <%= account.isAllowPrivateMsg() ? "checked" : "" %> name="AllowPrivateMsg" value="1"><br/>
-  Autoriser FMG a vous informer des évolutions majeurs
-  <input type="checkbox" <%= account.isAllowMailFromNewsLetter() ? "checked" : "" %> name="AllowMailFromNewsLetter" value="1"><br/>
   <br/>
   Jabber ID :
   <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>

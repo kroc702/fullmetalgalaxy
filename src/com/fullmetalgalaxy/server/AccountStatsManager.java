@@ -287,6 +287,11 @@ public class AccountStatsManager
     ds.close();
   }
 
+  /**
+   * warning: can't be called while game is transient
+   * @param p_account
+   * @param p_game
+   */
   public static void gameCreate(EbAccount p_account, Game p_game)
   {
     StatsGame stat = getLastStats( p_account, p_game.getId() );
@@ -304,10 +309,20 @@ public class AccountStatsManager
 
   public static void gameJoin(EbAccount p_account, Game p_game)
   {
-    StatsGamePlayer lastStat = new StatsGamePlayer( p_game );
-    p_account.getStats().add( lastStat );
+    StatsGame lastStat = getLastStats( p_account, p_game.getId() );
+    if( lastStat != null )
+    {
+      // player join a game he has created, remplace this stat
+      p_account.getStats().remove( lastStat );
+    }
+    StatsGamePlayer newStat = new StatsGamePlayer( p_game );
+    p_account.getStats().add( newStat );
     EbRegistration registration = p_game.getRegistrationByIdAccount( p_account.getId() );
-    lastStat.setPlayer( p_game, registration );
+    newStat.setPlayer( p_game, registration );
+    if( lastStat != null )
+    {
+      newStat.setCreator( lastStat.isCreator() );
+    }
     saveAndUpdate( p_account );
   }
 
@@ -332,7 +347,7 @@ public class AccountStatsManager
     saveAndUpdate( p_account );
   }
 
-  public static void gameFinish(Game p_game)
+  protected static void gameFinish(Game p_game)
   {
     // for player
     for( EbRegistration registration : p_game.getSetRegistration() )
@@ -370,8 +385,19 @@ public class AccountStatsManager
     saveAndUpdate( account );
   }
 
+  /**
+   * I may want to use this to make a difference between a deleted and aborted game.
+   * @param p_game
+   */
+  protected static void gameDelete(Game p_game)
+  {
+    if( !p_game.isFinished() )
+    {
+      gameAbort( p_game );
+    }
+  }
 
-  public static void gameAbort(Game p_game)
+  protected static void gameAbort(Game p_game)
   {
     // for player
     for( EbRegistration registration : p_game.getSetRegistration() )

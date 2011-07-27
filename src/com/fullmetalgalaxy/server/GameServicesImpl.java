@@ -34,16 +34,13 @@ import javax.servlet.ServletException;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
-import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Tide;
-import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
@@ -51,14 +48,11 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
-import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -90,7 +84,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   public void init() throws ServletException
   {
     super.init();
-    if( s_basePath == null )
+    ServerUtil.setBasePath( getServletContext().getRealPath( "/" ) );
+    if( s_basePath == null || s_basePath.isEmpty() )
     {
       s_basePath = getServletContext().getRealPath( "/" );
     }
@@ -117,8 +112,11 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
     }
     FmgDataStore dataStore = new FmgDataStore(false);
+    EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
+    boolean isNewlyCreated = true;
     if( !p_game.isTrancient() )
     {
+      isNewlyCreated = false;
       // then add an admin event
       if( p_modifDesc == null || p_modifDesc.trim().length() == 0 )
       {
@@ -127,7 +125,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       EbAdmin adminEvent = new EbAdmin();
       adminEvent.setGame( p_game );
       adminEvent.setMessage( p_modifDesc );
-      EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
+
       if( (!Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )) )
       {
         throw new RpcFmpException(
@@ -139,6 +137,13 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
     dataStore.put( p_game );
     dataStore.close();
+
+    if( isNewlyCreated )
+    {
+      // game is just created
+      GameWorkflow.gameOpen( p_game );
+      AccountStatsManager.gameCreate( account, p_game );
+    }
 
     // should we construct minimap image ?
     if( p_game.getMinimapUri() == null )
@@ -170,7 +175,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       modelUpdate.setGameId( model.getId() );
       modelUpdate.setFromVersion( model.getVersion() );
 
-      ArrayList<AnEvent> events = updateGame( model );
+      ArrayList<AnEvent> events = GameWorkflow.checkUpdate( model );
 
       if( !events.isEmpty() )
       {
@@ -310,7 +315,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           log.fine( "player is connected: we don't need to send an email" );
           return;
         }
-        if( !currentPlayer.isAllowMailFromGame() || !currentPlayer.haveEmail() )
+        if( currentPlayer.getAllowMsgFromGame() == AllowMessage.No || !currentPlayer.haveEmail() )
         {
           // player don't want any notification
           log.fine( "player " + currentPlayer.getPseudo() + " don't want any notification" );
@@ -354,31 +359,12 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
             + ") thief account " + p_action.getAccountId() );
       }
     }*/
-
-    if( (p_action.getType() == GameLogType.EvtPlayerTurn)
-        && (game.getCurrentTimeStep() == game.getEbConfigGameTime().getTotalTimeStep()) )
-    {
-      // end turn action in the last turn...
-      // check that his freighter take off, if not, take off automatically
-      for( EbToken token : game.getSetToken() )
-      {
-        if( (token.getType() == TokenType.Freighter)
-            && (game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor()))
-            && (token.getLocation() == Location.Board) )
-        {
-          // automatic take off for this freighter
-          EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
-          eventTakeOff.setGame( game );
-          eventTakeOff.setToken( token );
-          eventTakeOff.setAccountId( game.getRegistrationByColor( token.getColor() ).getAccount().getId() );
-          eventTakeOff.setAuto( true );
-          eventTakeOff.checkedExec( game );
-          game.addEvent( eventTakeOff );
-          modelUpdate.getGameEvents().add( eventTakeOff );
-        }
-      }
-    }
     
+    if( p_action.getType().isEventUser() )
+    {
+      ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+    }
+
     // real action
     //
     if(p_action.getType() == GameLogType.EvtCancel)
@@ -387,29 +373,27 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       ((EbEvtCancel)p_action).execCancel( game );
       
       modelUpdate.getGameEvents().add( p_action );
-      modelUpdate.getGameEvents().addAll( updateGame( game ) );
+      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
     }
     else
     {
-      modelUpdate.getGameEvents().addAll( updateGame( game ) );
+      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game, p_action ) );
       modelUpdate.getGameEvents().add( p_action );
 
       // execute action
       p_action.checkedExec( game );
       game.addEvent( p_action );
+
+      // another update ?
+      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
     }
     
-    // save all events. This action is required as game->events relation isn't
-    // a real bidirectional relation (because of event_index column)
-    if( p_action.getType().isEventUser() )
-    {
-      ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-    }
+
 
     if( (p_action.getType() == GameLogType.EvtPlayerTurn)
         && (oldTimeStep != game.getCurrentTimeStep()) )
     {
-      // new turn !
+      // new turn : change tide ?
       if( game.getNextTideChangeTimeStep() <= game.getCurrentTimeStep() )
       {
         EbEvtTide eventTide = new EbEvtTide();
@@ -421,54 +405,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       }
     }
 
-    dataStore.put( game );
-
-    // Some special cases
-    /////////////////////
-    if( p_action.getType() == GameLogType.GameJoin )
-    {
-      if( game.getCurrentNumberOfRegiteredPlayer() == game.getMaxNumberOfPlayer() )
-      {
-        // TODO we may prefer starting game not in live mode only (slow game only)
-        // if the last player is just connected, automatically launch the game.
-        EbAdminTimePlay action = new EbAdminTimePlay();
-        action.setAuto( true );
-        action.setLastUpdate( ServerUtil.currentDate() );
-        action.setAccountId( ((EbGameJoin)p_action).getAccountId() );
-        action.setGame( game );
-        action.checkedExec( game );
-        game.addEvent( action );
-        modelUpdate.getGameEvents().add( action );
-      }
-
-      if(game.getCurrentTimeStep() == 0 
-          && game.getLastGameLog().getType() == GameLogType.AdminTimePlay
-          && game.getFreighter( game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
-      {
-        // game is starting
-        EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
-        action.setLastUpdate( ServerUtil.currentDate() );
-        action.initRandomOrder( game );
-        action.setGame( game );
-        action.checkedExec( game );      
-        game.addEvent( action );
-        modelUpdate.getGameEvents().add( action );
-      }
-    }
-    if(game.getCurrentTimeStep() == 1 
-        && !game.isAsynchron()
-        && game.getLastGameLog().getType() == GameLogType.EvtTide )
-    {
-      // second turn: everybody should be landed
-      EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
-      action.setLastUpdate( ServerUtil.currentDate() );
-      action.initBoardOrder( game );
-      action.setGame( game );
-      action.checkedExec( game );      
-      game.addEvent( action );
-      modelUpdate.getGameEvents().add( action );
-    }
-    
     dataStore.put( game );
     dataStore.close();
     modelUpdate.setToVersion( game.getVersion() );
@@ -514,7 +450,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
     modelUpdate.setGameId( game.getId() );
     modelUpdate.setFromVersion( game.getVersion() );
-    modelUpdate.setGameEvents( updateGame( game ) );
+    modelUpdate.setGameEvents( GameWorkflow.checkUpdate( game ) );
 
     // execute actions
     try
@@ -567,144 +503,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   }
 
 
-  /**
-   * update anything on game which can change without user intervention. 
-   * ie:<br/>
-   * - player actions pts (for asynchron game only)<br/>
-   * - tides (for asynchron game only)<br/>
-   * - current player's turn. (for turn by turn game only)<br/>
-   * - any other defined triggers
-   * - set history flag and compute stats
-   * @param p_game
-   * @return the getResultList of all event which occur during this update.
-   */
-  static protected ArrayList<AnEvent> updateGame(Game p_game) throws RpcFmpException
-  {
-    assert p_game != null;
-    ArrayList<AnEvent> events = new ArrayList<AnEvent>();
-
-    // in some case, game is never updated
-    if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
-        || p_game.getCurrentTimeStep() == 0 )
-    {
-      return events;
-    }
-    if( !p_game.isFinished() )
-    {
-      if( p_game.isAsynchron() )
-      {
-        long currentTimeInMiliSec = System.currentTimeMillis();
-        while( (!p_game.isFinished())
-            && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
-                .getEbConfigGameTime().getTimeStepDurationInMili()) )
-        {
-          // automatic take off for all freighter just before end game
-          if( p_game.getCurrentTimeStep() > p_game.getEbConfigGameTime().getTotalTimeStep() )
-          {
-            for( EbToken token : p_game.getSetToken() )
-            {
-              if( (token.getType() == TokenType.Freighter)
-                  && (token.getLocation() == Location.Board) )
-              {
-                // automatic take off for this freighter
-                EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
-                eventTakeOff.setGame( p_game );
-                eventTakeOff.setToken( token );
-                eventTakeOff.setAccountId( p_game.getRegistrationByColor( token.getColor() )
-                    .getAccount().getId() );
-                eventTakeOff.setAuto( true );
-                eventTakeOff.checkedExec( p_game );
-                p_game.addEvent( eventTakeOff );
-                events.add( eventTakeOff );
-              }
-            }
-          }
-          // new time step
-          EbEvtTimeStep event = new EbEvtTimeStep();
-          event.setGame( p_game );
-          event.checkedExec( p_game );
-          p_game.addEvent( event );
-          events.add( event );
-          if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
-          {
-            // next tide
-            EbEvtTide eventTide = new EbEvtTide();
-            eventTide.setNextTide( Tide.getRandom() );
-            eventTide.setGame( p_game );
-            eventTide.checkedExec( p_game );
-            p_game.addEvent( eventTide );
-            events.add( eventTide );
-          }
-        }
-      }
-      else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
-      {
-        if( (p_game.getCurrentPlayerRegistration() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() 
-                    <= System.currentTimeMillis())
-            && (p_game.getCurrentTimeStep() != 0) ) // never skip first turn
-        {
-          // change player's turn
-          int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
-          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
-          event.setAuto( true );
-          event.setGame( p_game );
-          event.checkedExec( p_game );
-          p_game.addEvent( event );
-          events.add( event );
-          if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
-          {
-            // new turn !
-            if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
-            {
-              // next tide
-              EbEvtTide eventTide = new EbEvtTide();
-              eventTide.setGame( p_game );
-              eventTide.setNextTide( Tide.getRandom() );
-              eventTide.checkedExec( p_game );
-              p_game.addEvent( eventTide );
-              events.add( eventTide );
-            }
-          }
-        }
-        /* TODO
-        if( (p_game.getCurrentPlayerRegistration() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
-        {
-          ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
-                                        // p_game.getId(), null );
-          if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
-          {
-            // current player is connected, update his end turn
-            p_game.getCurrentPlayerRegistration().setEndTurnDate(
-                new Date( System.currentTimeMillis()
-                    + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-            // p_session.persist( p_game.getCurrentPlayerRegistration() );
-            updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
-                .setEndTurnDate(
-                    new Date( System.currentTimeMillis()
-                        + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-
-            isUpdated = true;
-          }
-        }*/
-      }
-
-      // triggers
-      p_game.execTriggers();
-    }
-    else if( !p_game.isHistory() )
-    {
-      /*for( EbRegistration registration : p_game.getSetRegistration() )
-      {
-        registration.setStats( EbAccountStats.generate( registration, p_game ) );
-      }*/
-      p_game.setHistory( true );
-    }
-
-    return events;
-  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.GameServices#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
