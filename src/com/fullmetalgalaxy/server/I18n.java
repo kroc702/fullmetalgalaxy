@@ -49,6 +49,12 @@ public class I18n
     return s_validLocale;
   }
 
+  public static String getDefaultLocale()
+  {
+    return "fr";
+  }
+
+
   private static String validLocale(String p_locale)
   {
     assert p_locale != null;
@@ -61,9 +67,8 @@ public class I18n
       {
         return p_locale;
       }
-    }
-    return "en";*/
-    return "fr";
+    }*/
+    return getDefaultLocale();
   }
 
   @SuppressWarnings("unchecked")
@@ -118,6 +123,8 @@ public class I18n
         FmgDataStore dataStore = new FmgDataStore( false );
         dataStore.put( account );
         dataStore.close();
+        // to reload account data from datastore
+        p_request.getSession().setAttribute( "account", null );
       }
       return strLocale;
     }
@@ -148,7 +155,7 @@ public class I18n
       return strLocale;
     }
     // then give a default value
-    return "en";
+    return getDefaultLocale();
   }
 
 

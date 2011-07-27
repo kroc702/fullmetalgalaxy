@@ -82,6 +82,14 @@ public class ChannelManager extends HttpServlet
   private final static FmpLogger log = FmpLogger.getLogger( ChannelManager.class.getName() );
 
 
+  @Override
+  public void init() throws ServletException
+  {
+    super.init();
+    ServerUtil.setBasePath( getServletContext().getRealPath( "/" ) );
+  }
+
+  
   /**
    * entry point for task queue.
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)

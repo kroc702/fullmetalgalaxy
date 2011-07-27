@@ -333,7 +333,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         page.append( line );
       }
       reader.close();
-      System.out.println( page.toString() );
+      // System.out.println( page.toString() );
 
       Matcher matcher = pattern.matcher( page );
       if( matcher.matches() )

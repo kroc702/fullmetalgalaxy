@@ -44,7 +44,7 @@ search pseudo: <input type="text" name="pseudo" value="<%= pseudo %>">
 </form>
 
 	<table class="fmp-array" style="width:100%;">
-	<tr><td>Inscription</td><td>Connexion</td><td>Auth</td><td>Mail</td><td>Pseudo</td></tr>
+	<tr><td>Inscription</td><td>Connexion</td><td>Auth</td><td>Locale</td><td>Mail</td><td>Pseudo</td></tr>
 	<%
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
 	    for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
@@ -62,6 +62,9 @@ search pseudo: <input type="text" name="pseudo" value="<%= pseudo %>">
 	      // AuthProvider
 	      out.println("<td style='width:30px;'>"+account.getAuthIconHtml()+"</td>" );
 	   
+	   	  // locale
+	      out.println("<td style='width:30px;'><img src='/i18n/"+account.getLocale()+"/images/icon_locale.png' border='0'/></td>" );
+	      
 	      // account email
 	      out.println("<td style='width:30px;'><a href='mailto:"+ account.getEmail() + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
 	      

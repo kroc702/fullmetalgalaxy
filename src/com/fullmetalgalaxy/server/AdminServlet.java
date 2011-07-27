@@ -81,10 +81,12 @@ public class AdminServlet extends HttpServlet
     strid = p_req.getParameter( "deletegame" );
     if( strid != null )
     {
-      FmgDataStore dataStore = new FmgDataStore( false );
-      dataStore.delete( Game.class, Long.parseLong( strid ) );
-      dataStore.close();
-      p_resp.sendRedirect( "/gamelist.jsp" );
+      Game game = FmgDataStore.dao().getGame( Long.parseLong( strid ) );
+      if( game != null )
+      {
+        GameWorkflow.gameDelete( game );
+        p_resp.sendRedirect( "/gamelist.jsp" );
+      }
     }
 
     // delete account
@@ -185,8 +187,7 @@ public class AdminServlet extends HttpServlet
       EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
       if( account != null )
       {
-        if( ServerUtil.forumConnector().sendPMessage( "[FMG] Test", "Just to test forum link",
-            account.getPseudo() ) )
+        if( new FmgMessage( "test" ).send( account ) )
         {
           p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
         }

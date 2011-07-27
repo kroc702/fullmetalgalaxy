@@ -39,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -207,16 +208,9 @@ public class AccountServlet extends HttpServlet
         else
         {
           // all is ok, send a mail
-          PMServlet.sendMail( "[FMG] demande de mot de passe", 
-              "Bonjour,\n"
-              +"Votre mot de passe est le suivant:\n"
-              +" login: "+account.getLogin()+"\n"
-              +" password: "+account.getPassword()+"\n"
-              +"\n"
-              +"Cordialement"
-              , account.getEmail() );
+          new FmgMessage( "askPassword" ).sendEMail( account );
           
-          msg = "un mail à été envoyé a l'adresse " + account.getEmail();
+          msg = "un email a été envoyé à " + account.getEmail();
           account.setLastPasswordAsk( new Date() );
           ds.put( account );
         }
@@ -413,8 +407,16 @@ public class AccountServlet extends HttpServlet
     }
 
     account.setEmail( params.get( "email" ) );
-    account.setAllowMailFromGame( params.get( "AllowMailFromGame" ) != null );
-    account.setAllowMailFromNewsLetter( params.get( "AllowMailFromNewsLetter" ) != null );
+    if( account.getAllowMsgFromGame() == AllowMessage.No
+        && params.get( "AllowMailFromGame" ) != null )
+    {
+      account.setAllowMsgFromGame( AllowMessage.Mail );
+    }
+    else if( params.get( "AllowMailFromGame" ) == null )
+    {
+      account.setAllowMsgFromGame( AllowMessage.No );
+    }
+
     account.setAllowPrivateMsg( params.get( "AllowPrivateMsg" ) != null );
     account.setJabberId( params.get( "jabberId" ) );
     account.setDescription( params.get( "description" ) );

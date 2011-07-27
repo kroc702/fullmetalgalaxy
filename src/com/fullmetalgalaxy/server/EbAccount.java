@@ -48,6 +48,12 @@ public class EbAccount extends EbPublicAccount
 {
   private static final long serialVersionUID = -6721026137413400063L;
 
+
+  public enum AllowMessage
+  {
+    No, PM, Mail;
+  }
+
   // theses data come from database (Account table)
   // -------------------------------------------
   /**
@@ -68,8 +74,8 @@ public class EbAccount extends EbPublicAccount
   private boolean m_allowPrivateMsg = true;
   /** to allow message like 'it your turn on game xxx' */
   @Unindexed
-  private boolean m_allowMailFromGame = true;
-  private boolean m_allowMailFromNewsLetter = true;
+  private AllowMessage m_allowMsgFromGame = AllowMessage.PM;
+
   private String m_jabberId = null;
 
   @Unindexed
@@ -180,8 +186,7 @@ public class EbAccount extends EbPublicAccount
     m_authProvider = AuthProvider.Fmg;
     m_description = "";
     m_allowPrivateMsg = true;
-    m_allowMailFromGame = true;
-    m_allowMailFromNewsLetter = true;
+    m_allowMsgFromGame = AllowMessage.PM;
   }
 
   @Override
@@ -405,41 +410,22 @@ public class EbAccount extends EbPublicAccount
   }
 
 
-  /**
-   * @return the allowMailFromGame
-   */
-  public boolean isAllowMailFromGame()
-  {
-    return m_allowMailFromGame;
-  }
-
 
   /**
-   * @param p_allowMailFromGame the allowMailFromGame to set
+   * @return the allowMsgFromGame
    */
-  public void setAllowMailFromGame(boolean p_allowMailFromGame)
+  public AllowMessage getAllowMsgFromGame()
   {
-    m_allowMailFromGame = p_allowMailFromGame;
+    return m_allowMsgFromGame;
   }
-
 
   /**
-   * @return the allowMailFromNewsLetter
+   * @param p_allowMsgFromGame the allowMsgFromGame to set
    */
-  public boolean isAllowMailFromNewsLetter()
+  public void setAllowMsgFromGame(AllowMessage p_allowMsgFromGame)
   {
-    return m_allowMailFromNewsLetter;
+    m_allowMsgFromGame = p_allowMsgFromGame;
   }
-
-
-  /**
-   * @param p_allowMailFromNewsLetter the allowMailFromNewsLetter to set
-   */
-  public void setAllowMailFromNewsLetter(boolean p_allowMailFromNewsLetter)
-  {
-    m_allowMailFromNewsLetter = p_allowMailFromNewsLetter;
-  }
-
 
   public String getJabberId()
   {

@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -21,8 +21,8 @@ if( account == null )
 }
 if( account.isIsforumIdConfirmed() && account.getForumId() != null )
 {
-  response.sendRedirect( account.getProfileUrl() );
-  return;
+  //response.sendRedirect( account.getProfileUrl() );
+  //return;
 }
 if( Auth.isUserAdmin( request, response ) )
 {
@@ -42,6 +42,75 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 
 <pre><%= account.getDescription() %></pre>
 
+<p>level: <%= account.getCurrentLevel() %></p>
+
+<h2>Partie en cours</h2>
+<table class="fmp-array" style="width:100%;">
+<!--tr><td>Date</td><td>score</td><td>score</td><td>Locale</td><td>Mail</td><td>Pseudo</td></tr-->
+<%
+SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
+for(EbAccountStats astat : account.getStats())
+{
+  if( astat instanceof StatsGamePlayer && ((StatsGamePlayer)astat).getStatus() == StatsGame.Status.Running )
+  {
+    StatsGamePlayer stat = ((StatsGamePlayer)astat);
+	out.println("<tr>") ;
+	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
+	out.println("<td>"+stat.getGameName()+"</td>" );
+  	out.println("<td>"+stat.getFinalScore()+"</td>" );
+    out.println("</tr>") ;
+  }
+}
+%>
+</table>
+
+<h2>Arbitre sur...</h2>
+<table class="fmp-array" style="width:100%;">
+<%
+for(EbAccountStats astat : account.getStats())
+{
+  if( astat instanceof StatsGame && ((StatsGame)astat).isCreator() && ((StatsGame)astat).getStatus() == StatsGame.Status.Running )
+  {
+    StatsGame stat = ((StatsGame)astat);
+	out.println("<tr>") ;
+	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
+	out.println("<td>"+stat.getGameName()+"</td>" );
+    out.println("</tr>") ;
+  }
+}
+%>
+</table>
+
+<h2>Autre</h2>
+<table class="fmp-array" style="width:100%;">
+<%
+for(EbAccountStats astat : account.getStats())
+{
+  if( astat instanceof StatsGame && ((StatsGame)astat).getStatus() != StatsGame.Status.Running )
+  {
+    StatsGame stat = ((StatsGame)astat);
+	out.println("<tr>") ;
+	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
+	out.println("<td>"+stat.getGameName()+"</td>" );
+	out.println("<td>"+stat.getFinalScore()+"</td>" );
+	if( stat.isCreator() )
+	{
+	  out.println("<td>créateur</td>" );
+	}
+    out.println("</tr>") ;
+  }
+  else if( astat instanceof StatsErosion  )
+  {
+    StatsErosion stat = ((StatsErosion)astat);
+	out.println("<tr>") ;
+	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
+	out.println("<td>Erosion</td>" );
+	out.println("<td>"+stat.getFinalScore()+"</td>" );
+    out.println("</tr>") ;
+  }
+}
+%>
+</table>
 
 <%@include file="include/footer.jsp"%>
 </body>

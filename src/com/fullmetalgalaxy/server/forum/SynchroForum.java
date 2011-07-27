@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.FmpLogger;
+import com.fullmetalgalaxy.server.GlobalVars;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -58,10 +59,17 @@ public class SynchroForum extends HttpServlet
                                                        // leeway
 
     Cursor m_cursor = null;
+    int m_accountProcessed = 0;
+    int m_activeAccount = 0;
+    int m_maxLevel = 0;
 
-    public SynchroForumCommand(Cursor p_cursor)
+    public SynchroForumCommand(Cursor p_cursor, int p_accountProcessed, int p_activeAccount,
+        int p_maxLevel)
     {
       m_cursor = p_cursor;
+      m_accountProcessed = p_accountProcessed;
+      m_activeAccount = p_activeAccount;
+      m_maxLevel = p_maxLevel;
     }
 
     /**
@@ -136,14 +144,26 @@ public class SynchroForum extends HttpServlet
             // Forum account was probably created by FMG, but it's still not activated
           }
           
-          // some account update for legacy
-          if( account.getCompactPseudo() == null || account.getCompactPseudo().isEmpty() )
-          {
-            account.setPseudo( account.getPseudo() );
-          }
+          // TODO add erosion here
+          // errosion should start only if one player reach SCORE_REF
+
           
           // TODO we can optimize by doing this datastore put only if required
           ds.put( account );
+
+          if( account.getLastConnexion() != null
+              && account.getLastConnexion().getTime() > System.currentTimeMillis()
+                  - (1000 * 60 * 60 * 24 * 30) )
+          {
+            // account is considered as active if he connect itself in the last
+            // 30 days
+            m_activeAccount++;
+          }
+          if( account.getCurrentLevel() > m_maxLevel )
+          {
+            m_maxLevel = account.getCurrentLevel();
+          }
+          m_accountProcessed++;
         }
         ds.close();
 
@@ -152,12 +172,17 @@ public class SynchroForum extends HttpServlet
           Cursor cursor = iterator.getCursor();
           // synchro isn't finished: add task
           QueueFactory.getDefaultQueue().add(
-              TaskOptions.Builder.withPayload( new SynchroForumCommand( cursor ) ) );
+              TaskOptions.Builder.withPayload( new SynchroForumCommand( cursor, m_accountProcessed,
+                  m_activeAccount, m_maxLevel ) ) );
           break;
         }
       }
 
-
+      // all account are processed
+      // update global statistics
+      GlobalVars.setAccountCount( m_accountProcessed );
+      GlobalVars.setActiveAccount( m_activeAccount );
+      GlobalVars.setMaxLevel( m_maxLevel );
     }
   }
 
@@ -170,7 +195,8 @@ public class SynchroForum extends HttpServlet
       throws ServletException, IOException
   {
     QueueFactory.getDefaultQueue()
-      .add( TaskOptions.Builder.withPayload( new SynchroForumCommand( null ) ) );
+.add(
+        TaskOptions.Builder.withPayload( new SynchroForumCommand( null, 0, 0, 0 ) ) );
   }
 
   

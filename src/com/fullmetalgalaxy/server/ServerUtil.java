@@ -58,6 +58,18 @@ public class ServerUtil
   private static final String ALPHABET = "azertyuiopqsdfghjklmwxcvbn0123456789";
 
 
+  
+  private static String s_basePath = null;
+  public static void setBasePath(String p_path)
+  {
+    s_basePath = p_path;
+  }
+  
+  public static String getBasePath()
+  {
+    return s_basePath;
+  }
+  
   /**
    * remove accentued from a string and replace with ascii equivalent
    */

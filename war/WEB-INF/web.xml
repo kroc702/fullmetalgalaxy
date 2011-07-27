@@ -98,6 +98,15 @@
        <url-pattern>/cron/synchroforum</url-pattern>
     </servlet-mapping>
   
+    <servlet>
+       <servlet-name>GameUpdate</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.GameUpdate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>GameUpdate</servlet-name>
+       <url-pattern>/cron/gameupdate</url-pattern>
+    </servlet-mapping>
+  
   
     <servlet>
        <servlet-name>XMPPMessageServlet</servlet-name>
