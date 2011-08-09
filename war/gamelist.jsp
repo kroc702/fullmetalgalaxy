@@ -102,23 +102,8 @@ if(tab < 0 || tab > 3 )
 	      
 	      // time option
 	      out.println("<td>" );
-	      if( !game.isStarted() ) {
-	      	out.println( "<img src='/images/css/icon_pause.cache.png' title='En pause' />" );
-	      }
-	      if( !game.getConfigGameTime().isParallele() ) {
-		    out.println( "<img src='/images/css/icon_tbt.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-	      } else {
-	        out.println( "<img src='/images/css/icon_parallele.gif' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-	      }
-	      if( game.getConfigGameTime().isQuick() ) {
-		    out.println( "<img src='/images/css/icon_fast.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-		  } else {
-	        out.println( "<img src='/images/css/icon_slow.cache.png' title='"+game.getConfigGameTime().getEbConfigGameTime().getDescription()+"' />" );
-	      }
-	      if( game.isHistory() ) {
-	      	out.println( "<img src='/images/css/icon_history.cache.png' title='Archive' />" );
-	      }
-	      
+	      out.println( game.getIconsAsHtml() );
+	          
 	      if( ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).isAsynchron() )
 	      {
 	        out.println(""+(game.getCurrentTimeStep()*100/ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).getTotalTimeStep())+"%");
@@ -151,12 +136,12 @@ if(tab < 0 || tab > 3 )
 		<center><a href="editgame.jsp"><big>Cr&eacute;er une nouvelle partie</big></a></center>
 	<% } %>
 	<br/><small>
-	<img src='/images/css/icon_pause.cache.png'/> : Partie en pause<br/>
-	<img src='/images/css/icon_tbt.gif'/> : Partie en mode tour par tour<br/>
-	<img src='/images/css/icon_parallele.gif'/> : Partie en mode parallèle<br/>
-	<img src='/images/css/icon_slow.cache.png'/> : Partie lente (25 jours ou illimité)<br/>
-	<img src='/images/css/icon_fast.cache.png'/> : Partie rapide (1h30)<br/>
-	<img src='/images/css/icon_history.cache.png'/> : Partie archivé<br/>
+	<img src='/images/icons/turnbyturn16.png'/> : Partie en mode tour par tour<br/>
+	<img src='/images/icons/parallele16.png'/> : Partie en mode parallèle<br/>
+	<img src='/images/icons/slow16.png'/> : Partie lente (25 jours ou illimité)<br/>
+	<img src='/images/icons/fast16.png'/> : Partie rapide (1h30)<br/>
+	<img src='/images/icons/pause16.png'/> : Partie en pause<br/>
+	<img src='/images/icons/history16.png'/> : Partie archivé<br/>
 	</small>
 <% } %>
 

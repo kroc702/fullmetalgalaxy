@@ -92,11 +92,11 @@ public class WgtTimeInfo extends WgtView
 
     if( game.getEbConfigGameTime().isAsynchron() )
     {
-      m_iconTime.setUrl( "/images/css/icon_parallele.gif" );
+      m_iconTime.setUrl( "/images/icons/parallele16.png" );
     }
     else
     {
-      m_iconTime.setUrl( "/images/css/icon_tbt.gif" );
+      m_iconTime.setUrl( "/images/icons/turnbyturn16.png" );
     }
     m_panel.add( m_iconTime );
 

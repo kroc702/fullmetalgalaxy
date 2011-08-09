@@ -44,16 +44,16 @@ public class WgtConfigGameTime extends WgtBean implements ValueChangeHandler<Boo
 
   private RadioButton m_modeTbtButton = new RadioButton( "mode",
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
-          " <img src='/images/css/icon_tbt.gif'/> : Partie en mode tour par tour" ) );
+          " <img src='/images/icons/turnbyturn16.png'/> : Partie en mode tour par tour" ) );
   private RadioButton m_modeParallelButton = new RadioButton( "mode",
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
-          " <img src='/images/css/icon_parallele.gif'/> : Partie en mode parallèle" ) );
+          " <img src='/images/icons/parallele16.png'/> : Partie en mode parallèle" ) );
   private RadioButton m_speedSlowButton = new RadioButton( "speed",
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
-          " <img src='/images/css/icon_slow.cache.png'/> : Partie lente (25 jours ou illimité)" ) );
+          " <img src='/images/icons/slow16.png'/> : Partie lente (25 jours ou illimité)" ) );
   private RadioButton m_speedQuickButton = new RadioButton( "speed",
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
-          " <img src='/images/css/icon_fast.cache.png'/> : Partie rapide (1h30)" ) );
+          " <img src='/images/icons/fast16.png'/> : Partie rapide (1h30)" ) );
 
 
   /**

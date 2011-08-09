@@ -433,7 +433,26 @@ public class EbGamePreview extends EbBase
     return strBuf.toString();
   }
 
-
+  /**
+   * construct an html fragment to display information about game as little icons
+   * @return
+   */
+  public String getIconsAsHtml()
+  {
+    StringBuffer strBuf = new StringBuffer( " " );
+    if( isAborted() ) {
+      strBuf.append( "<img src='/images/icons/canceled16.png' title='Annulée' /> " );
+    }
+    else if( !isStarted() ) {
+      strBuf.append( "<img src='/images/icons/pause16.png' title='En pause' /> " );
+    }
+    else if( isHistory() ) {
+      strBuf.append( "<img src='/images/icons/history16.png' title='Archive' /> " );
+    }
+    strBuf.append( getConfigGameTime().getIconsAsHtml() );
+    
+    return strBuf.toString();
+  }
 
   /**
    * update isOpen flag (for future query)
@@ -446,7 +465,25 @@ public class EbGamePreview extends EbBase
     return m_isOpen;
   }
 
+  /**
+   * 
+   * @return true if the game is finished
+   */
+  public boolean isFinished()
+  {
+    return(getCurrentTimeStep() > getEbConfigGameTime().getTotalTimeStep());
+  }
 
+  /**
+   * 
+   * @return true if this game was aborted before the end. ie not finished but history
+   */
+  public boolean isAborted()
+  {
+    return !isFinished() && isHistory();
+  }
+
+ 
   /**
    * @return the Number Of Registration associated with an account
    * @WgtHidden

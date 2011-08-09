@@ -32,10 +32,10 @@ Vous déplacez vos pions sur une carte pavée d'hexagones.
 </div>
 
 <div id="news" class="bloc" style="width:290px; height:280px; position:absolute; top:130px; left:665px; font-size: 8pt;" >
-<%= News.getHtml() %>
-
+<!-- %= News.getHtml() %-->
+<h3>Stats en test:</h3>
 <br/>
-compte: <%= GlobalVars.getAccountCount() %>
+<%= GlobalVars.getStatsHtml() %>
 
 </div>
 

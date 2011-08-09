@@ -38,6 +38,29 @@ public enum ConfigGameTime implements IsSerializable
   Standard, QuickAsynch, QuickTurnBased, StandardAsynch, Custom;
 
   /**
+   * construct an html fragment to display information about game as little icons
+   * @return
+   */
+  public String getIconsAsHtml()
+  {
+    StringBuffer strBuf = new StringBuffer( " " );
+    if( !isParallele() ) {
+      strBuf.append( "<img src='/images/icons/turnbyturn16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
+    } else {
+      strBuf.append( "<img src='/images/icons/parallele16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
+    }
+    if( isQuick() ) {
+      strBuf.append( "<img src='/images/icons/fast16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
+    } else {
+      strBuf.append( "<img src='/images/icons/slow16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
+    }
+    
+    return strBuf.toString();
+  }
+
+
+  
+  /**
    * not sure that this way is a very good idea...
    * @param p_value
    */

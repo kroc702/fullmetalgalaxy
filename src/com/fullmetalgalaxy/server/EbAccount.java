@@ -224,6 +224,40 @@ public class EbAccount extends EbPublicAccount
     return url;
   }
 
+  /**
+   * icon url to illustrate player fiability, level and style
+   * @return
+   */
+  public String getGradUrl()
+  {
+    String iconName = "";
+    if( getFiability() == PlayerFiability.Banned )
+    {
+      iconName = "b";
+    } else if( getFiability() == PlayerFiability.Vip )
+    {
+      iconName = "v";
+    }
+    int normalizedLevel = (getCurrentLevel()-1)/(GlobalVars.getMaxLevel()-1) *9;
+    if( normalizedLevel < 0 ) normalizedLevel=0;
+    if( normalizedLevel > 9 ) normalizedLevel=9;
+    iconName += normalizedLevel;
+    if( getPlayerStyle() == PlayerStyle.Sheep )
+    {
+      iconName += "s"; 
+    } else if( getPlayerStyle() == PlayerStyle.Pacific )
+    {
+      iconName += "p"; 
+    } else if( getPlayerStyle() == PlayerStyle.Balanced )
+    {
+      iconName += "b"; 
+    } else if( getPlayerStyle() == PlayerStyle.Aggressive )
+    {
+      iconName += "a"; 
+    }
+    return "http://www.fullmetalgalaxy.com/images/icons/user/"+iconName+".png";
+    //return "/images/icons/user/"+iconName+".png";
+  }
   
   public boolean canChangePseudo()
   {

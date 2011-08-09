@@ -140,6 +140,7 @@ public class GlobalVarBase
       txn.rollback();
     } finally
     {
+      txn = s_datastore.beginTransaction();
       entity.setUnindexedProperty( ENTITY_VALUE, value );
       s_datastore.put( entity );
       txn.commit();
