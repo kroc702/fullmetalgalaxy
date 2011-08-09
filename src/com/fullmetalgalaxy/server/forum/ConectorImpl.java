@@ -84,6 +84,7 @@ public class ConectorImpl implements ForumConector, NewsConector
   private static final String FIELD_USERNAME = "username_edit";
   private static final String FIELD_EMAIL = "email";
   private static final String FIELD_LEVEL = "profile_field_10_2";
+  private static final String FIELD_GRADICON = "profile_field_6_3[]";
   private static final String FIELD_JABBER = "profile_field_3_1";
 
   // field pattern for profil forum page
@@ -543,7 +544,8 @@ public class ConectorImpl implements ForumConector, NewsConector
 
       // a list of many parameters
       clientPostRequest.setParameter( FIELD_LEVEL, p_account.getCurrentLevel() );
-
+      clientPostRequest.setParameter( FIELD_GRADICON, p_account.getGradUrl() );
+      
       Map<String,String> forumData = new HashMap<String,String>();
       if( p_account.getForumConnectorData() != null 
           && p_account.getForumConnectorData() instanceof HashMap<?,?> )

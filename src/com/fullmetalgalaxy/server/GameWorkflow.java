@@ -110,12 +110,6 @@ public class GameWorkflow
       // game was paused, but it is now running
       gameRun( p_game );
     }
-    if( (nextEvent.getType() == GameLogType.GameJoin) )
-    {
-      EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-          ((EbGameJoin)nextEvent).getAccountId() );
-      AccountStatsManager.gameJoin( account, p_game );
-    }
     if( (nextEvent.getType() == GameLogType.AdminBan) )
     {
       EbAccount account = FmgDataStore.dao().get(
@@ -146,8 +140,7 @@ public class GameWorkflow
     ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
 
     // in some case, game is never updated
-    if( !p_game.isStarted() || p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
-        || p_game.getCurrentTimeStep() == 0 )
+    if( p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer )
     {
       return eventAdded;
     }
@@ -160,6 +153,10 @@ public class GameWorkflow
 
       if( lastEvent.getType() == GameLogType.GameJoin )
       {
+        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+            ((EbGameJoin)lastEvent).getAccountId() );
+        AccountStatsManager.gameJoin( account, p_game );
+        
         if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer() )
         {
           // TODO we may prefer starting game not in live mode only (slow game
@@ -393,11 +390,23 @@ public class GameWorkflow
    */
   public static void gameDelete(Game p_game)
   {
-    gameAbort( p_game );
-    AccountStatsManager.gameDelete( p_game );
+    if( p_game.isOpen() )
+    {
+      GlobalVars.incrementOpenGameCount( -1 );
+    }
+    else if( !p_game.isFinished() )
+    {
+      GlobalVars.incrementRunningGameCount( -1 );
+    }
+    else
+    {
+      // well, game is finished, why do we cancel it ?
+      GlobalVars.incrementFinishedGameCount( -1 );
+    }
     GlobalVars.incrementDeletedGameCount( 1 );
-    FmgDataStore dataStore = new FmgDataStore( false );
     AccountStatsManager.gameDelete( p_game );
+    p_game.setHistory( true );
+    FmgDataStore dataStore = new FmgDataStore( false );
     dataStore.delete( Game.class, p_game.getId() );
     dataStore.close();
   }

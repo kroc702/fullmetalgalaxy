@@ -23,12 +23,75 @@
 
 package com.fullmetalgalaxy.server;
 
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.googlecode.objectify.Query;
+
 /**
  * @author vlegendr
  *
  */
 public class GlobalVars extends GlobalVarBase
 {
+  private static final String CACHE_STATS_KEY = "CACHE_STATS_KEY";
+  private static final int CACHE_STATS_TTL_SEC = 3600; // one hour
+
+  /**
+   * 
+   * @return stats for index page in an HTML format ready to be included in JSP pages.
+   */
+  public static String getStatsHtml()
+  {
+    String newsHtml = String.class.cast( getCache().get( CACHE_STATS_KEY ) );
+    if( newsHtml == null )
+    {
+      newsHtml = "Joueurs: "+getAccountCount() +" ("+getActiveAccount()+" actifs)<br/>";
+      newsHtml += "Parties: "+getTotalGameCount() + " ("+(getOpenGameCount() + getRunningGameCount()) +" en cours)<br/>";
+      
+      // get best player
+      newsHtml += "Meilleur joueur:";
+      Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
+      accountQuery = accountQuery.order( "-m_currentLevel" ).limit( 1 );
+      for(EbAccount account : accountQuery.fetch() )
+      {
+        newsHtml += "<a href='/profile.jsp?id="+account.getId()+"'><table width='100%'><tr>";
+        newsHtml += "<td><img src='"+account.getAvatarUrl()+"' height='40px'/></td>";
+        newsHtml += "<td>"+account.getPseudo()+"<br/><img src='"+account.getGradUrl()+"'/></td>";
+        newsHtml += "<td>"+account.getCurrentLevel()+" Pts</td>";
+        newsHtml += "</tr></table></a>";
+      }
+      
+      //getCache().put( CACHE_STATS_KEY, newsHtml, Expiration.byDeltaSeconds( CACHE_STATS_TTL_SEC ) );
+    }
+    
+    return newsHtml;
+  }
+  
+  private static MemcacheService s_cache = null;
+
+  /**
+   * @return the s_cache
+   */
+  private static MemcacheService getCache()
+  {
+    if( s_cache == null )
+    {
+      s_cache = MemcacheServiceFactory.getMemcacheService();
+    }
+    return s_cache;
+  }
+
+  
+  public static int getTotalGameCount()
+  {
+    return getOpenGameCount() + getRunningGameCount() + getFinishedGameCount() + getAbortedGameCount();
+  }
+  
+  
+  
+  
+  
   
   public static int getAccountCount()
   {

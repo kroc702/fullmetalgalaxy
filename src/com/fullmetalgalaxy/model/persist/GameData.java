@@ -273,6 +273,24 @@ public class GameData implements java.io.Serializable, IsSerializable
   // delegate methods
   // ================
   
+  /**
+   * 
+   * @return true if the game is finished
+   */
+  public boolean isFinished()
+  {
+    return m_preview.isFinished();
+  }
+
+  /**
+   * 
+   * @return true if this game was aborted before the end. ie not finished but history
+   */
+  public boolean isAborted()
+  {
+    return m_preview.isAborted();
+  }
+  
   public int getLandPixWidth(EnuZoom p_zoom)
   {
     return m_preview.getLandPixWidth( p_zoom );

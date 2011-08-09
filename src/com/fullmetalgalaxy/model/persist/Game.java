@@ -168,25 +168,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
   }
 
 
-  /**
-   * 
-   * @return true if the game is finished
-   */
-  public boolean isFinished()
-  {
-    return(getCurrentTimeStep() > getEbConfigGameTime().getTotalTimeStep());
-  }
-
-  /**
-   * 
-   * @return true if this game was aborted before the end. ie not finished but history
-   */
-  public boolean isAborted()
-  {
-    return !isFinished() && isHistory();
-  }
-
- 
 
   public void addEvent(AnEvent p_action)
   {

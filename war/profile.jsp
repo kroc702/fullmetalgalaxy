@@ -42,7 +42,8 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 
 <pre><%= account.getDescription() %></pre>
 
-<p>level: <%= account.getCurrentLevel() %></p>
+<p>level: <%= account.getCurrentLevel() %><br/>
+<img src='<%= account.getGradUrl() %>'/></p>
 
 <h2>Partie en cours</h2>
 <table class="fmp-array" style="width:100%;">
@@ -51,53 +52,96 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
 for(EbAccountStats astat : account.getStats())
 {
-  if( astat instanceof StatsGamePlayer && ((StatsGamePlayer)astat).getStatus() == StatsGame.Status.Running )
+  if( astat instanceof StatsGame && ((StatsGame)astat).getStatus() == StatsGame.Status.Running )
   {
-    StatsGamePlayer stat = ((StatsGamePlayer)astat);
-	out.println("<tr>") ;
-	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
-	out.println("<td>"+stat.getGameName()+"</td>" );
-  	out.println("<td>"+stat.getFinalScore()+"</td>" );
-    out.println("</tr>") ;
-  }
-}
-%>
-</table>
-
-<h2>Arbitre sur...</h2>
-<table class="fmp-array" style="width:100%;">
-<%
-for(EbAccountStats astat : account.getStats())
-{
-  if( astat instanceof StatsGame && ((StatsGame)astat).isCreator() && ((StatsGame)astat).getStatus() == StatsGame.Status.Running )
-  {
+    out.println("<tr>") ;
     StatsGame stat = ((StatsGame)astat);
-	out.println("<tr>") ;
-	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
-	out.println("<td>"+stat.getGameName()+"</td>" );
-    out.println("</tr>") ;
+    EbGamePreview game = FmgDataStore.dao().get( EbGamePreview.class, stat.getGameId() );
+    if( game == null )
+    {
+      // game wasn't found but his stat was "running"... it's an error !
+      System.err.println("game wasn't found but his stat was 'running'...");
+      System.err.println("user: "+account.getPseudo()+" gameid: "+stat.getGameId());
+      
+      out.println("<td><img src='/images/unknown-minimap.jpg' height='50px'/></td>");
+      out.println("<td>"+stat.getConfigGameTime().getIconsAsHtml()+"</td>");
+    } else {
+      out.println("<td><img src='"+game.getMinimapUri()+"' height='50px'/></td>");
+      out.println("<td><a href='/game.jsp?id="+game.getId()+"' >"+stat.getGameName()+"</a><br/>"
+          +simpleFormat.format(stat.getLastUpdate())+"</td>");
+      out.println("<td>"+game.getIconsAsHtml()+"</td>");
+    }
+    
+    out.println("<td>" );
+    if( stat.isCreator() )
+    {
+      out.println("<img src='/images/icons/referee.png' title='arbitre' />");
+    }
+	if( astat instanceof StatsGamePlayer )
+	{
+	  StatsGamePlayer statPlayer = ((StatsGamePlayer)astat);
+	  out.println("<img src='/images/icons/color/"+EnuColor.singleColorToString(statPlayer.getInitialColor())+"/icon32.png'/>" );
+	}
+	out.println("</td>");
+	 
+	 out.println("</tr>");
   }
 }
 %>
 </table>
 
-<h2>Autre</h2>
+
+<h2>Historique</h2>
 <table class="fmp-array" style="width:100%;">
 <%
 for(EbAccountStats astat : account.getStats())
 {
   if( astat instanceof StatsGame && ((StatsGame)astat).getStatus() != StatsGame.Status.Running )
   {
+    out.println("<tr>") ;
     StatsGame stat = ((StatsGame)astat);
-	out.println("<tr>") ;
-	out.println("<td>"+simpleFormat.format(stat.getLastUpdate())+"</td>" );
-	out.println("<td>"+stat.getGameName()+"</td>" );
-	out.println("<td>"+stat.getFinalScore()+"</td>" );
-	if( stat.isCreator() )
+    EbGamePreview game = FmgDataStore.dao().find( EbGamePreview.class, stat.getGameId() );
+    if( game == null )
+    {
+      // game wasn't found but his stat was "running"... it's an error !
+      System.err.println("game wasn't found but his stat was 'running'...");
+      System.err.println("user: "+account.getPseudo()+" gameid: "+stat.getGameId());
+      
+      out.println("<td><img src='/images/unknown-minimap.jpg' height='50px'/></td>");
+      out.println("<td>"+stat.getGameName()+"<br/>"
+          +simpleFormat.format(stat.getLastUpdate())+"</td>");
+      out.println("<td>");
+      if( stat.getStatus() == StatsGame.Status.Aborted )
+	  {
+	    out.println("<img src='/images/icons/canceled16.png'/>");
+	  }
+      out.println(stat.getConfigGameTime().getIconsAsHtml()+"</td>");
+    } else {
+      out.println("<td><img src='"+game.getMinimapUri()+"' height='50px'/></td>");
+      out.println("<td><a href='/game.jsp?id="+game.getId()+"' >"+stat.getGameName()+"</a><br/>"
+          +simpleFormat.format(stat.getLastUpdate())+"</td>");
+      out.println("<td>"+game.getIconsAsHtml()+"</td>");
+    }
+    
+    out.println("<td>" );
+    if( stat.isCreator() )
+    {
+      out.println("<img src='/images/icons/referee.png' title='arbitre' />");
+    }
+	if( astat instanceof StatsGamePlayer )
 	{
-	  out.println("<td>créateur</td>" );
+	  StatsGamePlayer statPlayer = ((StatsGamePlayer)astat);
+	  out.println("<img src='/images/icons/color/"+EnuColor.singleColorToString(statPlayer.getInitialColor())+"/icon32.png'/>" );
+	  out.println("<img src='"+statPlayer.getPlayerStyle().getIconUrl()+"'/>");
+	  if( statPlayer.getStatus() == StatsGame.Status.Banned )
+	  {
+	    out.println("<img src='/images/icons/ban.gif'/>");
+	  }
 	}
-    out.println("</tr>") ;
+	out.println("</td>");
+	 
+	out.println("<td>"+stat.getFinalScore()+"</td>" );
+	out.println("</tr>");
   }
   else if( astat instanceof StatsErosion  )
   {
