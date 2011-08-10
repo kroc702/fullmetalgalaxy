@@ -197,79 +197,7 @@ code {
 .gwt-StackPanel .gwt-StackPanelItem-selected {
 }
 
-.gwt-PushButton-up {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
-  cursor: pointer;
-  cursor: hand;
-}
 
-.gwt-PushButton-up-hovering {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-PushButton-down {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-PushButton-down-hovering {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-ToggleButton-up {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-ToggleButton-up-hovering {
-  background-color: #C3D9FF;
-  padding: 2px;
-  border: 2px solid transparent;
-  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-ToggleButton-down {
-  background-color: #C3D9FF;
-  padding: 2px;
-  background-color: #E8F1FF;
-  border: 2px solid transparent;
-  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-ToggleButton-down-hovering {
-  background-color: #C3D9FF;
-  padding: 2px;
-  background-color: #E8F1FF;
-  border: 2px solid transparent;
-  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
-  cursor: pointer;
-  cursor: hand;
-}
 
 ..gwt-HorizontalSplitPanel {
   border: 8px solid #C3D9FF;
@@ -358,10 +286,29 @@ code {
     cursor: default;
 }
 
-.fmp-button{
-	cursor: pointer;
-    cursor: hand;
-}   
+.fmp-PushButton32-up {
+  background-image: url(/images/css/PushButton32-up.png);
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.fmp-PushButton32-up-hovering {
+  background-image: url(/images/css/PushButton32-up-hovering.png);
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.fmp-PushButton32-down, .fmp-PushButton32-down-hovering {
+  background-image: url(/images/css/PushButton32-down.png);
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  cursor: hand;
+}
 
 .fmp-context-minimap {
     height:160px;
