@@ -142,7 +142,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     {
       // game is just created
       GameWorkflow.gameOpen( p_game );
-      AccountStatsManager.gameCreate( account, p_game );
+      AccountStatsManager.gameCreate( account.getId(), p_game );
     }
 
     // should we construct minimap image ?

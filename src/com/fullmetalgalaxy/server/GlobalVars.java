@@ -48,6 +48,12 @@ public class GlobalVars extends GlobalVarBase
     {
       newsHtml = "Joueurs: "+getAccountCount() +" ("+getActiveAccount()+" actifs)<br/>";
       newsHtml += "Parties: "+getTotalGameCount() + " ("+(getOpenGameCount() + getRunningGameCount()) +" en cours)<br/>";
+      // for debug
+      newsHtml += "<br/>open: "+getOpenGameCount() + " <br/>";
+      newsHtml += "running: "+getRunningGameCount() + " <br/>";
+      newsHtml += "finished: "+getFinishedGameCount() + " <br/>";
+      newsHtml += "aborted: "+getAbortedGameCount() + " <br/>";
+      newsHtml += "deletec: "+getDeletedGameCount() + " <br/>";
       
       // get best player
       newsHtml += "Meilleur joueur:";
@@ -55,7 +61,7 @@ public class GlobalVars extends GlobalVarBase
       accountQuery = accountQuery.order( "-m_currentLevel" ).limit( 1 );
       for(EbAccount account : accountQuery.fetch() )
       {
-        newsHtml += "<a href='/profile.jsp?id="+account.getId()+"'><table width='100%'><tr>";
+        newsHtml += "<a href='"+account.getProfileUrl()+"'><table width='100%'><tr>";
         newsHtml += "<td><img src='"+account.getAvatarUrl()+"' height='40px'/></td>";
         newsHtml += "<td>"+account.getPseudo()+"<br/><img src='"+account.getGradUrl()+"'/></td>";
         newsHtml += "<td>"+account.getCurrentLevel()+" Pts</td>";

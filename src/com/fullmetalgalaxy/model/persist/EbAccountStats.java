@@ -88,7 +88,7 @@ public class EbAccountStats extends AnPojoBase implements Comparable
       return -1;
     }
     Date otherDate = ((EbAccountStats)p_arg0).getLastUpdate();
-    return getLastUpdate().compareTo( otherDate );
+    return -1*getLastUpdate().compareTo( otherDate );
   }
 
 

@@ -124,7 +124,7 @@ public class StatsGamePlayer extends StatsGame
 
     for( AnEvent event : p_game.getLogs() )
     {
-      if( event instanceof AnEventPlay )
+      if( event  instanceof AnEventPlay )
       {
         // TODO getMyRegistration depend of account id...
         // this code will fail in case of replacement
@@ -148,14 +148,7 @@ public class StatsGamePlayer extends StatsGame
             currentColor.addColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() );
           }
         }
-        else if( (event instanceof EbGameJoin)
-            && ((EbGameJoin)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
-        {
-          // here because original color can change if he lose his original freighter
-          setInitialColor( ((EbGameJoin)event).getColor() );
-          currentColor.setValue( getInitialColor() );
-        }
-        if( event instanceof EbEvtControlFreighter
+        else if( event instanceof EbEvtControlFreighter
             && currentColor.isColored( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() ) )
         {
           setLosedFreighterCount( getLosedFreighterCount() + 1 );
@@ -171,6 +164,13 @@ public class StatsGamePlayer extends StatsGame
         {
           setLosedUnitCount( getLosedUnitCount() + 1 );
         }
+      }
+      else if( (event instanceof EbGameJoin)
+          && ((EbGameJoin)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
+      {
+        // here because original color can change if he lose his original freighter
+        setInitialColor( ((EbGameJoin)event).getColor() );
+        currentColor.setValue( getInitialColor() );
       }
     }
 
@@ -200,7 +200,7 @@ public class StatsGamePlayer extends StatsGame
       return PlayerStyle.Sheep;
     }
     float mine = getOreCount() / nbColor;
-    if( mine == 0 )
+    if( mine == 0 && attack > 0 )
     {
       return PlayerStyle.Aggressive;
     }

@@ -289,22 +289,23 @@ public class AccountStatsManager
 
   /**
    * warning: can't be called while game is transient
-   * @param p_account
+   * @param account
    * @param p_game
    */
-  public static void gameCreate(EbAccount p_account, Game p_game)
+  public static void gameCreate(long p_accountId, Game p_game)
   {
-    StatsGame stat = getLastStats( p_account, p_game.getId() );
+    EbAccount account = FmgDataStore.dao().find( EbAccount.class, p_accountId );
+    StatsGame stat = getLastStats( account, p_game.getId() );
     if( stat == null )
     {
       // stat is likely to be null as game is just created
       stat = new StatsGame( p_game );
       stat.setCreator( true );
-      p_account.getStats().add( stat );
+      account.getStats().add( stat );
     }
     stat.setLastUpdate( new Date() );
     
-    saveAndUpdate( p_account );
+    saveAndUpdate( account );
   }
 
   public static void gameJoin(EbAccount p_account, Game p_game)
@@ -391,10 +392,11 @@ public class AccountStatsManager
    */
   protected static void gameDelete(Game p_game)
   {
-    if( !p_game.isFinished() )
+    // we may want to flag corresponding stat as deleted game in future...
+    /*if( !p_game.isFinished() )
     {
       gameAbort( p_game );
-    }
+    }*/
   }
 
   protected static void gameAbort(Game p_game)
