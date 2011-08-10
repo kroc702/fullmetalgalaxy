@@ -238,7 +238,11 @@ public class EbAccount extends EbPublicAccount
     {
       iconName = "v";
     }
-    int normalizedLevel = (getCurrentLevel()-1)/(GlobalVars.getMaxLevel()-1) *9;
+    int normalizedLevel = 0;
+    if( GlobalVars.getMaxLevel() > 1 )
+    {
+      normalizedLevel = (getCurrentLevel()-1)/(GlobalVars.getMaxLevel()-1) *9;
+    }
     if( normalizedLevel < 0 ) normalizedLevel=0;
     if( normalizedLevel > 9 ) normalizedLevel=9;
     iconName += normalizedLevel;

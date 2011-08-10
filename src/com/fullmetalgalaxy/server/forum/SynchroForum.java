@@ -153,7 +153,7 @@ public class SynchroForum extends HttpServlet
 
           if( account.getLastConnexion() != null
               && account.getLastConnexion().getTime() > System.currentTimeMillis()
-                  - (1000 * 60 * 60 * 24 * 30) )
+                  - (1000l * 60 * 60 * 24 * 30) )
           {
             // account is considered as active if he connect itself in the last
             // 30 days

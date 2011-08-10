@@ -125,7 +125,7 @@ public class GlobalVarBase
     int value = p_toAdd;
     try
     {
-      Object obj = s_datastore.get( k );
+      Object obj = s_datastore.get( k ).getProperty( ENTITY_VALUE );
       if( obj != null && obj instanceof Number )
       {
         value += ((Number)obj).intValue();
@@ -134,7 +134,7 @@ public class GlobalVarBase
         txn.commit();
         return value;
       }
-    } catch( EntityNotFoundException e )
+    } catch( Exception e )
     {
       e.printStackTrace();
       txn.rollback();

@@ -144,12 +144,13 @@ public class GameWorkflow
     {
       return eventAdded;
     }
-    if( !p_game.isFinished() )
+    AnEvent lastEvent = p_game.getLastLog();
+    if( !p_game.isFinished() && lastEvent != null )
     {
       // game isn't finished: look for any update
       // search update according to the last action
       //
-      AnEvent lastEvent = p_game.getLastLog();
+      
 
       if( lastEvent.getType() == GameLogType.GameJoin )
       {
@@ -390,18 +391,9 @@ public class GameWorkflow
    */
   public static void gameDelete(Game p_game)
   {
-    if( p_game.isOpen() )
+    if( !p_game.isFinished() )
     {
-      GlobalVars.incrementOpenGameCount( -1 );
-    }
-    else if( !p_game.isFinished() )
-    {
-      GlobalVars.incrementRunningGameCount( -1 );
-    }
-    else
-    {
-      // well, game is finished, why do we cancel it ?
-      GlobalVars.incrementFinishedGameCount( -1 );
+      gameAbort(p_game);
     }
     GlobalVars.incrementDeletedGameCount( 1 );
     AccountStatsManager.gameDelete( p_game );

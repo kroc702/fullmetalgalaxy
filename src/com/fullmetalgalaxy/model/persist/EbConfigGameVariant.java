@@ -46,7 +46,7 @@ public class EbConfigGameVariant extends EbBase
   private String m_description = "";
   private Map<TokenType,Integer> m_constructReserve = new HashMap<TokenType,Integer>();
   private int m_actionPtMaxPerExtraShip = 5;
-  private int m_initialScore = 16;
+  private int m_initialScore = 14;
   
   /**
    * 

@@ -200,6 +200,7 @@ public class DataStore implements Objectify, Transaction
       return get( p_arg0, p_arg1 );
     } catch( Exception e )
     {
+      e.printStackTrace(System.out);
     }
     return null;
   }

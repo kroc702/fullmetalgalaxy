@@ -56,7 +56,7 @@ for(EbAccountStats astat : account.getStats())
   {
     out.println("<tr>") ;
     StatsGame stat = ((StatsGame)astat);
-    EbGamePreview game = FmgDataStore.dao().get( EbGamePreview.class, stat.getGameId() );
+    EbGamePreview game = FmgDataStore.dao().find( EbGamePreview.class, stat.getGameId() );
     if( game == null )
     {
       // game wasn't found but his stat was "running"... it's an error !
@@ -64,6 +64,8 @@ for(EbAccountStats astat : account.getStats())
       System.err.println("user: "+account.getPseudo()+" gameid: "+stat.getGameId());
       
       out.println("<td><img src='/images/unknown-minimap.jpg' height='50px'/></td>");
+      out.println("<td>"+stat.getGameName()+"<br/>"
+          +simpleFormat.format(stat.getLastUpdate())+"</td>");
       out.println("<td>"+stat.getConfigGameTime().getIconsAsHtml()+"</td>");
     } else {
       out.println("<td><img src='"+game.getMinimapUri()+"' height='50px'/></td>");
@@ -84,7 +86,8 @@ for(EbAccountStats astat : account.getStats())
 	}
 	out.println("</td>");
 	 
-	 out.println("</tr>");
+	out.println("<td>-</td>" );
+	out.println("</tr>");
   }
 }
 %>
