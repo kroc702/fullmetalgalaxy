@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -52,8 +53,8 @@ public class WgtContextTimeMode extends Composite implements ClickHandler
   Image m_btnBack = Icons.s_instance.back32().createImage();
   Image m_btnPlay = Icons.s_instance.play32().createImage();
 
-  Image m_btnOk = Icons.s_instance.ok32().createImage();
-  Image m_btnCancel = Icons.s_instance.cancel32().createImage();
+  PushButton m_btnOk = new PushButton( Icons.s_instance.ok32().createImage() );
+  PushButton m_btnCancel = new PushButton( Icons.s_instance.cancel32().createImage() );
 
 
   /**
@@ -65,23 +66,23 @@ public class WgtContextTimeMode extends Composite implements ClickHandler
     
     m_btnFastBack.addClickHandler( this );
     m_btnFastBack.setTitle( "" );
-    m_btnFastBack.setStyleName( "fmp-button" );
+    m_btnFastBack.setStyleName( "fmp-PushButton32" );
     m_btnFastPlay.addClickHandler( this );
     m_btnFastPlay.setTitle( "" );
-    m_btnFastPlay.setStyleName( "fmp-button" );
+    m_btnFastPlay.setStyleName( "fmp-PushButton32" );
     m_btnBack.addClickHandler( this );
     m_btnBack.setTitle( "" );
-    m_btnBack.setStyleName( "fmp-button" );
+    m_btnBack.setStyleName( "fmp-PushButton32" );
     m_btnPlay.addClickHandler( this );
     m_btnPlay.setTitle( "" );
-    m_btnPlay.setStyleName( "fmp-button" );
+    m_btnPlay.setStyleName( "fmp-PushButton32" );
 
     m_btnCancel.addClickHandler( this );
     m_btnCancel.setTitle( "Annuler" );
-    m_btnCancel.setStyleName( "fmp-button" );
+    m_btnCancel.setStyleName( "fmp-PushButton32" );
     m_btnOk.addClickHandler( this );
     m_btnOk.setTitle( "Ok" );
-    m_btnOk.setStyleName( "fmp-button" );
+    m_btnOk.setStyleName( "fmp-PushButton32" );
 
     initWidget( m_panel );
   }
