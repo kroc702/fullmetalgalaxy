@@ -334,7 +334,14 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     int i = 0;
     for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
     {
-      pseudoList[i] = registration.getAccount().getPseudo();
+      if( registration.getAccount() != null )
+      {
+        pseudoList[i] = registration.getAccount().getPseudo();
+      }
+      else
+      {
+        pseudoList[i] = "";
+      }
       i++;
     }
     m_playerPanel.add( new HTML( "<a href='"
@@ -366,18 +373,26 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
     {
       index++;
 
-      // display avatar
+      String html = "";
       if( registration.getAccount() != null )
       {
+        // display avatar
         m_playerGrid.setHTML( index, 0, "<IMG SRC='" + registration.getAccount().getAvatarUrl()
             + "' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+        // display login
+        String login = registration.getAccount().getPseudo();
+        html = "<a href='" + registration.getAccount().getProfileUrl() + "' target='_blank'>"
+            + login + "</a>";
+      }
+      else
+      {
+        // display avatar
+        m_playerGrid.setHTML( index, 0,
+            "<IMG SRC='/images/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+        // display login
+        html = "???";
       }
 
-      // display login
-      String login = registration.getAccount().getPseudo();
-      String html = "<a href='" + registration.getAccount().getProfileUrl()
-          + "' target='_blank'>" + login
-          + "</a>";
       if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )
       {
         html += Icons.s_instance.action16().getHTML();
@@ -427,9 +442,12 @@ public class DlgGameDetail extends DialogBox implements ClickHandler, SelectionH
       }
 
       // display email messages
-      String htmlMail = "<a target='_blank' href='/privatemsg.jsp?id="
-          + registration.getAccount().getId() + "'><img src='"
-          + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
+      String htmlMail = "";
+      if( registration.getAccount() != null )
+      {
+        htmlMail = "<a target='_blank' href='" + registration.getAccount().getPMUrl()
+            + "'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
+      }
       m_playerGrid.setHTML( index, 6, htmlMail );
 
       // display admin button

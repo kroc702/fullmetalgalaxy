@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-gae-channel-0.3-alpha.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/antlr-runtime.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/charabia.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.0.jar" sourcepath="/objectify-appengine-read-only/src"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jdom.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
