@@ -155,6 +155,7 @@ public class GlobalVarBase
     {
       return ((Number)obj).intValue();
     }
+    put( p_key, 0 );
     return 0;
   }
 
@@ -165,7 +166,8 @@ public class GlobalVarBase
     {
       return ((Number)obj).floatValue();
     }
-    return 0;
+    put( p_key, 0f );
+    return 0f;
   }
 
   public static String getString(String p_key)
@@ -175,6 +177,7 @@ public class GlobalVarBase
     {
       return ((String)obj);
     }
+    put( p_key, null );
     return null;
   }
 
