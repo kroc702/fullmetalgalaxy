@@ -34,7 +34,6 @@ public class EbBase extends AnPojoBase
 {
   private static final long serialVersionUID = 3533417036557857816L;
 
-  private long m_id = 0;
   @Id
   private Long id = null;
 
@@ -142,7 +141,7 @@ public class EbBase extends AnPojoBase
    */
   public boolean isTrancient()
   {
-    return(id == null);
+    return (id == null) || id == 0;
   }
 
   public void setTrancient()
@@ -164,11 +163,7 @@ public class EbBase extends AnPojoBase
   {
     if( id == null )
     {
-      if( m_id == 0 )
-      {
-        return 0;
-      }
-      id = m_id;
+      return 0;
     }
     return id;
   }

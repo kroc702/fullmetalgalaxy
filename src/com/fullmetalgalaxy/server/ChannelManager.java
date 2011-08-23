@@ -155,6 +155,7 @@ public class ChannelManager extends HttpServlet
       // these two connections are too close... consider as the same
       // its a workaround because game.jsp is sometime called twice and I don't
       // know why !
+      log.error( "connect bypass because the too connexion are too close (workaround)" );
       return null;
     }
     
@@ -298,11 +299,11 @@ public class ChannelManager extends HttpServlet
     boolean isCommand = ChatCommand.process( p_msg );
     String response = Serializer.toClient( p_msg );
 
-    if( response != null && !p_msg.isEmpty() )
+    if( response != null )
     {
       for( Presence presence : p_room )
       {
-        if( isCommand && !p_msg.getFromPseudo().equals( presence.getPseudo() ) )
+        if( (isCommand || p_msg.isEmpty()) && !p_msg.getFromPseudo().equals( presence.getPseudo() ) )
         {
           continue;
         }

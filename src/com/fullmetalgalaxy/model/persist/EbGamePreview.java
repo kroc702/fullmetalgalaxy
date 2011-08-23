@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Embedded;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -108,7 +109,7 @@ public class EbGamePreview extends EbBase
   }
 
 
-
+  
   private void init()
   {
     m_maxNumberOfPlayer = 0;
@@ -132,10 +133,38 @@ public class EbGamePreview extends EbBase
     this.init();
   }
 
+
+  @PostLoad
+  void onLoad()
+  {
+    /* do something after load */
+    // This is a workarround because we can't store an @Embedded collection with
+    // a null field
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( registration.getAccount() != null && registration.getAccount().isTrancient() )
+      {
+        registration.setAccount( null );
+      }
+    }
+  }
+
+
   @PrePersist
   void onPersist()
-  { /* do something before persisting */
+  {
+    /* do something before persisting */
     getLastUpdate().setTime( System.currentTimeMillis() );
+
+    // This is a workarround because we can't store an @Embedded collection with
+    // a null field
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( registration.getAccount() == null )
+      {
+        registration.setAccount( new EbPublicAccount() );
+      }
+    }
   }
 
   public int getScoreBonus()

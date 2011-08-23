@@ -111,6 +111,10 @@ public class StatsGamePlayer extends StatsGame
 
   public void setPlayer(Game p_game, EbRegistration p_registration)
   {
+    if( p_registration == null )
+    {
+      return;
+    }
     /*
      * TODO set final score !
      */
@@ -166,6 +170,7 @@ public class StatsGamePlayer extends StatsGame
         }
       }
       else if( (event instanceof EbGameJoin)
+          && ((EbGameJoin)event).getMyRegistration( p_game ) != null
           && ((EbGameJoin)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
       {
         // here because original color can change if he lose his original freighter

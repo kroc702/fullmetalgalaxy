@@ -24,6 +24,8 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.Date;
 
+import javax.persistence.Embedded;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.TokenType;
@@ -77,10 +79,7 @@ public class EbRegistration extends EbBase
   private int m_workingWeatherHenCount = 0;
   private Date m_endTurnDate = null;
 
-
-  // this id/pseudo are kept only for backward compatibility with older game
-  public long m_accountId = 0L;
-  public String m_accountPseudo = null;
+  @Embedded
   private EbPublicAccount m_account = null;
 
 

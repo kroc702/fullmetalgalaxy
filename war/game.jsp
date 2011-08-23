@@ -24,6 +24,7 @@
 		</script>
 
 		<script type="text/javascript" language="javascript">
+		    <%-- This is to prevent browser native scroll on some devices --%>
 			document.body.addEventListener('touchmove', function(e){ e.preventDefault(); }); 
 			document.body.addEventListener('touchstart', function(e){ e.preventDefault(); });
 			document.ontouchmove = function(e){ e.preventDefault(); }
