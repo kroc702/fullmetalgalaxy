@@ -64,6 +64,7 @@ import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -143,6 +144,16 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   private String m_channelToken = null;
   private int m_pageId = 0;
   private boolean m_isChannelConnected = false;
+
+
+  private Timer m_reloadTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      ClientUtil.reload();
+    }
+  };
 
 
 
@@ -412,12 +423,24 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         @Override
         public void onOpen()
         {
-          m_isChannelConnected = true;
+          // send an empty chat message to check channel is working
+          ChatMessage message = new ChatMessage();
+          message.setGameId( getGame().getId() );
+          message.setFromPageId( getPageId() );
+          message.setFromPseudo( getMyAccount().getPseudo() );
+          GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
         }
 
         @Override
         public void onMessage(String message)
         {
+          // we receive a message from channel: we won't needto reload page
+          m_reloadTimer.cancel();
+
+          // We could set this flag in onOpen callback
+          // but on some browser this doesn't reflect reality
+          m_isChannelConnected = true;
+
           Object object = deserialize( message );
 
           if( object instanceof ChatMessage )
@@ -610,6 +633,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     }
     m_isActionPending = true;
     AppMain.instance().startLoading();
+    // reload page if no response after 10 seconds
+    m_reloadTimer.schedule( 10000 );
 
     try
     {
@@ -657,6 +682,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     }
     m_isActionPending = true;
     AppMain.instance().startLoading();
+    // reload page if no response after 10 seconds
+    m_reloadTimer.schedule( 10000 );
 
     try
     {
