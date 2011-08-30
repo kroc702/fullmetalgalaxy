@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client;
 
 
-import com.fullmetalgalaxy.client.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.Window;

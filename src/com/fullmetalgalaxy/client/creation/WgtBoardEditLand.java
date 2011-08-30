@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.board.WgtBoardLayerBase;
-import com.fullmetalgalaxy.client.board.WgtBoardLayerLand;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
@@ -60,7 +60,7 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
 
   /**
    * 
-   * @see com.fullmetalgalaxy.client.board.WgtBoardLayerBase#redraw()
+   * @see com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase#redraw()
    */
   @Override
   public void onModelChange(boolean p_forceRedraw)

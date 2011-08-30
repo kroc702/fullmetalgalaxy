@@ -24,14 +24,13 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.FmpCallback;
-import com.fullmetalgalaxy.client.HistoryState;
-import com.fullmetalgalaxy.client.MiniApp;
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.board.MAppMessagesStack;
-import com.fullmetalgalaxy.client.widget.BindedWgtGameInfo;
-import com.fullmetalgalaxy.client.widget.WgtBean;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameServices;
@@ -59,8 +58,8 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 
-public class MAppGameCreation extends Composite implements MiniApp, ClickHandler, ChangeListener,
-    TabListener
+public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, ChangeListener,
+    TabListener, ModelUpdateEvent.Handler
 {
   public static final String HISTORY_ID = "new";
 
@@ -77,7 +76,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
   // UI
   private FlowPanel m_panel = new FlowPanel();
   private TabPanel m_tabPanel = new TabPanel();
-  private WgtBean m_simpleForm = new BindedWgtGameInfo();
+  private WgtGeneralInfo m_simpleForm = new WgtGeneralInfo();
   private WgtEditLand m_wgtEditLand = new WgtEditLand();
   private WgtEditTokens m_wgtEditTokens = new WgtEditTokens();
   private WgtEditForces m_wgtEditForces = new WgtEditForces();
@@ -213,7 +212,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
         // load newly created game to show it
         ModelFmpMain.model().getGame().updateFrom( p_result );
         ModelFmpMain.model().getActionBuilder().setGame( ModelFmpMain.model().getGame() );
-        AppMain.instance().gotoGame( p_result.getId() );
+        ClientUtil.gotoUrl( "/game.jsp?id="+ p_result.getId() );
         MAppMessagesStack.s_instance.showMessage( "Modif sauvegardes" );
       }
 
@@ -265,60 +264,7 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     // m_form.initFromBean();
   }
 
-  /**
-   * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
-   */
-  @Override
-  public Widget getTopWidget()
-  {
-    return this;
-  }
 
-
-  /**
-   * @see com.fullmetalgalaxy.client.MiniApp#hide()
-   */
-  @Override
-  public void hide()
-  {
-    // nothing to do ...
-  }
-
-  /**
-   * @see com.fullmetalgalaxy.client.MiniApp#show()
-   */
-  @Override
-  public void show(HistoryState p_state)
-  {
-    if( !ModelFmpMain.model().isLogged() )
-    {
-      Window.alert( "Pour éditer une partie vous devez etre loggé" );
-      AppMain.instance().gotoHome();
-      return;
-    }
-
-    if( !p_state.containsKey( s_TokenIdGame ) || p_state.getLong( s_TokenIdGame ) == 0 )
-    {
-      // create a new game
-      ModelFmpMain.model().reinitGame();
-      initNewGame();
-    }
-    else
-    {
-      if( ModelFmpMain.model().getGame().getId() != p_state.getLong( s_TokenIdGame ) )
-      {
-        // load game before
-        AppMain.instance().loadModelFmpBoard( p_state.getString( s_TokenIdGame ) );
-      }
-      else
-      {
-        // game is loaded... nothing to do !
-      }
-    }
-
-    ModelFmpMain.model().setZoomDisplayed( EnuZoom.Small );
-    m_simpleForm.attachBean( ModelFmpMain.model().getGame() );
-  }
 
   /**
    * initialize game to defaults parameters
@@ -345,18 +291,16 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
     switch( p_tabIndex )
     {
     case 0:
-      m_simpleForm.attachBean( ModelFmpMain.model().getGame() );
-      // m_simpleForm.initFromBean();
       break;
     case 1: // map
       m_wgtEditLand.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
       m_isLandGenerated = true;
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
       break;
     case 2: // tokens
       m_wgtEditTokens.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
       m_isOreGenerated = true;
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
       break;
     case 3: // forces
       m_wgtEditForces.refreshRegistrationList();
@@ -392,6 +336,34 @@ public class MAppGameCreation extends Composite implements MiniApp, ClickHandler
       Window.alert( "Vous n'avez pas les droits pour cet onglet" );
       return false;
     }
+  }
+
+
+  @Override
+  public void onModelUpdate(ModelFmpMain p_modelSender)
+  {
+    // redraw everything after any model update
+    //
+    if( !ModelFmpMain.model().isLogged() )
+    {
+      Window.alert( "Pour éditer une partie vous devez etre loggé" );
+      ClientUtil.gotoUrl( "/" );
+      return;
+    }
+
+    if( !AppRoot.instance().getHistoryState().containsKey( s_TokenIdGame ) 
+        || AppRoot.instance().getHistoryState().getLong( s_TokenIdGame ) == 0 )
+    {
+      // create a new game
+      p_modelSender.reinitGame();
+      initNewGame();
+    }
+    else
+    {
+      // game is loaded... nothing to do !
+    }
+
+    p_modelSender.setZoomDisplayed( EnuZoom.Small );
   }
 
 

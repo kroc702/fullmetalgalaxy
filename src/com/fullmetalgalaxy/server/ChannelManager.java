@@ -75,7 +75,7 @@ public class ChannelManager extends HttpServlet
   /** if last connection is farer (older) than this value we will disconnect it. */
   private final static int CACHE_PRESENCE_TTL_MS = 1000 * 60 * 20; // 20min
   /** if last connection is closer than this value, we don't need to update cache */
-  private final static int CONNECTION_MIN_DIFF_MS = 1000 * 5; // 5sec
+  private final static int CONNECTION_MIN_DIFF_MS = 1000 * 3; // 3sec
 
   private static MemcacheService s_cache = MemcacheServiceFactory.getMemcacheService();
   private static ChannelService s_channelService = ChannelServiceFactory.getChannelService();

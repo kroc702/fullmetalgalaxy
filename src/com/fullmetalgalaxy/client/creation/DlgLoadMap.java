@@ -25,8 +25,10 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.GameServices;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -63,14 +65,17 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     public void onSuccess(ModelFmpInit p_result)
     {
       super.onSuccess( p_result );
-      ModelFmpMain.model().getGame().setLandSize( p_result.getGame().getLandWidth(),
-          p_result.getGame().getLandHeight() );
-      ModelFmpMain.model().getGame().setLands( p_result.getGame().getLands() );
-      ModelFmpMain.model().getGame().setPlanetType( p_result.getGame().getPlanetType() );
-      ModelFmpMain.model().getGame().setMinimapUri( p_result.getGame().getMinimapUri() );
-      ModelFmpMain.model().getGame().setMapUri( p_result.getGame().getMapUri() );
-      ModelFmpMain.model().getGame().getSetToken().clear();
-      ModelFmpMain.model().fireModelUpdate();
+      if( p_result.getGame() != null )
+      {
+        ModelFmpMain.model().getGame().setLandSize( p_result.getGame().getLandWidth(),
+            p_result.getGame().getLandHeight() );
+        ModelFmpMain.model().getGame().setLands( p_result.getGame().getLands() );
+        ModelFmpMain.model().getGame().setPlanetType( p_result.getGame().getPlanetType() );
+        ModelFmpMain.model().getGame().setMinimapUri( p_result.getGame().getMinimapUri() );
+        ModelFmpMain.model().getGame().setMapUri( p_result.getGame().getMapUri() );
+        ModelFmpMain.model().getGame().getSetToken().clear();
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      }
       m_this.hide();
     }
   };

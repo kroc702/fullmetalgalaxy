@@ -37,12 +37,6 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/loading.png")
   public AbstractImagePrototype loading();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/logout.gif")
-  public AbstractImagePrototype logout();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/login.gif")
-  public AbstractImagePrototype login();
-
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Pause32.png")
   public AbstractImagePrototype pause32();
 
@@ -61,6 +55,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Winner32.png")
   public AbstractImagePrototype winner32();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/SwitchOff8.png")
+  public AbstractImagePrototype switchOff8();
+
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Cancel32.png")
   public AbstractImagePrototype cancel32();
@@ -70,6 +67,12 @@ public interface Icons extends ImageBundle
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Info32.png")
   public AbstractImagePrototype info32();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/WebLinks32.png")
+  public AbstractImagePrototype webLinks32();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Message32.png")
+  public AbstractImagePrototype message32();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Ok32.png")
   public AbstractImagePrototype ok32();
@@ -106,9 +109,6 @@ public interface Icons extends ImageBundle
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Player32.png")
   public AbstractImagePrototype player32();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Map32.png")
-  public AbstractImagePrototype map32();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Action16.png")
   public AbstractImagePrototype action16();

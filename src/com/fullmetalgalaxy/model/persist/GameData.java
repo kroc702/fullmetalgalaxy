@@ -71,6 +71,9 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     m_preview = new EbGamePreview();
     m_data = new EbGameData();
+    // allocate default land size
+    setLandSize( m_preview.getLandWidth(), m_preview.getLandHeight() );
+    setLand( 0, 0, LandType.Plain );    
   }
   
   
@@ -94,10 +97,10 @@ public class GameData implements java.io.Serializable, IsSerializable
   public int getNumberOfHexagon()
   {
     int hexagonCount = getLandHeight() * getLandWidth();
-    if( getLand( 0, 0 ) == LandType.None )
+    if( !isMapSquare() )
     {
       // assume map is an hexagon
-      hexagonCount *= 3 / 4;
+      hexagonCount *= 3f / 4f;
     }
     return hexagonCount;
   }
@@ -197,9 +200,15 @@ public class GameData implements java.io.Serializable, IsSerializable
    */
   public void setLandSize(int p_width, int p_height)
   {
+    boolean isMapSquare = isMapSquare();
     m_data.setLands( new byte[(p_width * p_height) / 2 + 1] );
     setLandWidth( p_width );
     setLandHeight( p_height );
+    // this is a little workaround to make isMapSquare() continue working after this call
+    if(isMapSquare)
+    {
+      setLand( 0, 0, LandType.Plain );
+    }
   }
 
 
@@ -219,6 +228,10 @@ public class GameData implements java.io.Serializable, IsSerializable
     return false;
   }
 
+  public boolean isMapSquare()
+  {
+    return getLand( 0, 0 ) != LandType.None;
+  }
 
   
   // common methods
@@ -721,6 +734,21 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void setMapUri(String p_mapUri)
   {
     m_data.setMapUri( p_mapUri );
+  }
+
+  public String getMessage()
+  {
+    return m_data.getMessage();
+  }
+
+  public void setMessage(String p_messages)
+  {
+    m_data.setMessage( p_messages );
+  }
+
+  public boolean isMessageWebUrl()
+  {
+    return m_data.isMessageWebUrl();
   }
   
   

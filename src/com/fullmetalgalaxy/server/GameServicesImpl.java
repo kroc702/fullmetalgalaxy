@@ -259,8 +259,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // Auth.getUserPseudo(
       // getThreadLocalRequest(), getThreadLocalResponse() ),
       // modelInit.getGame().getId(), null );
+      modelInit.setPresenceRoom( ChannelManager.getRoom( modelInit.getGame().getId() ) );
     }
-    modelInit.setPresenceRoom( ChannelManager.getRoom( modelInit.getGame().getId() ) );
     return modelInit;
   }
 

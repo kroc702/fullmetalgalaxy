@@ -32,7 +32,7 @@
 
         <style type="text/css">@import url( /appMain.css );</style>
         
-        <meta name='gwt:property' id='app_history' content='idGame_<%= request.getParameter( "id" ) %>_status__messages__context__advises__switch__board__'>
+        <meta name='gwt:property' id='app_history' content='idGame_<%= request.getParameter( "id" ) %>_status__messages__context__advises__tabmenu__board__'>
         
     </head>
 
@@ -68,19 +68,12 @@
         </table>
 
         <div id="board" style="display:none; width:100%; height:100%; background-color:#d09750;"></div>
-        <div id="advises" style="display:none; position:absolute; top:50px; right:50px; z-index:9999999999;"></div>
-
-        <div class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" >
-            <div id="menu" style="float:left; width:180px;">
-                <jsp:include page="<%= I18n.localize(request,response,\"/menu.html\") %>" />
-            </div>
-            <div style="height:100%; background-color:black; cursor: pointer; cursor: hand; float:left;" >
-                <div id="switch" style="display:none; width:7px; height:100%;"></div>
-            </div>
-        </div>
 
     </td></tr>
     </table>
+
+        <div id="tabmenu" class="bloc" style="display:none; height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" ></div>
+
     
         <div id="context" style="display:none; position:absolute; bottom:0px; right:0px; z-index:9999999998;"></div>
     
