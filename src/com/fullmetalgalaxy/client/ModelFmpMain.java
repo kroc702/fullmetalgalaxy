@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fullmetalgalaxy.client.board.DlgMessageEvent;
-import com.fullmetalgalaxy.client.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.event.MessageEvent;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ChatService;
@@ -36,14 +37,11 @@ import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
-import com.fullmetalgalaxy.model.ModelUpdateListener;
-import com.fullmetalgalaxy.model.ModelUpdateListenerCollection;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -78,7 +76,7 @@ import com.google.gwt.user.client.ui.HTML;
  * @author Vincent Legendre
  *
  */
-public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHandler
+public class ModelFmpMain implements Window.ClosingHandler
 {
   private static ModelFmpMain s_ModelFmpMain = new ModelFmpMain();
 
@@ -93,10 +91,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   protected String m_gameId = null;
   protected Game m_game = new Game();
 
-  /**
-   * the list of all widget which will be refreshed after any model change. 
-   */
-  protected ModelUpdateListenerCollection m_listenerCollection = new ModelUpdateListenerCollection();
 
   protected EventsPlayBuilder m_actionBuilder = new EventsPlayBuilder();
 
@@ -118,11 +112,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   private boolean m_isAtmosphereDisplayed = true;
   // standard land layer or custom map image
   private boolean m_isCustomMapDisplayed = false;
-
-  /**
-   * minimap or players connections informations
-   */
-  private boolean m_isMiniMapDisplayed = true;
 
   /**
    * if set, user can't do anything else:
@@ -157,39 +146,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
 
 
 
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.SourceModelUpdateEvents#subscribeModelUpdateEvent(com.fullmetalgalaxy.client.ModelUpdateListener)
-   */
-  @Override
-  public void subscribeModelUpdateEvent(ModelUpdateListener p_listener)
-  {
-    m_listenerCollection.add( p_listener );
-  }
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.SourceModelUpdateEvents#removeModelUpdateEvent(com.fullmetalgalaxy.model.ModelUpdateListener)
-   */
-  @Override
-  public void removeModelUpdateEvent(ModelUpdateListener p_listener)
-  {
-    m_listenerCollection.remove( p_listener );
-  }
-
-  /**
-   * This method call 'notifyModelUpdate()' of all childs and father controller.
-   * You should call this method every time the model associated with this controller is updated.
-   * the sub method should first call 'super.notifyModelUpdate()'
-   */
-  public void notifyModelUpdate()
-  {
-    // setLastUpdate( new Date() );
-    fireModelUpdate();
-  }
-
-  public void fireModelUpdate()
-  {
-    m_listenerCollection.fireModelUpdate( this );
-  }
 
   /**
    * 
@@ -213,7 +169,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     }
     m_game = p_model;
     getActionBuilder().setGame( getGame() );
-    notifyModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     if( p_model.getGameType() != GameType.MultiPlayer )
     {
       LocalGame.loadGame( this );
@@ -306,7 +262,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   {
     m_game = new Game();
     m_gameId = null;
-    notifyModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   public Game getGame()
@@ -348,7 +304,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
-      ModelFmpMain.model().notifyModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
 
     @Override
@@ -359,7 +315,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      ModelFmpMain.model().notifyModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
       // maybe the action failed because the model isn't up to date
       if( m_successiveRpcErrorCount <= 2 )
       {
@@ -434,7 +390,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         @Override
         public void onMessage(String message)
         {
-          // we receive a message from channel: we won't needto reload page
+          // we receive a message from channel: we won't need to reload page
           m_reloadTimer.cancel();
 
           // We could set this flag in onOpen callback
@@ -525,7 +481,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     // handle connected player
     //
     m_connectedUsers = p_room;
-    ModelFmpMain.model().fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   
@@ -535,12 +491,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     //
     if( p_msg.isEmpty() )
     {
-      // empty message: server ask if we are still connected
-      ChatMessage message = new ChatMessage();
-      message.setGameId( ModelFmpMain.model().getGame().getId() );
-      message.setFromPageId( ModelFmpMain.model().getPageId() );
-      message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
-      GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
+      if( !ModelFmpMain.model().getMyAccount().getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ))
+      {
+        // empty message: server ask if we are still connected
+        ChatMessage message = new ChatMessage();
+        message.setGameId( ModelFmpMain.model().getGame().getId() );
+        message.setFromPageId( ModelFmpMain.model().getPageId() );
+        message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+        GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
+      }
     }
     else
     {
@@ -564,7 +523,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
 
     try
     {
-      if( getGame().getVersion() != p_result.getFromVersion() )
+      if( getGame() == null || getGame().getVersion() != p_result.getFromVersion() )
       {
         Window.alert( "Error: receive incoherant model update. reload page" );
         // RpcUtil.logDebug(
@@ -583,32 +542,28 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       List<AnEvent> events = p_result.getGameEvents();
       for( AnEvent event : events )
       {
+        if( event.getType() == GameLogType.EvtCancel )
+        {
+          ((EbEvtCancel)event).execCancel( getGame() );
+        }
+
+        event.exec( getGame() );
+        // getGame().getLastUpdate().setTime(
+        // event.getLastUpdate().getTime() );
+        if( event.getType() != GameLogType.EvtCancel )
+        {
+          getGame().addEvent( event );
+        }
+        getGame().updateLastTokenUpdate( null );
+        
         if( event.getType() == GameLogType.EvtMessage )
         {
-          DlgMessageEvent dlgMsg = new DlgMessageEvent( (EbEvtMessage)event );
-          dlgMsg.center();
-          dlgMsg.show();
-        }
-        if( getGame() != null )
-        {
-          if( event.getType() == GameLogType.EvtCancel )
-          {
-            ((EbEvtCancel)event).execCancel( getGame() );
-          }
-
-          event.exec( getGame() );
-          // getGame().getLastUpdate().setTime(
-          // event.getLastUpdate().getTime() );
-          if( event.getType() != GameLogType.EvtCancel )
-          {
-            getGame().addEvent( event );
-          }
-          getGame().updateLastTokenUpdate( null );
+          AppRoot.getEventBus().fireEvent( new MessageEvent((EbEvtMessage)event) );
         }
       }
 
       // assume that if we receive an update, something has changed !
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
 
     } catch( Throwable e )
     {
@@ -633,8 +588,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     }
     m_isActionPending = true;
     AppMain.instance().startLoading();
-    // reload page if no response after 10 seconds
-    m_reloadTimer.schedule( 10000 );
 
     try
     {
@@ -647,6 +600,8 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       // action.check();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
+        // reload page if no response after 10 seconds
+        m_reloadTimer.schedule( 10000 );
         GameServices.Util.getInstance().runEvent( p_action, m_callbackEvents );
       }
       else
@@ -659,7 +614,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      ModelFmpMain.model().notifyModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
@@ -682,8 +637,6 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
     }
     m_isActionPending = true;
     AppMain.instance().startLoading();
-    // reload page if no response after 10 seconds
-    m_reloadTimer.schedule( 10000 );
 
     try
     {
@@ -696,6 +649,9 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       getActionBuilder().unexec();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
+        // reload page if no response after 10 seconds
+        m_reloadTimer.schedule( 10000 );
+        // then send request
         GameServices.Util.getInstance()
             .runAction( getActionBuilder().getActionList(), m_callbackEvents );
       }
@@ -715,7 +671,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      ModelFmpMain.model().notifyModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
   }
 
@@ -759,7 +715,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   public void setGridDisplayed(boolean p_isGridDisplayed)
   {
     m_isGridDisplayed = p_isGridDisplayed;
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   /**
@@ -776,7 +732,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   public void setAtmosphereDisplayed(boolean p_isAtmosphereDisplayed)
   {
     m_isAtmosphereDisplayed = p_isAtmosphereDisplayed;
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   /**
@@ -793,7 +749,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   public void setCustomMapDisplayed(boolean p_isCustomMapDisplayed)
   {
     m_isCustomMapDisplayed = p_isCustomMapDisplayed;
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   /**
@@ -810,7 +766,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   public void setFireCoverDisplayed(boolean p_isFireCoverDisplayed)
   {
     m_isFireCoverDisplayed = p_isFireCoverDisplayed;
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   /**
@@ -827,31 +783,15 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
   public void setZoomDisplayed(int p_zoomValueDisplayed)
   {
     m_zoomDisplayed = new EnuZoom( p_zoomValueDisplayed );
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   public void setZoomDisplayed(EnuZoom p_zoomDisplayed)
   {
     m_zoomDisplayed = p_zoomDisplayed;
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
-  /**
-   * @return the isMiniMapDisplayed
-   */
-  public boolean isMiniMapDisplayed()
-  {
-    return m_isMiniMapDisplayed;
-  }
-
-  /**
-   * @param p_isMiniMapDisplayed the isMiniMapDisplayed to set
-   */
-  public void setMiniMapDisplayed(boolean p_isMiniMapDisplayed)
-  {
-    m_isMiniMapDisplayed = p_isMiniMapDisplayed;
-    fireModelUpdate();
-  }
 
   /**
    * @return the isTimeLineMode
@@ -874,7 +814,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       timePlay( 99999 );
     }
     m_currentActionIndex = getGame().getLogs().size();
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   public void timeBack(int p_actionCount)
@@ -896,7 +836,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         {
           RpcUtil.logError( "error ", e );
           Window.alert( "unexpected error : " + e );
-          fireModelUpdate();
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
           return;
         }
         // don't count automatic action as one action to play
@@ -912,7 +852,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
         }
       }
     }
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
 
@@ -950,7 +890,7 @@ public class ModelFmpMain implements SourceModelUpdateEvents, Window.ClosingHand
       }
       m_currentActionIndex++;
     }
-    fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   public int getCurrentActionIndex()

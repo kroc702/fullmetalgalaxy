@@ -24,12 +24,17 @@ package com.fullmetalgalaxy.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import com.fullmetalgalaxy.client.event.EventPreviewListenerCollection;
+import com.fullmetalgalaxy.client.event.SourcesPreviewEvents;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -46,22 +51,35 @@ import com.google.gwt.user.client.ui.RootPanel;
  *
  */
 
-public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, HistoryListener,
+public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListener,
     SourcesPreviewEvents, NativePreviewHandler
 {
+  public static Logger logger = Logger.getLogger("AppRoot");
+  private static AppRoot s_instance = null;
+  
+  /**
+   * @return the first instance of AppMain
+   */
+  public static AppRoot instance()
+  {
+    return s_instance;
+  }
+  
   protected PopupPanel m_loadingPanel = new PopupPanel( false, true );
   protected int m_isLoading = 0;
   protected Map m_dialogMap = new HashMap();
 
   private HistoryState m_historyState = new HistoryState();
   private EventPreviewListenerCollection m_previewListenerCollection = new EventPreviewListenerCollection();
-
+  private EventBus m_eventBus = new SimpleEventBus();
+  
+  
   /**
    * 
    */
   public AppRoot()
   {
-    // TODO Auto-generated constructor stub
+    s_instance = this;
   }
 
   /* (non-Javadoc)
@@ -90,14 +108,23 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
     // If the application starts with no history token, start it off in the
     // 'baz' state.
     String initToken = History.getToken();
-
+    m_historyState.fromString( initToken );
+    if(initToken == null || initToken.isEmpty())
+    {
+      m_historyState = getDefaultHistoryState();
+      initToken = m_historyState.toString();
+    }
+    
     // onHistoryChanged() is not called when the application first runs. Call
     // it now in order to reflect the initial state.
     onHistoryChanged( initToken );
-
+    
   }
 
-
+  public static EventBus getEventBus()
+  {
+    return instance().m_eventBus;
+  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.SourcesPreviewEvents#addPreviewListener(com.google.gwt.user.client.EventPreview)
@@ -154,22 +181,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
     // m_dockPanel.setHeight( "" + (p_height - 20) + "px" );
   }
 
-  @Override
-  public void onClick(ClickEvent p_event)
-  {
 
-  }
-
-  /**
-   * this method should return the list of all possible MiniApp this application can show.
-   * key is a string which match the div id of the html source
-   * value is the corresponding MiniApp. 
-   * @return
-   */
-  protected MiniApp getMApp(String p_key)
-  {
-    return null;
-  }
 
   /**
    * this method should return the default history token which contain the first MiniApp
@@ -187,79 +199,15 @@ public class AppRoot implements EntryPoint, WindowResizeListener, ClickHandler, 
   }
 
   /**
-   * display all MiniApp found in p_historyToken and hide the other one.
    * @see com.google.gwt.user.client.HistoryListener#onHistoryChanged(java.lang.String)
    */
   @Override
   public void onHistoryChanged(String p_historyToken)
   {
-    HistoryState oldHistoryState = m_historyState;
-    if( p_historyToken.length() == 0 )
-    {
-      m_historyState = getDefaultHistoryState();
-    }
-    else
-    {
-      m_historyState = new HistoryState( p_historyToken );
-    }
-    for( String key : m_historyState.keySet() )
-    {
-      if( getMApp( key ) != null )
-      {
-        // this mini app is present in history: show it
-        show( key, getMApp( key ) );
-      }
-    }
-    // hide useless mini app
-    for( String key : oldHistoryState.keySet() )
-    {
-      if( (!m_historyState.containsKey( key ) ) && (getMApp( key ) != null))
-      {
-        hide( key, getMApp( key ) );
-      }
-    }
+    
   }
 
-  protected void show(String p_id, MiniApp p_miniApp)
-  {
-    assert p_miniApp != null;
-    RootPanel panel = RootPanel.get( p_id );
-    if( panel != null )
-    {
-      panel.setVisible( true );
-      if( p_miniApp.getTopWidget() != null )
-      {
-        if( panel.getWidgetCount() == 0 )
-        {
-          panel.add( p_miniApp.getTopWidget() );
-        }
-      }
-    }
-    else
-    {
-      RpcUtil.logDebug( "couldn't display mini app " + p_id );
-    }
-    p_miniApp.show( getHistoryState() );
-  }
-
-  private void hide(String p_id, MiniApp p_miniApp)
-  {
-    if( p_miniApp == null )
-    {
-      return;
-    }
-    p_miniApp.hide();
-    RootPanel panel = RootPanel.get( p_id );
-    if( panel != null )
-    {
-      if( p_miniApp.getTopWidget() != null )
-      {
-        panel.remove( p_miniApp.getTopWidget() );
-      }
-      panel.setVisible( false );
-    }
-  }
-
+ 
   public void startLoading()
   {
     if( m_isLoading < 0 )

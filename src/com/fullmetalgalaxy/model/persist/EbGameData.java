@@ -60,7 +60,7 @@ public class EbGameData extends EbBase
   protected Date m_lastTimeStepChange = new Date( System.currentTimeMillis() );
   protected ArrayList<Integer> m_takeOffTurns = null;
   protected String m_mapUri = null;
-
+  protected String m_messages = null;
   /**
   * Land description. It's a two dimension array of landWitdh * landHeight
   */
@@ -104,6 +104,8 @@ public class EbGameData extends EbBase
     m_lands = new byte[0];
     m_lastTimeStepChange = new Date( System.currentTimeMillis() );
     m_takeOffTurns = null;
+    m_mapUri = null;
+    m_messages = null;
     m_setToken = new HashSet<com.fullmetalgalaxy.model.persist.EbToken>();
     m_setGameLog = new ArrayList<com.fullmetalgalaxy.model.persist.gamelog.AnEvent>();
     m_triggers = new ArrayList<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>();
@@ -341,5 +343,23 @@ public class EbGameData extends EbBase
     m_mapUri = p_mapUri;
   }
 
+  public String getMessage()
+  {
+    return m_messages;
+  }
 
+  public void setMessage(String p_messages)
+  {
+    m_messages = p_messages;
+  }
+
+  /**
+   * if message start with './', '/' or 'http://', message is a web page url
+   * @return
+   */
+  public boolean isMessageWebUrl()
+  {
+    return getMessage() != null && ( getMessage().startsWith( "./" ) || getMessage().startsWith( "/" )
+        || getMessage().startsWith( "http://" ) );
+  }
 }

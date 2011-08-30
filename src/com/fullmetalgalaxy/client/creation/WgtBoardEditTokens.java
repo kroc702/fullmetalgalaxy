@@ -23,18 +23,19 @@
 package com.fullmetalgalaxy.client.creation;
 
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.board.BoardLayer;
-import com.fullmetalgalaxy.client.board.BoardLayerCollection;
-import com.fullmetalgalaxy.client.board.WgtBoardLayerBase;
-import com.fullmetalgalaxy.client.board.WgtBoardLayerLand;
-import com.fullmetalgalaxy.client.board.WgtBoardLayerToken;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.board.BoardLayer;
+import com.fullmetalgalaxy.client.game.board.BoardLayerCollection;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerToken;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
-import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
@@ -193,7 +194,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
         e.printStackTrace();
       }
     }
-    ModelFmpMain.model().fireModelUpdate();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
   }
 
   /* (non-Javadoc)
@@ -233,7 +234,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.WgtBoard#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
-  public void notifyModelUpdate(SourceModelUpdateEvents p_ctrModelSender)
+  public void notifyModelUpdate(ModelFmpMain p_ctrModelSender)
   {
     if( hashLand( ModelFmpMain.model().getGame() ) != m_oldHashLand )
     {

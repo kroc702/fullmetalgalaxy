@@ -25,7 +25,9 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
@@ -205,7 +207,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       GameGenerator.generLands();
       ModelFmpMain.model().getGame().setMinimapUri( null );
       ModelFmpMain.model().getGame().setMapUri( null );
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
     else if( p_event.getSource() == m_btnClear )
     {
@@ -213,7 +215,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
       ModelFmpMain.model().getGame().setMinimapUri( null );
       ModelFmpMain.model().getGame().setMapUri( null );
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
     else if( p_event.getSource() == m_btnLoadMap )
     {
@@ -321,7 +323,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       ModelFmpMain.model().getGame()
           .setPlanetType( m_planets.get( m_lstPlanet.getSelectedIndex() ) );
       redraw();
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
 
   }

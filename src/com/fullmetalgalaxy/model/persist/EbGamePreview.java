@@ -58,7 +58,7 @@ public class EbGamePreview extends EbBase
   private String m_name = "";
   @Unindexed
   private String m_description = "";
-  private int m_maxNumberOfPlayer = 0;
+  private int m_maxNumberOfPlayer = 4;
   private boolean m_history = false;
   @Unindexed
   private int m_currentTimeStep = 0;
@@ -78,8 +78,8 @@ public class EbGamePreview extends EbBase
   @Embedded
   private EbPublicAccount m_accountCreator = null;
 
-  private int m_landWidth = 0;
-  private int m_landHeight = 0;
+  private int m_landWidth = 36;
+  private int m_landHeight = 24;
   private Date m_creationDate = new Date( System.currentTimeMillis() );
   private boolean m_started = false;
 
@@ -112,12 +112,12 @@ public class EbGamePreview extends EbBase
   
   private void init()
   {
-    m_maxNumberOfPlayer = 0;
+    m_maxNumberOfPlayer = 4;
     m_history = false;
     m_currentTimeStep = 0;
     m_currentPlayerId = 0L;
-    m_landWidth = 0;
-    m_landHeight = 0;
+    m_landWidth = 36;
+    m_landHeight = 24;
     m_creationDate = new Date( System.currentTimeMillis() );
     m_description = "";
     m_name = "";

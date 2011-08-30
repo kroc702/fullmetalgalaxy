@@ -40,7 +40,6 @@ public class EbActMessage extends AnAction
   static final long serialVersionUID = 123;
 
   private String m_message = "";
-  private String m_title = null;
 
 
   /**
@@ -63,7 +62,6 @@ public class EbActMessage extends AnAction
   private void init()
   {
     m_message = "";
-    m_title = null;
   }
 
   @Override
@@ -86,7 +84,6 @@ public class EbActMessage extends AnAction
       msg.setAuto( true );
       msg.setGame( p_game );
       msg.setMessage( getMessage() );
-      msg.setTitle( getTitle() );
       events.add( msg );
     }
     return events;
@@ -108,22 +105,5 @@ public class EbActMessage extends AnAction
   {
     m_message = p_message;
   }
-
-  /**
-   * @return the title
-   */
-  public String getTitle()
-  {
-    return m_title;
-  }
-
-  /**
-   * @param p_title the title to set
-   */
-  public void setTitle(String p_title)
-  {
-    m_title = p_title;
-  }
-
 
 }

@@ -23,11 +23,12 @@
 package com.fullmetalgalaxy.client.creation;
 
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.WgtScroll;
-import com.fullmetalgalaxy.client.WgtView;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.widget.WgtScroll;
+import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.SourceModelUpdateEvents;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -49,7 +50,7 @@ public class WgtEditLand extends WgtView implements WindowResizeListener
   public WgtEditLand()
   {
     Window.addWindowResizeListener( this );
-    ModelFmpMain.model().subscribeModelUpdateEvent( this );
+    AppRoot.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
     m_wgtScroll.setWidget( m_wgtBoard );
     m_panel.add( m_tools );
     m_panel.setCellWidth( m_tools, "100px" );
@@ -80,7 +81,7 @@ public class WgtEditLand extends WgtView implements WindowResizeListener
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
   @Override
-  public void onModelUpdate(SourceModelUpdateEvents p_ModelSender)
+  public void onModelUpdate(ModelFmpMain p_ModelSender)
   {
     if( !isVisible() )
     {

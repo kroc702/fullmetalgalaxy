@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client;
 
+import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public abstract class MAppLink extends MApp implements ClickListener, MouseListener
+public abstract class MAppLink extends GuiEntryPoint implements ClickListener, MouseListener
 {
   private Label m_createAccountLabel = new Label( "link" );
 

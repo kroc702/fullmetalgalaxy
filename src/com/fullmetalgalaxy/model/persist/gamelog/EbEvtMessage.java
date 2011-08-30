@@ -22,6 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.persist.Game;
+
 
 
 /**
@@ -33,7 +36,7 @@ public class EbEvtMessage extends AnEvent
   static final long serialVersionUID = 1;
 
   private String m_message = null;
-  private String m_title = null;
+  private String m_oldMessage = null;
 
   /**
    * 
@@ -55,7 +58,6 @@ public class EbEvtMessage extends AnEvent
   private void init()
   {
     m_message = null;
-    m_title = null;
   }
 
   @Override
@@ -64,7 +66,33 @@ public class EbEvtMessage extends AnEvent
     return GameLogType.EvtMessage;
   }
 
+  @Override
+  public void exec(Game p_game) throws RpcFmpException
+  {
+    super.exec( p_game );
+    
+    m_oldMessage = p_game.getMessage();
+    p_game.setMessage( getMessage() );
+  }
 
+
+  @Override
+  public void unexec(Game p_game) throws RpcFmpException
+  {
+    super.unexec( p_game );
+    p_game.setMessage( m_oldMessage );
+  }
+
+
+  /**
+   * if message start with './', '/' or 'http://', message is a web page url
+   * @return
+   */
+  public boolean isWebUrl()
+  {
+    return getMessage() != null && ( getMessage().startsWith( "./" ) || getMessage().startsWith( "/" )
+        || getMessage().startsWith( "http://" ) );
+  }
 
   // Bean getter / setter
   // ====================
@@ -83,22 +111,6 @@ public class EbEvtMessage extends AnEvent
   public void setMessage(String p_message)
   {
     m_message = p_message;
-  }
-
-  /**
-   * @return the title
-   */
-  public String getTitle()
-  {
-    return m_title;
-  }
-
-  /**
-   * @param p_title the title to set
-   */
-  public void setTitle(String p_title)
-  {
-    m_title = p_title;
   }
 
 

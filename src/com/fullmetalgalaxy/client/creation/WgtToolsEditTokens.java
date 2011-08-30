@@ -27,7 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -157,7 +159,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     {
       GameGenerator.populateOres();
       m_wgtBoardEditTokens.m_layerToken.cleanToken();
-      ModelFmpMain.model().fireModelUpdate();
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
     }
   }
 

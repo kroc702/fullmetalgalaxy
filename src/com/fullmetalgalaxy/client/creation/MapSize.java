@@ -22,6 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.creation;
 
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
+import com.fullmetalgalaxy.model.persist.Game;
+
 /**
  * @author Vincent Legendre
  *
@@ -41,6 +44,23 @@ public enum MapSize
     return values()[p_value];
   }
 
+  public static MapSize getFromGame(Game p_game)
+  {
+    int hexCount = p_game.getNumberOfHexagon(); // p_game.getLandWidth() * p_game.getLandHeight()
+    int diffSmall = Math.abs( Small.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
+    int diffMedium = Math.abs( Medium.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
+    int diffLarge = Math.abs( Large.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
+    
+    if( diffSmall < diffMedium && diffSmall < diffLarge )
+    {
+      return Small;
+    }
+    if( diffLarge < diffMedium && diffLarge < diffSmall  )
+    {
+      return Large;
+    }
+    return Medium;
+  }
 
   public int getHexagonPerPlayer()
   {
