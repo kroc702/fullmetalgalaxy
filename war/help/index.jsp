@@ -1,4 +1,5 @@
-﻿<HTML>
+﻿<!DOCTYPE html>
+<HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>
         
@@ -9,6 +10,7 @@
 
 <%@include file="/include/header.jsp"%>
 
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
 <jsp:include page="<%= I18n.localize(request,response,\"/help/index.html\") %>" />
 
 

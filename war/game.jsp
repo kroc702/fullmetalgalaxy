@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<!--DOCTYPE html-->
 
 <html>
     <head>
@@ -46,7 +47,7 @@
                 <div id="status" style="display:none; width:100%;"></div>
             </td>
             <td>
-				<div id="mymenu" style="width:300px; margin:5px; float:right; color:white;">
+				<div id="mymenu" style="width:30px; margin:5px; float:right; color:white;">
 				<%@include file="/include/mytopmenu.jsp"%>
 				</div>
             </td>
@@ -72,8 +73,7 @@
     </td></tr>
     </table>
 
-        <div id="tabmenu" class="bloc" style="display:none; height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" ></div>
-
+        <div id="tabmenu" class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;"></div>
     
         <div id="context" style="display:none; position:absolute; bottom:0px; right:0px; z-index:9999999998;"></div>
     

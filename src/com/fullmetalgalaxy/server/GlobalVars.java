@@ -49,12 +49,12 @@ public class GlobalVars extends GlobalVarBase
       newsHtml = "Joueurs: "+getAccountCount() +" ("+getActiveAccount()+" actifs)<br/>";
       newsHtml += "Parties: "+getTotalGameCount() + " ("+(getOpenGameCount() + getRunningGameCount()) +" en cours)<br/>";
       // for debug
-      newsHtml += "<br/>open: "+getOpenGameCount() + " <br/>";
+      /*newsHtml += "<br/>open: "+getOpenGameCount() + " <br/>";
       newsHtml += "running: "+getRunningGameCount() + " <br/>";
       newsHtml += "finished: "+getFinishedGameCount() + " <br/>";
       newsHtml += "aborted: "+getAbortedGameCount() + " <br/>";
       newsHtml += "deletec: "+getDeletedGameCount() + " <br/>";
-      
+      */
       // get best player
       newsHtml += "Meilleur joueur:";
       Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
@@ -68,7 +68,7 @@ public class GlobalVars extends GlobalVarBase
         newsHtml += "</tr></table></a>";
       }
       
-      //getCache().put( CACHE_STATS_KEY, newsHtml, Expiration.byDeltaSeconds( CACHE_STATS_TTL_SEC ) );
+      getCache().put( CACHE_STATS_KEY, newsHtml, Expiration.byDeltaSeconds( CACHE_STATS_TTL_SEC ) );
     }
     
     return newsHtml;

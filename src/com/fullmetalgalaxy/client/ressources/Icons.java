@@ -104,6 +104,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Register32.png")
   public AbstractImagePrototype register32();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Reserve32.png")
+  public AbstractImagePrototype reserve32();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOff32.png")
   public AbstractImagePrototype takeOff32();
 

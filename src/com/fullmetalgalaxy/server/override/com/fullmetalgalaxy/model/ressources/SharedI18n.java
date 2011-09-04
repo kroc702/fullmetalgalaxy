@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.model.ressources;
 
 import com.fullmetalgalaxy.model.ressources.MessagesRpc;
 import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
+import com.fullmetalgalaxy.model.ressources.Misc;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.GWTi18nServer;
@@ -48,15 +49,9 @@ public class SharedI18n
     }
     else
     {
-      EbAccount account = FmgDataStore.dao().find( EbAccount.class, p_accountId );
-      String locale = null;
-      if( account != null )
-      {
-        locale = account.getLocale();
-      }
       try
       {
-        return GWTi18nServer.create( MessagesRpcException.class, locale );
+        return GWTi18nServer.create( MessagesRpcException.class, getLocale(p_accountId) );
       }catch (Exception e) {
       }
     }
@@ -73,19 +68,46 @@ public class SharedI18n
     }
     else
     {
-      EbAccount account = FmgDataStore.dao().find( EbAccount.class, p_accountId );
-      String locale = null;
-      if( account != null )
-      {
-        locale = account.getLocale();
-      }
       try
       {
-        return GWTi18nServer.create( MessagesRpc.class, locale );
+        return GWTi18nServer.create( MessagesRpc.class, getLocale(p_accountId) );
       }catch (Exception e) {
       }
     }
     return null;
   }
   
+  public static Misc getMisc(long p_accountId)
+  {
+    if( GWT.isClient() )
+    {
+      // this is for debug only.
+      // in production, the other class is compiled by gwt
+      return GWT.create( Misc.class );
+    }
+    else
+    {
+      try
+      {
+        return GWTi18nServer.create( Misc.class, getLocale(p_accountId) );
+      }catch (Exception e) {
+      }
+    }
+    return null;
+  }
+  
+  private static String getLocale(long p_accountId)
+  {
+    EbAccount account = null;
+    if(p_accountId != 0)
+    {
+      account = FmgDataStore.dao().find( EbAccount.class, p_accountId );
+    }
+    String locale = null;
+    if( account != null )
+    {
+      locale = account.getLocale();
+    }
+    return locale;
+  }
 }

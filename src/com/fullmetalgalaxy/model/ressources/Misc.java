@@ -20,9 +20,8 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.ressources;
+package com.fullmetalgalaxy.model.ressources;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Messages;
 
 /**
@@ -31,8 +30,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface Misc extends Messages
 {
-  public Misc Messages = GWT.create( Misc.class );
-
   String shortDateFormat();
 
   String dateFormat();
