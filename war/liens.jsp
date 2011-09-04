@@ -1,4 +1,5 @@
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<!DOCTYPE html>
 <HTML>
 <head>
 <title>Full Metal Galaxy - Liens</title>
@@ -10,7 +11,7 @@
 
 <%@include file="include/header.jsp"%>
 
-    <h2>Jeux conseillé</h2>
+    <h2>Jeux partenaires</h2>
     <p>
     <a href='http://alonya.eu/' >Alonya</a> : Une version fantastique de civilisation
     </p>
@@ -35,6 +36,10 @@
       Et le logiciel pour jouer par mail</a><br/>
     </p>
     <h2>Les bannières du site</h2>
+    <p>
+    <a href="http://fullmetalgalaxy.com">
+    <img src="/images/banner/90-33.png" /></a><br/>
+    <br/>
     <p>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/146-60.jpg" /></a><br/>

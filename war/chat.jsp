@@ -1,6 +1,6 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<!doctype html>
+<!DOCTYPE html>
 <!-- The DOCTYPE declaration above will set the    -->
 <!-- browser's rendering engine into               -->
 <!-- "Standards Mode". Replacing this declaration  -->

@@ -1,20 +1,17 @@
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<HTML>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
 <title>Full Metal Galaxy - Background</title>
         
-<%@include file="include/meta.jsp"%>
+<%@include file="/include/meta.jsp"%>
 
 </head>
 <body >
 
-<%@include file="include/header.jsp"%>
+<%@include file="/include/header.jsp"%>
 
-<table border="0" width="100%">
-<tbody><tr>
-<td align="right">Par Sébastien ANDRIVET</td>
-</tr>
-</tbody></table>
+<h1>Un texte d'ambiance par Sébastien ANDRIVET</h1>
 
 <br>
 Full Métal Planète, que les joueurs surnomment FeuMeuPeu, est un jeu
@@ -547,6 +544,6 @@ Prométhée anthropophage et métallique.<br>
 </tbody></table>
 
 
-<%@include file="include/footer.jsp"%>
+<%@include file="/include/footer.jsp"%>
 </body>
 </HTML>

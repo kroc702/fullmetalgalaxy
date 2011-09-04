@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fullmetalgalaxy.client.ressources.Misc;
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -231,12 +231,12 @@ public class ClientUtil
     return null;
   }
 
-  public static final DateTimeFormat s_dateTimeFormat = DateTimeFormat.getFormat( Misc.Messages
-      .dateTimeFormat() );
-  private static final DateTimeFormat s_shortDateFormat = DateTimeFormat.getFormat( Misc.Messages
-      .shortDateFormat() );
-  private static final DateTimeFormat s_timeFormat = DateTimeFormat.getFormat( Misc.Messages
-      .timeFormat() );
+  public static final DateTimeFormat s_dateTimeFormat = DateTimeFormat.getFormat( SharedI18n
+      .getMisc( 0 ).dateTimeFormat() );
+  private static final DateTimeFormat s_shortDateFormat = DateTimeFormat.getFormat( SharedI18n
+      .getMisc( 0 ).shortDateFormat() );
+  private static final DateTimeFormat s_timeFormat = DateTimeFormat.getFormat( SharedI18n.getMisc(
+      0 ).timeFormat() );
 
   /**
    * a formated and localized string representing the given date or time if date is between

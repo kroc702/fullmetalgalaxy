@@ -158,6 +158,10 @@ public class EbPublicAccount extends EbBase
 
   public int getCurrentLevel()
   {
+    if( m_currentLevel <= 0 )
+    {
+      m_currentLevel = 1;
+    }
     return m_currentLevel;
   }
 

@@ -485,7 +485,10 @@ public class EbAccount extends EbPublicAccount
 
   public void setMaxLevel(int p_maxLevel)
   {
-    m_maxLevel = p_maxLevel;
+    if( m_maxLevel < p_maxLevel )
+    {
+      m_maxLevel = p_maxLevel;
+    }
   }
 
 

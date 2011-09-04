@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<!DOCTYPE html>
 
 <html>
     <head>

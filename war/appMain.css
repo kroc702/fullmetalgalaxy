@@ -372,14 +372,13 @@ filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 -moz-opacity:0.5;
 -opacity:0.5;
 opacity: 0.5;
-} 
-
-/* ie6 only */
-* html #tabmenu {
-    width:55px;
 }
 
-/* ie7 only */
-*+html #tabmenu {
-    width:55px;
+/* specific style for game page */
+div#login {
+top: -4px;
+}
+
+form#login label {
+color: white;
 }

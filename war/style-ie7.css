@@ -1,0 +1,8 @@
+#nav ul li {
+	display: inline ;
+}
+
+#keyPointsCollumn {
+	position:relative; 
+	top:-22px;
+}

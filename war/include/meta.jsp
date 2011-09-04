@@ -1,10 +1,15 @@
 
 <%@ page import="com.fullmetalgalaxy.server.*, com.fullmetalgalaxy.model.*" %>
-<style type="text/css">@import url( /style.css );</style>
 
 <meta name="author" content="Vincent Legendre" />
 <meta name="keywords" content="full, metal, planete, jeu, online, strategie" />
 <meta name="description" content="Full Metal Galaxy est un jeu de strategie online par navigateur bas&eacute; sur le jeu de plateau Full Metal Planete" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/style.css" type="text/css" media="screen" />
+<!--[if lte IE 7]>
+<link rel="stylesheet" href="/style-ie7.css" type="text/css" media="screen" />
+<![endif]-->
 
 <%
 long id = 0;

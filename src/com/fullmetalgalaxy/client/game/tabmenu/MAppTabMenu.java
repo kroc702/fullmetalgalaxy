@@ -60,7 +60,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   private ToggleButton m_btnInfo = new ToggleButton( Icons.s_instance.info32().createImage() );
   private ToggleButton m_btnMessage = new ToggleButton( Icons.s_instance.message32().createImage() );
   private ToggleButton m_btnPlayer = new ToggleButton( Icons.s_instance.player32().createImage() );
-  private ToggleButton m_btnReserve = new ToggleButton( Icons.s_instance.fireCoverOff32().createImage() );
+  private ToggleButton m_btnReserve = new ToggleButton( Icons.s_instance.reserve32().createImage() );
   private ToggleButton m_btnTime = new ToggleButton( Icons.s_instance.time32().createImage() );
   
   private PushButton m_btnSwitchOff = new PushButton( Icons.s_instance.switchOff8().createImage() );
@@ -109,13 +109,13 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
     addTabButton(m_btnInfo,"Autre info");
     addTabButton(m_btnMessage,"Messages");
     addTabButton(m_btnPlayer,"Afficher les joueurs");
-    addTabButton(m_btnReserve,"Réserve");
+    addTabButton( m_btnReserve, "Réserve" );
     addTabButton(m_btnTime,"Voir l'historique");
     
     m_vTabPanel.setSize( "100%", "100%" );
     m_vTabPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
     m_vTabPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
-    m_hPanel.setSize( "100%", "100%" );
+    m_hPanel.setHeight( "100%" );
     initWidget( m_hPanel );
     AppMain.getEventBus().addHandler( MessageEvent.TYPE, this );
     

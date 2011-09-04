@@ -35,6 +35,7 @@ import java.util.Locale;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -83,6 +84,7 @@ public class News
     String newsHtml = "";
     
     int itemCount = 0;
+    DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
     for( Element item : getNewsItem() )
     {
       // for each item:
@@ -101,7 +103,15 @@ public class News
       }
 
       // add a news entry
-      newsHtml += "<p><a href="+link+">"+title+"</a><br/>"+description+"</p>";
+      if( description.length() > 150 )
+      {
+        description = description.substring( 0, 150 ) + " ...";
+      }
+
+      newsHtml += "<a href=" + link + "><div class='article'><article><span class='date'>"
+ + dateFormat.format( pubDate )
+          + "</span><h4>" + title + "<h4><p>" + description
+          + "</p></article></div></a>";
         
       // and stop if we've got enough
       itemCount++;

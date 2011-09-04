@@ -1,59 +1,13 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
 
-<SCRIPT language="Javascript">
-  <!--
-var timeout = 500;
-var closetimer  = 0;
-var ddmenuitem  = 0;
-
-// open hidden layer
-function mopen(id)
-{ 
-  mcancelclosetime();
-
-  // close old layer
-  if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
-
-  // get new layer and show it
-  ddmenuitem = document.getElementById(id);
-  ddmenuitem.style.visibility = 'visible';
-
-}
-// close showed layer
-function mclose()
-{
-  if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
-}
-
-// go close timer
-function mclosetime()
-{
-  closetimer = window.setTimeout(mclose, timeout);
-}
-
-// cancel close timer
-function mcancelclosetime()
-{
-  if(closetimer)
-  {
-    window.clearTimeout(closetimer);
-    closetimer = null;
-  }
-}
-
-// close layer when click-out
-document.onclick = mclose; 
-  // -->
-</SCRIPT>
-
-<div id="mymenu" style="margin:5px; float:right; color:white;  z-index:9999999998;">
+<div id="login">
 	<% if(Auth.isUserLogged(request,response)) { %> 
-	    <%= Auth.getUserPseudo(request,response) %> :
 	    <% if(Auth.isUserAdmin(request, response)) { %>
-		<span style="position: relative;">
-	    	<a href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2"
-	    	onmouseover="mopen('menuAdmin')" onmouseout="mclosetime()">Admin</a> |
-		    	<div id="menuAdmin" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-10px; width:150px; z-index:9999999999;"
+		<span id="linkPseudo" style="position: relative;">
+	    	<a href="/account.jsp">
+	    	<img style="border:none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
+	    	</a> |
+		  <div id="menuAdmin" class="bloc" style="position: absolute; text-align:left; top:10px; left:-10px; width:150px; z-index:9999999999;"
 		      onmouseover="mcancelclosetime()" 
 		      onmouseout="mclosetime()">
 			<a target="_blank" href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2">App Engine</a><br/>
@@ -69,30 +23,30 @@ document.onclick = mclose;
 		    <a href="/AccountServlet?logout=fmgonly">log back to admin</a> <br/>
 		  </div>
 		</span>	    	
-	    <% } %>
+	    <% } else { %>
 	    <a HREF="/account.jsp" >
-	    	<img style="border=none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;Mon&nbsp;profil
+	    	<img style="border=none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
 	    </a> |
+	    <% } %>
 	    <a href="<%= Auth.getLogoutURL(request,response) %>" >
 	        <img style="border=none" border=0 src="/images/css/icon_power.cache.png" alt="" />&nbsp;D&eacute;connexion
 	    </a>
 	<% } else { %>
-		<a href="<%= Auth.getFmgLoginURL(request,response) %>" >
-	        <img style="border=none" border=0 src="/favicon.ico" alt="FMG" />&nbsp;Connexion
-	    </a> |
-		<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
-	        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion 
-	    </a>
-	<% } %> |
-	<span style="position: relative;">
-    	<a href="#"	onmouseover="mopen('menuLocale')" onmouseout="mclosetime()">
-    	<img src="<%= I18n.localize(request,response,"/images/icon_locale.png") %>" border="0"/></a>
-    	<div id="menuLocale" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-30px; z-index:9999999999;"
-	      onmouseover="mcancelclosetime()" 
-	      onmouseout="mclosetime()">
-	      <% for(String locale : I18n.getLocales()) {
-	        out.println("<a href='"+I18n.getURI(request,locale)+"'><img src='/i18n/"+locale+"/images/icon_locale.png' border='0'/></a><br/><br/>");
-	      } %>
-	  </div>
-	</span>	    	
+	<form id="login" method="POST" action="/AccountServlet" enctype="multipart/form-data">
+		<div>
+			<span><label>Username</label><input type="text" name="login" size="15" /></span>
+            <span><label>Password</label><input type="password" name="password" size="15" /></span>
+			<input type="hidden" name="connexion" value="1"/>
+			<input type="hidden" name="continue" value="<%= (request.getParameter("continue")==null) ? "/" : request.getParameter("continue") %>"/>
+			<span><input id="login-submit" type="submit" name="Submit" value="Go!" /></span>
+		</div>
+	</form>
+	<div id="loginlinks">
+	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
+        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion avec google 
+    </a>
+    <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;Inscription</a>
+    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;Identifiants oubliés</a>
+    </div>
+	<% } %> 	
 </div>

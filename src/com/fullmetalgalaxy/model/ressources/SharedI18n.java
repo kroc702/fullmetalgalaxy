@@ -35,6 +35,7 @@ public class SharedI18n
 {
   private static MessagesRpcException s_msgError = null;
   private static MessagesRpc s_msg = null;
+  private static Misc s_misc = null;
 
   /**
    * account id is used to decide which language to chose on server side (unused on client side)
@@ -58,4 +59,14 @@ public class SharedI18n
     }
     return s_msg;
   }
+
+  public static Misc getMisc(long p_accountId)
+  {
+    if( s_misc == null )
+    {
+      s_misc = GWT.create( Misc.class );
+    }
+    return s_misc;
+  }
+
 }

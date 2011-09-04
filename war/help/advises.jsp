@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>
@@ -9,13 +10,11 @@
 
 <%@include file="/include/header.jsp"%>
 
+<div class="inline-ul" >
 <jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
+</div>
 
     <h1>Conseils aux d&eacute;butants</h1>
-
-<p>
-Ces conseils étaits données à la fin du livre de règle.
-</p>
 
 <ul>
   <li>
@@ -23,6 +22,13 @@ Ces conseils étaits données à la fin du livre de règle.
     mode asynchrone, vitesse du jeu, etc...). N'hésitez pas &agrave; contacter les autres joueurs
     pour connaître leurs niveaux, leurs fréquences de jeu. 
   </li>
+</ul>
+ 
+<h1>
+Ces conseils étaits données à la fin du livre de règle.
+</h1>
+
+<ul>
   <li>
     Avant d'entammer une série d'action, ou un plan machiavelique, vérifiez bien que votre 
     stock de point d'action vous permet de mener &agrave; bien votre plan.
@@ -53,11 +59,20 @@ ne le croyez jamais.
   </li>
 </ul>
 
-<p>
+<h1>Il y a aussi de véritables cours !</h1>
+<ul>
+  <li>
 <a href="http://fullmetalplanete.forum2jeux.com/trucs-et-astuces-f16/les-lecons-d-alpha-t203.htm">
-Il y a aussi de véritables cours !</a>
-</p>
-
+Les leçons d'Alpha
+</a>
+  </li>
+  <li>
+<a href="http://fullmetalplanete.forum2jeux.com/t42-conseils-de-sages">
+Les conseils de Grzon
+</a>
+</li>
+</ul>
+	
 <%@include file="/include/footer.jsp"%>
 </body>
 </HTML>
