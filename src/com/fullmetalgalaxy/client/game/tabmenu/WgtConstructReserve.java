@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 import java.util.Map.Entry;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -59,12 +59,12 @@ public class WgtConstructReserve extends Composite
   public void redraw()
   {
     m_panel.clear();
-    EbConfigGameVariant variant = ModelFmpMain.model().getGame().getEbConfigGameVariant();
+    EbConfigGameVariant variant = GameEngine.model().getGame().getEbConfigGameVariant();
     
     EnuColor myColor = new EnuColor();
-    if( ModelFmpMain.model().getMyRegistration() != null )
+    if( GameEngine.model().getMyRegistration() != null )
     {
-      myColor.setValue( ModelFmpMain.model().getMyRegistration().getOriginalColor() );
+      myColor.setValue( GameEngine.model().getMyRegistration().getOriginalColor() );
     }
     
     for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )

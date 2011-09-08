@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.creation;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.model.LandType;
@@ -66,7 +66,7 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
   public void onModelChange(boolean p_forceRedraw)
   {
     // always redraw game in construction as all lands may have been regenerated
-    if( (ModelFmpMain.model().getGame().getId() == 0) || p_forceRedraw )
+    if( (GameEngine.model().getGame().getId() == 0) || p_forceRedraw )
     {
       m_lastGameId = -1;
     }
@@ -140,14 +140,14 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
 
     if( DOM.eventGetButton( DOM.eventGetCurrentEvent() ) == Event.BUTTON_LEFT )
     {
-      ModelFmpMain.model().getGame().setLand( position, m_leftClic );
+      GameEngine.model().getGame().setLand( position, m_leftClic );
     }
     else
     {
-      ModelFmpMain.model().getGame().setLand( position, m_rightClic );
+      GameEngine.model().getGame().setLand( position, m_rightClic );
     }
-    ModelFmpMain.model().getGame().setMinimapUri( null );
-    ModelFmpMain.model().getGame().setMapUri( null );
+    GameEngine.model().getGame().setMinimapUri( null );
+    GameEngine.model().getGame().setMapUri( null );
     onModelChange();
   }
 

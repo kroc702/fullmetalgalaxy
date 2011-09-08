@@ -40,6 +40,8 @@ import com.fullmetalgalaxy.model.persist.Game;
  * @author Vincent Legendre
  * it is the base class to represent any event or action which can be performed on to a game.
  * 'exec()' have to be launch at least once before saving this event. @see unexec()
+ * 
+ * TODO should we store game version ? or use ModelFmpUpdate in GameServices
  */
 public class AnEvent extends EbBase
 {

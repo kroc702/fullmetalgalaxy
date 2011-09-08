@@ -23,8 +23,10 @@
 package com.fullmetalgalaxy.client.game.tabmenu;
 
 import java.util.Date;
+
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
@@ -87,7 +89,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
    */
   private void initGeneralPanel()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
 
     // set general informations
     // ------------------------
@@ -96,10 +98,10 @@ public class WgtGameInfo extends Composite implements ClickHandler
     if( game.getGameType() == GameType.Puzzle )
     {
       m_generalPanel.add( new Label( "Partie en mode 'Puzzle'" ) );
-      if( ModelFmpMain.model().getMyRegistration() != null )
+      if( GameEngine.model().getMyRegistration() != null )
       {
         m_generalPanel.add( new Label( ", vous controllez les pions "
-            + Messages.getColorString( 0, ModelFmpMain.model().getMyRegistration().getColor() ) ) );
+            + Messages.getColorString( 0, GameEngine.model().getMyRegistration().getColor() ) ) );
       }
     }
 
@@ -110,8 +112,8 @@ public class WgtGameInfo extends Composite implements ClickHandler
         + BoardIcons.iconTide( game.getCurrentTide() ).getHTML()
         + " ";
     // + Messages.getTideString( game.getCurrentTide() ) + "'> ";
-    if( (ModelFmpMain.model().getMyRegistration() != null)
-        && (ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() > 0) )
+    if( (GameEngine.model().getMyRegistration() != null)
+        && (GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() > 0) )
     {
       htmlTide += BoardIcons.iconTide( game.getNextTide() ).getHTML() + " ";
       // + Messages.getTideString( game.getNextTide() ) + "'>";
@@ -146,9 +148,9 @@ public class WgtGameInfo extends Composite implements ClickHandler
               "Reporter un problème à <a href='mailto:admin@fullmetalgalaxy.com'>admin@fullmetalgalaxy.com</a>" ) );
     }
 
-    if( ModelFmpMain.model().isJoined() )
+    if( GameEngine.model().isJoined() )
     {
-      EbRegistration registration = ModelFmpMain.model().getMyRegistration();
+      EbRegistration registration = GameEngine.model().getMyRegistration();
       if( game.isAsynchron() )
       {
         // Display next action point increments
@@ -174,15 +176,15 @@ public class WgtGameInfo extends Composite implements ClickHandler
 
     // grid button
     m_generalPanel.add( m_btnGrid );
-    m_btnGrid.setDown( ModelFmpMain.model().isGridDisplayed() );
+    m_btnGrid.setDown( GameEngine.model().isGridDisplayed() );
     // atmosphere button
     m_generalPanel.add( m_btnAtmosphere );
-    m_btnAtmosphere.setDown( ModelFmpMain.model().isAtmosphereDisplayed() );
+    m_btnAtmosphere.setDown( GameEngine.model().isAtmosphereDisplayed() );
     // standard display button
     if( game.getMapUri() != null )
     {
       m_generalPanel.add( m_btnCustomMap );
-      m_btnCustomMap.setDown( ModelFmpMain.model().isCustomMapDisplayed() );
+      m_btnCustomMap.setDown( GameEngine.model().isCustomMapDisplayed() );
     }
 
     // display end game date
@@ -207,8 +209,8 @@ public class WgtGameInfo extends Composite implements ClickHandler
     }
 
     if( (game.getAccountCreator() != null &&
-        ModelFmpMain.model().getMyAccount().getId() == game.getAccountCreator().getId() )
-        || ModelFmpMain.model().iAmAdmin() )
+        AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId() )
+        || AppMain.instance().iAmAdmin() )
     {
       // play / pause button
       if( game.getGameType() == GameType.MultiPlayer )
@@ -226,7 +228,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
       m_generalPanel.add( m_btnEdit );
     }
 
-    if( ModelFmpMain.model().iAmAdmin() )
+    if( AppMain.instance().iAmAdmin() )
     {
       // download button
       m_generalPanel.add( new HTML( "<a href='/admin/Servlet?downloadgame=" + game.getId()
@@ -249,33 +251,33 @@ public class WgtGameInfo extends Composite implements ClickHandler
   {
     if( p_event.getSource() == m_btnGrid )
     {
-      ModelFmpMain.model().setGridDisplayed( m_btnGrid.isDown() );
+      GameEngine.model().setGridDisplayed( m_btnGrid.isDown() );
     }
     else if( p_event.getSource() == m_btnAtmosphere )
     {
-      ModelFmpMain.model().setAtmosphereDisplayed( m_btnAtmosphere.isDown() );
+      GameEngine.model().setAtmosphereDisplayed( m_btnAtmosphere.isDown() );
     }
     else if( p_event.getSource() == m_btnCustomMap )
     {
-      ModelFmpMain.model().setCustomMapDisplayed( m_btnCustomMap.isDown() );
+      GameEngine.model().setCustomMapDisplayed( m_btnCustomMap.isDown() );
     }
     else if( p_event.getSource() == m_btnPause )
     {
-      AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccount()
+      AnEvent gameLog = GameLogFactory.newAdminTimePause( AppMain.instance().getMyAccount()
           .getId() );
-      gameLog.setGame( ModelFmpMain.model().getGame() );
-      ModelFmpMain.model().runSingleAction( gameLog );
+      gameLog.setGame( GameEngine.model().getGame() );
+      GameEngine.model().runSingleAction( gameLog );
     }
     else if( p_event.getSource() == m_btnPlay )
     {
-      AnEvent gameLog = GameLogFactory.newAdminTimePlay( ModelFmpMain.model().getMyAccount()
+      AnEvent gameLog = GameLogFactory.newAdminTimePlay( AppMain.instance().getMyAccount()
           .getId() );
-      gameLog.setGame( ModelFmpMain.model().getGame() );
-      ModelFmpMain.model().runSingleAction( gameLog );
+      gameLog.setGame( GameEngine.model().getGame() );
+      GameEngine.model().runSingleAction( gameLog );
     }
     else if( p_event.getSource() == m_btnEdit )
     {
-      ClientUtil.gotoUrl( "/editgame.jsp?id="+ ModelFmpMain.model().getGame().getId() );
+      ClientUtil.gotoUrl( "/editgame.jsp?id="+ GameEngine.model().getGame().getId() );
     }
    }
 

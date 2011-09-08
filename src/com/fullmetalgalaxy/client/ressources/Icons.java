@@ -74,6 +74,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Message32.png")
   public AbstractImagePrototype message32();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Chat32.png")
+  public AbstractImagePrototype chat32();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Ok32.png")
   public AbstractImagePrototype ok32();
 

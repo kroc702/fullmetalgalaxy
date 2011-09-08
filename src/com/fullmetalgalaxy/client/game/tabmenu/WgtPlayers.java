@@ -27,9 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
@@ -50,7 +51,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -69,7 +69,6 @@ public class WgtPlayers extends Composite implements ClickHandler
   private Panel m_playerPanel = new FlowPanel();
   
   private Button m_btnChat = new Button( "chat" );
-  private DlgChatInput m_dlgChat = new DlgChatInput();
   
   public WgtPlayers()
   {
@@ -88,13 +87,13 @@ public class WgtPlayers extends Composite implements ClickHandler
   {
     m_banButtons.clear();
     m_playerPanel.clear();
-    int PlayerCount = ModelFmpMain.model().getGame().getSetRegistration().size();
+    int PlayerCount = GameEngine.model().getGame().getSetRegistration().size();
     m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( PlayerCount ) ) );
 
     // message to all link
     String pseudoList[] = new String[PlayerCount];
     int i = 0;
-    for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
+    for( EbRegistration registration : GameEngine.model().getGame().getSetRegistration() )
     {
       if( registration.getAccount() != null )
       {
@@ -108,11 +107,11 @@ public class WgtPlayers extends Composite implements ClickHandler
     }
     m_playerPanel.add( new HTML( "<a href='"
         + EbPublicAccount
-            .getPMUrl( "[FMG] " + ModelFmpMain.model().getGame().getName(), pseudoList )
+            .getPMUrl( "[FMG] " + GameEngine.model().getGame().getName(), pseudoList )
         + "' >Envoyer un message à tous</a>" ) );
 
     // get player order
-    List<EbRegistration> sortedRegistration = ModelFmpMain.model().getGame()
+    List<EbRegistration> sortedRegistration = GameEngine.model().getGame()
         .getRegistrationByPlayerOrder();
 
 
@@ -144,14 +143,14 @@ public class WgtPlayers extends Composite implements ClickHandler
         
         // display login
         // if player is connected, display in bold font
-        if( ModelFmpMain.model().isUserConnected( registration.getAccount().getPseudo() ) )
+        if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
         {
           html += "<b>";
         }
         String login = registration.getAccount().getPseudo();
         html += "<a href='" + registration.getAccount().getProfileUrl() + "' target='_blank'>"
             + login + "</a>";
-        if( ModelFmpMain.model().isUserConnected( registration.getAccount().getPseudo() ) )
+        if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
         {
           html += "</b>";
         }
@@ -165,7 +164,7 @@ public class WgtPlayers extends Composite implements ClickHandler
         html = "???";
       }
 
-      if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )
+      if( GameEngine.model().getGame().getCurrentPlayerRegistration() == registration )
       {
         html += Icons.s_instance.action16().getHTML();
       }
@@ -197,15 +196,15 @@ public class WgtPlayers extends Composite implements ClickHandler
               3,
               ""  + registration.getPtAction()
                   + "/"
-                  + (ModelFmpMain.model().getGame().getEbConfigGameVariant()
-                      .getActionPtMaxReserve() + ((registration.getEnuColor().getNbColor() - 1) * ModelFmpMain
+                  + (GameEngine.model().getGame().getEbConfigGameVariant()
+                      .getActionPtMaxReserve() + ((registration.getEnuColor().getNbColor() - 1) * GameEngine
                       .model().getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
 
       // display Wining points
-      m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(ModelFmpMain.model().getGame()) );
+      m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );
 
       // display 'must play before'
-      if( (!ModelFmpMain.model().getGame().isAsynchron())
+      if( (!GameEngine.model().getGame().isAsynchron())
           && (registration.getEndTurnDate() != null) )
       {
         m_playerGrid.setText( 0, 5, "doit jouer avant" );
@@ -223,9 +222,9 @@ public class WgtPlayers extends Composite implements ClickHandler
       m_playerGrid.setHTML( index, 6, htmlMail );
 
       // display admin button
-      if( (ModelFmpMain.model().getGame().getAccountCreator() != null
-          && ModelFmpMain.model().getMyAccount().getId() == ModelFmpMain.model().getGame()
-          .getAccountCreator().getId()) || ModelFmpMain.model().iAmAdmin() ) 
+      if( (GameEngine.model().getGame().getAccountCreator() != null
+          && AppMain.instance().getMyAccount().getId() == GameEngine.model().getGame()
+          .getAccountCreator().getId()) || AppMain.instance().iAmAdmin() ) 
       {
         if( registration.haveAccount() )
         {
@@ -240,7 +239,7 @@ public class WgtPlayers extends Composite implements ClickHandler
         }
         
         // display endTurn button
-        if( (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration) )
+        if( (GameEngine.model().getGame().getCurrentPlayerRegistration() == registration) )
         {
           m_playerGrid.setWidget( index, 8, m_btnSkipTurn );
         }
@@ -254,14 +253,14 @@ public class WgtPlayers extends Composite implements ClickHandler
     
     // come from old WgtContextPlayers
     //
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( game.getGameType() == GameType.MultiPlayer )
     {
       VerticalPanel vpanel = new VerticalPanel();
 
       // other connected User
       vpanel.add( new Label( "Visiteur(s) :" ) );
-      for( Presence user : ModelFmpMain.model().getPresenceRoom() )
+      for( Presence user : AppMain.instance().getPresenceRoom() )
       {
         if( !contain( sortedRegistration, user.getPseudo() ) )
         {
@@ -305,23 +304,22 @@ public class WgtPlayers extends Composite implements ClickHandler
   {
     if( p_event.getSource() == m_btnChat )
     {
-      m_dlgChat.center();
-      m_dlgChat.show();
+      DlgChatInput.showDialog();
     }
     else if( p_event.getSource() == m_btnSkipTurn )
     {
-      EbRegistration registration = ModelFmpMain.model().getGame().getCurrentPlayerRegistration();
+      EbRegistration registration = GameEngine.model().getGame().getCurrentPlayerRegistration();
       if( Window.confirm( "Voulez-vous réellement sauter le tour de "
           + registration.getAccount().getPseudo()
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-        action.setGame( ModelFmpMain.model().getGame() );
-        action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
+        action.setGame( GameEngine.model().getGame() );
+        action.setAccountId( AppMain.instance().getMyAccount().getId() );
         // ok itsn't an automatic action, but with this trick I can track of the guy which
         // end this turn and pass through action checking
         action.setAuto( true );
-        ModelFmpMain.model().runSingleAction( action );
+        GameEngine.model().runSingleAction( action );
       }
     }
     else if( m_banButtons.get( p_event.getSource() ) != null )
@@ -329,13 +327,13 @@ public class WgtPlayers extends Composite implements ClickHandler
       // want to ban player
       EbRegistration registration = m_banButtons.get( p_event.getSource() );
       if( Window.confirm( "Voulez-vous réellement banir " + registration.getAccount().getPseudo()
-          + " de la partie " + ModelFmpMain.model().getGame().getName() ) )
+          + " de la partie " + GameEngine.model().getGame().getName() ) )
       {
         EbAdminBan gameLog = new EbAdminBan();
-        gameLog.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
+        gameLog.setAccountId( AppMain.instance().getMyAccount().getId() );
         gameLog.setRegistrationId( registration.getId() );
-        gameLog.setGame( ModelFmpMain.model().getGame() );
-        ModelFmpMain.model().runSingleAction( gameLog );
+        gameLog.setGame( GameEngine.model().getGame() );
+        GameEngine.model().runSingleAction( gameLog );
       }
     }
   }

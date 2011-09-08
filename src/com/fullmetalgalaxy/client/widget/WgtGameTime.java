@@ -24,8 +24,8 @@
 package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -80,7 +80,7 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
 
     m_panel.add( new HTML( "<br/><a href='/help/gamemodes.jsp'>plus de détail ici</a>" ) );
     // fill UI
-    onModelUpdate(ModelFmpMain.model());
+    onModelUpdate(GameEngine.model());
 
     initWidget( m_panel );
 
@@ -100,19 +100,19 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
   @Override
   public void onValueChange(ValueChangeEvent<Boolean> p_event)
   {
-    ModelFmpMain
+    GameEngine
         .model()
         .getGame()
         .setConfigGameTime(
             ConfigGameTime.getFromProperties( m_speedQuickButton.getValue(),
                 m_modeParallelButton.getValue() ) );
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
 
   
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     ConfigGameTime config = p_modelSender.getGame().getConfigGameTime();
     m_modeParallelButton.setValue( config.isParallele(), false );

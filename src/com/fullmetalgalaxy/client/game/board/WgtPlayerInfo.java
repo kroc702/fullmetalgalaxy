@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
@@ -94,7 +94,7 @@ public class WgtPlayerInfo extends WgtView
 
   protected void redraw()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     AnEvent lastEvent = game.getLastGameLog();
 
     if( (lastEvent != m_oldGameEvent) )
@@ -108,15 +108,15 @@ public class WgtPlayerInfo extends WgtView
       m_panelTide.add( image );
       m_panelTide.setCellWidth( image, "20px" );
 
-      if( ModelFmpMain.model().getMyRegistration() != null )
+      if( GameEngine.model().getMyRegistration() != null )
       {
         m_lblAction.setHTML( "&nbsp;: "
-            + ModelFmpMain.model().getMyRegistration().getPtAction()
+            + GameEngine.model().getMyRegistration().getPtAction()
             + "/"
-            + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((ModelFmpMain.model()
+            + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((GameEngine.model()
                 .getMyRegistration().getEnuColor().getNbColor() - 1) * game
                 .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
-        m_lblOre.setHTML( "&nbsp;: " + ModelFmpMain.model().getMyRegistration().getOreCount(game) );
+        m_lblOre.setHTML( "&nbsp;: " + GameEngine.model().getMyRegistration().getOreCount(game) );
 
 
         // Display current take off turn
@@ -132,7 +132,7 @@ public class WgtPlayerInfo extends WgtView
 
         // display next tide (or no forecast)
         // ==================================
-        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() <= 0 )
+        if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() <= 0 )
         {
           image = BoardIcons.iconTide( Tide.Unknown ).createImage();
           image.setTitle( "pas de prévision" );
@@ -151,7 +151,7 @@ public class WgtPlayerInfo extends WgtView
         m_panelTide.setCellWidth( image, "20px" );
 
         
-        if( ModelFmpMain.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
+        if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
           image.setTitle( "maree futur: " + Messages.getTideString( 0, game.getNextTide() ) );
@@ -197,7 +197,7 @@ public class WgtPlayerInfo extends WgtView
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     redraw();
   }

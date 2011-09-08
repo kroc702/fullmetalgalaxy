@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -84,9 +84,9 @@ public class WgtEditTriggers extends Composite implements ClickHandler, ChangeLi
       EbTrigger trigger = new EbTrigger();
       trigger.setName( "trigger " + m_triggerCount );
       m_triggerCount++;
-      ModelFmpMain.model().getGame().getTriggers().add( trigger );
+      GameEngine.model().getGame().getTriggers().add( trigger );
       refreshTriggerList();
-      m_lstTrigger.setSelectedIndex( ModelFmpMain.model().getGame().getTriggers().size() - 1 );
+      m_lstTrigger.setSelectedIndex( GameEngine.model().getGame().getTriggers().size() - 1 );
       selectTrigger( trigger );
     }
 
@@ -97,7 +97,7 @@ public class WgtEditTriggers extends Composite implements ClickHandler, ChangeLi
     m_mapTrigger = new HashMap<String, EbTrigger>();
     int selectedIndex = m_lstTrigger.getSelectedIndex();
     m_lstTrigger.clear();
-    for( EbTrigger trigger : ModelFmpMain.model().getGame().getTriggers() )
+    for( EbTrigger trigger : GameEngine.model().getGame().getTriggers() )
     {
       m_lstTrigger.addItem( trigger.getName() );
       m_mapTrigger.put( trigger.getName(), trigger );

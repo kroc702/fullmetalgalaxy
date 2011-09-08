@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -58,18 +58,18 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    if( isVisible() != ModelFmpMain.model().isCustomMapDisplayed() )
+    if( isVisible() != GameEngine.model().isCustomMapDisplayed() )
     {
-      setVisible( ModelFmpMain.model().isCustomMapDisplayed() );
+      setVisible( GameEngine.model().isCustomMapDisplayed() );
     }
     if( !isVisible() )
     {
       return;
     }
 
-    if( (m_lastGameId != ModelFmpMain.model().getGame().getId()) || (p_forceRedraw) )
+    if( (m_lastGameId != GameEngine.model().getGame().getId()) || (p_forceRedraw) )
     {
-      Game game = ModelFmpMain.model().getGame();
+      Game game = GameEngine.model().getGame();
       m_lastGameId = game.getId();
       m_lastTideValue = game.getCurrentTide();
 
@@ -77,9 +77,9 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
 
       setZoom( getZoom() );
     }
-    if( m_lastTideValue != ModelFmpMain.model().getGame().getCurrentTide() )
+    if( m_lastTideValue != GameEngine.model().getGame().getCurrentTide() )
     {
-      m_lastTideValue = ModelFmpMain.model().getGame().getCurrentTide();
+      m_lastTideValue = GameEngine.model().getGame().getCurrentTide();
       onTideChange();
     }
   }
@@ -93,7 +93,7 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
 
     // compute the size of the widget
     int pxW = game.getLandPixWidth( new EnuZoom( getZoom().getValue() ) );

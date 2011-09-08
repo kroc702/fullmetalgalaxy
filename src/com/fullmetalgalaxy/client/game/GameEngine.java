@@ -20,30 +20,28 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client;
+package com.fullmetalgalaxy.client.game;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.AppRoot;
+import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmpCallback;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.MessageEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
-import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
-import com.fullmetalgalaxy.model.ChatMessage;
-import com.fullmetalgalaxy.model.ChatService;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
-import com.fullmetalgalaxy.model.Presence;
-import com.fullmetalgalaxy.model.Presence.ClientType;
-import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -55,51 +53,35 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
-import com.google.gwt.appengine.channel.client.Channel;
-import com.google.gwt.appengine.channel.client.ChannelFactory;
-import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
-import com.google.gwt.appengine.channel.client.SocketError;
-import com.google.gwt.appengine.channel.client.SocketListener;
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
-import com.google.gwt.user.client.ui.HTML;
 
 
 /**
  * @author Vincent Legendre
  *
  */
-public class ModelFmpMain implements Window.ClosingHandler
+public class GameEngine implements EntryPoint
 {
-  private static ModelFmpMain s_ModelFmpMain = new ModelFmpMain();
+  public static final String HISTORY_ID = "GameEngine";
+  private static GameEngine s_ModelFmpMain = null;
 
   /**
    * @return a unique instance of the model on client side
    */
-  public static ModelFmpMain model()
+  public static GameEngine model()
   {
     return s_ModelFmpMain;
   }
 
-  protected String m_gameId = null;
   protected Game m_game = new Game();
 
 
   protected EventsPlayBuilder m_actionBuilder = new EventsPlayBuilder();
-
-  protected EbPublicAccount m_myAccount = new EbPublicAccount();
-
-  protected boolean m_myAccountAdmin = false;
-
-  // connected players (or any other peoples)
-  protected PresenceRoom m_connectedUsers = new PresenceRoom( 0 );
 
 
   // interface
@@ -127,54 +109,46 @@ public class ModelFmpMain implements Window.ClosingHandler
 
   private int m_successiveRpcErrorCount = 0;
 
-  /**
-   * @see ModelFmpInit.m_channelToken
-   */
-  private String m_channelToken = null;
-  private int m_pageId = 0;
-  private boolean m_isChannelConnected = false;
-
-
-  private Timer m_reloadTimer = new Timer()
-  {
-    @Override
-    public void run()
-    {
-      ClientUtil.reload();
-    }
-  };
-
-
-
 
   /**
    * 
    */
-  public ModelFmpMain()
+  public GameEngine()
   {
-    // disconnect if leaving this page
-    Window.addWindowClosingHandler( this );
-
-    loadAccountInfoFromPage();
-    getActionBuilder().setAccountId( getMyAccount().getId() );
+    s_ModelFmpMain = this;
   }
 
-  public void load(Game p_model)
+
+  private FmpCallback<ModelFmpInit> loadGameCallback = new FmpCallback<ModelFmpInit>()
   {
-    if( p_model==null )
+    @Override
+    public void onSuccess(ModelFmpInit p_result)
     {
-      // TODO i18n
-      Window.alert( "Partie non trouve...\nVerifier l'url, mais il ce peut qu'elle ai ete suprime" );
-      return;
+      super.onSuccess( p_result );
+      ModelFmpInit model = (ModelFmpInit)p_result;
+      if( model==null )
+      {
+        // TODO i18n
+        Window.alert( "Partie non trouve...\nVerifier l'url, mais il ce peut qu'elle ai ete suprime" );
+        return;
+      }
+      else
+      {
+        if( model.getPresenceRoom() != null )
+        {
+          //ModelFmpMain.model().m_connectedUsers = model.getPresenceRoom();
+        }
+        m_game = model.getGame();
+        getActionBuilder().setGame( getGame() );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+        if( m_game.getGameType() != GameType.MultiPlayer )
+        {
+          LocalGame.loadGame( GameEngine.model() );
+        }
+        AppMain.instance().stopLoading();
+      }
     }
-    m_game = p_model;
-    getActionBuilder().setGame( getGame() );
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
-    if( p_model.getGameType() != GameType.MultiPlayer )
-    {
-      LocalGame.loadGame( this );
-    }
-  }
+  };
 
 
   public EbRegistration getMyRegistration()
@@ -191,7 +165,7 @@ public class ModelFmpMain implements Window.ClosingHandler
     {
       EbRegistration registration = (EbRegistration)it.next();
       if( registration.haveAccount() 
-          && registration.getAccount().getId() == getMyAccount().getId() )
+          && registration.getAccount().getId() == AppMain.instance().getMyAccount().getId() )
       {
         return registration;
       }
@@ -200,48 +174,13 @@ public class ModelFmpMain implements Window.ClosingHandler
   }
 
 
-  private void loadAccountInfoFromPage()
-  {
-    getMyAccount().setPseudo( ClientUtil.readGwtPropertyString( "fmp_userpseudo" ) );
-    getMyAccount().setId( ClientUtil.readGwtPropertyLong( "fmp_userid" ) );
-    m_myAccountAdmin = ClientUtil.readGwtPropertyBoolean( "fmp_useradmin" );
-    m_pageId = ClientUtil.readGwtPropertyLong( "fmp_pageid" ).intValue();
-
-    m_channelToken = ClientUtil.readGwtProperty( "fmp_channelToken" );
-    if( m_channelToken != null && getGame().getGameType() == GameType.MultiPlayer )
-    {
-      m_reconnectCallback.onSuccess( m_channelToken );
-    }
-  }
-
-
-  public EbPublicAccount getMyAccount()
-  {
-    return m_myAccount;
-  }
-
-  public boolean iAmAdmin()
-  {
-    return m_myAccountAdmin;
-  }
 
 
 
-  /**
-   * create a new instance of my presence
-   * @return
-   */
-  public Presence getMyPresence()
-  {
-    Presence presence = new Presence( getMyAccount().getPseudo(), getPresenceRoom().getGameId(),
-        getPageId() );
-    presence.setClientType( ClientType.GAME );
-    return presence;
-  }
 
   public boolean isLogged()
   {
-    return getMyAccount().getId() != 0;
+    return AppMain.instance().getMyAccount().getId() != 0;
   }
 
 
@@ -261,8 +200,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void reinitGame()
   {
     m_game = new Game();
-    m_gameId = null;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   public Game getGame()
@@ -270,19 +208,7 @@ public class ModelFmpMain implements Window.ClosingHandler
     return m_game;
   }
 
-  public void setGameId(String p_id)
-  {
-    m_gameId = p_id;
-  }
 
-  public String getGameId()
-  {
-    if( m_gameId == null )
-    {
-      return "" + getGame().getId();
-    }
-    return m_gameId;
-  }
 
 
   private boolean m_isActionPending = false;
@@ -292,8 +218,8 @@ public class ModelFmpMain implements Window.ClosingHandler
     @Override
     public void onSuccess(Void p_result)
     {
-      if( !m_isChannelConnected
-          && ModelFmpMain.model().getGame().getGameType() == GameType.MultiPlayer )
+      if( !AppMain.instance().isChannelConnected()
+          && GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
       {
         // we just receive an action acknowledge but we arn't connected with
         // channel. ie we won't receive update event... reload page
@@ -304,7 +230,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
 
     @Override
@@ -315,7 +241,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       // maybe the action failed because the model isn't up to date
       if( m_successiveRpcErrorCount <= 2 )
       {
@@ -335,182 +261,6 @@ public class ModelFmpMain implements Window.ClosingHandler
     }
   };
 
-  private AsyncCallback<Void> m_dummyCallback = new AsyncCallback<Void>()
-  {
-    @Override
-    public void onFailure(Throwable p_caught)
-    {
-    }
-    @Override
-    public void onSuccess(Void p_result)
-    {
-    }
-  };
-
-  private AsyncCallback<String> m_reconnectCallback = new AsyncCallback<String>()
-  {
-    @Override
-    public void onFailure(Throwable p_caught)
-    {
-      Window.alert( "server (re)connexion error !!!" );
-    }
-    @Override
-    public void onSuccess(String p_result)
-    {
-      m_channelToken = p_result;
-      if( m_channelToken == null || m_channelToken.equalsIgnoreCase( "null" ) )
-      {
-        Window.alert( "server (re)connexion error !!!" );
-      }
-      else
-      {
-        ChannelFactory.createChannel( m_channelToken, m_callbackChannel );
-      }
-    }
-  };
-
-  private ChannelCreatedCallback m_callbackChannel = new ChannelCreatedCallback()
-  {
-    @Override
-    public void onChannelCreated(Channel channel)
-    {
-      channel.open( new SocketListener()
-      {
-        @Override
-        public void onOpen()
-        {
-          // send an empty chat message to check channel is working
-          ChatMessage message = new ChatMessage();
-          message.setGameId( getGame().getId() );
-          message.setFromPageId( getPageId() );
-          message.setFromPseudo( getMyAccount().getPseudo() );
-          GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
-        }
-
-        @Override
-        public void onMessage(String message)
-        {
-          // we receive a message from channel: we won't need to reload page
-          m_reloadTimer.cancel();
-
-          // We could set this flag in onOpen callback
-          // but on some browser this doesn't reflect reality
-          m_isChannelConnected = true;
-
-          Object object = deserialize( message );
-
-          if( object instanceof ChatMessage )
-          {
-            receiveChatMessage( (ChatMessage)object );
-          }
-          else if( object instanceof PresenceRoom )
-          {
-            receivePresenceRoom( (PresenceRoom)object );
-          }
-          else if( object instanceof ModelFmpUpdate )
-          {
-            receiveModelUpdate( (ModelFmpUpdate)object );
-          }
-          else
-          {
-            MAppMessagesStack.s_instance.showWarning( "Error: " + message );
-          }
-
-        }
-
-        @Override
-        public void onError(SocketError error)
-        {
-          m_isChannelConnected = false;
-          MAppMessagesStack.s_instance.showWarning( "Error: " + error.getDescription() );
-        }
-
-        @Override
-        public void onClose()
-        {
-          m_isChannelConnected = false;
-          // This occur after two hours. in this case, we ask server for a new
-          // channel token
-          GameServices.Util.getInstance().reconnect( getMyPresence(), m_reconnectCallback );
-        }
-      } );
-    }
-  };
-
-
-  private Object deserialize(String p_serial)
-  {
-    Object object = null;
-    try
-    {
-      // Decode chat data
-      SerializationStreamFactory factory = GWT.create( ChatService.class );
-      SerializationStreamReader reader = factory.createStreamReader( p_serial );
-      object = reader.readObject();
-      if( object != null )
-      {
-        return object;
-      }
-    } catch( SerializationException e )
-    {
-    }
-
-    try
-    {
-      // Decode game data
-      SerializationStreamFactory factory = GWT.create( GameServices.class );
-      SerializationStreamReader reader = factory.createStreamReader( p_serial );
-      object = reader.readObject();
-      if( object != null )
-      {
-        return object;
-      }
-    } catch( SerializationException e )
-    {
-    }
-    return object;
-  }
-
-
-  protected void receivePresenceRoom(PresenceRoom p_room)
-  {
-    if( p_room == null )
-    {
-      return;
-    }
-    // handle connected player
-    //
-    m_connectedUsers = p_room;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
-  }
-
-  
-  protected void receiveChatMessage(ChatMessage p_msg)
-  {
-    // handle chat messages
-    //
-    if( p_msg.isEmpty() )
-    {
-      if( !ModelFmpMain.model().getMyAccount().getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ))
-      {
-        // empty message: server ask if we are still connected
-        ChatMessage message = new ChatMessage();
-        message.setGameId( ModelFmpMain.model().getGame().getId() );
-        message.setFromPageId( ModelFmpMain.model().getPageId() );
-        message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
-        GameServices.Util.getInstance().sendChatMessage( message, m_dummyCallback );
-      }
-    }
-    else
-    {
-      // real message
-      String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
-      text = SmileyCollection.INSTANCE.remplace( text );
-      text = text.replace( "\n", "<br/>" );
-      HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
-      MAppMessagesStack.s_instance.showMessage( label );
-    }
-  }
 
 
   protected void receiveModelUpdate(ModelFmpUpdate p_result)
@@ -532,7 +282,7 @@ public class ModelFmpMain implements Window.ClosingHandler
         return;
       }
 
-      if( p_result.getAccountId() == getMyAccount().getId() )
+      if( p_result.getAccountId() == AppMain.instance().getMyAccount().getId() )
       {
         getActionBuilder().clear();
       }
@@ -563,7 +313,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       }
 
       // assume that if we receive an update, something has changed !
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
 
     } catch( Throwable e )
     {
@@ -591,7 +341,7 @@ public class ModelFmpMain implements Window.ClosingHandler
 
     try
     {
-      if( !ModelFmpMain.model().isLogged() && getGame().getGameType() == GameType.MultiPlayer )
+      if( !GameEngine.model().isLogged() && getGame().getGameType() == GameType.MultiPlayer )
       {
         // TODO i18n ???
         throw new RpcFmpException( "You must be logged to do this action" );
@@ -600,9 +350,8 @@ public class ModelFmpMain implements Window.ClosingHandler
       // action.check();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        // reload page if no response after 10 seconds
-        m_reloadTimer.schedule( 10000 );
-        GameServices.Util.getInstance().runEvent( p_action, m_callbackEvents );
+        AppMain.instance().scheduleReloadTimer();
+        AppMain.getRpcService().runEvent( p_action, m_callbackEvents );
       }
       else
       {
@@ -614,7 +363,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
@@ -640,7 +389,7 @@ public class ModelFmpMain implements Window.ClosingHandler
 
     try
     {
-      if( !ModelFmpMain.model().isJoined() )
+      if( !GameEngine.model().isJoined() )
       {
         // no i18n ?
         throw new RpcFmpException( "you didn't join this game." );
@@ -649,10 +398,9 @@ public class ModelFmpMain implements Window.ClosingHandler
       getActionBuilder().unexec();
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
-        // reload page if no response after 10 seconds
-        m_reloadTimer.schedule( 10000 );
+        AppMain.instance().scheduleReloadTimer();
         // then send request
-        GameServices.Util.getInstance()
+        AppMain.getRpcService()
             .runAction( getActionBuilder().getActionList(), m_callbackEvents );
       }
       else
@@ -671,7 +419,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
   }
 
@@ -683,7 +431,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void endTurn()
   {
     EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-    action.setAccountId( model().getMyAccount().getId() );
+    action.setAccountId( AppMain.instance().getMyAccount().getId() );
     action.setGame( model().getGame() );
     runSingleAction( action );
   }
@@ -715,7 +463,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void setGridDisplayed(boolean p_isGridDisplayed)
   {
     m_isGridDisplayed = p_isGridDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   /**
@@ -732,7 +480,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void setAtmosphereDisplayed(boolean p_isAtmosphereDisplayed)
   {
     m_isAtmosphereDisplayed = p_isAtmosphereDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   /**
@@ -749,7 +497,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void setCustomMapDisplayed(boolean p_isCustomMapDisplayed)
   {
     m_isCustomMapDisplayed = p_isCustomMapDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   /**
@@ -766,7 +514,7 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void setFireCoverDisplayed(boolean p_isFireCoverDisplayed)
   {
     m_isFireCoverDisplayed = p_isFireCoverDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   /**
@@ -783,13 +531,13 @@ public class ModelFmpMain implements Window.ClosingHandler
   public void setZoomDisplayed(int p_zoomValueDisplayed)
   {
     m_zoomDisplayed = new EnuZoom( p_zoomValueDisplayed );
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   public void setZoomDisplayed(EnuZoom p_zoomDisplayed)
   {
     m_zoomDisplayed = p_zoomDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
 
@@ -814,7 +562,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       timePlay( 99999 );
     }
     m_currentActionIndex = getGame().getLogs().size();
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   public void timeBack(int p_actionCount)
@@ -836,7 +584,7 @@ public class ModelFmpMain implements Window.ClosingHandler
         {
           RpcUtil.logError( "error ", e );
           Window.alert( "unexpected error : " + e );
-          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
           return;
         }
         // don't count automatic action as one action to play
@@ -852,7 +600,7 @@ public class ModelFmpMain implements Window.ClosingHandler
         }
       }
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
 
@@ -890,7 +638,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       }
       m_currentActionIndex++;
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   public int getCurrentActionIndex()
@@ -909,7 +657,7 @@ public class ModelFmpMain implements Window.ClosingHandler
     {
       return true;
     }
-    if( iAmAdmin() )
+    if( AppMain.instance().iAmAdmin() )
     {
       return true;
     }
@@ -933,7 +681,7 @@ public class ModelFmpMain implements Window.ClosingHandler
       {
         event = getGame().getLogs().get( i );
         if( event == null || !(event instanceof AnEventPlay)
-            || ((AnEventPlay)event).getAccountId() != getMyAccount().getId() )
+            || ((AnEventPlay)event).getAccountId() != AppMain.instance().getMyAccount().getId() )
         {
           return false;
         }
@@ -942,68 +690,47 @@ public class ModelFmpMain implements Window.ClosingHandler
     }
     return false;
   }
-  
-
-
-  public boolean isUserConnected(String p_pseudo)
-  {
-    assert p_pseudo != null;
-    return m_connectedUsers.isConnected( p_pseudo );
-  }
-
-
-  public PresenceRoom getPresenceRoom()
-  {
-    return m_connectedUsers;
-  }
-
-
-  /**
-   * @return the channelToken
-   */
-  protected String getChannelToken()
-  {
-    return m_channelToken;
-  }
-
-  /**
-   * @param p_channelToken the channelToken to set
-   */
-  protected void setChannelToken(String p_channelToken)
-  {
-    m_channelToken = p_channelToken;
-  }
-
-  /**
-   * @return the pageId
-   */
-  public int getPageId()
-  {
-    return m_pageId;
-  }
-
-  /**
-   * @param p_pageId the pageId to set
-   */
-  public void setPageId(int p_pageId)
-  {
-    m_pageId = p_pageId;
-  }
 
   @Override
-  public void onWindowClosing(ClosingEvent p_event)
+  public void onModuleLoad()
   {
-    GameServices.Util.getInstance().disconnect(
-        getMyPresence(), m_dummyCallback );
+    AppMain.instance().startLoading();
+    
+    String strModel = ClientUtil.getJSString( "fmp_model" );
+    if( strModel != null )
+    {
+      try
+      {
+        SerializationStreamFactory factory = GWT.create( GameServices.class );
+        SerializationStreamReader reader;
+        reader = factory.createStreamReader( strModel );
+        Object object = reader.readObject();
+        if( object instanceof ModelFmpInit )
+        {
+          loadGameCallback.onSuccess( (ModelFmpInit)object );
+        }
+      } catch( SerializationException e )
+      {
+        AppRoot.logger.log( Level.WARNING, e.getMessage() );
+      }
+    }
+    
+    if( AppMain.instance().isLoading() )
+    {
+      // well, model init wasn't found in jsp => ask it with standard RPC call
+      String gameId = ClientUtil.getUrlParameter( "id" ); 
+      if( gameId != null )
+      {
+        AppMain.getRpcService().getModelFmpInit( gameId, loadGameCallback );
+      }
+      else
+      {
+        // load an empty game
+        AppMain.instance().stopLoading();
+      }
+    }
   }
-
-  /**
-   * @return the isChannelConnected
-   */
-  public boolean isChannelConnected()
-  {
-    return m_isChannelConnected;
-  }
+  
 
 
 

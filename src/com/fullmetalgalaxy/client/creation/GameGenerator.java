@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -50,7 +50,7 @@ public class GameGenerator
 
   protected static Game getGame()
   {
-    return ModelFmpMain.model().getGame();
+    return GameEngine.model().getGame();
   }
 
   /**
@@ -58,7 +58,7 @@ public class GameGenerator
    */
   public static void cleanToken()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
@@ -79,7 +79,7 @@ public class GameGenerator
    */
   public static void clearOre()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
@@ -183,6 +183,8 @@ public class GameGenerator
    */
   public static void clearLand(LandType p_land)
   {
+    clearOre();
+    
     // to be sure the blob have the right size.
     setSize( getSize() );
     int width = getGame().getLandWidth();

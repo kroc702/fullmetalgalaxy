@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtScroll;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.google.gwt.user.client.Window;
@@ -82,7 +82,7 @@ public class WgtEditTokens extends WgtView implements WindowResizeListener
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     if( isVisible() )
     {

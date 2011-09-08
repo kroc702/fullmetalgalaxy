@@ -77,6 +77,10 @@ public class Presence implements IsSerializable, java.io.Serializable
   }
 
 
+  public String getAvatarUrl()
+  {
+    return "/ImageServlet?avatar=" + getPseudo();
+  }
 
 
   @Override

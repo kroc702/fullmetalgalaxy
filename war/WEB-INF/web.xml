@@ -16,15 +16,6 @@
     <servlet-name>Services</servlet-name>
     <url-pattern>/game/Services</url-pattern>
   </servlet-mapping>
-
-  <servlet>
-    <servlet-name>chatServlet</servlet-name>
-    <servlet-class>com.fullmetalgalaxy.server.ChatServiceImpl</servlet-class>
-  </servlet>  
-  <servlet-mapping>
-    <servlet-name>chatServlet</servlet-name>
-    <url-pattern>/chat/chat</url-pattern>
-  </servlet-mapping>
     
     <servlet>
        <servlet-name>ImageServlet</servlet-name>

@@ -20,12 +20,13 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client;
+package com.fullmetalgalaxy.client.game;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -47,11 +48,11 @@ public class LocalGame
    * This method is called after a successful load of a local game.
    * @param callback
    */
-  public static void loadGame(ModelFmpMain p_model)
+  public static void loadGame(GameEngine p_model)
   {
     ModelFmpUpdate updates = new ModelFmpUpdate();
     List<AnEvent> events = new ArrayList<AnEvent>();
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     updates.setFromVersion( game.getVersion() );
     for( EbTrigger trigger : game.getTriggers() )
     {
@@ -75,9 +76,9 @@ public class LocalGame
   }
 
   public static void runEvent(AnEvent p_action, AsyncCallback<Void> callbackUpdates,
-      ModelFmpMain p_model)
+      GameEngine p_model)
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
@@ -100,12 +101,12 @@ public class LocalGame
   }
 
   public static void runAction(ArrayList<AnEventPlay> p_actionList,
-      AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
+      AsyncCallback<Void> callbackUpdates, GameEngine p_model)
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
-    updates.setFromPageId( ModelFmpMain.model().getPageId() );
-    updates.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+    updates.setFromPageId( AppMain.instance().getPageId() );
+    updates.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
     updates.setFromVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
     for( AnEvent eventPlay : p_actionList )
@@ -121,8 +122,8 @@ public class LocalGame
     events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     updates = new ModelFmpUpdate();
-    updates.setFromPageId( ModelFmpMain.model().getPageId() );
-    updates.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
+    updates.setFromPageId( AppMain.instance().getPageId() );
+    updates.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
     updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
     updates.setToVersion( game.getVersion() );
@@ -139,10 +140,10 @@ public class LocalGame
    * @throws RpcFmpException
    */
   public static void modelUpdate(long p_gameId, Date p_lastVersion,
-      AsyncCallback<Void> callbackUpdates, ModelFmpMain p_model)
+      AsyncCallback<Void> callbackUpdates, GameEngine p_model)
   {
     // check triggers
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     List<AnEvent> events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
     ModelFmpUpdate updates = new ModelFmpUpdate();

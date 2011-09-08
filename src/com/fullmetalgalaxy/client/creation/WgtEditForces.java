@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.creation;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -81,7 +81,7 @@ public class WgtEditForces extends Composite implements ClickHandler, ChangeList
   {
     if( p_event.getSource() == m_btnNewReg )
     {
-      Game game = ModelFmpMain.model().getGame();
+      Game game = GameEngine.model().getGame();
 
       if( game.getSetRegistration().size() >= game.getMaxNumberOfPlayer() )
       {
@@ -119,7 +119,7 @@ public class WgtEditForces extends Composite implements ClickHandler, ChangeList
     m_mapReg = new HashMap<String, EbRegistration>();
     int selectedIndex = m_lstReg.getSelectedIndex();
     m_lstReg.clear();
-    for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
+    for( EbRegistration registration : GameEngine.model().getGame().getSetRegistration() )
     {
       m_lstReg.addItem( Messages.getColorString( 0, registration.getColor() ) );
       m_mapReg.put( Messages.getColorString( 0, registration.getColor() ), registration );

@@ -19,6 +19,7 @@
 	    %>
 		<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />
 		<meta name='gwt:property' id='fmp_pageid' content='<%= presence.getPageId() %>' />
+		<meta name='gwt:property' id='fmp_gameid' content='<%= id %>' />
 		<script type="text/javascript" language="javascript">
 			var fmp_room='<%= room %>';
 			var fmp_model='<%= model %>';
@@ -33,8 +34,9 @@
 
         <style type="text/css">@import url( /appMain.css );</style>
         
-        <meta name='gwt:property' id='app_history' content='idGame_<%= request.getParameter( "id" ) %>_status__messages__context__advises__tabmenu__board__'>
-        
+		<meta name='gwt:property' id='ChatEngine' />
+		<meta name='gwt:property' id='GameEngine' />
+		
     </head>
 
     <body style="width:100%; height:100%; background:url(images/css/bloc-bkg.png) repeat;">
@@ -63,7 +65,6 @@
                 </td>
                 <td width="100%" height="100%" >
                     <div id="list" style="display:none;" ></div>
-                    <div id="new" style="display:none; width:100%; height:100%; "></div>
                 </td>
             </tr>
         </table>
@@ -73,11 +74,14 @@
     </td></tr>
     </table>
 
-        <div id="tabmenu" class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;"></div>
+        <div id="tabmenu" class="bloc" style="display:none; height:376px; position:absolute; top:10%; left:0px; z-index:9999999999;" ></div>
+
     
         <div id="context" style="display:none; position:absolute; bottom:0px; right:0px; z-index:9999999998;"></div>
     
-        <div id="messages" style="display:none; position:absolute; bottom:205px; right:0px; z-index:9999999999;"></div>
+        <div id="LittlePresences" style="display:none; position:absolute; bottom:0px; right:0px; z-index:9999999999;"></div>
+    
+        <div id="MessagesStack" style="display:none; position:absolute; bottom:205px; right:0px; z-index:9999999999;"></div>
         
         <div id="debug" style="display:block; position:absolute; top:50px; left:50px; z-index:9999999999;"></div>
         

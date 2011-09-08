@@ -24,9 +24,10 @@ package com.fullmetalgalaxy.client.game.board;
 
 import java.util.List;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -63,16 +64,16 @@ public class WgtPlayerList extends WgtView
 
   protected void redraw()
   {
-    assert ModelFmpMain.model().getGame().getSetRegistration() != null;
+    assert GameEngine.model().getGame().getSetRegistration() != null;
     int winnerPoint = 0;
     String winnerLogin = "";
 
     m_panel.clear();
-    m_panel.add( new Label( MAppBoard.s_messages.xPlayers( ModelFmpMain.model().getGame()
+    m_panel.add( new Label( MAppBoard.s_messages.xPlayers( GameEngine.model().getGame()
         .getSetRegistration().size() ) ) );
 
     // get player order
-    List<EbRegistration> sortedRegistration = ModelFmpMain.model().getGame()
+    List<EbRegistration> sortedRegistration = GameEngine.model().getGame()
         .getRegistrationByPlayerOrder();
 
     String htmlPlayers = "";
@@ -97,7 +98,7 @@ public class WgtPlayerList extends WgtView
       }
 
       // display player login
-      if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == registration )
+      if( GameEngine.model().getGame().getCurrentPlayerRegistration() == registration )
       {
         htmlPlayers += "<b>";
       }
@@ -105,7 +106,7 @@ public class WgtPlayerList extends WgtView
       int point = 0;
       if( registration.haveAccount() )
       {
-        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(GameEngine.model().getGame());
         String pseudo = registration.getAccount().getPseudo();
         if( point > winnerPoint )
         {
@@ -114,21 +115,21 @@ public class WgtPlayerList extends WgtView
         }
         htmlPlayers += MAppBoard.s_messages.playerDescription( pseudo, point );
       }
-      else if( registration.getAccount().getId() == ModelFmpMain.model().getMyAccount().getId() )
+      else if( registration.getAccount().getId() == AppMain.instance().getMyAccount().getId() )
       {
-        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(GameEngine.model().getGame());
         if( point > winnerPoint )
         {
           winnerPoint = point;
-          winnerLogin = ModelFmpMain.model().getMyAccount().getPseudo();
+          winnerLogin = AppMain.instance().getMyAccount().getPseudo();
         }
-        htmlPlayers += MAppBoard.s_messages.playerDescription( ModelFmpMain.model().getMyAccount()
+        htmlPlayers += MAppBoard.s_messages.playerDescription( AppMain.instance().getMyAccount()
             .getPseudo(),
             point );
       }
       else
       {
-        point = registration.estimateWinningScore(ModelFmpMain.model().getGame());
+        point = registration.estimateWinningScore(GameEngine.model().getGame());
         if( point > winnerPoint )
         {
           winnerPoint = point;
@@ -137,7 +138,7 @@ public class WgtPlayerList extends WgtView
         htmlPlayers += MAppBoard.s_messages.playerDescription( "???", point );
       }
 
-      if( ModelFmpMain.model().getGame().getCurrentPlayerRegistration().getId() == registration
+      if( GameEngine.model().getGame().getCurrentPlayerRegistration().getId() == registration
           .getId() )
       {
         htmlPlayers += "</b>";
@@ -149,7 +150,7 @@ public class WgtPlayerList extends WgtView
     m_panel.add( playersPanel );
 
     // display winner !
-    if( ModelFmpMain.model().getGame().isFinished() )
+    if( GameEngine.model().getGame().isFinished() )
     {
       Image image = new Image( "winner.jpg" );
       image.setWidth( "100%" );
@@ -164,7 +165,7 @@ public class WgtPlayerList extends WgtView
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     // TODO optimisation: redraw only if required
     redraw();

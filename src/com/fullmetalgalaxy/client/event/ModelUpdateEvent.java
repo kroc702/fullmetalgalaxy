@@ -22,14 +22,14 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.event;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author vlegendr
  *
- * this event represent any {@link ModelFmpMain} update: this is the legacy event. 
+ * this event represent any {@link GameEngine} update: this is the legacy event. 
  * (ie the only existing event before the use of eventbus)
  */
 public class ModelUpdateEvent extends GwtEvent<ModelUpdateEvent.Handler>
@@ -38,7 +38,7 @@ public class ModelUpdateEvent extends GwtEvent<ModelUpdateEvent.Handler>
    * Implemented by objects that handle {@link ModelUpdateEvent}.
    */
   public interface Handler extends EventHandler {
-    public void onModelUpdate(ModelFmpMain p_modelSender);
+    public void onModelUpdate(GameEngine p_modelSender);
   }
 
   /**
@@ -46,9 +46,9 @@ public class ModelUpdateEvent extends GwtEvent<ModelUpdateEvent.Handler>
    */
   public static Type<ModelUpdateEvent.Handler> TYPE = new Type<ModelUpdateEvent.Handler>();
   
-  private ModelFmpMain m_modelSender = null;
+  private GameEngine m_modelSender = null;
   
-  public ModelUpdateEvent(ModelFmpMain p_modelSender)
+  public ModelUpdateEvent(GameEngine p_modelSender)
   {
     m_modelSender = p_modelSender;
   }

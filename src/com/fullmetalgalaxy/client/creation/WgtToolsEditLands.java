@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
@@ -153,7 +153,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
 
   protected void redraw()
   {
-    String base = "images/board/" + ModelFmpMain.model().getGame().getPlanetType().getFolderName();
+    String base = "images/board/" + GameEngine.model().getGame().getPlanetType().getFolderName();
     m_btnPlain.setUrl( base + "/strategy/plain.png" );
     m_btnMontain.setUrl( base + "/strategy/montain.png" );
     m_btnReef.setUrl( base + "/strategy/reef_low.png" );
@@ -166,14 +166,14 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
         + m_wgtlayerEditLand.getRightClic().getImageName(), 0, 0, FmpConstant
         .getHexWidth( EnuZoom.Medium ), FmpConstant.getHexHeight( EnuZoom.Medium ) );
 
-    m_txtLandWidth.setText( "" + ModelFmpMain.model().getGame().getLandWidth() );
-    m_txtLandHeight.setText( "" + ModelFmpMain.model().getGame().getLandHeight() );
+    m_txtLandWidth.setText( "" + GameEngine.model().getGame().getLandWidth() );
+    m_txtLandHeight.setText( "" + GameEngine.model().getGame().getLandHeight() );
   }
 
   private void setClicTool(int p_button, LandType p_land)
   {
     String imageUrl = "images/board/"
-        + ModelFmpMain.model().getGame().getPlanetType().getFolderName() + "/tactic/"
+        + GameEngine.model().getGame().getPlanetType().getFolderName() + "/tactic/"
         + p_land.getImageName();
     if( p_button == Event.BUTTON_LEFT )
     {
@@ -205,17 +205,17 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       GameGenerator.setLandPercent( percent );
       GameGenerator.setHexagonMap( m_chkRoundMap.getValue() );
       GameGenerator.generLands();
-      ModelFmpMain.model().getGame().setMinimapUri( null );
-      ModelFmpMain.model().getGame().setMapUri( null );
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      GameEngine.model().getGame().setMinimapUri( null );
+      GameEngine.model().getGame().setMapUri( null );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
     else if( p_event.getSource() == m_btnClear )
     {
       GameGenerator.setSize( landWidth, landHeight );
       GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
-      ModelFmpMain.model().getGame().setMinimapUri( null );
-      ModelFmpMain.model().getGame().setMapUri( null );
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      GameEngine.model().getGame().setMinimapUri( null );
+      GameEngine.model().getGame().setMapUri( null );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
     else if( p_event.getSource() == m_btnLoadMap )
     {
@@ -320,10 +320,10 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     }
     else if( p_sender == m_lstPlanet )
     {
-      ModelFmpMain.model().getGame()
+      GameEngine.model().getGame()
           .setPlanetType( m_planets.get( m_lstPlanet.getSelectedIndex() ) );
       redraw();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
 
   }

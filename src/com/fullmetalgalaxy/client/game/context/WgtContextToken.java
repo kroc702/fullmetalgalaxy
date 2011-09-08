@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.context;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -62,11 +62,11 @@ public class WgtContextToken extends Composite
 
   public void redraw()
   {
-    assert ModelFmpMain.model() != null;
-    EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+    assert GameEngine.model() != null;
+    EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
     if( actionBuilder.getLastUpdate().getTime() != m_actionLastUpdate )
     {
-      assert ModelFmpMain.model() != null;
+      assert GameEngine.model() != null;
       m_panel.clear();
       m_actionLastUpdate = actionBuilder.getLastUpdate().getTime();
 
@@ -88,7 +88,7 @@ public class WgtContextToken extends Composite
           + "</b>" ), 0, 0 );
       if( actionBuilder.getSelectedToken().getColor() != EnuColor.None )
       {
-        EbRegistration player = ModelFmpMain.model().getGame().getRegistrationByColor(
+        EbRegistration player = GameEngine.model().getGame().getRegistrationByColor(
             actionBuilder.getSelectedToken().getColor() );
         if(player != null && player.haveAccount() )
         {
@@ -97,12 +97,12 @@ public class WgtContextToken extends Composite
       }
       
       // display land under token
-      AnBoardPosition position = ModelFmpMain.model().getActionBuilder().getSelectedPosition();
+      AnBoardPosition position = GameEngine.model().getActionBuilder().getSelectedPosition();
       if(position != null)
       {
         String landStr = Messages
-            .getLandString( 0, ModelFmpMain.model().getGame().getLand( position ) );
-        if( ModelFmpMain.model().getGame().getToken( position, TokenType.Pontoon ) != null )
+            .getLandString( 0, GameEngine.model().getGame().getLand( position ) );
+        if( GameEngine.model().getGame().getToken( position, TokenType.Pontoon ) != null )
         {
           landStr += " & " + Messages.getTokenString( 0, TokenType.Pontoon );
         }
@@ -111,7 +111,7 @@ public class WgtContextToken extends Composite
       }
 
       // display ore count for freither
-      EbToken token = ModelFmpMain.model().getActionBuilder().getSelectedToken();
+      EbToken token = GameEngine.model().getActionBuilder().getSelectedToken();
       if( token != null && token.getType() == TokenType.Freighter )
       {
         absPanel.add( new HTML( Messages.getTokenString( 0, TokenType.Ore ) +" : " 

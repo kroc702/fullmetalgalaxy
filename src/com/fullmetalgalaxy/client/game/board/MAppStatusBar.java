@@ -24,9 +24,9 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.MAppGameCreation;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.fonts.ImageFont;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.google.gwt.user.client.ui.HTML;
@@ -94,23 +94,11 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
 
 
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     // redraw everything after any model update
     //
-    if( AppRoot.instance().getHistoryState().containsKey( MAppBoard.HISTORY_ID ) )
-    {
-      setTitleStatus( ModelFmpMain.model().getGame().getName() );
-    }
-    else if( AppRoot.instance().getHistoryState().containsKey( MAppGameCreation.HISTORY_ID ) )
-    {
-      // TODO i18n
-      setTitleStatus( "Nouvelle exploitation" );
-    }
-    else
-    {
-      setTitleStatus( "browse" );
-    }
+    setTitleStatus( GameEngine.model().getGame().getName() );
   }
 
 

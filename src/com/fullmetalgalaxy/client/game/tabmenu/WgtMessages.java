@@ -23,7 +23,7 @@
 
 package com.fullmetalgalaxy.client.game.tabmenu;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -47,15 +47,15 @@ public class WgtMessages extends Composite
   {
     super();
     
-    if( ModelFmpMain.model().getGame().isMessageWebUrl() )
+    if( GameEngine.model().getGame().isMessageWebUrl() )
     {
-      Frame frame = new Frame( ModelFmpMain.model().getGame().getMessage() );
+      Frame frame = new Frame( GameEngine.model().getGame().getMessage() );
       frame.setPixelSize( 700, 350 );
       m_panel.add( frame );
     }
     else
     {
-      initEditableMsg(ModelFmpMain.model().getGame().getMessage());
+      initEditableMsg(GameEngine.model().getGame().getMessage());
     }
     
     initWidget(m_panel);
@@ -73,14 +73,15 @@ public class WgtMessages extends Composite
       @Override
       public void onBlur(BlurEvent p_event)
       {
-        if( m_text.getText().equalsIgnoreCase( ModelFmpMain.model().getGame().getMessage() ))
+        if( m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() ))
         {
           // message didn't change: don't send message event
           return;
         }
         EbEvtMessage message = new EbEvtMessage();
+        message.setGame( GameEngine.model().getGame() );
         message.setMessage( m_text.getText() );
-        ModelFmpMain.model().runSingleAction(message);
+        GameEngine.model().runSingleAction(message);
         
       }
     });

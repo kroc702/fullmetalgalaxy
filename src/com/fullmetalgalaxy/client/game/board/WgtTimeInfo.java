@@ -24,10 +24,11 @@ package com.fullmetalgalaxy.client.game.board;
 
 import java.util.Date;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -78,7 +79,7 @@ public class WgtTimeInfo extends WgtView
 
   protected void redraw()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( game == null )
     {
       return;
@@ -143,9 +144,9 @@ public class WgtTimeInfo extends WgtView
       m_panel.add( lbl );
 
 
-      if( ModelFmpMain.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0
-          && ModelFmpMain.model().getGame().isStarted()
-          && !ModelFmpMain.model().getGame().isFinished() && !ModelFmpMain.model().isTimeLineMode() )
+      if( GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0
+          && GameEngine.model().getGame().isStarted()
+          && !GameEngine.model().getGame().isFinished() && !GameEngine.model().isTimeLineMode() )
       {
         displayEndTurn( game.getCurrentPlayerRegistration().getEndTurnDate() );
         m_panel.add( m_lblDate );
@@ -155,18 +156,18 @@ public class WgtTimeInfo extends WgtView
       lbl.setStyleName( "fmp-status-text" );
       m_panel.add( lbl );
     }
-    else if( game.isAsynchron() && ModelFmpMain.model().getGame().isStarted()
-        && !ModelFmpMain.model().getGame().isFinished() && !ModelFmpMain.model().isTimeLineMode() )
+    else if( game.isAsynchron() && GameEngine.model().getGame().isStarted()
+        && !GameEngine.model().getGame().isFinished() && !GameEngine.model().isTimeLineMode() )
     {
       displayEndTurn( game.estimateNextTimeStep() );
       m_panel.add( m_lblDate );
     }
 
 
-    if( (!game.isAsynchron()) && (ModelFmpMain.model().getMyRegistration() != null)
-        && (ModelFmpMain.model().getMyRegistration() != game.getCurrentPlayerRegistration()) )
+    if( (!game.isAsynchron()) && (GameEngine.model().getMyRegistration() != null)
+        && (GameEngine.model().getMyRegistration() != game.getCurrentPlayerRegistration()) )
     {
-      Label lblDate = new Label( ClientUtil.formatDateTime( ModelFmpMain.model()
+      Label lblDate = new Label( ClientUtil.formatDateTime( GameEngine.model()
           .getMyRegistration().getEndTurnDate() ) );
       lblDate.setStyleName( "fmp-status-text" );
       lblDate.setTitle( "Date de fin de prochain tour" );
@@ -181,7 +182,7 @@ public class WgtTimeInfo extends WgtView
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     redraw();
   }
@@ -260,7 +261,7 @@ public class WgtTimeInfo extends WgtView
       m_lblDate.setHTML( "&nbsp; -" + secToStr( sec ) );
       if( sec == 0 )
       {
-        GameServices.Util.getInstance().checkUpdate( ModelFmpMain.model().getGame().getId(),
+        AppMain.getRpcService().checkUpdate( GameEngine.model().getGame().getId(),
             m_dummyCallback );
       }
       m_clockTimer.schedule( 1000 );

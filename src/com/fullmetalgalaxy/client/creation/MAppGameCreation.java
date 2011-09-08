@@ -27,9 +27,9 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.FmpCallback;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
@@ -122,7 +122,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
 
   public void createGame()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( game.getName().compareTo( "" ) == 0 )
     {
       Window.alert( s_messages.errorName() );
@@ -145,7 +145,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       return;
     }
 
-    game.setAccountCreator( ModelFmpMain.model().getMyAccount() );
+    game.setAccountCreator( AppMain.instance().getMyAccount() );
 
     // tune configuration
     if(game.getConfigGameVariant() != null)
@@ -174,8 +174,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       {
         super.onSuccess( p_result );
         // load newly created game to show it
-        ModelFmpMain.model().getGame().updateFrom( p_result );
-        ModelFmpMain.model().getActionBuilder().setGame( ModelFmpMain.model().getGame() );
+        GameEngine.model().getGame().updateFrom( p_result );
+        GameEngine.model().getActionBuilder().setGame( GameEngine.model().getGame() );
         // this was in the old time where we had only one html page for
         // everything
         // AppMain.instance().gotoGame( p_result.getId() );
@@ -194,7 +194,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
 
     // (4) Make the call. Control flow will continue immediately and later
     // 'callback' will be invoked when the RPC completes.
-    GameServices.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), callback );
+    AppMain.getRpcService().saveGame( GameEngine.model().getGame(), callback );
 
   }
 
@@ -210,8 +210,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       {
         super.onSuccess( p_result );
         // load newly created game to show it
-        ModelFmpMain.model().getGame().updateFrom( p_result );
-        ModelFmpMain.model().getActionBuilder().setGame( ModelFmpMain.model().getGame() );
+        GameEngine.model().getGame().updateFrom( p_result );
+        GameEngine.model().getActionBuilder().setGame( GameEngine.model().getGame() );
         ClientUtil.gotoUrl( "/game.jsp?id="+ p_result.getId() );
         MAppMessagesStack.s_instance.showMessage( "Modif sauvegardes" );
       }
@@ -226,10 +226,10 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
 
     // (4) Make the call. Control flow will continue immediately and later
     // 'callback' will be invoked when the RPC completes.
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     GameEventStack stack = game.getGameEventStack();
     game.setGameEventStack( game ); // as stack may be client specific class
-    GameServices.Util.getInstance().saveGame( ModelFmpMain.model().getGame(), comment, callback );
+    AppMain.getRpcService().saveGame( GameEngine.model().getGame(), comment, callback );
     game.setGameEventStack( stack );
   }
 
@@ -239,7 +239,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     if( p_event.getSource() == m_btnCreateGame )
     {
       AppMain.instance().startLoading();
-      if( ModelFmpMain.model().getGame().isTrancient() )
+      if( GameEngine.model().getGame().isTrancient() )
       {
         createGame();
       }
@@ -250,7 +250,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     }
     else if( p_event.getSource() == m_btnCancel )
     {
-      ModelFmpMain.model().getGame().reinit();
+      GameEngine.model().getGame().reinit();
       History.back();
     }
   }
@@ -271,8 +271,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
    */
   private void initNewGame()
   {
-    Game game = ModelFmpMain.model().getGame();
-    game.setAccountCreator( ModelFmpMain.model().getMyAccount() );
+    Game game = GameEngine.model().getGame();
+    game.setAccountCreator( AppMain.instance().getMyAccount() );
 
     game.setConfigGameTime( ConfigGameTime.Standard );
     game.setConfigGameVariant( ConfigGameVariant.Standard );
@@ -294,13 +294,26 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       break;
     case 1: // map
       m_wgtEditLand.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
-      m_isLandGenerated = true;
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      if( m_isLandGenerated == false )
+      {
+        GameGenerator.generLands();
+        m_isLandGenerated = true;
+      }
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       break;
     case 2: // tokens
       m_wgtEditTokens.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
-      m_isOreGenerated = true;
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      if( m_isOreGenerated == false )
+      {
+        if( m_isLandGenerated == false )
+        {
+          GameGenerator.generLands();
+          m_isLandGenerated = true;
+        }
+        GameGenerator.populateOres();
+        m_isOreGenerated = true;
+      }
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       break;
     case 3: // forces
       m_wgtEditForces.refreshRegistrationList();
@@ -329,7 +342,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     case 4: // triggers
     case 5: // Extra
     default:
-      if( ModelFmpMain.model().iAmAdmin() )
+      if( AppMain.instance().iAmAdmin() )
       {
         return true;
       }
@@ -340,17 +353,19 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
 
 
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     // redraw everything after any model update
     //
-    if( !ModelFmpMain.model().isLogged() )
+    if( !GameEngine.model().isLogged() )
     {
       Window.alert( "Pour éditer une partie vous devez etre loggé" );
       ClientUtil.gotoUrl( "/" );
       return;
     }
 
+    // TODO check we don't have to do anything
+    /*
     if( !AppRoot.instance().getHistoryState().containsKey( s_TokenIdGame ) 
         || AppRoot.instance().getHistoryState().getLong( s_TokenIdGame ) == 0 )
     {
@@ -361,7 +376,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     else
     {
       // game is loaded... nothing to do !
-    }
+    }*/
 
     p_modelSender.setZoomDisplayed( EnuZoom.Small );
   }

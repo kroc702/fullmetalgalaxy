@@ -86,7 +86,17 @@ public class ImageServlet extends HttpServlet
 
       if( avatarid != null )
       {
-        EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( avatarid ) );
+        EbAccount account = null;
+        try {
+          account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( avatarid ) );
+        } catch( Exception e ) {}
+        if( account == null )
+        {
+          // avatarid may be a user pseudo
+          try {
+            account = FmgDataStore.dao().query(EbAccount.class).filter( "m_pseudo ==", avatarid ).get();
+          } catch( Exception e ) {}
+        }
         if( account != null && account.getForumAvatarUrl() != null )
         {
           response.sendRedirect( account.getForumAvatarUrl() );

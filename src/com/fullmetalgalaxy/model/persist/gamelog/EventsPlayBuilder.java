@@ -27,7 +27,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameType;
@@ -65,7 +66,6 @@ public class EventsPlayBuilder implements GameEventStack
 
   private Date m_lastUpdate = new Date( System.currentTimeMillis() );
 
-  private long m_accountId = 0L;
   private Game m_game = null;
 
   /**
@@ -412,7 +412,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
 
     setLastUserClick( p_position );
-    if( getMyRegistration() == null || ModelFmpMain.model().isTimeLineMode() )
+    if( getMyRegistration() == null || GameEngine.model().isTimeLineMode() )
     {
       // user isn't registered to this game or is viewing past actions
       clear();
@@ -1569,18 +1569,12 @@ public class EventsPlayBuilder implements GameEventStack
   /**
    * @return the account
    */
-  public long getAccountId()
+  private long getAccountId()
   {
-    return m_accountId;
+    return AppMain.instance().getMyAccount().getId();
   }
 
-  /**
-   * @param p_account the account to set
-   */
-  public void setAccountId(long p_accountId)
-  {
-    m_accountId = p_accountId;
-  }
+
 
   /**
    * @return the game

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 
@@ -37,7 +36,7 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
  * all objects added to it will be of type EventPreview.
  */
 
-public class EventPreviewListenerCollection extends ArrayList<NativePreviewHandler>
+public class EventPreviewHandlerCollection extends ArrayList<NativePreviewHandler>
 {
   static final long serialVersionUID = 15;
 
@@ -45,7 +44,7 @@ public class EventPreviewListenerCollection extends ArrayList<NativePreviewHandl
   /**
    * 
    */
-  public EventPreviewListenerCollection()
+  public EventPreviewHandlerCollection()
   {
   }
 

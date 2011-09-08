@@ -20,48 +20,18 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.tabmenu;
+package com.fullmetalgalaxy.client.event;
 
-
-import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Vincent Legendre
- *
+ * generate event used by 'ChannelMessageEventHandler' interface
+ * @param <M>
  */
-public class WgtGameLogs extends Composite
+public interface SourcesChannelMessageEvents
 {
-  private VerticalPanel m_panel = new VerticalPanel();
+  void addChannelMessageEventHandler(Class<?> p_class, ChannelMessageEventHandler p_handler);
 
-  /**
-   * 
-   */
-  public WgtGameLogs()
-  {
-    ScrollPanel panel = new ScrollPanel();
-    panel.add( m_panel );
-    initWidget( panel );
-    redraw();
-  }
-
-  public void redraw()
-  {
-    m_panel.clear();
-
-    for( AnEvent event : GameEngine.model().getGame().getLogs() )
-    {
-      // display all non admin events
-      if( !(event.getType().isEventAdmin()) )
-      {
-        Label label = new Label( event.toString() );
-        m_panel.add( label );
-      }
-    }
-  }
+  void removeChannelMessageEventHandler(Class<?> p_class, ChannelMessageEventHandler p_handler);
 
 }

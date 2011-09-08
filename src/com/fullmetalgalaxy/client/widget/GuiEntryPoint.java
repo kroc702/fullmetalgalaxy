@@ -56,12 +56,12 @@ public abstract class GuiEntryPoint extends Composite implements EntryPoint
   public void onModuleLoad()
   {
     RootPanel panel = RootPanel.get( getHistoryId() );
-    if( panel != null && getTopWidget() != null && AppRoot.instance().getHistoryState().containsKey( getHistoryId() ))
+    if( panel != null )
     {
       panel.setVisible( true );
       if( panel.getWidgetCount() == 0 )
       {
-        panel.add( getTopWidget() );
+        panel.add( this );
       }
       //show( AppRoot.instance().getHistoryState() );
     }
@@ -72,13 +72,6 @@ public abstract class GuiEntryPoint extends Composite implements EntryPoint
   }
   
   
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.client.MiniApp#getTopWidget()
-   */
-  public Widget getTopWidget()
-  {
-    return this;
-  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.MiniApp#hide()
