@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 import java.util.ArrayList;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -79,7 +79,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   {
     // TODO Auto-generated method stub
     super.onModelChange( p_forceRedraw );
-    EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder action = GameEngine.model().getActionBuilder();
     if( action.getLastUpdate().getTime() != m_actionLastUpdate || p_forceRedraw )
     {
       redrawAction();
@@ -142,40 +142,40 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   private void drawFireAction(EbEvtFire p_fireAction)
   {
     assert p_fireAction != null;
-    if( p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() ) != null )
+    if( p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() ) != null )
     {
       Image image = m_images.getNextImage();
       BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1" );
-      setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() )
+      setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() )
           .getPosition() );
     }
-    if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
+    if( p_fireAction.getTokenTarget( GameEngine.model().getGame() ) != null )
     {
       Image image = m_images.getNextImage();
       BoardIcons.target( getZoom().getValue() ).applyTo( image );
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-      setWidgetHexPosition( image, p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ).getPosition() );
+      setWidgetHexPosition( image, p_fireAction.getTokenTarget( GameEngine.model().getGame() ).getPosition() );
     }
   }
 
   private void drawControlAction(EbEvtControl p_fireAction)
   {
     assert p_fireAction != null;
-    if( p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() ) != null )
+    if( p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() ) != null )
     {
       Image image = m_images.getNextImage();
       BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1" );
-      setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( ModelFmpMain.model().getGame() )
+      setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() )
           .getPosition() );
     }
-    if( p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ) != null )
+    if( p_fireAction.getTokenTarget( GameEngine.model().getGame() ) != null )
     {
       Image image = m_images.getNextImage();
       BoardIcons.target_control( getZoom().getValue() ).applyTo( image );
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1000" );
-      setWidgetHexPosition( image, p_fireAction.getTokenTarget( ModelFmpMain.model().getGame() ).getPosition() );
+      setWidgetHexPosition( image, p_fireAction.getTokenTarget( GameEngine.model().getGame() ).getPosition() );
     }
   }
 
@@ -184,8 +184,8 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
    */
   protected void redrawAction()
   {
-    m_actionLastUpdate = ModelFmpMain.model().getActionBuilder().getLastUpdate().getTime();
-    ArrayList<AnEventPlay> actionList = ModelFmpMain.model().getActionList();
+    m_actionLastUpdate = GameEngine.model().getActionBuilder().getLastUpdate().getTime();
+    ArrayList<AnEventPlay> actionList = GameEngine.model().getActionList();
     m_images.resetImageIndex();
     int actionCount = actionList.size();
     int index = 0;
@@ -197,26 +197,26 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
     while( index < actionCount )
     {
       AnEvent action = actionList.get( index );
-      AnEvent nextAction = ModelFmpMain.model().getActionBuilder().getAction( index + 1 );
-      AnEvent previousAction = ModelFmpMain.model().getActionBuilder().getAction( index - 1 );
+      AnEvent nextAction = GameEngine.model().getActionBuilder().getAction( index + 1 );
+      AnEvent previousAction = GameEngine.model().getActionBuilder().getAction( index - 1 );
       if( action.getType() == GameLogType.EvtMove )
       {
         if( (nextAction == null)
             || ((nextAction.getType() == GameLogType.EvtLoad) 
-                && (((EbEvtLoad)nextAction).getToken(  ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+                && (((EbEvtLoad)nextAction).getToken(  GameEngine.model().getGame() ).getType() == TokenType.Ore)
                 && (firstAction != null)
                 && (firstAction.getType() != GameLogType.EvtConstruct) ) )
         {
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
           {
             drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
-                  ((EbEvtConstruct)firstAction).getTokenCarrier( ModelFmpMain.model().getGame() )
+                  ((EbEvtConstruct)firstAction).getTokenCarrier( GameEngine.model().getGame() )
                       .getEnuColor(),
                   ((EbEvtMove)action).getNewPosition() );
           }
           else
           {
-            drawTransparentToken( ((EbEvtMove)action).getToken( ModelFmpMain.model().getGame() ),
+            drawTransparentToken( ((EbEvtMove)action).getToken( GameEngine.model().getGame() ),
                 ((EbEvtMove)action)
                 .getNewPosition() );
           }
@@ -224,13 +224,13 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         else
         {
           // as barge as two hexagons, one foot shouldn't be displayed
-          if( ModelFmpMain.model().getActionBuilder().getSelectedToken().getHexagonSize() == 2 )
+          if( GameEngine.model().getActionBuilder().getSelectedToken().getHexagonSize() == 2 )
           {
-            if( ModelFmpMain.model().getActionBuilder().getSelectedToken().getPosition().equals(
-                ModelFmpMain.model().getActionBuilder().getSelectedPosition() ) )
+            if( GameEngine.model().getActionBuilder().getSelectedToken().getPosition().equals(
+                GameEngine.model().getActionBuilder().getSelectedPosition() ) )
             {
               // barge was selected by tail
-              AnEvent nextNextAction = ModelFmpMain.model().getActionBuilder().getAction(
+              AnEvent nextNextAction = GameEngine.model().getActionBuilder().getAction(
                   index + 2 );
               if( (nextNextAction != null) && !(nextNextAction.getType() == GameLogType.EvtLoad) )
               {
@@ -260,25 +260,25 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         {
           // the loaded token will be strait unloaded
           AnBoardPosition position = ((AnEventPlay)action).getTokenCarrier(
-              ModelFmpMain.model().getGame() ).getPosition().newInstance();
-          position.setSector( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() )
+              GameEngine.model().getGame() ).getPosition().newInstance();
+          position.setSector( ((AnEventPlay)action).getToken( GameEngine.model().getGame() )
               .getPosition()
               .getNeighbourSector(
               position ) );
           drawFoot( position );
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
-            && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType() == TokenType.Ore)
             && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
-          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+          drawTransparentToken( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ),
               ((AnEventPlay)previousAction).getNewPosition() );
         }
-        else if( ModelFmpMain.model().getActionBuilder().getSelectedAction() == null )
+        else if( GameEngine.model().getActionBuilder().getSelectedAction() == null )
         {
-          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
-              ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition() );
+          drawTransparentToken( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ),
+              ((AnEventPlay)action).getTokenCarrier( GameEngine.model().getGame() ).getPosition() );
         }
 
       }
@@ -290,23 +290,23 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
         {
           // the loaded token will be strait unloaded
           AnBoardPosition position = ((AnEventPlay)action).getNewTokenCarrier(
-              ModelFmpMain.model().getGame() ).getPosition().newInstance();
-          position.setSector( ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition()
+              GameEngine.model().getGame() ).getPosition().newInstance();
+          position.setSector( ((AnEventPlay)action).getTokenCarrier( GameEngine.model().getGame() ).getPosition()
               .getNeighbourSector( position ) );
           drawFoot( position );
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
-            && (((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ).getType() == TokenType.Ore)
+            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType() == TokenType.Ore)
             && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
-          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+          drawTransparentToken( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ),
               ((AnEventPlay)previousAction).getNewPosition() );
         }
-        else if( ModelFmpMain.model().getActionBuilder().getSelectedAction() == null )
+        else if( GameEngine.model().getActionBuilder().getSelectedAction() == null )
         {
-          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
-              ((AnEventPlay)action).getTokenCarrier( ModelFmpMain.model().getGame() ).getPosition() );
+          drawTransparentToken( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ),
+              ((AnEventPlay)action).getTokenCarrier( GameEngine.model().getGame() ).getPosition() );
         }
 
       }
@@ -321,13 +321,13 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           if( (firstAction != null) && (firstAction.getType() == GameLogType.EvtConstruct) )
           {
             drawTransparentToken( ((EbEvtConstruct)firstAction).getConstructType(),
-                  ((EbEvtConstruct)firstAction).getTokenCarrier( ModelFmpMain.model().getGame() )
+                  ((EbEvtConstruct)firstAction).getTokenCarrier( GameEngine.model().getGame() )
                       .getEnuColor(),
                   ((EbEvtUnLoad)action).getNewPosition() );
           }
           else
           {
-            drawTransparentToken( ((EbEvtUnLoad)action).getToken( ModelFmpMain.model().getGame() ),
+            drawTransparentToken( ((EbEvtUnLoad)action).getToken( GameEngine.model().getGame() ),
                 ((EbEvtUnLoad)action)
                 .getNewPosition() );
           }
@@ -343,34 +343,34 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       }
       index++;
     }
-    if( ModelFmpMain.model().getActionBuilder().getSelectedAction() != null )
+    if( GameEngine.model().getActionBuilder().getSelectedAction() != null )
     {
-      AnEventPlay action = ModelFmpMain.model().getActionBuilder().getSelectedAction();
+      AnEventPlay action = GameEngine.model().getActionBuilder().getSelectedAction();
       if( action instanceof EbEvtConstruct )
       {
-        assert ((EbEvtConstruct)action).getTokenCarrier( ModelFmpMain.model().getGame() ) != null;
+        assert ((EbEvtConstruct)action).getTokenCarrier( GameEngine.model().getGame() ) != null;
         drawTransparentToken( ((EbEvtConstruct)action).getConstructType(),
-              ((EbEvtConstruct)action).getTokenCarrier( ModelFmpMain.model().getGame() )
+              ((EbEvtConstruct)action).getTokenCarrier( GameEngine.model().getGame() )
                   .getEnuColor(), ((EbEvtConstruct)action).getTokenCarrier(
-                  ModelFmpMain.model().getGame() ).getPosition() );
+                  GameEngine.model().getGame() ).getPosition() );
       }
       else if( action instanceof EbEvtUnLoad )
       {
-        if( ((EbEvtUnLoad)action).getToken( ModelFmpMain.model().getGame() ) != null )
+        if( ((EbEvtUnLoad)action).getToken( GameEngine.model().getGame() ) != null )
         {
-          AnBoardPosition position = ModelFmpMain.model().getActionBuilder().getSelectedPosition();
+          AnBoardPosition position = GameEngine.model().getActionBuilder().getSelectedPosition();
           if( ((EbEvtUnLoad)action).getNewPosition() != null )
           {
             position.setSector( position
                 .getNeighbourSector( ((EbEvtUnLoad)action).getNewPosition() ) );
           }
-          TokenType tokenType = action.getToken( ModelFmpMain.model().getGame() ).getType();
+          TokenType tokenType = action.getToken( GameEngine.model().getGame() ).getType();
           if( firstAction != null && firstAction.getType() == GameLogType.EvtConstruct)
           {
             tokenType = ((EbEvtConstruct)firstAction).getConstructType();
           }
           drawTransparentToken( tokenType,
-              ((EbEvtUnLoad)action).getTokenCarrier(ModelFmpMain.model().getGame()).getEnuColor(),
+              ((EbEvtUnLoad)action).getTokenCarrier(GameEngine.model().getGame()).getEnuColor(),
               position );
         }
       }
@@ -386,7 +386,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       {
         if( ((AnEventPlay)action).getPosition() != null && ((AnEventPlay)action).getPosition().getX() >= 0 )
         {
-          drawTransparentToken( ((AnEventPlay)action).getToken( ModelFmpMain.model().getGame() ),
+          drawTransparentToken( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ),
               ((AnEventPlay)action).getPosition() );
           if( action instanceof EbEvtLand )
           {

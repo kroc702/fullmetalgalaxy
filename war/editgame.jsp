@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"-->
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -12,8 +12,6 @@
 
         <%@include file="include/meta.jsp"%>
         <style type="text/css">@import url( /appMain.css );</style>
-        
-        <meta name='gwt:property' id='app_history' content='new__'>
         
     </head>
 
@@ -48,32 +46,18 @@
             </tr>
         </table>
 
-        <div id="board" style="display:none; width:100%; height:100%; background-color:#d09750;"></div>
-        <div id="advises" style="display:none; position:absolute; top:50px; right:10px; z-index:9999999999;"></div>
-
         <div class="bloc" style="height:376px; position:absolute; top:130px; left:0px; z-index:9999999999;" >
             <div id="menu" style="float:left; width:180px;">
                 <jsp:include page="<%= I18n.localize(request,response,\"/menu.html\") %>" />
-            </div>
-            <div style="height:100%; background-color:black; cursor: pointer; cursor: hand; float:left;" >
-                <div id="switch" style="display:none; width:7px; height:100%;"></div>
             </div>
         </div>
 
     </td></tr>
     </table>
     
-        <div id="context" style="display:none; position:absolute; bottom:0px; right:0px; z-index:9999999998;"></div>
-    
-        <div id="messages" style="display:none; position:absolute; bottom:205px; right:0px; z-index:9999999999;"></div>
-        
-        <div id="debug" style="display:block; position:absolute; top:50px; left:50px; z-index:9999999999;"></div>
         
         <script type="text/javascript" language="javascript" src="game/game.nocache.js"></script>
 
-        <!-- OPTIONAL: include this if you want history support -->
-        <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
-        
 <%@include file="include/analiticscript.html"%>
  
     </body>

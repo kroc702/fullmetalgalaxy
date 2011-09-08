@@ -29,33 +29,16 @@ import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
  * @author Kroc
  * 
  */
-// @RemoteServiceRelativePath("GameServices")
+@RemoteServiceRelativePath("Services")
 public interface GameServices extends RemoteService
 {
-
-  public static final String SERVICE_URI = "Services";
-
-  public static class Util
-  {
-
-    public static GameServicesAsync getInstance()
-    {
-      GameServicesAsync instance = (GameServicesAsync)GWT.create( GameServices.class );
-      ServiceDefTarget target = (ServiceDefTarget)instance;
-      target.setServiceEntryPoint( GWT.getModuleBaseURL() + SERVICE_URI );
-      // AppMain.instance().startLoading();
-      return instance;
-    }
-  }
-
 
   /**
    * create (if id=0) or save a game.
@@ -132,4 +115,17 @@ public interface GameServices extends RemoteService
    * @return
    */
   public String reconnect(Presence p_presence);
+  
+  /**
+   * This service is only here to serialize a ChatMessage class with RPC.encodeResponseForSuccess
+   */
+  public ChatMessage getChatMessage(long p_gameId);
+
+  /**
+   * return non null PresenceRoom class associated with p_gameId.
+   * This service is also here to serialize a PresenceRoom class with RPC.encodeResponseForSuccess
+   */
+  public PresenceRoom getRoom(long p_gameId);
+
+
 }

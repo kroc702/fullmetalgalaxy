@@ -25,10 +25,10 @@ package com.fullmetalgalaxy.client.game.context;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameType;
@@ -57,8 +57,6 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
   private HorizontalPanel m_panelExtra = new HorizontalPanel();
   private WgtContextMinimap m_wgtMinimap = new WgtContextMinimap();
   private WgtContextToken m_wgtToken = new WgtContextToken();
-
-  private DlgChatInput m_dlgChat = new DlgChatInput();
 
 
   public MAppContext()
@@ -109,50 +107,49 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
   {
     if( p_event.getTypeInt() == Event.ONKEYPRESS )
     {
-      if( m_dlgChat.isChatMode() )
+      if( DlgChatInput.isChatMode() )
       {
         // don't catch any key if chat dialog is visible
         return;
       }
       if( p_event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER )
       {
-        if( ModelFmpMain.model().getGame().getGameType() == GameType.MultiPlayer )
+        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
         {
-          m_dlgChat.center();
-          m_dlgChat.show();
+          DlgChatInput.showDialog();
         }
         return;
       }
       else if( p_event.getNativeEvent().getKeyCode() == 'f'
           || p_event.getNativeEvent().getKeyCode() == 'F' )
       {
-        if( ModelFmpMain.model().isFireCoverDisplayed() )
+        if( GameEngine.model().isFireCoverDisplayed() )
         {
-          ModelFmpMain.model().setFireCoverDisplayed( false );
+          GameEngine.model().setFireCoverDisplayed( false );
         }
         else
         {
-          ModelFmpMain.model().setFireCoverDisplayed( true );
+          GameEngine.model().setFireCoverDisplayed( true );
         }
         // cancel event
         return;
       }
       else if( p_event.getNativeEvent().getKeyCode() == '+' )
       {
-        ModelFmpMain.model().setZoomDisplayed( EnuZoom.Medium );
+        GameEngine.model().setZoomDisplayed( EnuZoom.Medium );
         // cancel event
         return;
       }
       else if( p_event.getNativeEvent().getKeyCode() == '-' )
       {
-        ModelFmpMain.model().setZoomDisplayed( EnuZoom.Small );
+        GameEngine.model().setZoomDisplayed( EnuZoom.Small );
         // cancel event
         return;
       }
       else if( p_event.getNativeEvent().getKeyCode() == 'g'
           || p_event.getNativeEvent().getKeyCode() == 'G' )
       {
-        ModelFmpMain.model().setGridDisplayed( !ModelFmpMain.model().isGridDisplayed() );
+        GameEngine.model().setGridDisplayed( !GameEngine.model().isGridDisplayed() );
         // cancel event
         p_event.cancel();
         return;
@@ -161,8 +158,8 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
       {
         try
         {
-          ModelFmpMain.model().getActionBuilder().userCancel();
-          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+          GameEngine.model().getActionBuilder().userCancel();
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
         } catch( RpcFmpException e )
         {
           MAppMessagesStack.s_instance.showWarning( e.getLocalizedMessage() );
@@ -197,7 +194,7 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
 
 
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     // redraw everything after any model update
     //

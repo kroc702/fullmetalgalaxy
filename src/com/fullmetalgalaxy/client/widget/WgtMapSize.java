@@ -24,10 +24,10 @@
 package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.creation.GameGenerator;
 import com.fullmetalgalaxy.client.creation.MapSize;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml;
@@ -82,8 +82,8 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
 
     m_panel.add( new HTML( "<br/>plus elle sera petite plus il y aura de combats" ) );
     // fill UI
-    m_maxPlayerCount = ModelFmpMain.model().getGame().getMaxNumberOfPlayer();
-    onModelUpdate(ModelFmpMain.model());
+    m_maxPlayerCount = GameEngine.model().getGame().getMaxNumberOfPlayer();
+    onModelUpdate(GameEngine.model());
 
     initWidget( m_panel );
 
@@ -112,19 +112,19 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
   public void onValueChange(ValueChangeEvent<Boolean> p_event)
   {
     GameGenerator.setSize( getSelectedMapSize() );
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
 
   
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     if( m_maxPlayerCount != p_modelSender.getGame().getMaxNumberOfPlayer() )
     {
       m_maxPlayerCount = p_modelSender.getGame().getMaxNumberOfPlayer();
       GameGenerator.setSize( getSelectedMapSize() );
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       return;
     }
     MapSize mapSize = MapSize.getFromGame( p_modelSender.getGame() );

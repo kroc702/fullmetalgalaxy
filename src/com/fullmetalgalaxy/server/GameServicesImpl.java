@@ -343,6 +343,11 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
     FmgDataStore dataStore = new FmgDataStore(false);
     Game game = dataStore.getGame( p_action.getIdGame() );
+    if( game == null )
+    {
+      System.err.println("run action on unknown game: "+p_action.getIdGame());
+      return;
+    }
     int oldTimeStep = game.getCurrentTimeStep();
 
     p_action.setLastUpdate( ServerUtil.currentDate() );
@@ -535,6 +540,25 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   public void checkUpdate(long p_gameId) throws RpcFmpException
   {
     getEbGame( p_gameId );
+  }
+  
+  /**
+   * This service is only here to serialize a ChatMessage class with RPC.encodeResponseForSuccess
+   */
+  @Override
+  public ChatMessage getChatMessage(long p_gameId)
+  {
+    return new ChatMessage();
+  }
+
+  /**
+   * return non null PresenceRoom class associated with p_gameId.
+   * This service is also here to serialize a PresenceRoom class with RPC.encodeResponseForSuccess
+   */
+  @Override
+  public PresenceRoom getRoom(long p_gameId)
+  {
+    return ChannelManager.getRoom( p_gameId );
   }
 
 }

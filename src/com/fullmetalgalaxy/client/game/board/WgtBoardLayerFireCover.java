@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
@@ -65,7 +65,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
    */
   public void displayFireCover(boolean p_isVisible)
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     for( EbRegistration registration : game.getSetRegistration() )
     {
       displayFireCover( p_isVisible, registration );
@@ -115,7 +115,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( game.getId() != m_lastGameId || p_forceRedraw )
     {
       m_lastGameId = game.getId();
@@ -130,7 +130,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
       m_validLayersSet.clear();
     }
     else if( ((game.getVersion() > m_gameLastVersion))
-        || (m_tokenLastUpdate != ModelFmpMain.model().getGame().getLastTokenUpdate().getTime()) )
+        || (m_tokenLastUpdate != GameEngine.model().getGame().getLastTokenUpdate().getTime()) )
     {
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
       m_gameLastVersion = game.getVersion();
@@ -146,9 +146,9 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
         }
       }
     }
-    else if( isAnyCoverVisible() != ModelFmpMain.model().isFireCoverDisplayed() )
+    else if( isAnyCoverVisible() != GameEngine.model().isFireCoverDisplayed() )
     {
-      displayFireCover( ModelFmpMain.model().isFireCoverDisplayed() );
+      displayFireCover( GameEngine.model().isFireCoverDisplayed() );
     }
   }
 
@@ -196,7 +196,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   private String getFireCoverHtml(EbRegistration p_registration)
   {
     StringBuffer html = new StringBuffer();
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
 
 
     // compute the size of the widget

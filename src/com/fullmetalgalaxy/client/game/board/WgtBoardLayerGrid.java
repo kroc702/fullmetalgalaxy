@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 
 
@@ -72,9 +72,9 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    if( isVisible() != ModelFmpMain.model().isGridDisplayed() )
+    if( isVisible() != GameEngine.model().isGridDisplayed() )
     {
-      setVisible( ModelFmpMain.model().isGridDisplayed() );
+      setVisible( GameEngine.model().isGridDisplayed() );
     }
   }
 

@@ -25,8 +25,8 @@ package com.fullmetalgalaxy.client.game.board;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.MessagesAppBoard;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.client.widget.WgtScroll;
@@ -52,11 +52,6 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
   public static final int s_DefaultZoom = EnuZoom.Medium;
 
   protected static MAppBoard s_instance = null;
-
-  public static final String s_TokenZoom = "zoom";
-  public static final String s_TokenGrid = "grid";
-  public static final String s_TokenIdGame = "idGame";
-  public static final String s_TokenFireCover = "fireCover";
 
   private WgtScroll m_wgtScroll = new WgtScroll();
   private WgtBoard m_wgtBoard = new WgtBoard();
@@ -104,9 +99,9 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
     int boardWidth = m_wgtBoard.getOffsetWidth();
     int boardHeight = m_wgtBoard.getOffsetHeight();
     // cast are here to avoid wrong approximations
-    int newScrollPositionX = (int)(((float)boardWidth * p_hexX) / ModelFmpMain.model().getGame()
+    int newScrollPositionX = (int)(((float)boardWidth * p_hexX) / GameEngine.model().getGame()
         .getLandWidth());
-    int newScrollPositionY = (int)(((float)boardHeight * p_hexY) / ModelFmpMain.model().getGame()
+    int newScrollPositionY = (int)(((float)boardHeight * p_hexY) / GameEngine.model().getGame()
         .getLandHeight());
     // now compute the corresponding top/left position for newScrollPosition.
     int screenWidth = m_wgtScroll.getOffsetWidth();
@@ -130,12 +125,12 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
   public void onModuleLoad()
   {
     super.onModuleLoad();
-    m_wgtBoard.show( AppRoot.instance().getHistoryState() );
+    m_wgtBoard.show( );
   }
   
   
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     // redraw everything after any model update
     //
@@ -144,9 +139,9 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
       return;
     }
  
-    if( m_oldZoomValue != ModelFmpMain.model().getZoomDisplayed().getValue() )
+    if( m_oldZoomValue != GameEngine.model().getZoomDisplayed().getValue() )
     {
-      m_oldZoomValue = ModelFmpMain.model().getZoomDisplayed().getValue();
+      m_oldZoomValue = GameEngine.model().getZoomDisplayed().getValue();
       int oldBoardWidth = m_wgtBoard.getOffsetWidth();
       int oldBoardHeight = m_wgtBoard.getOffsetHeight();
       int oldScrollPositionX = m_wgtScroll.getHorizontalScrollPosition();
@@ -167,11 +162,11 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
     {
       m_wgtBoard.notifyModelUpdate( p_modelSender );
     }
-    if( m_idGame != ModelFmpMain.model().getGame().getId() )
+    if( m_idGame != GameEngine.model().getGame().getId() )
     {
-      m_idGame = ModelFmpMain.model().getGame().getId();
-      EbToken myFreighter = ModelFmpMain.model().getGame()
-          .getFreighter( ModelFmpMain.model().getMyRegistration() );
+      m_idGame = GameEngine.model().getGame().getId();
+      EbToken myFreighter = GameEngine.model().getGame()
+          .getFreighter( GameEngine.model().getMyRegistration() );
       if( myFreighter != null && myFreighter.getLocation() == Location.Board )
       {
         setScrollPosition( myFreighter.getPosition().getX(), myFreighter.getPosition().getY() );

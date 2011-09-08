@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
@@ -97,7 +97,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
 
   public void onModelChange(boolean p_forceRedraw)
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( (game.getId() != m_lastGameId) || (p_forceRedraw) )
     {
       int pxW = game.getLandPixWidth( getZoom() );
@@ -130,7 +130,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   @Override
   public void setZoom(EnuZoom p_zoom)
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
     setPixelSize( pxW, pxH );
@@ -144,7 +144,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
 
   protected EnuZoom getZoom()
   {
-    return ModelFmpMain.model().getZoomDisplayed();
+    return GameEngine.model().getZoomDisplayed();
   }
 
   /**

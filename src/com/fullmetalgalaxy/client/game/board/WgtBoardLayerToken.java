@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -71,7 +71,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   {
     super.redraw();
 
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     Set<EbToken> tokenList = game.getSetToken();
 
     // little optimisation to avoid using isHexVisible for each token...
@@ -110,7 +110,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   {
     for( EbToken token : m_tokenMap.keySet() )
     {
-      if( ModelFmpMain.model().getGame().getToken( token.getId() ) == null )
+      if( GameEngine.model().getGame().getToken( token.getId() ) == null )
       {
         // token was removed from the game, get rid of it
         TokenWidget tokenWidget = m_tokenMap.get( token );
@@ -154,7 +154,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // update is needed !
 
       // token is on board: display it !
-      Game game = ModelFmpMain.model().getGame();
+      Game game = GameEngine.model().getGame();
       add( tokenWidget.getTokenImage() );
       tokenWidget.getTokenImage().setVisible( true );
       int landPixOffset = 0;
@@ -295,7 +295,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
     setPixelSize( pxW, pxH );
@@ -314,7 +314,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     if( m_lastGameId != game.getId() || p_forceRedraw )
     {
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();

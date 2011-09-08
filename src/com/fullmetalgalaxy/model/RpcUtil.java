@@ -22,13 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.google.gwt.core.client.GWT;
-
 
 /**
  * @author Kroc
@@ -36,11 +30,6 @@ import com.google.gwt.core.client.GWT;
  */
 public class RpcUtil
 {
-  public static String dateFormat(Date p_date)
-  {
-    DateFormat format = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
-    return format.format( p_date );
-  }
 
   /**
    * 

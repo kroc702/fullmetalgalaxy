@@ -26,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
@@ -67,14 +68,14 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
 
     // configure color selector
     Set<EnuColor> freeColors = null;
-    if( ModelFmpMain.model().getGame().getSetRegistration().size() >= ModelFmpMain.model()
+    if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model()
         .getGame().getMaxNumberOfPlayer() )
     {
-      freeColors = ModelFmpMain.model().getGame().getFreeRegistrationColors();
+      freeColors = GameEngine.model().getGame().getFreeRegistrationColors();
     }
     else
     {
-      freeColors = ModelFmpMain.model().getGame().getFreePlayersColors();
+      freeColors = GameEngine.model().getGame().getFreePlayersColors();
     }
     for( EnuColor color : freeColors )
     {
@@ -108,11 +109,11 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
     int color = m_icons.get( p_event.getSource() );
 
     EbGameJoin action = new EbGameJoin();
-    action.setGame( ModelFmpMain.model().getGame() );
-    action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
-    action.setAccount( ModelFmpMain.model().getMyAccount() );
+    action.setGame( GameEngine.model().getGame() );
+    action.setAccountId( AppMain.instance().getMyAccount().getId() );
+    action.setAccount( AppMain.instance().getMyAccount() );
     action.setColor( color );
-    ModelFmpMain.model().runSingleAction( action );
+    GameEngine.model().runSingleAction( action );
 
     this.hide();
   }

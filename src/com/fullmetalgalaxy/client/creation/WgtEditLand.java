@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtScroll;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -81,15 +81,15 @@ public class WgtEditLand extends WgtView implements WindowResizeListener
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     if( !isVisible() )
     {
       return;
     }
-    if( m_oldZoomValue != ModelFmpMain.model().getZoomDisplayed().getValue() )
+    if( m_oldZoomValue != GameEngine.model().getZoomDisplayed().getValue() )
     {
-      m_oldZoomValue = ModelFmpMain.model().getZoomDisplayed().getValue();
+      m_oldZoomValue = GameEngine.model().getZoomDisplayed().getValue();
       int oldBoardWidth = m_wgtBoard.getOffsetWidth();
       int oldBoardHeight = m_wgtBoard.getOffsetHeight();
       int oldScrollPositionX = m_wgtScroll.getHorizontalScrollPosition();

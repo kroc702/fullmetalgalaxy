@@ -92,4 +92,9 @@ public interface GameServicesAsync
   public void disconnect(Presence p_presence, AsyncCallback<Void> callback);
 
   public void reconnect(Presence p_presence, AsyncCallback<String> callback);
+  
+  public void getChatMessage(long p_gameId, AsyncCallback<ChatMessage> callback);
+
+  public void getRoom(long p_gameId, AsyncCallback<PresenceRoom> callback);
+
 }

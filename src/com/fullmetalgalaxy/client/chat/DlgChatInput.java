@@ -23,10 +23,10 @@
 package com.fullmetalgalaxy.client.chat;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
+import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.ChatMessage;
-import com.fullmetalgalaxy.model.GameServices;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -54,6 +54,18 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
   private TextBox m_text = new TextBox();
   private boolean m_isChatMode = false;
 
+  private static DlgChatInput m_dlg = null;
+  
+  public static void showDialog()
+  {
+    if( m_dlg == null )
+    {
+      m_dlg = new DlgChatInput();
+    }
+    m_dlg.center();
+    m_dlg.show();
+  }
+  
   public DlgChatInput()
   {
     // auto hide / modal
@@ -72,37 +84,12 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
     setWidget( m_panel );
   }
 
-  private AsyncCallback<Void> m_sendMessageCallback = new AsyncCallback<Void>()
-  {
-
-    @Override
-    public void onFailure(Throwable p_caught)
-    {
-      // TODO i18n
-      MAppMessagesStack.s_instance.showWarning( m_text.getText() + "\nlast message failed" );
-    }
-
-    @Override
-    public void onSuccess(Void p_result)
-    {
-      // we will receive message through channel API
-    }
-
-  };
 
 
 
   protected void sendMessage()
   {
-    if( m_text.getText().length() > 0 )
-    {
-      ChatMessage message = new ChatMessage();
-      message.setGameId( ModelFmpMain.model().getGame().getId() );
-      message.setFromPageId( ModelFmpMain.model().getPageId() );
-      message.setFromPseudo( ModelFmpMain.model().getMyAccount().getPseudo() );
-      message.setText( m_text.getText() );
-      GameServices.Util.getInstance().sendChatMessage( message, m_sendMessageCallback );
-    }
+    ChatEngine.sendMessage( m_text.getText() );
     hide();
   }
 
@@ -204,9 +191,13 @@ public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHand
   }
 
 
-  public boolean isChatMode()
+  public static boolean isChatMode()
   {
-    return m_isChatMode;
+    if( m_dlg == null )
+    {
+      return false;
+    }
+    return m_dlg.m_isChatMode;
   }
 
 }

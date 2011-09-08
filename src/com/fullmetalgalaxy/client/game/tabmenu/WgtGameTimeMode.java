@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 
 import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
@@ -88,12 +88,12 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
 
   private void redraw()
   {
-    assert ModelFmpMain.model() != null;
-    Game game = ModelFmpMain.model().getGame();
+    assert GameEngine.model() != null;
+    Game game = GameEngine.model().getGame();
 
     m_panel.clear();
     
-    m_lblTimePosition.setText( ModelFmpMain.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
+    m_lblTimePosition.setText( GameEngine.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
     m_panel.add( m_lblTimePosition );
         
     Panel panel = new HorizontalPanel();
@@ -101,7 +101,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     panel.add( m_btnBack );
     panel.add( m_btnPlay );
     panel.add( m_btnFastPlay );
-    if( ModelFmpMain.model().canCancelAction() )
+    if( GameEngine.model().canCancelAction() )
     {
       // in puzzle or turn by turn on several day we allow cancel action
       panel.add( m_btnOk );
@@ -116,7 +116,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   protected void onLoad()
   {
     super.onLoad();
-    ModelFmpMain.model().setTimeLineMode( true );
+    GameEngine.model().setTimeLineMode( true );
     // register event
     m_hdlRegistration = AppMain.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
     redraw();
@@ -126,7 +126,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   protected void onUnload()
   {
     super.onUnload();
-    ModelFmpMain.model().setTimeLineMode( false );
+    GameEngine.model().setTimeLineMode( false );
     // unregister event
     if( m_hdlRegistration != null )
     {
@@ -144,36 +144,36 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     if( sender == m_btnOk )
     {
       // just in case another action was in preparation
-      EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+      EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
       actionBuilder.clear();
       EbEvtCancel evtCancel = new EbEvtCancel();
-      evtCancel.setGame( ModelFmpMain.model().getGame() );
-      evtCancel.setFromActionIndex( ModelFmpMain.model().getGame() );
-      evtCancel.setToActionIndex( ModelFmpMain.model().getCurrentActionIndex() );
-      evtCancel.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
+      evtCancel.setGame( GameEngine.model().getGame() );
+      evtCancel.setFromActionIndex( GameEngine.model().getGame() );
+      evtCancel.setToActionIndex( GameEngine.model().getCurrentActionIndex() );
+      evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
       //ModelFmpMain.model().setTimeLineMode( false );
-      ModelFmpMain.model().runSingleAction( evtCancel );
+      GameEngine.model().runSingleAction( evtCancel );
     }
     else if( sender == m_btnPlay )
     {
-      ModelFmpMain.model().timePlay( 1 );
+      GameEngine.model().timePlay( 1 );
     }
     else if( sender == m_btnFastPlay )
     {
-      ModelFmpMain.model().timePlay( 10 );
+      GameEngine.model().timePlay( 10 );
     }
     else if( sender == m_btnBack )
     {
-      ModelFmpMain.model().timeBack( 1 );
+      GameEngine.model().timeBack( 1 );
     }
     else if( sender == m_btnFastBack )
     {
-      ModelFmpMain.model().timeBack( 10 );
+      GameEngine.model().timeBack( 10 );
     }
   }
 
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     redraw();
   }

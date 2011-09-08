@@ -23,12 +23,14 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.EnuNavigator;
 import com.fullmetalgalaxy.client.HistoryState;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
@@ -110,7 +112,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
 
   protected boolean m_isVisible = false;
 
-  public void show(HistoryState p_state)
+  public void show()
   {
     if( !m_isVisible )
     {
@@ -125,40 +127,17 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     // m_layerLand.setVisible( ModelFmpMain.model().isStandardLandDisplayed() );
 
     // grid
-    m_layerGrid.setVisible( p_state.containsKey( MAppBoard.s_TokenGrid ) );
+    m_layerGrid.setVisible( false );
 
     // atmosphere
-    m_layerAtmosphere.setVisible( ModelFmpMain.model().isAtmosphereDisplayed() );
+    m_layerAtmosphere.setVisible( GameEngine.model().isAtmosphereDisplayed() );
 
     // zoom
-    EnuZoom zoom = new EnuZoom( p_state.getInt( MAppBoard.s_TokenZoom ) );
-    if( !p_state.containsKey( MAppBoard.s_TokenZoom ) )
-    {
-      zoom.setValue( MAppBoard.s_DefaultZoom );
-    }
+    EnuZoom zoom = new EnuZoom( EnuZoom.Medium );
     setZoom( zoom );
 
     // fire cover
     m_layerCover.displayFireCover( false );
-    if( p_state.containsKey( MAppBoard.s_TokenFireCover ) )
-    {
-      for( EbRegistration registration : ModelFmpMain.model().getGame().getSetRegistration() )
-      {
-        m_layerCover.displayFireCover( true, registration );
-      }
-      // TODO should we put back distinction between fire cover ?
-      /*String[] fireCover = p_state.getStringArray( MAppBoard.s_TokenFireCover );
-      for( int i = 0; i < fireCover.length; i++ )
-      {
-        EbRegistration registration = ModelFmpMain.model().getGame().getRegistration(
-            Long.parseLong( fireCover[i] ) );
-        if( registration != null )
-        {
-          m_layerCover.displayFireCover( true, registration );
-        }
-      }*/
-    }
-
   }
 
   public void hide()
@@ -256,25 +235,25 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
       // this is a test to avoid select current token
-      if( position.equals( ModelFmpMain.model().getActionBuilder().getLastUserClick() ) )
+      if( position.equals( GameEngine.model().getActionBuilder().getLastUserClick() ) )
       {
-        ModelFmpMain.model().getActionBuilder().check();
+        GameEngine.model().getActionBuilder().check();
 
-        ModelFmpMain.model().getActionBuilder().userOk();
-        ModelFmpMain.model().runCurrentAction();
+        GameEngine.model().getActionBuilder().userOk();
+        GameEngine.model().runCurrentAction();
       }
       else 
       {
         boolean searchPath = p_event.isControlKeyDown() || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
-        eventBuilderMsg = ModelFmpMain.model().getActionBuilder().userBoardClick( position, searchPath );
+        eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );
       }
       switch( eventBuilderMsg )
       {
       case Updated:
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
         break;
       case MustRun:
-        ModelFmpMain.model().runCurrentAction();
+        GameEngine.model().runCurrentAction();
         break;
       default:
       }
@@ -285,18 +264,18 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       {
         MAppMessagesStack.s_instance.showWarning( ex.getLocalizedMessage() );
       }
-      ModelFmpMain.model().getActionBuilder().cancel();
+      GameEngine.model().getActionBuilder().cancel();
       try
       {
-        ModelFmpMain.model().getActionBuilder().userBoardClick( position, false );
+        GameEngine.model().getActionBuilder().userBoardClick( position, false );
       } catch( Throwable iniore )
       {
       }
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     } catch( Throwable ex )
     {
       Window.alert( "Une erreur est survenu, la page va être rechargé \n" + ex.getMessage() );
-      ClientUtil.sendPM( "" + ModelFmpMain.model().getMyAccount().getId(), "5001", "js error",
+      ClientUtil.sendPM( "" + AppMain.instance().getMyAccount().getId(), "5001", "js error",
           ex.getMessage() );
       ClientUtil.reload();
     }
@@ -323,19 +302,19 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   {
     if( p_enuZoom.getValue() != getZoom().getValue() )
     {
-      ModelFmpMain.model().setZoomDisplayed( p_enuZoom );
+      GameEngine.model().setZoomDisplayed( p_enuZoom );
     }
   }
 
   protected EnuZoom getZoom()
   {
-    return ModelFmpMain.model().getZoomDisplayed();
+    return GameEngine.model().getZoomDisplayed();
   }
 
   protected Game m_game = null;
   private int m_oldZoom = -1;
 
-  public void notifyModelUpdate(ModelFmpMain p_modelSender)
+  public void notifyModelUpdate(GameEngine p_modelSender)
   {
     if( !m_isVisible )
     {

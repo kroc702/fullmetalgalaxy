@@ -29,10 +29,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -100,7 +100,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
   {
     try
     {
-      EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+      EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
       EbToken token = m_wgtTokenLink.get( p_event.getSource() );
 
       assert token != null;
@@ -110,24 +110,24 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       MAppMessagesStack.s_instance.showWarning( e.getLocalizedMessage() );
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   protected void redraw()
   {
     m_panel.clear();
     m_wgtTokenLink.clear();
-    ModelFmpMain model = ModelFmpMain.model();
+    GameEngine model = GameEngine.model();
     if( (model == null) )
     {
       return;
     }
-    if( ModelFmpMain.model().getGame().isFinished() )
+    if( GameEngine.model().getGame().isFinished() )
     {
       return;
     }
 
-    EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder action = GameEngine.model().getActionBuilder();
     EbToken mainToken = action.getSelectedToken();
 
     if( (!action.isBoardTokenSelected()) && (!action.isActionsPending())
@@ -138,14 +138,14 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           || model.getGame().getCurrentTimeStep() <= model.getGame().getEbConfigGameTime()
               .getDeploymentTimeStep() || !model.getGame().isStarted() )
       {
-        Set<EbToken> list = ModelFmpMain.model().getGame().getSetToken();
+        Set<EbToken> list = GameEngine.model().getGame().getSetToken();
         boolean isTitleDisplayed = false;
         for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
         {
           EbToken token = (EbToken)it.next();
   
           if( token.getLocation() == Location.Orbit
-              && ModelFmpMain.model().getGame().getRegistrationByColor( token.getColor() ).haveAccount() )
+              && GameEngine.model().getGame().getRegistrationByColor( token.getColor() ).haveAccount() )
           {
             if( !isTitleDisplayed )
             {
@@ -235,7 +235,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     HTML label = new HTML( "" );
     if( p_token.getType() == TokenType.Freighter )
     {
-      EbRegistration registration = ModelFmpMain.model().getGame().getRegistrationByColor(
+      EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor(
           p_token.getColor() );
       if( registration.haveAccount() )
       {
@@ -273,7 +273,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     // TODO optimisation: redraw only if required
     redraw();

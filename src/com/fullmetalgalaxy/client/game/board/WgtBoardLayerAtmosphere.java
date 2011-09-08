@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 
@@ -51,9 +51,9 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements Native
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-    if( isVisible() != ModelFmpMain.model().isAtmosphereDisplayed() )
+    if( isVisible() != GameEngine.model().isAtmosphereDisplayed() )
     {
-      setVisible( ModelFmpMain.model().isAtmosphereDisplayed() );
+      setVisible( GameEngine.model().isAtmosphereDisplayed() );
     }
   }
 

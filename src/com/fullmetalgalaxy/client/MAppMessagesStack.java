@@ -20,15 +20,20 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.board;
+package com.fullmetalgalaxy.client;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
+import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -40,9 +45,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  * display in game message, error and chat messages from other players
  */
-public class MAppMessagesStack extends GuiEntryPoint
+public class MAppMessagesStack extends GuiEntryPoint implements ChannelMessageEventHandler
 {
-  public static final String HISTORY_ID = "messages";
+  public static final String HISTORY_ID = "MessagesStack";
 
   private Map<Widget, PopupTimer> s_messagesPanels = new HashMap<Widget, PopupTimer>();
   private VerticalPanel m_panel = new VerticalPanel();
@@ -58,6 +63,8 @@ public class MAppMessagesStack extends GuiEntryPoint
 
     initWidget( m_panel );
     s_instance = this;
+    
+    AppMain.instance().addChannelMessageEventHandler( ChatMessage.class, this );
   }
 
   @Override
@@ -125,6 +132,26 @@ public class MAppMessagesStack extends GuiEntryPoint
       timer.cancel();
     }
     timer.schedule( FmpConstant.clientMessagesLivePeriod * 1000 );
+  }
+
+  @Override
+  public void onChannelMessage(Object p_message)
+  {
+    if( p_message instanceof ChatMessage)
+    {
+      // handle chat messages
+      //
+      ChatMessage p_msg = (ChatMessage)p_message;
+      if( !p_msg.isEmpty() )
+      {
+        // real message
+        String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
+        text = SmileyCollection.INSTANCE.remplace( text );
+        text = text.replace( "\n", "<br/>" );
+        HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
+        showMessage( label );
+      }
+    }
   }
 
 

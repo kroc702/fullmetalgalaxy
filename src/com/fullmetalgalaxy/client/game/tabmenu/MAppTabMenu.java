@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 
 import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.MessageEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.GameType;
@@ -119,8 +119,8 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
     initWidget( m_hPanel );
     AppMain.getEventBus().addHandler( MessageEvent.TYPE, this );
     
-    if( ModelFmpMain.model().getGame().getGameType() != GameType.MultiPlayer 
-        && ModelFmpMain.model().getGame().getMessage() != null )
+    if( GameEngine.model().getGame().getGameType() != GameType.MultiPlayer 
+        && GameEngine.model().getGame().getMessage() != null )
     {
       openTab(m_btnMessage);
     }

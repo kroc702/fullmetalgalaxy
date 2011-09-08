@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
@@ -52,7 +52,7 @@ public class WgtGameAdminLogs extends Composite
   {
     m_panel.clear();
 
-    for( AnEvent event : ModelFmpMain.model().getGame().getLogs() )
+    for( AnEvent event : GameEngine.model().getGame().getLogs() )
     {
       // display all non admin events
       if( event.getType().isEventAdmin() )

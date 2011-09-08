@@ -24,8 +24,8 @@
 package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -67,11 +67,11 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
           @Override
           public void onValueChange(ValueChangeEvent<String> p_event)
           {
-            ModelFmpMain
+            GameEngine
             .model()
             .getGame()
             .setName( m_name.getText() );
-            AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+            AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
           }
       
         });
@@ -94,11 +94,11 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        ModelFmpMain
+        GameEngine
         .model()
         .getGame()
         .setMaxNumberOfPlayer( m_maxPlayerCount.getSelectedIndex()+2 );
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       }
       
     });
@@ -111,11 +111,11 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
           @Override
           public void onValueChange(ValueChangeEvent<String> p_event)
           {
-            ModelFmpMain
+            GameEngine
             .model()
             .getGame()
             .setDescription( m_description.getText() );
-            AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+            AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
           }
       
         });
@@ -123,7 +123,7 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
 
     
     // fill UI
-    onModelUpdate(ModelFmpMain.model());
+    onModelUpdate(GameEngine.model());
 
     initWidget( m_panel );
 
@@ -142,7 +142,7 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
 
   
   @Override
-  public void onModelUpdate(ModelFmpMain p_modelSender)
+  public void onModelUpdate(GameEngine p_modelSender)
   {
     m_name.setText( p_modelSender.getGame().getName() );
     m_description.setText( p_modelSender.getGame().getDescription() );

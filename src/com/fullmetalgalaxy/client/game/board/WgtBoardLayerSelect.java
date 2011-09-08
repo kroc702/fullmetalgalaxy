@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -71,7 +71,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
   {
     // TODO Auto-generated method stub
     super.onModelChange( p_forceRedraw );
-    EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder action = GameEngine.model().getActionBuilder();
     if( action.getLastUpdate().getTime() != m_actionLastUpdate || p_forceRedraw )
     {
       redrawAction();
@@ -92,13 +92,13 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
 
   private AbstractImagePrototype getHighLightImage()
   {
-    EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
     if( actionBuilder.getSelectedAction() != null
         && (actionBuilder.getSelectedAction().getType() == GameLogType.EvtLand || actionBuilder
             .getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
       AnEventPlay action = (AnEventPlay)actionBuilder.getSelectedAction();
-      return TokenImages.getTokenImage( action.getToken( ModelFmpMain.model().getGame() ),
+      return TokenImages.getTokenImage( action.getToken( GameEngine.model().getGame() ),
           getZoom().getValue() );
     }
     return BoardIcons.hightlight_hexagon( getZoom().getValue() );
@@ -109,7 +109,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
    */
   protected void redrawAction()
   {
-    EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
     m_actionLastUpdate = actionBuilder.getLastUpdate().getTime();
 
     if( actionBuilder.isBoardTokenSelected() )
@@ -127,12 +127,12 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
 
   public void moveHightLightHexagon(AnBoardPosition p_anBoardPosition)
   {
-    AnEventPlay evDeploy = ModelFmpMain.model().getActionBuilder().getSelectedAction();
+    AnEventPlay evDeploy = GameEngine.model().getActionBuilder().getSelectedAction();
     if( evDeploy != null && evDeploy.getType() == GameLogType.EvtDeployment )
     {
-      int distance = evDeploy.getToken( ModelFmpMain.model().getGame() ).getCarrierToken()
+      int distance = evDeploy.getToken( GameEngine.model().getGame() ).getCarrierToken()
           .getPosition().getHexDistance( p_anBoardPosition );
-      if( distance > ModelFmpMain.model().getGame().getEbConfigGameVariant().getDeploymentRadius() )
+      if( distance > GameEngine.model().getGame().getEbConfigGameVariant().getDeploymentRadius() )
       {
         BoardIcons.hightlight_hexagon( getZoom().getValue() ).applyTo( m_hexagonHightlight );
       }

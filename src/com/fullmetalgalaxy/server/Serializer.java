@@ -50,8 +50,8 @@ public class Serializer
   {
     try
     {
-      s_getRoom = ChatServiceImpl.class.getMethod( "getRoom", Long.TYPE );
-      s_getChatMessage = ChatServiceImpl.class.getMethod( "getChatMessage", Long.TYPE );
+      s_getRoom = GameServicesImpl.class.getMethod( "getRoom", Long.TYPE );
+      s_getChatMessage = GameServicesImpl.class.getMethod( "getChatMessage", Long.TYPE );
       s_getModelFmpUpdate = GameServicesImpl.class.getMethod( "getModelFmpUpdate", Long.TYPE );
       s_getModelFmpInit = GameServicesImpl.class.getMethod( "getModelFmpInit", String.class );
     } catch( Exception e )

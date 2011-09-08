@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.game.context;
 
 
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -45,7 +45,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   private AbsolutePanel m_panel = new AbsolutePanel();
   private Image m_miniMapImage = new Image();
 
-  String m_lastGameId = null;
+  String m_lastMiniMapUri = null;
 
 
   /**
@@ -60,15 +60,15 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
 
   public void redraw()
   {
-    assert ModelFmpMain.model() != null;
-    Game game = ModelFmpMain.model().getGame();
-    String gameId = ModelFmpMain.model().getGameId();
+    assert GameEngine.model() != null;
+    Game game = GameEngine.model().getGame();
+    String miniMapUri = GameEngine.model().getGame().getMapUri();
 
     m_panel.clear();
 
-    if( m_lastGameId == null || !m_lastGameId.equals( gameId ) )
+    if( m_lastMiniMapUri == null || !m_lastMiniMapUri.equals( miniMapUri ) )
     {
-      m_lastGameId = gameId;
+      m_lastMiniMapUri = miniMapUri;
       m_miniMapImage.setUrl( game.getMinimapUri() );
       m_miniMapImage.setPixelSize( FmpConstant.miniMapWidth, FmpConstant.miniMapHeight );
     }

@@ -17,6 +17,7 @@
     <%
 	Presence presence = new Presence();
 	String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.CHAT,presence);
+	String room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
 	EbGamePreview game = FmgDataStore.dao().find( EbGamePreview.class, id);
 	String title = "Full Metal Chat";
 	if( game != null )
@@ -26,21 +27,13 @@
 	%>
 	<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />
 	<meta name='gwt:property' id='fmp_pageid' content='<%= presence.getPageId() %>' />
-
-    
-    <%
-    String conversation = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
-    %>
-    <!-- meta name='gwt:property' id='fmp_conversation' content='' /-->
-    <script type="text/javascript" language="javascript">
-    	var conversation='<%= conversation %>';
+	<meta name='gwt:property' id='fmp_gameid' content='<%= id %>' />
+	<script type="text/javascript" language="javascript">
+		var fmp_room='<%= room %>';
 	</script>
-    <!--                                           -->
-    <!-- This script loads your compiled module.   -->
-    <!-- If you add any GWT meta tags, they must   -->
-    <!-- be added before this line.                -->
-    <!--                                           -->
-    <script type="text/javascript" language="javascript" src="chat/chat.nocache.js"></script>
+    
+    <style type="text/css">@import url( /appMain.css );</style>
+	<meta name='gwt:property' id='ChatEngine' />
   </head>
 
   <body style="width:100%; height:100%;">
@@ -56,7 +49,8 @@
 
     <h3><%= title %></h3>
 
-	<div id="wgtmessages" style="height:100%; width:100%;"></div>
+	<div id="Presences" style="float:right;"></div>
+	<div id="Chat" style="height:100%; width:100%;"></div>
 	
 	<% if( id == 0 ) { %>
 	<p>
@@ -66,6 +60,9 @@
 	Le contact (ou Jabber ID) est: <a href="xmpp:fullmetalgalaxy2@appspot.com">fullmetalgalaxy2@appspot.com</a>
 	</p>
 	<% } %>
+
+        <script type="text/javascript" language="javascript" src="game/game.nocache.js"></script>
+
 	<%@include file="include/footer.jsp"%>
   </body>
 </html>

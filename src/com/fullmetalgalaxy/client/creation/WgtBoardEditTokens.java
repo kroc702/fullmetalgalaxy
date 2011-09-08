@@ -24,8 +24,8 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ModelFmpMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.BoardLayer;
 import com.fullmetalgalaxy.client.game.board.BoardLayerCollection;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
@@ -90,7 +90,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
 
   protected EnuZoom getZoom()
   {
-    return ModelFmpMain.model().getZoomDisplayed();
+    return GameEngine.model().getZoomDisplayed();
   }
 
   /* (non-Javadoc)
@@ -131,7 +131,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
     AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair( p_x,
         p_y ), getZoom() );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
 
     if( DOM.eventGetButton( DOM.eventGetCurrentEvent() ) == Event.BUTTON_LEFT )
     {
@@ -194,7 +194,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
         e.printStackTrace();
       }
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
   /* (non-Javadoc)
@@ -234,12 +234,12 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.WgtBoard#notifyModelUpdate(com.fullmetalgalaxy.model.SourceModelUpdateEvents)
    */
-  public void notifyModelUpdate(ModelFmpMain p_ctrModelSender)
+  public void notifyModelUpdate(GameEngine p_ctrModelSender)
   {
-    if( hashLand( ModelFmpMain.model().getGame() ) != m_oldHashLand )
+    if( hashLand( GameEngine.model().getGame() ) != m_oldHashLand )
     {
       // land change: redraw all
-      m_oldHashLand = hashLand( ModelFmpMain.model().getGame() );
+      m_oldHashLand = hashLand( GameEngine.model().getGame() );
       // force redraw
       m_layerLand.onModelChange( true );
       m_layerToken.onModelChange( true );

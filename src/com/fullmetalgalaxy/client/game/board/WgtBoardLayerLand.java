@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Tide;
@@ -62,10 +62,10 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   {
     super.onModelChange( p_forceRedraw );
 
-    if( (m_lastGameId != ModelFmpMain.model().getGame().getId()) || (p_forceRedraw) )
+    if( (m_lastGameId != GameEngine.model().getGame().getId()) || (p_forceRedraw) )
     {
-      m_lastGameId = ModelFmpMain.model().getGame().getId();
-      m_lastTideValue = ModelFmpMain.model().getGame().getCurrentTide();
+      m_lastGameId = GameEngine.model().getGame().getId();
+      m_lastTideValue = GameEngine.model().getGame().getCurrentTide();
       m_htmlLandTactic = null;
       m_htmlLandStrategy = null;
       setZoom( getZoom() );
@@ -78,9 +78,9 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
       m_html.setHTML( getHtmlLand() );
       onTideChange();*/
     }
-    if( m_lastTideValue != ModelFmpMain.model().getGame().getCurrentTide() )
+    if( m_lastTideValue != GameEngine.model().getGame().getCurrentTide() )
     {
-      m_lastTideValue = ModelFmpMain.model().getGame().getCurrentTide();
+      m_lastTideValue = GameEngine.model().getGame().getCurrentTide();
       onTideChange();
     }
   }
@@ -97,13 +97,13 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     case EnuZoom.Medium:
       if( m_htmlLandTactic == null )
       {
-        m_htmlLandTactic = buildHtmlLand( ModelFmpMain.model().getGame(), EnuZoom.Medium );
+        m_htmlLandTactic = buildHtmlLand( GameEngine.model().getGame(), EnuZoom.Medium );
       }
       return m_htmlLandTactic;
     case EnuZoom.Small:
       if( m_htmlLandStrategy == null )
       {
-        m_htmlLandStrategy = buildHtmlLand( ModelFmpMain.model().getGame(), EnuZoom.Small );
+        m_htmlLandStrategy = buildHtmlLand( GameEngine.model().getGame(), EnuZoom.Small );
       }
       return m_htmlLandStrategy;
     }
@@ -164,7 +164,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     setWidthRules( s_firstLandRuleIndex + LandType.Marsh.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Plain.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Montain.ordinal(), width );
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
     setPixelSize( pxW, pxH );
@@ -180,7 +180,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
    */
   public void onTideChange()
   {
-    Game game = ModelFmpMain.model().getGame();
+    Game game = GameEngine.model().getGame();
     String baseUrl = "images/board/" + game.getPlanetType().getFolderName();
     if( getZoom().getValue() == EnuZoom.Small )
     {

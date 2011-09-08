@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.Presence;
@@ -68,18 +69,17 @@ public class ChannelManager extends HttpServlet
   /**  */
   private final static int CACHE_ROOM_TTL_SEC = 60 * 60 * 2; // 2h
   /** if last connection is closer than this value, we don't need to update cache */
-  private final static int CACHE_PRESENCE_MIN_DIFF_MS = 1000 * 60 * 4; // 4min
+  private final static int CACHE_PRESENCE_MIN_DIFF_MS = 1000 * 60 * 3; // 3min
   /** if last connection is farer (older) than this value we should ask client for an update
    *  because he may have crash. In this case, we will disconnect it. */
-  private final static int CACHE_PRESENCE_ASK_TTL_MS = 1000 * 60 * 15; // 15min
+  private final static int CACHE_PRESENCE_ASK_TTL_MS = 1000 * 60 * 8; // 8min
   /** if last connection is farer (older) than this value we will disconnect it. */
-  private final static int CACHE_PRESENCE_TTL_MS = 1000 * 60 * 20; // 20min
+  private final static int CACHE_PRESENCE_TTL_MS = 1000 * 60 * 11; // 11min
   /** if last connection is closer than this value, we don't need to update cache */
   private final static int CONNECTION_MIN_DIFF_MS = 1000 * 3; // 3sec
 
   private static MemcacheService s_cache = MemcacheServiceFactory.getMemcacheService();
   private static ChannelService s_channelService = ChannelServiceFactory.getChannelService();
-  private final static FmpLogger log = FmpLogger.getLogger( ChannelManager.class.getName() );
 
 
   @Override
@@ -155,7 +155,7 @@ public class ChannelManager extends HttpServlet
       // these two connections are too close... consider as the same
       // its a workaround because game.jsp is sometime called twice and I don't
       // know why !
-      log.error( "connect bypass because the too connexion are too close (workaround)" );
+      AppRoot.logger.warning( "connect bypass because the too connexion are too close (workaround)" );
       return null;
     }
     
@@ -167,6 +167,7 @@ public class ChannelManager extends HttpServlet
 
   public static String connect(Presence p_presence)
   {
+    AppRoot.logger.fine( "ChannelManager.connect "+ p_presence.getGameId()+" - "+p_presence.getChannelId() );
     assert p_presence != null;
     PresenceRoom room = getRoom( p_presence.getGameId() );
 
@@ -195,6 +196,8 @@ public class ChannelManager extends HttpServlet
     {
       return;
     }
+    AppRoot.logger.fine( "ChannelManager.disconnect "+ p_presence.getGameId()+" - "+p_presence.getChannelId() );
+    
     PresenceRoom room = getRoom( p_presence.getGameId() );
     room.remove( p_presence );
     
@@ -208,12 +211,13 @@ public class ChannelManager extends HttpServlet
       {
         try
         {
+          // client have 4 seconds to answer
           presence.getLastConnexion().setTime(
-              presence.getLastConnexion().getTime() + CACHE_PRESENCE_TTL_MS - 4000 );
+              System.currentTimeMillis() - CACHE_PRESENCE_TTL_MS + 4000 );
           s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
         } catch( Exception e )
         {
-          log.error( e );
+          AppRoot.logger.severe( e.getMessage() );
         }
       }
     }
@@ -252,6 +256,8 @@ public class ChannelManager extends HttpServlet
    */
   protected static void broadcast(PresenceRoom p_room)
   {
+    AppRoot.logger.fine( "ChannelManager.broadcast room "+ p_room.getGameId() );
+    
     String response = Serializer.toClient( p_room );
 
     if( response != null )
@@ -267,7 +273,7 @@ public class ChannelManager extends HttpServlet
           }
           else
           {
-            log.error( "Send a PresenceRoom, but his XMPP presence have a JabberId null !" );
+            AppRoot.logger.severe( "Send a PresenceRoom, but his XMPP presence have a JabberId null !" );
           }
         }
         else
@@ -275,10 +281,11 @@ public class ChannelManager extends HttpServlet
           // send presence to web client
           try
           {
+            AppRoot.logger.finer( "ChannelManager.sendMessage "+ presence.getChannelId() );
             s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
           } catch( Exception e )
           {
-            log.error( e );
+            AppRoot.logger.severe( e.getMessage() );
           }
         }
       }
@@ -291,6 +298,8 @@ public class ChannelManager extends HttpServlet
    */
   public static void broadcast(PresenceRoom p_room, ChatMessage p_msg)
   {
+    AppRoot.logger.fine( "ChannelManager.broadcast room "+ p_room.getGameId() +" msg '"+p_msg+"'");
+    
     boolean isRoomUpdated = false;
     List<Presence> toRemove = new ArrayList<Presence>();
     isRoomUpdated |= updateLastConnexion( p_room, p_msg.getFromPseudo(), p_msg.getFromPageId() );
@@ -328,10 +337,11 @@ public class ChannelManager extends HttpServlet
           // send chat message to web client
           try
           {
+            AppRoot.logger.finer( "ChannelManager.sendMessage "+ presence.getChannelId() );
             s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
           } catch( Exception e )
           {
-            log.error( e );
+            AppRoot.logger.severe( e.getMessage() );
             // message send fail: remove presence
             toRemove.add( presence );
           }
@@ -379,7 +389,7 @@ public class ChannelManager extends HttpServlet
           }
         } catch( Exception e )
         {
-          log.error( e );
+          AppRoot.logger.severe( e.getMessage() );
         }
       }
     }
@@ -405,7 +415,7 @@ public class ChannelManager extends HttpServlet
       presence.setClientType( ClientType.GAME );
       p_room.connect( presence );
       isRoomUpdated = true;
-      log.warning( "a user send a chat message, but his presence isn't found in room" );
+      AppRoot.logger.warning( "a user send a chat message, but his presence isn't found in room" );
     }
     else if( presence.getLastConnexion().before( new Date(System.currentTimeMillis()-CACHE_PRESENCE_MIN_DIFF_MS)) )
     {
@@ -472,7 +482,7 @@ public class ChannelManager extends HttpServlet
         s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
       } catch( Exception e )
       {
-        log.error( e );
+        AppRoot.logger.severe( e.getMessage() );
       }
     }
     return isRoomUpdated;

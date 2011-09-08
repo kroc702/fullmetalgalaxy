@@ -22,17 +22,12 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import com.fullmetalgalaxy.client.event.EventPreviewListenerCollection;
+import com.fullmetalgalaxy.client.event.EventPreviewHandlerCollection;
 import com.fullmetalgalaxy.client.event.SourcesPreviewEvents;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.DOM;
@@ -51,7 +46,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  *
  */
 
-public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListener,
+public abstract class AppRoot implements EntryPoint, WindowResizeListener, HistoryListener,
     SourcesPreviewEvents, NativePreviewHandler
 {
   public static Logger logger = Logger.getLogger("AppRoot");
@@ -67,10 +62,9 @@ public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListene
   
   protected PopupPanel m_loadingPanel = new PopupPanel( false, true );
   protected int m_isLoading = 0;
-  protected Map m_dialogMap = new HashMap();
 
   private HistoryState m_historyState = new HistoryState();
-  private EventPreviewListenerCollection m_previewListenerCollection = new EventPreviewListenerCollection();
+  private EventPreviewHandlerCollection m_previewListenerCollection = new EventPreviewHandlerCollection();
   private EventBus m_eventBus = new SimpleEventBus();
   
   
@@ -160,10 +154,10 @@ public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListene
 
 
   /**
-   * 
+   * We won't use history state anymore
    * @return the current history state.
    */
-  public HistoryState getHistoryState()
+  private HistoryState getHistoryState()
   {
     return m_historyState;
   }
@@ -188,7 +182,7 @@ public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListene
    * which have to be displayed on module loading.
    * @return
    */
-  public HistoryState getDefaultHistoryState()
+  private HistoryState getDefaultHistoryState()
   {
     if( RootPanel.get( "app_history" ) != null )
     {
@@ -237,6 +231,6 @@ public class AppRoot implements EntryPoint, WindowResizeListener, HistoryListene
     return m_isLoading > 0;
   }
 
-
+  
 
 }

@@ -23,12 +23,13 @@
 package com.fullmetalgalaxy.client.game.context;
 
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
-import com.fullmetalgalaxy.client.ModelFmpMain;
+import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
-import com.fullmetalgalaxy.client.game.board.MAppMessagesStack;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -199,29 +200,29 @@ public class WgtContextAction extends WgtView implements ClickHandler
     Object sender = p_event.getSource();
     try
     {
-      EventsPlayBuilder actionBuilder = ModelFmpMain.model().getActionBuilder();
+      EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
       if( sender == m_btnOk )
       {
         actionBuilder.userOk();
-        ModelFmpMain.model().runCurrentAction();
+        GameEngine.model().runCurrentAction();
       }
       else if( sender == m_btnCancel )
       {
         actionBuilder.userCancel();
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       }
       else if( sender == m_btnRepairTurret )
       {
         EventBuilderMsg eventBuilderMsg = actionBuilder.userAction( GameLogType.EvtRepair );
         if( eventBuilderMsg == EventBuilderMsg.MustRun )
         {
-          ModelFmpMain.model().runSingleAction( actionBuilder.getSelectedAction() );
+          GameEngine.model().runSingleAction( actionBuilder.getSelectedAction() );
         }
       }
       else if( sender == m_btnFire )
       {
         actionBuilder.userAction( GameLogType.EvtFire );
-        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( ModelFmpMain.model()
+        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( GameEngine.model()
             .getGame() ) == null )
         {
           // TODO i18n
@@ -237,7 +238,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       else if( sender == m_btnControl )
       {
         actionBuilder.userAction( GameLogType.EvtControl );
-        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( ModelFmpMain.model()
+        if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( GameEngine.model()
             .getGame() ) == null )
         {
           // TODO i18n
@@ -252,23 +253,23 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnFireCoverOn )
       {
-        ModelFmpMain.model().setFireCoverDisplayed( true );
+        GameEngine.model().setFireCoverDisplayed( true );
       }
       else if( sender == m_btnFireCoverOff )
       {
-        ModelFmpMain.model().setFireCoverDisplayed( false );
+        GameEngine.model().setFireCoverDisplayed( false );
       }
       else if( sender == m_btnGrid )
       {
-        ModelFmpMain.model().setGridDisplayed( !ModelFmpMain.model().isGridDisplayed() );
+        GameEngine.model().setGridDisplayed( !GameEngine.model().isGridDisplayed() );
       }
       else if( sender == m_btnZoomIn )
       {
-        ModelFmpMain.model().setZoomDisplayed( EnuZoom.Medium );
+        GameEngine.model().setZoomDisplayed( EnuZoom.Medium );
       }
       else if( sender == m_btnZoomOut )
       {
-        ModelFmpMain.model().setZoomDisplayed( EnuZoom.Small );
+        GameEngine.model().setZoomDisplayed( EnuZoom.Small );
       }
       else if( sender == m_btnRegister || sender == m_pnlRegister )
       {
@@ -279,8 +280,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
       else if( sender == m_btnEndTurn || sender == m_pnlEndTurn )
       {
         String msg = null;
-        int oldPt = ModelFmpMain.model().getMyRegistration().getPtAction();
-        int newPt = ModelFmpMain.model().getMyRegistration().getRoundedActionPt(ModelFmpMain.model().getGame());
+        int oldPt = GameEngine.model().getMyRegistration().getPtAction();
+        int newPt = GameEngine.model().getMyRegistration().getRoundedActionPt(GameEngine.model().getGame());
         // TODO i18n
         if( oldPt == newPt )
         {
@@ -294,9 +295,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
         if( Window.confirm( msg ) )
         {
           EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-          action.setGame( ModelFmpMain.model().getGame() );
-          action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
-          ModelFmpMain.model().runSingleAction( action );
+          action.setGame( GameEngine.model().getGame() );
+          action.setAccountId( AppMain.instance().getMyAccount().getId() );
+          GameEngine.model().runSingleAction( action );
         }
       }
       else if( sender == m_btnTakeOff )
@@ -306,56 +307,56 @@ public class WgtContextAction extends WgtView implements ClickHandler
             + Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) + " ?" ) )
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
-          action.setGame( ModelFmpMain.model().getGame() );
-          action.setAccountId( ModelFmpMain.model().getMyAccount().getId() );
+          action.setGame( GameEngine.model().getGame() );
+          action.setAccountId( AppMain.instance().getMyAccount().getId() );
           action.setToken( actionBuilder.getSelectedToken() );
-          ModelFmpMain.model().runSingleAction( action );
+          GameEngine.model().runSingleAction( action );
         }
       }
       else if( sender == m_pnlPause )
       {
-        AnEvent gameLog = GameLogFactory.newAdminTimePause( ModelFmpMain.model().getMyAccount()
+        AnEvent gameLog = GameLogFactory.newAdminTimePause( AppMain.instance().getMyAccount()
             .getId() );
-        gameLog.setGame( ModelFmpMain.model().getGame() );
-        ModelFmpMain.model().runSingleAction( gameLog );
+        gameLog.setGame( GameEngine.model().getGame() );
+        GameEngine.model().runSingleAction( gameLog );
       }
       else if( sender == m_pnlLand )
       {
         // search for my freighter to land
-        ModelFmpMain
+        GameEngine
             .model()
             .getActionBuilder()
             .userTokenClick(
-                ModelFmpMain.model().getGame()
-                    .getFreighter( ModelFmpMain.model().getMyRegistration() ) );
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+                GameEngine.model().getGame()
+                    .getFreighter( GameEngine.model().getMyRegistration() ) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       }
       else if( sender == m_pnlDeploy )
       {
         // search for any unit to deploy
-        EbToken myFreighter = ModelFmpMain.model().getGame()
-            .getFreighter( ModelFmpMain.model().getMyRegistration() );
+        EbToken myFreighter = GameEngine.model().getGame()
+            .getFreighter( GameEngine.model().getMyRegistration() );
         if( myFreighter.containToken() )
         {
           EbToken firstToken = myFreighter.getContains().iterator().next();
-          ModelFmpMain.model().getActionBuilder().userTokenClick( firstToken );
-          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+          GameEngine.model().getActionBuilder().userTokenClick( firstToken );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
         }
       }
       else if( sender == m_pnlTakeOff )
       {
-        ModelFmpMain.model().getActionBuilder().clear();
+        GameEngine.model().getActionBuilder().clear();
         // search for my freighter to take off
-        for( EbToken token : ModelFmpMain.model().getGame()
-            .getAllFreighter( ModelFmpMain.model().getMyRegistration() ) )
+        for( EbToken token : GameEngine.model().getGame()
+            .getAllFreighter( GameEngine.model().getMyRegistration() ) )
         {
           if( token.getLocation() == Location.Board )
           {
-            ModelFmpMain.model().getActionBuilder().userTokenClick( token );
+            GameEngine.model().getActionBuilder().userTokenClick( token );
             break;
           }
         }
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(ModelFmpMain.model()) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       }
     } catch( RpcFmpException e )
     {
@@ -366,26 +367,26 @@ public class WgtContextAction extends WgtView implements ClickHandler
   protected void redraw()
   {
     m_panel.clear();
-    ModelFmpMain model = ModelFmpMain.model();
+    GameEngine model = GameEngine.model();
     if( (model == null) )
     {
       return;
     }
 
-    EventsPlayBuilder action = ModelFmpMain.model().getActionBuilder();
+    EventsPlayBuilder action = GameEngine.model().getActionBuilder();
     EbToken mainSelectedToken = action.getSelectedToken();
     EbRegistration myRegistration = model.getMyRegistration();
 
-    if( !model.isChannelConnected()
+    if( !AppMain.instance().isChannelConnected()
         && (System.currentTimeMillis() - ClientUtil.pageLoadTimeMillis()) > 2000 )
     {
       MAppMessagesStack.s_instance.showMessage( m_pnlChannelDisconnected );
     }
 
-    if( !action.isTokenSelected() || ModelFmpMain.model().getGame().isFinished() )
+    if( !action.isTokenSelected() || GameEngine.model().getGame().isFinished() )
     {
       // add standard actions icon set
-      if( ModelFmpMain.model().isFireCoverDisplayed() )
+      if( GameEngine.model().isFireCoverDisplayed() )
       {
         m_panel.add( m_btnFireCoverOff );
       }
@@ -394,7 +395,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnFireCoverOn );
       }
       m_panel.add( m_btnGrid );
-      if( ModelFmpMain.model().getZoomDisplayed().getValue() == EnuZoom.Small )
+      if( GameEngine.model().getZoomDisplayed().getValue() == EnuZoom.Small )
       {
         m_panel.add( m_btnZoomIn );
       }
@@ -402,7 +403,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         m_panel.add( m_btnZoomOut );
       }
-      if( !ModelFmpMain.model().isTimeLineMode() )
+      if( !GameEngine.model().isTimeLineMode() )
       {
         // display wait panel advise
         if( (myRegistration != null) && (model.getGame().getCurrentTimeStep() <= 0)
@@ -411,9 +412,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
           MAppMessagesStack.s_instance.showMessage( m_pnlWait );
         }
         // display end turn button ?
-        if( (!ModelFmpMain.model().getGame().isAsynchron()) && (myRegistration != null)
-            && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == myRegistration)
-            && (ModelFmpMain.model().getGame().isStarted()) )
+        if( (!GameEngine.model().getGame().isAsynchron()) && (myRegistration != null)
+            && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration)
+            && (GameEngine.model().getGame().isStarted()) )
         {
           m_panel.add( m_btnEndTurn );
 
@@ -421,21 +422,21 @@ public class WgtContextAction extends WgtView implements ClickHandler
           if( myRegistration.getPtAction() <= 0 )
           {
             
-            if( ModelFmpMain.model().getGame().getCurrentTimeStep() > ModelFmpMain.model()
+            if( GameEngine.model().getGame().getCurrentTimeStep() > GameEngine.model()
                 .getGame().getEbConfigGameTime().getDeploymentTimeStep() )
             {
               MAppMessagesStack.s_instance.showMessage( m_pnlEndTurn );
             }
             else 
             {
-              EbToken myFreighter = ModelFmpMain.model().getGame().getFreighter( myRegistration );
-              if( (ModelFmpMain.model().getGame().getCurrentTimeStep() < ModelFmpMain.model()
+              EbToken myFreighter = GameEngine.model().getGame().getFreighter( myRegistration );
+              if( (GameEngine.model().getGame().getCurrentTimeStep() < GameEngine.model()
                 .getGame().getEbConfigGameTime().getDeploymentTimeStep())
                 && (myFreighter.getLocation() == Location.Board) )
               {
                 MAppMessagesStack.s_instance.showMessage( m_pnlEndTurn );
               }
-              else if( (ModelFmpMain.model().getGame().getCurrentTimeStep() == ModelFmpMain.model()
+              else if( (GameEngine.model().getGame().getCurrentTimeStep() == GameEngine.model()
                   .getGame().getEbConfigGameTime().getDeploymentTimeStep()) )
               {
                 if( !myFreighter.containToken() )
@@ -450,10 +451,10 @@ public class WgtContextAction extends WgtView implements ClickHandler
             }
           }
         }
-        if( ModelFmpMain.model().isLogged()
+        if( GameEngine.model().isLogged()
             && myRegistration == null
-            && !ModelFmpMain.model().getGame().isStarted()
-            && ModelFmpMain.model().getGame().getMaxNumberOfPlayer() > ModelFmpMain.model()
+            && !GameEngine.model().getGame().isStarted()
+            && GameEngine.model().getGame().getMaxNumberOfPlayer() > GameEngine.model()
                 .getGame().getCurrentNumberOfRegiteredPlayer() )
         {
           m_panel.add( m_btnRegister );
@@ -461,21 +462,21 @@ public class WgtContextAction extends WgtView implements ClickHandler
         }
         
         // should we display pause to allow subscription advise ?
-        if( (ModelFmpMain.model().getGame().getCurrentNumberOfRegiteredPlayer() < ModelFmpMain.model().getGame().getMaxNumberOfPlayer())
-          && (ModelFmpMain.model().getGame().isStarted()) )
+        if( (GameEngine.model().getGame().getCurrentNumberOfRegiteredPlayer() < GameEngine.model().getGame().getMaxNumberOfPlayer())
+          && (GameEngine.model().getGame().isStarted()) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlPause );
         }
         
         // should we display landing advise ?
-        if( ModelFmpMain.model().getGame().getCurrentTimeStep() < ModelFmpMain.model()
+        if( GameEngine.model().getGame().getCurrentTimeStep() < GameEngine.model()
             .getGame().getEbConfigGameTime().getDeploymentTimeStep())
         {
-          EbToken myFreighter = ModelFmpMain.model().getGame().getFreighter( myRegistration );
+          EbToken myFreighter = GameEngine.model().getGame().getFreighter( myRegistration );
           if( myFreighter != null
               && model.getGame().isStarted()
               && myFreighter.getLocation() == Location.Orbit
-              && (ModelFmpMain.model().getGame().getCurrentPlayerRegistration() == myRegistration) )
+              && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration) )
           {
             MAppMessagesStack.s_instance.showMessage( m_pnlLand );
           }
@@ -484,7 +485,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // should we display take off advise ?
         if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
             .getCurrentTimeStep() ))
-            && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
+            && (GameEngine.model().getGame().isAsynchron() || GameEngine.model().getGame()
                 .getCurrentPlayerRegistration() == myRegistration) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
@@ -499,7 +500,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     {
       m_panel.add( m_btnOk );
       m_panel.add( m_iconAction );
-      m_lblAction.setText( String.valueOf( ModelFmpMain.model().getActionBuilder().getCost() ) );
+      m_lblAction.setText( String.valueOf( GameEngine.model().getActionBuilder().getCost() ) );
       m_panel.add( m_lblAction );
       m_panel.add( m_btnCancel );
     }
@@ -526,13 +527,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
 
       if( !mainSelectedToken.getEnuColor().contain( myRegistration.getColor() ) )
       {
-        if( mainSelectedToken.canBeATarget( ModelFmpMain.model().getGame() ) )
+        if( mainSelectedToken.canBeATarget( GameEngine.model().getGame() ) )
         {
           m_panel.add( m_btnFire );
         }
       }
-      else if( ((ModelFmpMain.model().getGame().getTokenFireLength( mainSelectedToken ) > 0) || (mainSelectedToken
-          .getType() == TokenType.Freighter && ModelFmpMain.model().getGame()
+      else if( ((GameEngine.model().getGame().getTokenFireLength( mainSelectedToken ) > 0) || (mainSelectedToken
+          .getType() == TokenType.Freighter && GameEngine.model().getGame()
           .getToken( action.getSelectedPosition(), TokenType.Turret ) != null)) )
       {
         try
@@ -555,7 +556,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           }
         }
       }
-      if( action.getSelectedToken().canControlNeighbor( ModelFmpMain.model().getGame(),
+      if( action.getSelectedToken().canControlNeighbor( GameEngine.model().getGame(),
           action.getSelectedPosition() ) )
       {
         m_panel.add( m_btnControl );
@@ -576,7 +577,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
 
       if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() ))
-          && (ModelFmpMain.model().getGame().isAsynchron() || ModelFmpMain.model().getGame()
+          && (GameEngine.model().getGame().isAsynchron() || GameEngine.model().getGame()
               .getCurrentPlayerRegistration() == myRegistration) )
       {
         if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
@@ -595,7 +596,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
    * @see com.fullmetalgalaxy.client.ModelUpdateListener#notifyModelUpdate(com.fullmetalgalaxy.client.CtrModel)
    */
   @Override
-  public void onModelUpdate(ModelFmpMain p_ModelSender)
+  public void onModelUpdate(GameEngine p_ModelSender)
   {
     redraw();
   }
