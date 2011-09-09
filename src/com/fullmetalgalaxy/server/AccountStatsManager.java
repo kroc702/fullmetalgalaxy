@@ -355,20 +355,25 @@ public class AccountStatsManager
     {
       if( registration.getAccount() != null )
       {
-        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-            registration.getAccount().getId() );
-        StatsGamePlayer lastStat = StatsGamePlayer.class.cast( getLastStats( account,
-            p_game.getId() ) );
-        if( lastStat == null )
+        try {
+          EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+              registration.getAccount().getId() );
+          StatsGamePlayer lastStat = StatsGamePlayer.class.cast( getLastStats( account,
+              p_game.getId() ) );
+          if( lastStat == null )
+          {
+            lastStat = new StatsGamePlayer( p_game );
+            account.getStats().add( lastStat );
+          }
+          lastStat.setPlayer( p_game, registration );
+          lastStat.setStatus( Status.Finished );
+          lastStat.setFinalScore( processFinalScore( p_game, registration ) );
+          lastStat.setLastUpdate( new Date() );
+          saveAndUpdate( account );
+        } catch(Exception e)
         {
-          lastStat = new StatsGamePlayer( p_game );
-          account.getStats().add( lastStat );
+          ServerUtil.logger.warning( e.getMessage() );
         }
-        lastStat.setPlayer( p_game, registration );
-        lastStat.setStatus( Status.Finished );
-        lastStat.setFinalScore( processFinalScore( p_game, registration ) );
-        lastStat.setLastUpdate( new Date() );
-        saveAndUpdate( account );
       }
     }
 

@@ -1,3 +1,4 @@
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
 <HTML>
 <head>
@@ -30,7 +31,7 @@
 </pre>
 
 <h2>Les tirs</h2>
-la cible doit être a porté des deux destructeurs.
+la cible doit Ãªtre a portÃ© des deux destructeurs.
 <pre>
 [Clic] destructeur 1
 [Clic] icon cible
@@ -39,23 +40,23 @@ la cible doit être a porté des deux destructeurs.
 [OK]
 </pre>
 
-<h3>Les tirs avancés</h3>
-Si l'un des destructeurs est trop éloigné de la cible, il est possible de déplacer le destructeur 1 
+<h3>Les tirs avancÃ©s</h3>
+Si l'un des destructeurs est trop Ã©loignÃ© de la cible, il est possible de dÃ©placer le destructeur 1 
 dans la zone de feu adverse juste avant le tir:
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible
 [OK]
 </pre>
 
-<h3>Les tirs très avancés</h3>
-Il est même possible de faire deux tirs après le déplacement:
+<h3>Les tirs trÃ¨s avancÃ©s</h3>
+Il est mÃªme possible de faire deux tirs aprÃ¨s le dÃ©placement:
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible 1
@@ -65,7 +66,7 @@ Il est même possible de faire deux tirs après le déplacement:
 Ou bien :
 <pre>
 [Clic] destructeur 1
-[Clic] case où positionner le destructeur 1
+[Clic] case oÃ¹ positionner le destructeur 1
 [Clic] icon cible
 [Clic] destructeur 2
 [Clic] Cible 1
@@ -74,13 +75,13 @@ Ou bien :
 [Clic] Cible 2
 [OK]
 </pre>
-A noter: d'autre séquence fonctionnent, notaments la sélections des pions dans le désordre
-ou l'omission du déplacement initial. Mais dans certaine situation rare, seul les séquences
-proposé ici réalise l'action exactement comme vous le souhaitez.
+A noter: d'autre sÃ©quence fonctionnent, notaments la sÃ©lections des pions dans le dÃ©sordre
+ou l'omission du dÃ©placement initial. Mais dans certaine situation rare, seul les sÃ©quences
+proposÃ© ici rÃ©alise l'action exactement comme vous le souhaitez.
 
-<h2>Les contrôles de pièce standard</h2>
+<h2>Les contrÃ´les de piÃ¨ce standard</h2>
 <pre>
-Les deux destructeurs doivent être au contact de la cible.
+Les deux destructeurs doivent Ãªtre au contact de la cible.
 [Clic] destructeur 1
 [Clic] icon main/controle
 [Clic] destructeur 2
@@ -88,27 +89,27 @@ Les deux destructeurs doivent être au contact de la cible.
 [OK]
 </pre>
 
-<h2>Les contrôles d'astronefs</h2>
+<h2>Les contrÃ´les d'astronefs</h2>
 <p>
-Détruisez les trois tourelles puis entrez dedans avec un destructeur, comme s'il s'agissait du votre.
+DÃ©truisez les trois tourelles puis entrez dedans avec un destructeur, comme s'il s'agissait du votre.
 </p>
 
-<h2>Le déchargement</h2>
+<h2>Le dÃ©chargement</h2>
 <p>
-Pour décharger un véhicule d'un autre:
+Pour dÃ©charger un vÃ©hicule d'un autre:
 </p>
 <pre>
 [Clic] transporteur
-[Clic] véhicule a décharger (en bas a droite)
-[Clic] case où positionner le véhicule
+[Clic] vÃ©hicule a dÃ©charger (en bas a droite)
+[Clic] case oÃ¹ positionner le vÃ©hicule
 [OK]
 </pre>
-Décharger un véhicule coûte un point d'action. Mais décharger un véhicule lui même chargé ne coûte aussi qu'un point d'action.
-ex pour décharger un crabe et deux char de la barge en un seul point d'action:
+DÃ©charger un vÃ©hicule coÃ»te un point d'action. Mais dÃ©charger un vÃ©hicule lui mÃªme chargÃ© ne coÃ»te aussi qu'un point d'action.
+ex pour dÃ©charger un crabe et deux char de la barge en un seul point d'action:
 <pre>
 [Clic] barge
 [Clic] crabe
-[Clic] case où positionner le crabe
+[Clic] case oÃ¹ positionner le crabe
 [OK] (-> 1pt d'action)
 [Clic] barge
 [Clic] char 1
@@ -120,17 +121,17 @@ ex pour décharger un crabe et deux char de la barge en un seul point d'action:
 [OK] (-> 0pt d'action)
 </pre>
 
-Pour positionner la barge comme on le souhaite, il est possible de sélectioner les deux cases qu'elle doit
+Pour positionner la barge comme on le souhaite, il est possible de sÃ©lectioner les deux cases qu'elle doit
 occuper:
 <pre>
 [Clic] pod de l'astronef
 [Clic] barge
 [Clic] 1iere case adjacente
-[Clic] 2nd case (& vérifier que ça nous convient)
+[Clic] 2nd case (& vÃ©rifier que Ã§a nous convient)
 [OK] (-> 1pt d'action)
 </pre>
 
-<h2>chat / joueurs connecté</h2>
+<h2>chat / joueurs connectÃ©</h2>
 <h2>timeline</h2>
 
 

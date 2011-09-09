@@ -1,4 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 	<div id="motifHeader">
 	<div id="bordure">
@@ -30,7 +31,7 @@
 				</li>																
 				<li><a href="/halloffames.jsp" >joueurs</a></li>																
 				<li><a href="/liens.jsp" >liens</a></li>																
-				<li><a href="/apropos.jsp" >Développement</a></li>			
+				<li><a href="/apropos.jsp" >DÃ©veloppement</a></li>			
 				
 				<%-- |
 	<span style="position: relative;">

@@ -250,6 +250,7 @@ public class FmgMessage
     m_params.put( "pseudo", p_account.getPseudo() );
     m_params.put( "login", p_account.getLogin() );
     m_params.put( "password", p_account.getPassword() );
+    m_params.put( "forumKey", p_account.getForumKey() );
     return this;
   }
   

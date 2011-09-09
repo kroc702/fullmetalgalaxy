@@ -1,4 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <div id="login">
 	<% if(Auth.isUserLogged(request,response)) { %> 
@@ -46,7 +47,7 @@
         <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion avec google 
     </a>
     <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;Inscription</a>
-    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;Identifiants oubliés</a>
+    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;Identifiants oubliÃ©s</a>
     </div>
 	<% } %> 	
 </div>
