@@ -1,0 +1,8 @@
+lier les deux comptes forum/jeu
+Bonjour {pseudo},
+Si les deux comptes '{pseudo}' sur FMG et le forum vous appartiennent et que vous désirez les lier,
+veuillez visiter cette URL:
+http://www.fullmetalgalaxy.com/AccountServlet?link={forumKey}
+
+Cordialement
+FullMetalGalaxy

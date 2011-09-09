@@ -353,10 +353,10 @@ public class GameWorkflow
    */
   public static void gameFinished(Game p_game)
   {
-    GlobalVars.incrementRunningGameCount( -1 );
-    GlobalVars.incrementFinishedGameCount( 1 );
     AccountStatsManager.gameFinish( p_game );
     p_game.setHistory( true );
+    GlobalVars.incrementRunningGameCount( -1 );
+    GlobalVars.incrementFinishedGameCount( 1 );
   }
 
   /**

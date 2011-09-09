@@ -1,3 +1,4 @@
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 	<div id="footer"><footer>
 		<div id="travaux"></div>
 		<p>Copyright 2010-2011 sous licence open source 

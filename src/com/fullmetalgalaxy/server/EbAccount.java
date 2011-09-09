@@ -494,6 +494,11 @@ public class EbAccount extends EbPublicAccount
 
   public List<EbAccountStats> getStats()
   {
+    if( m_stats == null )
+    {
+      // for old account
+      m_stats = new ArrayList<EbAccountStats>();
+    }
     return m_stats;
   }
 

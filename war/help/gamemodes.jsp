@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<!DOCTYPE html>
 <HTML>
 <head>
 <title>Aide de Full Metal Galaxy</title>

@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.server;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
@@ -35,7 +36,8 @@ import com.fullmetalgalaxy.server.forum.NewsConector;
  */
 public class ServerUtil
 {
-
+  public static Logger logger = Logger.getLogger("Server");
+  
   private static final String PLAIN_ASCII = "AaEeIiOoUu" // grave
       + "AaEeIiOoUuYy" // acute
       + "AaEeIiOoUuYy" // circumflex

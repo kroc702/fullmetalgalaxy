@@ -1,5 +1,5 @@
-
 <%@ page import="com.fullmetalgalaxy.server.*, com.fullmetalgalaxy.model.*" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <meta name="author" content="Vincent Legendre" />
 <meta name="keywords" content="full, metal, planete, jeu, online, strategie" />

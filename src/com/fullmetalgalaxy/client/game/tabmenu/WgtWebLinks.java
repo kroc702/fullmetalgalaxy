@@ -35,13 +35,12 @@ public class WgtWebLinks extends HTML
   {
     super();
     setHTML( "<P ALIGN=CENTER><A HREF='/'>Accueil</A></P>"
-        + "<P ALIGN=CENTER><A HREF='/presentation.jsp'>Pr&eacute;sentation</A></P>"
         + "<P ALIGN=CENTER><A HREF='/gamelist.jsp'>Parties en cours</A></P>"
         + "<P ALIGN=CENTER><A HREF='http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy'>Forum</A></P>"
         + "<P ALIGN=CENTER><A HREF='/chat.jsp'>Chat</A></P>"
         + "<P ALIGN=CENTER><A HREF='/help/'>Aides de jeu</A></P>"
         + "<P ALIGN=CENTER><A HREF='/halloffames.jsp'>Joueurs</A></P>"
-        + "<P ALIGN=CENTER><A HREF='/historique.jsp'>Background</A></P>"
-        + "<P ALIGN=CENTER><A HREF='/liens.jsp'>Liens</A></P>" );
+        + "<P ALIGN=CENTER><A HREF='/liens.jsp'>Liens</A></P>"
+        + "<P ALIGN=CENTER><A HREF='/apropos.jsp'>Développement</A></P>" );
   }
 }

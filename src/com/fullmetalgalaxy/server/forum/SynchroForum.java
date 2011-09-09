@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.FmgMessage;
 import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.GlobalVars;
 import com.fullmetalgalaxy.server.ServerUtil;
@@ -101,7 +102,11 @@ public class SynchroForum extends HttpServlet
             account.setForumId( ServerUtil.forumConnector().getUserId( account.getPseudo() ) );
           }
           
-          if( account.getForumId() != null && !account.isIsforumIdConfirmed() && "anne".equalsIgnoreCase( account.getCompactPseudo() ) )
+          if( account.getForumId() != null && !account.isIsforumIdConfirmed() && (
+              "anne".equalsIgnoreCase( account.getCompactPseudo() ) 
+              || "ian solo".equalsIgnoreCase( account.getCompactPseudo() ) 
+              || "tomxbx".equalsIgnoreCase( account.getCompactPseudo() ) 
+                  ))
           {
             // A Forum account is found, but we're not sure it belong to the same people
             //
@@ -110,16 +115,7 @@ public class SynchroForum extends HttpServlet
               // we never send PM to link both account: let's do it
               //
               account.setForumKey( ServerUtil.randomString( 10 ) );
-              ServerUtil.forumConnector().sendPMessage(
-                  "[FMG] lier les deux comptes forum/jeu",
-                  "Bonjour\n" +
-                  "Pour lier les deux comptes '"+account.getPseudo()+"' entre FMG et le Forum veuillez visiter cette URL:\n" +
-                  "http://www.fullmetalgalaxy.com/AccountServlet?link="+account.getForumKey()+" \n" +
-                  "\n" +
-                  "Cordialement\n" +
-                  "Full Metal Galaxy", 
-                  account.getPseudo() );
-              log.info( "send PM for " + account.getPseudo() );
+              new FmgMessage( "linkAccount" ).send( account );
             }
           }
           else if( account.getForumId() != null && account.isIsforumIdConfirmed() )

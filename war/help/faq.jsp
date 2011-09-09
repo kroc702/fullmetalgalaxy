@@ -1,3 +1,4 @@
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
 <HTML>
 <head>
@@ -17,24 +18,24 @@
     <h1>Foire aux questions</h1>
 
 <p>
-<b>Q: Le panneau d'information général sur l'exploitation m'annonce 'Prévision non disponible'.</b><br/>
-R: Effectivement, pour avoir les prévisions météorologiques, vous devez contrôler une Pondeuse 
-Météo &agrave; l'extérieur et en état de marche : pas déactivée par une marrée 
+<b>Q: Le panneau d'information gÃ©nÃ©ral sur l'exploitation m'annonce 'PrÃ©vision non disponible'.</b><br/>
+R: Effectivement, pour avoir les prÃ©visions mÃ©tÃ©orologiques, vous devez contrÃ´ler une Pondeuse 
+MÃ©tÃ©o &agrave; l'extÃ©rieur et en Ã©tat de marche : pas dÃ©activÃ©e par une marrÃ©e 
 ou une zone de feu adverse.
 </p>
 <p>
-<b>Q: Bon j'ai sorti ma pondeuse mais je ne vois toujours pas la marrée futur.</b><br/>
-R: Vous ne verrez la marrée futur qu'au prochain changement de tour ou incréments de temps.
+<b>Q: Bon j'ai sorti ma pondeuse mais je ne vois toujours pas la marrÃ©e futur.</b><br/>
+R: Vous ne verrez la marrÃ©e futur qu'au prochain changement de tour ou incrÃ©ments de temps.
 </p>
 <p>
 <b>Q: Je n'arrive pas &agrave; charger mon Crabe dans ma Barge.</b><br/>
-R: L'action de chargement coûte un point d'action et nécessite que le véhicule chargé 
-ait suffisament de place. Un Crabe chargé de 2 chars occupe 4 places.
+R: L'action de chargement coÃ»te un point d'action et nÃ©cessite que le vÃ©hicule chargÃ© 
+ait suffisament de place. Un Crabe chargÃ© de 2 chars occupe 4 places.
 </p>
 <p>
-<b>Q: Je n'arrive pas à visualiser l'ensemble du plateau de jeu.</b><br/>
-R: La zone que vous pouvez visuliser d'un seul coup d'&oelig;il est variable selon la résolution
-de votre écran. Vous pouvez cependant utiliser les deux icons loupes [+/-] pour changer de vue.
+<b>Q: Je n'arrive pas Ã  visualiser l'ensemble du plateau de jeu.</b><br/>
+R: La zone que vous pouvez visuliser d'un seul coup d'&oelig;il est variable selon la rÃ©solution
+de votre Ã©cran. Vous pouvez cependant utiliser les deux icons loupes [+/-] pour changer de vue.
 Si cela ne suffit pas, vous pouvez aussi utiliser le zoom du navigateur: [CTRL] + Molette 
 ou bien [CTRL] + [+/-]. <br/>
 Pour les utilisateurs de mac: [Pomme] + [+]
@@ -45,15 +46,15 @@ R: La meilleure solution :<br/>
 clic sur le pod<br/>
 clic sur la barge<br/>
 clic une case adjacente<br/>
-clic la deuxième case (& vérifier que ça nous convient)<br/>
-valider le mouvement (clic même 2nd case ou bouton OK)
+clic la deuxiÃ¨me case (& vÃ©rifier que Ã§a nous convient)<br/>
+valider le mouvement (clic mÃªme 2nd case ou bouton OK)
 </p>
 <p>
-<b>Q: Comment choisir la couleur d'une unité controlée par deux destructeurs de couleur différente ?</b><br/>
-R: Le premier destructeur sélectionné détermine la future couleur de l'unité contrôlée.
+<b>Q: Comment choisir la couleur d'une unitÃ© controlÃ©e par deux destructeurs de couleur diffÃ©rente ?</b><br/>
+R: Le premier destructeur sÃ©lectionnÃ© dÃ©termine la future couleur de l'unitÃ© contrÃ´lÃ©e.
 </p>
 <p>
-Q: En mode tour par tour, je ne comprend pas comment sont calculés les dates limites de jeu.<br/>
+Q: En mode tour par tour, je ne comprend pas comment sont calculÃ©s les dates limites de jeu.<br/>
 R: 
 </p>
 <p>
