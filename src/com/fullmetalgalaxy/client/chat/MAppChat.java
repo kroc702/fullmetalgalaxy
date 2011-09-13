@@ -108,14 +108,19 @@ public class MAppChat extends GuiEntryPoint implements ChannelMessageEventHandle
   @Override
   public void onChannelMessage(Object p_message)
   {
-    ChatMessage p_msg = (ChatMessage)p_message;
-
-    String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
-    text = SmileyCollection.INSTANCE.remplace( text );
-    text = text.replace( "\n", "<br/>" );
-    HTML label = new HTML( "<b>["+p_msg.getFromPseudo()+"]</b> "+text );
-    m_msgList.add( label );
-    scrollPanel.ensureVisible( label );
+    if( p_message instanceof ChatMessage )
+    {
+      ChatMessage p_msg = (ChatMessage)p_message;
+      if( !p_msg.isEmpty() )
+      {
+        String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
+        text = SmileyCollection.INSTANCE.remplace( text );
+        text = text.replace( "\n", "<br/>" );
+        HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
+        m_msgList.add( label );
+        scrollPanel.ensureVisible( label );
+      }
+    }
   }
 
   protected void sendMessage()
