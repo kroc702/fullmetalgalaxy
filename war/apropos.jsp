@@ -18,7 +18,7 @@ Signalez les bugs avec ce formulaire.</a>
 
 <h3>Version actuel :</h3>
 <ul>
-<li>Dernière mise à jour : <%@include file="include/version.html"%> </li>
+<li>Dernière mise à jour : <%@include file="include/version.htm"%> </li>
 <li>Techno : HTML / Java / GWT / AppEngine</li>
 <li>Licence : <a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="/images/agplv3-88x31.cache.png" alt="AGPL v3"/></a> 
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>

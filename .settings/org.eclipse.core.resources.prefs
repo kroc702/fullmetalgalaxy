@@ -1,4 +1,4 @@
-#Thu Jul 07 21:07:43 CEST 2011
+#Fri Sep 09 17:12:59 CEST 2011
 eclipse.preferences.version=1
 encoding//src/com/fullmetalgalaxy/client/ressources/MessagesAppBoard_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/client/ressources/fonts/ImageFont.java=UTF-8
@@ -14,5 +14,4 @@ encoding//war/i18n/fr/help/index.html=UTF-8
 encoding//war/i18n/fr/help/menu.html=UTF-8
 encoding//war/i18n/fr/help/rules.html=UTF-8
 encoding//war/i18n/fr/index.html=UTF-8
-encoding//war/include/version.html=ISO-8859-1
 encoding/<project>=UTF-8
