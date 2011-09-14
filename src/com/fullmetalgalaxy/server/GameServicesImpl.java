@@ -22,10 +22,10 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -53,8 +53,13 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
-import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -92,6 +97,36 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   }
 
 
+  protected static boolean storeMinimap(Game p_game, byte[] p_data)
+  {
+    // Get a file service
+    FileService fileService = FileServiceFactory.getFileService();
+
+    try
+    {
+      // Create a new Blob file with mime-type "text/plain"
+      AppEngineFile file = fileService.createNewBlobFile( "image/png" );
+
+      // Open a channel to write to it
+      FileWriteChannel writeChannel = fileService.openWriteChannel( file, true );
+      writeChannel.write( ByteBuffer.wrap( p_data ) );
+      // Now finalize
+      writeChannel.closeFinally();
+
+      // Now read from the file using the Blobstore API
+      BlobKey blobKey = fileService.getBlobKey( file );
+
+      // update game
+      p_game.setMinimapUri( ImagesServiceFactory.getImagesService().getServingUrl( blobKey ) );
+      p_game.setMinimapBlobKey( blobKey.getKeyString() );
+
+    } catch( Exception e )
+    {
+      ServerUtil.logger.severe( e.getMessage() );
+      return false;
+    }
+    return true;
+  }
 
 
   @Override
@@ -113,6 +148,14 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     }
     FmgDataStore dataStore = new FmgDataStore(false);
     EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
+
+    // should we construct minimap image ?
+    if( p_game.getMinimapUri() == null )
+    {
+      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, p_game );
+      storeMinimap( p_game, miniMapProducer.getImage() );
+    }
+
     boolean isNewlyCreated = true;
     if( !p_game.isTrancient() )
     {
@@ -144,15 +187,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       GameWorkflow.gameOpen( p_game );
       AccountStatsManager.gameCreate( account.getId(), p_game );
     }
-
-    // should we construct minimap image ?
-    if( p_game.getMinimapUri() == null )
-    {
-      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, p_game );
-      byte[] data = miniMapProducer.getImage();
-      BlobstoreCache.storeMinimap( p_game.getId(), new ByteArrayInputStream( data ) );
-    }
-
 
     return p_game.createEbBase();
   }

@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.forum.ForumConector;
 import com.fullmetalgalaxy.server.forum.NewsConector;
+import com.google.appengine.api.utils.SystemProperty;
 
 /**
  * @author Kroc
@@ -60,6 +61,8 @@ public class ServerUtil
   private static final String ALPHABET = "azertyuiopqsdfghjklmwxcvbn0123456789";
 
 
+  public static final boolean PRODUCTION_MODE = SystemProperty.environment.value() == SystemProperty.Environment.Value.Production;
+  public static final String URL_PREFIX = PRODUCTION_MODE ? "" : "http://localhost:8888";
   
   private static String s_basePath = null;
   public static void setBasePath(String p_path)
