@@ -41,7 +41,13 @@ if( account == null )
 <table class="fmp-array" style="width:100%;">
 <!--tr><td>Date</td><td>score</td><td>score</td><td>Locale</td><td>Mail</td><td>Pseudo</td></tr-->
 <%
-SimpleDateFormat  simpleFormat = new SimpleDateFormat(SharedI18n.getMisc(Auth.getUserAccount(request,response).getId()).dateFormat());
+long clientid = 0;
+EbAccount clientaccount = Auth.getUserAccount(request,response);
+if( clientaccount != null )
+{
+  clientid = clientaccount.getId();
+}
+SimpleDateFormat  simpleFormat = new SimpleDateFormat(SharedI18n.getMisc(clientid).dateFormat());
 for(EbAccountStats astat : account.getStats())
 {
   if( astat instanceof StatsGame && ((StatsGame)astat).getStatus() == StatsGame.Status.Running )

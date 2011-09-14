@@ -112,15 +112,36 @@ public class FmgMessage
    */
   public boolean send(EbAccount p_account)
   {
-    return send( p_account, false );
+    boolean isOk = true;
+    String error = null;
+    
+    if( (p_account.getAllowMsgFromGame() == AllowMessage.No )
+        || !p_account.haveEmail() )
+    {
+      // send nothing
+      error = "player " + p_account.getPseudo() + " don't want any messages";
+      log.fine( error );
+      send2Archive( this, "?", error );
+    }
+    else if( p_account.getAllowMsgFromGame() == AllowMessage.PM && p_account.isIsforumIdConfirmed() )
+    {
+      // send a forum private message
+      isOk = sendPM(p_account);
+    }
+    else
+    {
+      // send an mail
+      isOk = sendEMail(p_account);
+    }
+    return isOk;
   }
 
+  /**
+   * send this message as an email regardless user profile
+   * @param p_account
+   * @return
+   */
   public boolean sendEMail(EbAccount p_account)
-  {
-    return send( p_account, true );
-  }
-
-  public boolean send(EbAccount p_account, boolean p_forceEMail)
   {
     if( p_account == null )
     {
@@ -129,40 +150,14 @@ public class FmgMessage
     boolean isOk = true;
     String error = null;
 
-    // construct message according to parameters and locale
-    //
-    putParams( p_account );
-    FmgMessage msg = this;
-    if( getName() != null )
-    {
-      String locale = p_account.getLocale();
-      if( locale == null || locale.isEmpty() )
-      {
-        locale = I18n.getDefaultLocale();
-      }
-      msg = FmgMessage.buildMessage( locale, getName() );
-    }
-    msg = msg.applyParams( m_params );
-
+    // localize msg
+    FmgMessage msg = localize(p_account, this);
 
     // then send message according to users profile
     //
-    if( (p_account.getAllowMsgFromGame() == AllowMessage.No && !p_forceEMail)
-        || !p_account.haveEmail() )
+    if( p_account.haveEmail() )
     {
-      // send nothing
-      log.fine( "player " + p_account.getPseudo() + " don't want any messages" );
-    }
-    else if( p_account.getAllowMsgFromGame() == AllowMessage.PM && p_account.isIsforumIdConfirmed()
-        && !p_forceEMail )
-    {
-      // send a forum private message
-      isOk = ServerUtil.forumConnector().sendPMessage( "[FMG] " + msg.getSubject(), msg.getBody(),
-          p_account.getPseudo() );
-    }
-    else
-    {
-      // send an mail
+      // send an email
       Properties props = new Properties();
       Session session = Session.getDefaultInstance( props, null );
       MimeMessage mimemsg = new MimeMessage( session );
@@ -185,22 +180,94 @@ public class FmgMessage
         error = e.getMessage();
       }
     }
+    else
+    {
+      // send nothing
+      error = "player " + p_account.getPseudo() + " don't have email addresse";
+      log.fine( error );
+    }
 
     // send a copy to archive@fullmetalgalaxy.com
+    send2Archive( msg, "EMAIL", error );
+    
+    return isOk;
+  }
+
+  /**
+   * send this message as a forum private message, regardless user profile
+   * and event if link between forum and fmg isn't confirmed
+   * @param p_account
+   * @return
+   */
+  public boolean sendPM(EbAccount p_account)
+  {
+    if( p_account == null )
+    {
+      return false;
+    }
+    boolean isOk = true;
+    String error = null;
+
+    // localize msg
+    FmgMessage msg = localize(p_account, this);
+
+    // send a forum private message
+    isOk = ServerUtil.forumConnector().sendPMessage( "[FMG] " + msg.getSubject(), msg.getBody(),
+        p_account.getPseudo() );
+
+    // send a copy to archive@fullmetalgalaxy.com
+    send2Archive( msg, "PM", error );
+    
+    return isOk;
+  }
+
+  /**
+   * construct message according to parameters and locale
+   * @param p_account
+   * @param p_msg
+   * @return
+   */
+  private FmgMessage localize(EbAccount p_account, FmgMessage p_msg)
+  {
+    putParams( p_account );
+    FmgMessage msg = p_msg;
+    if( getName() != null )
+    {
+      String locale = p_account.getLocale();
+      if( locale == null || locale.isEmpty() )
+      {
+        locale = I18n.getDefaultLocale();
+      }
+      msg = FmgMessage.buildMessage( locale, getName() );
+    }
+    msg = msg.applyParams( m_params );
+    return msg;
+  }
+  
+  /**
+   * send a copy to archive@fullmetalgalaxy.com
+   * p_account.getAllowMsgFromGame()
+   * @return
+   */
+  private boolean send2Archive(FmgMessage p_msg, String p_tag, String p_error)
+  {
+    boolean isOk = true;
+    
+    // 
     Properties props = new Properties();
     Session session = Session.getDefaultInstance( props, null );
     MimeMessage mimemsg = new MimeMessage( session );
 
     try
     {
-      String subject = "[" + p_account.getAllowMsgFromGame() + "] ";
-      String body = msg.getBody();
-      if( isOk == false )
+      String subject = "[" + p_tag + "] ";
+      String body = p_msg.getBody();
+      if( p_error != null )
       {
         subject += "-Failed- ";
-        body = error + "\n\n" + msg.getBody();
+        body = p_error + "\n\n" + p_msg.getBody();
       }
-      subject += msg.getSubject();
+      subject += p_msg.getSubject();
       mimemsg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
       mimemsg.setSubject( subject );
       mimemsg.setContent( body, "text/plain" );
@@ -211,12 +278,12 @@ public class FmgMessage
     {
       isOk = false;
       log.error( e );
-      error = e.getMessage();
+      p_error = e.getMessage();
     }
-
     return isOk;
   }
-
+  
+ 
   protected FmgMessage putParams(Map<String, String> p_params)
   {
     m_params.putAll( p_params );
