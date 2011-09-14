@@ -102,11 +102,8 @@ public class SynchroForum extends HttpServlet
             account.setForumId( ServerUtil.forumConnector().getUserId( account.getPseudo() ) );
           }
           
-          if( account.getForumId() != null && !account.isIsforumIdConfirmed() && (
-              "anne".equalsIgnoreCase( account.getCompactPseudo() ) 
-              || "ian solo".equalsIgnoreCase( account.getCompactPseudo() ) 
-              || "tomxbx".equalsIgnoreCase( account.getCompactPseudo() ) 
-                  ))
+          if( account.getForumId() != null && !account.isIsforumIdConfirmed() && 
+              account.isActive() )
           {
             // A Forum account is found, but we're not sure it belong to the same people
             //
@@ -115,7 +112,7 @@ public class SynchroForum extends HttpServlet
               // we never send PM to link both account: let's do it
               //
               account.setForumKey( ServerUtil.randomString( 10 ) );
-              new FmgMessage( "linkAccount" ).send( account );
+              new FmgMessage( "linkAccount" ).sendPM( account );
             }
           }
           else if( account.getForumId() != null && account.isIsforumIdConfirmed() )
@@ -147,12 +144,8 @@ public class SynchroForum extends HttpServlet
           // TODO we can optimize by doing this datastore put only if required
           ds.put( account );
 
-          if( account.getLastConnexion() != null
-              && account.getLastConnexion().getTime() > System.currentTimeMillis()
-                  - (1000l * 60 * 60 * 24 * 30) )
+          if( account.isActive() )
           {
-            // account is considered as active if he connect itself in the last
-            // 30 days
             m_activeAccount++;
           }
           if( account.getCurrentLevel() > m_maxLevel )

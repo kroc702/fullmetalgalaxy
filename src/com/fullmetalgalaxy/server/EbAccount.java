@@ -246,10 +246,7 @@ public class EbAccount extends EbPublicAccount
     if( normalizedLevel < 0 ) normalizedLevel=0;
     if( normalizedLevel > 9 ) normalizedLevel=9;
     iconName += normalizedLevel;
-    if( getPlayerStyle() == PlayerStyle.Sheep )
-    {
-      iconName += "s"; 
-    } else if( getPlayerStyle() == PlayerStyle.Pacific )
+    if( getPlayerStyle() == PlayerStyle.Pacific )
     {
       iconName += "p"; 
     } else if( getPlayerStyle() == PlayerStyle.Balanced )
@@ -258,9 +255,24 @@ public class EbAccount extends EbPublicAccount
     } else if( getPlayerStyle() == PlayerStyle.Aggressive )
     {
       iconName += "a"; 
+    } else
+    {
+      // PlayerStyle.Sheep
+      iconName += "s"; 
     }
+    // we need to specify full url, as it is used on forum
     return "http://www.fullmetalgalaxy.com/images/icons/user/"+iconName+".png";
-    //return "/images/icons/user/"+iconName+".png";
+  }
+  
+  /**
+   * account is considered as active if he connect itself in the last 30 days
+   * @return true if account is active
+   */
+  public boolean isActive()
+  {
+    return getLastConnexion() != null
+        && getLastConnexion().getTime() > System.currentTimeMillis()
+            - (1000l * 60 * 60 * 24 * 30);  // 30 days
   }
   
   public boolean canChangePseudo()
