@@ -27,15 +27,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     </servlet-mapping>
     
     <servlet>
-       <servlet-name>BlobstoreCache</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.image.BlobstoreCache</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>BlobstoreCache</servlet-name>
-       <url-pattern>/BlobstoreCache</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
        <servlet-name>AccountServlet</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.AccountServlet</servlet-class>
     </servlet>

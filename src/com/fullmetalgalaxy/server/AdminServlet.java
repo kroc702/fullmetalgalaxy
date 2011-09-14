@@ -22,7 +22,6 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -48,7 +47,6 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.server.image.BlobstoreCache;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 
 /**
@@ -318,15 +316,16 @@ public class AdminServlet extends HttpServlet
       modelInit.getGame().setMinimapBlobKey( null );
       modelInit.getGame().setMinimapUri( null );
 
+      // construct minimap image
+      MiniMapProducer miniMapProducer = new MiniMapProducer( GameServicesImpl.s_basePath,
+          modelInit.getGame() );
+      GameServicesImpl.storeMinimap( modelInit.getGame(), miniMapProducer.getImage() );
+
+      // then save game
       FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.put( modelInit.getGame() );
       dataStore.close();
 
-      // construct minimap image
-      MiniMapProducer miniMapProducer = new MiniMapProducer( GameServicesImpl.s_basePath,
-          modelInit.getGame() );
-      byte[] data = miniMapProducer.getImage();
-      BlobstoreCache.storeMinimap( modelInit.getGame().getId(), new ByteArrayInputStream( data ) );
     }
 
   }

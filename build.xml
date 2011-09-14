@@ -181,6 +181,7 @@ compilation file for Full Metal Galaxy
 			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
 			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
 		</tstamp>
+		<buildnumber file="update.properties" />
 		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.htm" encoding="UTF-16"/>
 
 		<exec executable="${hgdir}/hg" outputproperty="hgid">
@@ -197,7 +198,6 @@ compilation file for Full Metal Galaxy
 		</copy>
 		<appcfg2 action="update" war="war" />
 		<echo message="${TODAY_FR} - update: ${build.number} - commit ${hgid}" level="info" />
-		<buildnumber file="update.properties" />
 	</target>
 
 	<target name="upload" depends="clean,build,uploadonly" description="Uploads the application to App Engine.">

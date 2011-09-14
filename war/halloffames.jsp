@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.constant.*,com.googlecode.objectify.Query" %>
-<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
+<%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
 <html>
 <head>
