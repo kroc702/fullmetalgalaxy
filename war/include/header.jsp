@@ -29,22 +29,11 @@
 				<li><a href="/help/" >Aides de jeu</a>
 					<jsp:include page="/i18n/fr/help/menu.html" />
 				</li>																
-				<li><a href="/halloffames.jsp" >joueurs</a></li>																
-				<li><a href="/liens.jsp" >liens</a></li>																
+				<li><a href="/halloffames.jsp" >Joueurs</a></li>																
+				<li><a href="/liens.jsp" >Liens</a></li>																
 				<li><a href="/apropos.jsp" >Développement</a></li>			
 				
-				<%-- |
-	<span style="position: relative;">
-    	<a href="#"	onmouseover="mopen('menuLocale')" onmouseout="mclosetime()">
-    	<img src="<%= I18n.localize(request,response,"/images/icon_locale.png") %>" border="0"/></a>
-    	<div id="menuLocale" class="bloc" style="visibility: hidden; position: absolute; text-align:left; top:10px; left:-30px; z-index:9999999999;"
-	      onmouseover="mcancelclosetime()" 
-	      onmouseout="mclosetime()">
-	      <% for(String locale : I18n.getLocales()) {
-	        out.println("<a href='"+I18n.getURI(request,locale)+"'><img src='/i18n/"+locale+"/images/icon_locale.png' border='0'/></a><br/><br/>");
-	      } %>
-	  </div>
-	</span>	   													
+				<%--
 				<li><a href="" ><img src="/i18n/fr/images/icon_locale.png" /></a></li>
 				 --%>																
 			</ul>

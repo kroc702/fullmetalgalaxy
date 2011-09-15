@@ -235,6 +235,12 @@ code {
 }
 
 /* -------------------------------------------------------------------------- */
+.gwt-ToggleButton-up,
+.gwt-ToggleButton-up-hovering,
+.gwt-ToggleButton-up-disabled,
+.gwt-ToggleButton-down,
+.gwt-ToggleButton-down-hovering,
+.gwt-ToggleButton-down-disabled,
 .gwt-PushButton-up,
 .gwt-PushButton-up-hovering,
 .gwt-PushButton-up-disabled,
@@ -254,6 +260,7 @@ code {
   padding: 3px 5px 3px 5px;
 }
 
+.gwt-ToggleButton-up,
 .gwt-PushButton-up {
   border:1px solid #bbb;
   border-bottom: 1px solid #a0a0a0;
@@ -261,8 +268,9 @@ code {
   cursor: hand;
 }
 
+.gwt-ToggleButton-up-hovering,
 .gwt-PushButton-up-hovering {
-  border: 1px solid;
+	  border: 1px solid;
   border-color: #939393;
   cursor: pointer;
   cursor: hand;
@@ -276,6 +284,7 @@ code {
   zoom: 1;
 }
 
+.gwt-ToggleButton-down,
 .gwt-PushButton-down,
 .gwt-PushButton-down-hovering,
 .gwt-PushButton-down-disabled {
@@ -283,14 +292,16 @@ code {
   outline:none;
 }
 
+.gwt-ToggleButton-down,
 .gwt-PushButton-down {
   border: 1px inset #666;
   cursor: pointer;
   cursor: hand;
 }
 
+.gwt-ToggleButton-down-hovering,
 .gwt-PushButton-down-hovering {
-  border: 1px solid #939393;
+	  border: 1px solid #939393;
   border-top: 1px solid #333333;
   cursor: pointer;
   cursor: hand;
@@ -414,12 +425,6 @@ code {
     width:100%;
 } 
 
-#messages {
-    width: 250px;
-    padding: 0px;
-    background: #f0f0dd;
-    opacity: 0.8;
-}
 
 .fmp-log-panel {
     width: 650px;
@@ -434,6 +439,11 @@ code {
     font-size: big;
     opacity: 0.8;
     cursor: pointer;
+}
+
+#MessagesStack{
+	background: url(/images/css/bloc-bkg.png);
+	width: 250px;
 }
 
 .transparent50 {

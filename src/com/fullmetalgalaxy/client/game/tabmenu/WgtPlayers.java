@@ -107,7 +107,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     }
     m_playerPanel.add( new HTML( "<a href='"
         + EbPublicAccount
-            .getPMUrl( "[FMG] " + GameEngine.model().getGame().getName(), pseudoList )
+            .getForumPMUrl( "[FMG] " + GameEngine.model().getGame().getName(), pseudoList )
         + "' >Envoyer un message à tous</a>" ) );
 
     // get player order

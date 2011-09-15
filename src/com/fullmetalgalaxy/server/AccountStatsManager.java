@@ -149,7 +149,7 @@ public class AccountStatsManager
 
   private static StatsGame getLastStats(EbAccount p_account, long p_gameId)
   {
-    if( p_account.getStats() == null || p_account.getStats().isEmpty() )
+    if( p_account == null || p_account.getStats() == null || p_account.getStats().isEmpty() )
     {
       return null;
     }
@@ -379,7 +379,7 @@ public class AccountStatsManager
 
     // for creator
     EbAccount account = FmgDataStore.dao()
-        .get( EbAccount.class, p_game.getAccountCreator().getId() );
+        .find( EbAccount.class, p_game.getAccountCreator().getId() );
     StatsGame lastStat = StatsGame.class.cast( getLastStats( account, p_game.getId() ) );
     if( lastStat == null )
     {

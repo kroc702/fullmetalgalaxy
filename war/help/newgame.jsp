@@ -27,16 +27,11 @@
     Ici, seul 6 champs sont indispenssables:
     <ul>
         <li>Nom : C'est le nom de la partie.</li>
-        <li>Description : Ajoutez ici toute les info utiles aux futurs joueurs (ex: niveau des joueurs).</li>
         <li>Nombre max de joueur : Le maximum d'inscription.</li>
+        <li>Description : Ajoutez ici toute les info utiles aux futurs joueurs (ex: niveau des joueurs).</li>
         <li>Taille de la carte : Elle est calculé en fonction du nombre de joueur.</li>
-        <li>Vitesse du jeu : </li>
-        <ul>
-        <li>Standard : tour par tour</li>
-        <li>StandardAsynch : Aynchrone, 3pt d'action toute les 4.8 heures (ie un tour par jour)</li>
-        <li>QuickTurnBased : un tour toutes les 3 minutes</li>
-        <li>QuickAsynch : Aynchrone, 8pt d'action toute les 100 secondes (ie un tour toutes les 3 minutes)</li>
-        </ul>
+        <li>Mode de jeu : tour par tour ou parallèle</li>
+        <li>Vitesse du jeu : lente ou rapide</li>
     </ul>
     Les autres champs sont de simples indications sur vos choix.<br/>
     Note: Comme pour le jeu de plateau, pour être intéressant les parties de 
@@ -75,41 +70,50 @@
     
     <h2>Démarrage</h2>
     <p>
-    La partie est créé, mais personne n'est inscrit et elle n'est pas encore démaré. En fait
-    la partie est créé en pause.
+	    La partie est créé, mais personne n'est inscrit et elle n'est pas encore démaré.
     </p>
     <h3>Inscrivez-vous</h3>
     <p>
-    A priori, si vous avez créé une partie, c'est pour y jouer. Inscrivez vous en cliquant
-    sur l'icone d'action <img src="/puzzles/tutorial/images/Register32.png" alt="Register" />. Choisissez
-    ensuite la couleur qui vous représentera durant toute la partie. 
-    Votre Astronef apparait en bas avec tous les Astronefs en orbite.
-    </p>
-    <p>
-    Attendez que le nombre de joueur maximum soit atteint. En effet, il vous est parfaitement 
-    possible de jouer une partie à 3 joueurs sur une carte prévu pour 4, mais la partie
-    risque d'être moins intéressante.<br/>
-    Note : Il n'est possible de s'inscrire que si la partie est en pause.
+	    A priori, si vous avez créé une partie, c'est pour y jouer. Inscrivez vous en cliquant
+	    sur l'icone d'action <img src="/help/images/Register32.png" alt="Register" />. Choisissez
+	    ensuite la couleur qui vous représentera durant toute la partie. 
+	    Votre Astronef apparait en bas avec tous les Astronefs en orbite.
     </p>
     <h3>Lancez la partie</h3>
     <p>
-    Comme la partie est créé en pause il vous reste encore à retirer la pause pour pouvoir
-    jouer. Pour cela cliquez sur l'icon détail de la partie 
-    <img src="/puzzles/tutorial/images/Info32.png" alt="Info" />, puis cliquez sur le bouton "Play".
+	    Comme la partie est créé en pause. Vous pouvez la lancer quand vous voulez, mais il est préférable
+	    d'attendre que le nombre de joueur maximum soit atteint. En effet, il vous est parfaitement 
+	    possible de jouer une partie à 3 joueurs sur une carte prévu pour 4, mais la partie
+	    risque d'être moins intéressante.
     </p>
     
     <h2>Administration de la partie</h2>
+	<p>
+		En tant que créateur de la partie, vous avez certains droits et devoirs sur celle-ci.
+		<br/>
+		Pour le respect des autres joueurs, vous vous engagez moralement à mener cette partie à terme. 
+		A défaut, contactez l'administrateur qui fera son possible pour terminer la partie.
+	</p>
+    <h3>la Pause</h3>
     <p>
-    Tous les joueurs inscrit à une partie, peuvent activer/déactiver la pause. 
-    Cependant, et afin de détecter la triche, toutes les actions des joueurs sont enregistrées.
-    Vous pouvez avoir un apperçu en cliquant l'icon 
-    <img src="/puzzles/tutorial/images/Info32.png" alt="Info" />
-    puis l'onglet "log" et "admin log".
+	    Dans certains cas, il peut être intéressant de mettre la partie en pause. 
+	    Icon <img src="/puzzles/tutorial/images/Info32.png" alt="Info" /> puis bouton pause/play.
+		<br/>
+		Assurez-vous que tous les joueurs soient au courant.
     </p>
+    <h3>Banir un joueur</h3>
     <p>
-    En tant que créateur de la partie, vous avez d'autres droits comme l'édition de case 
-    ou de pions. A priori vous n'aurez pas besoin de cette fonctionalité.<br/>
-    Si vous désirez banir un joueur (qui ne joue plus par exemple) contactez l'administrateur.
+	    Si un joueur ne donne plus signe de vie après plusieurs relances ou s'il désire abandonner, 
+	    vous pouvez le bannir de la partie. Ses pièces restent sur le plateau de jeu et pour ne pas 
+	    déséquilibrer la partie, il est largement préférable de trouver un remplaçant. 
+		<br/>
+		Pour qu'un nouveau joueur prenne ça place, la partie doit être en pause: il est alors possible 
+		de la rejoindre comme en début de partie.
+    </p>
+    <h3>Autre</h3>
+    <p>
+	    Il existe d'autre possibilité comme l'édition de case 
+	    ou de pions. A priori vous n'aurez pas besoin de cette fonctionalité.
     </p>
     <p>
     Cet aspect du jeu n'étant pas encore très développé, n'hésitez pas à faire vos demandent

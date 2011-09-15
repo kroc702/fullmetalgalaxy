@@ -219,9 +219,18 @@ public class EbAccount extends EbPublicAccount
   @Override
   public String getPMUrl(String p_subject)
   {
-    String url = super.getPMUrl( p_subject );
-    url += "&u=" + getForumId();
-    return url;
+    if( p_subject == null ) p_subject = "";
+    if( isIsforumIdConfirmed() && getForumId() != null )
+    {
+      // use forum to send a Private Message
+      return EbPublicAccount.getForumPMUrl( p_subject, getPseudo() ) + "&u=" + getForumId() ;
+    }
+    else if( isAllowPrivateMsg() && haveEmail() )
+    {
+      // then send an email with our form
+      return "/email.jsp?id="+getId()+"&subject="+p_subject;
+    }
+    return "/genericmsg.jsp?title="+getPseudo()+" ne souhaite pas être contacté";
   }
 
   /**
@@ -241,7 +250,7 @@ public class EbAccount extends EbPublicAccount
     int normalizedLevel = 0;
     if( GlobalVars.getMaxLevel() > 1 )
     {
-      normalizedLevel = (getCurrentLevel()-1)/(GlobalVars.getMaxLevel()-1) *9;
+      normalizedLevel = (int)(((float)(getCurrentLevel()-1))/(GlobalVars.getMaxLevel()-1) *9);
     }
     if( normalizedLevel < 0 ) normalizedLevel=0;
     if( normalizedLevel > 9 ) normalizedLevel=9;

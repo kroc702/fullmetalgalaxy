@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
+import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.event.MessageEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -39,6 +40,7 @@ import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
+import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
@@ -65,7 +67,7 @@ import com.google.gwt.user.client.rpc.SerializationStreamReader;
  * @author Vincent Legendre
  *
  */
-public class GameEngine implements EntryPoint
+public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 {
   public static final String HISTORY_ID = "GameEngine";
   private static GameEngine s_ModelFmpMain = null;
@@ -141,7 +143,11 @@ public class GameEngine implements EntryPoint
         m_game = model.getGame();
         getActionBuilder().setGame( getGame() );
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-        if( m_game.getGameType() != GameType.MultiPlayer )
+        if( m_game.getGameType() == GameType.MultiPlayer )
+        {
+          AppMain.instance().addChannelMessageEventHandler( ModelFmpUpdate.class, GameEngine.model() );
+        } 
+        else
         {
           LocalGame.loadGame( GameEngine.model() );
         }
@@ -230,7 +236,7 @@ public class GameEngine implements EntryPoint
       m_isActionPending = false;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      //AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
 
     @Override
@@ -254,8 +260,7 @@ public class GameEngine implements EntryPoint
       }
       else
       {
-        // TODO i18n
-        Window.alert( "another error occur: reload page" );
+        // too much successive error: reload page
         ClientUtil.reload();
       }
     }
@@ -322,6 +327,16 @@ public class GameEngine implements EntryPoint
     }
   }
 
+
+  @Override
+  public void onChannelMessage(Object p_message)
+  {
+    if( p_message instanceof ModelFmpUpdate)
+    {
+      receiveModelUpdate( (ModelFmpUpdate)p_message );
+    }
+  }
+  
 
 
 
@@ -730,7 +745,11 @@ public class GameEngine implements EntryPoint
       }
     }
   }
-  
+
+
+
+
+
 
 
 
