@@ -34,3 +34,5 @@ syntax: regexp
 ^war/WEB-INF/deploy$
 syntax: regexp
 ^src/com/fullmetalgalaxy/server/forum/forumaccount\.properties$
+syntax: regexp
+^gwt-unitCache$

@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.server;
 
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Transaction;
@@ -52,7 +53,7 @@ import com.googlecode.objectify.util.DAOBase;
  */
 public class DataStore implements Objectify, Transaction
 {
-  private final static FmpLogger log = FmpLogger.getLogger( DataStore.class.getName() );
+  private final static Logger log = Logger.getLogger( DataStore.class.getName() );
 
   private boolean m_isReadOnly = true;
   private DAOBase m_dao = null;
@@ -94,7 +95,7 @@ public class DataStore implements Objectify, Transaction
   @Override
   public AsyncObjectify async()
   {
-    log.error( new Exception( "unimplemented" ) );
+    log.severe( new Exception( "unimplemented" ).getMessage() );
     return null;
   }
 
@@ -105,7 +106,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
     }
     else
     {
@@ -127,7 +128,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
     }
     else
     {
@@ -145,7 +146,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
     }
     else
     {
@@ -160,7 +161,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
     }
     else
     {
@@ -182,6 +183,7 @@ public class DataStore implements Objectify, Transaction
       return get( p_arg0 );
     } catch( NotFoundException e )
     {
+      log.fine( e.getMessage() );
     }
     return null;
   }
@@ -200,7 +202,7 @@ public class DataStore implements Objectify, Transaction
       return get( p_arg0, p_arg1 );
     } catch( Exception e )
     {
-      e.printStackTrace(System.out);
+      log.fine( e.getMessage() );
     }
     return null;
   }
@@ -219,6 +221,7 @@ public class DataStore implements Objectify, Transaction
       return get( p_arg0, p_arg1 );
     } catch( NotFoundException e )
     {
+      log.fine( e.getMessage() );
     }
     return null;
   }
@@ -302,7 +305,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
     else
@@ -318,7 +321,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
     else
@@ -334,7 +337,7 @@ public class DataStore implements Objectify, Transaction
   {
     if( isReadOnly() )
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
     else
@@ -384,7 +387,7 @@ public class DataStore implements Objectify, Transaction
     }
     else
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
   }
@@ -400,7 +403,7 @@ public class DataStore implements Objectify, Transaction
     }
     else
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
   }
@@ -416,7 +419,7 @@ public class DataStore implements Objectify, Transaction
     }
     else
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
   }
@@ -444,7 +447,7 @@ public class DataStore implements Objectify, Transaction
     }
     else
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
     }
   }
 
@@ -459,7 +462,7 @@ public class DataStore implements Objectify, Transaction
     }
     else
     {
-      log.error( new Exception( "not available in read only" ) );
+      log.severe( new Exception( "not available in read only" ).getMessage() );
       return null;
     }
   }

@@ -92,7 +92,7 @@ public class ClientUtil
    * @param p_yInc
    */
   public static native void scrollBy(int p_xInc, int p_yInc) /*-{
-    window.scrollBy(p_xInc,p_yInc); 
+		$wnd.scrollBy(p_xInc, p_yInc);
   }-*/;
   
   /**
