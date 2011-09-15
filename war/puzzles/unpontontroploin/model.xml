@@ -1,20 +1,19 @@
 <com.fullmetalgalaxy.model.ModelFmpInit>
   <game>
     <m__preview>
-      <m__id>0</m__id>
+      <id>1</id>
       <m__version>1</m__version>
       <m__name>Un ponton trop loin</m__name>
       <m__description>probleme propose par Deep Space Mining</m__description>
       <m__maxNumberOfPlayer>2</m__maxNumberOfPlayer>
       <m__history>false</m__history>
-      <m__currentTimeStep>0</m__currentTimeStep>
+      <m__currentTimeStep>10</m__currentTimeStep>
       <m__gameType>Puzzle</m__gameType>
       <m__planetType>Desert</m__planetType>
       <m__isOpen>false</m__isOpen>
       <m__minimapUri>/puzzles/unpontontroploin/minimap.png</m__minimapUri>
       <m__currentPlayerId>1</m__currentPlayerId>
       <m__accountCreator>
-        <m__id>0</m__id>
         <id>2</id>
         <m__pseudo></m__pseudo>
         <m__currentLevel>1</m__currentLevel>
@@ -27,7 +26,6 @@
       <m__configGameTime>Standard</m__configGameTime>
       <m__configGameVariant>Standard</m__configGameVariant>
       <m__ebConfigGameTime>
-        <m__id>0</m__id>
         <m__timeStepDurationInSec>0</m__timeStepDurationInSec>
         <m__tideChangeFrequency>1</m__tideChangeFrequency>
         <m__totalTimeStep>25</m__totalTimeStep>
@@ -44,7 +42,6 @@
         <m__deploymentTimeStep>1</m__deploymentTimeStep>
       </m__ebConfigGameTime>
       <m__ebConfigGameVariant>
-        <m__id>0</m__id>
         <m__actionPtMaxReserve>25</m__actionPtMaxReserve>
         <m__minSpaceBetweenFreighter>8</m__minSpaceBetweenFreighter>
         <m__deployementRadius>4</m__deployementRadius>
@@ -67,7 +64,6 @@
       </m__ebConfigGameVariant>
       <m__setRegistration>
         <com.fullmetalgalaxy.model.persist.EbRegistration>
-          <m__id>1</m__id>
           <id>1</id>
           <m__color>4</m__color>
           <m__OriginalColor>4</m__OriginalColor>
@@ -75,25 +71,20 @@
           <m__orderIndex>0</m__orderIndex>
           <m__turretsToRepair>0</m__turretsToRepair>
           <m__workingWeatherHenCount>0</m__workingWeatherHenCount>
-          <m__accountId>1</m__accountId>
           <m__account>
-            <m__id>0</m__id>
             <id>1</id>
             <m__pseudo>Vous</m__pseudo>
             <m__currentLevel>1</m__currentLevel>
           </m__account>
         </com.fullmetalgalaxy.model.persist.EbRegistration>
         <com.fullmetalgalaxy.model.persist.EbRegistration>
-          <m__id>2</m__id>
           <m__color>128</m__color>
           <m__OriginalColor>128</m__OriginalColor>
           <m__ptAction>5</m__ptAction>
           <m__orderIndex>1</m__orderIndex>
           <m__turretsToRepair>0</m__turretsToRepair>
           <m__workingWeatherHenCount>0</m__workingWeatherHenCount>
-          <m__accountId>2</m__accountId>
           <m__account>
-            <m__id>0</m__id>
             <id>2</id>
             <m__pseudo>CPU</m__pseudo>
             <m__currentLevel>1</m__currentLevel>
@@ -102,7 +93,7 @@
       </m__setRegistration>
     </m__preview>
     <m__data>
-      <m__id>0</m__id>
+      <id>1</id>
       <m__currentTide>Medium</m__currentTide>
       <m__nextTide>Medium</m__nextTide>
       <m__nextTide2>Hight</m__nextTide2>
@@ -116,7 +107,6 @@
 ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lands>
       <m__setToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>18</m__id>
           <id>18</id>
           <m__version>0</m__version>
           <m__type>Pontoon</m__type>
@@ -131,7 +121,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>13</m__id>
           <id>13</id>
           <m__version>0</m__version>
           <m__type>Freighter</m__type>
@@ -146,7 +135,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>11</m__id>
           <id>11</id>
           <m__version>0</m__version>
           <m__type>WeatherHen</m__type>
@@ -161,7 +149,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>17</m__id>
           <id>17</id>
           <m__version>0</m__version>
           <m__type>Ore</m__type>
@@ -176,7 +163,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>5</m__id>
           <id>5</id>
           <m__version>0</m__version>
           <m__type>Pontoon</m__type>
@@ -191,7 +177,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>7</m__id>
           <id>7</id>
           <m__version>0</m__version>
           <m__type>Tank</m__type>
@@ -206,7 +191,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>1</m__id>
           <id>1</id>
           <m__version>0</m__version>
           <m__type>Crab</m__type>
@@ -221,7 +205,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
           <m__setContainToken>
             <com.fullmetalgalaxy.model.persist.EbToken>
-              <m__id>2</m__id>
               <id>2</id>
               <m__version>0</m__version>
               <m__type>Pontoon</m__type>
@@ -239,7 +222,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           </m__setContainToken>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>16</m__id>
           <id>16</id>
           <m__version>0</m__version>
           <m__type>Tank</m__type>
@@ -254,7 +236,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>15</m__id>
           <id>15</id>
           <m__version>0</m__version>
           <m__type>Tank</m__type>
@@ -269,7 +250,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>3</m__id>
           <id>3</id>
           <m__version>0</m__version>
           <m__type>Heap</m__type>
@@ -284,7 +264,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>8</m__id>
           <id>8</id>
           <m__version>0</m__version>
           <m__type>Barge</m__type>
@@ -299,7 +278,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
           <m__setContainToken>
             <com.fullmetalgalaxy.model.persist.EbToken>
-              <m__id>9</m__id>
               <id>9</id>
               <m__version>0</m__version>
               <m__type>Ore</m__type>
@@ -317,7 +295,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           </m__setContainToken>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>4</m__id>
           <id>4</id>
           <m__version>0</m__version>
           <m__type>Heap</m__type>
@@ -332,7 +309,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>14</m__id>
           <id>14</id>
           <m__version>0</m__version>
           <m__type>Heap</m__type>
@@ -348,7 +324,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken reference="../com.fullmetalgalaxy.model.persist.EbToken[7]/m__setContainToken/com.fullmetalgalaxy.model.persist.EbToken"/>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>6</m__id>
           <id>6</id>
           <m__version>0</m__version>
           <m__type>Turret</m__type>
@@ -364,7 +339,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken reference="../com.fullmetalgalaxy.model.persist.EbToken[11]/m__setContainToken/com.fullmetalgalaxy.model.persist.EbToken"/>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>10</m__id>
           <id>10</id>
           <m__version>0</m__version>
           <m__type>Turret</m__type>
@@ -379,7 +353,6 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
           <m__carrierTokenId>0</m__carrierTokenId>
         </com.fullmetalgalaxy.model.persist.EbToken>
         <com.fullmetalgalaxy.model.persist.EbToken>
-          <m__id>12</m__id>
           <id>12</id>
           <m__version>0</m__version>
           <m__type>Crab</m__type>
@@ -397,17 +370,14 @@ ITNUNQQARERBEREUAQAAREREEVEBAAAARBQ0M0MFAAAAERE0MxMCAAAAERE0MxECAAAAAA==</m__lan
       <m__setGameLog/>
       <m__triggers>
         <com.fullmetalgalaxy.model.persist.triggers.EbTrigger>
-          <m__id>20</m__id>
           <m__actions>
             <com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
-              <m__id>21</m__id>
               <m__message>./puzzles/unpontontroploin/welcome.html
 					</m__message>
             </com.fullmetalgalaxy.model.persist.triggers.actions.EbActMessage>
           </m__actions>
           <m__conditions>
             <com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndPuzzleLoad>
-              <m__id>22</m__id>
               <m__negative>false</m__negative>
             </com.fullmetalgalaxy.model.persist.triggers.conditions.EbCndPuzzleLoad>
           </m__conditions>

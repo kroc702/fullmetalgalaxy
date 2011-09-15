@@ -53,7 +53,11 @@
     	<div style="min-height:50px;"></div>
     </td></tr>
     <tr style="height:100%;"><td>
-    	<div id="board" style="width:100%; height:100%; background-color:#d09750;"></div>
+    	<%
+    	int pixWidth = modelFmpInit.getGame().getLandPixWidth( new EnuZoom(EnuZoom.Large) ) + 350;
+    	int pixHeight = modelFmpInit.getGame().getLandPixHeight( new EnuZoom(EnuZoom.Large) );
+    	%>
+    	<div id="board" style="width:<%=pixWidth%>px; height:<%=pixHeight%>px; background-color:#d09750;"></div>
     </td></tr>
     </table>
     

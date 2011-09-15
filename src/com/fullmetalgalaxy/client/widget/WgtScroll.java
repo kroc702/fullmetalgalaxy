@@ -387,6 +387,11 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     }
   }
 
+  // this is to test scrollBy function
+  private int m_scrollXCorrection = 0;
+  private int m_scrollYCorrection = 0;
+
+
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
@@ -410,7 +415,15 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     {
       setScrollPositionSilent( getHorizontalScrollPosition() + scrollX, getVerticalScrollPosition()
           + scrollY );
+
+      // scroll correction are here to remove mouse dragging event raised by
+      // scrollBy function
+      scrollX += m_scrollXCorrection;
+      m_scrollXCorrection = scrollX;
+      scrollY += m_scrollYCorrection;
+      m_scrollYCorrection = scrollY;
       ClientUtil.scrollBy( scrollX, scrollY );
+
       m_lastMouseX = p_x;
       m_lastMouseY = p_y;
     }

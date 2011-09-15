@@ -151,7 +151,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<security-constraint>
 	   <web-resource-collection>
-	       <url-pattern>/admin/*</url-pattern>
+	       <url-pattern>/admin/accounts.jsp</url-pattern>
+	       <url-pattern>/admin/index.jsp</url-pattern>
 	       <!-- url-pattern>/cron/*</url-pattern-->
 	   </web-resource-collection>
 	   <auth-constraint>
@@ -160,14 +161,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</security-constraint>
 
 	<jsp-config>
-        <!--jsp-property-group>
-            <url-pattern>*.jsp</url-pattern>
+        <jsp-property-group>
+            <url-pattern>/i18n/fr/index.html</url-pattern>
+            <url-pattern>/i18n/fr/menu.html</url-pattern>
+            <url-pattern>/i18n/fr/puzzleslist.jsp</url-pattern>
+            <url-pattern>/i18n/fr/help/index.html</url-pattern>
+            <url-pattern>/i18n/fr/help/menu.html</url-pattern>
+            <url-pattern>/i18n/fr/help/rules.html</url-pattern>
             <page-encoding>UTF-8</page-encoding>
         </jsp-property-group>
-        <jsp-property-group>
-            <url-pattern>*.html</url-pattern>
-            <page-encoding>UTF-8</page-encoding>
-        </jsp-property-group-->
     </jsp-config>
 
 </web-app>
