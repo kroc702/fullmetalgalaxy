@@ -87,6 +87,15 @@ public class ClientUtil
   }-*/;
 
   /**
+   * horizontal and vertical scroll increments
+   * @param p_xInc
+   * @param p_yInc
+   */
+  public static native void scrollBy(int p_xInc, int p_yInc) /*-{
+    window.scrollBy(p_xInc,p_yInc); 
+  }-*/;
+  
+  /**
    * get html element p_id and return his content property or null if not found.
    * @param p_id
    * @return 

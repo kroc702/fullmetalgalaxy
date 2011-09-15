@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.client.widget;
 
 
 import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -409,6 +410,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     {
       setScrollPositionSilent( getHorizontalScrollPosition() + scrollX, getVerticalScrollPosition()
           + scrollY );
+      ClientUtil.scrollBy( scrollX, scrollY );
       m_lastMouseX = p_x;
       m_lastMouseY = p_y;
     }

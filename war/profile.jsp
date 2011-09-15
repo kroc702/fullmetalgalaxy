@@ -13,16 +13,11 @@
 <%@include file="include/header.jsp"%>
 
 <%
-EbAccount account = FmgDataStore.dao().find( EbAccount.class, id );
+EbAccount account = ServerUtil.findRequestedAccount(request);
 if( account == null ) 
 { 
-	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'existe pas.</h2>" );
+	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'a pas été trouvé.</h2>" );
 	return;
-}
-if( account.isIsforumIdConfirmed() && account.getForumId() != null )
-{
-  //response.sendRedirect( account.getProfileUrl() );
-  //return;
 }
 if( Auth.isUserAdmin( request, response ) )
 {
@@ -30,14 +25,19 @@ if( Auth.isUserAdmin( request, response ) )
 }
 %>
 
+<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
+
 <h2> <%= account.getPseudo() %> </h2>
-<% if(account.getForumId() != null) { %>
+<% if( account.isIsforumIdConfirmed() && account.getForumId() != null ) { %>
+<a href="<%=account.getProfileUrl()%>">Ce compte est lié a un compte du forum.</a>
+<% } else if(account.getForumId() != null) { %>
 Un compte similaire existe sur le forum, mais n'est pas lié à FMG.<br/>
 <% } else { %>
 Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <% } %>
-<% if(account.isAllowPrivateMsg() && account.haveEmail()) { %>
-<a href="/privatemsg.jsp?id=<%= account.getId()%>">Ecrire un message</a><br/>
+<% if(account.isAllowPrivateMsg()) { %>
+<a href="<%= account.getPMUrl()%>">Ecrire un message privé</a><br/>
+<a href="/email.jsp?id=<%= account.getId()%>">Ecrire un email</a><br/>
 <% } %>
 
 <pre><%= account.getDescription() %></pre>

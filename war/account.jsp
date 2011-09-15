@@ -40,22 +40,30 @@ if(account == null) {
 } 
 %>
 
+<h1><%= (request.getParameter("msg")==null) ? "" : request.getParameter("msg") %></h1>
+
 <% if( id == 0 ) { %>
 <h2>Création d'un nouveau compte</h2>
 Vous pouvez aussi utiliser votre compte google pour vous 
 <a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
+<%} else { %>
+<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
+Voir mon profil public sur: 
+<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
+ou 
+<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
+<p>
+<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' width='32' height='32'><br/>
+level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
+</p>
 <%}%>
-
-
-<h1><%= (request.getParameter("msg")==null) ? "" : request.getParameter("msg") %></h1>
-
 
 
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
 <input type="hidden" name="accountid" value="<%= account.getId() %>"/>
 <input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
-<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' width='32' height='32'><br/>
+
 login :
 <input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
 <%= account.getAuthIconHtml() %><br/>

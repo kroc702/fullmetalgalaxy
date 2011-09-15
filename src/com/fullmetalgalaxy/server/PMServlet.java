@@ -46,6 +46,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 
 /**
@@ -71,7 +72,14 @@ public class PMServlet extends HttpServlet
   protected void doGet(HttpServletRequest p_req, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
-    super.doGet( p_req, p_resp );
+    EbAccount account = ServerUtil.findRequestedAccount(p_req);
+    if( account == null ) 
+    { 
+      p_resp.sendRedirect( "/genericmsg.jsp?title=Le profil n'a pas été trouvé." );
+      return;
+    }
+    String subject = p_req.getParameter("subject");
+    p_resp.sendRedirect( account.getPMUrl( subject ) );
   }
 
   /* (non-Javadoc)
@@ -103,7 +111,7 @@ public class PMServlet extends HttpServlet
       log.error( e );
     }
 
-    p_response.getOutputStream().println( "Message envoye" );
+    p_response.sendRedirect( "/genericmsg.jsp?title=Message envoye" );
   }
 
 
@@ -117,7 +125,7 @@ public class PMServlet extends HttpServlet
     accountFrom = ds.get( EbAccount.class, Long.parseLong( params.get( "fromid" ) ) );
     assert accountTo != null;
     assert accountFrom != null;
-    String body = "Vous avez recu un message de "
+    String body = "Vous avez recu un email de "
               + accountFrom.getPseudo()
               + "\n"
               + "Pour repondre vous pouvez utiliser ce lien http://www.fullmetalgalaxy.com/privatemsg.jsp?id="

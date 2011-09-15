@@ -102,7 +102,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
         i++;
       }
     }
-    return EbPublicAccount.getPMUrl( getName(), pseudo );
+    return EbPublicAccount.getForumPMUrl( getName(), pseudo );
   }
 
   /* (non-Javadoc)

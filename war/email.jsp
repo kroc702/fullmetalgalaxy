@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Full Metal Galaxy - Profil du joueur</title>
+<title>Full Metal Galaxy - EMail</title>
         
 <%@include file="include/meta.jsp"%>
 
@@ -11,25 +11,27 @@
 <body>
 <%@include file="include/header.jsp"%>
 
-<h1>Message privé</h1>
+<h1>Envoyer un email</h1>
 
 <%
-EbAccount account = FmgDataStore.dao().find( EbAccount.class, id );
+EbAccount account = ServerUtil.findRequestedAccount(request);
 if( account == null ) 
 { 
-	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'existe pas.</h2>" );
+	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'a pas été trouvé.</h2>" );
 	return;
 }
 if( !Auth.isUserLogged( request, response ) )
 {
-	out.println("<h2>Vous devez être connecté pour envoyer un message a un autre joueur.</h2>" );
+	out.println("<h2>Vous devez être connecté pour envoyer un email a un autre joueur.</h2>" );
 	return;
 }
 if( !account.isAllowPrivateMsg() || !account.haveEmail() )
 {
-	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté par mail.</h2>" );
+	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté par email.</h2>" );
 	return;
 }
+String subject = request.getParameter("subject");
+if( subject == null ) subject = "";
 %>
 
 &nbsp;A : <%= account.getPseudo() %><br/>
@@ -38,7 +40,7 @@ if( !account.isAllowPrivateMsg() || !account.haveEmail() )
 <input type="hidden" name="fromid" value="<%= Auth.getUserAccount( request, response ).getId() %>"/>
 <input type="hidden" name="toid" value="<%= account.getId() %>"/>
 Objet :
-<input type="text" name="subject" value=""/><br/>
+<input type="text" name="subject" value="<%=subject%>"/><br/>
 <textarea cols="50" rows="10" name="msg">
 </textarea><br/>
 

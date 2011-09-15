@@ -119,7 +119,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       m_layerCollection.show();
       m_isVisible = true;
       ClientUtil.scrollToTop();
-      Window.enableScrolling( false );
+      //Window.enableScrolling( false );
     }
 
     // map or standard land layer ?

@@ -100,7 +100,7 @@ public class EbPublicAccount extends EbBase
     return "/profile.jsp?id=" + getId();
   }
 
-  public static String getPMUrl(String p_subject, String... p_pseudo)
+  public static String getForumPMUrl(String p_subject, String... p_pseudo)
   {
     if( p_subject == null )
     {
@@ -125,7 +125,12 @@ public class EbPublicAccount extends EbBase
 
   public String getPMUrl(String p_subject)
   {
-    return getPMUrl( p_subject, getPseudo() );
+    String url = "/PMServlet?id="+getId();
+    if( p_subject != null )
+    {
+      url += "&subject="+p_subject;
+    }
+    return url;
   }
 
   public String getPMUrl()

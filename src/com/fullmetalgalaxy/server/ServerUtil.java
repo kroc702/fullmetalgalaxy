@@ -25,6 +25,8 @@ package com.fullmetalgalaxy.server;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.forum.ForumConector;
@@ -121,6 +123,31 @@ public class ServerUtil
     return date;
   }
 
+  public static EbAccount findRequestedAccount(HttpServletRequest p_request)
+  {
+    EbAccount account = null;
+    try
+    {
+      account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong(p_request.getParameter("id")));
+    } catch(Exception e) {}
+    if( account == null ) 
+    {
+        String forumid = p_request.getParameter("forumid");
+        if( forumid != null )
+        {
+            account = FmgDataStore.dao().query(EbAccount.class).filter("m_forumId ==", forumid ).get();
+        }
+    }
+    if( account == null ) 
+    {
+      try
+      {
+        account = FmgDataStore.dao().query(EbAccount.class).filter("m_pseudo ==", p_request.getParameter("pseudo")).get();
+      } catch(Exception e) {}
+    }
+    return account;
+  }
+  
   /*
   public static String negateRegexStr(String p_str)
   {

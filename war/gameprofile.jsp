@@ -10,26 +10,7 @@
 <body>
 
 <%
-EbAccount account = null;
-try
-{
-  account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong(request.getParameter("id")));
-} catch(Exception e) {}
-if( account == null ) 
-{
-    String forumid = request.getParameter("forumid");
-    if( forumid != null )
-    {
-  		account = FmgDataStore.dao().query(EbAccount.class).filter("m_forumId ==", forumid ).get();
-    }
-}
-if( account == null ) 
-{
-  try
-  {
-  	account = FmgDataStore.dao().query(EbAccount.class).filter("m_pseudo ==", request.getParameter("pseudo")).get();
-  } catch(Exception e) {}
-}
+EbAccount account = ServerUtil.findRequestedAccount(request);
 if( account == null ) 
 { 
 	out.println("<h1>Ce profil n'a pas été trouvé sur <a href='http://www.fullmetalgalaxy.com'>www.fullmetalgalaxy.com</a></h1>" );
