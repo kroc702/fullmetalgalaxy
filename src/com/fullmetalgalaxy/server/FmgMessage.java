@@ -151,7 +151,7 @@ public class FmgMessage
     String error = null;
 
     // localize msg
-    FmgMessage msg = localize(p_account, this);
+    FmgMessage msg = localize(p_account);
 
     // then send message according to users profile
     //
@@ -209,7 +209,7 @@ public class FmgMessage
     String error = null;
 
     // localize msg
-    FmgMessage msg = localize(p_account, this);
+    FmgMessage msg = localize(p_account);
 
     // send a forum private message
     isOk = ServerUtil.forumConnector().sendPMessage( "[FMG] " + msg.getSubject(), msg.getBody(),
@@ -227,10 +227,10 @@ public class FmgMessage
    * @param p_msg
    * @return
    */
-  private FmgMessage localize(EbAccount p_account, FmgMessage p_msg)
+  private FmgMessage localize(EbAccount p_account)
   {
     putParams( p_account );
-    FmgMessage msg = p_msg;
+    FmgMessage msg = null;
     if( getName() != null )
     {
       String locale = p_account.getLocale();
@@ -240,8 +240,11 @@ public class FmgMessage
       }
       msg = FmgMessage.buildMessage( locale, getName() );
     }
-    msg = msg.applyParams( m_params );
-    return msg;
+    if( msg != null )
+    {
+      return msg.applyParams( m_params ); 
+    }
+    return applyParams( m_params );
   }
   
   /**
@@ -300,13 +303,18 @@ public class FmgMessage
   {
     String subject = getSubject();
     String body = getBody();
+    if( subject == null ) subject = "";
+    if( body == null ) body = "";
     if( p_params != null )
     {
       for( Entry<String, String> entry : p_params.entrySet() )
       {
-        String key = "{" + entry.getKey() + "}";
-        subject = subject.replace( key, entry.getValue() );
-        body = body.replace( key, entry.getValue() );
+        if( entry.getKey() != null && entry.getValue() != null )
+        {
+          String key = "{" + entry.getKey() + "}";
+          subject = subject.replace( key, entry.getValue() );
+          body = body.replace( key, entry.getValue() );
+        }
       }
     }
     return new FmgMessage( subject, body );

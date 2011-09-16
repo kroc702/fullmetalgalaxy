@@ -110,7 +110,8 @@ public class News
 
       newsHtml += "<a href=" + link + "><div class='article'><article><span class='date'>"
  + dateFormat.format( pubDate )
-          + "</span><h4>" + title + "<h4><p>" + description
+   // <h4> tag cause graphic glich on IE7
+          + "</span><div class='h4'>" + title + "</div><p>" + description
           + "</p></article></div></a>";
         
       // and stop if we've got enough

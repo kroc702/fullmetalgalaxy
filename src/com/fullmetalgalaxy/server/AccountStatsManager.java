@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.server;
 import java.util.Collections;
 import java.util.Date;
 
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccountStats;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -211,6 +212,10 @@ public class AccountStatsManager
   @SuppressWarnings("unchecked")
   private static void saveAndUpdate(EbAccount p_account)
   {
+    if( p_account == null )
+    {
+      return;
+    }
     // sort stat according to their date
     Collections.sort( p_account.getStats() );
     // update player level and other style
@@ -219,6 +224,8 @@ public class AccountStatsManager
     int sheepCount = 0;
     float style = 0;
     int styleCount = 0;
+    int colors[] = new int[EnuColor.getTotalNumberOfColor()];
+    int colorCount = 0;
     for( EbAccountStats stat : p_account.getStats() )
     {
       level += stat.getFinalScore();
@@ -254,13 +261,31 @@ public class AccountStatsManager
             break;
           }
         }
+        // look his color
+        int colorIndex = new EnuColor(((StatsGamePlayer)stat).getInitialColor()).getColorIndex();
+        if( colorIndex >= 0 && colorIndex < colors.length )
+        {
+          colors[colorIndex]++;
+          colorCount++;
+        }
       }
     }
+    // set player color
+    p_account.setMainColor( EnuColor.None );
+    for(int colorIndex = 0; colorIndex < colors.length; colorIndex++ )
+    {
+      if( colors[colorIndex] > colorCount/2 )
+      {
+        p_account.setMainColor( EnuColor.getColorFromIndex( colorIndex ).getValue() );
+      }
+    }
+    // set player level & fiability
     p_account.setCurrentLevel( level );
     if( banCount > styleCount + sheepCount )
     {
       p_account.setFiability( PlayerFiability.Banned );
     }
+    // set player style
     if( sheepCount > styleCount )
     {
       p_account.setPlayerStyle( PlayerStyle.Sheep );
@@ -360,7 +385,7 @@ public class AccountStatsManager
               registration.getAccount().getId() );
           StatsGamePlayer lastStat = StatsGamePlayer.class.cast( getLastStats( account,
               p_game.getId() ) );
-          if( lastStat == null )
+          if( lastStat == null && account != null )
           {
             lastStat = new StatsGamePlayer( p_game );
             account.getStats().add( lastStat );
@@ -380,15 +405,18 @@ public class AccountStatsManager
     // for creator
     EbAccount account = FmgDataStore.dao()
         .find( EbAccount.class, p_game.getAccountCreator().getId() );
-    StatsGame lastStat = StatsGame.class.cast( getLastStats( account, p_game.getId() ) );
-    if( lastStat == null )
+    if( account != null )
     {
-      lastStat = new StatsGame( p_game );
-      account.getStats().add( lastStat );
+      StatsGame lastStat = StatsGame.class.cast( getLastStats( account, p_game.getId() ) );
+      if( lastStat == null )
+      {
+        lastStat = new StatsGame( p_game );
+        account.getStats().add( lastStat );
+      }
+      lastStat.setStatus( Status.Finished );
+      lastStat.setLastUpdate( new Date() );
+      saveAndUpdate( account );
     }
-    lastStat.setStatus( Status.Finished );
-    lastStat.setLastUpdate( new Date() );
-    saveAndUpdate( account );
   }
 
   /**
@@ -411,37 +439,44 @@ public class AccountStatsManager
     {
       if( registration.getAccount() != null )
       {
-        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-            registration.getAccount().getId() );
-        StatsGamePlayer lastStat = StatsGamePlayer.class.cast( getLastStats( account,
-            p_game.getId() ) );
-        if( lastStat == null )
+        try {
+          EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+              registration.getAccount().getId() );
+          StatsGamePlayer lastStat = StatsGamePlayer.class.cast( getLastStats( account,
+              p_game.getId() ) );
+          if( lastStat == null )
+          {
+            lastStat = new StatsGamePlayer( p_game );
+            lastStat.setPlayer( p_game, registration );
+            account.getStats().add( lastStat );
+          }
+          lastStat.setStatus( Status.Aborted );
+          lastStat.setFinalScore( 0 );
+          lastStat.setLastUpdate( new Date() );
+          saveAndUpdate( account );
+        } catch(Exception e)
         {
-          lastStat = new StatsGamePlayer( p_game );
-          lastStat.setPlayer( p_game, registration );
-          account.getStats().add( lastStat );
+          ServerUtil.logger.warning( e.getMessage() );
         }
-        lastStat.setStatus( Status.Aborted );
-        lastStat.setFinalScore( 0 );
-        lastStat.setLastUpdate( new Date() );
-        saveAndUpdate( account );
       }
     }
 
     // for creator
     EbAccount account = FmgDataStore.dao()
-        .get( EbAccount.class, p_game.getAccountCreator().getId() );
-    StatsGame lastStat = StatsGame.class.cast( getLastStats( account, p_game.getId() ) );
-    if( lastStat == null )
+        .find( EbAccount.class, p_game.getAccountCreator().getId() );
+    if( account != null )
     {
-      lastStat = new StatsGame( p_game );
-      account.getStats().add( lastStat );
+      StatsGame lastStat = StatsGame.class.cast( getLastStats( account, p_game.getId() ) );
+      if( lastStat == null )
+      {
+        lastStat = new StatsGame( p_game );
+        account.getStats().add( lastStat );
+      }
+      lastStat.setStatus( Status.Aborted );
+      lastStat.setFinalScore( 0 );
+      lastStat.setLastUpdate( new Date() );
+      saveAndUpdate( account );
     }
-    lastStat.setStatus( Status.Aborted );
-    lastStat.setFinalScore( 0 );
-    lastStat.setLastUpdate( new Date() );
-    saveAndUpdate( account );
-
   }
 
   public static void erosion(EbAccount p_account)

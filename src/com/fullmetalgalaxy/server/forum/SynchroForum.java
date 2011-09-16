@@ -135,6 +135,7 @@ public class SynchroForum extends HttpServlet
           {
             // well, forumId is confirmed but no forumId was found...
             // Forum account was probably created by FMG, but it's still not activated
+            // OR account isn't active
           }
           
           // TODO add erosion here
