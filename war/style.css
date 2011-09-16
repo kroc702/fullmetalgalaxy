@@ -323,7 +323,8 @@ h1 {
 	background-color: #eef4ff;
 }
   	
-#newsrss h4 {
+#newsrss h4,
+#newsrss .h4 {
 	font-weight: 400;
 	margin: 5px 0;
 }

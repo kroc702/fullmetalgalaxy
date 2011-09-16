@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccountStats;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
@@ -90,6 +91,11 @@ public class EbAccount extends EbPublicAccount
    * player style to recognize people
    */
   private PlayerStyle m_playerStyle = PlayerStyle.Sheep;
+  
+  /**
+   * player main color
+   */
+  private int m_mainColor = EnuColor.None;
   
   /** because of this data, EbAccount shoudln't be send on client side ! 
    * We may have to encrypt this data.
@@ -248,9 +254,10 @@ public class EbAccount extends EbPublicAccount
       iconName = "v";
     }
     int normalizedLevel = 0;
-    if( GlobalVars.getMaxLevel() > 1 )
+    int maxLevel = GlobalVars.getMaxLevel(); 
+    if( maxLevel > 1 )
     {
-      normalizedLevel = (int)(((float)(getCurrentLevel()-1))/(GlobalVars.getMaxLevel()-1) *9);
+      normalizedLevel = (int)(((float)(getCurrentLevel()-1))/(maxLevel-1) *9);
     }
     if( normalizedLevel < 0 ) normalizedLevel=0;
     if( normalizedLevel > 9 ) normalizedLevel=9;
@@ -678,6 +685,16 @@ public class EbAccount extends EbPublicAccount
   public void setForumConnectorData(Object p_forumConnectorData)
   {
     m_forumConnectorData = p_forumConnectorData;
+  }
+
+  public int getMainColor()
+  {
+    return m_mainColor;
+  }
+
+  public void setMainColor(int p_mainColor)
+  {
+    m_mainColor = p_mainColor;
   }
 
 

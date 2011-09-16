@@ -70,7 +70,7 @@ public class GlobalVarBase
         entity.setUnindexedProperty( ENTITY_VALUE, new Blob(o.toByteArray()) );
       } catch( Exception ex )
       {
-        ex.printStackTrace();
+        DataStore.logger.fine( ex.getMessage() );
       }
     }
     s_datastore.put( entity );
@@ -100,12 +100,13 @@ public class GlobalVarBase
           return typedObj;
         } catch( Exception e )
         {
+          DataStore.logger.finest( e.getMessage() );
         }
       }
       return obj;
     } catch( EntityNotFoundException e )
     {
-      e.printStackTrace();
+      DataStore.logger.fine( e.getMessage() );
     }
     return null;
   }
@@ -125,24 +126,25 @@ public class GlobalVarBase
     int value = p_toAdd;
     try
     {
-      Object obj = s_datastore.get( k ).getProperty( ENTITY_VALUE );
+      Object obj = s_datastore.get( txn, k ).getProperty( ENTITY_VALUE );
       if( obj != null && obj instanceof Number )
       {
         value += ((Number)obj).intValue();
         entity.setUnindexedProperty( ENTITY_VALUE, value );
-        s_datastore.put( entity );
+        s_datastore.put( txn, entity );
         txn.commit();
         return value;
       }
+      txn.rollback();
     } catch( Exception e )
     {
-      e.printStackTrace();
+      DataStore.logger.fine( e.getMessage() );
       txn.rollback();
     } finally
     {
       txn = s_datastore.beginTransaction();
       entity.setUnindexedProperty( ENTITY_VALUE, value );
-      s_datastore.put( entity );
+      s_datastore.put( txn, entity );
       txn.commit();
     }
     return value;

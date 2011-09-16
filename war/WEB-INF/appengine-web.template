@@ -43,8 +43,9 @@
     <resource-files>
         <include path="/puzzles/**.bin" />
         <include path="/i18n/**.html" />
+        <include path="/i18n/**.jsp" />
         <include path="/include/*" />
-        <include path="/*txt" />
+        <include path="/**txt" />
         <include path="/**rpc" />
         <include path="/help/menu.html" />
         <include path="/images/**/minimap/*" />
