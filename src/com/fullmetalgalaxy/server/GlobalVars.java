@@ -61,11 +61,7 @@ public class GlobalVars extends GlobalVarBase
       accountQuery = accountQuery.order( "-m_currentLevel" ).limit( 1 );
       for(EbAccount account : accountQuery.fetch() )
       {
-        newsHtml += "<a href='"+account.getProfileUrl()+"'><table width='100%'><tr>";
-        newsHtml += "<td><img src='"+account.getAvatarUrl()+"' height='40px'/></td>";
-        newsHtml += "<td>"+account.getPseudo()+"<br/><img src='"+account.getGradUrl()+"'/></td>";
-        newsHtml += "<td>"+account.getCurrentLevel()+" Pts</td>";
-        newsHtml += "</tr></table></a>";
+        newsHtml += account.buildHtmlFragment();
       }
       
       getCache().put( CACHE_STATS_KEY, newsHtml, Expiration.byDeltaSeconds( CACHE_STATS_TTL_SEC ) );

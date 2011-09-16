@@ -280,6 +280,17 @@ public class EbAccount extends EbPublicAccount
     return "http://www.fullmetalgalaxy.com/images/icons/user/"+iconName+".png";
   }
   
+  
+  public String buildHtmlFragment()
+  {
+    String newsHtml = "<a href='"+getProfileUrl()+"'><table width='100%'><tr>";
+    newsHtml += "<td><img src='"+getAvatarUrl()+"' height='40px' border='0' /></td>";
+    newsHtml += "<td>"+getPseudo()+"<br/><img src='"+getGradUrl()+"' border='0' /></td>";
+    newsHtml += "<td>"+getCurrentLevel()+" Pts</td>";
+    newsHtml += "</tr></table></a>";
+    return newsHtml;
+  }
+  
   /**
    * account is considered as active if he connect itself in the last 30 days
    * @return true if account is active
