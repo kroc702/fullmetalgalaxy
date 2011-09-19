@@ -76,6 +76,10 @@ li {
 	position: relative;
 	top : -110px;
 
+	background-image: url('images/draw1.png');
+	background-repeat:no-repeat;
+	background-position: 35% 100%;	
+	
 }
 
 #header {
@@ -277,10 +281,13 @@ h1 {
 	font-weight: 500;
 }
 
-.collumn #iconrss img {
+.collumn .iconrss {
 	border:0px;
 	margin: 0px;
 	float: right;
+	background-image: url('/images/css/rss.jpg');
+	width: 19px;
+	height: 19px;
 }
 
 .collumn {
@@ -296,7 +303,6 @@ h1 {
 	font-weight: 500;
 }
 .collumn img {
-	border: 1px #333 solid;
 	margin: 10px;
 }
 
@@ -304,13 +310,13 @@ h1 {
 	float:right;
 }
 
-#newsrss .article p{
+.article p{
 	display: inline;
 	margin: 0;
 	padding: 0;
 	color: #333;
 }
-#newsrss .article {
+.article {
 	-moz-border-radius: 10px; 
   	-webkit-border-radius: 10px; 
   	border-radius: 10px; 
@@ -319,30 +325,23 @@ h1 {
   	margin: 4px;
  }
  
-#newsrss .article:hover {
+.article:hover {
 	background-color: #eef4ff;
 }
   	
+#gamesrss h4,
+#gamesrss .h4,
 #newsrss h4,
 #newsrss .h4 {
 	font-weight: 400;
 	margin: 5px 0;
 }
-#newsrss .article .date {
+.article .date {
 	float: right;
 	background-image: url('images/css/calendar.png');
 	background-repeat:no-repeat;
 	padding-left: 20px;
 }
-#draw1 {
-	height : 125px;
-	width : 255px;
-	background-image: url('images/draw1.png');
-	position: absolute;
-	bottom: 50px;
-	right: 0px;
-}
-
 
 #draw2 {
 	height : 70px;

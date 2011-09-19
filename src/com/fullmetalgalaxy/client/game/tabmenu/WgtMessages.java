@@ -23,6 +23,7 @@
 
 package com.fullmetalgalaxy.client.game.tabmenu;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -64,7 +65,8 @@ public class WgtMessages extends Composite
   private void initEditableMsg(String p_text)
   {
     m_panel.clear();
-    m_panel.add( new Label("Ce texte est public et éditable par tous les joueurs de cette partie") );
+    m_panel
+        .add( new Label( "Ce texte est public et éditable par tous les joueurs de cette partie" ) );
     m_panel.add( m_text );
     m_text.setPixelSize( 400, 350 );
     m_text.setText( p_text );
@@ -81,6 +83,7 @@ public class WgtMessages extends Composite
         EbEvtMessage message = new EbEvtMessage();
         message.setGame( GameEngine.model().getGame() );
         message.setMessage( m_text.getText() );
+        message.setAccountId( AppMain.instance().getMyAccount().getId() );
         GameEngine.model().runSingleAction(message);
         
       }

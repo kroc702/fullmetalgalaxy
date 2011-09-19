@@ -23,25 +23,17 @@
 
 package com.fullmetalgalaxy.server.forum;
 
-import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-
+import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.ressources.SharedI18n;
-import com.fullmetalgalaxy.server.ServerUtil;
+import com.fullmetalgalaxy.server.FmgDataStore;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.googlecode.objectify.Query;
 
 /**
  * create an html text from an RSS stream.
@@ -55,13 +47,6 @@ public class Games
   private static final String CACHE_NEWS_KEY = "CACHE_GAMES_KEY";
   private static final int CACHE_NEWS_TTL_SEC = 3600; // one hour
   
-  private static final DateFormat s_pubDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
-
-  // regex pattern that match game url
-  private static Pattern s_gameUrlPattern = Pattern.compile(
-      ".*href=\"http://www.fullmetalgalaxy.com/game.jsp\\?id=([^\"]*)\".*", Pattern.DOTALL );
-  
-    
   
   /**
    * 
@@ -88,82 +73,23 @@ public class Games
   {
     String newsHtml = "";
     
-    int itemCount = 0;
     DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
-    for( Element item : getNewsItem() )
+    Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class )
+        .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
+
+    for( EbGamePreview game : query )
     {
-      // for each item:
-      // read relevent informations
-      // title, link, description, pubDate
-      String title = item.getChild("title").getText();
-      String link = item.getChild("link").getText();
-      String description = item.getChild("description").getText();
-      Date pubDate = new Date();
-      try
-      {
-        pubDate = s_pubDateFormat.parse(item.getChild("pubDate").getText());
-      } catch( ParseException e )
-      {
-        e.printStackTrace();
-      }
-
-      // find game url in message description
-      Matcher matcher = s_gameUrlPattern.matcher( description );
-      if( matcher.matches() )
-      {
-        String gameId = matcher.group( 1 );
-        link = "/game.jsp?id=" + gameId;
-      }
-
-
       // add a news entry
-      newsHtml += "<a href='" + link + "'><div class='article'><article><span class='date'>"
- + dateFormat.format( pubDate )
-   // <h4> tag cause graphic glich on IE7
-          + "</span><div class='h4'>" + title + "</div></article></div></a>";
-        
-      // and stop if we've got enough
-      itemCount++;
-      if( itemCount >= GAMES_ITEM_COUNT)
-      {
-        break;
-      }
+      newsHtml += "<a href='" + FmpConstant.getBaseUrl() + "/game.jsp?id=" + game.getId()
+          + "'><div class='article'><article><span class='date'>"
+          + dateFormat.format( game.getCreationDate() )
+          // <h4> tag cause graphic glich on IE7
+          + "</span><div class='h4'>" + game.getName() + "</div></article></div></a>";
     }
     
     return newsHtml;
   }
   
-
-  @SuppressWarnings("unchecked")
-  private static List<Element> getNewsItem()
-  {
-    List<Element> listItem = new ArrayList<Element>();
-      
-    org.jdom.Document document;
-    // On crée une instance de SAXBuilder
-    SAXBuilder sxb = new SAXBuilder();
-    try
-    {
-      URL url = new URL( ServerUtil.newsConnector().getNewsRssUrl(
-          ConectorImpl.FORUM_GAMES_THREAD_ID ) );
-      // On crée un nouveau document JDOM avec en argument le fichier XML
-      // Le parsing est terminé ;)
-       document = sxb.build( url.openStream() );
-  
-      // On initialise un nouvel élément racine avec l'élément racine du
-      // document.
-      Element racine = document.getRootElement();
-  
-      // On crée une List contenant tous les noeuds "etudiant" de l'Element
-      // racine
-      listItem = racine.getChild("channel").getChildren("item");
-    }
-    catch(Exception e)
-    {
-      e.printStackTrace();
-    }
-    return listItem;
-  }
   
   private static MemcacheService s_cache = null;
 

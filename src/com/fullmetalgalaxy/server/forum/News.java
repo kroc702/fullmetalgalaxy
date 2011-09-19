@@ -49,9 +49,11 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
  */
 public class News
 {
-  private static final int NEWS_ITEM_COUNT = 5;
+  private static final int NEWS_FULLITEM_COUNT = 1;
+  private static final int NEWS_ITEM_COUNT = 3;
   private static final String CACHE_NEWS_KEY = "CACHE_NEWS_KEY";
   private static final int CACHE_NEWS_TTL_SEC = 3600; // one hour
+  private static final int MAX_CHAR_DESCRIPTION = 190;
   
   private static final DateFormat s_pubDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
 
@@ -102,17 +104,41 @@ public class News
         e.printStackTrace();
       }
 
-      // add a news entry
-      if( description.length() > 150 )
+      if( itemCount >= NEWS_FULLITEM_COUNT )
       {
-        description = description.substring( 0, 150 ) + " ...";
+        description = "";
+      }
+      else
+      {
+        // cut description
+        int charIndex = 0;
+        int charCount = 0;
+        while( charCount < MAX_CHAR_DESCRIPTION )
+        {
+          int index = description.indexOf( "<img", charIndex );
+          if( index < 0 )
+          {
+            charIndex += MAX_CHAR_DESCRIPTION - charCount;
+            charCount = MAX_CHAR_DESCRIPTION;
+          }
+          else
+          {
+            charIndex = description.indexOf( '>', index );
+            charCount += index + 5;
+          }
+        }
+        if( description.length() > charIndex )
+        {
+          description = description.substring( 0, charIndex ) + " ...";
+        }
+        description = "<p>" + description + "</p>";
       }
 
-      newsHtml += "<a href=" + link + "><div class='article'><article><span class='date'>"
+      // add a news entry
+      newsHtml += "<a href='" + link + "'><div class='article'><article><span class='date'>"
  + dateFormat.format( pubDate )
    // <h4> tag cause graphic glich on IE7
-          + "</span><div class='h4'>" + title + "</div><p>" + description
-          + "</p></article></div></a>";
+          + "</span><div class='h4'>" + title + "</div>" + description + "</article></div></a>";
         
       // and stop if we've got enough
       itemCount++;
@@ -136,7 +162,8 @@ public class News
     SAXBuilder sxb = new SAXBuilder();
     try
     {
-      URL url = new URL( ServerUtil.newsConnector().getNewsRssUrl() );
+      URL url = new URL( ServerUtil.newsConnector().getNewsRssUrl(
+          ConectorImpl.FORUM_NEWS_THREAD_ID ) );
       // On crée un nouveau document JDOM avec en argument le fichier XML
       // Le parsing est terminé ;)
        document = sxb.build( url.openStream() );

@@ -1,0 +1,3 @@
+{game_name}
+{game_description}
+[url={game_url}]{game_name}[/url]

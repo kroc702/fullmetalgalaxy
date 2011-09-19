@@ -31,7 +31,7 @@ import com.fullmetalgalaxy.model.persist.Game;
  * @author Vincent Legendre
  *
  */
-public class EbEvtMessage extends AnEvent
+public class EbEvtMessage extends AnEventUser
 {
   static final long serialVersionUID = 1;
 

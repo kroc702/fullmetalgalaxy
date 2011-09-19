@@ -35,12 +35,12 @@ public interface NewsConector
    * @param p_body
    * @return true if succeed
    */
-  public boolean postNews(String p_subject, String p_body);
+  public boolean postNews(String p_threadId, String p_subject, String p_body);
 
   /**
    * 
    * @return absolute url for rss news
    */
-  public String getNewsRssUrl();
+  public String getNewsRssUrl(String p_threadId);
 
 }
