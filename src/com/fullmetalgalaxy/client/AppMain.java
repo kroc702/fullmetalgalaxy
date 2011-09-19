@@ -38,17 +38,17 @@ import com.fullmetalgalaxy.client.game.board.MAppStatusBar;
 import com.fullmetalgalaxy.client.game.context.MAppContext;
 import com.fullmetalgalaxy.client.game.tabmenu.MAppTabMenu;
 import com.fullmetalgalaxy.model.ChatMessage;
+import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameServicesAsync;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
-import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.google.gwt.appengine.channel.client.Channel;
 import com.google.gwt.appengine.channel.client.ChannelFactory;
+import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
 import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
-import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -65,7 +65,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Window.ClosingHandler
 {
   private static AppMain s_instance = null;
-  
+  private static final int WATCHDOG_PERIOD_MS = 1000 * 60 * 1; // 3 min
   /**
    * Create a remote service proxy to talk to the server-side Greeting service.
    */
@@ -103,6 +103,19 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
     {
       ClientUtil.reload();
       m_isReloadTimerScheduled = false;
+    }
+  };
+
+  private Timer m_channelWatchDogTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      // send a keep alive message.
+      // server should answer with an empty chat message.
+      ChatMessage msg = new ChatMessage( m_gameId, getMyPresence().getPseudo(), null );
+      AppMain.getRpcService().sendChatMessage( msg, m_dummyCallback );
+      scheduleReloadTimer();
     }
   };
 
@@ -222,6 +235,12 @@ private ChatEngine m_chatEngine = null;
           
           // we receive a message from channel: we won't need to reload page
           cancelReloadTimer();
+          // also reshedule channel watchdog
+          if( isChannelConnected() )
+          {
+              m_channelWatchDogTimer.cancel();
+          }
+          m_channelWatchDogTimer.schedule( WATCHDOG_PERIOD_MS );
 
           // We could set this flag in onOpen callback
           // but on some browser this doesn't reflect reality
