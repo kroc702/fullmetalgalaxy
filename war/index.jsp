@@ -22,16 +22,16 @@
 		<a href="img01_url" target="_blank">
 	        <img src='/images/slide/pondeuse.jpg' >
 	    </a>
-		<a href="img01_url" target="_blank">
+		<a href="img01_url" target="_blank" style="display:none;">
 	        <img src='/images/slide/screen1.jpg' >
 	    </a>
-		<a href="img01_url" target="_blank">
+		<a href="img01_url" target="_blank" style="display:none;">
 	        <img src='/images/slide/tank.jpg' >
 	    </a>
-		<a href="img01_url" target="_blank">
+		<a href="img01_url" target="_blank" style="display:none;">
 	        <img src='/images/slide/pince.jpg' >
 	    </a>
-		<a href="img01_url" target="_blank">
+		<a href="img01_url" target="_blank" style="display:none;">
 	        <img src='/images/slide/crabe.jpg' >
 	    </a>
 		</div>
@@ -59,13 +59,17 @@ FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque p
 		</div>
 		
 		<div id="rssCollumn" class="collumn" >
-			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news">Les dernières nouvelles</a>
-				<a id="iconrss" href="http://fullmetalplanete.forum2jeux.com/feed?f=40" target="_blank">
-			        <img src='/images/icons/rss.jpg'/>
-		    	</a>
+			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news">Dernières nouvelles</a>
+				<a class="iconrss" href="http://fullmetalplanete.forum2jeux.com/feed?f=40" target="_blank"></a>
 			</h2>
 				<div id="newsrss">
 					<%= News.getHtml() %>
+				</div>
+
+			<h2>Dernières parties
+			</h2>
+				<div id="gamesrss">
+					<%= Games.getHtml() %>
 				</div>
 		</div>
 
@@ -90,7 +94,6 @@ FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque p
 		<%= GlobalVars.getStatsHtml() %>
 		</div>		
 		
-	<div id="draw1"></div>	
 
 	<p id="nb">
 Full Metal Galaxy est une adaptation jeu web de Full Metal Planète, un jeu de stratégie sur table de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, édité par Ludodélire entre 1989 et 1996. Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris part à son développement.

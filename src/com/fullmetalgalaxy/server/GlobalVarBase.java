@@ -73,13 +73,33 @@ public class GlobalVarBase
         DataStore.logger.fine( ex.getMessage() );
       }
     }
-    s_datastore.put( entity );
+    Transaction txn = s_datastore.beginTransaction();
+    try
+    {
+      s_datastore.put( txn, entity );
+    } catch( Exception e )
+    {
+      DataStore.logger.severe( e.getMessage() );
+    } finally
+    {
+      txn.commit();
+    }
   }
   
   public static void delete(String p_key)
   {
     Key k = KeyFactory.createKey( ENTITY_KIND, p_key );
-    s_datastore.delete( k );
+    Transaction txn = s_datastore.beginTransaction();
+    try
+    {
+      s_datastore.delete( txn, k );
+    } catch( Exception e )
+    {
+      DataStore.logger.severe( e.getMessage() );
+    } finally
+    {
+      txn.commit();
+    }
   }
   
   public static Object get(String p_key)
@@ -107,6 +127,9 @@ public class GlobalVarBase
     } catch( EntityNotFoundException e )
     {
       DataStore.logger.fine( e.getMessage() );
+    } catch( Exception e )
+    {
+      DataStore.logger.warning( e.getMessage() );
     }
     return null;
   }

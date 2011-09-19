@@ -38,12 +38,16 @@ public class ClientHttpRequest
   {
     connect();
     os.write( c );
+    // for debug
+    // System.out.write( c );
   }
 
   protected void write(String s) throws IOException
   {
     connect();
     os.write( s.getBytes() );
+    // for debug
+    // System.out.write( s.getBytes() );
   }
 
   protected void newline() throws IOException
@@ -111,7 +115,7 @@ public class ClientHttpRequest
   }
 
 
-  private void postCookies()
+  public void postCookies()
   {
     StringBuffer cookieList = new StringBuffer();
 

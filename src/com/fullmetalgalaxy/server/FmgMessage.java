@@ -293,6 +293,17 @@ public class FmgMessage
     return this;
   }
 
+  protected FmgMessage putParam(String p_key, String p_value)
+  {
+    m_params.put( p_key, p_value );
+    return this;
+  }
+
+  public FmgMessage applyParams()
+  {
+    return applyParams( m_params );
+  }
+
   /**
    * remplace key present in p_params and found with the following syntax {key} in subject and body
    * template by their corresponding value.
@@ -322,18 +333,25 @@ public class FmgMessage
   
   private FmgMessage putParams(EbAccount p_account)
   {
-    m_params.put( "pseudo", p_account.getPseudo() );
-    m_params.put( "login", p_account.getLogin() );
-    m_params.put( "password", p_account.getPassword() );
-    m_params.put( "forumKey", p_account.getForumKey() );
+    if( p_account != null )
+    {
+      m_params.put( "pseudo", p_account.getPseudo() );
+      m_params.put( "login", p_account.getLogin() );
+      m_params.put( "password", p_account.getPassword() );
+      m_params.put( "forumKey", p_account.getForumKey() );
+    }
     return this;
   }
   
   public FmgMessage putParams(Game p_game)
   {
-    m_params.put( "game_name", p_game.getName() );
-    m_params.put( "game_url", "http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId() );
-    m_params.put( "game_time_step", "" + p_game.getCurrentTimeStep() );
+    if( p_game != null )
+    {
+      m_params.put( "game_name", p_game.getName() );
+      m_params.put( "game_url", "http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId() );
+      m_params.put( "game_time_step", "" + p_game.getCurrentTimeStep() );
+      m_params.put( "game_description", p_game.getDescription() );
+    }
     return this;
   }
 

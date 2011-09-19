@@ -236,7 +236,7 @@ public class EbAccount extends EbPublicAccount
       // then send an email with our form
       return "/email.jsp?id="+getId()+"&subject="+p_subject;
     }
-    return "/genericmsg.jsp?title="+getPseudo()+" ne souhaite pas être contacté";
+    return "/genericmsg.jsp?title=" + getPseudo() + " ne souhaite pas être contacté";
   }
 
   /**
@@ -284,8 +284,8 @@ public class EbAccount extends EbPublicAccount
   public String buildHtmlFragment()
   {
     String newsHtml = "<a href='"+getProfileUrl()+"'><table width='100%'><tr>";
-    newsHtml += "<td><img src='"+getAvatarUrl()+"' height='40px' border='0' /></td>";
-    newsHtml += "<td>"+getPseudo()+"<br/><img src='"+getGradUrl()+"' border='0' /></td>";
+    newsHtml += "<td><img src='" + getAvatarUrl() + "' height='40px' /></td>";
+    newsHtml += "<td>" + getPseudo() + "<br/><img src='" + getGradUrl() + "' /></td>";
     newsHtml += "<td>"+getCurrentLevel()+" Pts</td>";
     newsHtml += "</tr></table></a>";
     return newsHtml;

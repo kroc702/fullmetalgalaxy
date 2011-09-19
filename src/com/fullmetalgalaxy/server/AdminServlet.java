@@ -47,6 +47,7 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 
 /**
@@ -230,6 +231,25 @@ public class AdminServlet extends HttpServlet
         p_resp.getOutputStream().println( "account " + strid + " not found" );
       }
       ds.close();
+    }
+
+    // post a new game on forum (test)
+    // ===============================
+    strid = p_req.getParameter( "forumpostgame" );
+    if( strid != null )
+    {
+      FmgMessage msg = FmgMessage.buildMessage( "fr", "forumPostGame" );
+      msg.putParam( "game_name", "Tutorial" );
+      msg.putParam( "game_description",
+          "La première partie que vous pouvez faire pour vous familiariser avec les règles (environ 15min)" );
+      msg.putParam( "game_url",
+          "http://www.fullmetalgalaxy.com/game.jsp?id=/puzzles/tutorial/model.bin" );
+      msg = msg.applyParams();
+
+      // ServerUtil.newsConnector().postNews(
+      // ConectorImpl.FORUM_GAMES_THREAD_ID, msg.getSubject(),
+      // msg.getBody() );
+      ServerUtil.newsConnector().postNews( ConectorImpl.FORUM_GAMES_THREAD_ID, "ezrtret", "erztre" );
     }
 
     // download game

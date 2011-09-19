@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.FmgMessage;
-import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.GlobalVars;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.datastore.Cursor;
@@ -51,7 +50,6 @@ import com.googlecode.objectify.Query;
 public class SynchroForum extends HttpServlet
 {
   private static final long serialVersionUID = 1L;
-  private final static FmpLogger log = FmpLogger.getLogger( SynchroForum.class.getName() );
 
   protected class SynchroForumCommand implements DeferredTask
   {
@@ -93,7 +91,7 @@ public class SynchroForum extends HttpServlet
         EbAccount account = ds.find( iterator.next() );
         if( account != null )
         {
-          log.info( "start synchro for " + account.getPseudo() );
+          ConectorImpl.logger.fine( "start synchro for " + account.getPseudo() );
 
           if( account.getForumId() == null )//&& account.isIsforumIdConfirmed() )
           {
@@ -128,7 +126,7 @@ public class SynchroForum extends HttpServlet
             }
             if( !succeed )
             {
-              log.error( "synchro for " + account.getPseudo() + " failed" );
+              ConectorImpl.logger.warning( "synchro for " + account.getPseudo() + " failed" );
             }
           }
           else
@@ -142,9 +140,7 @@ public class SynchroForum extends HttpServlet
           // errosion should start only if one player reach SCORE_REF
 
           
-          // TODO we can optimize by doing this datastore put only if required
-          ds.put( account );
-
+          // compute some global stats
           if( account.isActive() )
           {
             m_activeAccount++;
@@ -154,6 +150,10 @@ public class SynchroForum extends HttpServlet
             m_maxLevel = account.getCurrentLevel();
           }
           m_accountProcessed++;
+
+          // TODO we can optimize by doing this datastore put only if required
+          ds.put( account );
+          ds.commit();
         }
         ds.close();
 

@@ -55,7 +55,7 @@ public enum GameLogType
 
   public boolean isEventUser()
   {
-    return isEventPlay() || isEventAdmin() || this == GameJoin;
+    return isEventPlay() || isEventAdmin() || this == GameJoin || this == EvtMessage;
   }
   
   public boolean isEventPlay()

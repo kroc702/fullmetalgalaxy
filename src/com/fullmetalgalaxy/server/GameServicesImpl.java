@@ -205,17 +205,20 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // anything to update ?
     try
     {
+      boolean wasHistory = model.isHistory();
       ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
       modelUpdate.setGameId( model.getId() );
       modelUpdate.setFromVersion( model.getVersion() );
 
       ArrayList<AnEvent> events = GameWorkflow.checkUpdate( model );
 
+      if( !events.isEmpty() || wasHistory != model.isHistory() )
+      {
+        dataStore.put( model );
+      }
       if( !events.isEmpty() )
       {
         modelUpdate.setGameEvents( events );
-
-        dataStore.put( model );
         modelUpdate.setToVersion( model.getVersion() );
 
         ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );

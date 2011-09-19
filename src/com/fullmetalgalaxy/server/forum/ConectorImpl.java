@@ -30,19 +30,20 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgCookieStore;
-import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPHeader;
@@ -63,13 +64,16 @@ import com.myjavatools.web.ClientHttpRequest;
 
 public class ConectorImpl implements ForumConector, NewsConector
 {
-  private final static FmpLogger log = FmpLogger.getLogger( ConectorImpl.class.getName() );
+  public static String FORUM_NEWS_THREAD_ID = "40";
+  public static String FORUM_GAMES_THREAD_ID = "41";
+
+  public static Logger logger = Logger.getLogger( "Conector" );
+
   private static String COOKIE_SID = "fa_" + FmpConstant.getForumHost().replace( '.', '_' )
       + "_sid";
   private static String FORUM_USERNAME = "";
   private static String FORUM_PASS = "";
   private static String PROXY_KEY = "";
-  private static String FORUM_NEWS_ID = "40";
 
   // various pattern on forum pages
   private static Pattern s_confirmPassPattern = Pattern.compile(
@@ -144,7 +148,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       PROXY_KEY = s_forumConfig.getProperty( "proxykey" );
     } catch( Exception e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
     }
   }
 
@@ -206,7 +210,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       p_url = URLDecoder.decode( p_url, "UTF-8" );
     } catch( UnsupportedEncodingException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
     }
     return p_url;
   }
@@ -304,7 +308,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       disconnect();
     }
   }
@@ -345,7 +349,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
     }
     return null;
   }
@@ -392,7 +396,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       // System.out.println("===========================");
     } catch( UnsupportedEncodingException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
     }
     return decrypted;
   }
@@ -516,7 +520,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     } catch( Exception e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       return false;
     }
     return true;
@@ -612,7 +616,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         {
           is.close();
         }
-        //System.out.println( writer.toString() );
+        System.out.println( writer.toString() );
         if( !writer.toString().contains( "Le profil de l'utilisateur a été mis à jour avec succès" ) )
         {
           disconnect();
@@ -623,7 +627,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       disconnect();
       return false;
     }
@@ -674,7 +678,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       }
       else
       {
-        log.error( "pattern 'email' failed" );
+        logger.warning( "pattern 'email' failed" );
       }
 
       matcher = s_avatarUrlPattern.matcher( page );
@@ -684,7 +688,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       }
       else
       {
-        log.error( "pattern 'avatar url' failed" );
+        logger.warning( "pattern 'avatar url' failed" );
       }
 
       matcher = s_jabberPattern.matcher( page );
@@ -698,7 +702,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       }
       else
       {
-        log.error( "pattern 'jabber id' failed" );
+        logger.warning( "pattern 'jabber id' failed" );
       }
 
       
@@ -726,7 +730,14 @@ public class ConectorImpl implements ForumConector, NewsConector
         else
         {
           forumData.remove( entry.getKey() );
-          log.error( "pattern '" + entry.getKey() + "' failed" );
+          if( entry.getKey().equals( "user_rank" ) )
+          {
+            logger.fine( "pattern '" + entry.getKey() + "' failed" );
+          }
+          else
+          {
+            logger.warning( "pattern '" + entry.getKey() + "' failed" );
+          }
         }
       }
 
@@ -735,7 +746,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       disconnect();
       return false;
     }
@@ -778,7 +789,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       disconnect();
       return false;
     }
@@ -787,7 +798,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
 
   @Override
-  public boolean postNews(String p_subject, String p_body)
+  public boolean postNews(String p_threadId, String p_subject, String p_body)
   {
     // we need to be connected as admin
     connect();
@@ -797,7 +808,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       // first request: simply ask for posting page
       // ==========================================
       URL url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/post?f="
-          + FORUM_NEWS_ID + "&mode=newtopic" ) );
+          + p_threadId + "&mode=newtopic" ) );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.GET, FetchOptions.Builder
           .withDefaults().doNotFollowRedirects() );
       request.addHeader( new HTTPHeader( "Host", PROXY_HOST ) );
@@ -838,26 +849,50 @@ public class ConectorImpl implements ForumConector, NewsConector
       url = new URL( proxyfyUrl( "http://" + FmpConstant.getForumHost() + "/post" ) );
 
       ClientHttpRequest clientPostRequest = null;
-      clientPostRequest = new ClientHttpRequest( url );
+      //clientPostRequest = new ClientHttpRequest( url );
+      
 
+      // the following code was test and I didn't succeed to post a news on
+      // forum
+
+      URLConnection connection = url.openConnection();
+      connection.setDoOutput( true );
+      connection.setRequestProperty( "Host", "fullmetalplanete.forum2jeux.com" );
+      connection
+          .setRequestProperty( "User-Agent",
+              "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB7.1" );
+      connection.setRequestProperty( "Accept",
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
+      connection.setRequestProperty( "Accept-Language", "fr-fr" );
+      connection.setRequestProperty( "Keep-Alive", "300" );
+      connection.setRequestProperty( "Connection", "keep-alive" );
+
+      connection.setRequestProperty( "Referer", "http://fullmetalplanete.forum2jeux.com/post?f=41&mode=newtopic" );
+      connection.setRequestProperty( "Cookie", m_cookieStore.toString() );
+          
+      clientPostRequest = new ClientHttpRequest( connection );
+      // clientPostRequest.setCookie( m_cookieStore.getCookies() );
+      // clientPostRequest.postCookies();
+      
       clientPostRequest.setParameter( "subject", p_subject );
+      clientPostRequest.setParameter( "post_icon", "0" );
       clientPostRequest.setParameter( "message", p_body );
       clientPostRequest.setParameter( "lt", "0" );
       clientPostRequest.setParameter( "mode", "newtopic" );
-      clientPostRequest.setParameter( "f", FORUM_NEWS_ID );
+      clientPostRequest.setParameter( "f", p_threadId );
       clientPostRequest.setParameter( "post", "Envoyer" );
       clientPostRequest.setParameter( "notify", "off" );
       clientPostRequest.setParameter( "topictype", "0" );
-      clientPostRequest.setParameter( "topic_calendar_day", "0" );
-      clientPostRequest.setParameter( "topic_calendar_month", "0" );
-      clientPostRequest.setParameter( "topic_calendar_year", "0" );
-      clientPostRequest.setParameter( "topic_calendar_hour", "" );
-      clientPostRequest.setParameter( "topic_calendar_min", "" );
-      clientPostRequest.setParameter( "topic_calendar_duration_day", "" );
-      clientPostRequest.setParameter( "topic_calendar_duration_hour", "" );
-      clientPostRequest.setParameter( "topic_calendar_duration_min", "" );
-      clientPostRequest.setParameter( "create_event", "0" );
-      clientPostRequest.setParameter( "calendar_d", "0" );
+      // clientPostRequest.setParameter( "topic_calendar_day", "0" );
+      // clientPostRequest.setParameter( "topic_calendar_month", "0" );
+      // clientPostRequest.setParameter( "topic_calendar_year", "0" );
+      // clientPostRequest.setParameter( "topic_calendar_hour", "" );
+      // clientPostRequest.setParameter( "topic_calendar_min", "" );
+      // clientPostRequest.setParameter( "topic_calendar_duration_day", "" );
+      // clientPostRequest.setParameter( "topic_calendar_duration_hour", "" );
+      // clientPostRequest.setParameter( "topic_calendar_duration_min", "" );
+      // clientPostRequest.setParameter( "create_event", "0" );
+      // clientPostRequest.setParameter( "calendar_d", "0" );
       clientPostRequest.setParameter( "poll_title", "" );
       clientPostRequest.setParameter( "poll_option_text", "" );
       clientPostRequest.setParameter( "poll_length", "" );
@@ -872,13 +907,23 @@ public class ConectorImpl implements ForumConector, NewsConector
         clientPostRequest.setParameter( "auth[]", auth2 );
       }
 
+      // clientPostRequest.setCookie( m_cookieStore.getCookies() );
+      InputStream is = clientPostRequest.post();
 
-      clientPostRequest.setCookie( m_cookieStore.getCookies() );
-      clientPostRequest.post();
-
+      // read response
+      if( is != null )
+      {
+        char[] buffer = new char[1024];
+        InputStreamReader reader = new InputStreamReader( is, "iso-8859-1" );
+        int n;
+        while( (n = reader.read( buffer )) != -1 )
+        {
+          System.out.print( buffer/*, 0, n*/);
+        }
+      }
     } catch( IOException e )
     {
-      log.error( e );
+      logger.severe( e.getMessage() );
       disconnect();
       return false;
     }
@@ -887,9 +932,9 @@ public class ConectorImpl implements ForumConector, NewsConector
 
 
   @Override
-  public String getNewsRssUrl()
+  public String getNewsRssUrl(String p_threadId)
   {
-    return "http://" + FmpConstant.getForumHost() + "/feed?f=" + FORUM_NEWS_ID;
+    return "http://" + FmpConstant.getForumHost() + "/feed?f=" + p_threadId;
   }
 
 
