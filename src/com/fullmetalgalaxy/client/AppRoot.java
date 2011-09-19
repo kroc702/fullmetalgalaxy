@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.client.event.EventPreviewHandlerCollection;
 import com.fullmetalgalaxy.client.event.SourcesPreviewEvents;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.DOM;
@@ -149,6 +150,19 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   @Override
   public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
+    com.google.gwt.dom.client.Element elmt = com.google.gwt.dom.client.Element.as( p_event
+        .getNativeEvent().getEventTarget() );
+    if( elmt instanceof InputElement )
+    {
+      String type = ((InputElement)elmt).getType();
+      if( type != null
+          && (type.equals( "text" ) || type.equals( "password" ) || type.equals( "textarea" )) )
+      {
+        return;
+      }
+    }
+
+    // don't preview event if user is editing someting in an input form
     m_previewListenerCollection.fireEventPreview( p_event );
   }
 

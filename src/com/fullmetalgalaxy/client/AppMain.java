@@ -65,7 +65,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Window.ClosingHandler
 {
   private static AppMain s_instance = null;
-  private static final int WATCHDOG_PERIOD_MS = 1000 * 60 * 1; // 3 min
+  private static final int WATCHDOG_PERIOD_MS = 1000 * 60 * 3; // 3 min
   /**
    * Create a remote service proxy to talk to the server-side Greeting service.
    */
