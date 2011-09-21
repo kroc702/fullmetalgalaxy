@@ -365,7 +365,14 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       if( getGame().getGameType() == GameType.MultiPlayer )
       {
         AppMain.instance().scheduleReloadTimer();
-        AppMain.getRpcService().runEvent( p_action, m_callbackEvents );
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+        modelUpdate.setFromVersion( getGame().getVersion() );
+        modelUpdate.setFromPageId( AppMain.instance().getPageId() );
+        modelUpdate.setGameId( getGame().getId() );
+        modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
+        modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
+        modelUpdate.getGameEvents().add( p_action );
+        AppMain.getRpcService().runModelUpdate( modelUpdate, m_callbackEvents );
       }
       else
       {
@@ -414,8 +421,14 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       {
         AppMain.instance().scheduleReloadTimer();
         // then send request
-        AppMain.getRpcService()
-            .runAction( getActionBuilder().getActionList(), m_callbackEvents );
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+        modelUpdate.setFromVersion( getGame().getVersion() );
+        modelUpdate.setFromPageId( AppMain.instance().getPageId() );
+        modelUpdate.setGameId( getGame().getId() );
+        modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
+        modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
+        modelUpdate.getGameEvents().addAll( getActionBuilder().getActionList() );
+        AppMain.getRpcService().runModelUpdate( modelUpdate, m_callbackEvents );
       }
       else
       {

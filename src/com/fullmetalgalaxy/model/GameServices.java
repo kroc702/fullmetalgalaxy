@@ -75,17 +75,10 @@ public interface GameServices extends RemoteService
    */
   public void checkUpdate(long p_gameId) throws RpcFmpException;
 
-  /**
-   * TODO we should merge runAction and runEvent and take in parameters a ModelFmpUpdate
-   * @param p_action
-   * @throws RpcFmpException
-   */
-  public void runEvent(AnEvent p_action) throws RpcFmpException;
 
-  public void runAction(ArrayList<AnEventPlay> p_actionList)
-      throws RpcFmpException;
+  public void runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException;
 
-
+  
   /**
    * This method shouldn't be used anymore as update is now send with channel API.
    * 

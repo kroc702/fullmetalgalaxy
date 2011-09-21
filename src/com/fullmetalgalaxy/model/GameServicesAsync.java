@@ -66,10 +66,7 @@ public interface GameServicesAsync
   public void checkUpdate(long p_gameId, AsyncCallback<Void> callback);
 
 
-  public void runEvent(AnEvent p_action, AsyncCallback<Void> callback);
-
-  public void runAction(ArrayList<AnEventPlay> p_actionList, AsyncCallback<Void> callback);
-
+  public void runModelUpdate(ModelFmpUpdate p_modelUpdate, AsyncCallback<Void> callback);
 
   /**
    * Get all changes in an fmp model since p_currentVersion and send back all needed data
