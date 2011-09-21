@@ -72,10 +72,13 @@ public class Games
   private static String buildNewsHtml()
   {
     String newsHtml = "";
-    
+
     DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
+
+    // find recently openened games
     Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class )
-        .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
+    .order( "-m_isOpen" )
+    .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
 
     for( EbGamePreview game : query )
     {
