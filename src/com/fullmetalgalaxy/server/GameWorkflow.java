@@ -24,6 +24,7 @@
 package com.fullmetalgalaxy.server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
@@ -36,6 +37,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
@@ -65,7 +67,7 @@ public class GameWorkflow
   }
 
 
-  static public ArrayList<AnEvent> checkUpdate(Game p_game, ArrayList<AnEvent> p_futurEvents)
+  static public ArrayList<AnEvent> checkUpdate(Game p_game, List<AnEvent> p_futurEvents)
       throws RpcFmpException
   {
     ArrayList<AnEvent> eventAdded = checkUpdate( p_game );
@@ -151,6 +153,17 @@ public class GameWorkflow
       // search update according to the last action
       //
       
+      if( p_game.isAsynchron() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
+      {
+        // a player is just landed and game is parallel: next player
+        EbEvtPlayerTurn action = new EbEvtPlayerTurn();
+        action.setLastUpdate( ServerUtil.currentDate() );
+        action.setAccountId( ((EbEvtLand)lastEvent).getAccountId() );
+        action.setGame( p_game );
+        action.checkedExec( p_game );
+        p_game.addEvent( action );
+        eventAdded.add( action );
+      }
 
       if( lastEvent.getType() == GameLogType.GameJoin )
       {

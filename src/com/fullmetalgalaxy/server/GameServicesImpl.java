@@ -372,25 +372,23 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
 
 
-  // TODO merge these two method and use a modelUpdate to get pageID
   @Override
-  public void runEvent(AnEvent p_action) throws RpcFmpException
+  public void runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException
   {
-    // System.out.println( p_action );
-    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+    if( p_modelUpdate.getGameEvents().isEmpty() )
+    {
+      throw new RpcFmpException( "No actions provided" );
+    }
     FmgDataStore dataStore = new FmgDataStore(false);
-    Game game = dataStore.getGame( p_action.getIdGame() );
+    Game game = dataStore.getGame( p_modelUpdate.getGameId() );
     if( game == null )
     {
-      System.err.println("run action on unknown game: "+p_action.getIdGame());
-      return;
+      throw new RpcFmpException( "run action on unknown game: "+p_modelUpdate.getGameId());
     }
-    int oldTimeStep = game.getCurrentTimeStep();
-
-    p_action.setLastUpdate( ServerUtil.currentDate() );
-    modelUpdate.setFromVersion( game.getVersion() );
-    modelUpdate.setGameId( game.getId() );
-
+    if( game.getVersion() != p_modelUpdate.getFromVersion() )
+    {
+      throw new RpcFmpException( "Send action on wrong game version" );
+    }
     // security check
     /*if( p_action.getAccountId() != 0L )
     {
@@ -401,95 +399,9 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
             + ") thief account " + p_action.getAccountId() );
       }
     }*/
-    
-    if( p_action.getType().isEventUser() )
-    {
-      ((AnEventUser)p_action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-    }
-
-    // real action
-    //
-    if(p_action.getType() == GameLogType.EvtCancel)
-    {
-      // cancel action doesn't work in exact same way as other event
-      ((EbEvtCancel)p_action).execCancel( game );
-      
-      modelUpdate.getGameEvents().add( p_action );
-      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
-    }
-    else
-    {
-      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game, p_action ) );
-      modelUpdate.getGameEvents().add( p_action );
-
-      // execute action
-      p_action.checkedExec( game );
-      game.addEvent( p_action );
-
-      // another update ?
-      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
-    }
-    
-
-
-    if( (p_action.getType() == GameLogType.EvtPlayerTurn)
-        && (oldTimeStep != game.getCurrentTimeStep()) )
-    {
-      // new turn : change tide ?
-      if( game.getNextTideChangeTimeStep() <= game.getCurrentTimeStep() )
-      {
-        EbEvtTide eventTide = new EbEvtTide();
-        eventTide.setNextTide( Tide.getRandom() );
-        eventTide.setGame( game );
-        eventTide.checkedExec( game );
-        game.addEvent( eventTide );
-        modelUpdate.getGameEvents().add( eventTide );
-      }
-    }
-
-    dataStore.put( game );
-    dataStore.close();
-    modelUpdate.setToVersion( game.getVersion() );
-
-    // do we need to send an email ?
-    sendMail( game, modelUpdate );
-
-    // broadcast changes to all clients
-    ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
-  }
-
-  @Override
-  public void runAction(ArrayList<AnEventPlay> p_actionList) throws RpcFmpException
-  {
-    if( p_actionList.isEmpty() )
-    {
-      throw new RpcFmpException( "No actions provided" );
-    }
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-    FmgDataStore dataStore = new FmgDataStore(false);
-    Game game = null;
     AnEvent lastAction = null;
-    RpcFmpException exception = null;
-
-    for( AnEventPlay action : p_actionList )
-    {
-      if( !action.getType().isEventUser() )
-      {
-        throw new RpcFmpException( "This method can only play user action" );
-      }
-
-      if( game == null )
-      {
-        game = dataStore.getGame( action.getIdGame() );
-      }
-      else
-      {
-        assert game.getId() == action.getIdGame();
-      }
-      // security check TODO ?
-    }
-    assert game != null;
-
+    
     modelUpdate.setGameId( game.getId() );
     modelUpdate.setFromVersion( game.getVersion() );
     modelUpdate.setGameEvents( GameWorkflow.checkUpdate( game ) );
@@ -497,19 +409,40 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // execute actions
     try
     {
-      for( AnEvent action : p_actionList )
+      // an automatic update before run event ?
+      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game, p_modelUpdate.getGameEvents() ) );
+      
+      // then run all provided event
+      for( AnEvent event : p_modelUpdate.getGameEvents() )
       {
-        ((AnEventUser)action).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
-        action.setLastUpdate( ServerUtil.currentDate() );
-        action.checkedExec( game );
-        game.addEvent( action );
+        if( event instanceof AnEventUser )
+        {
+          ((AnEventUser)event).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+        }
+        event.setLastUpdate( ServerUtil.currentDate() );
+        
+        if(event.getType() == GameLogType.EvtCancel)
+        {
+          // cancel action doesn't work in exact same way as other event
+          ((EbEvtCancel)event).execCancel( game );
+        }
+        else
+        {
+          // execute action
+          event.checkedExec( game );
+          game.addEvent( event );
 
-        lastAction = action;
+        }
+        lastAction = event;
       }
-      modelUpdate.getGameEvents().addAll( p_actionList );
+      modelUpdate.getGameEvents().addAll( p_modelUpdate.getGameEvents() );
+      // another automatic update after running event ?
+      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
+      
     } catch( RpcFmpException e )
     {
-      exception = e;
+      dataStore.rollback();
+      throw e;
     }
 
 
@@ -538,13 +471,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // broadcast changes to all clients
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
 
-    if( exception != null )
-    {
-      throw exception;
-    }
+  
   }
-
-
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.GameServices#sendChatMessage(com.fullmetalgalaxy.model.ChatMessage)
@@ -597,5 +525,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     return ChannelManager.getRoom( p_gameId );
   }
+
+
 
 }
