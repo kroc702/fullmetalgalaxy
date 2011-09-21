@@ -54,9 +54,12 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   PushButton m_btnFastPlay = new PushButton( Icons.s_instance.fastPlay32().createImage() );
   PushButton m_btnBack = new PushButton( Icons.s_instance.back32().createImage() );
   PushButton m_btnPlay = new PushButton( Icons.s_instance.play32().createImage() );
-
   PushButton m_btnOk = new PushButton( Icons.s_instance.ok32().createImage() );
 
+  private Panel m_btnPanel = new HorizontalPanel();
+  private WgtGameLogs m_wgtGameLog = new WgtGameLogs();
+  
+  
   private HandlerRegistration m_hdlRegistration = null; 
 
   /**
@@ -83,6 +86,14 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     m_btnOk.setTitle( "Ok" );
     m_btnOk.setStyleName( "fmp-PushButton32" );
 
+    m_panel.add( m_lblTimePosition );
+    m_btnPanel.add( m_btnFastBack );
+    m_btnPanel.add( m_btnBack );
+    m_btnPanel.add( m_btnPlay );
+    m_btnPanel.add( m_btnFastPlay );
+    m_panel.add( m_btnPanel );
+    m_panel.add( m_wgtGameLog );
+    
     initWidget( m_panel );
   }
 
@@ -91,24 +102,22 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     assert GameEngine.model() != null;
     Game game = GameEngine.model().getGame();
 
-    m_panel.clear();
-    
     m_lblTimePosition.setText( GameEngine.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
-    m_panel.add( m_lblTimePosition );
+    
         
-    Panel panel = new HorizontalPanel();
-    panel.add( m_btnFastBack );
-    panel.add( m_btnBack );
-    panel.add( m_btnPlay );
-    panel.add( m_btnFastPlay );
     if( GameEngine.model().canCancelAction() )
     {
       // in puzzle or turn by turn on several day we allow cancel action
-      panel.add( m_btnOk );
+      m_btnPanel.add( m_btnOk );
     }
-    m_panel.add( panel );
+    else
+    {
+      m_btnPanel.remove( m_btnOk );
+    }
     
-    m_panel.add( new WgtGameLogs() );
+    m_btnPanel.remove( m_wgtGameLog );
+    m_wgtGameLog = new WgtGameLogs();
+    m_panel.add( m_wgtGameLog );
 }
 
 
