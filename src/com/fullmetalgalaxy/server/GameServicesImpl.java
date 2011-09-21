@@ -446,21 +446,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     }
 
 
-    // Some special cases
-    // ///////////////////
-    if( game.isAsynchron() && lastAction != null && lastAction.getType() == GameLogType.EvtLand )
-    {
-      // a player is just landed and game is parallel: next player
-      EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-      action.setLastUpdate( ServerUtil.currentDate() );
-      action.setAccountId( ((EbEvtLand)lastAction).getAccountId() );
-      action.setGame( game );
-      action.checkedExec( game );
-      game.addEvent( action );
-      modelUpdate.getGameEvents().add( action );
-    }
-
-
     dataStore.put( game );
     dataStore.close();
     modelUpdate.setToVersion( game.getVersion() );
