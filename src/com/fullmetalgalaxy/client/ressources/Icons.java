@@ -92,8 +92,11 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/ZoomOut32.png")
   public AbstractImagePrototype zoomOut32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Grid32.png")
-  public AbstractImagePrototype grid32();
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/GridOn32.png")
+  public AbstractImagePrototype gridOn32();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/GridOff32.png")
+  public AbstractImagePrototype gridOff32();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/EndTurn32.png")
   public AbstractImagePrototype endTurn32();

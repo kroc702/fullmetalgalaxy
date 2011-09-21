@@ -59,6 +59,7 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
           " <img src='/images/icons/fast16.png'/> : Partie rapide (1h30)" ) );
 
+  private boolean m_readOnly = false;
   /**
    * 
    */
@@ -90,10 +91,12 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
 
   public void setReadOnly(boolean p_readOnly)
   {
+    m_readOnly = p_readOnly;
     m_modeTbtButton.setEnabled( !p_readOnly );
     m_modeParallelButton.setEnabled( !p_readOnly );
     m_speedSlowButton.setEnabled( !p_readOnly );
     m_speedQuickButton.setEnabled( !p_readOnly );
+    onModelUpdate(GameEngine.model());
   }
 
 
@@ -120,7 +123,19 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
 
     m_speedQuickButton.setValue( config.isQuick(), false );
     m_speedSlowButton.setValue( !config.isQuick(), false );
+    
+    m_modeParallelButton.setVisible( true );
+    m_modeTbtButton.setVisible( true );
+    m_speedQuickButton.setVisible( true );
+    m_speedSlowButton.setVisible( true );
+    if( m_readOnly )
+    {
+      m_modeParallelButton.setVisible( config.isParallele() );
+      m_modeTbtButton.setVisible( !config.isParallele() );
 
+      m_speedQuickButton.setVisible( config.isQuick() );
+      m_speedSlowButton.setVisible( !config.isQuick() );
+    }
   }
 
 }

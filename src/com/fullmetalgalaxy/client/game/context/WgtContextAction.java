@@ -27,6 +27,7 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
+import com.fullmetalgalaxy.client.event.MessageEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
@@ -40,6 +41,7 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
@@ -76,7 +78,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
   PushButton m_btnEndTurn = new PushButton( Icons.s_instance.endTurn32().createImage() );
   PushButton m_btnZoomIn = new PushButton( Icons.s_instance.zoomIn32().createImage() );
   PushButton m_btnZoomOut = new PushButton( Icons.s_instance.zoomOut32().createImage() );
-  PushButton m_btnGrid = new PushButton( Icons.s_instance.grid32().createImage() );
+  PushButton m_btnGridOn = new PushButton( Icons.s_instance.gridOn32().createImage() );
+  PushButton m_btnGridOff = new PushButton( Icons.s_instance.gridOff32().createImage() );
   PushButton m_btnRegister = new PushButton( Icons.s_instance.register32().createImage() );
   FocusPanel m_pnlRegister = null;
   FocusPanel m_pnlWait = null;
@@ -128,9 +131,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnZoomOut.addClickHandler( this );
     m_btnZoomOut.setTitle( "Zoom strategique [-]" );
     m_btnZoomOut.setStyleName( "fmp-PushButton32" );
-    m_btnGrid.addClickHandler( this );
-    m_btnGrid.setTitle( "Afficher/cacher la grille [G]" );
-    m_btnGrid.setStyleName( "fmp-PushButton32" );
+    m_btnGridOn.addClickHandler( this );
+    m_btnGridOn.setTitle( "Afficher la grille [G]" );
+    m_btnGridOn.setStyleName( "fmp-PushButton32" );
+    m_btnGridOff.addClickHandler( this );
+    m_btnGridOff.setTitle( "Cacher la grille [G]" );
+    m_btnGridOff.setStyleName( "fmp-PushButton32" );
     m_btnRegister.addClickHandler( this );
     m_btnRegister.setTitle( "S'inscrire a cette partie" );
     m_btnRegister.setStyleName( "fmp-PushButton32" );
@@ -259,9 +265,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         GameEngine.model().setFireCoverDisplayed( false );
       }
-      else if( sender == m_btnGrid )
+      else if( sender == m_btnGridOn )
       {
-        GameEngine.model().setGridDisplayed( !GameEngine.model().isGridDisplayed() );
+        GameEngine.model().setGridDisplayed( true );
+      }
+      else if( sender == m_btnGridOff )
+      {
+        GameEngine.model().setGridDisplayed( false );
       }
       else if( sender == m_btnZoomIn )
       {
@@ -364,6 +374,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     }
   }
 
+
   protected void redraw()
   {
     m_panel.clear();
@@ -394,7 +405,14 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         m_panel.add( m_btnFireCoverOn );
       }
-      m_panel.add( m_btnGrid );
+      if( GameEngine.model().isGridDisplayed() )
+      {
+        m_panel.add( m_btnGridOff );
+      }
+      else
+      {
+        m_panel.add( m_btnGridOn );
+      }
       if( GameEngine.model().getZoomDisplayed().getValue() == EnuZoom.Small )
       {
         m_panel.add( m_btnZoomIn );
@@ -451,6 +469,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
             }
           }
         }
+        
+        // display register icon and advise
         if( GameEngine.model().isLogged()
             && myRegistration == null
             && !GameEngine.model().getGame().isStarted()
