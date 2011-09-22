@@ -57,7 +57,7 @@ public class AccountStatsManager
   private final static int EROSION_C = FmpConstant.SCORE_REF;
   private final static float EROSION_TIME_MIN = -1 * EROSION_B / (2 * EROSION_A);
 
-  private final static int MONTH_IN_MILLIS = 1000 * 60 * 60 * 24 * 30;
+  private final static long MONTH_IN_MILLIS = 1000l * 60 * 60 * 24 * 30;
 
 
   /**
@@ -105,7 +105,7 @@ public class AccountStatsManager
    *  may differ from oreCount + tokenCount as ore may have different value.
    * More important, this score depend of other players level !
    *
-   * finalScore = (fmpScore - 20)*(sum(otherLevel)/(myLevel*otherPlayerCount))^sign(fmpScore) 
+   * finalScore = (fmpScore - 14)*(sum(otherLevel)/(myLevel*otherPlayerCount))^sign(fmpScore) 
    *
    * for winner, we also add the sum of other players bonus
    * @param p_game

@@ -95,6 +95,11 @@ public class EbPublicAccount extends EbBase
     return "/ImageServlet?avatar=" + getId();
   }
 
+  public String getGradUrl()
+  {
+    return "/ImageServlet?grad=" + getId();
+  }
+
   public String getProfileUrl()
   {
     return "/profile.jsp?id=" + getId();

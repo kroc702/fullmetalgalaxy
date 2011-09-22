@@ -49,8 +49,10 @@
 
     <h3><%= title %></h3>
 
-	<div id="Presences" style="float:right;"></div>
-	<div id="Chat" style="height:100%; width:100%;"></div>
+	<table style="width:100%;">
+	<tr><td><div id="Chat" style="height:100%; width:75%;"></div></td>
+	<td><div id="Presences" style="width:25%;"></div></td></tr>
+	</table>
 	
 	<% if( id == 0 ) { %>
 	<p>

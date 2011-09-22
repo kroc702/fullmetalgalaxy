@@ -22,8 +22,14 @@ try
 {
 }
 
+String orderby = request.getParameter( "orderby" );
+if( orderby == null || !orderby.equals("m_lastConnexion"))
+{
+  orderby = "-m_currentLevel";
+}
+
 Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
-accountQuery.order("-m_currentLevel"); ;
+accountQuery.order(orderby);
 
 for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
 {
@@ -38,7 +44,7 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
 		int accountListCount = GlobalVars.getAccountCount();
 		while(accountListCount > 0)
 		{
-		  out.println( "<a href='"+ request.getRequestURL() +"?offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
+		  out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"&offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
 		  accountListCount -= COUNT_PER_PAGE;
 		  p++;
 		}
