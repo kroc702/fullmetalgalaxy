@@ -124,7 +124,6 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_playerGrid.setText( 0, 3, "pt d'action" );
     m_playerGrid.setHTML( 0, 4, "pt de victoire<br/>(estimation)" );
     m_playerGrid.setText( 0, 5, "" ); // must play before
-    m_playerGrid.setText( 0, 6, "" ); // messages
     m_playerGrid.setText( 0, 7, "" ); // ban
     m_playerGrid.setText( 0, 8, "" ); // skip turn
     m_playerGrid.getRowFormatter().addStyleName( 0, "fmp-home-gameline-caption" );
@@ -164,9 +163,21 @@ public class WgtPlayers extends Composite implements ClickHandler
         html = "???";
       }
 
+      // display email messages
+      if( registration.getAccount() != null )
+      {
+        html += " <a target='_blank' href='" + registration.getAccount().getPMUrl(GameEngine.model().getGame().getName())
+            + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
+      }
+
       if( GameEngine.model().getGame().getCurrentPlayerRegistration() == registration )
       {
         html += Icons.s_instance.action16().getHTML();
+      }
+      if( registration.haveAccount() )
+      {
+        html += "<br/><img src='"+registration.getAccount().getGradUrl()+"' border=0 alt='GRAD'/>"
+             + " ("+registration.getAccount().getCurrentLevel()+")";
       }
       m_playerGrid.setHTML( index, 1, html );
 
@@ -211,15 +222,6 @@ public class WgtPlayers extends Composite implements ClickHandler
         m_playerGrid.setText( index, 5, ClientUtil.s_dateTimeFormat.format( registration
             .getEndTurnDate() ) );
       }
-
-      // display email messages
-      String htmlMail = "";
-      if( registration.getAccount() != null )
-      {
-        htmlMail = "<a target='_blank' href='" + registration.getAccount().getPMUrl()
-            + "'><img src='" + "/images/css/icon_pm.gif' border=0 alt='PM'></a>";
-      }
-      m_playerGrid.setHTML( index, 6, htmlMail );
 
       // display admin button
       if( (GameEngine.model().getGame().getAccountCreator() != null

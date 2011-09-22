@@ -54,6 +54,7 @@ import com.fullmetalgalaxy.server.image.CacheKey.CacheKeyType;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.GameServicesImpl;
+import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -74,6 +75,27 @@ public class ImageServlet extends HttpServlet
   private static MemcacheService s_cache = null;
 
 
+  private EbAccount findAccount(String p_id)
+  {
+    EbAccount account = null;
+    try {
+      account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( p_id ) );
+    } catch( Exception e ) 
+    {
+      ServerUtil.logger.severe( e.getMessage() );
+    }
+    if( account == null )
+    {
+      // avatarid may be a user pseudo
+      try {
+        account = FmgDataStore.dao().query(EbAccount.class).filter( "m_pseudo ==", p_id ).get();
+      } catch( Exception e ) 
+      {
+        ServerUtil.logger.severe( e.getMessage() );
+      }
+    }
+    return account;
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException,
@@ -82,21 +104,12 @@ public class ImageServlet extends HttpServlet
     try
     {
       String avatarid = request.getParameter( "avatar" );
+      String gradid = request.getParameter( "grad" );
       String gameid = request.getParameter( "minimap" );
 
       if( avatarid != null )
       {
-        EbAccount account = null;
-        try {
-          account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( avatarid ) );
-        } catch( Exception e ) {}
-        if( account == null )
-        {
-          // avatarid may be a user pseudo
-          try {
-            account = FmgDataStore.dao().query(EbAccount.class).filter( "m_pseudo ==", avatarid ).get();
-          } catch( Exception e ) {}
-        }
+        EbAccount account = findAccount(avatarid);
         if( account != null && account.getForumAvatarUrl() != null )
         {
           response.sendRedirect( account.getForumAvatarUrl() );
@@ -104,6 +117,18 @@ public class ImageServlet extends HttpServlet
         else
         {
           response.sendRedirect( "/images/avatar-default.jpg" );
+        }
+      }
+      else if( gradid != null )
+      {
+        EbAccount account = findAccount(gradid);
+        if( account != null && account.getGradUrl() != null )
+        {
+          response.sendRedirect( account.getGradUrl() );
+        }
+        else
+        {
+          response.sendRedirect( "/images/icons/level0.png" );
         }
       }
       else if( gameid != null )

@@ -90,13 +90,15 @@ FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque p
 		</div>
 		
 		<div id="statCollumn" class="collumn">
-		<h2>Stats en test:</h2>
+		<h2><a href="/stats.jsp">Stats en test:</a></h2>
 		<%= GlobalVars.getStatsHtml() %>
 		</div>		
 		
 
 	<p id="nb">
-Full Metal Galaxy est une adaptation jeu web de Full Metal Planète, un jeu de stratégie sur table de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, édité par Ludodélire entre 1989 et 1996. Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris part à son développement.
+Full Metal Galaxy est une adaptation jeu web de Full Metal Planète, un jeu de stratégie sur table 
+de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, édité par Ludodélire entre 1989 et 1996. 
+Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris part à son développement.
 	<p>
 
 

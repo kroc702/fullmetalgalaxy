@@ -243,6 +243,7 @@ public class EbAccount extends EbPublicAccount
    * icon url to illustrate player fiability, level and style
    * @return
    */
+  @Override
   public String getGradUrl()
   {
     String iconName = "";

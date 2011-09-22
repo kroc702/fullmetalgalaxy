@@ -117,17 +117,6 @@ public class GlobalVars extends GlobalVarBase
   }
 
 
-  public static int getActiveOpenGameCount()
-  {
-    return getInt("ActiveOpenGameCount");
-  }
-
-  public static void setActiveOpenGameCount(int p_accountCount)
-  {
-    put("ActiveOpenGameCount",p_accountCount);
-  }
-
-
   public static int getMaxLevel()
   {
     return getInt("MaxLevel");
