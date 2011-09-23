@@ -24,7 +24,13 @@
 						<li><a href="/gamelist.jsp?tab=3" >Autres Parties</a></li>
 					</ul>
 				</li>
-				<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >Forum</a></li>
+				<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >Forum</a>
+					<ul>
+						<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >D&eacute;di&eacute; &agrave; FMG</a></li>
+						<li><a href="http://fullmetalplanete.forum2jeux.com/f12-recherche-planete-a-atterrir" >Recherche de joueurs</a></li>
+						<li><a href="http://fullmetalplanete.forum2jeux.com/" >Racine</a></li>
+					</ul>
+				</li>
 				<li><a href="/chat.jsp" >Chat</a></li>
 				<li><a href="/help/" >Aides de jeu</a>
 					<jsp:include page="/i18n/fr/help/menu.html" />
