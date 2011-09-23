@@ -57,6 +57,30 @@ Les grades sont les petites icônes ajoutées sous les avatars du forum. On y tr
 un insigne indiquant sont niveau par rapport au plus fort et un smiley indiquant 
 sont comportement moyen des parties précédentes.
 </p>
+<p>Il y a 10 icônes de niveau calculé en fonction du niveau du mieux classé :<br/>
+    <img src="/images/icons/level0.png" alt="0" border="0">
+    <img src="/images/icons/level1.png" alt="1" border="0">
+    <img src="/images/icons/level2.png" alt="2" border="0">
+    <img src="/images/icons/level3.png" alt="3" border="0">
+    <img src="/images/icons/level4.png" alt="4" border="0">
+    <img src="/images/icons/level5.png" alt="5" border="0">
+    <img src="/images/icons/level6.png" alt="6" border="0">
+    <img src="/images/icons/level7.png" alt="7" border="0">
+    <img src="/images/icons/level8.png" alt="8" border="0">
+    <img src="/images/icons/level9.png" alt="9" border="0">
+</p><p>    
+    Il y a 4 icônes d'attitudes !<br/>
+    <img src="/images/icons/aggressive.png" alt="" border="0"> agressif<br/>
+    <img src="/images/icons/balanced.png" alt="" border="0"> normal<br/>
+    <img src="/images/icons/pacific.png" alt="" border="0"> pacifique<br/>
+    <img src="/images/icons/sheep.png" alt="" border="0"> c'est fait prendre son astro 1 fois sur 2 (ou joué aucune
+    partie)<br/>
+</p><p>
+    Enfin FMG peux ajouter des icônes sur la fiabilité du joueur:<br/>
+    <img src="/images/icons/ban.png" alt="" border="0"> c'est fait banir 1 fois sur 2<br/>
+    [rien] donc joueur normal<br/>
+    <img src="/images/icons/vip.png" alt="" border="0"> termine toutes ses parties et icon sur demande<br/>
+</p>
 
 
 <%@include file="/include/footer.jsp"%>
