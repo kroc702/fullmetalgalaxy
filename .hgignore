@@ -1,11 +1,5 @@
 
 syntax: regexp
-^src/com/fullmetalgalaxy/client/ressources/tokens/render$
-syntax: regexp
-^war/images/home-header\.jpg$
-syntax: regexp
-^war/images/home-header\.pspimage$
-syntax: regexp
 ^war/WEB-INF/classes$
 syntax: regexp
 ^war/WEB-INF/lib/appengine.*\.jar$
@@ -21,8 +15,6 @@ syntax: regexp
 ^war/WEB-INF/lib/jsr107cache.*\.jar$
 syntax: regexp
 ^war/game$
-syntax: regexp
-^war/chat$
 syntax: regexp
 ^war/WEB-INF/appengine-generated$
 syntax: regexp
