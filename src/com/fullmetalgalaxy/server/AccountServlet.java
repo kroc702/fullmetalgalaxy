@@ -92,7 +92,7 @@ public class AccountServlet extends HttpServlet
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {
-        p_response.getWriter().println( "Erreur: clef non trouvé" );
+        p_response.sendRedirect( "/genericmsg.jsp?title=Erreur: clef non trouvé" );
         return;
       }
       EbAccount account = it.next();
@@ -109,15 +109,17 @@ public class AccountServlet extends HttpServlet
       }
       if( Auth.getUserAccount( p_request, p_response ).getId() != account.getId() )
       {
-        p_response.getWriter().println("Erreur: la clef ne correspond pas au compte "+Auth.getUserPseudo( p_request, p_response ));
+        p_response
+            .sendRedirect( "/genericmsg.jsp?title=Erreur: la clef ne correspond pas au compte "
+                + Auth.getUserPseudo( p_request, p_response ) );
         return;
       }
       account.setIsforumIdConfirmed( true );
       FmgDataStore ds = new FmgDataStore( false );
       ds.put( account );
       ds.close();
-      p_response.getWriter().println(
-          "les comptes '" + account.getPseudo() + "' de FMG et du Forum sont liés" );
+      p_response.sendRedirect( "/genericmsg.jsp?title=les comptes '" + account.getPseudo()
+          + "' de FMG et du Forum sont liés" );
       return;
     }
     else
