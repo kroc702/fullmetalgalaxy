@@ -122,6 +122,22 @@ public class Auth
     return p_request.getUserPrincipal().getName();
   }
 
+  /**
+   * account ID or 0
+   * @param p_request
+   * @param p_response
+   * @return
+   */
+  public static long getUserId(HttpServletRequest p_request, HttpServletResponse p_response)
+  {
+    long accountId = 0;
+    if( Auth.isUserLogged( p_request, p_response ) )
+    {
+      accountId = Auth.getUserAccount( p_request, p_response ).getId();
+    }
+    return accountId;
+  }
+
 
   /**
    * 

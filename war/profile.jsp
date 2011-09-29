@@ -1,6 +1,5 @@
-<%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
+<%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.ressources.SharedI18n" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +22,8 @@ if( Auth.isUserAdmin( request, response ) )
 {
 	out.println("<a href=\"/account.jsp?id="+id+"\">editer</a><br/>" );
 }
+
+DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );
 %>
 
 <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
@@ -43,7 +44,9 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <pre><%= account.getDescription() %></pre>
 
 <p>level: <%= account.getCurrentLevel() %><br/>
-<img src='<%= account.getGradUrl() %>'/></p>
+<img src='<%= account.getGradUrl() %>'/><br/>
+Dernière connexion : <span class='date'><%= dateFormat.format( account.getLastConnexion() ) %></span>
+</p>
 
 <% String url = "/gameprofile.jsp?id=" + account.getId(); %>
 <jsp:include page="<%= url %>"></jsp:include>
