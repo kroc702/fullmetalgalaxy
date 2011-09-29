@@ -100,6 +100,10 @@ public class FmgMessage
     {
       return buildMessage( I18n.getDefaultLocale(), p_msgName );
     }
+    if( msg == null )
+    {
+      log.error( "Message '" + p_msgName + "' not found !" );
+    }
     return msg;
   }
 
