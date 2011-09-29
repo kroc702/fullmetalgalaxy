@@ -23,20 +23,29 @@
 package com.fullmetalgalaxy.client.game.tabmenu;
 
 
+import java.util.Iterator;
+
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtGameLogs extends Composite
+public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
 {
-  private VerticalPanel m_panel = new VerticalPanel();
+  private Tree m_tree = new Tree();
 
   /**
    * 
@@ -44,24 +53,108 @@ public class WgtGameLogs extends Composite
   public WgtGameLogs()
   {
     ScrollPanel panel = new ScrollPanel();
-    panel.add( m_panel );
+    panel.setStyleName( "fmp-log-panel" );
+    panel.add( m_tree );
+    m_tree.addSelectionHandler( this );
     initWidget( panel );
     redraw();
   }
 
+  /**
+   * construct tree HMI from game event list
+   */
   public void redraw()
   {
-    m_panel.clear();
+    m_tree.clear();
 
-    for( AnEvent event : GameEngine.model().getGame().getLogs() )
+    int currentTurn = -1;
+    TreeItem turnTreeItem = new TreeItem( "inscriptions" );
+    m_tree.addItem( turnTreeItem );
+
+    Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
+    // game starting
+    while( iterator.hasNext() )
     {
-      // display all non admin events
-      if( !(event.getType().isEventAdmin()) )
+      AnEvent event = iterator.next();
+      turnTreeItem.addItem( new TreeItemEvent( event ) );
+      if( event instanceof EbEvtChangePlayerOrder )
       {
-        Label label = new Label( event.toString() );
-        m_panel.add( label );
+        currentTurn++;
+        turnTreeItem = new TreeItem( "tour " + currentTurn );
+        m_tree.addItem( turnTreeItem );
+        break;
       }
     }
+    // game turn
+    int evtPlayerTurnCount = 0;
+    int playerCount = GameEngine.model().getGame().getCurrentNumberOfRegiteredPlayer();
+    TreeItem playerTreeItem = null;
+    while( iterator.hasNext() )
+    {
+      AnEvent event = iterator.next();
+      if( playerTreeItem == null )
+      {
+        String playerPseudo = null;
+        if( event instanceof AnEventPlay )
+        {
+          playerPseudo = GameEngine.model().getGame()
+            .getRegistrationByIdAccount( ((AnEventPlay)event).getAccountId() ).getAccount()
+            .getPseudo();
+        }
+        else if( event instanceof EbEvtPlayerTurn && !event.isAuto() )
+        {
+          playerPseudo = GameEngine.model().getGame()
+              .getRegistrationByIdAccount( ((EbEvtPlayerTurn)event).getAccountId() ).getAccount()
+              .getPseudo();
+        }
+        if( playerPseudo != null )
+        {
+          playerTreeItem = new TreeItemEvent( event );
+          playerTreeItem.setText( playerPseudo );
+          turnTreeItem.addItem( playerTreeItem );
+        }
+      }
+      if( playerTreeItem != null )
+      {
+        playerTreeItem.addItem( new TreeItemEvent( event ) );
+      }
+      else
+      {
+        turnTreeItem.addItem( new TreeItemEvent( event ) );
+      }
+      if( event instanceof EbEvtPlayerTurn )
+      {
+        playerTreeItem = null;
+        evtPlayerTurnCount++;
+        if( evtPlayerTurnCount >= playerCount )
+        {
+          // its probably a new turn
+          evtPlayerTurnCount = 0;
+          currentTurn++;
+          turnTreeItem = new TreeItemEvent( event );
+          turnTreeItem.setText( "tour " + currentTurn );
+          m_tree.addItem( turnTreeItem );
+        }
+      }
+      if( event instanceof EbEvtControlFreighter )
+      {
+        if( ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() )
+            .getColor() == EnuColor.None )
+        {
+          playerCount--;
+        }
+      }
+    }
+  }
+
+  @Override
+  public void onSelection(SelectionEvent<TreeItem> p_event)
+  {
+    if( p_event.getSelectedItem() instanceof TreeItemEvent )
+    {
+      GameEngine.model().timePlay( ((TreeItemEvent)p_event.getSelectedItem()).getEvent() );
+    }
+
   }
 
 }

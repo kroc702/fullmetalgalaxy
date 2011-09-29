@@ -163,6 +163,7 @@ public class GameWorkflow
         action.checkedExec( p_game );
         p_game.addEvent( action );
         eventAdded.add( action );
+        lastEvent = action;
       }
 
       if( lastEvent.getType() == GameLogType.GameJoin )
@@ -185,12 +186,12 @@ public class GameWorkflow
           action.checkedExec( p_game );
           p_game.addEvent( action );
           eventAdded.add( action );
-
+          lastEvent = action;
           gameRun( p_game );
         }
 
         if( p_game.getCurrentTimeStep() == 0
-            && p_game.getLastGameLog().getType() == GameLogType.AdminTimePlay
+            && lastEvent.getType() == GameLogType.AdminTimePlay
             && p_game.getFreighter( p_game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
         {
           // game is starting
@@ -201,6 +202,7 @@ public class GameWorkflow
           action.checkedExec( p_game );
           p_game.addEvent( action );
           eventAdded.add( action );
+          lastEvent = action;
         }
       }
       if( p_game.getCurrentTimeStep() == 1 && !p_game.isAsynchron()
@@ -214,6 +216,7 @@ public class GameWorkflow
         action.checkedExec( p_game );
         p_game.addEvent( action );
         eventAdded.add( action );
+        lastEvent = action;
       }
 
 
@@ -244,6 +247,7 @@ public class GameWorkflow
                 eventTakeOff.checkedExec( p_game );
                 p_game.addEvent( eventTakeOff );
                 eventAdded.add( eventTakeOff );
+                lastEvent = eventTakeOff;
               }
             }
           }
@@ -253,6 +257,7 @@ public class GameWorkflow
           event.checkedExec( p_game );
           p_game.addEvent( event );
           eventAdded.add( event );
+          lastEvent = event;
           if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
           {
             // next tide
@@ -262,6 +267,7 @@ public class GameWorkflow
             eventTide.checkedExec( p_game );
             p_game.addEvent( eventTide );
             eventAdded.add( eventTide );
+            lastEvent = eventTide;
           }
         }
       }
@@ -274,27 +280,14 @@ public class GameWorkflow
             && (p_game.getCurrentTimeStep() != 0) ) // never skip first turn
         {
           // change player's turn
-          int oldPlayerOrderIndex = p_game.getCurrentPlayerRegistration().getOrderIndex();
+          p_game.getCurrentPlayerRegistration().getOrderIndex();
           EbEvtPlayerTurn event = new EbEvtPlayerTurn();
           event.setAuto( true );
           event.setGame( p_game );
           event.checkedExec( p_game );
           p_game.addEvent( event );
           eventAdded.add( event );
-          if( p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
-          {
-            // new turn !
-            if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
-            {
-              // next tide
-              EbEvtTide eventTide = new EbEvtTide();
-              eventTide.setGame( p_game );
-              eventTide.setNextTide( Tide.getRandom() );
-              eventTide.checkedExec( p_game );
-              p_game.addEvent( eventTide );
-              eventAdded.add( eventTide );
-            }
-          }
+          lastEvent = event;
         }
         /* TODO
         if( (p_game.getCurrentPlayerRegistration() != null)
@@ -318,6 +311,25 @@ public class GameWorkflow
           }
         }*/
       }
+
+      int oldPlayerOrderIndex = p_game.getPreviousPlayerRegistration().getOrderIndex();
+      if( lastEvent instanceof EbEvtPlayerTurn
+          && p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
+      {
+        // new turn !
+        if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+        {
+          // next tide
+          EbEvtTide eventTide = new EbEvtTide();
+          eventTide.setGame( p_game );
+          eventTide.setNextTide( Tide.getRandom() );
+          eventTide.checkedExec( p_game );
+          p_game.addEvent( eventTide );
+          eventAdded.add( eventTide );
+          lastEvent = eventTide;
+        }
+      }
+
 
       // triggers
       p_game.execTriggers();

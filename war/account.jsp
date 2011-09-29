@@ -47,13 +47,13 @@ if(account == null) {
 Vous pouvez aussi utiliser votre compte google pour vous 
 <a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
 <%} else { %>
+<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 <a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
 Voir mon profil public sur: 
 <a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
 ou 
 <a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
 <p>
-<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' width='32' height='32'><br/>
 level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
 </p>
 <%}%>
@@ -114,9 +114,12 @@ email :
   {
 	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
 	out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
-	out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test private message</a><br/>" );
+	out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test PM</a><br/>" );
   } else if( account.getForumId() != null ){
 	out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
+	if( account.getForumKey() != null ){
+		out.println("<a href=\"/admin/Servlet?linkpm="+account.getId()+"\">Send a link forum PM</a><br/>" );
+	}
   } else {
     out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">pull account ID</a><br/>" );
     out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );

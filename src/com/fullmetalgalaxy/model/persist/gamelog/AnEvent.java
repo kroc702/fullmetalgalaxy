@@ -30,6 +30,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
@@ -180,13 +181,10 @@ public class AnEvent extends EbBase
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-  @SuppressWarnings("deprecation")
   @Override
   public String toString()
   {
-    String str = getLastUpdate().getDay() + "/" + getLastUpdate().getMonth() + "/"
-        + (getLastUpdate().getYear() + 1900) + " " + getLastUpdate().getHours() + ":"
-        + getLastUpdate().getMinutes() + ":" + getLastUpdate().getSeconds();
+    String str = RpcUtil.formatDate( getLastUpdate() );
     str += " " + getType();
     return str;
   }
