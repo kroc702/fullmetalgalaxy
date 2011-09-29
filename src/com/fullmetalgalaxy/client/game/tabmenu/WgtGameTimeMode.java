@@ -49,6 +49,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   private Panel m_panel = new VerticalPanel();
 
   Label m_lblTimePosition = new Label();
+  Label m_lblCurrentEvent = new Label();
   
   PushButton m_btnFastBack = new PushButton( Icons.s_instance.fastBack32().createImage() );
   PushButton m_btnFastPlay = new PushButton( Icons.s_instance.fastPlay32().createImage() );
@@ -87,6 +88,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     m_btnOk.setStyleName( "fmp-PushButton32" );
 
     m_panel.add( m_lblTimePosition );
+    m_panel.add( m_lblCurrentEvent );
     m_btnPanel.add( m_btnFastBack );
     m_btnPanel.add( m_btnBack );
     m_btnPanel.add( m_btnPlay );
@@ -103,7 +105,8 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     Game game = GameEngine.model().getGame();
 
     m_lblTimePosition.setText( GameEngine.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
-    
+    m_lblCurrentEvent.setText( game.getLogs().get( GameEngine.model().getCurrentActionIndex() )
+        .toString() );
         
     if( GameEngine.model().canCancelAction() )
     {
@@ -116,7 +119,6 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     }
     
     m_btnPanel.remove( m_wgtGameLog );
-    m_wgtGameLog = new WgtGameLogs();
     m_panel.add( m_wgtGameLog );
 }
 
@@ -160,7 +162,8 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       evtCancel.setFromActionIndex( GameEngine.model().getGame() );
       evtCancel.setToActionIndex( GameEngine.model().getCurrentActionIndex() );
       evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
-      //ModelFmpMain.model().setTimeLineMode( false );
+      // this action is required to send the last game version to server
+      GameEngine.model().setTimeLineMode( false );
       GameEngine.model().runSingleAction( evtCancel );
     }
     else if( sender == m_btnPlay )

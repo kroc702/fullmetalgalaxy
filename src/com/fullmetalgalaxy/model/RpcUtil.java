@@ -22,6 +22,11 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -56,6 +61,15 @@ public class RpcUtil
     {
     }
     return ret;
+  }
+
+
+  private static DateFormat s_dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 )
+      .dateFormat() );
+
+  public static String formatDate(Date p_date)
+  {
+    return s_dateFormat.format( p_date );
   }
 
   // TODO send error to server - use log4j

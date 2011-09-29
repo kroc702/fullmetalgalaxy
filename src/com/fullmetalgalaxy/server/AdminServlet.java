@@ -198,6 +198,26 @@ public class AdminServlet extends HttpServlet
     }
 
 
+    // send a test private message
+    // ===========================
+    strid = p_req.getParameter( "linkpm" );
+    if( strid != null )
+    {
+      EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
+      if( account != null )
+      {
+        if( new FmgMessage( "linkAccount" ).sendPM( account ) )
+        {
+          p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
+        }
+        else
+        {
+          p_resp.getOutputStream().println( "PM failed" );
+        }
+      }
+    }
+
+
     // create forum account
     // ====================
     strid = p_req.getParameter( "createforumaccount" );

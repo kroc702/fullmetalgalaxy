@@ -110,7 +110,10 @@ public class SynchroForum extends HttpServlet
               // we never send PM to link both account: let's do it
               //
               account.setForumKey( ServerUtil.randomString( 10 ) );
-              new FmgMessage( "linkAccount" ).sendPM( account );
+              if( new FmgMessage( "linkAccount" ).sendPM( account ) == false )
+              {
+                account.setForumKey( null );
+              }
             }
           }
           else if( account.getForumId() != null && account.isIsforumIdConfirmed() )

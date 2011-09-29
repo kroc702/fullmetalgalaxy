@@ -179,6 +179,8 @@ code {
 }
 
 .gwt-Tree .gwt-TreeItem {
+	cursor: pointer;
+  cursor: hand;
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
@@ -427,8 +429,8 @@ code {
 
 
 .fmp-log-panel {
-    width: 650px;
-    height: 400px; 
+    width: 400px;
+    height: 320px; 
 	overflow: scroll;
 }
 

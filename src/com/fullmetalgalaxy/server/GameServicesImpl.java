@@ -39,18 +39,14 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
@@ -400,7 +396,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       }
     }*/
     ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-    AnEvent lastAction = null;
     
     modelUpdate.setGameId( game.getId() );
     modelUpdate.setFromVersion( game.getVersion() );
@@ -433,7 +428,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           game.addEvent( event );
 
         }
-        lastAction = event;
       }
       modelUpdate.getGameEvents().addAll( p_modelUpdate.getGameEvents() );
       // another automatic update after running event ?

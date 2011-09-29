@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
@@ -69,6 +70,7 @@ import com.google.gwt.user.client.rpc.SerializationStreamReader;
 public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 {
   public static final String HISTORY_ID = "GameEngine";
+  public static Logger logger = Logger.getLogger( "GameEngine" );
   private static GameEngine s_ModelFmpMain = null;
 
   /**
@@ -592,6 +594,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
+  /**
+   * in time line mode, play several events backward
+   * @param p_actionCount
+   */
   public void timeBack(int p_actionCount)
   {
     List<AnEvent> logs = getGame().getLogs();
@@ -630,7 +636,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
-
+  /**
+   * in time mode, play several events
+   * @param p_actionCount
+   */
   public void timePlay(int p_actionCount)
   {
     List<AnEvent> logs = getGame().getLogs();
@@ -647,7 +656,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           action.exec( getGame() );
         } catch( RpcFmpException e )
         {
-          RpcUtil.logError( "error ", e );
+          logger.severe( e.getMessage() );
           Window.alert( "unexpected error : " + e );
           return;
         }
@@ -667,6 +676,62 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
+
+  /**
+   * in time mode, play events up to the given one
+   * @param p_actionCount
+   */
+  public void timePlay(AnEvent p_event)
+  {
+    if( !isTimeLineMode() || p_event == null || p_event.getIdGame() != getGame().getId() )
+    {
+      logger.warning( "time play command but wrong mode or wrong params" );
+      return;
+    }
+    AnEvent currentEvent = null;
+    if( m_currentActionIndex < getGame().getLogs().size() )
+    {
+      currentEvent = getGame().getLogs().get( m_currentActionIndex );
+    }
+    boolean timeForward = false;
+    if( currentEvent != null
+        && currentEvent.getLastUpdate().getTime() < p_event.getLastUpdate().getTime() )
+    {
+      timeForward = true;
+    }
+    try
+    {
+      while( currentEvent != p_event )
+      {
+        // we assume playing event in same way during the whole method
+        // this insure us not going in endless loop
+        if( timeForward )
+        {
+          currentEvent.exec( getGame() );
+          m_currentActionIndex++;
+          currentEvent = getGame().getLogs().get( m_currentActionIndex );
+        }
+        else
+        {
+          m_currentActionIndex--;
+          currentEvent = getGame().getLogs().get( m_currentActionIndex );
+          currentEvent.unexec( getGame() );
+        }
+        if( m_currentActionIndex < 0 || m_currentActionIndex >= getGame().getLogs().size() )
+        {
+          logger.severe( "time play command but given event wasn't found" );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+          return;
+        }
+      }
+    } catch( RpcFmpException e )
+    {
+      logger.severe( e.getMessage() );
+      Window.alert( "unexpected error : " + e );
+    }
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+  }
+
 
   public int getCurrentActionIndex()
   {
