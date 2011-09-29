@@ -566,6 +566,10 @@ public class EbAccount extends EbPublicAccount
    */
   public Date getLastConnexion()
   {
+    if( m_lastConnexion == null )
+    {
+      m_lastConnexion = new Date( 0 );
+    }
     return m_lastConnexion;
   }
 
