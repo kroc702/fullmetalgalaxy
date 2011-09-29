@@ -336,11 +336,13 @@ h1 {
 	font-weight: 400;
 	margin: 5px 0;
 }
-.article .date {
-	float: right;
+.date {
 	background-image: url('images/css/calendar.png');
 	background-repeat:no-repeat;
 	padding-left: 20px;
+}
+.article .date {
+	float: right;
 }
 
 #draw2 {

@@ -38,7 +38,7 @@
 				<li><a href="/halloffames.jsp" >Joueurs</a>
 					<ul>
 						<li><a href="/halloffames.jsp" >Classement</a></li>
-						<li><a href="/halloffames.jsp?orderby=m_lastConnexion" >Joueurs actif</a></li>
+						<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Joueurs actif</a></li>
 						<li><a href="http://fullmetalplanete.forum2jeux.com/memberlist" >Annuaire forum</a></li>
 						<li><a href="/stats.jsp" >Stats global</a></li>
 					</ul>
