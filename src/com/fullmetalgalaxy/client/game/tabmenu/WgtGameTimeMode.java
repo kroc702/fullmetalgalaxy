@@ -27,13 +27,16 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.client.widget.EventPresenter;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -49,7 +52,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   private Panel m_panel = new VerticalPanel();
 
   Label m_lblTimePosition = new Label();
-  Label m_lblCurrentEvent = new Label();
+  HTML m_lblCurrentEvent = new HTML();
   
   PushButton m_btnFastBack = new PushButton( Icons.s_instance.fastBack32().createImage() );
   PushButton m_btnFastPlay = new PushButton( Icons.s_instance.fastPlay32().createImage() );
@@ -105,8 +108,15 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     Game game = GameEngine.model().getGame();
 
     m_lblTimePosition.setText( GameEngine.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
-    m_lblCurrentEvent.setText( game.getLogs().get( GameEngine.model().getCurrentActionIndex() )
-        .toString() );
+    AnEvent currentEvent = GameEngine.model().getCurrentAction();
+    if( currentEvent == null )
+    {
+      m_lblCurrentEvent.setHTML( "" );
+    }
+    else
+    {
+      m_lblCurrentEvent.setHTML( EventPresenter.getDetailAsHtml( currentEvent ) );
+    }
         
     if( GameEngine.model().canCancelAction() )
     {
@@ -154,6 +164,14 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     Object sender = p_event.getSource();
     if( sender == m_btnOk )
     {
+      if( GameEngine.model().getCurrentActionIndex() >= GameEngine.model().getGame().getLogs()
+          .size() )
+      {
+        // user click ok to cancel action
+        // but action selected was then last one: no cancel
+        GameEngine.model().setTimeLineMode( false );
+        return;
+      }
       // just in case another action was in preparation
       EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
       actionBuilder.clear();

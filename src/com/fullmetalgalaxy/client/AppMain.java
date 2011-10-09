@@ -139,6 +139,7 @@ private ChatEngine m_chatEngine = null;
   {
     getMyAccount().setPseudo( ClientUtil.readGwtPropertyString( "fmp_userpseudo" ) );
     getMyAccount().setId( ClientUtil.readGwtPropertyLong( "fmp_userid" ) );
+    getMyAccount().setCurrentLevel( ClientUtil.readGwtPropertyLong( "fmp_userlevel" ).intValue() );
     m_myAccountAdmin = ClientUtil.readGwtPropertyBoolean( "fmp_useradmin" );
     m_pageId = ClientUtil.readGwtPropertyLong( "fmp_pageid" ).intValue();
     m_gameId = ClientUtil.readGwtPropertyLong( "fmp_gameid" ).longValue();

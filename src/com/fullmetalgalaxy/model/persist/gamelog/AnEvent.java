@@ -30,7 +30,6 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
@@ -184,10 +183,10 @@ public class AnEvent extends EbBase
   @Override
   public String toString()
   {
-    String str = RpcUtil.formatDate( getLastUpdate() );
-    str += " " + getType();
+    String str = "" + getType();
     return str;
   }
+
 
   // Bean getter / setter
   // ====================

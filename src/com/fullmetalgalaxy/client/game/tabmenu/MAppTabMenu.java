@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.event.MessageEvent;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
@@ -50,7 +51,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boolean>, NativePreviewHandler, MessageEvent.Handler
+public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boolean>,
+    NativePreviewHandler, MessageEvent.Handler, ModelUpdateEvent.Handler
 {
   public static final String HISTORY_ID = "tabmenu";
 
@@ -143,6 +145,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   {
     super.onModuleLoad();
     AppMain.instance().addPreviewListener( this );
+    AppMain.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
   }
   
   
@@ -255,6 +258,16 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
       closeAllTab();
       openTab( m_btnMessage );
     }
+  }
+
+  @Override
+  public void onModelUpdate(GameEngine p_modelSender)
+  {
+    if( !p_modelSender.isTimeLineMode() && m_btnTime.isDown() )
+    {
+      closeAllTab();
+    }
+
   }
 
 

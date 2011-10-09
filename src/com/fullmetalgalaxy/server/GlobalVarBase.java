@@ -107,7 +107,9 @@ public class GlobalVarBase
     Key k = KeyFactory.createKey( ENTITY_KIND, p_key );
     try
     {
-      Entity entity = s_datastore.get( k );
+      Transaction txn = s_datastore.beginTransaction();
+      Entity entity = s_datastore.get( txn, k );
+      txn.rollback();
       Object obj = entity.getProperty( ENTITY_VALUE );
       if( obj instanceof Blob)
       {

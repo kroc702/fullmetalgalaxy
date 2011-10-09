@@ -1,3 +1,4 @@
+<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.ressources.SharedI18n" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -36,16 +37,14 @@ Un compte similaire existe sur le forum, mais n'est pas lié à FMG.<br/>
 <% } else { %>
 Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <% } %>
-<% if(account.isAllowPrivateMsg()) { %>
-<a href="<%= account.getPMUrl()%>">Ecrire un message privé</a><br/>
-<a href="/email.jsp?id=<%= account.getId()%>">Ecrire un email</a><br/>
+<% if(account.getAllowMsgFromPlayer() != AllowMessage.No) { %>
+<a href="<%= account.getPMUrl()%>">Ecrire un message</a><br/>
 <% } %>
-
-<pre><%= account.getDescription() %></pre>
 
 <p>level: <%= account.getCurrentLevel() %><br/>
 <img src='<%= account.getGradUrl() %>'/><br/>
-Dernière connexion : <span class='date'><%= dateFormat.format( account.getLastConnexion() ) %></span>
+Inscription : <span class='date'><%= dateFormat.format( account.getSubscriptionDate() ) %></span><br/>
+Dernière connexion : <span class='date'><%= dateFormat.format( account.getLastConnexion() ) %></span><br/>
 </p>
 
 <% String url = "/gameprofile.jsp?id=" + account.getId(); %>

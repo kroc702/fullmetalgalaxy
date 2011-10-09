@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
@@ -207,37 +208,50 @@ public class EbEvtPlayerTurn extends AnEvent
     Game game = p_game;
     assert game != null;
 
-    // current player action points
-    int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
-    int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
-        * (game.getCurrentPlayerRegistration().getEnuColor().getNbColor() - 1);
-    actionInc += actionExtraPoint;
-    int actionPt = game.getCurrentPlayerRegistration().getPtAction() - actionInc;
-    if( actionPt < 0 )
-    {
-      actionPt = 0;
-    }
-    game.getCurrentPlayerRegistration().setPtAction( actionPt );
-
-    // find index player
-    int index = game.getCurrentPlayerRegistration().getOrderIndex();
     // previous player
     EbRegistration registration = null;
-    do
-    {
-      index--;
-      if( index < 0 )
-      {
-        // previous turn !
-        index = game.getSetRegistration().size() - 1;
-        game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
-      }
-      registration = game.getRegistrationByOrderIndex( index );
-      assert registration != null;
-    } while( registration.getColor() == EnuColor.None );
 
-    game.setCurrentPlayerRegistration( registration );
+    if( game.isAsynchron() && game.getCurrentTimeStep() == 1 )
+    {
+      // this event turn is a special case: last turn of last player
+      // in other word it's the event which really switch from turn by turn to
+      // asynchron mode
+      List<EbRegistration> list = game.getRegistrationByPlayerOrder();
+      registration = list.get( list.size() - 1 );
+      game.setCurrentTimeStep( 0 );
+    }
+    else
+    {
+      // current player action points
+      int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
+      int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
+          * (game.getCurrentPlayerRegistration().getEnuColor().getNbColor() - 1);
+      actionInc += actionExtraPoint;
+      int actionPt = game.getCurrentPlayerRegistration().getPtAction() - actionInc;
+      if( actionPt < 0 )
+      {
+        actionPt = 0;
+      }
+      game.getCurrentPlayerRegistration().setPtAction( actionPt );
+
+      // find index player
+      int index = game.getCurrentPlayerRegistration().getOrderIndex();
+      do
+      {
+        index--;
+        if( index < 0 )
+        {
+          // previous turn !
+          index = game.getSetRegistration().size() - 1;
+          game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
+        }
+        registration = game.getRegistrationByOrderIndex( index );
+        assert registration != null;
+      } while( registration.getColor() == EnuColor.None );
+    }
+
     registration.setPtAction( m_oldActionPt );
+    game.setCurrentPlayerRegistration( registration );
   }
 
   /**

@@ -39,7 +39,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -115,6 +114,7 @@ public class AccountServlet extends HttpServlet
         return;
       }
       account.setIsforumIdConfirmed( true );
+      ServerUtil.forumConnector().pullAccount( account );
       FmgDataStore ds = new FmgDataStore( false );
       ds.put( account );
       ds.close();
@@ -409,19 +409,8 @@ public class AccountServlet extends HttpServlet
     }
 
     account.setEmail( params.get( "email" ) );
-    if( account.getAllowMsgFromGame() == AllowMessage.No
-        && params.get( "AllowMailFromGame" ) != null )
-    {
-      account.setAllowMsgFromGame( AllowMessage.Mail );
-    }
-    else if( params.get( "AllowMailFromGame" ) == null )
-    {
-      account.setAllowMsgFromGame( AllowMessage.No );
-    }
 
-    account.setAllowPrivateMsg( params.get( "AllowPrivateMsg" ) != null );
     account.setJabberId( params.get( "jabberId" ) );
-    account.setDescription( params.get( "description" ) );
     account.setLogin( params.get( "login" ) );
 
     if( params.get( "password" ) != null )

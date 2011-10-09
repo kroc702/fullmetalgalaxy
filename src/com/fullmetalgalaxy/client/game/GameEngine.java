@@ -584,6 +584,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setTimeLineMode(boolean p_isTimeLineMode)
   {
     getActionBuilder().clear();
+    if( m_isTimeLineMode == p_isTimeLineMode )
+    {
+      return;
+    }
     m_isTimeLineMode = p_isTimeLineMode;
     m_lastTurnPlayed = getGame().getCurrentTimeStep();
     if( !p_isTimeLineMode )
@@ -736,6 +740,15 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public int getCurrentActionIndex()
   {
     return m_currentActionIndex;
+  }
+
+  public AnEvent getCurrentAction()
+  {
+    if( m_currentActionIndex < getGame().getLogs().size() )
+    {
+      return getGame().getLogs().get( m_currentActionIndex );
+    }
+    return null;
   }
 
   /**

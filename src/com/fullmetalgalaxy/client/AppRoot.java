@@ -150,6 +150,11 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   @Override
   public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
+    if( p_event == null || p_event.getNativeEvent() == null
+        || p_event.getNativeEvent().getEventTarget() == null )
+    {
+      return;
+    }
     com.google.gwt.dom.client.Element elmt = com.google.gwt.dom.client.Element.as( p_event
         .getNativeEvent().getEventTarget() );
     if( elmt instanceof InputElement )
