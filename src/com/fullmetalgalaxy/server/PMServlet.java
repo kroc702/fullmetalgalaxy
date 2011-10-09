@@ -138,7 +138,7 @@ public class PMServlet extends HttpServlet
    * @param p_recipients
    * @return false if an error occur in parameters
    */
-  public static synchronized boolean sendMail(String p_subject, String p_body, String p_recipients)
+  private static synchronized boolean sendMail(String p_subject, String p_body, String p_recipients)
   {
     boolean isOk = true;
     Properties props = new Properties();

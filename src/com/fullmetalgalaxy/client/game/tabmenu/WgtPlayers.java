@@ -87,11 +87,12 @@ public class WgtPlayers extends Composite implements ClickHandler
   {
     m_banButtons.clear();
     m_playerPanel.clear();
-    int PlayerCount = GameEngine.model().getGame().getSetRegistration().size();
-    m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( PlayerCount ) ) );
+    int playerCount = GameEngine.model().getGame().getSetRegistration().size();
+    int maxPlayerCount = GameEngine.model().getGame().getMaxNumberOfPlayer();
+    m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( playerCount, maxPlayerCount ) ) );
 
     // message to all link
-    String pseudoList[] = new String[PlayerCount];
+    String pseudoList[] = new String[playerCount];
     int i = 0;
     for( EbRegistration registration : GameEngine.model().getGame().getSetRegistration() )
     {
@@ -108,7 +109,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_playerPanel.add( new HTML( "<a href='"
         + EbPublicAccount
             .getForumPMUrl( "[FMG] " + GameEngine.model().getGame().getName(), pseudoList )
-        + "' >Envoyer un message à tous</a>" ) );
+ + "' >Envoyer un message à tous</a>" ) );
 
     // get player order
     List<EbRegistration> sortedRegistration = GameEngine.model().getGame()

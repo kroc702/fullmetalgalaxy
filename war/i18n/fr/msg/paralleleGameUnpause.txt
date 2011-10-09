@@ -1,0 +1,7 @@
+{game_name} - Notification de tour de jeux
+Bonjour {pseudo},
+La pause sur la partie {game_name} {game_url} vient d'être levé.
+Vous pouvez donc vous connecter pour continuer votre partie.
+
+Cordialement
+Full Metal Galaxy

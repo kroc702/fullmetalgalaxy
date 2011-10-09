@@ -44,11 +44,8 @@ import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
-import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
-import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.files.AppEngineFile;
@@ -220,7 +217,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
 
         // do we need to send an email ?
-        sendMail( model, modelUpdate );
+        GameNotification.sendMail( model, modelUpdate );
       }
     } catch( RpcFmpException e )
     {
@@ -319,54 +316,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
 
 
-  /**
-   * eventually send an email to people that need it.
-   * This method have to be called after p_action have been successfully ran.
-   * @param action
-   */
-  protected static void sendMail(Game p_game, ModelFmpUpdate p_update)
-  {
-    for( AnEvent action : p_update.getGameEvents() )
-    {
-      if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
-      {
-        EbAccount currentPlayer = null;
-        if( p_game.getCurrentPlayerRegistration() != null )
-        {
-          FmgDataStore dataStore = new FmgDataStore(true);
-          currentPlayer = dataStore.get( EbAccount.class, p_game.getCurrentPlayerRegistration()
-              .getAccount().getId() );
-        }
-        if( currentPlayer == null )
-        {
-          // TODO send email to all players: it's an asynchron game
-          log.error( "New turn email couldn't be send" );
-          return;
-        }
-        if( ChannelManager.getRoom( p_game.getId() ).isConnected( currentPlayer.getPseudo() ) )
-        {
-          log.fine( "player is connected: we don't need to send an email" );
-          return;
-        }
-        if( currentPlayer.getAllowMsgFromGame() == AllowMessage.No || !currentPlayer.haveEmail() )
-        {
-          // player don't want any notification
-          log.fine( "player " + currentPlayer.getPseudo() + " don't want any notification" );
-          return;
-        }
-        String subject = "FMG: Notification de tour de jeux sur " + p_game.getName();
-        String body = "Bonjour " + currentPlayer.getPseudo() + "\n\n"
-            + "Vous pouvez des a present vous connecter a la partie " + p_game.getName()
-            + " http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId()
-            + " pour jouer votre tour " + p_game.getCurrentTimeStep() + ".\n";
-        PMServlet.sendMail( subject, body, currentPlayer.getEmail() );
-        return;
-      }
-    }
-  }
-
-
-
 
   @Override
   public void runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException
@@ -445,7 +394,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     modelUpdate.setToVersion( game.getVersion() );
 
     // do we need to send an email ?
-    sendMail( game, modelUpdate );
+    GameNotification.sendMail( game, modelUpdate );
 
     // broadcast changes to all clients
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );

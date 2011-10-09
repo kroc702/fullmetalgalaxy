@@ -4,5 +4,7 @@ Si les deux comptes '{pseudo}' sur FMG et le forum vous appartiennent et que vou
 veuillez visiter cette URL:
 http://www.fullmetalgalaxy.com/AccountServlet?link={forumKey}
 
+Cela vous permettra de communiquer plus facilement entre joueurs, avoir un avatar et quelques autres options.
+
 Cordialement
 FullMetalGalaxy

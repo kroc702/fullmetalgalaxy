@@ -51,7 +51,7 @@ import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
  * password
  * game_name
  * game_url
- * game_time_step
+ * game_currentTimeStep
  * </pre>
  */
 public class FmgMessage
@@ -71,6 +71,12 @@ public class FmgMessage
   public FmgMessage(String p_msgName)
   {
     m_name = p_msgName;
+  }
+
+  public FmgMessage(String p_msgName, Game p_game)
+  {
+    this( p_msgName );
+    putParams( p_game );
   }
 
   public FmgMessage(String p_subject, String p_body)
@@ -119,23 +125,22 @@ public class FmgMessage
     boolean isOk = true;
     String error = null;
     
-    if( (p_account.getAllowMsgFromGame() == AllowMessage.No )
-        || !p_account.haveEmail() )
+    if( p_account.getAllowMsgFromGame() == AllowMessage.PM && p_account.isIsforumIdConfirmed() )
+    {
+      // send a forum private message
+      isOk = sendPM(p_account);
+    }
+    else if( p_account.getAllowMsgFromGame() == AllowMessage.Mail && p_account.haveEmail() )
+    {
+      // send an mail
+      isOk = sendEMail(p_account);
+    }
+    else
     {
       // send nothing
       error = "player " + p_account.getPseudo() + " don't want any messages";
       log.fine( error );
       send2Archive( this, "?", error );
-    }
-    else if( p_account.getAllowMsgFromGame() == AllowMessage.PM && p_account.isIsforumIdConfirmed() )
-    {
-      // send a forum private message
-      isOk = sendPM(p_account);
-    }
-    else
-    {
-      // send an mail
-      isOk = sendEMail(p_account);
     }
     return isOk;
   }
@@ -335,6 +340,7 @@ public class FmgMessage
     return new FmgMessage( subject, body );
   }
   
+
   private FmgMessage putParams(EbAccount p_account)
   {
     if( p_account != null )
@@ -353,7 +359,7 @@ public class FmgMessage
     {
       m_params.put( "game_name", p_game.getName() );
       m_params.put( "game_url", "http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId() );
-      m_params.put( "game_time_step", "" + p_game.getCurrentTimeStep() );
+      m_params.put( "game_currentTimeStep", "" + p_game.getCurrentTimeStep() );
       m_params.put( "game_description", p_game.getDescription() );
     }
     return this;
