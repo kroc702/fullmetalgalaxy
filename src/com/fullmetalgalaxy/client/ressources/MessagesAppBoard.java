@@ -42,7 +42,7 @@ public interface MessagesAppBoard extends Messages
 
   String inOrbit();
 
-  String xPlayers(int p_nbPlayer);
+  String xPlayers(int p_nbPlayer, int p_nbMaxPlayer);
 
   String playerDescription(String p_login, int p_points);
 

@@ -1,0 +1,9 @@
+{game_name} - Notification de tour de jeux
+Bonjour {pseudo},
+Tous les joueurs de la partie {game_name} {game_url}
+se sont posé et le mode paralèlle débute.
+Vous avez environ 46h pour profiter du déploiement gratuit.
+N'oubliez pas de contacter le créateur de la partie pour la mettre en pause si vous ne pouvez pas vous connecter pendant plus de 48 heures.
+
+Cordialement
+Full Metal Galaxy

@@ -1,0 +1,7 @@
+{game_name} - Notification de tour de jeux
+Bonjour {pseudo},
+Vous pouvez des à present vous connecter à la partie {game_name} {game_url}
+pour jouer votre tour {game_currentTimeStep}
+
+Cordialement
+Full Metal Galaxy

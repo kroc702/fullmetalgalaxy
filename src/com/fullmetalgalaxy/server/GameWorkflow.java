@@ -350,6 +350,8 @@ public class GameWorkflow
   }
 
 
+
+
   /**
    * called when a game is newly open due to his creation or paused with a missing player
    * @param p_game
