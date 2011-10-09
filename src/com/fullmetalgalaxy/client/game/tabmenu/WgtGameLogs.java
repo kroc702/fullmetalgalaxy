@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
@@ -94,18 +95,21 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
       AnEvent event = iterator.next();
       if( playerTreeItem == null )
       {
+        EbRegistration registration = null;
         String playerPseudo = null;
         if( event instanceof AnEventPlay )
         {
-          playerPseudo = GameEngine.model().getGame()
-            .getRegistrationByIdAccount( ((AnEventPlay)event).getAccountId() ).getAccount()
-            .getPseudo();
+          registration = GameEngine.model().getGame()
+              .getRegistrationByIdAccount( ((AnEventPlay)event).getAccountId() );
         }
         else if( event instanceof EbEvtPlayerTurn && !event.isAuto() )
         {
-          playerPseudo = GameEngine.model().getGame()
-              .getRegistrationByIdAccount( ((EbEvtPlayerTurn)event).getAccountId() ).getAccount()
-              .getPseudo();
+          registration = GameEngine.model().getGame()
+              .getRegistrationByIdAccount( ((EbEvtPlayerTurn)event).getAccountId() );
+        }
+        if( registration != null )
+        {
+          playerPseudo = registration.getAccount().getPseudo();
         }
         if( playerPseudo != null )
         {

@@ -222,7 +222,7 @@ public class GameWorkflow
 
       // search any other update
       //
-      if( p_game.isAsynchron() )
+      if( p_game.isAsynchron() && p_game.isStarted() && p_game.getCurrentTimeStep() != 0 )
       {
         long currentTimeInMiliSec = System.currentTimeMillis();
         while( (!p_game.isFinished())
@@ -312,9 +312,14 @@ public class GameWorkflow
         }*/
       }
 
-      int oldPlayerOrderIndex = p_game.getPreviousPlayerRegistration().getOrderIndex();
+      int oldPlayerOrderIndex = Integer.MAX_VALUE;
+      if( !p_game.isAsynchron() )
+      {
+        p_game.getPreviousPlayerRegistration().getOrderIndex();
+      }
       if( lastEvent instanceof EbEvtPlayerTurn
-          && p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex )
+          && (p_game.getCurrentPlayerRegistration() == null
+               || p_game.getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex ) )
       {
         // new turn !
         if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )

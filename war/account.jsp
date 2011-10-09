@@ -43,21 +43,30 @@ if(account == null) {
 <h1><%= (request.getParameter("msg")==null) ? "" : request.getParameter("msg") %></h1>
 
 <% if( id == 0 ) { %>
-<h2>Création d'un nouveau compte</h2>
-Vous pouvez aussi utiliser votre compte google pour vous 
-<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
-<%} else { %>
-<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
-<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
-Voir mon profil public sur: 
-<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
-ou 
-<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
-<p>
-level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
-</p>
-<%}%>
-
+	<h2>Création d'un nouveau compte</h2>
+	Vous pouvez aussi utiliser votre compte google pour vous 
+	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
+<%} else if(account.isIsforumIdConfirmed() && account.getForumId() != null){ %>
+	<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
+	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
+	Voir mon profil public sur: 
+	<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
+	ou sur le 
+	<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
+	<p>
+	level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
+	</p>
+<%} else if( account.getForumId() != null){ %>
+	Un message privé vous a été envoyé pour lier les comptes Forum et FMG<br/>
+	Si ce n'est pas le cas, merci de contacter l'administrateur.<br/>
+	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
+<%} else {%>
+	<a href="http://fullmetalplanete.forum2jeux.com/register">
+	<img src="/images/icons/canceled32.png" border=0 />
+	Nous vous conseillons de créer un compte sur le forum
+	pour facilier les contacts entre joueurs, avoir un avatar et quelques autres options.</a><br/>
+	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
+<%} %>
 
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
@@ -93,21 +102,14 @@ login :
 <br/>
 email :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
-
+<br/>
+AllowMsgFromGame : <%= account.getAllowMsgFromGame() %><br/>
+AllowMsgFromPlayer : <%= account.getAllowMsgFromPlayer() %><br/>
+NotificationQty : <%= account.getNotificationQty() %><br/>
 
 <% if(Auth.isUserAdmin(request, response)) { %>
-  Autoriser FMG a envoyer un mail pour signaler votre tour de jeu
-  <input type="checkbox" <%= account.getAllowMsgFromGame()==AllowMessage.No ? "" : "checked" %> name="AllowMailFromGame" value="1"><br/>
-  Autoriser les autres joueurs a vous contacter par messages privés
-  <input type="checkbox" <%= account.isAllowPrivateMsg() ? "checked" : "" %> name="AllowPrivateMsg" value="1"><br/>
-  <br/>
   Jabber ID :
   <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
-  <br/>
-  Description publique :<br/>
-  <textarea cols="50" rows="10" name="description">
-  <%= account.getDescription() %>
-  </textarea><br/>
   
 <%
   if( account.isIsforumIdConfirmed() && account.getForumId() != null )

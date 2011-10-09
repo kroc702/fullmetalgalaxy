@@ -43,6 +43,8 @@ import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.server.EbAccount;
+import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
+import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.FmgCookieStore;
 import com.fullmetalgalaxy.server.ServerUtil;
 import com.google.appengine.api.urlfetch.FetchOptions;
@@ -90,6 +92,8 @@ public class ConectorImpl implements ForumConector, NewsConector
   private static final String FIELD_LEVEL = "profile_field_10_2";
   private static final String FIELD_GRADICON = "profile_field_6_3[]";
   private static final String FIELD_JABBER = "profile_field_3_1";
+  private static final String FIELD_FMG_NOTIF_MODE = "profile_field_7_4";
+  private static final String FIELD_FMG_NOTIF_QTY = "profile_field_7_5";
 
   // field pattern for profil forum page
   private static final Pattern s_usernamePattern = fieldTextPattern( FIELD_USERNAME );
@@ -97,7 +101,9 @@ public class ConectorImpl implements ForumConector, NewsConector
   private static final Pattern s_jabberPattern = fieldTextPattern( FIELD_JABBER );
   private static final Pattern s_avatarUrlPattern = Pattern.compile(
       ".*Image Actuelle</span><br /><img src=\"([^\"]*)\".*", Pattern.DOTALL );
-  
+  private static final Pattern s_notifModePattern = fieldSelectPattern( FIELD_FMG_NOTIF_MODE );
+  private static final Pattern s_notifQtyPattern = fieldSelectPattern( FIELD_FMG_NOTIF_QTY );
+  private static final Pattern s_sendEmailPattern = fieldRadioPattern( "viewemail" );
 
   // field pattern for profil page that we need to backup to avoid override
   private static Map<String, Pattern> s_fieldPatternMap = new HashMap<String, Pattern>();
@@ -168,7 +174,7 @@ public class ConectorImpl implements ForumConector, NewsConector
 
   private static Pattern fieldSelectPattern(String p_field)
   {
-    return Pattern.compile( ".*<select name=\"" + p_field
+    return Pattern.compile( ".*<select[^>]*name=\"" + p_field
         + "\"(?:[^<]*|</?o){0,20}<option value=\"([^\"]*)\" selected.*",
         Pattern.DOTALL );
   }
@@ -282,7 +288,8 @@ public class ConectorImpl implements ForumConector, NewsConector
           // System.out.println( "Set-Cookie: " + header.getValue() );
         }
       }
-      System.out.println( new String( response.getContent(), getCharset( response ) ) );
+      // System.out.println( new String( response.getContent(), getCharset(
+      // response ) ) );
       
 
       // get admin panel to read tid param
@@ -320,7 +327,7 @@ public class ConectorImpl implements ForumConector, NewsConector
     // we don't need to be connected
 
     Pattern pattern = Pattern.compile(
-        ".*href=\"[^\"]*(?:/|%2F)u([^\"&]*)[^\"]*\">(?:<span style=\"color:#E.....\">)?(?:<strong>)?"
+        ".*href=\"[^\"]*(?:/|%2F)u([^\"&]*)[^\"]*\">(?:<span style=\"color:#......\">)?(?:<strong>)?"
             + Pattern.quote( p_pseudo ) + "<.*",
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL );
 
@@ -616,7 +623,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         {
           is.close();
         }
-        System.out.println( writer.toString() );
+        // System.out.println( writer.toString() );
         if( !writer.toString().contains( "Le profil de l'utilisateur a été mis à jour avec succès" ) )
         {
           disconnect();
@@ -705,7 +712,90 @@ public class ConectorImpl implements ForumConector, NewsConector
         logger.warning( "pattern 'jabber id' failed" );
       }
 
+      matcher = s_notifModePattern.matcher( page );
+      if( matcher.matches() )
+      {
+        String value = matcher.group( 1 );
+        if( value != null )
+        {
+          // 0 : email
+          // 1 : PM
+          if( value.equalsIgnoreCase( "0" ) )
+          {
+            p_account.setAllowMsgFromGame( AllowMessage.Mail );
+          }
+          else
+          // if( value.equalsIgnoreCase( "1" ) )
+          {
+            p_account.setAllowMsgFromGame( AllowMessage.PM );
+          }
+          /*else
+          {
+            p_account.setAllowMsgFromGame( AllowMessage.No );
+          }*/
+
+        }
+      }
+      else
+      {
+        logger.warning( "pattern 'FIELD_FMG_NOTIF_MODE' failed" );
+      }
       
+      matcher = s_notifQtyPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        String value = matcher.group( 1 );
+        if( value != null )
+        {
+          // 0 : min
+          // 1 : standard
+          // 2 : max
+          if( value.equalsIgnoreCase( "0" ) )
+          {
+            p_account.setNotificationQty( NotificationQty.Min );
+          }
+          else if( value.equalsIgnoreCase( "2" ) )
+          {
+            p_account.setNotificationQty( NotificationQty.Max );
+          }
+          else
+          {
+            p_account.setNotificationQty( NotificationQty.Std );
+          }
+
+        }
+      }
+      else
+      {
+        logger.warning( "pattern 'FIELD_FMG_NOTIF_QTY' failed" );
+      }
+
+      matcher = s_sendEmailPattern.matcher( page );
+      if( matcher.matches() )
+      {
+        String value = matcher.group( 1 );
+        if( value != null )
+        {
+          // 0 : no
+          // 1 : by email client
+          // 2 : by forms
+          if( value.equalsIgnoreCase( "0" ) )
+          {
+            p_account.setAllowMsgFromPlayer( AllowMessage.PM );
+          }
+          else
+          {
+            p_account.setAllowMsgFromPlayer( AllowMessage.Mail );
+          }
+        }
+      }
+      else
+      {
+        logger.warning( "pattern 'viewemail' failed" );
+      }
+
+
+
       // backup some forum field to avoid override
       //
       Map<String,String> forumData = new HashMap<String,String>();

@@ -55,6 +55,11 @@ public class EbAccount extends EbPublicAccount
     No, PM, Mail;
   }
 
+  public enum NotificationQty
+  {
+    Min, Std, Max;
+  }
+
   // theses data come from database (Account table)
   // -------------------------------------------
   /**
@@ -69,13 +74,14 @@ public class EbAccount extends EbPublicAccount
   private Date m_lastConnexion = null;
   @Unindexed
   private AuthProvider m_authProvider = AuthProvider.Fmg;
-  @Unindexed
-  private String m_description = "";
-  @Unindexed
-  private boolean m_allowPrivateMsg = true;
   /** to allow message like 'it your turn on game xxx' */
   @Unindexed
-  private AllowMessage m_allowMsgFromGame = AllowMessage.PM;
+  private AllowMessage m_allowMsgFromGame = AllowMessage.Mail;
+  /** to allow message from other players */
+  @Unindexed
+  private AllowMessage m_allowMsgFromPlayer = AllowMessage.Mail;
+  @Unindexed
+  private NotificationQty m_notificationQty = NotificationQty.Std;
 
   private String m_jabberId = null;
 
@@ -189,10 +195,11 @@ public class EbAccount extends EbPublicAccount
     m_email = "";
     m_password = null;
     m_subscriptionDate = new Date( System.currentTimeMillis() );
+    m_lastConnexion = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
-    m_description = "";
-    m_allowPrivateMsg = true;
-    m_allowMsgFromGame = AllowMessage.PM;
+    m_allowMsgFromGame = AllowMessage.Mail;
+    m_allowMsgFromPlayer = AllowMessage.Mail;
+    m_notificationQty = NotificationQty.Std;
   }
 
   @Override
@@ -226,15 +233,16 @@ public class EbAccount extends EbPublicAccount
   public String getPMUrl(String p_subject)
   {
     if( p_subject == null ) p_subject = "";
-    if( isIsforumIdConfirmed() && getForumId() != null )
+    if( getAllowMsgFromPlayer() == AllowMessage.Mail && haveEmail() )
+    {
+      // then send an email with our form
+      return "/email.jsp?id=" + getId() + "&subject=" + p_subject;
+    }
+    else if( getAllowMsgFromPlayer() == AllowMessage.PM && isIsforumIdConfirmed()
+        && getForumId() != null )
     {
       // use forum to send a Private Message
       return EbPublicAccount.getForumPMUrl( p_subject, getPseudo() ) + "&u=" + getForumId() ;
-    }
-    else if( isAllowPrivateMsg() && haveEmail() )
-    {
-      // then send an email with our form
-      return "/email.jsp?id="+getId()+"&subject="+p_subject;
     }
     return "/genericmsg.jsp?title=" + getPseudo() + " ne souhaite pas être contacté";
   }
@@ -256,9 +264,13 @@ public class EbAccount extends EbPublicAccount
     }
     int normalizedLevel = 0;
     int maxLevel = GlobalVars.getMaxLevel(); 
-    if( maxLevel > 1 )
+    if( maxLevel > 1 && getCurrentLevel() > 1 )
     {
-      normalizedLevel = (int)(((float)(getCurrentLevel()-1))/(maxLevel-1) *9);
+      // from 1 to 9
+      // because even if current level is 2, player shoudn't have the same grad
+      // as new player
+      normalizedLevel = (int)(((float)(getCurrentLevel() - 1)) / (maxLevel - 1) * 8);
+      normalizedLevel++;
     }
     if( normalizedLevel < 0 ) normalizedLevel=0;
     if( normalizedLevel > 9 ) normalizedLevel=9;
@@ -452,48 +464,16 @@ public class EbAccount extends EbPublicAccount
   }
 
 
-  /**
-   * @return the description
-   */
-  public String getDescription()
-  {
-    return m_description;
-  }
-
-
-  /**
-   * @param p_description the description to set
-   */
-  public void setDescription(String p_description)
-  {
-    m_description = p_description;
-  }
-
-
-  /**
-   * @return the allowPrivateMsg
-   */
-  public boolean isAllowPrivateMsg()
-  {
-    return m_allowPrivateMsg;
-  }
-
-
-  /**
-   * @param p_allowPrivateMsg the allowPrivateMsg to set
-   */
-  public void setAllowPrivateMsg(boolean p_allowPrivateMsg)
-  {
-    m_allowPrivateMsg = p_allowPrivateMsg;
-  }
-
-
 
   /**
    * @return the allowMsgFromGame
    */
   public AllowMessage getAllowMsgFromGame()
   {
+    if( m_allowMsgFromGame == AllowMessage.PM && (getForumId() == null || !isIsforumIdConfirmed()) )
+    {
+      m_allowMsgFromGame = AllowMessage.Mail;
+    }
     return m_allowMsgFromGame;
   }
 
@@ -711,6 +691,43 @@ public class EbAccount extends EbPublicAccount
   public void setMainColor(int p_mainColor)
   {
     m_mainColor = p_mainColor;
+  }
+
+  /**
+   * @return the allowMsgFromPlayer
+   */
+  public AllowMessage getAllowMsgFromPlayer()
+  {
+    if( m_allowMsgFromPlayer == AllowMessage.PM
+        && (getForumId() == null || !isIsforumIdConfirmed()) )
+    {
+      m_allowMsgFromPlayer = AllowMessage.Mail;
+    }
+    return m_allowMsgFromPlayer;
+  }
+
+  /**
+   * @param p_allowMsgFromPlayer the allowMsgFromPlayer to set
+   */
+  public void setAllowMsgFromPlayer(AllowMessage p_allowMsgFromPlayer)
+  {
+    m_allowMsgFromPlayer = p_allowMsgFromPlayer;
+  }
+
+  /**
+   * @return the notificationQty
+   */
+  public NotificationQty getNotificationQty()
+  {
+    return m_notificationQty;
+  }
+
+  /**
+   * @param p_notificationQty the notificationQty to set
+   */
+  public void setNotificationQty(NotificationQty p_notificationQty)
+  {
+    m_notificationQty = p_notificationQty;
   }
 
 
