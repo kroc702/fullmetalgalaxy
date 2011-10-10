@@ -39,7 +39,7 @@
 		
     </head>
 
-    <body style="width:100%; height:100%; background:url(images/css/bloc-bkg.png) repeat;">
+    <body style="width:100%; height:100%; background:url(images/css/bloc-bkg.png) repeat;" scroll=no>
     
     <div style="position:fixed; left:0px; width:100%; min-height:50px; background-image:url('images/css/navbar-bkg.png');">
 	    <div id="status" style="width:100%;"></div>
