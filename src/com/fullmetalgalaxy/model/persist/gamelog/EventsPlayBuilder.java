@@ -1257,6 +1257,18 @@ public class EventsPlayBuilder implements GameEventStack
     if( (getGame().getOpponentFireCover( destroyer1 ).getValue() == EnuColor.None)
         && (getGame().getOpponentFireCover( destroyer2 ).getValue() == EnuColor.None) )
     {
+      // as only destroyer1 can move forward (destroyer2 can too but rule are
+      // not check in this case)
+      // swap 1 and 2
+      if( !getGame().canTokenFireOn( destroyer2, target ) )
+      {
+        action.setTokenDestroyer1( destroyer2 );
+        action.setTokenDestroyer2( destroyer1 );
+        destroyer1 = action.getTokenDestroyer1( getGame() );
+        destroyer2 = action.getTokenDestroyer2( getGame() );
+        setSelectedToken( destroyer1 );
+        setSelectedPosition( destroyer1.getPosition() );
+      }
       if( !getGame().canTokenFireOn( destroyer1, target ) )
       {
         EbEvtMove actionMove = new EbEvtMove();
@@ -1265,16 +1277,6 @@ public class EventsPlayBuilder implements GameEventStack
         actionMove.setToken( destroyer1 );
         actionMove.setNewPosition( destroyer1.getPosition().getNeighbour(
             destroyer1.getPosition().getNeighbourSector( target.getPosition() ) ) );
-        actionAdd( actionMove );
-      }
-      else if( !getGame().canTokenFireOn( destroyer2, target ) )
-      {
-        EbEvtMove actionMove = new EbEvtMove();
-        actionMove.setGame( getGame() );
-        actionMove.setAccountId( getAccountId() );
-        actionMove.setToken( destroyer2 );
-        actionMove.setNewPosition( destroyer2.getPosition().getNeighbour(
-            destroyer2.getPosition().getNeighbourSector( target.getPosition() ) ) );
         actionAdd( actionMove );
       }
     }
