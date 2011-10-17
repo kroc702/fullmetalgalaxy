@@ -1,0 +1,8 @@
+{game_name} - Fin de partie
+Bonjour {pseudo},
+La partie {game_name} {game_url} vient de se terminer.
+Voici les resultats:
+{game_results}
+
+Cordialement
+Full Metal Galaxy

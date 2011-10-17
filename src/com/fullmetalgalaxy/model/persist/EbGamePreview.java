@@ -270,10 +270,15 @@ public class EbGamePreview extends EbBase
 
 
   /**
+   * allways return null if p_color is None
    * @return the registration which control p_color. (or null if it doesn't exist)
    */
   public EbRegistration getRegistrationByColor(int p_color)
   {
+    if( p_color == EnuColor.None )
+    {
+      return null;
+    }
     for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
     {
       EbRegistration registration = (EbRegistration)it.next();

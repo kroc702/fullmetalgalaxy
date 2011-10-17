@@ -22,13 +22,16 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Embedded;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.TokenType;
+import com.googlecode.objectify.annotation.Serialized;
 
 
 /**
@@ -78,6 +81,9 @@ public class EbRegistration extends EbBase
   /** number of weather hen at the last time step change. */
   private int m_workingWeatherHenCount = 0;
   private Date m_endTurnDate = null;
+  private Date m_lastConnexion = new Date();
+  @Serialized
+  private List<String> m_notifSended = null;
 
   @Embedded
   private EbPublicAccount m_account = null;
@@ -162,6 +168,37 @@ public class EbRegistration extends EbBase
     int futurActionPt = getPtAction() / p_game.getEbConfigGameTime().getRoundActionPt();
     futurActionPt *= p_game.getEbConfigGameTime().getRoundActionPt();
     return futurActionPt;
+  }
+
+  public int getMaxActionPt(Game p_game)
+  {
+    int nbColor = getEnuColor().getNbColor();
+    return p_game.getEbConfigGameVariant().getActionPtMaxReserve()
+        + ((nbColor - 1) * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
+  }
+
+
+  public boolean isNotifSended(String p_msgName)
+  {
+    if( m_notifSended == null )
+    {
+      return false;
+    }
+    return m_notifSended.contains( p_msgName );
+  }
+
+  public void clearNotifSended()
+  {
+    m_notifSended = null;
+  }
+
+  public void addNotifSended(String p_msgName)
+  {
+    if( m_notifSended == null )
+    {
+      m_notifSended = new ArrayList<String>();
+    }
+    m_notifSended.add( p_msgName );
   }
 
   // getters / setters
@@ -304,6 +341,26 @@ public class EbRegistration extends EbBase
   public void setWorkingWeatherHenCount(int p_workingWeatherHenCount)
   {
     m_workingWeatherHenCount = p_workingWeatherHenCount;
+  }
+
+  /**
+   * @return the lastConnexion
+   */
+  public Date getLastConnexion()
+  {
+    return m_lastConnexion;
+  }
+
+  /**
+   * @param p_lastConnexion the lastConnexion to set
+   */
+  public void updateLastConnexion()
+  {
+    if( m_lastConnexion == null )
+    {
+      m_lastConnexion = new Date();
+    }
+    m_lastConnexion.setTime( System.currentTimeMillis() );
   }
 
 

@@ -40,6 +40,7 @@ import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
@@ -217,7 +218,10 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
 
         // do we need to send an email ?
-        GameNotification.sendMail( model, modelUpdate );
+        if( GameNotification.sendMail( model, modelUpdate ) )
+        {
+          dataStore.put( model );
+        }
       }
     } catch( RpcFmpException e )
     {
@@ -344,10 +348,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
             + ") thief account " + p_action.getAccountId() );
       }
     }*/
-    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-    
-    modelUpdate.setGameId( game.getId() );
-    modelUpdate.setFromVersion( game.getVersion() );
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate( game );
     modelUpdate.setGameEvents( GameWorkflow.checkUpdate( game ) );
 
     // execute actions
@@ -362,6 +363,12 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         if( event instanceof AnEventUser )
         {
           ((AnEventUser)event).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+          EbRegistration registration = ((AnEventUser)event).getMyRegistration( game );
+          if( registration != null )
+          {
+            registration.updateLastConnexion();
+            registration.clearNotifSended();
+          }
         }
         event.setLastUpdate( ServerUtil.currentDate() );
         
@@ -388,13 +395,14 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       throw e;
     }
 
-
-    dataStore.put( game );
-    dataStore.close();
     modelUpdate.setToVersion( game.getVersion() );
 
     // do we need to send an email ?
     GameNotification.sendMail( game, modelUpdate );
+
+    // and save game
+    dataStore.put( game );
+    dataStore.close();
 
     // broadcast changes to all clients
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );

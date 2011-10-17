@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.server.forum;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -78,7 +79,9 @@ public class SynchroForum extends HttpServlet
     public void run()
     {
       long startTime = System.currentTimeMillis();
-      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class );
+      Date lastMonth = EbAccount.getLastConnexionDate2beActive();
+      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class )
+          .filter( "m_lastConnexion >", lastMonth );
       if( m_cursor != null )
       {
         query.startCursor( m_cursor );

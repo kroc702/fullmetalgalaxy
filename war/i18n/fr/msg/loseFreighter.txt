@@ -1,0 +1,7 @@
+{game_name} - Perte de l'astronef
+Bonjour {pseudo},
+Vous venez de perdre votre astronef sur la partie {game_name} {game_url}.
+Oui, ce jeu est parfois cruel...
+
+Cordialement
+Full Metal Galaxy

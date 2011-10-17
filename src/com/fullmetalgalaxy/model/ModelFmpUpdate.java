@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -55,6 +56,12 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
 
   public ModelFmpUpdate()
   {
+  }
+
+  public ModelFmpUpdate(Game p_game)
+  {
+    setGameId( p_game.getId() );
+    setFromVersion( p_game.getVersion() );
   }
 
 

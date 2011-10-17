@@ -244,7 +244,7 @@ public class EbEvtControl extends AnEventPlay
   /**
    * @return the oldColor
    */
-  private int getOldColor()
+  public int getOldColor()
   {
     return m_oldColor;
   }

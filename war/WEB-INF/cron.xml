@@ -14,7 +14,7 @@
   <cron>
     <url>/cron/gameupdate</url>
     <description>Check for any game update</description>
-    <schedule>every day 05:00</schedule>
+    <schedule>every 5 hours</schedule>
     <timezone>Europe/Paris</timezone>
   </cron>
 </cronentries>

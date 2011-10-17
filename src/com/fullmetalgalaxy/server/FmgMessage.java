@@ -38,6 +38,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 
@@ -52,6 +53,7 @@ import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
  * game_name
  * game_url
  * game_currentTimeStep
+ * game_results
  * </pre>
  */
 public class FmgMessage
@@ -361,6 +363,25 @@ public class FmgMessage
       m_params.put( "game_url", "http://www.fullmetalgalaxy.com/game.jsp?id=" + p_game.getId() );
       m_params.put( "game_currentTimeStep", "" + p_game.getCurrentTimeStep() );
       m_params.put( "game_description", p_game.getDescription() );
+      
+      // compute game result
+      String gameResults = "";
+      if( p_game.isFinished() )
+      {
+        for(EbRegistration registration : p_game.getRegistrationByWinningRank() )
+        {
+          if( registration.getAccount() != null )
+          {
+            gameResults += registration.getAccount().getPseudo();
+          }
+          else
+          {
+            gameResults += "???";
+          }
+          gameResults += " : " + registration.getWinningScore( p_game ) + " pts\n";
+        }
+      }
+      m_params.put( "game_results", gameResults );
     }
     return this;
   }

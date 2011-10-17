@@ -1,0 +1,8 @@
+{game_name} - Notification automatique
+Bonjour {pseudo},
+Vous etes inscrit sur la partie {game_name} {game_url} et vous venez d'atteindre le maximum de point d'action
+que vous pouvez économiser.
+Si vous ne vous connectez pas rapidement, vous allez perdre les points d'actions supplémentaires.
+
+Cordialement
+Full Metal Galaxy

@@ -1,0 +1,6 @@
+{game_name} - Vous êtes attaqué !
+Bonjour {pseudo},
+Vous venez de perdre une unité sur la partie {game_name} {game_url}.
+
+Cordialement
+Full Metal Galaxy
