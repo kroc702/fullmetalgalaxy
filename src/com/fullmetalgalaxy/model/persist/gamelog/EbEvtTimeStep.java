@@ -27,9 +27,9 @@ import java.util.Date;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -130,11 +130,9 @@ public class EbEvtTimeStep extends AnEvent
         {
           action = FmpConstant.maximumActionPtWithoutLanding;
         }
-        if( action > game.getEbConfigGameVariant().getActionPtMaxReserve()
-            + ((nbColor - 1) * game.getEbConfigGameVariant().getActionPtMaxPerExtraShip()) )
+        if( action > registration.getMaxActionPt( p_game ) )
         {
-          action = game.getEbConfigGameVariant().getActionPtMaxReserve()
-              + ((nbColor - 1) * game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
+          action = registration.getMaxActionPt( p_game );
         }
         registration.setPtAction( action );
       }

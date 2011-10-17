@@ -304,6 +304,12 @@ public class EbAccount extends EbPublicAccount
     return newsHtml;
   }
   
+  public static Date getLastConnexionDate2beActive()
+  {
+    // 30 days
+    return new Date( System.currentTimeMillis() - (1000l * 60 * 60 * 24 * 30) );
+  }
+
   /**
    * account is considered as active if he connect itself in the last 30 days
    * @return true if account is active
@@ -311,8 +317,7 @@ public class EbAccount extends EbPublicAccount
   public boolean isActive()
   {
     return getLastConnexion() != null
-        && getLastConnexion().getTime() > System.currentTimeMillis()
-            - (1000l * 60 * 60 * 24 * 30);  // 30 days
+        && getLastConnexion().getTime() > getLastConnexionDate2beActive().getTime();
   }
   
   public boolean canChangePseudo()

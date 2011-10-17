@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -86,6 +87,7 @@ public class GameUpdate extends HttpServlet
       while( iterator.hasNext() )
       {
         Game game = FmgDataStore.dao().getGame( iterator.next() );
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate( game );
         ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
         try
         {
@@ -99,6 +101,13 @@ public class GameUpdate extends HttpServlet
         {
           // something changed in this game: save it
           FmgDataStore ds = new FmgDataStore( false );
+
+          // do we need to send an email ?
+          modelUpdate.getGameEvents().addAll( eventAdded );
+          modelUpdate.setToVersion( game.getVersion() );
+          GameNotification.sendMail( game, modelUpdate );
+
+          // and save game
           ds.put( game );
           ds.close();
         }

@@ -1,0 +1,7 @@
+{game_name} - Partie en pause
+Bonjour {pseudo},
+La partie {game_name} {game_url} vient d'être mis en pause par son créateur ou un admin.
+Vous recevrez une nouvelle notification lorsqu'elle reprendra.
+
+Cordialement
+Full Metal Galaxy

@@ -29,8 +29,13 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePause;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControl;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 
 /**
@@ -47,9 +52,11 @@ public class GameNotification
    * eventually send an email to people that need it.
    * This method have to be called after p_update have been successfully ran.
    * @param action
+   * @return true if at least one mail was sended. in this case you must save provided Game
    */
-  public static void sendMail(Game p_game, ModelFmpUpdate p_update)
+  public static boolean sendMail(Game p_game, ModelFmpUpdate p_update)
   {
+    boolean mailSended = false;
     for( AnEvent action : p_update.getGameEvents() )
     {
       if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
@@ -64,16 +71,75 @@ public class GameNotification
             msg = new FmgMessage( "paralleleGameUnpause", p_game );
           }
           send2AllPlayers( msg, p_game, NotificationQty.Min );
-          return;
+          mailSended = true;
         }
+        else
+        {
+          // new turn => email to current player
+          send2Player( new FmgMessage( "newTurn", p_game ), p_game,
+              p_game.getCurrentPlayerRegistration(), NotificationQty.Min );
+          mailSended = true;
+        }
+      }
 
+      if( action instanceof EbAdminTimePause )
+      {
+        send2AllPlayers( new FmgMessage( "gamePause", p_game ), p_game, NotificationQty.Std );
+        mailSended = true;
+      }
 
-        // new turn => email to current player
-        send2Player( new FmgMessage( "newTurn", p_game ), p_game,
-            p_game.getCurrentPlayerRegistration(), NotificationQty.Min );
-        return;
+      if( action instanceof EbEvtTimeStep )
+      {
+        for( EbRegistration registration : p_game.getSetRegistration() )
+        {
+          if( registration.getPtAction() > registration.getMaxActionPt( p_game )
+              - p_game.getEbConfigGameTime().getActionPtPerTimeStep() )
+          {
+            send2Player( new FmgMessage( "tooManyPA", p_game ), p_game, registration,
+                NotificationQty.Std );
+            mailSended = true;
+          }
+        }
+      }
+
+      if( action instanceof EbEvtControlFreighter )
+      {
+        EbRegistration looser = ((EbEvtControlFreighter)action).getOldRegistration( p_game );
+        send2Player( new FmgMessage( "loseFreighter", p_game ), p_game, looser, NotificationQty.Min );
+        mailSended = true;
+      }
+
+      if( action instanceof EbEvtControl )
+      {
+        EbRegistration registration = p_game.getRegistrationByColor( ((EbEvtControl)action)
+            .getOldColor() );
+        if( registration != null )
+        {
+          send2Player( new FmgMessage( "loseUnit", p_game ), p_game, registration,
+              NotificationQty.Max );
+          mailSended = true;
+        }
+      }
+      if( action instanceof EbEvtFire )
+      {
+        EbRegistration registration = p_game.getRegistrationByColor( ((EbEvtFire)action)
+            .getTokenTarget( p_game ).getColor() );
+        if( registration != null )
+        {
+          send2Player( new FmgMessage( "loseUnit", p_game ), p_game, registration,
+              NotificationQty.Max );
+          mailSended = true;
+        }
       }
     }
+
+    if( p_game.isHistory() )
+    {
+      send2AllPlayers( new FmgMessage( "gameFinish", p_game ), p_game, NotificationQty.Min );
+      mailSended = true;
+    }
+
+    return mailSended;
   }
 
 
@@ -88,6 +154,12 @@ public class GameNotification
   private static void send2Player(FmgMessage p_msg, Game p_game, EbRegistration p_registration,
       NotificationQty p_level)
   {
+    if( p_registration == null || p_registration.isNotifSended( p_msg.getName() ) )
+    {
+      logger.finest( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
+          + " already receive his notif" );
+      return;
+    }
     EbAccount account = null;
     if( p_registration != null && p_registration.getAccount() != null )
     {
@@ -112,7 +184,10 @@ public class GameNotification
       return;
     }
     // finally send message
-    p_msg.send( account );
+    if( p_msg.send( account ) )
+    {
+      p_registration.addNotifSended( p_msg.getName() );
+    }
   }
 
 
