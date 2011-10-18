@@ -724,6 +724,11 @@ public class EbAccount extends EbPublicAccount
    */
   public NotificationQty getNotificationQty()
   {
+    // for compatibility
+    if( m_notificationQty == null )
+    {
+      m_notificationQty = NotificationQty.Std;
+    }
     return m_notificationQty;
   }
 
