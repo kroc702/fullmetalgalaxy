@@ -27,7 +27,6 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
-import com.fullmetalgalaxy.client.event.MessageEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
@@ -39,14 +38,11 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
-import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -165,7 +161,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
         .add( new Label(
             "Pour permettre l'inscription d'un nouveau joueur vous devriez mettre la partie en pause" ) );
     m_pnlPause = new FocusPanel( hPanel );
-    m_pnlPause.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.endTurn32().createImage() );
     hPanel.add( new Label( "Vous devez maintenant terminez votre tour !" ) );
@@ -322,13 +317,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
           action.setToken( actionBuilder.getSelectedToken() );
           GameEngine.model().runSingleAction( action );
         }
-      }
-      else if( sender == m_pnlPause )
-      {
-        AnEvent gameLog = GameLogFactory.newAdminTimePause( AppMain.instance().getMyAccount()
-            .getId() );
-        gameLog.setGame( GameEngine.model().getGame() );
-        GameEngine.model().runSingleAction( gameLog );
       }
       else if( sender == m_pnlLand )
       {
