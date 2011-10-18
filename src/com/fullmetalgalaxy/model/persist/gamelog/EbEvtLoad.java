@@ -190,6 +190,16 @@ public class EbEvtLoad extends AnEventPlay
           Messages.getColorString( getAccountId(),
               p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
     }
+    if( getToken( p_game ).getColor() == EnuColor.None
+        && p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
+            getToken( p_game ).getPosition() ).getValue() != EnuColor.None )
+    {
+      // the colorless token is loaded from opponent fire cover
+      throw new RpcFmpException( errMsg().CantUnloadDisableFire(
+          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
+          Messages.getColorString( getAccountId(),
+              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
+    }
   }
 
   /* (non-Javadoc)
