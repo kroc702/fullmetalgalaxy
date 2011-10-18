@@ -750,6 +750,15 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     return m_data.isMessageWebUrl();
   }
+
+  /**
+   * @return
+   * @see com.fullmetalgalaxy.model.persist.EbGamePreview#getLastUpdate()
+   */
+  public Date getLastUpdate()
+  {
+    return m_preview.getLastUpdate();
+  }
   
   
   

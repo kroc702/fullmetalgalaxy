@@ -312,6 +312,31 @@ public class GameWorkflow
         }*/
       }
 
+      // are all player take off before the end ?
+      // -> in this case, we don't mind new tide
+      if( lastEvent instanceof EbEvtPlayerTurn && (p_game.getCurrentPlayerRegistration() != null) )
+      {
+        boolean isGameFinish = true;
+        for( EbToken freighter : p_game.getAllFreighter( p_game.getCurrentPlayerRegistration() ) )
+        {
+          if( freighter.getLocation() == Location.Board )
+          {
+            isGameFinish = false;
+          }
+        }
+        while( isGameFinish && !p_game.isFinished() )
+        {
+          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+          event.setAuto( true );
+          event.setGame( p_game );
+          event.checkedExec( p_game );
+          p_game.addEvent( event );
+          eventAdded.add( event );
+          lastEvent = event;
+        }
+      }
+
+      // if new turn occur: trigger new tide
       int oldPlayerOrderIndex = Integer.MAX_VALUE;
       if( !p_game.isAsynchron() )
       {
@@ -350,6 +375,66 @@ public class GameWorkflow
   }
 
 
+  /**
+   * these update are check less often (ie only by cron task) to see if a game is blocked
+   * and if we can unblock it.
+   * send email to player or game creator
+   * play obvious action
+   * @param p_game
+   * @return
+   * @throws RpcFmpException
+   */
+  static public ArrayList<AnEvent> checkUpdate2Unblock(Game p_game) throws RpcFmpException
+  {
+    assert p_game != null;
+    ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
+
+    // in some case, game is never updated
+    long lastHour = System.currentTimeMillis() - (1000 * 60 * 60);
+    if( p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
+        || p_game.getLastUpdate().getTime() > lastHour )
+    {
+      // in all these case, game isn't blocked
+      return eventAdded;
+    }
+
+    // TODO if game is paused since a long time, send email to game creator
+
+    if( p_game.getEbConfigGameTime().isAsynchron() )
+    {
+      // game isn't blocked
+      return eventAdded;
+    }
+
+    AnEvent lastEvent = p_game.getLastLog();
+    if( !p_game.isFinished() && lastEvent != null )
+    {
+      // player may forget to set next turn after take off
+      if( lastEvent instanceof EbEvtTakeOff )
+      {
+        boolean isGameFinish = true;
+        for( EbToken freighter : p_game.getAllFreighter( ((EbEvtTakeOff)lastEvent)
+            .getMyRegistration( p_game ) ) )
+        {
+          if( freighter.getLocation() == Location.Board )
+          {
+            isGameFinish = false;
+          }
+        }
+        if( isGameFinish )
+        {
+          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+          event.setAuto( true );
+          event.setGame( p_game );
+          event.checkedExec( p_game );
+          p_game.addEvent( event );
+          eventAdded.add( event );
+          lastEvent = event;
+        }
+      }
+    }
+    return eventAdded;
+  }
 
 
   /**
