@@ -719,7 +719,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         {
           m_currentActionIndex--;
           currentEvent = getGame().getLogs().get( m_currentActionIndex );
-          currentEvent.unexec( getGame() );
+          if( !(currentEvent instanceof EbAdmin) && !(currentEvent instanceof EbGameJoin)
+              && !(currentEvent instanceof EbEvtCancel) )
+          {
+            currentEvent.unexec( getGame() );
+          }
         }
         if( m_currentActionIndex < 0 || m_currentActionIndex >= getGame().getLogs().size() )
         {

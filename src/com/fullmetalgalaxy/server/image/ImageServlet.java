@@ -50,11 +50,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.server.image.CacheKey.CacheKeyType;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.fullmetalgalaxy.server.ServerUtil;
+import com.fullmetalgalaxy.server.image.CacheKey.CacheKeyType;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -78,12 +78,14 @@ public class ImageServlet extends HttpServlet
   private EbAccount findAccount(String p_id)
   {
     EbAccount account = null;
+    long accountId = 0;
     try {
-      account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( p_id ) );
+      accountId = Long.parseLong( p_id );
     } catch( Exception e ) 
     {
-      ServerUtil.logger.severe( e.getMessage() );
+      ServerUtil.logger.finest( e.getMessage() );
     }
+    account = FmgDataStore.dao().find( EbAccount.class, accountId );
     if( account == null )
     {
       // avatarid may be a user pseudo

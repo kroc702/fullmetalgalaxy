@@ -91,7 +91,8 @@ public class GameUpdate extends HttpServlet
         ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
         try
         {
-          eventAdded = GameWorkflow.checkUpdate( game );
+          eventAdded = GameWorkflow.checkUpdate2Unblock( game );
+          eventAdded.addAll( GameWorkflow.checkUpdate( game ) );
         } catch( RpcFmpException e )
         {
           log.error( e );
