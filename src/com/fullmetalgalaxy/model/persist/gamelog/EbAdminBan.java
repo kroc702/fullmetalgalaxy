@@ -24,10 +24,11 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
 
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 
 /**
  * @author Vincent
@@ -76,6 +77,18 @@ public class EbAdminBan extends EbAdmin
     super.check( p_game );
     // only admin or game creator sould be able to do this
     // TODO how to check my account is admin ?
+
+    EbRegistration registration = p_game.getRegistration( getRegistrationId() );
+    if( registration == null )
+    {
+      // no i18n
+      throw new RpcFmpException( "No registration to ban was selected" );
+    }
+    if( registration.getColor() == EnuColor.None )
+    {
+      // TODO i18n
+      throw new RpcFmpException( "Vous ne pouvez pas banir les joueurs sans astronef" );
+    }
   }
 
   /* (non-Javadoc)
