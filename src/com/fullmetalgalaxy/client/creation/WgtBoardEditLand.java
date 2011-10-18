@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.creation;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
+import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
@@ -51,6 +52,7 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
   public WgtBoardEditLand()
   {
     super();
+    GameEngine.model().setZoomDisplayed( EnuZoom.Small );
     m_focus.add( m_html );
     m_focus.addMouseListener( this );
     m_focus.setSize( "100%", "100%" );
