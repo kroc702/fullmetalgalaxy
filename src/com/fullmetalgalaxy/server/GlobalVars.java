@@ -23,6 +23,8 @@
 
 package com.fullmetalgalaxy.server;
 
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -140,7 +142,7 @@ public class GlobalVars extends GlobalVarBase
 
   public static int incrementAbortedGameCount(int p_toAdd)
   {
-    return increment( "AbortedGameCount", p_toAdd );
+    return (int)increment( "AbortedGameCount", p_toAdd );
   }
 
 
@@ -154,9 +156,14 @@ public class GlobalVars extends GlobalVarBase
     put( "FinishedGameCount", p_accountCount );
   }
 
+  /**
+   * TODO remove this stat as it is included in FGameNbConfigGameTime
+   * @param p_toAdd
+   * @return
+   */
   public static int incrementFinishedGameCount(int p_toAdd)
   {
-    return increment( "FinishedGameCount", p_toAdd );
+    return (int)increment( "FinishedGameCount", p_toAdd );
   }
 
 
@@ -172,7 +179,7 @@ public class GlobalVars extends GlobalVarBase
 
   public static int incrementOpenGameCount(int p_toAdd)
   {
-    return increment( "OpenGameCount", p_toAdd );
+    return (int)increment( "OpenGameCount", p_toAdd );
   }
 
 
@@ -188,7 +195,7 @@ public class GlobalVars extends GlobalVarBase
 
   public static int incrementRunningGameCount(int p_toAdd)
   {
-    return increment( "RunningGameCount", p_toAdd );
+    return (int)increment( "RunningGameCount", p_toAdd );
   }
 
 
@@ -199,8 +206,207 @@ public class GlobalVars extends GlobalVarBase
 
   public static int incrementDeletedGameCount(int p_toAdd)
   {
-    return increment( "DeletedGameCount", p_toAdd );
+    return (int)increment( "DeletedGameCount", p_toAdd );
   }
+
+  // =================================
+  // finished games stats
+  // =================================
+  public static int getFGameNbPlayer()
+  {
+    return getInt( "FGameNbPlayer" );
+  }
+  public static void setFGameNbPlayer(int p_value)
+  {
+    put( "FGameNbPlayer", p_value );
+  }
+
+  public static int incrementFGameNbPlayer(int p_value)
+  {
+    return (int)increment( "FGameNbPlayer", p_value );
+  }
+
+  private static String getVarName(ConfigGameTime p_config)
+  {
+    switch( p_config )
+    {
+    case Standard:
+      return "FGameNbTimeStandard";
+    case QuickAsynch:
+      return "FGameNbTimeQuickAsynch";
+    case QuickTurnBased:
+      return "FGameNbTimeQuickTurnBased";
+    case StandardAsynch:
+      return "FGameNbTimeStandardAsynch";
+    case Custom:
+    default:
+      return "FGameNbTimeCustom";
+    }
+  }
+
+  public static int getFGameNbConfigGameTime(ConfigGameTime p_config)
+  {
+    return getInt( getVarName( p_config ) );
+  }
+
+  public static void setFGameNbConfigGameTime(ConfigGameTime p_config, int p_value)
+  {
+    put( getVarName( p_config ), p_value );
+  }
+
+  public static int incrementFGameNbConfigGameTime(ConfigGameTime p_config, int p_value)
+  {
+    return (int)increment( getVarName( p_config ), p_value );
+  }
+
+  private static String getVarName(ConfigGameVariant p_config)
+  {
+    switch( p_config )
+    {
+    case Standard:
+    default:
+      return "FGameNbVariantStandard";
+    }
+  }
+
+  public static int getFGameNbConfigGameVariant(ConfigGameVariant p_config)
+  {
+    return getInt( getVarName( p_config ) );
+  }
+
+  public static void setFGameNbConfigGameVariant(ConfigGameVariant p_config, int p_value)
+  {
+    put( getVarName( p_config ), p_value );
+  }
+  public static int incrementFGameNbConfigGameVariant(ConfigGameVariant p_config, int p_value)
+  {
+    return (int)increment( getVarName( p_config ), p_value );
+  }
+
+
+
+  public static long getFGameNbOfHexagon()
+  {
+    return getLong( "FGameNbOfHexagon" );
+  }
+
+  public static void setFGameNbOfHexagon(long p_value)
+  {
+    put( "FGameNbOfHexagon", p_value );
+  }
+
+  public static long incrementFGameNbOfHexagon(int p_value)
+  {
+    return increment( "FGameNbOfHexagon", p_value );
+  }
+
+
+  public static int getFGameFmpScore()
+  {
+    return getInt( "FGameFmpScore" );
+  }
+
+  public static void setFGameFmpScore(int p_value)
+  {
+    put( "FGameFmpScore", p_value );
+  }
+
+  public static int incrementFGameFmpScore(int p_value)
+  {
+    return (int)increment( "FGameFmpScore", p_value );
+  }
+
+  public static int getFGameFireCount()
+  {
+    return getInt( "FGameFireCount" );
+  }
+
+  public static void setFGameFireCount(int p_value)
+  {
+    put( "FGameFireCount", p_value );
+  }
+
+  public static int incrementFGameFireCount(int p_value)
+  {
+    return (int)increment( "FGameFireCount", p_value );
+  }
+
+  public static int getFGameUnitControlCount()
+  {
+    return getInt( "FGameUnitControlCount" );
+  }
+
+  public static void setFGameUnitControlCount(int p_value)
+  {
+    put( "FGameUnitControlCount", p_value );
+  }
+
+  public static int incrementFGameUnitControlCount(int p_value)
+  {
+    return (int)increment( "FGameUnitControlCount", p_value );
+  }
+
+  public static int getFGameFreighterControlCount()
+  {
+    return getInt( "FGameFreighterControlCount" );
+  }
+
+  public static void setFGameFreighterControlCount(int p_value)
+  {
+    put( "FGameFreighterControlCount", p_value );
+  }
+
+  public static int incrementFGameFreighterControlCount(int p_value)
+  {
+    return (int)increment( "FGameFreighterControlCount", p_value );
+  }
+
+
+  public static int getFGameConstructionCount()
+  {
+    return getInt( "FGameConstructionCount" );
+  }
+
+  public static void setFGameConstructionCount(int p_value)
+  {
+    put( "FGameConstructionCount", p_value );
+  }
+
+  public static int incrementFGameConstructionCount(int p_value)
+  {
+    return (int)increment( "FGameConstructionCount", p_value );
+  }
+
+  public static int getFGameOreCount()
+  {
+    return getInt( "FGameOreCount" );
+  }
+
+  public static void setFGameOreCount(int p_value)
+  {
+    put( "FGameOreCount", p_value );
+  }
+
+  public static int incrementFGameOreCount(int p_value)
+  {
+    return (int)increment( "FGameOreCount", p_value );
+  }
+
+  public static int getFGameTokenCount()
+  {
+    return getInt( "FGameTokenCount" );
+  }
+
+  public static void setFGameTokenCount(int p_value)
+  {
+    put( "FGameTokenCount", p_value );
+  }
+
+  public static int incrementFGameTokenCount(int p_value)
+  {
+    return (int)increment( "FGameTokenCount", p_value );
+  }
+
 
 
 }

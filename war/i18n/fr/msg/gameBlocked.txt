@@ -1,0 +1,8 @@
+{game_name} - Partie bloqué
+Bonjour {pseudo},
+La partie {game_name} {game_url} est bloque depuis quelques temps.
+Etant le createur de cette partie, vous pouvez retirez la pause ou banir les joueurs qui ne désire plus jouer.
+N'hésitez pas a contacter l'administreur pour toute question.
+
+Cordialement
+Full Metal Galaxy

@@ -25,10 +25,30 @@ Niveau maximum : <%= GlobalVars.getMaxLevel() %>
 <h3>Les parties</h3>
 <pre>
 Nombre de partie ouverte : <%= GlobalVars.getOpenGameCount() %>
-Nombre de partie en cour : <%= GlobalVars.getRunningGameCount() %>
+Nombre de partie en cours : <%= GlobalVars.getRunningGameCount() %>
 Nombre de partie terminée : <%= GlobalVars.getFinishedGameCount() %>
 Nombre de partie annulée : <%= GlobalVars.getAbortedGameCount() %>
 Nombre de partie effacée : <%= GlobalVars.getDeletedGameCount() %>
+</pre>
+<h3>Les parties terminées</h3>
+<pre>
+Nombre de partie time Standard : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.Standard) %>
+Nombre de partie time StandardAsynch : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.StandardAsynch) %>
+Nombre de partie time QuickTurnBased : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.QuickTurnBased) %>
+Nombre de partie time QuickTurnBased : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.QuickTurnBased) %>
+Nombre de partie time Custom : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.Custom) %>
+Nombre de partie variant Standard : <%= GlobalVars.getFGameNbConfigGameVariant(ConfigGameVariant.Standard) %>
+
+Nombre d'hexagon  : <%= GlobalVars.getFGameNbOfHexagon() %>
+Nombre de joueurs  : <%= GlobalVars.getFGameNbPlayer() %>
+Somme des scores  : <%= GlobalVars.getFGameFmpScore() %>
+
+Nombre de minerai récupéré : <%= GlobalVars.getFGameOreCount() %>
+Nombre d'unité ramené : <%= GlobalVars.getFGameTokenCount() %>
+Nombre de construction : <%= GlobalVars.getFGameConstructionCount() %>
+Nombre de tir : <%= GlobalVars.getFGameFireCount() %>
+Nombre de control : <%= GlobalVars.getFGameUnitControlCount() %>
+Nombre de control d'astronef : <%= GlobalVars.getFGameFreighterControlCount() %>
 </pre>
 
 <%@include file="include/footer.jsp"%>

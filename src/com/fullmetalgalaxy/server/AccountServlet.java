@@ -61,7 +61,28 @@ public class AccountServlet extends HttpServlet
   protected void doGet(HttpServletRequest p_request, HttpServletResponse p_response)
       throws ServletException, IOException
   {
-    if( p_request.getParameter( "logout" ) != null )
+    if( p_request.getParameter( "profil" ) != null )
+    {
+      // redirect to real profil url
+      // ===========================
+      long id = 0;
+      try
+      {
+        id = Long.parseLong( p_request.getParameter( "profil" ) );
+      } catch( Exception e )
+      {
+      }
+      if( id != 0 )
+      {
+        EbAccount account = FmgDataStore.dao().get( EbAccount.class, id );
+        p_response.sendRedirect( account.getProfileUrl() );
+      }
+      else
+      {
+        p_response.sendRedirect( "/genericmsg.jsp?title=Erreur: utilisateur non trouvé" );
+      }
+    }
+    else if( p_request.getParameter( "logout" ) != null )
     {
       // user logout
       // ===========
@@ -186,7 +207,7 @@ public class AccountServlet extends HttpServlet
     }
     else if( isPassword )
     {
-      // user ask for his password
+      // user ask for his password to be send on his email
       String msg = "";
       FmgDataStore ds = new FmgDataStore( false );
       Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
@@ -224,6 +245,7 @@ public class AccountServlet extends HttpServlet
     }
     else
     {
+      // update or create new account
       String msg = checkParams( params );
       if( msg != null )
       {
@@ -423,6 +445,17 @@ public class AccountServlet extends HttpServlet
       store.rollback();
       return "Vous devez definir un mot de passe";
     }
+
+
+    if( id == 0 && params.containsKey( "createforumaccount" ) )
+    {
+      // a new account was created: check if we need to create new forum account
+      if( ServerUtil.forumConnector().createAccount( account ) )
+      {
+        account.setIsforumIdConfirmed( true );
+      }
+    }
+
     store.put( account );
     store.close();
     // to reload account data from datastore

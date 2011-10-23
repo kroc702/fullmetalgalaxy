@@ -31,9 +31,11 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
@@ -314,7 +316,9 @@ public class GameWorkflow
 
       // are all player take off before the end ?
       // -> in this case, we don't mind new tide
-      if( lastEvent instanceof EbEvtPlayerTurn && (p_game.getCurrentPlayerRegistration() != null) )
+      if( lastEvent instanceof EbEvtPlayerTurn
+          && (p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns().get( 0 ))
+          && (p_game.getCurrentPlayerRegistration() != null) )
       {
         boolean isGameFinish = true;
         for( EbToken freighter : p_game.getAllFreighter( p_game.getCurrentPlayerRegistration() ) )
@@ -398,7 +402,24 @@ public class GameWorkflow
       return eventAdded;
     }
 
-    // TODO if game is paused since a long time, send email to game creator
+    // if game is blocked since a long time, send email to game creator
+    long last10Days = System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 10);
+    if( p_game.getLastUpdate().getTime() < last10Days )
+    {
+      // this message will keep track of this, save game and update last update
+      // -> creator will have to do something or he will receive this message
+      // every 10 days.
+      EbAdmin event = new EbAdmin();
+      event.setAuto( true );
+      event.setMessage( "send a game blocked message to game creator" );
+      p_game.addEvent( event );
+      eventAdded.add( event );
+
+      // send message to game creator
+      EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+          p_game.getAccountCreator().getId() );
+      new FmgMessage( "gameBlocked" ).sendEMail( account );
+    }
 
     if( p_game.getEbConfigGameTime().isAsynchron() )
     {
@@ -433,6 +454,30 @@ public class GameWorkflow
         }
       }
     }
+
+    long last48Hour = System.currentTimeMillis() - (1000 * 60 * 60 * 48);
+    if( p_game.isStarted() && p_game.getLastUpdate().getTime() < last48Hour )
+    {
+      // current player didn't play since 48 hours...
+      EbRegistration registration = p_game.getCurrentPlayerRegistration();
+      if( registration != null && registration.getAccount() != null )
+      {
+        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+            registration.getAccount().getId() );
+        if( new FmgMessage( "playerDontPlay" ).sendEMail( account ) )
+        {
+          registration.addNotifSended( "playerDontPlay" );
+          // to save game & registration
+          EbAdmin event = new EbAdmin();
+          event.setAuto( true );
+          event.setMessage( "send a notification to current player" );
+          p_game.addEvent( event );
+          eventAdded.add( event );
+        }
+      }
+      
+    }
+
     return eventAdded;
   }
 
@@ -474,6 +519,12 @@ public class GameWorkflow
     p_game.setHistory( true );
     GlobalVars.incrementRunningGameCount( -1 );
     GlobalVars.incrementFinishedGameCount( 1 );
+
+    // add all stat related to finished game
+    GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), 1 );
+    GlobalVars.incrementFGameNbConfigGameVariant( p_game.getConfigGameVariant(), 1 );
+    GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
+    GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
   }
 
   /**

@@ -29,12 +29,14 @@ package com.fullmetalgalaxy.model.persist;
  */
 public enum PlayerStyle
 {
-  Sheep, Pacific, Balanced, Aggressive;
+  Mysterious, Sheep, Pacific, Balanced, Aggressive;
 
   public String getIconUrl()
   {
     switch( this )
     {
+    case Mysterious:
+      return "/images/icons/mysterious.png";
     case Sheep:
       return "/images/icons/sheep.png";
     case Pacific:

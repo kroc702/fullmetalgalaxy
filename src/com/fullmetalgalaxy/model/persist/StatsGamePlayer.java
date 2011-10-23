@@ -42,6 +42,9 @@ public class StatsGamePlayer extends StatsGame
 {
   static final long serialVersionUID = 1;
 
+  /** fmp raw score. differ from finalScore as it don't include bonus */
+  private int m_fmpScore = 0;
+
   /** game final rank (1 for winner) */
   private int m_gameRank = 0;
   /** fire action count during game */
@@ -358,6 +361,26 @@ public class StatsGamePlayer extends StatsGame
   public void setTokenCount(int p_tokenCount)
   {
     m_tokenCount = p_tokenCount;
+  }
+
+  /**
+   * @return the fmpScore
+   */
+  public int getFmpScore()
+  {
+    if( m_fmpScore == 0 && getFinalScore() != 0 )
+    {
+      m_fmpScore = getFinalScore();
+    }
+    return m_fmpScore;
+  }
+
+  /**
+   * @param p_fmpScore the fmpScore to set
+   */
+  public void setFmpScore(int p_fmpScore)
+  {
+    m_fmpScore = p_fmpScore;
   }
 
 

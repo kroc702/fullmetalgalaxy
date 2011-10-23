@@ -28,6 +28,7 @@ import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -46,9 +47,19 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
+import com.fullmetalgalaxy.model.persist.EbAccountStats;
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.StatsGame.Status;
+import com.fullmetalgalaxy.model.persist.StatsGamePlayer;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Query;
 
 /**
  * @author Vincent
@@ -309,6 +320,21 @@ public class AdminServlet extends HttpServlet
       }
     }
 
+    // recompute stats
+    // ===============
+    strid = p_req.getParameter( "recomputestats" );
+    if( strid != null )
+    {
+      int openGameCount = FmgDataStore.dao().query( EbGamePreview.class ).filter( "m_isOpen", true ).count();
+      int runningGameCount = FmgDataStore.dao().query( EbGamePreview.class ).filter( "m_history", false ).count() - openGameCount;
+      GlobalVars.setOpenGameCount( openGameCount );
+      GlobalVars.setRunningGameCount( runningGameCount );
+
+      QueueFactory.getDefaultQueue()
+          .add( TaskOptions.Builder.withPayload( new StatFGameCommand() ) );
+      p_resp.getOutputStream().println( "aborted & deleted game count can't be recomputed" );
+      p_resp.getOutputStream().println( "recompute stats task launched..." );
+    }
   }
 
   /* (non-Javadoc)
@@ -378,6 +404,132 @@ public class AdminServlet extends HttpServlet
     CacheStatistics stats = cache.getCacheStatistics();
     log.info( "Clearing " + stats.getObjectCount() + " objects in cache" );
     cache.clear();
+  }
+
+
+  /**
+   * 
+   * @author Vincent
+   * update all stat related to finished game.
+   * then launch StatFGameAccountCommand
+   */
+  protected class StatFGameCommand extends LongDBTask<EbGamePreview>
+  {
+    private static final long serialVersionUID = 1L;
+    private HashMap<ConfigGameTime, Integer> m_nbConfigGameTime = new HashMap<ConfigGameTime, Integer>();
+    private HashMap<ConfigGameVariant, Integer> m_nbConfigGameVariant = new HashMap<ConfigGameVariant, Integer>();
+    private long m_nbOfHexagon = 0;
+    private int m_nbPlayer = 0;
+
+    public StatFGameCommand()
+    {
+      for( ConfigGameTime config : ConfigGameTime.values() )
+      {
+        m_nbConfigGameTime.put( config, 0 );
+      }
+      for( ConfigGameVariant config : ConfigGameVariant.values() )
+      {
+        m_nbConfigGameVariant.put( config, 0 );
+      }
+    }
+
+    @Override
+    protected Query<EbGamePreview> getQuery()
+    {
+      Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
+      query.filter( "m_history", true );
+      return query;
+    }
+
+    @Override
+    protected void processKey(Key<EbGamePreview> p_key)
+    {
+      Game game = FmgDataStore.dao().getGame( p_key );
+      m_nbConfigGameTime.put( game.getConfigGameTime(),
+          m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
+      m_nbConfigGameVariant.put( game.getConfigGameVariant(),
+          m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
+      m_nbOfHexagon += game.getNumberOfHexagon();
+      m_nbPlayer += game.getSetRegistration().size();
+    }
+
+    @Override
+    protected void finish()
+    {
+      // save process stats into datastore
+      for( Entry<ConfigGameTime, Integer> entry : m_nbConfigGameTime.entrySet() )
+      {
+        GlobalVars.setFGameNbConfigGameTime( entry.getKey(), entry.getValue() );
+      }
+      for( Entry<ConfigGameVariant, Integer> entry : m_nbConfigGameVariant.entrySet() )
+      {
+        GlobalVars.setFGameNbConfigGameVariant( entry.getKey(), entry.getValue() );
+      }
+      GlobalVars.setFGameNbOfHexagon( m_nbOfHexagon );
+      GlobalVars.setFGameNbPlayer( m_nbPlayer );
+
+      // now, update stat related to players
+      QueueFactory.getDefaultQueue().add(
+          TaskOptions.Builder.withPayload( new StatFGameAccountCommand() ) );
+    }
+  }
+
+  /**
+   * 
+   * @author Vincent
+   * update all stat related to player and their finished game
+   */
+  protected class StatFGameAccountCommand extends LongDBTask<EbAccount>
+  {
+    private static final long serialVersionUID = 1L;
+    private int m_ConstructionCount = 0;
+    private int m_FireCount = 0;
+    private int m_FmpScore = 0;
+    private int m_FreighterControlCount = 0;
+    private int m_OreCount = 0;
+    private int m_TokenCount = 0;
+    private int m_UnitControlCount = 0;
+
+
+    @Override
+    protected Query<EbAccount> getQuery()
+    {
+      return FmgDataStore.dao().query( EbAccount.class );
+    }
+
+    @Override
+    protected void processKey(Key<EbAccount> p_key)
+    {
+      EbAccount account = FmgDataStore.dao().get( p_key );
+      for( EbAccountStats stat : account.getStats() )
+      {
+        if( stat instanceof StatsGamePlayer
+            && ((StatsGamePlayer)stat).getStatus() == Status.Finished )
+        {
+          StatsGamePlayer statp = ((StatsGamePlayer)stat);
+          m_ConstructionCount += statp.getConstructionCount();
+          m_FireCount += statp.getFireCount();
+          m_FmpScore += statp.getFmpScore();
+          m_FreighterControlCount += statp.getFreighterControlCount();
+          m_OreCount += statp.getOreCount();
+          m_TokenCount += statp.getTokenCount();
+          m_UnitControlCount += statp.getUnitControlCount();
+        }
+      }
+    }
+
+    @Override
+    protected void finish()
+    {
+      // save process stats into datastore
+      GlobalVars.incrementFGameConstructionCount( m_ConstructionCount );
+      GlobalVars.incrementFGameFireCount( m_FireCount );
+      GlobalVars.incrementFGameFmpScore( m_FmpScore );
+      GlobalVars.incrementFGameFreighterControlCount( m_FreighterControlCount );
+      GlobalVars.incrementFGameOreCount( m_OreCount );
+      GlobalVars.incrementFGameTokenCount( m_TokenCount );
+      GlobalVars.incrementFGameUnitControlCount( m_UnitControlCount );
+    }
   }
 
 }

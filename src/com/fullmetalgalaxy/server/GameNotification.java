@@ -59,7 +59,8 @@ public class GameNotification
     boolean mailSended = false;
     for( AnEvent action : p_update.getGameEvents() )
     {
-      if( (action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn) )
+      if( ((action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn))
+          && !p_game.isFinished() )
       {
         if( p_game.getCurrentPlayerRegistration() == null )
         {
@@ -70,21 +71,28 @@ public class GameNotification
           {
             msg = new FmgMessage( "paralleleGameUnpause", p_game );
           }
-          send2AllPlayers( msg, p_game, NotificationQty.Min );
+          send2AllPlayers( msg, p_game, NotificationQty.Min, false );
+          mailSended = true;
+        }
+        else if( p_game.getCurrentTimeStep() <= 1 )
+        {
+          // new turn in begin game => email to current player
+          send2Player( new FmgMessage( "newTurn", p_game ), p_game,
+              p_game.getCurrentPlayerRegistration(), NotificationQty.Min, false );
           mailSended = true;
         }
         else
         {
           // new turn => email to current player
           send2Player( new FmgMessage( "newTurn", p_game ), p_game,
-              p_game.getCurrentPlayerRegistration(), NotificationQty.Min );
+              p_game.getCurrentPlayerRegistration(), NotificationQty.Std, false );
           mailSended = true;
         }
       }
 
       if( action instanceof EbAdminTimePause )
       {
-        send2AllPlayers( new FmgMessage( "gamePause", p_game ), p_game, NotificationQty.Std );
+        send2AllPlayers( new FmgMessage( "gamePause", p_game ), p_game, NotificationQty.Std, false );
         mailSended = true;
       }
 
@@ -96,7 +104,7 @@ public class GameNotification
               - p_game.getEbConfigGameTime().getActionPtPerTimeStep() )
           {
             send2Player( new FmgMessage( "tooManyPA", p_game ), p_game, registration,
-                NotificationQty.Std );
+                NotificationQty.Std, true );
             mailSended = true;
           }
         }
@@ -105,7 +113,8 @@ public class GameNotification
       if( action instanceof EbEvtControlFreighter )
       {
         EbRegistration looser = ((EbEvtControlFreighter)action).getOldRegistration( p_game );
-        send2Player( new FmgMessage( "loseFreighter", p_game ), p_game, looser, NotificationQty.Min );
+        send2Player( new FmgMessage( "loseFreighter", p_game ), p_game, looser,
+            NotificationQty.Min, false );
         mailSended = true;
       }
 
@@ -116,7 +125,7 @@ public class GameNotification
         if( registration != null )
         {
           send2Player( new FmgMessage( "loseUnit", p_game ), p_game, registration,
-              NotificationQty.Max );
+              NotificationQty.Max, true );
           mailSended = true;
         }
       }
@@ -127,7 +136,7 @@ public class GameNotification
         if( registration != null )
         {
           send2Player( new FmgMessage( "loseUnit", p_game ), p_game, registration,
-              NotificationQty.Max );
+              NotificationQty.Max, true );
           mailSended = true;
         }
       }
@@ -135,7 +144,7 @@ public class GameNotification
 
     if( p_game.isHistory() )
     {
-      send2AllPlayers( new FmgMessage( "gameFinish", p_game ), p_game, NotificationQty.Min );
+      send2AllPlayers( new FmgMessage( "gameFinish", p_game ), p_game, NotificationQty.Min, false );
       mailSended = true;
     }
 
@@ -143,18 +152,28 @@ public class GameNotification
   }
 
 
-  private static void send2AllPlayers(FmgMessage p_msg, Game p_game, NotificationQty p_level)
+  private static void send2AllPlayers(FmgMessage p_msg, Game p_game, NotificationQty p_level,
+      boolean p_checkDoubleSend)
   {
     for( EbRegistration registration : p_game.getSetRegistration() )
     {
-      send2Player( p_msg, p_game, registration, p_level );
+      send2Player( p_msg, p_game, registration, p_level, p_checkDoubleSend );
     }
   }
 
+  /**
+   * 
+   * @param p_msg
+   * @param p_game
+   * @param p_registration
+   * @param p_level
+   * @param p_checkDoubleSend if true, this message can only be send once between two game action
+   */
   private static void send2Player(FmgMessage p_msg, Game p_game, EbRegistration p_registration,
-      NotificationQty p_level)
+      NotificationQty p_level, boolean p_checkDoubleSend)
   {
-    if( p_registration == null || p_registration.isNotifSended( p_msg.getName() ) )
+    if( p_registration == null
+        || (p_registration.isNotifSended( p_msg.getName() ) && p_checkDoubleSend) )
     {
       logger.finest( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
           + " already receive his notif" );
@@ -177,7 +196,10 @@ public class GameNotification
           + account.getPseudo() + ": don't want this message" );
       return;
     }
-    if( ChannelManager.getRoom( p_game.getId() ).isConnected( account.getPseudo() ) )
+    // for high verbosity notification or high speed game, check player's room
+    // presence
+    if( (p_level == NotificationQty.Max || p_game.getConfigGameTime().isQuick())
+        && ChannelManager.getRoom( p_game.getId() ).isConnected( account.getPseudo() ) )
     {
       logger.fine( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
           + account.getPseudo() + " is connected: we don't need to send an email" );

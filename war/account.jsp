@@ -44,8 +44,8 @@ if(account == null) {
 
 <% if( id == 0 ) { %>
 	<h2>Création d'un nouveau compte</h2>
-	Vous pouvez aussi utiliser votre compte google pour vous 
-	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >connecter</a> a Full Metal Galaxy.
+	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
+	Vous pouvez aussi utiliser votre compte google pour vous connecter a Full Metal Galaxy.</a>
 <%} else if(account.isIsforumIdConfirmed() && account.getForumId() != null){ %>
 	<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
@@ -102,10 +102,15 @@ login :
 <br/>
 email :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
+<% if( id == 0 ) { %>
+<input type="checkbox" name="createforumaccount" value="1" checked /> Créer un compte sur le forum
+<br/>
+<% } else { %>
 <br/>
 AllowMsgFromGame : <%= account.getAllowMsgFromGame() %><br/>
 AllowMsgFromPlayer : <%= account.getAllowMsgFromPlayer() %><br/>
 NotificationQty : <%= account.getNotificationQty() %><br/>
+<% } %>
 
 <% if(Auth.isUserAdmin(request, response)) { %>
   Jabber ID :
