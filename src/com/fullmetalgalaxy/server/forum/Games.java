@@ -87,7 +87,8 @@ public class Games
           + "'><div class='article'><article><span class='date'>"
           + dateFormat.format( game.getCreationDate() )
           // <h4> tag cause graphic glich on IE7
-          + "</span><div class='h4'>" + game.getName() + "</div></article></div></a>";
+          + "</span><div class='h4'>" + game.getIconsAsHtml() + game.getName()
+          + "</div></article></div></a>";
     }
     
     return newsHtml;

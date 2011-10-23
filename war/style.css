@@ -336,6 +336,10 @@ h1 {
 	font-weight: 400;
 	margin: 5px 0;
 }
+#gamesrss img,
+#newsrss img {
+	margin: 0px;
+}
 .date {
 	background-image: url('images/css/calendar.png');
 	background-repeat:no-repeat;

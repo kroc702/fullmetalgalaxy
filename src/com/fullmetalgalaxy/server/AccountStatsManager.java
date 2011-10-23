@@ -23,8 +23,10 @@
 
 package com.fullmetalgalaxy.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
@@ -210,7 +212,7 @@ public class AccountStatsManager
 
 
   @SuppressWarnings("unchecked")
-  private static void saveAndUpdate(EbAccount p_account)
+  public static void UpdateStats(EbAccount p_account)
   {
     if( p_account == null )
     {
@@ -226,12 +228,16 @@ public class AccountStatsManager
     int styleCount = 0;
     int colors[] = new int[EnuColor.getTotalNumberOfColor()];
     int colorCount = 0;
+    List<EbAccountStats> stat2Remove = new ArrayList<EbAccountStats>();
     for( EbAccountStats stat : p_account.getStats() )
     {
       level += stat.getFinalScore();
-      if( level <= 0 )
+      if( stat instanceof StatsGame && ((StatsGame)stat).getStatus() == Status.Aborted
+          && stat.getFinalScore() == 0
+          && stat.getLastUpdate().getTime() < System.currentTimeMillis() - MONTH_IN_MILLIS )
       {
-        level = 1;
+        // game was cancelled and older than one month: remove it
+        stat2Remove.add( stat );
       }
       if( stat instanceof StatsGamePlayer )
       {
@@ -270,6 +276,19 @@ public class AccountStatsManager
         }
       }
     }
+    // little correction on level
+    if( level <= 1 && (styleCount >= 1 || sheepCount >= 1) )
+    {
+      level = 2;
+    }
+    if( level <= 0 )
+    {
+      level = 1;
+    }
+
+    // remove too old games
+    p_account.getStats().removeAll( stat2Remove );
+
     // set player color
     p_account.setMainColor( EnuColor.None );
     for(int colorIndex = 0; colorIndex < colors.length; colorIndex++ )
@@ -286,7 +305,11 @@ public class AccountStatsManager
       p_account.setFiability( PlayerFiability.Banned );
     }
     // set player style
-    if( sheepCount > styleCount )
+    if( p_account.getStats().size() == 0 )
+    {
+      p_account.setPlayerStyle( PlayerStyle.Mysterious );
+    }
+    else if( sheepCount > styleCount )
     {
       p_account.setPlayerStyle( PlayerStyle.Sheep );
     }
@@ -306,11 +329,21 @@ public class AccountStatsManager
         p_account.setPlayerStyle( PlayerStyle.Balanced );
       }
     }
+  }
+
+  private static void saveAndUpdate(EbAccount p_account)
+  {
+    if( p_account == null )
+    {
+      return;
+    }
+    UpdateStats( p_account );
     // save account to datastore
     FmgDataStore ds = new FmgDataStore( false );
     ds.put( p_account );
     ds.close();
   }
+
 
   /**
    * warning: can't be called while game is transient
@@ -390,11 +423,24 @@ public class AccountStatsManager
             lastStat = new StatsGamePlayer( p_game );
             account.getStats().add( lastStat );
           }
-          lastStat.setPlayer( p_game, registration );
-          lastStat.setStatus( Status.Finished );
-          lastStat.setFinalScore( processFinalScore( p_game, registration ) );
-          lastStat.setLastUpdate( new Date() );
-          saveAndUpdate( account );
+          if( lastStat != null )
+          {
+            lastStat.setPlayer( p_game, registration );
+            lastStat.setStatus( Status.Finished );
+            lastStat.setFmpScore( registration.getWinningScore( p_game ) );
+            lastStat.setFinalScore( processFinalScore( p_game, registration ) );
+            lastStat.setLastUpdate( new Date() );
+            saveAndUpdate( account );
+
+            // stat for finished games
+            GlobalVars.incrementFGameConstructionCount( lastStat.getConstructionCount() );
+            GlobalVars.incrementFGameFireCount( lastStat.getFireCount() );
+            GlobalVars.incrementFGameFmpScore( lastStat.getFmpScore() );
+            GlobalVars.incrementFGameFreighterControlCount( lastStat.getFreighterControlCount() );
+            GlobalVars.incrementFGameOreCount( lastStat.getOreCount() );
+            GlobalVars.incrementFGameTokenCount( lastStat.getTokenCount() );
+            GlobalVars.incrementFGameUnitControlCount( lastStat.getUnitControlCount() );
+          }
         } catch(Exception e)
         {
           ServerUtil.logger.warning( e.getMessage() );
@@ -417,6 +463,7 @@ public class AccountStatsManager
       lastStat.setLastUpdate( new Date() );
       saveAndUpdate( account );
     }
+
   }
 
   /**

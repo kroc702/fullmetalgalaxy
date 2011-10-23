@@ -143,18 +143,18 @@ public class GlobalVarBase
    * @param p_toAdd
    * @return Integer.MAX_VALUE if error or new value if succeed
    */
-  public static int increment(String p_key, int p_toAdd)
+  public static long increment(String p_key, int p_toAdd)
   {
     Entity entity = new Entity( ENTITY_KIND, p_key );
     Key k = KeyFactory.createKey( ENTITY_KIND, p_key );
     Transaction txn = s_datastore.beginTransaction();
-    int value = p_toAdd;
+    long value = p_toAdd;
     try
     {
       Object obj = s_datastore.get( txn, k ).getProperty( ENTITY_VALUE );
       if( obj != null && obj instanceof Number )
       {
-        value += ((Number)obj).intValue();
+        value += ((Number)obj).longValue();
         entity.setUnindexedProperty( ENTITY_VALUE, value );
         s_datastore.put( txn, entity );
         txn.commit();
@@ -181,6 +181,17 @@ public class GlobalVarBase
     if( obj != null && obj instanceof Number)
     {
       return ((Number)obj).intValue();
+    }
+    put( p_key, 0 );
+    return 0;
+  }
+
+  public static long getLong(String p_key)
+  {
+    Object obj = get( p_key );
+    if( obj != null && obj instanceof Number )
+    {
+      return ((Number)obj).longValue();
     }
     put( p_key, 0 );
     return 0;

@@ -96,7 +96,7 @@ public class EbAccount extends EbPublicAccount
   /**
    * player style to recognize people
    */
-  private PlayerStyle m_playerStyle = PlayerStyle.Sheep;
+  private PlayerStyle m_playerStyle = PlayerStyle.Mysterious;
   
   /**
    * player main color
@@ -226,7 +226,7 @@ public class EbAccount extends EbPublicAccount
     {
       return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
     }
-    return super.getProfileUrl();
+    return "/profil.jsp?id=" + getId();
   }
 
   @Override
@@ -284,6 +284,10 @@ public class EbAccount extends EbPublicAccount
     } else if( getPlayerStyle() == PlayerStyle.Aggressive )
     {
       iconName += "a"; 
+    }
+    else if( getPlayerStyle() == PlayerStyle.Mysterious )
+    {
+      iconName += "m";
     } else
     {
       // PlayerStyle.Sheep

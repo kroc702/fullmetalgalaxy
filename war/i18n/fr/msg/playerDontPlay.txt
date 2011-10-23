@@ -1,0 +1,12 @@
+{game_name} - Notification de tour de jeu
+Bonjour {pseudo},
+Vous n'avez pas joué votre tour sur la partie {game_name} {game_url}.
+
+N'oubliez pas que les autres joueurs attendent leur tour pour jouer.
+Si vous ne pouvez ou ne voulez plus jouer cette partie, même temporairement, 
+n'hésitez pas à contacter le créateur de la partie ou l'administrateur de FMG.
+
+Si vos partenaires de jeu sont déjà prévenus, ne tenez pas compte de ce message.
+
+Cordialement
+Full Metal Galaxy

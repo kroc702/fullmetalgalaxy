@@ -102,7 +102,7 @@ public class EbPublicAccount extends EbBase
 
   public String getProfileUrl()
   {
-    return "/profile.jsp?id=" + getId();
+    return "/AccountServlet?profil=" + getId();
   }
 
   public static String getForumPMUrl(String p_subject, String... p_pseudo)

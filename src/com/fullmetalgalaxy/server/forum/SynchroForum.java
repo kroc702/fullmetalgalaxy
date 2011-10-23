@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fullmetalgalaxy.server.AccountStatsManager;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.FmgMessage;
@@ -144,7 +145,10 @@ public class SynchroForum extends HttpServlet
           
           // TODO add erosion here
           // errosion should start only if one player reach SCORE_REF
+          // what to do for unconnected player ?
 
+          // update player stats
+          AccountStatsManager.UpdateStats( account );
           
           // compute some global stats
           if( account.isActive() )
@@ -176,9 +180,12 @@ public class SynchroForum extends HttpServlet
 
       // all account are processed
       // update global statistics
-      GlobalVars.setAccountCount( m_accountProcessed );
+      // GlobalVars.setAccountCount( m_accountProcessed );
       GlobalVars.setActiveAccount( m_activeAccount );
       GlobalVars.setMaxLevel( m_maxLevel );
+
+      // count account number
+      GlobalVars.setAccountCount( FmgDataStore.dao().query( EbAccount.class ).count() );
     }
   }
 

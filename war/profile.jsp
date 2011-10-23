@@ -42,6 +42,7 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <% } %>
 
 <p>level: <%= account.getCurrentLevel() %><br/>
+max level: <%= account.getMaxLevel() %><br/>
 <img src='<%= account.getGradUrl() %>'/><br/>
 Inscription : <span class='date'><%= dateFormat.format( account.getSubscriptionDate() ) %></span><br/>
 Dernière connexion : <span class='date'><%= dateFormat.format( account.getLastConnexion() ) %></span><br/>

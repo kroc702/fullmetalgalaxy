@@ -49,7 +49,7 @@ for(EbAccountStats astat : account.getStats())
     } else {
       out.println("<td><img src='"+game.getMinimapUri()+"' height='50px'/></td>");
       out.println("<td><a href='/game.jsp?id="+game.getId()+"' target='_top'>"+stat.getGameName()+"</a><br/>"
-          +simpleFormat.format(stat.getLastUpdate())+"</td>");
+          +simpleFormat.format(stat.getGameCreation())+"</td>");
       out.println("<td>"+game.getIconsAsHtml()+"</td>");
     }
     
@@ -85,10 +85,7 @@ for(EbAccountStats astat : account.getStats())
     EbGamePreview game = FmgDataStore.dao().find( EbGamePreview.class, stat.getGameId() );
     if( game == null )
     {
-      // game wasn't found but his stat was "running"... it's an error !
-      System.err.println("game wasn't found but his stat was 'running'...");
-      System.err.println("user: "+account.getPseudo()+" gameid: "+stat.getGameId());
-      
+      // game wasn't found 
       out.println("<td><img src='/images/unknown-minimap.jpg' height='50px'/></td>");
       out.println("<td>"+stat.getGameName()+"<br/>"
           +simpleFormat.format(stat.getLastUpdate())+"</td>");
@@ -101,7 +98,7 @@ for(EbAccountStats astat : account.getStats())
     } else {
       out.println("<td><img src='"+game.getMinimapUri()+"' height='50px'/></td>");
       out.println("<td><a href='/game.jsp?id="+game.getId()+"' >"+stat.getGameName()+"</a><br/>"
-          +simpleFormat.format(stat.getLastUpdate())+"</td>");
+          +simpleFormat.format(stat.getGameCreation())+" -> "+simpleFormat.format(stat.getLastUpdate())+"</td>");
       out.println("<td>"+game.getIconsAsHtml()+"</td>");
     }
     
@@ -119,10 +116,12 @@ for(EbAccountStats astat : account.getStats())
 	  {
 	    out.println("<img src='/images/icons/ban.gif'/>");
 	  }
+		out.println("</td><td>"+((StatsGamePlayer)stat).getFmpScore()+" -> "+stat.getFinalScore()+"</td>" );
 	}
-	out.println("</td>");
-	 
-	out.println("<td>"+stat.getFinalScore()+"</td>" );
+	else
+	{
+		out.println("</td><td>-</td>");
+	} 
 	out.println("</tr>");
   }
   else if( astat instanceof StatsErosion  )
