@@ -226,7 +226,7 @@ public class EbAccount extends EbPublicAccount
     {
       return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
     }
-    return "/profil.jsp?id=" + getId();
+    return "/profile.jsp?id=" + getId();
   }
 
   @Override
