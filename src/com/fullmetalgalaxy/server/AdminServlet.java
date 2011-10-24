@@ -445,12 +445,16 @@ public class AdminServlet extends HttpServlet
     protected void processKey(Key<EbGamePreview> p_key)
     {
       Game game = FmgDataStore.dao().getGame( p_key );
-      m_nbConfigGameTime.put( game.getConfigGameTime(),
-          m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
-      m_nbConfigGameVariant.put( game.getConfigGameVariant(),
-          m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
-      m_nbOfHexagon += game.getNumberOfHexagon();
-      m_nbPlayer += game.getSetRegistration().size();
+      // game is in history, but it may have been canceled
+      if( game.isFinished() )
+      {
+        m_nbConfigGameTime.put( game.getConfigGameTime(),
+            m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
+        m_nbConfigGameVariant.put( game.getConfigGameVariant(),
+            m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
+        m_nbOfHexagon += game.getNumberOfHexagon();
+        m_nbPlayer += game.getSetRegistration().size();
+      }
     }
 
     @Override
@@ -522,13 +526,13 @@ public class AdminServlet extends HttpServlet
     protected void finish()
     {
       // save process stats into datastore
-      GlobalVars.incrementFGameConstructionCount( m_ConstructionCount );
-      GlobalVars.incrementFGameFireCount( m_FireCount );
-      GlobalVars.incrementFGameFmpScore( m_FmpScore );
-      GlobalVars.incrementFGameFreighterControlCount( m_FreighterControlCount );
-      GlobalVars.incrementFGameOreCount( m_OreCount );
-      GlobalVars.incrementFGameTokenCount( m_TokenCount );
-      GlobalVars.incrementFGameUnitControlCount( m_UnitControlCount );
+      GlobalVars.setFGameConstructionCount( m_ConstructionCount );
+      GlobalVars.setFGameFireCount( m_FireCount );
+      GlobalVars.setFGameFmpScore( m_FmpScore );
+      GlobalVars.setFGameFreighterControlCount( m_FreighterControlCount );
+      GlobalVars.setFGameOreCount( m_OreCount );
+      GlobalVars.setFGameTokenCount( m_TokenCount );
+      GlobalVars.setFGameUnitControlCount( m_UnitControlCount );
     }
   }
 

@@ -31,6 +31,7 @@ import java.util.List;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbAccountStats;
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.PlayerFiability;
@@ -51,6 +52,8 @@ import com.fullmetalgalaxy.model.persist.StatsGamePlayer;
  */
 public class AccountStatsManager
 {
+  private final static FmpLogger log = FmpLogger.getLogger( AccountStatsManager.class.getName() );
+
   // coef of erosion polynom formulas
   private final static float EROSION_A = -1 * FmpConstant.SCORE_EROSION_REF
       * FmpConstant.SCORE_EROSION_REF
@@ -239,6 +242,57 @@ public class AccountStatsManager
         // game was cancelled and older than one month: remove it
         stat2Remove.add( stat );
       }
+      if( stat instanceof StatsGame && ((StatsGame)stat).getStatus() == Status.Running )
+      {
+        // game is running... due to somewhere bug, check that still the case.
+        EbGamePreview gamePreview = FmgDataStore.dao().find( EbGamePreview.class,
+            ((StatsGame)stat).getGameId() );
+        if( gamePreview == null || gamePreview.isAborted() )
+        {
+          // well, game was deleted !
+          ((StatsGame)stat).setStatus( Status.Aborted );
+          log.error( "Game '" + ((StatsGame)stat).getGameName() + "("
+              + ((StatsGame)stat).getGameId() + ")' was deleted but a stat was found for user "
+              + p_account.getPseudo() );
+        }
+        else if( stat instanceof StatsGamePlayer && gamePreview.isHistory() )
+        {
+          // game is history, but this stat wasn't updated !
+          StatsGamePlayer gameStat = ((StatsGamePlayer)stat);
+          Game game = FmgDataStore.dao().getGame( gamePreview );
+          EbRegistration registration = game.getRegistrationByIdAccount( p_account.getId() );
+          if( registration == null )
+          {
+            // registration isn't found...
+            // player have been banned.
+            gameStat.setStatus( Status.Banned );
+            log.error( "Game '" + gameStat.getGameName() + "(" + gameStat.getGameId()
+                + ")' is history but user " + p_account.getPseudo()
+                + " have a Running stat on it. as it wasn't found in game, he should be banned" );
+          }
+          else
+          {
+            // player finished game normally
+            // for an unknown reason, this stat wasn't computed...
+            gameStat.setPlayer( game, registration );
+            gameStat.setStatus( Status.Finished );
+            gameStat.setFmpScore( registration.getWinningScore( game ) );
+            gameStat.setFinalScore( processFinalScore( game, registration ) );
+            gameStat.setLastUpdate( new Date() );
+            log.error( "Game '" + gameStat.getGameName() + "(" + gameStat.getGameId()
+                + ")' is history but user " + p_account.getPseudo()
+                + " have a Running stat on it. player finished game normally" );
+          }
+        }
+        else if( gamePreview.isHistory() )
+        {
+          // account is simply game creator, but he didn't play
+          ((StatsGame)stat).setStatus( Status.Finished );
+          log.error( "Game '" + gamePreview.getName() + "(" + gamePreview.getId()
+              + ")' is history but user " + p_account.getPseudo()
+              + " have a Running stat on it. he was game creator" );
+        }
+      }
       if( stat instanceof StatsGamePlayer )
       {
         if( ((StatsGamePlayer)stat).getStatus() == Status.Banned )
@@ -286,7 +340,7 @@ public class AccountStatsManager
       level = 1;
     }
 
-    // remove too old games
+    // remove too old and canceled games
     p_account.getStats().removeAll( stat2Remove );
 
     // set player color

@@ -112,6 +112,11 @@ public class StatsGamePlayer extends StatsGame
     this.init();
   }
 
+  /**
+   * set a lot of statistic for this game/player
+   * @param p_game
+   * @param p_registration
+   */
   public void setPlayer(Game p_game, EbRegistration p_registration)
   {
     if( p_registration == null )
