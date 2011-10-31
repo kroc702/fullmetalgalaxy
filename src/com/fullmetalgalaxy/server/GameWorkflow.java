@@ -464,7 +464,7 @@ public class GameWorkflow
       {
         EbAccount account = FmgDataStore.dao().get( EbAccount.class,
             registration.getAccount().getId() );
-        if( new FmgMessage( "playerDontPlay" ).sendEMail( account ) )
+        if( new FmgMessage( "playerDontPlay", p_game ).sendEMail( account ) )
         {
           registration.addNotifSended( "playerDontPlay" );
           // to save game & registration
