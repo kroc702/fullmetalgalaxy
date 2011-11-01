@@ -65,22 +65,22 @@ public class WgtPlayerInfo extends WgtView
     AppRoot.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
 
     m_panel.add( m_iconAction );
-    m_iconAction.setTitle( "Point d'action restant" );
+    m_iconAction.setTitle( MAppBoard.s_messages.remainingActionPoint() );
     m_panel.add( m_lblAction );
-    m_lblAction.setTitle( "Point d'action restant" );
+    m_lblAction.setTitle( MAppBoard.s_messages.remainingActionPoint() );
     m_panel.setCellWidth( m_lblAction, "60px" );
     m_lblAction.setStyleName( "fmp-status-text" );
     m_panel.add( m_iconOre );
-    m_iconOre.setTitle( "Minerais en soute" );
+    m_iconOre.setTitle( MAppBoard.s_messages.oreInHold() );
     m_panel.add( m_lblOre );
     m_lblOre.setTitle( "Minerais en soute" );
     m_panel.setCellWidth( m_lblOre, "40px" );
     m_lblOre.setStyleName( "fmp-status-text" );
 
     m_panel.add( m_iconMoon );
-    m_iconMoon.setTitle( "Marees" );
+    m_iconMoon.setTitle( MAppBoard.s_messages.tide() );
     m_panel.add( m_lblMoon );
-    m_lblMoon.setTitle( "Marees" );
+    m_lblMoon.setTitle( MAppBoard.s_messages.tide() );
     m_lblMoon.setStyleName( "fmp-status-text" );
     m_panel.add( m_panelTide );
 
@@ -104,7 +104,8 @@ public class WgtPlayerInfo extends WgtView
       // Display current tides
       m_panelTide.clear();
       Image image = BoardIcons.iconTide( game.getCurrentTide() ).createImage();
-      image.setTitle( "maree actuelle: " + Messages.getTideString( 0, game.getCurrentTide() ) );
+      image.setTitle( MAppBoard.s_messages.currentTide()
+          + Messages.getTideString( 0, game.getCurrentTide() ) );
       m_panelTide.add( image );
       m_panelTide.setCellWidth( image, "20px" );
 
@@ -135,12 +136,13 @@ public class WgtPlayerInfo extends WgtView
         if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() <= 0 )
         {
           image = BoardIcons.iconTide( Tide.Unknown ).createImage();
-          image.setTitle( "pas de prévision" );
+          image.setTitle( MAppBoard.s_messages.noForecast() );
         }
         else
         {
           image = BoardIcons.iconTide( game.getNextTide() ).createImage();
-          image.setTitle( "maree futur: " + Messages.getTideString( 0, game.getNextTide() ) );
+          image.setTitle( MAppBoard.s_messages.nextTide()
+              + Messages.getTideString( 0, game.getNextTide() ) );
         }
         if( game.getEbConfigGameTime().isAsynchron() )
         {
@@ -154,7 +156,8 @@ public class WgtPlayerInfo extends WgtView
         if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() >= 2 )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
-          image.setTitle( "maree futur: " + Messages.getTideString( 0, game.getNextTide() ) );
+          image.setTitle( MAppBoard.s_messages.nextTide()
+              + Messages.getTideString( 0, game.getNextTide2() ) );
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );
         }

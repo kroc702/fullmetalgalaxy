@@ -52,11 +52,17 @@ public interface MessagesAppBoard extends Messages
 
   String nextTide();
 
+  String currentTide();
+
   String noForecast();
 
   String gameCreation(String p_date);
 
   String gameFinishAt(String p_date);
+
+  String oreInHold();
+
+  String remainingActionPoint();
 
   // unused ?
   String gameFinished();
