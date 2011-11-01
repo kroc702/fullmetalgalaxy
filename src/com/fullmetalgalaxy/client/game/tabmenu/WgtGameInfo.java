@@ -56,8 +56,6 @@ public class WgtGameInfo extends Composite implements ClickHandler
 {
   private Button m_btnPlay = new Button( "Play" );
   private Button m_btnPause = new Button( "Pause" );
-  private Button m_btnEdit = new Button( "Edite" );
-  private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
   private ToggleButton m_btnAtmosphere = new ToggleButton( "Atmosphere" );
   private ToggleButton m_btnCustomMap = new ToggleButton( "Affichage carte custom" );
 
@@ -73,8 +71,6 @@ public class WgtGameInfo extends Composite implements ClickHandler
 
     m_btnPlay.addClickHandler( this );
     m_btnPause.addClickHandler( this );
-    m_btnEdit.addClickHandler( this );
-    m_btnGrid.addClickHandler( this );
     m_btnAtmosphere.addClickHandler( this );
     m_btnCustomMap.addClickHandler( this );
     
@@ -174,9 +170,6 @@ public class WgtGameInfo extends Composite implements ClickHandler
       }
     }
 
-    // grid button
-    m_generalPanel.add( m_btnGrid );
-    m_btnGrid.setDown( GameEngine.model().isGridDisplayed() );
     // atmosphere button
     m_generalPanel.add( m_btnAtmosphere );
     m_btnAtmosphere.setDown( GameEngine.model().isAtmosphereDisplayed() );
@@ -225,7 +218,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
         }
       }
       // edit button
-      m_generalPanel.add( m_btnEdit );
+      m_generalPanel.add( new HTML( "<a href='/editgame.jsp?id=" + game.getId() + "'>edit</a>" ) );
     }
 
     if( AppMain.instance().iAmAdmin() )
@@ -249,11 +242,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
   @Override
   public void onClick(ClickEvent p_event)
   {
-    if( p_event.getSource() == m_btnGrid )
-    {
-      GameEngine.model().setGridDisplayed( m_btnGrid.isDown() );
-    }
-    else if( p_event.getSource() == m_btnAtmosphere )
+    if( p_event.getSource() == m_btnAtmosphere )
     {
       GameEngine.model().setAtmosphereDisplayed( m_btnAtmosphere.isDown() );
     }
@@ -274,10 +263,6 @@ public class WgtGameInfo extends Composite implements ClickHandler
           .getId() );
       gameLog.setGame( GameEngine.model().getGame() );
       GameEngine.model().runSingleAction( gameLog );
-    }
-    else if( p_event.getSource() == m_btnEdit )
-    {
-      ClientUtil.gotoUrl( "/editgame.jsp?id="+ GameEngine.model().getGame().getId() );
     }
    }
 
