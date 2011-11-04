@@ -28,10 +28,10 @@ import java.util.Collection;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.core.client.GWT;
 
 
@@ -152,26 +152,10 @@ public class BoardFireCover implements Serializable
 
   protected void incFireCover(int p_x, int p_y, EnuColor p_color, byte[][][] p_fireCover)
   {
-    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor()) )
+    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor())
+        || (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
     {
       return;
-    }
-    if( (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
-    {
-      // the fire cover array is too small: enlarge it !
-      byte[][][] newFireCover = new byte[Math.max( p_x + 10, p_fireCover.length )][Math.max(
-          p_y + 10, p_fireCover[0].length )][EnuColor.getTotalNumberOfColor()];
-      for( int ix = 0; ix < p_fireCover.length; ix++ )
-      {
-        for( int iy = 0; iy < p_fireCover[0].length; iy++ )
-        {
-          for( int ic = 0; ic < EnuColor.getTotalNumberOfColor(); ic++ )
-          {
-            newFireCover[ix][iy][ic] = p_fireCover[ix][iy][ic];
-          }
-        }
-      }
-      p_fireCover = newFireCover;
     }
     p_fireCover[p_x][p_y][p_color.getColorIndex()]++;
 
@@ -255,28 +239,11 @@ public class BoardFireCover implements Serializable
    */
   protected void decFireCover(int p_x, int p_y, EnuColor p_color, byte[][][] p_fireCover)
   {
-    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor()) )
+    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor())
+        || (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
     {
       return;
     }
-    if( (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
-    {
-      // the fire cover array is too small: enlarge it !
-      byte[][][] newFireCover = new byte[Math.max( p_x + 10, p_fireCover.length )][Math.max(
-          p_y + 10, p_fireCover[0].length )][EnuColor.getTotalNumberOfColor()];
-      for( int ix = 0; ix < p_fireCover.length; ix++ )
-      {
-        for( int iy = 0; iy < p_fireCover[0].length; iy++ )
-        {
-          for( int ic = 0; ic < EnuColor.getTotalNumberOfColor(); ic++ )
-          {
-            newFireCover[ix][iy][ic] = p_fireCover[ix][iy][ic];
-          }
-        }
-      }
-      p_fireCover = newFireCover;
-    }
-
     p_fireCover[p_x][p_y][p_color.getColorIndex()]--;
   }
 
