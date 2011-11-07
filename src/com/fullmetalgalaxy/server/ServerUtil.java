@@ -69,7 +69,7 @@ public class ServerUtil
   private static String s_basePath = null;
   public static void setBasePath(String p_path)
   {
-    synchronized( s_basePath )
+    synchronized( ServerUtil.class )
     {
       s_basePath = p_path;
     }
