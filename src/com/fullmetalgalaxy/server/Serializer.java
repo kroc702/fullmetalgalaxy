@@ -48,7 +48,7 @@ public class Serializer
 
   static
   {
-    synchronized( s_getRoom )
+    synchronized( Serializer.class )
     {
       try
       {
