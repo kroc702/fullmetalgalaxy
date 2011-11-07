@@ -383,7 +383,7 @@ public class AdminServlet extends HttpServlet
       modelInit.getGame().setMinimapUri( null );
 
       // construct minimap image
-      MiniMapProducer miniMapProducer = new MiniMapProducer( GameServicesImpl.s_basePath,
+      MiniMapProducer miniMapProducer = new MiniMapProducer( ServerUtil.getBasePath(),
           modelInit.getGame() );
       GameServicesImpl.storeMinimap( modelInit.getGame(), miniMapProducer.getImage() );
 

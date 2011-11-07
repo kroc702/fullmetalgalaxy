@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 public class I18n
 {
 
-  private static String[] s_validLocale = { /*"en",*/"fr" };
+  private final static String[] s_validLocale = { /*"en",*/"fr" };
 
   /**
    * 

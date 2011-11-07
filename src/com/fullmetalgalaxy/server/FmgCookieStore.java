@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 public class FmgCookieStore
 {
-  private static Pattern s_patternInvalidCookie = Pattern.compile(".*expires=...$");
+  private final static Pattern s_patternInvalidCookie = Pattern.compile( ".*expires=...$" );
   
   private List<HttpCookie> m_cookies = new ArrayList<HttpCookie>();
 

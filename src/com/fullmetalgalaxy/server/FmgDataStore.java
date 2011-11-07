@@ -51,7 +51,7 @@ public class FmgDataStore extends DataStore
   /**
    * a static read only DAO
    */
-  private static FmgDataStore s_dao = new FmgDataStore(true);
+  private final static FmgDataStore s_dao = new FmgDataStore( true );
 
   /**
    * This method return a static instance of a read only data store.

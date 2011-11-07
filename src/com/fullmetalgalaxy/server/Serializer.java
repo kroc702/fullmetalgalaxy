@@ -48,16 +48,19 @@ public class Serializer
 
   static
   {
-    try
+    synchronized( s_getRoom )
     {
-      s_getRoom = GameServicesImpl.class.getMethod( "getRoom", Long.TYPE );
-      s_getChatMessage = GameServicesImpl.class.getMethod( "getChatMessage", Long.TYPE );
-      s_getModelFmpUpdate = GameServicesImpl.class.getMethod( "getModelFmpUpdate", Long.TYPE );
-      s_getModelFmpInit = GameServicesImpl.class.getMethod( "getModelFmpInit", String.class );
-    } catch( Exception e )
-    {
-      // in that case, server push through channel api wont work.
-      log.error( e );
+      try
+      {
+        s_getRoom = GameServicesImpl.class.getMethod( "getRoom", Long.TYPE );
+        s_getChatMessage = GameServicesImpl.class.getMethod( "getChatMessage", Long.TYPE );
+        s_getModelFmpUpdate = GameServicesImpl.class.getMethod( "getModelFmpUpdate", Long.TYPE );
+        s_getModelFmpInit = GameServicesImpl.class.getMethod( "getModelFmpInit", String.class );
+      } catch( Exception e )
+      {
+        // in that case, server push through channel api wont work.
+        log.error( e );
+      }
     }
   }
 

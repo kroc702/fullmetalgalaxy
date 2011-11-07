@@ -39,7 +39,7 @@ import com.google.appengine.api.utils.SystemProperty;
  */
 public class ServerUtil
 {
-  public static Logger logger = Logger.getLogger("Server");
+  public final static Logger logger = Logger.getLogger( "Server" );
   
   private static final String PLAIN_ASCII = "AaEeIiOoUu" // grave
       + "AaEeIiOoUuYy" // acute
@@ -69,11 +69,15 @@ public class ServerUtil
   private static String s_basePath = null;
   public static void setBasePath(String p_path)
   {
-    s_basePath = p_path;
+    synchronized( s_basePath )
+    {
+      s_basePath = p_path;
+    }
   }
   
   public static String getBasePath()
   {
+    // well, I'm not sure it's fully thread safe ;)
     return s_basePath;
   }
   

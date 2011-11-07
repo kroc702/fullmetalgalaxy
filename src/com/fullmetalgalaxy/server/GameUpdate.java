@@ -119,7 +119,8 @@ public class GameUpdate extends HttpServlet
           Cursor cursor = iterator.getCursor();
           // synchro isn't finished: add task
           QueueFactory.getDefaultQueue().add(
-              TaskOptions.Builder.withPayload( new GameUpdateCommand( cursor ) ) );
+              TaskOptions.Builder.withPayload( new GameUpdateCommand( cursor ) ).header(
+                  "X-AppEngine-FailFast", "true" ) );
           break;
         }
       }
@@ -139,7 +140,9 @@ public class GameUpdate extends HttpServlet
       throws ServletException, IOException
   {
     QueueFactory.getDefaultQueue()
-      .add( TaskOptions.Builder.withPayload( new GameUpdateCommand( null ) ) );
+.add(
+        TaskOptions.Builder.withPayload( new GameUpdateCommand( null ) ).header(
+            "X-AppEngine-FailFast", "true" ) );
   }
 
   

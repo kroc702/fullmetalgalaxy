@@ -65,7 +65,8 @@ public abstract class LongDBTask<T> implements DeferredTask
       {
         // synchro isn't finished: add task
         m_cursor = iterator.getCursor();
-        QueueFactory.getDefaultQueue().add( TaskOptions.Builder.withPayload( this ) );
+        QueueFactory.getDefaultQueue().add(
+            TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
         return;
       }
     }
