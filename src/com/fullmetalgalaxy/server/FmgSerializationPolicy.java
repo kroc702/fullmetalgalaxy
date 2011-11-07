@@ -34,14 +34,10 @@ import com.googlecode.objectify.Key;
  */
 public class FmgSerializationPolicy extends SerializationPolicy
 {
-  private static FmgSerializationPolicy s_policy = null;
+  private final static FmgSerializationPolicy s_policy = new FmgSerializationPolicy();
 
   public static SerializationPolicy getPolicy()
   {
-    if( s_policy == null )
-    {
-      s_policy = new FmgSerializationPolicy();
-    }
     return s_policy;
   }
 

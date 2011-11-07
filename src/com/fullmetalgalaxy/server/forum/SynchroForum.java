@@ -173,7 +173,8 @@ public class SynchroForum extends HttpServlet
           // synchro isn't finished: add task
           QueueFactory.getDefaultQueue().add(
               TaskOptions.Builder.withPayload( new SynchroForumCommand( cursor, m_accountProcessed,
-                  m_activeAccount, m_maxLevel ) ) );
+ m_activeAccount,
+                          m_maxLevel ) ).header( "X-AppEngine-FailFast", "true" ) );
           break;
         }
       }
@@ -199,7 +200,8 @@ public class SynchroForum extends HttpServlet
   {
     QueueFactory.getDefaultQueue()
 .add(
-        TaskOptions.Builder.withPayload( new SynchroForumCommand( null, 0, 0, 0 ) ) );
+        TaskOptions.Builder.withPayload( new SynchroForumCommand( null, 0, 0, 0 ) ).header(
+            "X-AppEngine-FailFast", "true" ) );
   }
 
   

@@ -46,7 +46,7 @@ import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
  */
 public class GameNotification
 {
-  public static Logger logger = Logger.getLogger( "GameNotification" );
+  public final static Logger logger = Logger.getLogger( "GameNotification" );
 
   /**
    * eventually send an email to people that need it.

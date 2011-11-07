@@ -5,7 +5,9 @@
 	
 	<sessions-enabled>true</sessions-enabled>
 	<precompilation-enabled>true</precompilation-enabled>
-	
+	<async-session-persistence enabled="true"/>
+	<threadsafe>true</threadsafe>
+	 
 	<!-- Configure java.util.logging -->
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
@@ -51,4 +53,10 @@
         <include path="/images/**/minimap/*" />
     </resource-files>
     
+    <static-error-handlers>
+    	<handler file="error-default.html"/>
+    	<handler file="error-quota.html" error-code="over_quota"/>
+    	<handler file="error-timeout.html" error-code="timeout"/>
+  	</static-error-handlers>
+  	
 </appengine-web-app>

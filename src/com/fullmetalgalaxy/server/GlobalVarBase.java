@@ -47,7 +47,7 @@ public class GlobalVarBase
   private static final String ENTITY_KIND = "GlobalVar";
   private static final String ENTITY_VALUE = "v";
   
-  private static DatastoreService s_datastore = DatastoreServiceFactory.getDatastoreService();
+  private final static DatastoreService s_datastore = DatastoreServiceFactory.getDatastoreService();
   
   
   public static void put(String p_key, Object p_value)

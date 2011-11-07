@@ -65,7 +65,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 {
   public static final long serialVersionUID = 1;
   private final static FmpLogger log = FmpLogger.getLogger( GameServicesImpl.class.getName() );
-  protected static String s_basePath = null;
 
   /**
    * constructor: 
@@ -84,10 +83,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     super.init();
     ServerUtil.setBasePath( getServletContext().getRealPath( "/" ) );
-    if( s_basePath == null || s_basePath.isEmpty() )
-    {
-      s_basePath = getServletContext().getRealPath( "/" );
-    }
   }
 
 
@@ -146,7 +141,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // should we construct minimap image ?
     if( p_game.getMinimapUri() == null )
     {
-      MiniMapProducer miniMapProducer = new MiniMapProducer( s_basePath, p_game );
+      MiniMapProducer miniMapProducer = new MiniMapProducer( ServerUtil.getBasePath(), p_game );
       storeMinimap( p_game, miniMapProducer.getImage() );
     }
 
@@ -255,9 +250,9 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       ObjectInputStream in = null;
       try
       {
-        if( s_basePath != null )
+        if( ServerUtil.getBasePath() != null )
         {
-          fis = new FileInputStream( new File( s_basePath + p_gameId ) );
+          fis = new FileInputStream( new File( ServerUtil.getBasePath() + p_gameId ) );
           in = new ObjectInputStream( fis );
           modelInit = ModelFmpInit.class.cast( in.readObject() );
           in.close();
