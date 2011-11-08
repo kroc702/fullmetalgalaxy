@@ -29,23 +29,25 @@
     <A HREF="http://eric.alber.free.fr/wiki/doku.php/full_metal_planete">
       Toutes les ressources pour fabriquer le jeu en carton</A><br/>
     <br/>
-    <A HREF="http://fullmetalplanete.forum2jeux.com">
-      Le forum des joueurs par mail</a><br/>
-    </p>
     <A HREF="http://fullmetalplanete.com">
-      Et le logiciel pour jouer par mail</a><br/>
+      Le logiciel pour jouer par mail</a><br/>
+    <br/>
+    <A HREF="http://fmp.mdabout.net/">
+      Et le secteur ludodeliria, une campagne par mail</a><br/>
+    <br/>
+    <A HREF="http://www.beuselinck.com/rubrique6.html">
+      Des récits de parties et articles d'ambiance !</a><br/>
     </p>
     <h2>Les bannières du site</h2>
     <p>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/90-33.png" /></a><br/>
     <br/>
-    <p>
     <a href="http://fullmetalgalaxy.com">
-    <img src="/images/banner/146-60.jpg" /></a><br/>
+    <img src="/images/banner/468-60.jpg" /></a><br/>
     <br/>
     <a href="http://fullmetalgalaxy.com">
-    <img src="/images/banner/468-60.jpg" /></a>
+    <img src="/images/banner/768-90.jpg" /></a><br/>
     </p>
 <%@include file="include/footer.jsp"%>
 </body>
