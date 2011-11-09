@@ -31,9 +31,7 @@ import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
-import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameEventStack;
-import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
@@ -46,7 +44,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
@@ -112,6 +109,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     m_panel.add( m_btnCancel );
 
     initWidget( m_panel );
+
+    AppMain.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
   }
 
   @Override
@@ -155,16 +154,19 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       game.getEbConfigGameVariant().multiplyConstructQty( game.getMaxNumberOfPlayer() );
     }
     
-    // lands creation
-    if( m_isLandGenerated == false )
+    if( GameEngine.model().getGame().isTrancient() )
     {
-      GameGenerator.generLands();
+      // lands creation
+      if( m_isLandGenerated == false )
+      {
+        GameGenerator.generLands();
+      }
+      if( m_isOreGenerated == false )
+      {
+        GameGenerator.populateOres();
+      }
+      GameGenerator.cleanToken();
     }
-    if( m_isOreGenerated == false )
-    {
-      GameGenerator.populateOres();
-    }
-    GameGenerator.cleanToken();
 
     // (3) Create an asynchronous callback to handle the result.
     FmpCallback<EbBase> callback = new FmpCallback<EbBase>()
@@ -355,8 +357,6 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
   @Override
   public void onModelUpdate(GameEngine p_modelSender)
   {
-    // redraw everything after any model update
-    //
     if( !GameEngine.model().isLogged() )
     {
       Window.alert( "Pour éditer une partie vous devez etre loggé" );
@@ -364,6 +364,11 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       return;
     }
 
+    if( !GameEngine.model().getGame().isTrancient() )
+    {
+      m_isLandGenerated = true;
+      m_isOreGenerated = true;
+    }
     // TODO check we don't have to do anything
     /*
     if( !AppRoot.instance().getHistoryState().containsKey( s_TokenIdGame ) 
@@ -377,8 +382,6 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     {
       // game is loaded... nothing to do !
     }*/
-
-    p_modelSender.setZoomDisplayed( EnuZoom.Small );
   }
 
 

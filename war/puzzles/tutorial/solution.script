@@ -1,0 +1,110 @@
+token 11
+board 12 12 false
+ok
+board 11 12 false
+token 12
+board 9 15 true
+ok
+board 9 14 false
+token 50 Crab
+board 7 13 true
+ok
+board 8 14 false
+board 9 13 false
+board 10 13 false
+ok
+board 11 12 false
+token 17
+board 10 13 false
+ok
+board 10 13 false
+board 10 9 true
+ok
+board 10 9 false
+token 17
+board 10 8 false
+ok
+board 10 9 false
+board 10 10 false
+board 11 10 false
+board 12 11 false
+ok
+board 12 11 false
+token 50
+board 11 10 false
+ok
+board 12 11 false
+token 14
+board 11 10 false
+ok
+board 12 11 false
+token 18
+board 11 10 false
+ok
+board 11 10 false
+board 10 10 false
+board 10 9 false
+board 10 8 false
+board 10 7 false
+board 10 6 false
+ok
+board 10 6 false
+token 14
+board 11 6 true
+ok
+board 10 6 false
+token 18
+board 11 5 false
+ok
+board 11 6 false
+board 12 6 true
+board 11 5 false
+ok
+board 11 5 false
+board 13 3 true
+ok
+board 11 6 false
+board 11 5 false
+board 13 4 true
+ok
+board 13 4 false
+action EvtFire
+board 13 3 false
+board 15 3 false
+ok
+board 13 3 false
+board 17 2 true
+ok
+board 13 4 false
+board 16 3 true
+ok
+board 12 6 false
+board 15 6 true
+ok
+board 16 3 false
+board 18 5 true
+board 15 6 false
+ok
+board 16 3 false
+action EvtControl
+board 17 2 false
+board 17 3 false
+ok
+board 17 2 false
+board 19 3 true
+ok
+board 19 3 false
+action EvtFire
+board 17 3 false
+board 20 5 false
+ok
+board 19 3 false
+board 20 4 false
+board 20 5 false
+ok
+board 20 5 false
+action EvtRepair
+board 18 5 false
+action EvtRepair
+board 19 6 false
+action EvtRepair

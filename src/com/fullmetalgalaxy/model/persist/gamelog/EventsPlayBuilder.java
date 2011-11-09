@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameType;
@@ -43,11 +41,11 @@ import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.pathfinder.SimplePathFinder;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.google.gwt.user.client.Window;
 
 
 /**
@@ -56,6 +54,8 @@ import com.google.gwt.user.client.Window;
  */
 public class EventsPlayBuilder implements GameEventStack
 {
+  public static final String GAME_MESSAGE_RECORDING_TAG = "#recording";
+
   private ArrayList<AnEventPlay> m_actionList = new ArrayList<AnEventPlay>();
   // theses informations are used while building a new action
   private AnEventPlay m_selectedAction = null;
@@ -67,6 +67,9 @@ public class EventsPlayBuilder implements GameEventStack
   private Date m_lastUpdate = new Date( System.currentTimeMillis() );
 
   private Game m_game = null;
+  private boolean m_isRecording = false;
+  private EbPublicAccount m_myAccount = null;
+  private boolean m_isReadOnly = false;
 
   /**
    * true if the action list is executed.
@@ -81,6 +84,16 @@ public class EventsPlayBuilder implements GameEventStack
 
   }
 
+  /**
+   * note that while recording, this class can't record the following event:
+   * join, player turn, take off
+   * @param p_isRecording
+   */
+  public void setRecordMode(boolean p_isRecording)
+  {
+    m_isRecording = p_isRecording;
+  }
+
   public void clear()
   {
     RpcUtil.logDebug( "clear action " );
@@ -92,13 +105,14 @@ public class EventsPlayBuilder implements GameEventStack
       } catch( RpcFmpException e )
       {
         RpcUtil.logError( "error ", e );
-        Window.alert( "unexpected error : " + e );
+        // Window.alert( "unexpected error : " + e );
       }
     }
     m_actionList.clear();
     unselectToken();
     setLastUserClick( null );
   }
+
 
   public void exec() throws RpcFmpException
   {
@@ -393,6 +407,11 @@ public class EventsPlayBuilder implements GameEventStack
    */
   public EventBuilderMsg userBoardClick(AnBoardPosition p_position, boolean p_searchPath) throws RpcFmpException
   {
+    if( m_isRecording )
+    {
+      m_game.setMessage( m_game.getMessage() + "board " + p_position.getX() + " "
+          + p_position.getY() + " " + p_searchPath + "\n" );
+    }
     EventBuilderMsg isUpdated = EventBuilderMsg.None;
     RpcUtil.logDebug( "user click board " + p_position );
     assert p_position != null;
@@ -401,7 +420,7 @@ public class EventsPlayBuilder implements GameEventStack
     {
       if( isRunnable() )
       {
-        userOk();
+        privateOk();
       }
       else
       {
@@ -412,7 +431,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
 
     setLastUserClick( p_position );
-    if( getMyRegistration() == null || GameEngine.model().isTimeLineMode() )
+    if( getMyRegistration() == null || m_isReadOnly )
     {
       // user isn't registered to this game or is viewing past actions
       clear();
@@ -515,7 +534,7 @@ public class EventsPlayBuilder implements GameEventStack
               actionAdd( actionConstruct );
   
               // then unload token
-              userTokenClick( actionConstruct.getToken( m_game ) );
+              privateTokenClick( actionConstruct.getToken( m_game ) );
               exec();
               // we never construct barge token.
               // assume that constructed token has only one hexagon
@@ -637,7 +656,7 @@ public class EventsPlayBuilder implements GameEventStack
             if( token.getColor() != getSelectedToken().getColor()
                 && token.isNeighbor( getSelectedToken() ) )
             {
-              userAction( GameLogType.EvtControl );
+              privateAction( GameLogType.EvtControl );
             }
             else if( (getSelectedToken().isDestroyer() && token.isDestroyer())
                 || (getSelectedToken().canBeATarget( getGame() ) && token.isDestroyer()
@@ -645,7 +664,7 @@ public class EventsPlayBuilder implements GameEventStack
                 || (token.canBeATarget( getGame() ) && getSelectedToken().isDestroyer()
                     && !getMyRegistration().getEnuColor().contain( token.getColor() )) )
             {
-              userAction( GameLogType.EvtFire );
+              privateAction( GameLogType.EvtFire );
             }
           }
 
@@ -655,7 +674,7 @@ public class EventsPlayBuilder implements GameEventStack
             {
               // user is firing and click on another token:
               // he want a double shoot !
-              userAction(GameLogType.EvtFire);
+              privateAction( GameLogType.EvtFire );
               ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( ((EbEvtFire)previousAction).getTokenDestroyer2( m_game ) );
               // select target
               ((EbEvtFire)getSelectedAction()).setTokenTarget( token );
@@ -833,7 +852,7 @@ public class EventsPlayBuilder implements GameEventStack
             actionConstruct.setAccountId( getAccountId() );
             actionAdd( actionConstruct );
             // then unload token
-            userTokenClick( actionConstruct.getToken( m_game ) );
+            privateTokenClick( actionConstruct.getToken( m_game ) );
             exec();
             if( token.getType() == TokenType.Turret )
             {
@@ -910,6 +929,22 @@ public class EventsPlayBuilder implements GameEventStack
     return isUpdated;
   }
 
+
+  public boolean userTokenClick(EbToken p_token) throws RpcFmpException
+  {
+    if( m_isRecording )
+    {
+      m_game.setMessage( m_game.getMessage() + "token " + p_token.getId() );
+      if( p_token.getCarrierToken() != null
+          && p_token.getCarrierToken().getType() == TokenType.WeatherHen )
+      {
+        m_game.setMessage( m_game.getMessage() + " " + p_token.getType() );
+      }
+      m_game.setMessage( m_game.getMessage() + "\n" );
+    }
+    RpcUtil.logDebug( "user click token " + p_token );
+    return privateTokenClick( p_token );
+  }
   /**
    * This method is part of the user building action API.
    * is user click on a token which ISN'T on board.
@@ -917,9 +952,8 @@ public class EventsPlayBuilder implements GameEventStack
    * @return
    * @throws RpcFmpException
    */
-  public boolean userTokenClick(EbToken p_token) throws RpcFmpException
+  private boolean privateTokenClick(EbToken p_token) throws RpcFmpException
   {
-    RpcUtil.logDebug( "user click token " + p_token );
     // assert p_token.getLocation() != Location.Board;
     boolean isUpdated = false;
     exec();
@@ -1019,7 +1053,16 @@ public class EventsPlayBuilder implements GameEventStack
    */
   public void userOk() throws RpcFmpException
   {
+    if( m_isRecording )
+    {
+      m_game.setMessage( m_game.getMessage() + "ok\n" );
+    }
     // RpcUtil.logDebug( "user click OK " );
+    privateOk();
+  }
+
+  private void privateOk() throws RpcFmpException
+  {
     if( getSelectedAction() != null
         && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
@@ -1031,6 +1074,10 @@ public class EventsPlayBuilder implements GameEventStack
 
   public void userCancel() throws RpcFmpException
   {
+    if( m_isRecording )
+    {
+      m_game.setMessage( m_game.getMessage() + "cancel\n" );
+    }
     // RpcUtil.logDebug( "user click cancel " );
     clear();
   }
@@ -1047,7 +1094,15 @@ public class EventsPlayBuilder implements GameEventStack
 
   public EventBuilderMsg userAction(GameLogType p_type) throws RpcFmpException
   {
-    RpcUtil.logDebug( "user click action " + p_type );
+    if( m_isRecording )
+    {
+      m_game.setMessage( m_game.getMessage() + "action " + p_type + "\n" );
+    }
+    return privateAction( p_type );
+  }
+
+  private EventBuilderMsg privateAction(GameLogType p_type) throws RpcFmpException
+  {
     EventBuilderMsg isUpdated = EventBuilderMsg.None;
 
     if( p_type == GameLogType.EvtRepair )
@@ -1573,7 +1628,11 @@ public class EventsPlayBuilder implements GameEventStack
    */
   private long getAccountId()
   {
-    return AppMain.instance().getMyAccount().getId();
+    if( m_myAccount != null )
+    {
+      return m_myAccount.getId();
+    }
+    return 0;
   }
 
 
@@ -1599,12 +1658,26 @@ public class EventsPlayBuilder implements GameEventStack
     m_game.setGameEventStack( this );
   }
 
+  public void setMyAccount(EbPublicAccount p_myAccount)
+  {
+    m_myAccount = p_myAccount;
+  }
+
   /**
    * @return the isExecuted
    */
   public boolean isExecuted()
   {
     return m_isExecuted;
+  }
+
+  /**
+   * if read only is set, then event play builder don't generate any action
+   * @param p_isReadOnly the isReadOnly to set
+   */
+  public void setReadOnly(boolean p_isReadOnly)
+  {
+    m_isReadOnly = p_isReadOnly;
   }
 
 

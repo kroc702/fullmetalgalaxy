@@ -123,9 +123,15 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
     if( m_maxPlayerCount != p_modelSender.getGame().getMaxNumberOfPlayer() )
     {
       m_maxPlayerCount = p_modelSender.getGame().getMaxNumberOfPlayer();
-      GameGenerator.setSize( getSelectedMapSize() );
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-      return;
+      if( p_modelSender.getGame().isTrancient() )
+      {
+        // if game is transient, this mean that we are building map and we
+        // change player number:
+        // so we need to regenerate map according to new size !
+        GameGenerator.setSize( getSelectedMapSize() );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+        return;
+      }
     }
     MapSize mapSize = MapSize.getFromGame( p_modelSender.getGame() );
     m_sizeMediumButton.setValue( mapSize == MapSize.Medium, false );

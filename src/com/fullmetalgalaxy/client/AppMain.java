@@ -434,8 +434,8 @@ private ChatEngine m_chatEngine = null;
    */
   public void scheduleReloadTimer()
   {
-    // reload page if no response after 10 seconds
-    m_reloadTimer.schedule( 10000 );
+    // reload page if no response after 5 seconds
+    m_reloadTimer.schedule( 5000 );
     m_isReloadTimerScheduled = true;
   }
   

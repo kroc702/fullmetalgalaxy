@@ -70,9 +70,13 @@ public class EbEvtMessage extends AnEventUser
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec( p_game );
-    
-    m_oldMessage = p_game.getMessage();
-    p_game.setMessage( getMessage() );
+    // if message start by recording, we don't touch it...
+    if( p_game.getMessage() == null
+        || !p_game.getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
+    {
+      m_oldMessage = p_game.getMessage();
+      p_game.setMessage( getMessage() );
+    }
   }
 
 

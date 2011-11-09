@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -75,9 +76,12 @@ public class WgtMessages extends Composite
       @Override
       public void onBlur(BlurEvent p_event)
       {
-        if( m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() ))
+        if( m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() )
+            || (GameEngine.model().getGame().getMessage() != null 
+                && GameEngine.model().getGame().getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG )))
         {
           // message didn't change: don't send message event
+          // or we are reccording user event
           return;
         }
         EbEvtMessage message = new EbEvtMessage();
