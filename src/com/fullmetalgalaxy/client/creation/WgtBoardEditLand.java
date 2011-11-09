@@ -148,9 +148,9 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
     {
       GameEngine.model().getGame().setLand( position, m_rightClic );
     }
-    GameEngine.model().getGame().setMinimapUri( null );
-    GameEngine.model().getGame().setMapUri( null );
-    onModelChange();
+    // GameEngine.model().getGame().setMinimapUri( null );
+    // GameEngine.model().getGame().setMapUri( null );
+    onModelChange( true );
   }
 
 

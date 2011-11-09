@@ -1,0 +1,54 @@
+# load ore into cyan weather hen
+board 2 1 false
+board 3 1 false
+ok
+# move and load ore into blue weather hen
+board 11 18 false
+board 9 19 true
+ok
+board 10 19 false
+board 9 19 false
+ok
+board 9 19 false
+token 172 Ore
+board 8 19 false
+ok
+board 8 19 false
+board 9 19 false
+board 10 20 false
+ok
+# try to load ore into disabled barge
+board 8 18 false
+assert exception
+board 9 17 false
+cancel
+# try to put ore into opponent fire cover
+board 9 7 false
+board 29 2 false
+token 214
+board 29 3 false
+ok
+board 29 2 false
+board 33 0 true
+ok
+board 32 1 false
+board 31 3 true
+ok
+board 31 3 false
+token 117
+assert exception
+board 31 4 false
+cancel
+# try to load ore from opponent fire cover
+board 31 3 false
+board 30 4 false
+board 30 11 true
+ok
+board 30 11 false
+token 117
+board 29 10 false
+ok
+board 31 11 false
+assert exception
+board 30 11 false
+cancel

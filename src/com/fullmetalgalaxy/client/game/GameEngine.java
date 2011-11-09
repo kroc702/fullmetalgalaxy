@@ -51,7 +51,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
@@ -143,6 +142,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         }
         m_game = model.getGame();
         getActionBuilder().setGame( getGame() );
+        getActionBuilder().setMyAccount( AppMain.instance().getMyAccount() );
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
         if( m_game.getGameType() == GameType.MultiPlayer )
         {
@@ -453,20 +453,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   }
 
 
-  /**
-   * rpc call to run the current action.
-   * Clear the current action.
-   */
-  public void endTurn()
-  {
-    EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-    action.setAccountId( AppMain.instance().getMyAccount().getId() );
-    action.setGame( model().getGame() );
-    runSingleAction( action );
-  }
-
-
-
 
 
 
@@ -588,6 +574,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return;
     }
+    getActionBuilder().setReadOnly( p_isTimeLineMode );
     m_isTimeLineMode = p_isTimeLineMode;
     m_lastTurnPlayed = getGame().getCurrentTimeStep();
     if( !p_isTimeLineMode )

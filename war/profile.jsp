@@ -21,7 +21,7 @@ if( account == null )
 }
 if( Auth.isUserAdmin( request, response ) )
 {
-	out.println("<a href=\"/account.jsp?id="+id+"\">editer</a><br/>" );
+	out.println("<a href=\"/account.jsp?id="+account.getId()+"\">editer</a><br/>" );
 }
 
 DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );

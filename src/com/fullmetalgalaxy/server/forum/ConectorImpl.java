@@ -720,20 +720,14 @@ public class ConectorImpl implements ForumConector, NewsConector
         {
           // 0 : email
           // 1 : PM
-          if( value.equalsIgnoreCase( "0" ) )
-          {
-            p_account.setAllowMsgFromGame( AllowMessage.Mail );
-          }
-          else
-          // if( value.equalsIgnoreCase( "1" ) )
+          if( value.equalsIgnoreCase( "1" ) )
           {
             p_account.setAllowMsgFromGame( AllowMessage.PM );
           }
-          /*else
+          else
           {
-            p_account.setAllowMsgFromGame( AllowMessage.No );
-          }*/
-
+            p_account.setAllowMsgFromGame( AllowMessage.Mail );
+          }
         }
       }
       else
