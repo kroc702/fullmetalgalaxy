@@ -27,7 +27,6 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.EnuNavigator;
-import com.fullmetalgalaxy.client.HistoryState;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
@@ -35,7 +34,6 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
 import com.google.gwt.dom.client.NativeEvent;
@@ -127,17 +125,17 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     // m_layerLand.setVisible( ModelFmpMain.model().isStandardLandDisplayed() );
 
     // grid
-    m_layerGrid.setVisible( false );
+    m_layerGrid.setVisible( GameEngine.model().isGridDisplayed() );
 
     // atmosphere
     m_layerAtmosphere.setVisible( GameEngine.model().isAtmosphereDisplayed() );
 
     // zoom
-    EnuZoom zoom = new EnuZoom( EnuZoom.Medium );
+    EnuZoom zoom = GameEngine.model().getZoomDisplayed();
     setZoom( zoom );
 
     // fire cover
-    m_layerCover.displayFireCover( false );
+    m_layerCover.displayFireCover( GameEngine.model().isFireCoverDisplayed() );
   }
 
   public void hide()

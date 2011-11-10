@@ -56,6 +56,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
@@ -181,8 +182,74 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   }
 
 
+  /**
+   * This method build a short string that represent current hmi option
+   * (ie grid, atmosphere, zoom, fire cover)
+   * This compact amount of data to be saved in cookies (and then send to server).
+   * @return
+   */
+  private String buildHMIFlags()
+  {
+    StringBuffer flags = new StringBuffer();
+    flags.append( isGridDisplayed() ? 'G' : 'g' );
+    flags.append( isAtmosphereDisplayed() ? 'A' : 'a' );
+    flags.append( getZoomDisplayed().getValue() == EnuZoom.Medium ? 'Z' : 'z' );
+    flags.append( isFireCoverDisplayed() ? 'F' : 'f' );
+    return flags.toString();
+  }
 
+  private void applyHMIFlags(String p_flags)
+  {
+    if( p_flags == null )
+    {
+      return;
+    }
+    for( int i = 0; i < p_flags.length(); i++ )
+    {
+      switch( p_flags.charAt( i ) )
+      {
+      case 'G':
+        setGridDisplayed( true );
+        break;
+      case 'g':
+        setGridDisplayed( false );
+        break;
+      case 'A':
+        setAtmosphereDisplayed( true );
+        break;
+      case 'a':
+        setAtmosphereDisplayed( false );
+        break;
+      case 'Z':
+        setZoomDisplayed( EnuZoom.Medium );
+        break;
+      case 'z':
+        setZoomDisplayed( EnuZoom.Small );
+        break;
+      case 'F':
+        setFireCoverDisplayed( true );
+        break;
+      case 'f':
+        setFireCoverDisplayed( false );
+        break;
+      default:
+        // do nothing
+      }
+    }
+  }
 
+  /**
+   * This method save HMI option in cookies to be restored later
+   */
+  private void backupHMIFlags()
+  {
+    Cookies.setCookie( "HMIFlags", buildHMIFlags() );
+  }
+
+  private void restoreHMIFlags()
+  {
+    applyHMIFlags( Cookies.getCookie( "HMIFlags" ) );
+  }
 
 
   public boolean isLogged()
@@ -479,6 +546,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     m_isGridDisplayed = p_isGridDisplayed;
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    backupHMIFlags();
   }
 
   /**
@@ -496,6 +564,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     m_isAtmosphereDisplayed = p_isAtmosphereDisplayed;
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    backupHMIFlags();
   }
 
   /**
@@ -530,6 +599,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     m_isFireCoverDisplayed = p_isFireCoverDisplayed;
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    backupHMIFlags();
   }
 
   /**
@@ -545,14 +615,14 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   public void setZoomDisplayed(int p_zoomValueDisplayed)
   {
-    m_zoomDisplayed = new EnuZoom( p_zoomValueDisplayed );
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    setZoomDisplayed( new EnuZoom( p_zoomValueDisplayed ) );
   }
 
   public void setZoomDisplayed(EnuZoom p_zoomDisplayed)
   {
     m_zoomDisplayed = p_zoomDisplayed;
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    backupHMIFlags();
   }
 
 
@@ -791,7 +861,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void onModuleLoad()
   {
     AppMain.instance().startLoading();
-    
+    restoreHMIFlags();
+
     String strModel = ClientUtil.getJSString( "fmp_model" );
     if( strModel != null )
     {
