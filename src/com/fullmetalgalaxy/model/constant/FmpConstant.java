@@ -87,8 +87,6 @@ public class FmpConstant
     default:
     case EnuZoom.Medium:
       return 76;// 50;
-    case EnuZoom.Large:
-      return 70;
     }
   }
 
@@ -114,8 +112,6 @@ public class FmpConstant
     default:
     case EnuZoom.Medium:
       return 40;// 44;
-    case EnuZoom.Large:
-      return 61;
     }
   }
 

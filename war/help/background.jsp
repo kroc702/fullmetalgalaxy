@@ -11,6 +11,10 @@
 
 <%@include file="/include/header.jsp"%>
 
+<div class="inline-ul" >
+<jsp:include page="<%= I18n.localize(request,response,\"/help/menu.html\") %>" />
+</div>
+
 <h1>Un texte d'ambiance par Sébastien ANDRIVET</h1>
 
 <br>

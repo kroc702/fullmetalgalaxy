@@ -33,7 +33,6 @@ public class EnuZoom extends MyEnum
 
   public static final int Small = 0;
   public static final int Medium = 1;
-  public static final int Large = 2;
 
 
   public EnuZoom(int p_value)
@@ -61,8 +60,6 @@ public class EnuZoom extends MyEnum
       return "strategy";
     case EnuZoom.Medium:
       return "tactic";
-    case EnuZoom.Large:
-      return "large";
     case EnuZoom.Unknown:
     default:
       return super.toString();
