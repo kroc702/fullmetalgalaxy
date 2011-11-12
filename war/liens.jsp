@@ -40,12 +40,21 @@
     </p>
     <h2>Les bannières du site</h2>
     <p>
+    <code>
+    &lt;a href=&quot;http://fullmetalgalaxy.com&quot;&gt;&lt;img src=&quot;http://fullmetalgalaxy.com/images/banner/90-33.png&quot;/&gt;&lt;/a&gt;
+    </code><br/>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/90-33.png" /></a><br/>
     <br/>
+    <code>
+    &lt;a href=&quot;http://fullmetalgalaxy.com&quot;&gt;&lt;img src=&quot;http://fullmetalgalaxy.com/images/banner/468-60.jpg&quot;/&gt;&lt;/a&gt;
+    </code><br/>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/468-60.jpg" /></a><br/>
     <br/>
+    <code>
+    &lt;a href=&quot;http://fullmetalgalaxy.com&quot;&gt;&lt;img src=&quot;http://fullmetalgalaxy.com/images/banner/768-90.jpg&quot;/&gt;&lt;/a&gt;
+    </code><br/>
     <a href="http://fullmetalgalaxy.com">
     <img src="/images/banner/768-90.jpg" /></a><br/>
     </p>
