@@ -87,8 +87,8 @@ li {
 }
 
 #banniere {
-	width: 230px;
-	height: 33px;
+	width: 365px;
+	height: 45px;
 	position: relative;
 	background-image: url('images/logoTitle.png');
 	background-position: right center;
@@ -103,14 +103,6 @@ li {
 	background-repeat: no-repeat;	
 	width: 69px;
 	height: 65px;
-}
-
-#logo {
-	width: 167px;
-	height: 23px;
-	background-image: url('images/logoTitle.png');
-	background-repeat: no-repeat;
-	float: left;
 }
 
 #chart {

@@ -44,7 +44,9 @@
 					</ul>
 				</li>																
 				<li><a href="/liens.jsp" >Liens</a></li>																
-				<li><a href="/apropos.jsp" >Développement</a></li>			
+				<li><a href="/development/" >Développement</a>
+					<jsp:include page="/i18n/fr/development/menu.html" />
+				</li>			
 				
 				<%--
 				<li><a href="" ><img src="/i18n/fr/images/icon_locale.png" /></a></li>
