@@ -112,6 +112,22 @@ public class EbEvtPlayerTurn extends AnEvent
         throw new RpcFmpException( "Vous devez poser votre astronef avant." );
       }
     }
+    // check that current player have no cheating tank (ie two tank on same
+    // montain)
+    if( !isAuto() )
+    {
+      EnuColor playerColor = p_game.getCurrentPlayerRegistration().getEnuColor();
+      for( EbToken token : p_game.getSetToken() )
+      {
+        if( token.getColor() != EnuColor.None && playerColor.isColored( token.getColor() )
+            && p_game.getTankCheating( token ) != null )
+        {
+          // TODO i18n
+          throw new RpcFmpException(
+              "Vous ne pouvez pas terminer votre tour avec deux chars cote à cote sur une montagne" );
+        }
+      }
+    }
   }
 
 
