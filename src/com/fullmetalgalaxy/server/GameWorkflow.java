@@ -232,7 +232,7 @@ public class GameWorkflow
                 .getEbConfigGameTime().getTimeStepDurationInMili()) )
         {
           // automatic take off for all freighter just before end game
-          if( p_game.getCurrentTimeStep() > p_game.getEbConfigGameTime().getTotalTimeStep() )
+          if( p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTotalTimeStep() )
           {
             for( EbToken token : p_game.getSetToken() )
             {
