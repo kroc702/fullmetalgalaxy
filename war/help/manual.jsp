@@ -26,7 +26,7 @@
 [G] afficher la grille
 [F] afficher les zones de feu
 [CTRL]+[Clic] ou [Clic droit] Mouvement de plusieurs cases
-
+[ENTER] envoyer un message instantané
 [CTRL]+[M] afficher le menu
 </pre>
 
@@ -131,9 +131,19 @@ occuper:
 [OK] (-> 1pt d'action)
 </pre>
 
-<h2>chat / joueurs connecté</h2>
-<h2>timeline</h2>
+<h2>Chat / joueurs connecté</h2>
+<p>
+Les avatars des joueurs connectés s'affichent en bas à droite de l'écran. Dans l'onglet "joueurs", les noms des joueurs
+connectés apparaissent en gras.<br/>
+Il est possible d'envoyer un message instantané ou d'ouvrir une fenêtre de discussion dédiée à la partie.
+</p>
 
+<h2>Timeline</h2>
+<p>
+Cette partie est amenée à évoluer...<br/>
+L'onglet "sablier" permet de visualiser les coups précédents avec les quelques boutons.
+Si l'annulation de ses propres coups est autorisée, il y a un bouton vert pour valider l'annulation. 
+</p>
 
 <%@include file="/include/footer.jsp"%>
 </body>
