@@ -50,6 +50,7 @@ import com.fullmetalgalaxy.model.pathfinder.PathGraph;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 
 /**
@@ -604,6 +605,43 @@ public class Game extends GameData implements PathGraph, GameEventStack
       }
     }
     return false;
+  }
+
+
+  /**
+   * 
+   * @param p_registration
+   * @return false if player can't deploy unit for free
+   */
+  public boolean canDeployUnit(EbRegistration p_registration)
+  {
+    if( getEbConfigGameTime().getDeploymentTimeStep() < getCurrentTimeStep() )
+    {
+      // too late
+      return false;
+    }
+    if( !isAsynchron() && getEbConfigGameTime().getDeploymentTimeStep() != getCurrentTimeStep() )
+    {
+      // too early
+      return false;
+    }
+    // check that, in parallel, player don't wan't to deploy after his first
+    // move
+    if( isAsynchron() )
+    {
+      int index = getLogs().size();
+      while( index > 0 )
+      {
+        index--;
+        AnEvent event = getLogs().get( index );
+        if( event instanceof EbEvtMove
+            && ((EbEvtMove)event).getMyRegistration( this ).getId() == p_registration.getId() )
+        {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**

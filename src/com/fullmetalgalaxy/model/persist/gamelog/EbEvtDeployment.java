@@ -112,6 +112,19 @@ public class EbEvtDeployment extends AnEventPlay
           + " pour deployer vos vehicules" );
     }
     
+    // check that, player don't wan't to deploy too late
+    if( p_game.getEbConfigGameTime().getDeploymentTimeStep() < p_game.getCurrentTimeStep() )
+    {
+      // no i18n
+      throw new RpcFmpException( "Too late to deploy your units" );
+    }
+
+    if( !p_game.canDeployUnit( getMyRegistration( p_game ) ) )
+    {
+      // no i18n
+      throw new RpcFmpException( "You can't deploy your units after your first move" );
+    }
+    
     // check token isn't deployed too far from his freighter
     // AnBoardPosition position = getToken( p_game )
     if( freighter.getPosition().getHexDistance( getPosition() ) > p_game.getEbConfigGameVariant()

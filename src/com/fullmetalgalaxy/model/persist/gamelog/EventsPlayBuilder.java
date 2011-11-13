@@ -986,8 +986,7 @@ public class EventsPlayBuilder implements GameEventStack
       }
       else if( p_token.getLocation() == Location.Token
           && p_token.getCarrierToken().getType() == TokenType.Freighter
-          && getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime()
-              .getDeploymentTimeStep() )
+          && getGame().canDeployUnit( getMyRegistration() ) )
       {
         // player want to deploy his token from freighter
         clear();
