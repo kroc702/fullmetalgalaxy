@@ -48,6 +48,13 @@ Le nombre maximum de PA qu’un joueur peut accumuler est de 25 plus 5 par astro
 En tour par tour, on ne peut économiser qu’un nombre de PA multiple de 5.
 </p>
 
+<h2>Voir et annuler les coups précédents</h2>
+<p>
+Il est possible de visualiser les coups précédents et même annuler ses propres coups si personne n'a joué depuis. 
+cf rubrique "<a href="/help/manual.jsp">manuel utilisateur</a>".
+</p>
+
+
 <%@include file="/include/footer.jsp"%>
 </body>
 </HTML>
