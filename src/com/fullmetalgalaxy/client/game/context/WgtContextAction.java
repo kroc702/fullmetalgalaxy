@@ -313,7 +313,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
           action.setGame( GameEngine.model().getGame() );
-          action.setAccountId( AppMain.instance().getMyAccount().getId() );
+          action.setRegistration( GameEngine.model().getMyRegistration() );
           action.setToken( actionBuilder.getSelectedToken() );
           GameEngine.model().runSingleAction( action );
         }

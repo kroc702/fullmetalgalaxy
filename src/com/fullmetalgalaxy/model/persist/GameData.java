@@ -233,7 +233,32 @@ public class GameData implements java.io.Serializable, IsSerializable
     return getLand( 0, 0 ) != LandType.None;
   }
 
-  
+
+  /**
+   * @param p_accountId
+   * @return
+   * @see com.fullmetalgalaxy.model.persist.EbGameData#getAccount(long)
+   */
+  public EbPublicAccount getAccount(long p_accountId)
+  {
+    EbPublicAccount account =  m_data.getAccount( p_accountId );
+    if( account != null )
+    {
+      return account;
+    }
+    // search everywhere we can find an account
+    if( getAccountCreator() != null && getAccountCreator().getId() == p_accountId )
+    {
+      return getAccountCreator();
+    }
+    EbRegistration registration = getRegistrationByIdAccount( p_accountId );
+    if( registration != null && registration.getAccount() != null )
+    {
+      return registration.getAccount();
+    }
+    return null;
+  }
+
   // common methods
   // ==============
   
@@ -750,6 +775,16 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     return m_data.isMessageWebUrl();
   }
+
+  /**
+   * @param p_otherAccount
+   * @see com.fullmetalgalaxy.model.persist.EbGameData#addAccount(com.fullmetalgalaxy.model.persist.EbPublicAccount)
+   */
+  public void addAccount(EbPublicAccount p_otherAccount)
+  {
+    m_data.addAccount( p_otherAccount );
+  }
+
 
   /**
    * @return

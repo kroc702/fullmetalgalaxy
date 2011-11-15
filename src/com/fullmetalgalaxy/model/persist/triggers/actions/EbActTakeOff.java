@@ -28,8 +28,8 @@ import java.util.List;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbBase;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 
@@ -91,7 +91,7 @@ public class EbActTakeOff extends AnAction
         event.setCost( 0 );
         event.setToken( freighter );
         event.setBackInOrbit( true );
-        event.setAccountId( 0L );
+        event.setRegistration( null );
         event.setAuto( true );
         events.add( event );
       }

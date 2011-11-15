@@ -138,9 +138,13 @@ public class StatsGamePlayer extends StatsGame
     {
       if( event  instanceof AnEventPlay )
       {
-        // TODO getMyRegistration depend of account id...
-        // this code will fail in case of replacement
-        if( ((AnEventPlay)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
+        EbRegistration eventRegistration = ((AnEventPlay)event).getMyRegistration( p_game );
+        if( eventRegistration == null )
+        {
+          // TODO getMyRegistration depend of account id...
+          // in case of replacement eventRegistration will be null !
+        }
+        else if( eventRegistration.getId() == p_registration.getId() )
         {
           if( event instanceof EbEvtControl )
           {

@@ -26,7 +26,6 @@ import java.util.Date;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -39,7 +38,7 @@ public class EbAdminBan extends EbAdmin
   private static final long serialVersionUID = 1L;
 
   private long m_registrationId = -1;
-  private EbPublicAccount m_oldAccount = null;
+  private long m_oldAccountId = 0L;
 
   /**
    * 
@@ -59,7 +58,7 @@ public class EbAdminBan extends EbAdmin
   private void init()
   {
     m_registrationId = -1;
-    m_oldAccount = null;
+    m_oldAccountId = 0L;
   }
 
   @Override
@@ -103,8 +102,10 @@ public class EbAdminBan extends EbAdmin
     if( registration != null )
     {
       // backup to keep track of this action
-      m_oldAccount = registration.getAccount();
+      m_oldAccountId = registration.getAccount().getId();
+      p_game.addAccount( registration.getAccount() );
 
+      registration.setReplacement( true );
       registration.setAccount( null );
       registration.setEndTurnDate( null );
       
@@ -121,7 +122,7 @@ public class EbAdminBan extends EbAdmin
   public String toString()
   {
     String str = super.toString();
-    str += " : " + m_oldAccount.getPseudo() + "(" + m_oldAccount.getId() + ")";
+    str += " : " + "accountid = " + m_oldAccountId;
     return str;
   }
 

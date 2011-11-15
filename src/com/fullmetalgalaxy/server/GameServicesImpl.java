@@ -25,6 +25,8 @@ package com.fullmetalgalaxy.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -357,7 +359,14 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       {
         if( event instanceof AnEventUser )
         {
-          ((AnEventUser)event).setRemoteAddr( getThreadLocalRequest().getRemoteAddr() );
+          try
+          {
+            ((AnEventUser)event).setRemoteAddr( InetAddress.getByName(
+                getThreadLocalRequest().getRemoteAddr() ).getAddress() );
+          } catch( UnknownHostException e )
+          {
+            log.error( e );
+          }
           EbRegistration registration = ((AnEventUser)event).getMyRegistration( game );
           if( registration != null )
           {

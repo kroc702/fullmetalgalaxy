@@ -5,7 +5,8 @@
 	
 	<sessions-enabled>true</sessions-enabled>
 	<precompilation-enabled>true</precompilation-enabled>
-	<async-session-persistence enabled="true"/>
+	<!-- comment du to this bug: http://code.google.com/p/googleappengine/issues/detail?id=5774 --> 
+	<!-- async-session-persistence enabled="true" queue-name="default"/-->
 	<threadsafe>true</threadsafe>
 	 
 	<!-- Configure java.util.logging -->

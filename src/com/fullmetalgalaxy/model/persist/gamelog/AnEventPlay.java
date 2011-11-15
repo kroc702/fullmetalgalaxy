@@ -40,6 +40,7 @@ public class AnEventPlay extends AnEventUser
 {
   static final long serialVersionUID = 1;
 
+  private long m_registrationId = 0L;
   /**
    * action point cost of this action.
    */
@@ -73,6 +74,7 @@ public class AnEventPlay extends AnEventUser
 
   private void init()
   {
+    m_registrationId = 0L;
     m_cost = 0;
     m_newPosition = null;
     m_packedToken = null;
@@ -97,7 +99,27 @@ public class AnEventPlay extends AnEventUser
     return null;
   }
 
-
+  /**
+   * set player AND account
+   * @param p_registration
+   */
+  public void setRegistration(EbRegistration p_registration)
+  {
+    if( p_registration == null )
+    {
+      m_registrationId = 0;
+      return;
+    }
+    m_registrationId = p_registration.getId();
+    if( p_registration.getAccount() == null )
+    {
+      setAccountId( 0 );
+    }
+    else
+    {
+      setAccountId( p_registration.getAccount().getId() );
+    }
+  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
@@ -172,6 +194,18 @@ public class AnEventPlay extends AnEventUser
     str += getCost() + "pt : ";
     return str;
   }
+
+  @Override
+  public EbRegistration getMyRegistration(Game p_game)
+  {
+    EbRegistration registration = p_game.getRegistration( getRegistrationId() );
+    if( registration != null )
+    {
+      return registration;
+    }
+    return super.getMyRegistration( p_game );
+  }
+
 
 
   // Bean getter / setter
@@ -280,9 +314,16 @@ public class AnEventPlay extends AnEventUser
     return m_packedTokenDestroyer2;
   }
 
-  
-  
-  
+  /**
+   * @return the registrationId
+   */
+  public long getRegistrationId()
+  {
+    return m_registrationId;
+  }
+
+
+
   // cache to avoid researching again and again
   // and to implement getter
   // ===========================================

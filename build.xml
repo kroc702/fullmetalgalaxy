@@ -11,7 +11,7 @@ compilation file for Full Metal Galaxy
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
 	<!--property name="eclipsedir" value="C:\Documents and Settings\vlegendr\Mes documents\fmg\eclipse" /-->
 	<property name="eclipsedir" value="C:\Sun\eclipse" />
-	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.5.3.r36v201108301710\appengine-java-sdk-1.5.3" />
+	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.5.5.r36v201110112027\appengine-java-sdk-1.5.5" />
 	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.4.0.r36v201108301710\gwt-2.4.0" />
 
 
