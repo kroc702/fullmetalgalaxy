@@ -61,6 +61,7 @@ public class EbRegistration extends EbBase
     m_color = EnuColor.None;
     m_ptAction = 0;
     m_orderIndex = 0;
+    m_isReplacement = false;
   }
 
   @Override
@@ -84,6 +85,7 @@ public class EbRegistration extends EbBase
   private Date m_lastConnexion = new Date();
   @Serialized
   private List<String> m_notifSended = null;
+  private boolean m_isReplacement = false;
 
   @Embedded
   private EbPublicAccount m_account = null;
@@ -361,6 +363,22 @@ public class EbRegistration extends EbBase
       m_lastConnexion = new Date();
     }
     m_lastConnexion.setTime( System.currentTimeMillis() );
+  }
+
+  /**
+   * @return the isReplacement
+   */
+  public boolean isReplacement()
+  {
+    return m_isReplacement;
+  }
+
+  /**
+   * @param p_isReplacement the isReplacement to set
+   */
+  public void setReplacement(boolean p_isReplacement)
+  {
+    m_isReplacement = p_isReplacement;
   }
 
 

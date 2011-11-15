@@ -39,11 +39,10 @@ public class AnEventUser extends AnEvent
 {
   static final long serialVersionUID = 1;
 
-  // TODO use registration id to get pseudo
   private long m_accountId = 0L;
-  // TODO use a long to compress data
+  // TODO remove this. is here for backward compatibility
   private String m_remoteAddr = null;
-
+  private byte[] m_remoteAddrAsArray = null;
   /**
    * 
    */
@@ -92,6 +91,8 @@ public class AnEventUser extends AnEvent
     }
     return null;
   }
+
+
 
   /**
    * check this action is allowed.
@@ -144,16 +145,26 @@ public class AnEventUser extends AnEvent
    */
   public String getRemoteAddr()
   {
-    return m_remoteAddr;
+    if( m_remoteAddr != null )
+    {
+      return m_remoteAddr;
+    }
+    if( m_remoteAddrAsArray != null )
+    {
+      // should be tuned for IPV6
+      StringBuffer str = new StringBuffer();
+      for( int i = 0; i < m_remoteAddrAsArray.length; i++ )
+      {
+        str.append( m_remoteAddrAsArray[i] );
+        str.append( '.' );
+      }
+      return str.substring( 0, str.length() - 1 );
+    }
+    return "???";
   }
 
-  /**
-   * @param p_remoteAddr the remoteAddr to set
-   */
-  public void setRemoteAddr(String p_remoteAddr)
+  public void setRemoteAddr(byte[] p_remoteAddr)
   {
-    m_remoteAddr = p_remoteAddr;
+    m_remoteAddrAsArray = p_remoteAddr;
   }
-
-
 }

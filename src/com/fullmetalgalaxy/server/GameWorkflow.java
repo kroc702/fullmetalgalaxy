@@ -94,8 +94,7 @@ public class GameWorkflow
           EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
           eventTakeOff.setGame( p_game );
           eventTakeOff.setToken( token );
-          eventTakeOff.setAccountId( p_game.getRegistrationByColor( token.getColor() ).getAccount()
-              .getId() );
+          eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
           eventTakeOff.setAuto( true );
           eventTakeOff.checkedExec( p_game );
           p_game.addEvent( eventTakeOff );
@@ -243,8 +242,7 @@ public class GameWorkflow
                 EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
                 eventTakeOff.setGame( p_game );
                 eventTakeOff.setToken( token );
-                eventTakeOff.setAccountId( p_game.getRegistrationByColor( token.getColor() )
-                    .getAccount().getId() );
+                eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
                 eventTakeOff.setAuto( true );
                 eventTakeOff.checkedExec( p_game );
                 p_game.addEvent( eventTakeOff );

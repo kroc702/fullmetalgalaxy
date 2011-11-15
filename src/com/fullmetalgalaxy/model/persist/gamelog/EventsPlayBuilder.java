@@ -530,7 +530,7 @@ public class EventsPlayBuilder implements GameEventStack
               // first add a construct action
               EbEvtConstruct actionConstruct = (EbEvtConstruct)getSelectedAction();
               actionConstruct.setGame( m_game );
-              actionConstruct.setAccountId( getAccountId() );
+              actionConstruct.setRegistration( getMyRegistration() );
               actionAdd( actionConstruct );
   
               // then unload token
@@ -849,7 +849,7 @@ public class EventsPlayBuilder implements GameEventStack
             // first add a construct action
             EbEvtConstruct actionConstruct = (EbEvtConstruct)getSelectedAction();
             actionConstruct.setGame( getGame() );
-            actionConstruct.setAccountId( getAccountId() );
+            actionConstruct.setRegistration( getMyRegistration() );
             actionAdd( actionConstruct );
             // then unload token
             privateTokenClick( actionConstruct.getToken( m_game ) );
@@ -976,7 +976,7 @@ public class EventsPlayBuilder implements GameEventStack
         clear();
         EbEvtLand action = new EbEvtLand();
         action.setGame( getGame() );
-        action.setAccountId( getAccountId() );
+        action.setRegistration( getMyRegistration() );
         action.setPosition( new AnBoardPosition() );
         p_token.getPosition().setSector( action.getPosition().getSector() );
         action.setToken( p_token );
@@ -992,7 +992,7 @@ public class EventsPlayBuilder implements GameEventStack
         clear();
         EbEvtDeployment action = new EbEvtDeployment();
         action.setGame( getGame() );
-        action.setAccountId( getAccountId() );
+        action.setRegistration( getMyRegistration() );
         action.setPosition( new AnBoardPosition(p_token.getCarrierToken().getPosition()) );
         action.getPosition().setSector( Sector.North );
         p_token.getPosition().setSector( action.getPosition().getSector() );
@@ -1109,7 +1109,7 @@ public class EventsPlayBuilder implements GameEventStack
       assert isBoardTokenSelected();
       EbEvtRepair action = new EbEvtRepair();
       action.setGame( getGame() );
-      action.setAccountId( getAccountId() );
+      action.setRegistration( getMyRegistration() );
       action.setPosition( getSelectedPosition() );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.MustRun;
@@ -1119,7 +1119,7 @@ public class EventsPlayBuilder implements GameEventStack
       assert isBoardTokenSelected();
       EbEvtTakeOff action = new EbEvtTakeOff();
       action.setGame( getGame() );
-      action.setAccountId( getAccountId() );
+      action.setRegistration( getMyRegistration() );
       action.setToken( getSelectedToken() );
       setSelectedAction( action );
       isUpdated = EventBuilderMsg.MustRun;
@@ -1129,7 +1129,7 @@ public class EventsPlayBuilder implements GameEventStack
       assert isBoardTokenSelected();
       EbEvtFire action = new EbEvtFire();
       action.setGame( getGame() );
-      action.setAccountId( getAccountId() );
+      action.setRegistration( getMyRegistration() );
       EbToken token = getSelectedToken();
       if( token.getType() == TokenType.Freighter )
       {
@@ -1157,7 +1157,7 @@ public class EventsPlayBuilder implements GameEventStack
       // assert getGame().getTokenFireLength( getSelectedToken() ) > 0;
       EbEvtControl action = new EbEvtControl();
       action.setGame( getGame() );
-      action.setAccountId( getAccountId() );
+      action.setRegistration( getMyRegistration() );
       EbToken token = getSelectedToken();
       if( token.getType() == TokenType.Freighter )
       {
@@ -1327,7 +1327,7 @@ public class EventsPlayBuilder implements GameEventStack
       {
         EbEvtMove actionMove = new EbEvtMove();
         actionMove.setGame( getGame() );
-        actionMove.setAccountId( getAccountId() );
+        actionMove.setRegistration( getMyRegistration() );
         actionMove.setToken( destroyer1 );
         actionMove.setNewPosition( destroyer1.getPosition().getNeighbour(
             destroyer1.getPosition().getNeighbourSector( target.getPosition() ) ) );
@@ -1400,7 +1400,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     EbEvtMove action = new EbEvtMove();
     action.setGame( getGame() );
-    action.setAccountId( getAccountId() );
+    action.setRegistration( getMyRegistration() );
     action.setToken( getSelectedToken() );
     action.setNewPosition( p_position );
     actionAdd( action );
@@ -1417,7 +1417,7 @@ public class EventsPlayBuilder implements GameEventStack
     setSelectedAction( null );
     EbEvtTransfer action = new EbEvtTransfer();
     action.setGame( getGame() );
-    action.setAccountId( getAccountId() );
+    action.setRegistration( getMyRegistration() );
     action.setToken( unload.getToken( m_game ) );
     action.setTokenCarrier( unload.getTokenCarrier( m_game ) );
     action.setNewTokenCarrier( p_newTokenCarrier );
@@ -1476,7 +1476,7 @@ public class EventsPlayBuilder implements GameEventStack
     EbEvtUnLoad action = (EbEvtUnLoad)getSelectedAction();
     RpcUtil.logDebug( "user unload token " + action.getToken( m_game ) + " from "
         + action.getTokenCarrier( m_game ) + " to " + p_position );
-    action.setAccountId( getAccountId() );
+    action.setRegistration( getMyRegistration() );
     action.setGame( getGame() );
     action.setNewPosition( p_position );
     AnEvent lastAction = getLastAction();
@@ -1495,7 +1495,7 @@ public class EventsPlayBuilder implements GameEventStack
       throws RpcFmpException
   {
     EbEvtControlFreighter action = new EbEvtControlFreighter();
-    action.setAccountId( getAccountId() );
+    action.setRegistration( getMyRegistration() );
     action.setGame( getGame() );
     action.setToken( p_token );
     action.setTokenFreighter( p_tokenFreighter );
@@ -1511,7 +1511,7 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user load token " + getSelectedToken() + " from "
         + getSelectedToken().getPosition() + " to " + p_tokenCarrier );
     EbEvtLoad action = new EbEvtLoad();
-    action.setAccountId( getAccountId() );
+    action.setRegistration( getMyRegistration() );
     action.setGame( getGame() );
     if( p_tokenCarrier.getType() == TokenType.Ore )
     {
@@ -1541,7 +1541,7 @@ public class EventsPlayBuilder implements GameEventStack
       for( EbToken tokenContent : action.getToken( m_game ).getContains() )
       {
         EbEvtTransfer transfer = new EbEvtTransfer();
-        transfer.setAccountId( getAccountId() );
+        transfer.setRegistration( getMyRegistration() );
         transfer.setGame( getGame() );
         transfer.setToken( tokenContent );
         transfer.setTokenCarrier( tokenContent.getCarrierToken() );

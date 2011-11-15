@@ -66,15 +66,14 @@ public class EbGameData extends EbBase
   */
   protected byte[] m_lands = new byte[0];
 
-
-  // theses data come from other table
-  // --------------------------------
   @Serialized
   protected Set<com.fullmetalgalaxy.model.persist.EbToken> m_setToken = new HashSet<com.fullmetalgalaxy.model.persist.EbToken>();
   @Serialized
   protected List<com.fullmetalgalaxy.model.persist.gamelog.AnEvent> m_setGameLog = new ArrayList<com.fullmetalgalaxy.model.persist.gamelog.AnEvent>();
   @Serialized
   protected List<com.fullmetalgalaxy.model.persist.triggers.EbTrigger> m_triggers = new ArrayList<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>();
+  @Serialized
+  protected Set<EbPublicAccount> m_accounts = null;
 
   
   protected long m_nextLocalId = 0L;
@@ -352,6 +351,37 @@ public class EbGameData extends EbBase
   {
     m_messages = p_messages;
   }
+
+
+
+  /**
+   * @param p_otherAccounts the otherAccounts to set
+   */
+  public void addAccount(EbPublicAccount p_otherAccount)
+  {
+    if( m_accounts == null )
+    {
+      m_accounts = new HashSet<EbPublicAccount>();
+    }
+    m_accounts.add( p_otherAccount );
+  }
+
+  public EbPublicAccount getAccount(long p_accountId)
+  {
+    if( m_accounts == null )
+    {
+      return null;
+    }
+    for( EbPublicAccount account : m_accounts )
+    {
+      if( account.getId() == p_accountId )
+      {
+        return account;
+      }
+    }
+    return null;
+  }
+
 
   /**
    * if message start with './', '/' or 'http://', message is a web page url
