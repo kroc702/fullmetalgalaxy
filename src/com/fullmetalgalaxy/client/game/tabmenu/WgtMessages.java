@@ -77,11 +77,16 @@ public class WgtMessages extends Composite
       public void onBlur(BlurEvent p_event)
       {
         if( m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() )
-            || (GameEngine.model().getGame().getMessage() != null 
-                && GameEngine.model().getGame().getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG )))
+            || (GameEngine.model().getGame().getMessage() != null ))
         {
           // message didn't change: don't send message event
-          // or we are reccording user event
+          return;
+        }
+        if( GameEngine.model().getGame().getMessage()
+            .startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
+        {
+          // or we are recording user event
+          GameEngine.model().getGame().setMessage( m_text.getText() );
           return;
         }
         EbEvtMessage message = new EbEvtMessage();
