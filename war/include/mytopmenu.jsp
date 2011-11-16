@@ -3,8 +3,9 @@
 
 <div id="login">
 	<% if(Auth.isUserLogged(request,response)) { %> 
+	    <span style="position: relative;top:5px;">
 	    <% if(Auth.isUserAdmin(request, response)) { %>
-		<span id="linkPseudo" style="position: relative;">
+		<span id="linkPseudo" >
 	    	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">
 	    	<img style="border:none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
 	    	</a> |
@@ -21,7 +22,7 @@
 		    <a href="/auth.jsp">log to other user</a> <br/>
 		    <a href="/AccountServlet?logout=fmgonly">log back to admin</a> <br/>
 		  </div>
-		</span>	    	
+		</span>
 	    <% } else { %>
 	    <a HREF="/account.jsp" >
 	    	<img style="border=none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
@@ -29,7 +30,11 @@
 	    <% } %>
 	    <a href="<%= Auth.getLogoutURL(request,response) %>" >
 	        <img style="border=none" border=0 src="/images/css/icon_power.cache.png" alt="" />&nbsp;D&eacute;connexion
+	    </a><br/>
+	    <a target="_blank" href="http://code.google.com/p/fullmetalgalaxy/issues/entry?template=Defect%20report%20from%20user" style="position:relative; top:-10px;">
+	        <img style="border=none;position:relative; bottom:-10px;" border=0 src="/images/icon_bugbusters.png" alt="" />&nbsp;Signaler un bug
 	    </a>
+	    </span>
 	<% } else { %>
 	<form id="login" method="POST" action="/AccountServlet" enctype="multipart/form-data">
 		<div>

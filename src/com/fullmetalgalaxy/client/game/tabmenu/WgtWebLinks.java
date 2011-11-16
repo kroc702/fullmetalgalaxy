@@ -41,6 +41,6 @@ public class WgtWebLinks extends HTML
         + "<P ALIGN=CENTER><A HREF='/help/'>Aides de jeu</A></P>"
         + "<P ALIGN=CENTER><A HREF='/halloffames.jsp'>Joueurs</A></P>"
         + "<P ALIGN=CENTER><A HREF='/liens.jsp'>Liens</A></P>"
-        + "<P ALIGN=CENTER><A HREF='/apropos.jsp'>Développement</A></P>" );
+        + "<P ALIGN=CENTER><A HREF='/development/'>Développement</A></P>" );
   }
 }
