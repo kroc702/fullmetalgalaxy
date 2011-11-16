@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import java.util.Iterator;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.widget.EventPresenter;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -67,7 +68,18 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
   public void redraw()
   {
     m_tree.clear();
+    if( GameEngine.model().getGame().getEbConfigGameTime().isAsynchron() )
+    {
+      buildTree4Parallel();
+    }
+    else
+    {
+      buildTree4Tbt();
+    }
+  }
 
+  private void buildTree4Tbt()
+  {
     int currentTurn = -1;
     TreeItem turnTreeItem = new TreeItem( "inscriptions" );
     m_tree.addItem( turnTreeItem );
@@ -148,6 +160,39 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
           playerCount--;
         }
       }
+    }
+  }
+
+  private void buildTree4Parallel()
+  {
+    TreeItem turnTreeItem = new TreeItem( "inscriptions" );
+    m_tree.addItem( turnTreeItem );
+
+    Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
+    // game starting
+    while( iterator.hasNext() )
+    {
+      AnEvent event = iterator.next();
+      turnTreeItem.addItem( new TreeItemEvent( event ) );
+      if( event instanceof EbEvtChangePlayerOrder )
+      {
+        break;
+      }
+    }
+    // game time step
+    TreeItemEvent dateTreeItem = null;
+    while( iterator.hasNext() )
+    {
+      AnEvent event = iterator.next();
+      if( dateTreeItem == null
+          || event.getLastUpdate().getDate() != dateTreeItem.getEvent().getLastUpdate().getDate() )
+      {
+        dateTreeItem = new TreeItemEvent( event );
+        dateTreeItem.setHTML( "<img src='/images/css/calendar.png'/> "
+            + EventPresenter.getDate( event ) );
+        m_tree.addItem( dateTreeItem );
+      }
+      dateTreeItem.addItem( new TreeItemEvent( event ) );
     }
   }
 

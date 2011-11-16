@@ -48,17 +48,9 @@ public class EventPresenter
   {
     if(p_event instanceof EbEvtTide)
     {
-      switch( ((EbEvtTide)p_event).getNextTide() )
-      {
-      case Low:
-        return Icons.s_instance.tide_low().getHTML();
-      case Medium:
-        return Icons.s_instance.tide_medium().getHTML();
-      case Hight:
-        return Icons.s_instance.tide_hight().getHTML();
-      case Unknown:
-        return Icons.s_instance.tide_unknown().getHTML();
-      }
+      // we can't determine imediate next tide without replaying event
+      // event.getNextTide() is in fact two tide after...
+      return Icons.s_instance.tide_unknown().getHTML();
     }
 
     return "";
