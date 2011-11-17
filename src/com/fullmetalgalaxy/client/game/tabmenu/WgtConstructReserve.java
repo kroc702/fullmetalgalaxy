@@ -64,7 +64,7 @@ public class WgtConstructReserve extends Composite
     EnuColor myColor = new EnuColor();
     if( GameEngine.model().getMyRegistration() != null )
     {
-      myColor.setValue( GameEngine.model().getMyRegistration().getOriginalColor() );
+      myColor.setValue( GameEngine.model().getMyRegistration().getSingleColor() );
     }
     
     for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )

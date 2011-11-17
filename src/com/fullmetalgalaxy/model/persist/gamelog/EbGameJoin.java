@@ -151,6 +151,7 @@ public class EbGameJoin extends AnEventUser
     Game game = p_game;
     EbRegistration registration = new EbRegistration();
     registration.setColor( getColor() );
+    registration.setSingleColor( registration.getColor() );
     registration.setOriginalColor( registration.getColor() );
     game.addRegistration( registration );
     if( game.getCurrentTimeStep() != 0 )

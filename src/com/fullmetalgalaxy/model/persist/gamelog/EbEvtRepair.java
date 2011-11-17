@@ -103,7 +103,7 @@ public class EbEvtRepair extends AnEventPlay
       // no i18n
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
-    if( getMyRegistration( p_game ).getOriginalColor() == freighter.getColor() )
+    if( getMyRegistration( p_game ).getSingleColor() == freighter.getColor() )
     {
       // no i18n
       throw new RpcFmpException( "you can't repair your original turrets" );

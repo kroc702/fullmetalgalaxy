@@ -573,7 +573,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
           && (mainSelectedToken.getType() == TokenType.Freighter) && (myRegistration != null)
           && (myRegistration.getTurretsToRepair() > 0) && (myRegistration.getPtAction() >= 2)
-          && (!mainSelectedToken.getEnuColor().isColored( myRegistration.getOriginalColor() ))
+          && (!mainSelectedToken.getEnuColor().isColored( myRegistration.getSingleColor() ))
           && (myRegistration.getEnuColor().isColored( mainSelectedToken.getColor() ))
           && (model.getGame().getToken( action.getSelectedPosition(), TokenType.Turret ) == null)
           && (!mainSelectedToken.getPosition().equals( action.getSelectedPosition() )) )

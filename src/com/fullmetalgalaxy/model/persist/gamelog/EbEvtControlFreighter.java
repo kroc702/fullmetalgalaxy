@@ -42,7 +42,7 @@ public class EbEvtControlFreighter extends AnEventPlay
   static final long serialVersionUID = 1;
 
   private EbBase m_packedOldRegistration = null;
-
+  private int m_oldRegistrationSingleColor = EnuColor.None;
 
   /**
    * 
@@ -158,18 +158,26 @@ public class EbEvtControlFreighter extends AnEventPlay
       if( color.isColored( getTokenFreighter(p_game).getColor() ) )
       {
         setOldRegistration( registration );
+        m_oldRegistrationSingleColor = registration.getSingleColor();
       }
     }
 
     if( getOldRegistration( p_game ) != null )
     {
       getOldRegistration( p_game ).setColor(
-          EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
+          EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenFreighter( p_game )
             .getColor() ) );
+      if( getOldRegistration( p_game ).getColor() != EnuColor.None
+          && !getOldRegistration( p_game ).getEnuColor().isColored( getOldRegistration( p_game ).getSingleColor() ) )
+      {
+        // player loose his main freighter but still have another one: change his fire cover color
+        getOldRegistration( p_game ).setSingleColor(
+            getOldRegistration( p_game ).getEnuColor().getSingleColor().getValue() );
+      }
     }
     // the new color owner
     getMyRegistration(p_game).setColor(
-        EnuColor.addColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
+        EnuColor.addColor( getMyRegistration(p_game).getColor(), getTokenFreighter(p_game).getColor() ) );
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() + 3 );
 
     execFireDisabling( p_game );
@@ -187,12 +195,18 @@ public class EbEvtControlFreighter extends AnEventPlay
     super.unexec(p_game);
     // the new color owner
     getMyRegistration(p_game).setColor(
-        EnuColor.removeColor( getMyRegistration(p_game).getColor(), getTokenCarrier(p_game).getColor() ) );
+        EnuColor.removeColor( getMyRegistration( p_game ).getColor(), getTokenFreighter( p_game )
+            .getColor() ) );
     if( getOldRegistration( p_game ) != null )
     {
       getOldRegistration( p_game ).setColor(
-        EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenCarrier( p_game )
+          EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenFreighter( p_game )
             .getColor() ) );
+      // test is here for backward compatibility
+      if( m_oldRegistrationSingleColor != EnuColor.None )
+      {
+        getOldRegistration( p_game ).setSingleColor( m_oldRegistrationSingleColor );
+      }
     }
     getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
 
