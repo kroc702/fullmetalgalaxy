@@ -883,7 +883,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public int getFireCover(int p_x, int p_y, EbRegistration p_registration)
   {
-    EnuColor regColor = new EnuColor( p_registration.getOriginalColor() );
+    EnuColor regColor = new EnuColor( p_registration.getSingleColor() );
     return getBoardFireCover().getFireCover( p_x, p_y, regColor );
   }
 

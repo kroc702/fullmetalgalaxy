@@ -76,6 +76,7 @@ public class EbRegistration extends EbBase
   // ------------------------------------------
   private int m_color = EnuColor.Unknown;
   private int m_OriginalColor = EnuColor.Unknown;
+  private int m_singleColor = EnuColor.Unknown;
   private int m_ptAction = 0;
   private int m_orderIndex = 0;
   private int m_turretsToRepair = 0;
@@ -267,6 +268,28 @@ public class EbRegistration extends EbBase
   }
 
   /**
+   * @return the color of his fire cover
+   */
+  public int getSingleColor()
+  {
+    // this test is here for backward compatibility
+    if( (m_singleColor == EnuColor.Unknown || m_singleColor == EnuColor.None)
+        && getColor() != EnuColor.None )
+    {
+      m_singleColor = getOriginalColor();
+    }
+    return m_singleColor;
+  }
+
+  /**
+   * @param p_singleColor the originalColor to set
+   */
+  public void setSingleColor(int p_singleColor)
+  {
+    m_singleColor = p_singleColor;
+  }
+
+  /**
    * @return the originalColor
    */
   public int getOriginalColor()
@@ -281,6 +304,7 @@ public class EbRegistration extends EbBase
   {
     m_OriginalColor = p_originalColor;
   }
+
 
   /**
    * @return the turretsToRepair

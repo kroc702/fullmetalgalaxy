@@ -216,8 +216,8 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     {
       cssClass += "tactic-";
     }
-    assert EnuColor.isSingleColor( p_registration.getOriginalColor() );
-    cssClass += EnuColor.singleColorToString( p_registration.getOriginalColor() );
+    assert EnuColor.isSingleColor( p_registration.getSingleColor() );
+    cssClass += EnuColor.singleColorToString( p_registration.getSingleColor() );
     String hCssClass = "h" + cssClass;
 
     html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );

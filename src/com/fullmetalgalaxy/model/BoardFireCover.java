@@ -109,7 +109,7 @@ public class BoardFireCover implements Serializable
     {
       return 0;
     }
-    EnuColor color = new EnuColor( p_registration.getOriginalColor() );
+    EnuColor color = new EnuColor( p_registration.getSingleColor() );
     return m_disabledFireCover[p_x][p_y][color.getColorIndex()];
   }
 
@@ -174,7 +174,7 @@ public class BoardFireCover implements Serializable
       EbRegistration tokenOwner = m_game.getRegistrationByColor( p_token.getColor() );
       if( tokenOwner != null )
       {
-        color.setValue( tokenOwner.getOriginalColor() );
+        color.setValue( tokenOwner.getSingleColor() );
       }
       else
       {
