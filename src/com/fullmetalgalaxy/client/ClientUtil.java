@@ -26,10 +26,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -221,6 +223,20 @@ public class ClientUtil
 		};
   }-*/;
 
+
+  /**
+   * format a string written by a user to a string that can be displayed.
+   * ie: html escape, \n and smiley convert
+   * @param p_message
+   * @return
+   */
+  public static String formatUserMessage(String p_message)
+  {
+    String text = SafeHtmlUtils.htmlEscape( p_message );
+    text = SmileyCollection.INSTANCE.remplace( text );
+    text = text.replace( "\n", "<br/>" );
+    return text;
+  }
 
   /**
    * @param p_parameter the parameter you want to read

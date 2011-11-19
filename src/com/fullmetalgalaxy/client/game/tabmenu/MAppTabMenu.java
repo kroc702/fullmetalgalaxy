@@ -233,6 +233,12 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
     }
     m_hPanel.add( m_wgtCurrentTab );
     m_hPanel.add( m_btnSwitchOff );
+
+    // HMI action that can't be done before widget is displayed
+    if( m_wgtCurrentTab instanceof WgtMessages )
+    {
+      ((WgtMessages)m_wgtCurrentTab).scrollToBottom();
+    }
   }
   
   

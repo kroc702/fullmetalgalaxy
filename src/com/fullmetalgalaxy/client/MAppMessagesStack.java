@@ -27,11 +27,9 @@ import java.util.Map;
 
 import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.ressources.Icons;
-import com.fullmetalgalaxy.client.ressources.smiley.SmileyCollection;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -145,9 +143,7 @@ public class MAppMessagesStack extends GuiEntryPoint implements ChannelMessageEv
       if( !p_msg.isEmpty() )
       {
         // real message
-        String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
-        text = SmileyCollection.INSTANCE.remplace( text );
-        text = text.replace( "\n", "<br/>" );
+        String text = ClientUtil.formatUserMessage( p_msg.getText() );
         HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
         showMessage( label );
       }

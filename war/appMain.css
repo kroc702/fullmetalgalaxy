@@ -429,9 +429,20 @@ code {
 
 
 .fmp-log-panel {
-    width: 400px;
+    min-width: 400px;
     height: 320px; 
 	overflow: scroll;
+}
+
+.fmp-msg-panel {
+    min-width: 420px;
+    height: 380px; 
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.fmp-msg-panel .article {
+	width: 380px;
+	word-wrap: break-word;
 }
 
 .fmp-btn-advises {
