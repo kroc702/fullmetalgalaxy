@@ -65,7 +65,7 @@ public class WgtTimeInfo extends WgtView
     // m_html.setWidth( "100%" );
 
     m_panel.add( m_iconTime );
-    // m_panel.add( m_lblTurn );
+    // m_vPanel.add( m_lblTurn );
 
 
     m_lblDate.setStyleName( "fmp-status-text" );

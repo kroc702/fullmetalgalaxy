@@ -77,7 +77,7 @@ public class WgtContextToken extends Composite
       wgtToken.setPixelSize( 70, 70 );*/
       wgtToken.setTitle( Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) );
 
-      // m_panel.add( new HTML( "<center>" ) );
+      // m_vPanel.add( new HTML( "<center>" ) );
       AbsolutePanel absPanel = new AbsolutePanel();
       m_panel.add( absPanel );
       absPanel.setSize( "100%", "100%" );
@@ -127,7 +127,7 @@ public class WgtContextToken extends Composite
         absPanel.add(
             new HTML( MAppBoard.s_messages.construct() + " : " + token.getBulletCount() ), 150, 0 );
       }
-      // m_panel.add( new HTML( "</center>" ) );
+      // m_vPanel.add( new HTML( "</center>" ) );
     }
   }
 }

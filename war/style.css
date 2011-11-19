@@ -507,11 +507,15 @@ h1 {
 }
 
 #tabmenu {
-	margin: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin: 10px;
   padding: 10px;
-    /*width:55px;*/
-    border:2px solid black;
+  /*width:55px;*/
+  /*border:2px solid black;*/
   background:url(/images/css/bloc-bkg.png);
+  box-shadow: 1px 1px 12px #555;
 }
 
 
