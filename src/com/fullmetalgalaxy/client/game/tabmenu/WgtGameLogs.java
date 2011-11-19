@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
@@ -174,7 +175,7 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     {
       AnEvent event = iterator.next();
       turnTreeItem.addItem( new TreeItemEvent( event ) );
-      if( event instanceof EbEvtChangePlayerOrder )
+      if( event instanceof EbAdminTimePlay )
       {
         break;
       }

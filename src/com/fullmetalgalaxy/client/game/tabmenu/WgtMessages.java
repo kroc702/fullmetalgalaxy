@@ -25,6 +25,9 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.widget.WgtPlayerMessage;
+import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -33,6 +36,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -40,10 +45,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author vlegendr
  *
  */
-public class WgtMessages extends Composite 
+public class WgtMessages extends Composite implements BlurHandler
 {
-  private Panel m_panel = new VerticalPanel();
   private TextArea m_text = new TextArea();
+  private boolean m_isEditableMode = false;
+  private ScrollPanel m_scrollPanel = null;
   
   public WgtMessages()
   {
@@ -53,50 +59,98 @@ public class WgtMessages extends Composite
     {
       Frame frame = new Frame( GameEngine.model().getGame().getMessage() );
       frame.setPixelSize( 700, 350 );
-      m_panel.add( frame );
+      Panel panel = new SimplePanel();
+      panel.add( frame );
+      initWidget( panel );
+    }
+    else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+    {
+      VerticalPanel verticalPanel = new VerticalPanel();
+      m_scrollPanel = new ScrollPanel();
+      m_scrollPanel.setStyleName( "fmp-msg-panel" );
+      m_scrollPanel.add( verticalPanel );
+      Panel panel = new SimplePanel();
+      panel.add( m_scrollPanel );
+      initMsgList( verticalPanel );
+      initWidget( panel );
     }
     else
     {
-      initEditableMsg(GameEngine.model().getGame().getMessage());
+      // this case become quite rare now...
+      // it is mainly used to record test
+      Panel panel = new VerticalPanel();
+      initEditableMsg( (VerticalPanel)panel, GameEngine.model().getGame().getMessage() );
+      m_isEditableMode = true;
+      initWidget( panel );
     }
     
-    initWidget(m_panel);
   }
   
-  private void initEditableMsg(String p_text)
+  public void scrollToBottom()
   {
-    m_panel.clear();
-    m_panel
+    if( m_scrollPanel != null )
+    {
+      m_scrollPanel.scrollToBottom();
+    }
+  }
+
+  private void initMsgList(VerticalPanel p_panel)
+  {
+    for( AnEvent event : GameEngine.model().getGame().getLogs() )
+    {
+      if( event instanceof EbEvtMessage )
+      {
+        p_panel.add( new WgtPlayerMessage( GameEngine.model().getGame(), (EbEvtMessage)event ) );
+      }
+    }
+    p_panel.add( m_text );
+    m_text.setPixelSize( 400, 60 );
+    m_text.addBlurHandler( this );
+  }
+
+
+  /**
+   * init widget to edit main game message
+   * @param p_text
+   */
+  private void initEditableMsg(VerticalPanel p_panel, String p_text)
+  {
+    p_panel.clear();
+    p_panel
         .add( new Label( "Ce texte est public et éditable par tous les joueurs de cette partie" ) );
-    m_panel.add( m_text );
+    p_panel.add( m_text );
     m_text.setPixelSize( 400, 350 );
     m_text.setText( p_text );
-    m_text.addBlurHandler( new BlurHandler()
+    m_text.addBlurHandler( this );
+  }
+
+
+  @Override
+  public void onBlur(BlurEvent p_event)
+  {
+    if( !m_isEditableMode && m_text.getText().isEmpty() )
     {
-      @Override
-      public void onBlur(BlurEvent p_event)
-      {
-        if( m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() )
-            || (GameEngine.model().getGame().getMessage() != null ))
-        {
-          // message didn't change: don't send message event
-          return;
-        }
-        if( GameEngine.model().getGame().getMessage()
-            .startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
-        {
-          // or we are recording user event
-          GameEngine.model().getGame().setMessage( m_text.getText() );
-          return;
-        }
-        EbEvtMessage message = new EbEvtMessage();
-        message.setGame( GameEngine.model().getGame() );
-        message.setMessage( m_text.getText() );
-        message.setAccountId( AppMain.instance().getMyAccount().getId() );
-        GameEngine.model().runSingleAction(message);
-        
-      }
-    });
+      return;
+    }
+    if( m_isEditableMode
+        && m_text.getText().equalsIgnoreCase( GameEngine.model().getGame().getMessage() ) )
+    {
+      // message didn't change: don't send message event
+      return;
+    }
+    if( GameEngine.model().getGame().getMessage() != null
+        && GameEngine.model().getGame().getMessage()
+        .startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
+    {
+      // or we are recording user event
+      GameEngine.model().getGame().setMessage( m_text.getText() );
+      return;
+    }
+    EbEvtMessage message = new EbEvtMessage();
+    message.setGame( GameEngine.model().getGame() );
+    message.setMessage( m_text.getText().trim() );
+    message.setAccountId( AppMain.instance().getMyAccount().getId() );
+    GameEngine.model().runSingleAction( message );
   }
 
 
