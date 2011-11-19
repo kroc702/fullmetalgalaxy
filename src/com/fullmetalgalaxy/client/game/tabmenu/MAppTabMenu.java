@@ -65,7 +65,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   private ToggleButton m_btnReserve = new ToggleButton( Icons.s_instance.reserve32().createImage() );
   private ToggleButton m_btnTime = new ToggleButton( Icons.s_instance.time32().createImage() );
   
-  private PushButton m_btnSwitchOff = new PushButton( Icons.s_instance.switchOff8().createImage() );
+  private PushButton m_btnSwitchOff = new PushButton();
 
   private Widget m_wgtCurrentTab = null;
   
@@ -96,7 +96,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   public MAppTabMenu()
   {
     super();
-    m_btnSwitchOff.setSize( "8px", "100%" );
+    m_btnSwitchOff.setStyleName( "fmp-tab-switchoff" );
     m_btnSwitchOff.addClickHandler( new ClickHandler()
     {
       @Override

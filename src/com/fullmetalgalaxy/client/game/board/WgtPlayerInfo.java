@@ -84,8 +84,8 @@ public class WgtPlayerInfo extends WgtView
     m_lblMoon.setStyleName( "fmp-status-text" );
     m_panel.add( m_panelTide );
 
-    // m_panel.setWidth( "100%" );
-    // m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
+    // m_vPanel.setWidth( "100%" );
+    // m_vPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
     initWidget( m_panel );
   }
 

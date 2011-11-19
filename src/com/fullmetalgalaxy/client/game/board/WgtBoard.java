@@ -91,7 +91,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     {
       addLayer( m_layerAtmosphere );
     }
-    // m_panel.setSize( "100%", "100%" );
+    // m_vPanel.setSize( "100%", "100%" );
     // setSize( "100%", "100%" );
     setWidget( m_panel );
     sinkEvents( Event.ONCONTEXTMENU );

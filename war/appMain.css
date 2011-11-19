@@ -397,6 +397,7 @@ code {
     width:250px;
     background:url(../images/css/context-bkg.png); 
     background-repeat:repeat;
+    box-shadow: 1px 1px 12px #555;
 }
 
 .fmp-context-extra {
@@ -404,12 +405,21 @@ code {
     bottom:0px;
     background:url(../images/css/context-bkg.png); 
     background-repeat:repeat;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: 1px 1px 12px #555;
 }
-
+.fmp-context-extra-title {
+	font-weight: bold;
+	text-align:center;
+}
+	
 .fmp-context-action {
     height:40px;
     width:250px;
-    background:url(../images/css/navbar-bkg.png); 
+    background:url(../images/css/navbar-bkg.png);
+    border-top-left-radius: 10px;
+    box-shadow: 1px 1px 12px #555;
 }
     
 .fmp-switch-menu {
@@ -452,6 +462,23 @@ code {
     font-size: big;
     opacity: 0.8;
     cursor: pointer;
+}
+
+.fmp-tab-switchoff {
+	background-color: #f3efe9;
+	height: 100%;
+    width: 15px;
+	vertical-align: middle;
+	background:url(../images/handle.png);
+    background-repeat: no-repeat;
+    background-position: 45% 40%;
+    cursor: pointer;
+}
+.fmp-tab-switchoff-up-hovering {
+	background-color: #e6b863;
+}
+.fmp-tab-switchoff-down-hovering {
+	background-color: #9e7322;
 }
 
 #MessagesStack{

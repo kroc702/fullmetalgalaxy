@@ -55,8 +55,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -67,8 +66,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class WgtContextExtra extends WgtView implements ClickHandler
 {
   // UI
-  FocusPanel m_focusPanel = new FocusPanel();
-  Panel m_panel = new HorizontalPanel();
+  private FocusPanel m_focusPanel = new FocusPanel();
+  private VerticalPanel m_vPanel = new VerticalPanel();
+  private HorizontalPanel m_hPanel = new HorizontalPanel();
+  private HTML m_lblTitle = new HTML();
 
   // ref on model
   Map<Widget, EbToken> m_wgtTokenLink = new HashMap<Widget, EbToken>();
@@ -80,7 +81,10 @@ public class WgtContextExtra extends WgtView implements ClickHandler
   {
     super();
 
-    m_focusPanel.add( m_panel );
+    m_lblTitle.setStyleName( "fmp-context-extra-title" );
+    m_vPanel.add( m_lblTitle );
+    m_vPanel.add( m_hPanel );
+
     initWidget( m_focusPanel );
 
 
@@ -115,7 +119,8 @@ public class WgtContextExtra extends WgtView implements ClickHandler
 
   protected void redraw()
   {
-    m_panel.clear();
+    m_hPanel.clear();
+    m_focusPanel.clear();
     m_wgtTokenLink.clear();
     GameEngine model = GameEngine.model();
     if( (model == null) )
@@ -150,7 +155,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
             if( !isTitleDisplayed )
             {
               isTitleDisplayed = true;
-              m_panel.add( new Label( MAppBoard.s_messages.inOrbit() ) );
+              m_lblTitle.setText( MAppBoard.s_messages.inOrbit() );
             }
             // this token is in orbit !
             // and an account is associated with it
@@ -167,12 +172,12 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       EbToken token = (EbToken)action.getSelectedToken();
       if( action.getSelectedAction().getType() == GameLogType.EvtLand )
       {
-        m_panel.add( new HTML( MAppBoard.s_messages.landing() ) );
+        m_lblTitle.setHTML( MAppBoard.s_messages.landing() );
       }
       else
       {
-        m_panel.add( new HTML( MAppBoard.s_messages.deployment( Messages.getTokenString( 0, token
-            .getType() ) ) ) );
+        m_lblTitle.setHTML( MAppBoard.s_messages.deployment( Messages.getTokenString( 0,
+            token.getType() ) ) );
       }
       addToken( token, token.getPosition().getSector() );
     }
@@ -180,7 +185,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       if( mainToken.containToken() )
       {
-        m_panel.add( new Label( MAppBoard.s_messages.contain() ) );
+        m_lblTitle.setText( MAppBoard.s_messages.contain() );
 
         // Add list of token contained by the selected token
         // and won't be unload during the preparing action
@@ -199,7 +204,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           // Add list of token that can be constructed
           //
           EbToken ore = mainToken.getCopyContains().iterator().next();
-          m_panel.add( new Label( MAppBoard.s_messages.construct() ) );
+          m_lblTitle.setText( MAppBoard.s_messages.construct() );
 
           EbConfigGameVariant variant = model.getGame().getEbConfigGameVariant();
           for( Entry<TokenType, Integer> entry : variant.getConstructReserve().entrySet() )
@@ -220,6 +225,10 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           }
         }
       }
+    }
+    if( m_hPanel.getWidgetCount() > 0 )
+    {
+      m_focusPanel.add( m_vPanel );
     }
   }
 
@@ -265,8 +274,9 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     m_wgtTokenLink.put( wgtToken, p_token );
     panelToken.add( wgtToken );
     panelToken.add( label );
-    m_panel.add( panelToken );
+    m_hPanel.add( panelToken );
   }
+
 
 
   /* (non-Javadoc)
