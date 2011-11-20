@@ -51,6 +51,7 @@ import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
+import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 
 /**
@@ -90,6 +91,15 @@ public class Game extends GameData implements PathGraph, GameEventStack
     this.init();
   }
   
+  /**
+   * 
+   * @return true if game message start with recording tag
+   */
+  public boolean isRecordingScript()
+  {
+    return getMessage() != null
+        && getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG );
+  }
 
   public String getPMUrl()
   {
