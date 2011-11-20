@@ -29,7 +29,6 @@ import com.fullmetalgalaxy.client.widget.WgtPlayerMessage;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
-import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -64,8 +63,7 @@ public class WgtMessages extends Composite implements BlurHandler
       initWidget( panel );
     }
     else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
-        && !GameEngine.model().getGame().getMessage()
-            .startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
+        && !GameEngine.model().getGame().isRecordingScript() )
     {
       VerticalPanel verticalPanel = new VerticalPanel();
       m_scrollPanel = new ScrollPanel();
@@ -105,6 +103,11 @@ public class WgtMessages extends Composite implements BlurHandler
         p_panel.add( new WgtPlayerMessage( GameEngine.model().getGame(), (EbEvtMessage)event ) );
       }
     }
+    if( p_panel.getWidgetCount() == 0 )
+    {
+      // TODO i18n
+      p_panel.add( new Label( "Aucun message pour le moment" ) );
+    }
     p_panel.add( m_text );
     m_text.setPixelSize( 400, 60 );
     m_text.addBlurHandler( this );
@@ -118,8 +121,6 @@ public class WgtMessages extends Composite implements BlurHandler
   private void initEditableMsg(VerticalPanel p_panel, String p_text)
   {
     p_panel.clear();
-    p_panel
-        .add( new Label( "Ce texte est public et éditable par tous les joueurs de cette partie" ) );
     p_panel.add( m_text );
     m_text.setPixelSize( 400, 350 );
     m_text.setText( p_text );
@@ -140,9 +141,7 @@ public class WgtMessages extends Composite implements BlurHandler
       // message didn't change: don't send message event
       return;
     }
-    if( GameEngine.model().getGame().getMessage() != null
-        && GameEngine.model().getGame().getMessage()
-        .startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
+    if( GameEngine.model().getGame().isRecordingScript() )
     {
       // or we are recording user event
       GameEngine.model().getGame().setMessage( m_text.getText() );
