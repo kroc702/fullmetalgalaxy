@@ -64,6 +64,8 @@ public interface MessagesRpcException extends Messages
 
   String CantLandCloser(int p_hexagonCount);
 
+  String CantLandTooCloseBorder();
+
   String NotYourTurn();
 
   String CantDestroyFreighter();
