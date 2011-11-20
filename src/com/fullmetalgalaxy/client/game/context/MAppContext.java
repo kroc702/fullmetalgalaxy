@@ -57,7 +57,7 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
   private HorizontalPanel m_panelExtra = new HorizontalPanel();
   private WgtContextMinimap m_wgtMinimap = new WgtContextMinimap();
   private WgtContextToken m_wgtToken = new WgtContextToken();
-
+  private WgtContextLand m_wgtLand = new WgtContextLand();
 
   public MAppContext()
   {
@@ -202,11 +202,18 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
     
     m_panelMiniMap.remove( m_wgtMinimap );
     m_panelMiniMap.remove( m_wgtToken );
+    m_panelMiniMap.remove( m_wgtLand );
     if( actionBuilder.isTokenSelected() )
     {
       // display current selected token
       m_panelMiniMap.add( m_wgtToken );
       m_wgtToken.redraw();
+    }
+    else if( actionBuilder.isEmptyLandSelected() )
+    {
+      // display information on selected empty land
+      m_panelMiniMap.add( m_wgtLand );
+      m_wgtLand.redraw();
     }
     else 
     {

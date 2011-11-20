@@ -110,7 +110,14 @@ public class EventsPlayBuilder implements GameEventStack
     }
     m_actionList.clear();
     unselectToken();
-    setLastUserClick( null );
+    // if no token is under the last click we don't need to clear it
+    // and then we can select land by clicking again.
+    // otherwise we need one click to unselect (ie clear) and two other click to
+    // select land
+    if( getGame().getToken( getLastUserClick() ) != null )
+    {
+      setLastUserClick( null );
+    }
   }
 
 
@@ -153,6 +160,15 @@ public class EventsPlayBuilder implements GameEventStack
   public boolean isTokenSelected()
   {
     return m_selectedToken != null;
+  }
+
+  /**
+   * 
+   * @return true if an empty land is selected
+   */
+  public boolean isEmptyLandSelected()
+  {
+    return m_selectedToken == null && m_selectedPosition != null;
   }
 
   public boolean isBoardTokenSelected()
@@ -421,9 +437,19 @@ public class EventsPlayBuilder implements GameEventStack
       if( isRunnable() )
       {
         privateOk();
+        isUpdated = EventBuilderMsg.MustRun;
+      }
+      else if( !isActionsPending() && getGame().getToken( p_position ) == null )
+      {
+        // player click two time on same hexagon: select it
+        clear();
+        isUpdated = EventBuilderMsg.Updated;
+        m_selectedPosition = p_position;
       }
       else
       {
+        check();
+        // this code is probably dead because check will thrown an exception
         clear();
         isUpdated = EventBuilderMsg.Updated;
       }
@@ -913,7 +939,7 @@ public class EventsPlayBuilder implements GameEventStack
         setLastUpdate( new Date( System.currentTimeMillis() ) );
         isUpdated = EventBuilderMsg.Updated;
       }
-      else if( isActionsPending() )
+      else if( isActionsPending() || isEmptyLandSelected() )
       {
         clear();
         isUpdated = EventBuilderMsg.Updated;
@@ -1079,6 +1105,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     // RpcUtil.logDebug( "user click cancel " );
     clear();
+    setLastUserClick( null );
   }
 
   public void cancel()

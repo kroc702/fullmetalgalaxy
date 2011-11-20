@@ -233,14 +233,14 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
       // this is a test to avoid select current token
-      if( position.equals( GameEngine.model().getActionBuilder().getLastUserClick() ) )
+      /*if( position.equals( GameEngine.model().getActionBuilder().getLastUserClick() ) )
       {
         GameEngine.model().getActionBuilder().check();
 
         GameEngine.model().getActionBuilder().userOk();
         GameEngine.model().runCurrentAction();
       }
-      else 
+      else*/ 
       {
         boolean searchPath = p_event.isControlKeyDown() || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
         eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );

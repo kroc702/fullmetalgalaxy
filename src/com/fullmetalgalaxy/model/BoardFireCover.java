@@ -98,19 +98,24 @@ public class BoardFireCover implements Serializable
   }
 
 
-  public byte getDisabledFireCover(int p_x, int p_y, EbRegistration p_registration)
+  public byte getDisabledFireCover(int p_x, int p_y, EnuColor p_color)
   {
     if( m_disabledFireCover == null )
     {
       reComputeFireCover();
     }
-    if( (p_x < 0) || (p_y < 0) || (p_x >= m_disabledFireCover.length)
-        || (p_y >= m_disabledFireCover[0].length) )
+    if( (p_x < 0) || (p_y < 0) || (p_x >= m_fireCover.length) || (p_y >= m_fireCover[0].length)
+        || (!p_color.isSingleColor()) )
     {
       return 0;
     }
-    EnuColor color = new EnuColor( p_registration.getSingleColor() );
-    return m_disabledFireCover[p_x][p_y][color.getColorIndex()];
+    return m_disabledFireCover[p_x][p_y][p_color.getColorIndex()];
+  }
+
+
+  public byte getDisabledFireCover(int p_x, int p_y, EbRegistration p_registration)
+  {
+    return getDisabledFireCover( p_x, p_y, new EnuColor( p_registration.getSingleColor() ) );
   }
 
 

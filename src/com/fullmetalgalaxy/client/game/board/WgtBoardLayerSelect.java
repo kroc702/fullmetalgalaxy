@@ -112,7 +112,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
     EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
     m_actionLastUpdate = actionBuilder.getLastUpdate().getTime();
 
-    if( actionBuilder.isBoardTokenSelected() )
+    if( actionBuilder.isBoardTokenSelected() || actionBuilder.isEmptyLandSelected() )
     {
       m_hexagonSelect.setVisible( true );
       setWidgetHexPosition( m_hexagonSelect, actionBuilder.getSelectedPosition() );
