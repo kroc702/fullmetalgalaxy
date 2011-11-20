@@ -416,7 +416,7 @@ public class GameWorkflow
       // send message to game creator
       EbAccount account = FmgDataStore.dao().get( EbAccount.class,
           p_game.getAccountCreator().getId() );
-      new FmgMessage( "gameBlocked" ).sendEMail( account );
+      new FmgMessage( "gameBlocked", p_game ).sendEMail( account );
     }
 
     if( p_game.getEbConfigGameTime().isAsynchron() )

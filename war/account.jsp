@@ -56,8 +56,12 @@ if(account == null) {
 	<p>
 	level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
 	</p>
-<%} else if( account.getForumId() != null){ %>
+<%} else if( account.getForumId() != null ){ 
+		if( account.getForumKey() == null ) {%>
+	Un message privé vous sera envoyé prochainement pour lier les comptes Forum et FMG<br/>
+		<%} else {%>
 	Un message privé vous a été envoyé pour lier les comptes Forum et FMG<br/>
+		<% } %>	
 	Si ce n'est pas le cas, merci de contacter l'administrateur.<br/>
 	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
 <%} else {%>

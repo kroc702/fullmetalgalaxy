@@ -224,27 +224,13 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     p_event.preventDefault();
     AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_event.getX(), p_event
         .getY() ) );
-    // EbActionPlay action = ModelFmpMain.model().getAction();
-    // ActionPlayBuilder actionBuilder =
-    // ModelFmpMain.model().getActionBuilder();
-
 
     try
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
-      // this is a test to avoid select current token
-      /*if( position.equals( GameEngine.model().getActionBuilder().getLastUserClick() ) )
-      {
-        GameEngine.model().getActionBuilder().check();
-
-        GameEngine.model().getActionBuilder().userOk();
-        GameEngine.model().runCurrentAction();
-      }
-      else*/ 
-      {
-        boolean searchPath = p_event.isControlKeyDown() || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
-        eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );
-      }
+      boolean searchPath = p_event.isControlKeyDown()
+          || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
+      eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );
       switch( eventBuilderMsg )
       {
       case Updated:
