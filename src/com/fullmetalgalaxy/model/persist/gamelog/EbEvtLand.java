@@ -161,6 +161,12 @@ public class EbEvtLand extends AnEventPlay
             p_game.getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) );
       }
     }
+    // check that freighter isn't landing too close of map boarder
+    if( getPosition().getX() < 2 || getPosition().getX() > (p_game.getLandWidth() - 3)
+        || getPosition().getY() < 2 || getPosition().getY() > (p_game.getLandHeight() - 3) )
+    {
+      throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+    }
   }
 
   /* (non-Javadoc)
