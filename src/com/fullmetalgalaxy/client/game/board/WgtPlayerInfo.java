@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
@@ -33,6 +34,7 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -73,7 +75,7 @@ public class WgtPlayerInfo extends WgtView
     m_panel.add( m_iconOre );
     m_iconOre.setTitle( MAppBoard.s_messages.oreInHold() );
     m_panel.add( m_lblOre );
-    m_lblOre.setTitle( "Minerais en soute" );
+    m_lblOre.setTitle( MAppBoard.s_messages.oreInHold() );
     m_panel.setCellWidth( m_lblOre, "40px" );
     m_lblOre.setStyleName( "fmp-status-text" );
 
@@ -117,6 +119,14 @@ public class WgtPlayerInfo extends WgtView
             + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((GameEngine.model()
                 .getMyRegistration().getEnuColor().getNbColor() - 1) * game
                 .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
+        if( game.isAsynchron() )
+        {
+          Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
+          m_lblAction.setTitle( MAppBoard.s_messages.nextPA(
+              EbConfigGameTime.getActionInc( game, GameEngine.model().getMyRegistration() ),
+              ClientUtil.formatTimeElapsed( nextActionIncrement
+              .getTime() - System.currentTimeMillis() ) ) );
+        }
         m_lblOre.setHTML( "&nbsp;: " + GameEngine.model().getMyRegistration().getOreCount(game) );
 
 

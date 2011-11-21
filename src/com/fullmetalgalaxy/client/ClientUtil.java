@@ -283,6 +283,18 @@ public class ClientUtil
     return s_timeFormat.format( p_date );
   }
 
+  /**
+   * format elapsed time from millisecond to human readable format
+   * @param p_millis
+   * @return
+   */
+  public static String formatTimeElapsed(long p_millis)
+  {
+    // convert p_millis to minutes
+    p_millis /= (1000 * 60);
+    return "" + (p_millis / 60) + "h" + (p_millis % 60);
+  }
+
 
   private static long m_initialLoadDate = System.currentTimeMillis();
   /**

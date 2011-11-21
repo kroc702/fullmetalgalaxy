@@ -119,12 +119,7 @@ public class EbEvtTimeStep extends AnEvent
       for( EbRegistration registration : game.getSetRegistration() )
       {
         int action = registration.getPtAction();
-        int nbColor = registration.getEnuColor().getNbColor();
-        if( nbColor >= 1 )
-        {
-          action += EbConfigGameTime.getDefaultActionInc( game );
-          action += (nbColor - 1) * game.getEbConfigGameTime().getActionPtPerExtraShip();
-        }
+        action += EbConfigGameTime.getActionInc( game, registration );
         if( (action > FmpConstant.maximumActionPtWithoutLanding)
             && (!game.isLanded( registration.getEnuColor() )) )
         {

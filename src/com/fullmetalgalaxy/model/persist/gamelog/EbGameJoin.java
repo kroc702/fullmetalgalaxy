@@ -156,7 +156,7 @@ public class EbGameJoin extends AnEventUser
     game.addRegistration( registration );
     if( game.getCurrentTimeStep() != 0 )
     {
-      int pt = EbConfigGameTime.getDefaultActionInc( game )
+      int pt = EbConfigGameTime.getActionInc( game, registration )
           * (game.getCurrentTimeStep() - p_game.getEbConfigGameTime().getDeploymentTimeStep());
       if( pt > FmpConstant.maximumActionPtWithoutLanding )
       {

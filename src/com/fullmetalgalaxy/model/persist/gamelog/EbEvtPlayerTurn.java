@@ -186,14 +186,11 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     else
     {
-      int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
-      int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
-          * (nextPlayerRegistration.getEnuColor().getNbColor() - 1);
-      actionInc += actionExtraPoint;
+      int actionInc = EbConfigGameTime.getActionInc( p_game, nextPlayerRegistration );
       int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
-      if( actionPt > game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint )
+      if( actionPt > nextPlayerRegistration.getMaxActionPt( p_game ) )
       {
-        actionPt = game.getEbConfigGameVariant().getActionPtMaxReserve() + actionExtraPoint;
+        actionPt = nextPlayerRegistration.getMaxActionPt( p_game );
       }
       nextPlayerRegistration.setPtAction( actionPt );
 
@@ -239,10 +236,7 @@ public class EbEvtPlayerTurn extends AnEvent
     else
     {
       // current player action points
-      int actionInc = EbConfigGameTime.getDefaultActionInc( p_game );
-      int actionExtraPoint = game.getEbConfigGameTime().getActionPtPerExtraShip()
-          * (game.getCurrentPlayerRegistration().getEnuColor().getNbColor() - 1);
-      actionInc += actionExtraPoint;
+      int actionInc = EbConfigGameTime.getActionInc( p_game, game.getCurrentPlayerRegistration() );
       int actionPt = game.getCurrentPlayerRegistration().getPtAction() - actionInc;
       if( actionPt < 0 )
       {
