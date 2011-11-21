@@ -145,6 +145,12 @@ public class EbEvtControlFreighter extends AnEventPlay
       throw new RpcFmpException( errMsg().OnlyDestroyerCanControl() );
     }
 
+    // check that player have at least one action point to control freighter
+    if( myRegistration.getPtAction() <= 0 )
+    {
+      throw new RpcFmpException( errMsg().NotEnouthActionPt() );
+    }
+
     // player have extra action points.
     assert getCost() == -1 * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip();
 
