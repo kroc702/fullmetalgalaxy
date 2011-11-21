@@ -64,6 +64,8 @@ public interface MessagesAppBoard extends Messages
 
   String remainingActionPoint();
 
+  String nextPA(int p_paIncrement, String p_remainingTime);
+
   // unused ?
   String gameFinished();
 
