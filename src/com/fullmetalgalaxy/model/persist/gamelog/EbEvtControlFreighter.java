@@ -107,6 +107,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
+      // no i18n
       throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
     }
 
@@ -136,6 +137,12 @@ public class EbEvtControlFreighter extends AnEventPlay
         // no i18n ?
         throw new RpcFmpException( "You must destroy all turrets of an opponents freighter before taking control of it." );
       }
+    }
+
+    // check that controlling token is a destroyer
+    if( !getToken( p_game ).isDestroyer() )
+    {
+      throw new RpcFmpException( errMsg().OnlyDestroyerCanControl() );
     }
 
     // player have extra action points.

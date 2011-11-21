@@ -70,4 +70,6 @@ public interface MessagesRpcException extends Messages
 
   String CantDestroyFreighter();
 
+  String OnlyDestroyerCanControl();
+
 }
