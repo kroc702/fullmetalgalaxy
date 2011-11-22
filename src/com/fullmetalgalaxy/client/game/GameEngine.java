@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.client.game;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -243,7 +244,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   private void backupHMIFlags()
   {
-    Cookies.setCookie( "HMIFlags", buildHMIFlags() );
+    Cookies.setCookie( "HMIFlags", buildHMIFlags(), new Date( Long.MAX_VALUE ) );
   }
 
   private void restoreHMIFlags()
