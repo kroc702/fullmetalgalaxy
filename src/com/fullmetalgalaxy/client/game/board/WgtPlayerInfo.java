@@ -97,7 +97,7 @@ public class WgtPlayerInfo extends WgtView
   protected void redraw()
   {
     Game game = GameEngine.model().getGame();
-    AnEvent lastEvent = game.getLastGameLog();
+    AnEvent lastEvent = GameEngine.model().getCurrentAction();
 
     if( (lastEvent != m_oldGameEvent) )
     {
