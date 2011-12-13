@@ -26,8 +26,8 @@ package com.fullmetalgalaxy.client.game.context;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -62,13 +62,13 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   {
     assert GameEngine.model() != null;
     Game game = GameEngine.model().getGame();
-    String miniMapUri = GameEngine.model().getGame().getMapUri();
 
     m_panel.clear();
 
-    if( m_lastMiniMapUri == null || !m_lastMiniMapUri.equals( miniMapUri ) )
+    if( game.getMinimapUri() != null
+        && (m_lastMiniMapUri == null || !m_lastMiniMapUri.equals( game.getMinimapUri() )) )
     {
-      m_lastMiniMapUri = miniMapUri;
+      m_lastMiniMapUri = game.getMinimapUri();
       m_miniMapImage.setUrl( game.getMinimapUri() );
       m_miniMapImage.setPixelSize( FmpConstant.miniMapWidth, FmpConstant.miniMapHeight );
     }

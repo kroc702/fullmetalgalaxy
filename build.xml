@@ -15,7 +15,7 @@ compilation file for Full Metal Galaxy
 	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.4.0.r36v201108301710\gwt-2.4.0" />
 
 
-	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.6.4\os\win32" />
+	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->

@@ -55,7 +55,6 @@ import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.StatsGame.Status;
 import com.fullmetalgalaxy.model.persist.StatsGamePlayer;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
-import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.googlecode.objectify.Key;
@@ -383,9 +382,7 @@ public class AdminServlet extends HttpServlet
       modelInit.getGame().setMinimapUri( null );
 
       // construct minimap image
-      MiniMapProducer miniMapProducer = new MiniMapProducer( ServerUtil.getBasePath(),
-          modelInit.getGame() );
-      GameServicesImpl.storeMinimap( modelInit.getGame(), miniMapProducer.getImage() );
+      FmgDataStore.storeMinimap( modelInit.getGame() );
 
       // then save game
       FmgDataStore dataStore = new FmgDataStore( false );
