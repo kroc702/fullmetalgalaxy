@@ -122,13 +122,9 @@ public class PMServlet extends HttpServlet
     accountFrom = ds.get( EbAccount.class, Long.parseLong( params.get( "fromid" ) ) );
     assert accountTo != null;
     assert accountFrom != null;
-    String body = "Vous avez recu un email de "
-              + accountFrom.getPseudo()
-              + "\n"
-              + "Pour repondre vous pouvez utiliser ce lien http://www.fullmetalgalaxy.com/privatemsg.jsp?id="
-        + accountFrom.getId() + "\n\n" + params.get( "msg" );
-    sendMail( "[FMG] MP de " + accountFrom.getPseudo() + " : " + params.get( "subject" ), body,
-        accountTo.getEmail() );
+    String body = params.get( "msg" );
+    sendMail( "[FMG] MP : " + params.get( "subject" ), body, accountFrom.getEmail(),
+        accountFrom.getPseudo(), accountTo.getEmail() );
   }
 
   /**
@@ -138,7 +134,8 @@ public class PMServlet extends HttpServlet
    * @param p_recipients
    * @return false if an error occur in parameters
    */
-  private static synchronized boolean sendMail(String p_subject, String p_body, String p_recipients)
+  private static synchronized boolean sendMail(String p_subject, String p_body,
+      String p_fromEmail, String p_fromName, String p_recipients)
   {
     boolean isOk = true;
     Properties props = new Properties();
@@ -147,7 +144,7 @@ public class PMServlet extends HttpServlet
 
     try
     {
-      msg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
+      msg.setSender( new InternetAddress( p_fromEmail, p_fromName ) );
       msg.setSubject( p_subject );
       msg.setContent( p_body, "text/plain" );
       msg.setRecipients( Message.RecipientType.TO, InternetAddress.parse( p_recipients ) );
