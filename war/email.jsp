@@ -35,6 +35,8 @@ String subject = request.getParameter("subject");
 if( subject == null ) subject = "";
 %>
 
+<p>Attention : votre email sera envoyé a votre destinataire pour lui permetre de répondre.</p>
+
 &nbsp;A : <%= account.getPseudo() %><br/>
 
 <form name="myform" action="/PMServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
