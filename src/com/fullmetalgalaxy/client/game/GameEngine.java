@@ -836,6 +836,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return false;
     }
+    if( getGame().isFinished() )
+    {
+      return false;
+    }
     if( !getGame().getEbConfigGameTime().isAsynchron()
         && getMyRegistration() == getGame().getCurrentPlayerRegistration() )
     {
