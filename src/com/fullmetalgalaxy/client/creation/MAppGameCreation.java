@@ -337,9 +337,9 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     {
     case 0: // general
     case 1: // map
+    case 2: // tokens
       // allows click
       return true;
-    case 2: // tokens
     case 3: // forces
     case 4: // triggers
     case 5: // Extra
