@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
@@ -76,16 +77,20 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     // add all colors
     EnuColor color = null;
     int i = 0;
-    while( i < EnuColor.getTotalNumberOfColor() )
+    int nbColor = 1;
+    if( AppMain.instance().iAmAdmin() )
     {
-      color = EnuColor.getColorFromIndex( i );
-      m_lstColor.addItem( Messages.getColorString( 0, color.getValue() ) );
-      m_colors.add( i, color );
-      if( color.getValue() == m_wgtBoardEditTokens.getColor().getValue() )
+      while( i < EnuColor.getTotalNumberOfColor() )
       {
-        m_lstColor.setSelectedIndex( i );
+        color = EnuColor.getColorFromIndex( i );
+        m_lstColor.addItem( Messages.getColorString( 0, color.getValue() ) );
+        m_colors.add( i, color );
+        if( color.getValue() == m_wgtBoardEditTokens.getColor().getValue() )
+        {
+          m_lstColor.setSelectedIndex( i );
+        }
+        i++;
       }
-      i++;
     }
     color = new EnuColor( EnuColor.None );
     m_lstColor.addItem( Messages.getColorString( 0, color.getValue() ) );

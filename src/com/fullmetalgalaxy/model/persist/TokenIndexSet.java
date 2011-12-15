@@ -77,6 +77,15 @@ public class TokenIndexSet implements IsSerializable
     }
   }
 
+  /**
+   * warning this method don't remove from position index
+   * @param p_token
+   */
+  protected void removeToken(EbToken p_token)
+  {
+    m_idIndex.remove( p_token.getId() );
+  }
+
   public Set<EbToken> getAllToken(AnBoardPosition p_position)
   {
 	assert m_positionIndex != null;

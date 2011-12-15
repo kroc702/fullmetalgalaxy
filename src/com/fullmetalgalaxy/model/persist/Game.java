@@ -519,6 +519,20 @@ public class Game extends GameData implements PathGraph, GameEventStack
     updateLastTokenUpdate( null );
   }
 
+  public void removeToken(EbToken p_token)
+  {
+    try
+    {
+      moveToken( p_token, Location.Graveyard );
+    } catch( RpcFmpException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    getTokenIndexSet().removeToken( p_token );
+    getSetToken().remove( p_token );
+    p_token.incVersion();
+  }
 
   public EbRegistration getWinnerRegistration()
   {

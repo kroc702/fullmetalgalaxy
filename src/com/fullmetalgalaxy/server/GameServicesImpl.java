@@ -94,8 +94,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     if( !isLogged() )
     {
-      throw new RpcFmpException(
-          "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
+      // no i18n
+      throw new RpcFmpException( "You must be logged for this action" );
     }
     FmgDataStore dataStore = new FmgDataStore(false);
     EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
@@ -119,10 +119,12 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       adminEvent.setGame( p_game );
       adminEvent.setMessage( p_modifDesc );
 
-      if( (!Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )) )
+      if( !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )
+          && (p_game.getAccountCreator().getId() != account.getId() || p_game.getCurrentTimeStep() >= 1) )
       {
+        // TODO i18n
         throw new RpcFmpException(
-            "Vous n'avez pas les droits suffisants pour effectuer cette operation" );
+            "seul l'admin peut modifier la partie après l'atterissage des joueurs" );
       }
       adminEvent.setAccountId( account.getId() );
       p_game.addEvent( adminEvent );

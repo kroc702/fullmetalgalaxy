@@ -98,7 +98,7 @@ public class GameGenerator
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      game.getSetToken().remove( token );
+      game.removeToken( token );
       token.incVersion();
     }
   }
