@@ -37,7 +37,11 @@ part &agrave; son développement.
 <p>
 Je remercie G.Matthieu pour avoir officieusement autorisé ce site (08/11/07).
 </p>           
-           
+
+<h3>Précédentes versions :</h3>
+<pre>
+<%@include file="/include/history.html"%>           
+</pre>
 
 <%@include file="/include/footer.jsp"%>
 </body>

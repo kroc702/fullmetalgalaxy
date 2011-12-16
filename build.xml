@@ -179,10 +179,9 @@ compilation file for Full Metal Galaxy
 	<target name="uploadonly" depends="" description="Uploads the application to App Engine.">
 		<property file="update.properties"/>
 		<tstamp>
-			<format property="TODAY_UK" pattern="d-MMMM-yyyy" locale="en,UK" />
-			<format property="TODAY_FR" pattern="d-MMMM-yyyy" locale="fr" />
+			<format property="TODAY" pattern="yyyy-MM-dd" />
 		</tstamp>
-		<echo message="${TODAY_FR} - update: ${build.number}" file="war/include/version.htm" encoding="UTF-16"/>
+		<echo message="${TODAY} - update: ${build.number}" file="war/include/version.htm" encoding="UTF-8" />
 
 		<exec executable="${hgdir}/hg" outputproperty="hgid">
 		    <arg value="id"/>
@@ -196,9 +195,30 @@ compilation file for Full Metal Galaxy
 				<filter token="UPDATE_COUNT" value="${build.number}" />
 			</filterset>
 		</copy>
-		<appcfg2 action="update" war="war" />
-		<echo message="${TODAY_FR} - update: ${build.number} - commit ${hgid}" level="info" />
-		<buildnumber file="update.properties" />
+		<!--appcfg2 action="update" war="war" /-->
+		<!-- build history -->
+		<move file="war/include/history.html" tofile="war/include/oldhistory.html"/>
+		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}${line.separator}" file="war/include/newhistory.html" encoding="UTF-8" />
+		<concat destfile="war/include/history.html">
+			<fileset file="war/include/newhistory.html" />
+			<fileset file="war/include/oldhistory.html" />
+		</concat>
+		<delete file="war/include/newhistory.html"/>
+		<delete file="war/include/oldhistory.html"/>
+		
+		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}" level="warning" />
+		<echo message="display changes since last upload on {oldupload.date}" level="info" />
+		<exec executable="${hgdir}/hg" >
+		    <arg value="log"/>
+		    <arg value="--date"/>
+		    <arg value=">${oldupload.date}"/>
+		    <arg value="--template"/>
+		    <arg value="{desc}\n"/>
+		</exec>
+		<propertyfile file="update.properties" >
+			<entry key="build.number" type="int" operation="+" value="1" />
+			<entry key="oldupload.date" type="string" operation="=" value="${TODAY}" />
+		</propertyfile>
 	</target>
 
 	<target name="upload" depends="clean,build,uploadonly" description="Uploads the application to App Engine.">
