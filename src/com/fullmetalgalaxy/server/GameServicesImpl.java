@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -166,28 +167,33 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
       if( !events.isEmpty() || wasHistory != model.isHistory() )
       {
-        dataStore.put( model );
-      }
-      if( !events.isEmpty() )
-      {
-        modelUpdate.setGameEvents( events );
-        modelUpdate.setToVersion( model.getVersion() );
-
-        ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
-
-        // do we need to send an email ?
-        if( GameNotification.sendMail( model, modelUpdate ) )
+        // some was necessary
+        if( !events.isEmpty() )
         {
-          dataStore.put( model );
+          modelUpdate.setGameEvents( events );
+          modelUpdate.setToVersion( model.getVersion() );
+
+          // do we need to send an email ?
+          GameNotification.sendMail( model, modelUpdate );
+        }
+        dataStore.put( model );
+        try
+        {
+          // this action may lead to a ConcurrentModificationException
+          // in this case, it simply mean that several client ask for an update
+          // at same time
+          dataStore.close();
+
+          // so we broadcast change only once
+          ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
+        } catch( ConcurrentModificationException e )
+        {
         }
       }
     } catch( RpcFmpException e )
     {
       log.error( e );
     }
-
-
-    dataStore.close();
 
     if( model.getGameType() != GameType.MultiPlayer )
     {

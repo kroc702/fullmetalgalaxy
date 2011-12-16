@@ -349,9 +349,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       if( getGame() == null || getGame().getVersion() != p_result.getFromVersion() )
       {
-        Window.alert( "Error: receive incoherant model update. reload page" );
-        // RpcUtil.logDebug(
-        // "model update 'from' is after 'lastUpdate', ignore it..." );
+        Window.alert( "Error: receive incoherant model update (" + p_result.getFromVersion()
+            + " expected " + getGame().getVersion() + "). reload page" );
         ClientUtil.reload();
         return;
       }
@@ -806,6 +805,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
   public AnEvent getCurrentAction()
   {
+    if( !model().isTimeLineMode() )
+    {
+      return getGame().getLastGameLog();
+    }
     if( m_currentActionIndex < getGame().getLogs().size() )
     {
       return getGame().getLogs().get( m_currentActionIndex );
