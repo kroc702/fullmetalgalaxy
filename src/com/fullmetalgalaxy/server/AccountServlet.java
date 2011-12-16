@@ -313,6 +313,9 @@ public class AccountServlet extends HttpServlet
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
       return false;
     }
+    login = account.getLogin();
+    params.put( "login", login );
+    p_request.setAttribute( "login", login );
     
     // if user is already connected as admin: don't check password and allow connect to another user
     if( !Auth.isUserAdmin( p_request, p_response ))
