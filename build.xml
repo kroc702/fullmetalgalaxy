@@ -9,10 +9,9 @@ compilation file for Full Metal Galaxy
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
-	<!--property name="eclipsedir" value="C:\Documents and Settings\vlegendr\Mes documents\fmg\eclipse" /-->
-	<property name="eclipsedir" value="C:\Sun\eclipse" />
-	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.6.0.v201111171704r36\appengine-java-sdk-1.6.0" />
-	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.4.0.relr36v201110112027\gwt-2.4.0" />
+	<property name="eclipsedir" value="C:\Sun\eclipse-indigo" />
+	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.6.1.v201112160242r37\appengine-java-sdk-1.6.1" />
+	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37\gwt-2.4.0" />
 
 
 	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
@@ -195,7 +194,7 @@ compilation file for Full Metal Galaxy
 				<filter token="UPDATE_COUNT" value="${build.number}" />
 			</filterset>
 		</copy>
-		<!--appcfg2 action="update" war="war" /-->
+		<appcfg2 action="update" war="war" />
 		<!-- build history -->
 		<move file="war/include/history.html" tofile="war/include/oldhistory.html"/>
 		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}${line.separator}" file="war/include/newhistory.html" encoding="UTF-8" />
@@ -207,7 +206,7 @@ compilation file for Full Metal Galaxy
 		<delete file="war/include/oldhistory.html"/>
 		
 		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}" level="warning" />
-		<echo message="display changes since last upload on {oldupload.date}" level="info" />
+		<echo message="display changes since last upload on ${oldupload.date}" level="info" />
 		<exec executable="${hgdir}/hg" >
 		    <arg value="log"/>
 		    <arg value="--date"/>
