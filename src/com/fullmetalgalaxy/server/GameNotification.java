@@ -142,7 +142,8 @@ public class GameNotification
       }
     }
 
-    if( p_game.isHistory() )
+    if( p_game.isHistory() 
+        && (p_game.getLastGameLog() instanceof EbEvtPlayerTurn || p_game.getLastGameLog() instanceof EbEvtTimeStep))
     {
       send2AllPlayers( new FmgMessage( "gameFinish", p_game ), p_game, NotificationQty.Min, false );
       mailSended = true;
