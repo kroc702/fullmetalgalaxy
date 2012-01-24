@@ -599,7 +599,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
         registration = getRegistrationByOrderIndex( index );
       }
       assert registration != null;
-    } while( !haveBoardFreighter( registration ) && (index != p_currentIndex) );
+    } while( (!haveBoardFreighter( registration ) || !registration.haveAccount()) && (index != p_currentIndex) );
     return registration;
   }
 

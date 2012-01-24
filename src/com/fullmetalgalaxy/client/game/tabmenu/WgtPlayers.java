@@ -312,8 +312,13 @@ public class WgtPlayers extends Composite implements ClickHandler
     else if( p_event.getSource() == m_btnSkipTurn )
     {
       EbRegistration registration = GameEngine.model().getGame().getCurrentPlayerRegistration();
+      String playerName = Messages.getColorString( 0, registration.getSingleColor());
+      if( registration.getAccount() != null )
+      {
+         playerName = registration.getAccount().getPseudo();
+      }
       if( Window.confirm( "Voulez-vous réellement sauter le tour de "
-          + registration.getAccount().getPseudo()
+          + playerName
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
