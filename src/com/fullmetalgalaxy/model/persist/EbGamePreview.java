@@ -663,7 +663,7 @@ public class EbGamePreview extends EbBase
 
 
   /**
-   * @return the isAsynchron
+   * @return the 
    */
   public boolean isParallel()
   {

@@ -52,7 +52,7 @@ public class EbConfigGameTime extends EbBase
   /** in turn by turn, action point are rounded to this value */
   private int m_roundActionPt = 1;
   /** in turn by turn it's the time step during which we can deploy token.
-   *  in asynchron mode it's the time step up to which we can deploy token. */
+   *  in parallel mode it's the time step up to which we can deploy token. */
   private int m_deploymentTimeStep = 1;
   
   /**
