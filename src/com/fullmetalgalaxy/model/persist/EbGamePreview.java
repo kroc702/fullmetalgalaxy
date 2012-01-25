@@ -61,7 +61,7 @@ public class EbGamePreview extends EbBase
   private int m_maxNumberOfPlayer = 4;
   private boolean m_history = false;
   @Unindexed
-  private int m_currentTimeStep = 0;
+  private int m_currentTimeStep = 1;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
   private boolean m_isOpen = true;
@@ -114,7 +114,7 @@ public class EbGamePreview extends EbBase
   {
     m_maxNumberOfPlayer = 4;
     m_history = false;
-    m_currentTimeStep = 0;
+    m_currentTimeStep = 1;
     m_currentPlayerId = 0L;
     m_landWidth = 36;
     m_landHeight = 24;
@@ -445,7 +445,7 @@ public class EbGamePreview extends EbBase
       {
         strBuf.append( player.getAccount().getPseudo() );
       }
-      if( (!isAsynchron() || getCurrentTimeStep() == 0)
+      if( (!isAsynchron() || getCurrentTimeStep() <= 1)
           && (getCurrentPlayerRegistration() == player) )
       {
         strBuf
