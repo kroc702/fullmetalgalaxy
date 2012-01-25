@@ -134,7 +134,7 @@ public class EbEvtCancel extends AnEventUser
       m_eventsBackup.add( 0, action );
     }
     // this is to avoid timestep replay right after the cancel action.
-    if( p_game.isAsynchron() && isTimeStepCanceled )
+    if( p_game.isParallel() && isTimeStepCanceled )
     {
       p_game.setLastTimeStepChange( new Date( System.currentTimeMillis()
           - timeSinceLastTimeStepChange ) );

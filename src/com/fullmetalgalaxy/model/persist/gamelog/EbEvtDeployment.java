@@ -105,7 +105,7 @@ public class EbEvtDeployment extends AnEventPlay
     }
 
     // check that, in turn by turn, player don't wan't to deploy too early
-    if( !p_game.isAsynchron() && p_game.getEbConfigGameTime().getDeploymentTimeStep() != p_game.getCurrentTimeStep() )
+    if( !p_game.isParallel() && p_game.getEbConfigGameTime().getDeploymentTimeStep() != p_game.getCurrentTimeStep() )
     {
       // TODO i18n
       throw new RpcFmpException( "Vous devez attendre le tour " + p_game.getEbConfigGameTime().getDeploymentTimeStep()

@@ -93,7 +93,7 @@ public class EbEvtPlayerTurn extends AnEvent
       // no i18n
       throw new RpcFmpException( "Cette partie est termine" );
     }
-    if( p_game.isAsynchron() && p_game.getCurrentTimeStep() > 1 )
+    if( p_game.isParallel() && p_game.getCurrentTimeStep() > 1 )
     {
       // no i18n
       throw new RpcFmpException(
@@ -177,7 +177,7 @@ public class EbEvtPlayerTurn extends AnEvent
 
     // if game is parallel (old asynchron) and turn 1, all players are landed:
     // start parallel mode
-    if( game.isAsynchron() && game.getCurrentTimeStep() == 2 )
+    if( game.isParallel() && game.getCurrentTimeStep() == 2 )
     {
       nextPlayerRegistration = null;
       // this is the real start time for parallele game
@@ -224,7 +224,7 @@ public class EbEvtPlayerTurn extends AnEvent
     // previous player
     EbRegistration registration = null;
 
-    if( game.isAsynchron() && game.getCurrentTimeStep() == 2 )
+    if( game.isParallel() && game.getCurrentTimeStep() == 2 )
     {
       // this event turn is a special case: last turn of last player
       // in other word it's the event which really switch from turn by turn to

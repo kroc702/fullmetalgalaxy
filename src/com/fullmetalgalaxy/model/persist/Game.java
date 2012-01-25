@@ -242,7 +242,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   public Date estimateTimeStepDate(int p_step)
   {
     long timeStepDurationInMili = getEbConfigGameTime().getTimeStepDurationInMili();
-    if( !isAsynchron() )
+    if( !isParallel() )
     {
       timeStepDurationInMili *= getSetRegistration().size();
     }
@@ -644,14 +644,14 @@ public class Game extends GameData implements PathGraph, GameEventStack
       // too late
       return false;
     }
-    if( !isAsynchron() && getEbConfigGameTime().getDeploymentTimeStep() != getCurrentTimeStep() )
+    if( !isParallel() && getEbConfigGameTime().getDeploymentTimeStep() != getCurrentTimeStep() )
     {
       // too early
       return false;
     }
     // check that, in parallel, player don't wan't to deploy after his first
     // move
-    if( isAsynchron() )
+    if( isParallel() )
     {
       int index = getLogs().size();
       while( index > 0 )

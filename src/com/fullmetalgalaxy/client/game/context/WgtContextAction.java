@@ -418,7 +418,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           MAppMessagesStack.s_instance.showMessage( m_pnlWait );
         }
         // display end turn button ?
-        if( (!GameEngine.model().getGame().isAsynchron()) && (myRegistration != null)
+        if( (!GameEngine.model().getGame().isParallel()) && (myRegistration != null)
             && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration)
             && (GameEngine.model().getGame().isStarted()) )
         {
@@ -493,7 +493,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // should we display take off advise ?
         if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
             .getCurrentTimeStep() ))
-            && (GameEngine.model().getGame().isAsynchron() || GameEngine.model().getGame()
+            && (GameEngine.model().getGame().isParallel() || GameEngine.model().getGame()
                 .getCurrentPlayerRegistration() == myRegistration) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
@@ -585,7 +585,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
 
       if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() ))
-          && (GameEngine.model().getGame().isAsynchron() || GameEngine.model().getGame()
+          && (GameEngine.model().getGame().isParallel() || GameEngine.model().getGame()
               .getCurrentPlayerRegistration() == myRegistration) )
       {
         if( (action.isBoardTokenSelected()) && (!action.isActionsPending())

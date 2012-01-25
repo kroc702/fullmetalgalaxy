@@ -46,7 +46,8 @@ public class EbConfigGameTime extends EbBase
   private int m_bulletCountIncrement = 20;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
-  /** if true, players can all play at same time */
+  /** if true, players can all play at same time. ie parallel mode
+   * asynchron is the old name. it is keep for backward compatibility on database */
   private boolean m_asynchron = false;
   /** in turn by turn, action point are rounded to this value */
   private int m_roundActionPt = 1;
@@ -72,7 +73,7 @@ public class EbConfigGameTime extends EbBase
     m_actionPtPerTimeStep = p_config.getActionPtPerTimeStep();
     m_actionPtPerExtraShip = p_config.getActionPtPerExtraShip();
     m_takeOffTurns = new ArrayList<Integer>( p_config.getTakeOffTurns() );
-    m_asynchron = p_config.isAsynchron();
+    m_asynchron = p_config.isParallel();
     m_roundActionPt = p_config.getRoundActionPt();
     m_deploymentTimeStep = p_config.getDeploymentTimeStep();
     m_description = new String( p_config.getDescription() );
@@ -126,7 +127,7 @@ public class EbConfigGameTime extends EbBase
   {
     int timeStep = p_game.getCurrentTimeStep();
     if( p_game.getEbConfigGameTime().getDeploymentTimeStep() > 0
-        && !p_game.getEbConfigGameTime().isAsynchron() )
+        && !p_game.getEbConfigGameTime().isParallel() )
     {
       timeStep -= p_game.getEbConfigGameTime().getDeploymentTimeStep();
     }
@@ -292,7 +293,7 @@ public class EbConfigGameTime extends EbBase
   /**
    * @return the asynchron
    */
-  public boolean isAsynchron()
+  public boolean isParallel()
   {
     return m_asynchron;
   }

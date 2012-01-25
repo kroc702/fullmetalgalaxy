@@ -127,7 +127,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
       htmlTide += Icons.s_instance.tide_unknown().getHTML();
       // + MAppBoard.s_messages.noForecast() + "'> ";
     }
-    if( game.isAsynchron() )
+    if( game.isParallel() )
     {
       htmlTide += " at " + ClientUtil.s_dateTimeFormat.format( game.estimateNextTideChange() );
     }
@@ -155,7 +155,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     if( GameEngine.model().isJoined() )
     {
       EbRegistration registration = GameEngine.model().getMyRegistration();
-      if( game.isAsynchron() )
+      if( game.isParallel() )
       {
         // Display next action point increments
         Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
@@ -192,7 +192,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     }
 
     // display end game date
-    if( !game.isAsynchron() )
+    if( !game.isParallel() )
     {
       m_generalPanel.add( new Label( MAppBoard.s_messages.turn() + " " + game.getCurrentTimeStep()
           + "/" + game.getEbConfigGameTime().getTotalTimeStep() ) );

@@ -84,7 +84,7 @@ public class EbAdminTimePause extends EbAdmin
   {
     super.exec(p_game);
     p_game.setStarted( false );
-    if( !p_game.isAsynchron() )
+    if( !p_game.isParallel() )
     {
       // game is in pause
       for( EbRegistration registration : p_game.getSetRegistration() )

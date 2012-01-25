@@ -94,7 +94,7 @@ public class EbAdminTimePlay extends EbAdmin
     super.exec(p_game);
     p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
     p_game.setStarted( true );
-    if( !p_game.isAsynchron() )
+    if( !p_game.isParallel() )
     {
       // every player but me shouldn't have a time constain
       for( EbRegistration registration : p_game.getSetRegistration() )
