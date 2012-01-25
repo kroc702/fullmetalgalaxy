@@ -69,7 +69,7 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
   public void redraw()
   {
     m_tree.clear();
-    if( GameEngine.model().getGame().getEbConfigGameTime().isAsynchron() )
+    if( GameEngine.model().getGame().getEbConfigGameTime().isParallel() )
     {
       buildTree4Parallel();
     }

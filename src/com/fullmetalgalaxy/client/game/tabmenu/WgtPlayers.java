@@ -216,7 +216,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );
 
       // display 'must play before'
-      if( (!GameEngine.model().getGame().isAsynchron())
+      if( (!GameEngine.model().getGame().isParallel())
           && (registration.getEndTurnDate() != null) )
       {
         m_playerGrid.setText( 0, 5, "doit jouer avant" );

@@ -143,7 +143,7 @@ public class AnEventPlay extends AnEventUser
     {
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
-    if( (!p_game.isAsynchron() || (p_game.getCurrentTimeStep() <= 1))
+    if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
         && (p_game.getCurrentPlayerRegistration() != registration) )
     {
       throw new RpcFmpException( errMsg().NotYourTurn() );

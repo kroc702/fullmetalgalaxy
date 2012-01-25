@@ -445,7 +445,7 @@ public class EbGamePreview extends EbBase
       {
         strBuf.append( player.getAccount().getPseudo() );
       }
-      if( (!isAsynchron() || getCurrentTimeStep() <= 1)
+      if( (!isParallel() || getCurrentTimeStep() <= 1)
           && (getCurrentPlayerRegistration() == player) )
       {
         strBuf
@@ -453,7 +453,7 @@ public class EbGamePreview extends EbBase
       }
       if( playerCount < sortedRegistration.size() )
       {
-        if( isAsynchron() )
+        if( isParallel() )
         {
           strBuf.append( " - " );
         }
@@ -665,9 +665,9 @@ public class EbGamePreview extends EbBase
   /**
    * @return the isAsynchron
    */
-  public boolean isAsynchron()
+  public boolean isParallel()
   {
-    return getEbConfigGameTime().isAsynchron();
+    return getEbConfigGameTime().isParallel();
   }
 
 

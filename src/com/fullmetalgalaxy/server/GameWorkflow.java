@@ -154,7 +154,7 @@ public class GameWorkflow
       // search update according to the last action
       //
       
-      if( p_game.isAsynchron() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
+      if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
       {
         // a player is just landed and game is parallel: next player
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
@@ -191,7 +191,7 @@ public class GameWorkflow
           gameRun( p_game );
         }
 
-        if( p_game.getCurrentTimeStep() == 0
+        if( p_game.getCurrentTimeStep() == 1
             && lastEvent.getType() == GameLogType.AdminTimePlay
             && p_game.getFreighter( p_game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
         {
@@ -206,7 +206,7 @@ public class GameWorkflow
           lastEvent = action;
         }
       }
-      if( p_game.getCurrentTimeStep() == 1 && !p_game.isAsynchron()
+      if( p_game.getCurrentTimeStep() == 2 && !p_game.isParallel()
           && p_game.getLastGameLog().getType() == GameLogType.EvtTide )
       {
         // second turn: everybody should be landed
@@ -223,7 +223,7 @@ public class GameWorkflow
 
       // search any other update
       //
-      if( p_game.isAsynchron() && p_game.isStarted() && p_game.getCurrentTimeStep() != 0 )
+      if( p_game.isParallel() && p_game.isStarted() && p_game.getCurrentTimeStep() > 1 )
       {
         long currentTimeInMiliSec = System.currentTimeMillis();
         while( (!p_game.isFinished())
@@ -277,7 +277,7 @@ public class GameWorkflow
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
             && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() 
                     <= System.currentTimeMillis())
-            && (p_game.getCurrentTimeStep() != 0) ) // never skip first turn
+            && (p_game.getCurrentTimeStep() > 1) ) // never skip first turn
         {
           // change player's turn
           p_game.getCurrentPlayerRegistration().getOrderIndex();
@@ -340,7 +340,7 @@ public class GameWorkflow
 
       // if new turn occur: trigger new tide
       int oldPlayerOrderIndex = Integer.MAX_VALUE;
-      if( !p_game.isAsynchron() )
+      if( !p_game.isParallel() )
       {
         p_game.getPreviousPlayerRegistration().getOrderIndex();
       }
@@ -419,7 +419,7 @@ public class GameWorkflow
       new FmgMessage( "gameBlocked", p_game ).sendEMail( account );
     }
 
-    if( p_game.getEbConfigGameTime().isAsynchron() )
+    if( p_game.getEbConfigGameTime().isParallel() )
     {
       // game isn't blocked
       return eventAdded;
