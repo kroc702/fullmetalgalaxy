@@ -132,15 +132,15 @@ public class EbConfigGameTime extends EbBase
     }
     int actionInc = p_game.getEbConfigGameTime().getActionPtPerTimeStep();
 
-    if( timeStep <= 0 )
+    if( timeStep <= 1 )
     {
       actionInc = 0;
     }
-    else if( timeStep == 1 )
+    else if( timeStep == 2 )
     {
       actionInc = actionInc / 3;
     }
-    else if( timeStep == 2 )
+    else if( timeStep == 3 )
     {
       actionInc = (2 * actionInc) / 3;
     }

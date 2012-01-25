@@ -93,11 +93,11 @@ public class EbEvtPlayerTurn extends AnEvent
       // no i18n
       throw new RpcFmpException( "Cette partie est termine" );
     }
-    if( p_game.isAsynchron() && p_game.getCurrentTimeStep() > 0 )
+    if( p_game.isAsynchron() && p_game.getCurrentTimeStep() > 1 )
     {
       // no i18n
       throw new RpcFmpException(
-          "Cette partie ne se joue pas en tour par tour mais en mode asynchrone" );
+          "Cette partie ne se joue pas en tour par tour mais en mode parallèle" );
     }
     if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccount().getId() )
     {
@@ -177,7 +177,7 @@ public class EbEvtPlayerTurn extends AnEvent
 
     // if game is parallel (old asynchron) and turn 1, all players are landed:
     // start parallel mode
-    if( game.isAsynchron() && game.getCurrentTimeStep() == 1 )
+    if( game.isAsynchron() && game.getCurrentTimeStep() == 2 )
     {
       nextPlayerRegistration = null;
       // this is the real start time for parallele game
@@ -195,7 +195,7 @@ public class EbEvtPlayerTurn extends AnEvent
       nextPlayerRegistration.setPtAction( actionPt );
 
       // set End turn date for future current player
-      if( game.getCurrentTimeStep() != 0
+      if( game.getCurrentTimeStep() > 1
           && game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
       {
         if( m_endTurnDate == null )
@@ -224,14 +224,14 @@ public class EbEvtPlayerTurn extends AnEvent
     // previous player
     EbRegistration registration = null;
 
-    if( game.isAsynchron() && game.getCurrentTimeStep() == 1 )
+    if( game.isAsynchron() && game.getCurrentTimeStep() == 2 )
     {
       // this event turn is a special case: last turn of last player
       // in other word it's the event which really switch from turn by turn to
       // asynchron mode
       List<EbRegistration> list = game.getRegistrationByPlayerOrder();
       registration = list.get( list.size() - 1 );
-      game.setCurrentTimeStep( 0 );
+      game.setCurrentTimeStep( 1 );
     }
     else
     {

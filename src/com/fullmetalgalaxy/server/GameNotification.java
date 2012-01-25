@@ -67,14 +67,14 @@ public class GameNotification
           // Parallel mode is starting
           // send email to all players
           FmgMessage msg = new FmgMessage( "paralleleGameStart", p_game );
-          if( p_game.getCurrentTimeStep() > 1 )
+          if( p_game.getCurrentTimeStep() > 2 )
           {
             msg = new FmgMessage( "paralleleGameUnpause", p_game );
           }
           send2AllPlayers( msg, p_game, NotificationQty.Min, false );
           mailSended = true;
         }
-        else if( p_game.getCurrentTimeStep() <= 1 )
+        else if( p_game.getCurrentTimeStep() <= 2 )
         {
           // new turn in begin game => email to current player
           send2Player( new FmgMessage( "newTurn", p_game ), p_game,

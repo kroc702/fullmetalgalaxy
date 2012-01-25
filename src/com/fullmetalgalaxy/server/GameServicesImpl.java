@@ -121,7 +121,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       adminEvent.setMessage( p_modifDesc );
 
       if( !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )
-          && (p_game.getAccountCreator().getId() != account.getId() || p_game.getCurrentTimeStep() >= 1) )
+          && (p_game.getAccountCreator().getId() != account.getId() || p_game.getCurrentTimeStep() >= 2) )
       {
         // TODO i18n
         throw new RpcFmpException(
