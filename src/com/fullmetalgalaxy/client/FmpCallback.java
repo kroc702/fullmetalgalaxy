@@ -57,12 +57,14 @@ public class FmpCallback<ReturnedType> implements AsyncCallback<ReturnedType>
     else if( p_caught instanceof SerializationException
         || p_caught instanceof IncompatibleRemoteServiceException )
     {
-      Window.alert( "Une mise à jour serveur vient d'être effectué:\n la page va être rechargé" );
+      // TODO i18n
+      Window.alert( "Une mise à jour serveur vient d'être effectué:\n la page va être rechargée" );
       ClientUtil.reload();
     }
     else
     {
       // lets try it: don't display error to not confuse user...
+      // TODO i18n
       MAppMessagesStack.s_instance.showWarning( "Unknown error or serveur is unreachable\n" );
     }
 

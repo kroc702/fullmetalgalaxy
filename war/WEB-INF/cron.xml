@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
+  <!-- no cron task for test mode  -->
   <cron>
     <url>/cron/channelmanager</url>
     <description>remove too old presences in chat</description>

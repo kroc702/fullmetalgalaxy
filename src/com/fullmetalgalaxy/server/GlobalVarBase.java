@@ -208,6 +208,17 @@ public class GlobalVarBase
     return 0f;
   }
 
+  public static double getDouble(String p_key)
+  {
+    Object obj = get( p_key );
+    if( obj != null && obj instanceof Number )
+    {
+      return ((Number)obj).doubleValue();
+    }
+    put( p_key, 0f );
+    return 0f;
+  }
+
   public static String getString(String p_key)
   {
     Object obj = get(p_key);

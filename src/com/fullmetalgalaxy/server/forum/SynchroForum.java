@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fullmetalgalaxy.server.AccountStatsManager;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.FmgMessage;
@@ -62,10 +61,10 @@ public class SynchroForum extends HttpServlet
     Cursor m_cursor = null;
     int m_accountProcessed = 0;
     int m_activeAccount = 0;
-    int m_maxLevel = 0;
+    double m_maxLevel = 0;
 
     public SynchroForumCommand(Cursor p_cursor, int p_accountProcessed, int p_activeAccount,
-        int p_maxLevel)
+        double p_maxLevel)
     {
       m_cursor = p_cursor;
       m_accountProcessed = p_accountProcessed;
@@ -142,14 +141,7 @@ public class SynchroForum extends HttpServlet
             // Forum account was probably created by FMG, but it's still not activated
             // OR account isn't active
           }
-          
-          // TODO add erosion here
-          // errosion should start only if one player reach SCORE_REF
-          // what to do for unconnected player ?
 
-          // update player stats
-          AccountStatsManager.UpdateStats( account );
-          
           // compute some global stats
           if( account.isActive() )
           {

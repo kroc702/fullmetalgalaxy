@@ -31,19 +31,22 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControl;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
-import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 /**
  * @author Vincent Legendre
  *
  */
-public class StatsGamePlayer extends StatsGame
+public class StatsPlayer implements java.io.Serializable, IsSerializable
 {
   static final long serialVersionUID = 1;
 
-  /** fmp raw score. differ from finalScore as it don't include bonus */
-  private int m_fmpScore = 0;
+  /** game final score
+   * may differ from oreCount + tokenCount as ore may have different value.
+   * */
+  private int m_finalScore = 0;
+
 
   /** game final rank (1 for winner) */
   private int m_gameRank = 0;
@@ -57,10 +60,6 @@ public class StatsGamePlayer extends StatsGame
   private int m_losedUnitCount = 0;
   /** freighter loosed due to opponent control */
   private int m_losedFreighterCount = 0;
-  /** players color at beginning of game */
-  private int m_initialColor = EnuColor.None;
-  /** players color at end of game */
-  private int m_finalColor = EnuColor.None;
   /** construct action count during game */
   private int m_constructionCount = 0;
   /** ore count in freighter at end of game */
@@ -68,126 +67,79 @@ public class StatsGamePlayer extends StatsGame
   /** unit count in freighter at end of game */
   private int m_tokenCount = 0;
 
-
-  public StatsGamePlayer()
-  {
-    super();
-    init();
-  }
-
-  public StatsGamePlayer(Game p_game)
-  {
-    super( p_game );
-    init();
-  }
-
-  public StatsGamePlayer(Game p_game, EbRegistration p_registration)
-  {
-    super( p_game );
-    init();
-
-    setPlayer( p_game, p_registration );
-  }
-
-  private void init()
-  {
-    m_gameRank = 0;
-    m_fireCount = 0;
-    m_unitControlCount = 0;
-    m_freighterControlCount = 0;
-    m_losedUnitCount = 0;
-    m_losedFreighterCount = 0;
-    m_initialColor = EnuColor.None;
-    m_finalColor = EnuColor.None;
-    m_constructionCount = 0;
-    m_oreCount = 0;
-    m_tokenCount = 0;
-  }
-
-
-  @Override
-  public void reinit()
-  {
-    super.reinit();
-    this.init();
-  }
-
   /**
    * set a lot of statistic for this game/player
    * @param p_game
    * @param p_registration
    */
-  public void setPlayer(Game p_game, EbRegistration p_registration)
+  public StatsPlayer(Game p_game, EbRegistration p_registration)
   {
     if( p_registration == null )
     {
       return;
     }
-    /*
-     * TODO set final score !
-     */
     setOreCount( p_registration.getOreCount( p_game ) );
     setTokenCount( p_registration.getTokenCount( p_game ) );
-    setFinalColor( p_registration.getColor() );
+    setFinalScore( p_registration.estimateWinningScore( p_game ) );
     
     EnuColor currentColor = new EnuColor(EnuColor.None);
     
-    // stats.setWinningPoints( p_registration.getWinningPoint() );
 
     for( AnEvent event : p_game.getLogs() )
     {
-      if( event  instanceof AnEventPlay )
+      // if an error occur with one action, we don't mind: it's only stats !
+      try
       {
-        EbRegistration eventRegistration = ((AnEventPlay)event).getMyRegistration( p_game );
-        if( eventRegistration == null )
+        if( event instanceof AnEventPlay )
         {
-          // TODO getMyRegistration depend of account id...
-          // in case of replacement eventRegistration will be null !
-        }
-        else if( eventRegistration.getId() == p_registration.getId() )
-        {
-          if( event instanceof EbEvtControl )
+          EbRegistration eventRegistration = ((AnEventPlay)event).getMyRegistration( p_game );
+          if( eventRegistration == null )
           {
-            setUnitControlCount( getUnitControlCount() + 1 );
+            // TODO getMyRegistration depend of account id...
+            // in case of replacement eventRegistration will be null !
           }
-          else if( event instanceof EbEvtFire )
+          else if( eventRegistration.getId() == p_registration.getId() )
           {
-            setFireCount( getFireCount() + 1 );
+            if( event instanceof EbEvtControl )
+            {
+              setUnitControlCount( getUnitControlCount() + 1 );
+            }
+            else if( event instanceof EbEvtFire )
+            {
+              setFireCount( getFireCount() + 1 );
+            }
+            else if( event instanceof EbEvtConstruct )
+            {
+              setConstructionCount( getConstructionCount() + 1 );
+            }
+            else if( event instanceof EbEvtControlFreighter )
+            {
+              setFreighterControlCount( getFreighterControlCount() + 1 );
+              currentColor.addColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game )
+                  .getColor() );
+            }
           }
-          else if( event instanceof EbEvtConstruct )
+          else if( event instanceof EbEvtControlFreighter
+              && currentColor.isColored( ((EbEvtControlFreighter)event).getTokenFreighter( p_game )
+                  .getColor() ) )
           {
-            setConstructionCount( getConstructionCount() + 1 );
+            setLosedFreighterCount( getLosedFreighterCount() + 1 );
+            currentColor.removeColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game )
+                .getColor() );
           }
-          else if( event instanceof EbEvtControlFreighter )
+          else if( event instanceof EbEvtControl
+              && currentColor.isColored( ((EbEvtControl)event).getTokenTarget( p_game ).getColor() ) )
           {
-            setFreighterControlCount( getFreighterControlCount() + 1 );
-            currentColor.addColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() );
+            setLosedUnitCount( getLosedUnitCount() + 1 );
+          }
+          else if( event instanceof EbEvtFire
+              && currentColor.isColored( ((EbEvtFire)event).getTokenTarget( p_game ).getColor() ) )
+          {
+            setLosedUnitCount( getLosedUnitCount() + 1 );
           }
         }
-        else if( event instanceof EbEvtControlFreighter
-            && currentColor.isColored( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() ) )
-        {
-          setLosedFreighterCount( getLosedFreighterCount() + 1 );
-          currentColor.removeColor( ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getColor() );
-        }
-        else if( event instanceof EbEvtControl
-            && currentColor.isColored( ((EbEvtControl)event).getTokenTarget( p_game ).getColor() ) )
-        {
-          setLosedUnitCount( getLosedUnitCount() + 1 );
-        }
-        else if( event instanceof EbEvtFire
-            && currentColor.isColored( ((EbEvtFire)event).getTokenTarget( p_game ).getColor() ) )
-        {
-          setLosedUnitCount( getLosedUnitCount() + 1 );
-        }
-      }
-      else if( (event instanceof EbGameJoin)
-          && ((EbGameJoin)event).getMyRegistration( p_game ) != null
-          && ((EbGameJoin)event).getMyRegistration( p_game ).getId() == p_registration.getId() )
+      } catch( Throwable th )
       {
-        // here because original color can change if he lose his original freighter
-        setInitialColor( ((EbGameJoin)event).getColor() );
-        currentColor.setValue( getInitialColor() );
       }
     }
 
@@ -205,35 +157,20 @@ public class StatsGamePlayer extends StatsGame
 
   }
 
-
-
-  public PlayerStyle getPlayerStyle()
+  /**
+   * compute a style ratio that can be used to determine player's style.
+   * @return
+   */
+  public float getStyleRatio()
   {
-    int attack = getUnitControlCount() + getFireCount() + getFreighterControlCount() * 2;
-    int nbColor = new EnuColor( getFinalColor() ).getNbColor();
-    if( nbColor == 0 )
-    {
-      // oups, player was captured...
-      return PlayerStyle.Sheep;
-    }
-    float mine = getOreCount() / nbColor;
-    if( mine == 0 && attack > 0 )
-    {
-      return PlayerStyle.Aggressive;
-    }
-    float balance = attack / mine;
-    if( balance > 1.9 )
-    {
-      return PlayerStyle.Aggressive;
-    }
-    if( balance < 0.5 )
-    {
-      return PlayerStyle.Pacific;
-    }
-    return PlayerStyle.Balanced;
+    int finalFreighterCount = 1 + getFreighterControlCount() - getLosedFreighterCount();
+    if( finalFreighterCount <= 0 )
+      finalFreighterCount = 1;
+    // +1 are here to avoid / zero
+    return (getFireCount() + getUnitControlCount() + 4 * getFreighterControlCount()
+        + getConstructionCount() + 1)
+        / (getOreCount() / finalFreighterCount + getLosedUnitCount() + 1);
   }
-
-
 
   // getters / setters
   // -----------------
@@ -313,30 +250,6 @@ public class StatsGamePlayer extends StatsGame
     m_losedFreighterCount = p_losedFreighterCount;
   }
 
-  public int getInitialColor()
-  {
-    return m_initialColor;
-  }
-
-
-  public void setInitialColor(int p_initialColor)
-  {
-    m_initialColor = p_initialColor;
-  }
-
-
-  public int getFinalColor()
-  {
-    return m_finalColor;
-  }
-
-
-  public void setFinalColor(int p_finalColor)
-  {
-    m_finalColor = p_finalColor;
-  }
-
-
   public int getConstructionCount()
   {
     return m_constructionCount;
@@ -372,26 +285,15 @@ public class StatsGamePlayer extends StatsGame
     m_tokenCount = p_tokenCount;
   }
 
-  /**
-   * @return the fmpScore
-   */
-  public int getFmpScore()
+  public int getFinalScore()
   {
-    if( m_fmpScore == 0 && getFinalScore() != 0 )
-    {
-      m_fmpScore = getFinalScore();
-    }
-    return m_fmpScore;
+    return m_finalScore;
   }
 
-  /**
-   * @param p_fmpScore the fmpScore to set
-   */
-  public void setFmpScore(int p_fmpScore)
+  public void setFinalScore(int p_score)
   {
-    m_fmpScore = p_fmpScore;
+    m_finalScore = p_score;
   }
-
 
 
 }

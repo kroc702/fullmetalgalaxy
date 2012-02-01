@@ -554,7 +554,7 @@ public class ConectorImpl implements ForumConector, NewsConector
       clientPostRequest.setParameter( "password_confirm", "" );
 
       // a list of many parameters
-      clientPostRequest.setParameter( FIELD_LEVEL, p_account.getCurrentLevel() );
+      clientPostRequest.setParameter( FIELD_LEVEL, (int)p_account.getCurrentLevel() );
       clientPostRequest.setParameter( FIELD_GRADICON, p_account.getGradUrl() );
       
       Map<String,String> forumData = new HashMap<String,String>();

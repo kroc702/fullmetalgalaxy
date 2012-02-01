@@ -258,7 +258,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     } catch( Throwable ex )
     {
-      Window.alert( "Une erreur est survenu, la page va être rechargé \n" + ex.getMessage() );
+      Window.alert( "Une erreur est survenu, la page va être rechargée \n" + ex.getMessage() );
       ClientUtil.sendPM( "" + AppMain.instance().getMyAccount().getId(), "5001", "js error",
           ex.getMessage() );
       ClientUtil.reload();

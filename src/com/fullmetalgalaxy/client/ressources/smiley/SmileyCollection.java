@@ -65,6 +65,7 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
     put( ":)", AbstractImagePrototype.create( Smiley.INSTANCE.smile() ) );
     put( ":-p", AbstractImagePrototype.create( Smiley.INSTANCE.tongue() ) );
     put( ":p", AbstractImagePrototype.create( Smiley.INSTANCE.tongue() ) );
+    put( ":P", AbstractImagePrototype.create( Smiley.INSTANCE.tongue() ) );
     put( ";-)", AbstractImagePrototype.create( Smiley.INSTANCE.wink() ) );
     put( ";)", AbstractImagePrototype.create( Smiley.INSTANCE.wink() ) );
     

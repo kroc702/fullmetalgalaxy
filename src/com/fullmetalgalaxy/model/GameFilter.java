@@ -72,12 +72,6 @@ public class GameFilter implements IsSerializable
         sql += " history = false and started = false and currentNumberOfRegiteredPlayer < maxNumberOfPlayer and gameType = "
             + GameType.MultiPlayer.ordinal() + "";
         break;
-      case Playing:
-        sql += " history = false and started = true ";
-        break;
-      case Closed:
-        sql += " history = true ";
-        break;
       case Puzzle:
         sql += " gameType = " + GameType.Puzzle.ordinal() + " ";
         break;

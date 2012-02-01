@@ -42,14 +42,6 @@ public class EbPublicAccount extends EbBase
   // -------------------------------------------
   private String m_pseudo = "";
 
-  /** level represent players skills.
-   * It is the sum of all it's finished game final score
-   * minus an erosion due to games ages.
-   * can't be lower than 1, as it is used as a divider for 
-   * final score processing
-   */
-  private int m_currentLevel = 1;
-
   
   public EbPublicAccount()
   {
@@ -77,12 +69,6 @@ public class EbPublicAccount extends EbBase
   {
     super.reinit();
     this.init();
-  }
-
-  public int getScoreBonus()
-  {
-    return FmpConstant.SCORE_BONUS_MIN
-        + (getCurrentLevel() * FmpConstant.SCORE_BONUS_REF / FmpConstant.SCORE_REF);
   }
 
   public boolean isEmpty()
@@ -164,24 +150,6 @@ public class EbPublicAccount extends EbBase
       p_pseudo = "???";
     }
     m_pseudo = p_pseudo.trim();
-  }
-
-  public int getCurrentLevel()
-  {
-    if( m_currentLevel <= 0 )
-    {
-      m_currentLevel = 1;
-    }
-    return m_currentLevel;
-  }
-
-  public void setCurrentLevel(int p_currentLevel)
-  {
-    m_currentLevel = p_currentLevel;
-    if( m_currentLevel <= 0 )
-    {
-      m_currentLevel = 1;
-    }
   }
 
 

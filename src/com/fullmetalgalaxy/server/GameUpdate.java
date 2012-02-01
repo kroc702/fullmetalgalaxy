@@ -25,12 +25,14 @@ package com.fullmetalgalaxy.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -69,13 +71,16 @@ public class GameUpdate extends HttpServlet
     }
 
     /**
-     * This method is called as many time needed for one forum synchronization session.
+     * This method is called as many time needed for one synchronization session.
      */
     @Override
     public void run()
     {
       long startTime = System.currentTimeMillis();
       Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
+
+      // TODO change this flag to check status instead
+      // //////////////////////////////////////////////
       query.filter( "m_history", false );
       query.filter( "m_gameType", GameType.MultiPlayer );
       if( m_cursor != null )
@@ -86,7 +91,8 @@ public class GameUpdate extends HttpServlet
       QueryResultIterator<Key<EbGamePreview>> iterator = query.fetchKeys().iterator();
       while( iterator.hasNext() )
       {
-        Game game = FmgDataStore.dao().getGame( iterator.next() );
+        FmgDataStore ds = new FmgDataStore( false );
+        Game game = ds.getGame( iterator.next() );
         ModelFmpUpdate modelUpdate = new ModelFmpUpdate( game );
         ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
         try
@@ -98,10 +104,9 @@ public class GameUpdate extends HttpServlet
           log.error( e );
         }
 
-        if( !eventAdded.isEmpty() || game.isHistory() )
+        if( !eventAdded.isEmpty() || game.getStatus() == GameStatus.History )
         {
           // something changed in this game: save it
-          FmgDataStore ds = new FmgDataStore( false );
 
           // do we need to send an email ?
           modelUpdate.getGameEvents().addAll( eventAdded );
@@ -125,11 +130,48 @@ public class GameUpdate extends HttpServlet
         }
       }
 
+      // after job is finished, delete too old aborted game
+      if( !iterator.hasNext() )
+      {
+        QueueFactory.getDefaultQueue().add(
+            TaskOptions.Builder.withPayload( new DeleteOldAbortedGameCommand() ).header(
+                "X-AppEngine-FailFast", "true" ) );
 
+      }
     }
   }
 
 
+  public static class DeleteOldAbortedGameCommand extends LongDBTask<EbGamePreview>
+  {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Query<EbGamePreview> getQuery()
+    {
+      Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
+      query.filter( "m_status", GameStatus.Aborted );
+      // one week older
+      Date lastWeek = new Date( System.currentTimeMillis() - (1000l * 60 * 60 * 24 * 7) );
+      query.filter( "m_lastUpdate >", lastWeek );
+      return query;
+    }
+
+    @Override
+    protected void processKey(Key<EbGamePreview> p_key)
+    {
+      GlobalVars.incrementCurrentGameCount( -1 );
+      FmgDataStore dataStore = new FmgDataStore( false );
+      dataStore.delete( Game.class, p_key );
+      dataStore.close();
+    }
+
+    @Override
+    protected void finish()
+    {
+      // noting to do
+    }
+  }
   
   /**
    * this method is called once every day because of "gameupdate" cron.
@@ -139,8 +181,7 @@ public class GameUpdate extends HttpServlet
   protected void doGet(HttpServletRequest p_req, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
-    QueueFactory.getDefaultQueue()
-.add(
+    QueueFactory.getDefaultQueue().add(
         TaskOptions.Builder.withPayload( new GameUpdateCommand( null ) ).header(
             "X-AppEngine-FailFast", "true" ) );
   }

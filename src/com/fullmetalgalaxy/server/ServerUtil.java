@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import jskills.GameInfo;
+
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.forum.ForumConector;
@@ -81,6 +83,17 @@ public class ServerUtil
     return s_basePath;
   }
   
+
+  /**
+   * this method is here to allow us modifying GameInfo parameters
+   * @return
+   */
+  public static GameInfo getGameInfo()
+  {
+    return GameInfo.getDefaultGameInfo();
+  }
+
+
   /**
    * remove accentued from a string and replace with ascii equivalent
    */
@@ -152,32 +165,6 @@ public class ServerUtil
     return account;
   }
   
-  /*
-  public static String negateRegexStr(String p_str)
-  {
-    String out = "";
-    for()
-    for( char ch : p_str)
-    
-    return out;
-  }
-  */
-  
-  /*
-  set exp {^([^f]|f[^o]|fo[^o])*.{0,2}$}
-  The following proc will build the expression for any given string
-   proc reg_negate {str} {
-      set partial ""
-      set branches [list]
-      foreach c [split $str ""] {
-          lappend branches [format {%s[^%s]} $partial $c]
-          append partial $c
-      }
-      set exp [format {^(%s)*.{0,%d}$} [join $branches "|"] \
-          [expr [string length $str] -1]]
-  }
-   
-   */
 
 
   private static ConectorImpl s_forumConnector = new ConectorImpl();
