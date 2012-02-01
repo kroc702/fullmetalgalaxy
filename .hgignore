@@ -21,6 +21,8 @@ syntax: regexp
 ^javadoc$
 syntax: regexp
 ^.*Thumbs\.db$
+syntax: regexp
+^.gwt$
 
 syntax: regexp
 ^war/WEB-INF/deploy$
@@ -28,3 +30,5 @@ syntax: regexp
 ^src/com/fullmetalgalaxy/server/forum/forumaccount\.properties$
 syntax: regexp
 ^gwt-unitCache$
+syntax: regexp
+^war/WEB-INF/lib/google_sql\.jar$

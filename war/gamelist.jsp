@@ -103,28 +103,7 @@ if(tab < 0 || tab > 3 )
 	<%  for( EbGamePreview game : gameList )
 	    {
 	      out.println( "<tr>" );
-	      // minimap
-	      out.println( "<td style=\"width:100px;\"><a href=\"/game.jsp?id="+game.getId()+"\"><img src=\""+game.getMinimapUri()+"\" height=\"50\"></a></td>" );
-	      // game name
-	      out.println( "<td><a href=\"/game.jsp?id="+game.getId()+"\"><big>"+ game.getName() + "</big><br/><small>" );
-	      // player name and number
-	      out.println( game.getPlayersAsString()  );
-	      if( game.getCurrentNumberOfRegiteredPlayer() != game.getMaxNumberOfPlayer() ) {
-	      	out.println( " (" + game.getCurrentNumberOfRegiteredPlayer()+"/"+ game.getMaxNumberOfPlayer() + ")" );
-	      }
-  		  out.println( "</small></a></td>" );
-	      
-	      // time option
-	      out.println("<td>" );
-	      out.println( game.getIconsAsHtml() );
-	          
-	      if( ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).isAsynchron() )
-	      {
-	        out.println(""+(game.getCurrentTimeStep()*100/ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).getTotalTimeStep())+"%");
-	      } else {
-	        out.println(""+game.getCurrentTimeStep()+"/"+ConfigGameTime.getEbConfigGameTime(game.getConfigGameTime()).getTotalTimeStep());
-	      }
-	      out.println("</td>" );
+	      out.println( game.getDescriptionAsHtml() );
 	      
 	      // admin option
 	      if(Auth.isUserAdmin(request, response))

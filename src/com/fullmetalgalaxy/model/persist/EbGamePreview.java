@@ -35,6 +35,7 @@ import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
@@ -59,12 +60,20 @@ public class EbGamePreview extends EbBase
   @Unindexed
   private String m_description = "";
   private int m_maxNumberOfPlayer = 4;
-  private boolean m_history = false;
   @Unindexed
   private int m_currentTimeStep = 0;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
+
+  // TODO remove the following flag
+  @Deprecated
+  private boolean m_history = false;
+  @Deprecated
   private boolean m_isOpen = true;
+  @Deprecated
+  private boolean m_started = false;
+  private GameStatus m_status = GameStatus.Unknown;
+
   /** minimap stored here to save some ImageService's CPU time */
   @Unindexed
   private String m_minimapBlobKey = null;
@@ -81,7 +90,6 @@ public class EbGamePreview extends EbBase
   private int m_landWidth = 36;
   private int m_landHeight = 24;
   private Date m_creationDate = new Date( System.currentTimeMillis() );
-  private boolean m_started = false;
 
   private Date m_lastUpdate = new Date();
 
@@ -89,7 +97,7 @@ public class EbGamePreview extends EbBase
    * only VIP people can join VIP game.
    */
   private boolean m_isVip = false;
-  
+
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
   private ConfigGameVariant m_configGameVariant = ConfigGameVariant.Standard;
@@ -101,7 +109,7 @@ public class EbGamePreview extends EbBase
   @Embedded
   private Set<com.fullmetalgalaxy.model.persist.EbRegistration> m_setRegistration = new HashSet<com.fullmetalgalaxy.model.persist.EbRegistration>();
 
-  
+
   public EbGamePreview()
   {
     super();
@@ -109,7 +117,7 @@ public class EbGamePreview extends EbBase
   }
 
 
-  
+
   private void init()
   {
     m_maxNumberOfPlayer = 4;
@@ -133,6 +141,11 @@ public class EbGamePreview extends EbBase
     this.init();
   }
 
+  @Override
+  public String toString()
+  {
+    return getName() + "(" + getId() + ")";
+  }
 
   @PostLoad
   void onLoad()
@@ -165,19 +178,9 @@ public class EbGamePreview extends EbBase
         registration.setAccount( new EbPublicAccount() );
       }
     }
-  }
 
-  public int getScoreBonus()
-  {
-    int bonus = 0;
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      if( registration.getAccount() != null )
-      {
-        bonus += registration.getAccount().getScoreBonus();
-      }
-    }
-    return bonus;
+    // set status for old game
+    getStatus();
   }
 
   public int getLandPixWidth(EnuZoom p_zoom)
@@ -215,8 +218,6 @@ public class EbGamePreview extends EbBase
       m_currentPlayerId = p_currentPlayerRegistration.getId();
     }
   }
-
-
 
 
 
@@ -314,7 +315,6 @@ public class EbGamePreview extends EbBase
 
 
 
-
   public EbRegistration getPreviousPlayerRegistration()
   {
     EbRegistration registration = null;
@@ -331,7 +331,6 @@ public class EbGamePreview extends EbBase
     } while( registration.getColor() == EnuColor.None );
     return registration;
   }
-
 
 
 
@@ -358,7 +357,6 @@ public class EbGamePreview extends EbBase
   }
 
 
- 
 
   /**
    * @return a set of free (not controlled by any registration, account may be null)
@@ -441,7 +439,7 @@ public class EbGamePreview extends EbBase
     for( EbRegistration player : sortedRegistration )
     {
       playerCount++;
-      if(player != null && player.haveAccount() )
+      if( player != null && player.haveAccount() )
       {
         strBuf.append( player.getAccount().getPseudo() );
       }
@@ -474,17 +472,103 @@ public class EbGamePreview extends EbBase
   public String getIconsAsHtml()
   {
     StringBuffer strBuf = new StringBuffer( " " );
-    if( isAborted() ) {
+    if( isAborted() )
+    {
       strBuf.append( "<img src='/images/icons/canceled16.png' title='Annulée' /> " );
     }
-    else if( !isStarted() ) {
+    else if( !isStarted() )
+    {
       strBuf.append( "<img src='/images/icons/pause16.png' title='En pause' /> " );
     }
-    else if( isHistory() ) {
+    else if( isHistory() )
+    {
       strBuf.append( "<img src='/images/icons/history16.png' title='Archive' /> " );
     }
     strBuf.append( getConfigGameTime().getIconsAsHtml() );
-    
+
+    return strBuf.toString();
+  }
+
+  /**
+   * should be display inside '<table><tr>' tag
+   * @return
+   */
+  public String getDescriptionAsHtml()
+  {
+    StringBuffer strBuf = new StringBuffer( "" );
+    // minimap
+    strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
+        + "\"><img src=\"" + getMinimapUri() + "\" height=\"50\"></a></td>" );
+    // game name
+    strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
+        + "</big><br/><small>" );
+    // player name and number
+    strBuf.append( getPlayersAsString() );
+    if( getCurrentNumberOfRegiteredPlayer() != getMaxNumberOfPlayer() )
+    {
+      strBuf.append( " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer()
+          + ")" );
+    }
+    strBuf.append( "</small></a></td>" );
+
+    // time option
+    strBuf.append( "<td>" );
+    strBuf.append( getIconsAsHtml() );
+
+    if( ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).isAsynchron() )
+    {
+      strBuf.append( ""
+          + (getCurrentTimeStep() * 100 / ConfigGameTime.getEbConfigGameTime( getConfigGameTime() )
+              .getTotalTimeStep()) + "%" );
+    }
+    else
+    {
+      strBuf.append( "" + getCurrentTimeStep() + "/"
+          + ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).getTotalTimeStep() );
+    }
+    strBuf.append( "</td>" );
+
+    return strBuf.toString();
+  }
+
+  /**
+   * should be display inside '<table><tr>' tag
+   * @return
+   */
+  public String getDescriptionAsHtml(long p_idAccount)
+  {
+    EbRegistration registration = getRegistrationByIdAccount( p_idAccount );
+    if( registration == null || getStatus() != GameStatus.History )
+    {
+      return getDescriptionAsHtml();
+    }
+
+    StringBuffer strBuf = new StringBuffer( "" );
+    // minimap
+    strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
+        + "\"><img src=\"" + getMinimapUri() + "\" height=\"50\"></a></td>" );
+    // game name
+    strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
+        + "</big><br/><small>" );
+    // player name and number
+    strBuf.append( getPlayersAsString() );
+    if( getCurrentNumberOfRegiteredPlayer() != getMaxNumberOfPlayer() )
+    {
+      strBuf.append( " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer()
+          + ")" );
+    }
+    strBuf.append( "</small></a></td>" );
+
+    // time option
+    strBuf.append( "<td>" );
+    strBuf.append( getIconsAsHtml() );
+
+
+    /*strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " - <img src=\""
+        + PlayerStyle.fromStatsPlayer( registration.getStats() ).getIconUrl() + "\"/></td>" );
+    */
+    strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " </td>" );
+
     return strBuf.toString();
   }
 
@@ -517,7 +601,7 @@ public class EbGamePreview extends EbBase
     return !isFinished() && isHistory();
   }
 
- 
+
   /**
    * @return the Number Of Registration associated with an account
    * @WgtHidden
@@ -535,7 +619,6 @@ public class EbGamePreview extends EbBase
     }
     return count;
   }
-
 
 
 
@@ -748,7 +831,7 @@ public class EbGamePreview extends EbBase
     return m_configGameTime;
   }
 
- 
+
   /**
    * @return the configGameVariant
    */
@@ -774,7 +857,7 @@ public class EbGamePreview extends EbBase
     m_gameType = p_gameType;
   }
 
- 
+
   /**
    * @return the planetType
    */
@@ -864,7 +947,7 @@ public class EbGamePreview extends EbBase
   public EbConfigGameVariant getEbConfigGameVariant()
   {
     // this patch is to handle old data game
-    if(m_ebConfigGameVariant == null && getConfigGameVariant() != null)
+    if( m_ebConfigGameVariant == null && getConfigGameVariant() != null )
     {
       setConfigGameVariant( getConfigGameVariant() );
       assert m_ebConfigGameVariant != null;
@@ -888,7 +971,7 @@ public class EbGamePreview extends EbBase
   public void setConfigGameVariant(ConfigGameVariant p_configGameVariant)
   {
     m_configGameVariant = p_configGameVariant;
-    setEbConfigGameVariant( new EbConfigGameVariant(m_configGameVariant.getEbConfigGameVariant()) );
+    setEbConfigGameVariant( new EbConfigGameVariant( m_configGameVariant.getEbConfigGameVariant() ) );
   }
 
   public long getVersion()
@@ -932,6 +1015,68 @@ public class EbGamePreview extends EbBase
   public Date getLastUpdate()
   {
     return m_lastUpdate;
+  }
+
+
+
+  public GameStatus getStatus()
+  {
+    if( m_status == null || m_status == GameStatus.Unknown )
+    {
+      // for backward compatibility
+      if( isOpen() )
+      {
+        m_status = GameStatus.Open;
+      }
+      else if( !isStarted() )
+      {
+        m_status = GameStatus.Pause;
+      }
+      else if( isHistory() && isFinished() )
+      {
+        m_status = GameStatus.History;
+      }
+      else if( isHistory() && !isFinished() )
+      {
+        m_status = GameStatus.Aborted;
+      }
+      else
+      {
+        m_status = GameStatus.Running;
+      }
+    }
+    return m_status;
+  }
+
+
+
+  public void setStatus(GameStatus p_status)
+  {
+    m_status = p_status;
+    // for backward compatibility
+    if( m_status == GameStatus.Open )
+    {
+      setStarted( false );
+      setHistory( false );
+    }
+    else if( m_status == GameStatus.Pause )
+    {
+      setStarted( false );
+      setHistory( false );
+    }
+    else if( m_status == GameStatus.Running )
+    {
+      setStarted( true );
+      setHistory( false );
+    }
+    else if( m_status == GameStatus.Aborted )
+    {
+      setHistory( true );
+    }
+    else if( m_status == GameStatus.History )
+    {
+      setHistory( true );
+    }
   }
 
 

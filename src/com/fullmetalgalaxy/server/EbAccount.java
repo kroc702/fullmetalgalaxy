@@ -28,13 +28,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jskills.IPlayer;
+import jskills.Rating;
+
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbAccountStats;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
-import com.fullmetalgalaxy.model.persist.PlayerFiability;
-import com.fullmetalgalaxy.model.persist.PlayerStyle;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -45,7 +44,7 @@ import com.googlecode.objectify.annotation.Unindexed;
  * @author Kroc
  * Account data that other people are allowed to see.
  */
-public class EbAccount extends EbPublicAccount
+public class EbAccount extends EbPublicAccount implements IPlayer
 {
   private static final long serialVersionUID = -6721026137413400063L;
 
@@ -88,21 +87,6 @@ public class EbAccount extends EbPublicAccount
   @Unindexed
   private String m_locale = "";
   
-  /**
-   * A VIP already finished one game and wasn't banned for a while.
-   */
-  private PlayerFiability m_fiability = PlayerFiability.Normal;
-  
-  /**
-   * player style to recognize people
-   */
-  private PlayerStyle m_playerStyle = PlayerStyle.Mysterious;
-  
-  /**
-   * player main color
-   */
-  private int m_mainColor = EnuColor.None;
-  
   /** because of this data, EbAccount shoudln't be send on client side ! 
    * We may have to encrypt this data.
    * */
@@ -112,14 +96,68 @@ public class EbAccount extends EbPublicAccount
    * last time user ask for his password.
    */
   private Date m_lastPasswordAsk = null;
+
+  /**
+   * it computed from score given by other users
+   */
+  @Unindexed
+  private int m_fairplay = 0;
   
   /**
-   * maximum level reach by this account
+   * a list of all fairplay comment
    */
-  private int m_maxLevel = 1;
   @Serialized
-  private List<EbAccountStats> m_stats = new ArrayList<EbAccountStats>();
+  private List<FairPlayNote> m_fairplayComments = new ArrayList<FairPlayNote>();
+
+  /**
+   * player can give 'm_remainingScoring' score on other players.
+   * note that they can score the same player only once.
+   */
+  @Unindexed
+  private int m_remainingScoring = 0;
+
+  /**
+   * represent this account activity.
+   * -> finished game count in the last 20 months + finished game in the last 8 months
+   */
+  private int m_activityLevel = 0;
+
+
+  // the following data are computed from m_stats list
+  // =================================================
+  /**
+   * player style to recognize people
+   */
+  private float m_styleRatio = 1;
   
+  /**
+   * easy: it's the sum of all his scores. We can call this: total profit.
+   */
+  private int m_totalScoreSum = 0;
+
+  /**
+   * the sum of player on all his finished game
+   */
+  @Unindexed
+  private int m_totalPlayerSum = 0;
+
+  private int m_finshedGameCount = 0;
+
+  private int m_victoryCount = 0;
+  
+  /** True skill mean level  */
+  @Unindexed
+  private double m_trueSkillMean = ServerUtil.getGameInfo().getInitialMean();
+  /** True skill standard deviation level */
+  @Unindexed
+  private double m_trueSkillSD = ServerUtil.getGameInfo().getInitialStandardDeviation();
+  /** current true skill conservative level. here to make request and sorting on it. */
+  private double m_currentLevel = 0;
+
+
+  
+  // data related to forum
+  // =====================
   /**
    * link with forum identity
    */
@@ -147,6 +185,8 @@ public class EbAccount extends EbPublicAccount
   
   private static Pattern s_pattern = Pattern.compile( "^(((\\w)+(\\p{Graph})?)+\\w)$" );
   
+
+
   /**
    * check if p_pseudo can be used as a valid username.
    * It is very permissive, but disallow two special char
@@ -200,6 +240,7 @@ public class EbAccount extends EbPublicAccount
     m_allowMsgFromGame = AllowMessage.Mail;
     m_allowMsgFromPlayer = AllowMessage.Mail;
     m_notificationQty = NotificationQty.Std;
+    clearComputedStats();
   }
 
   @Override
@@ -207,6 +248,22 @@ public class EbAccount extends EbPublicAccount
   {
     super.reinit();
     this.init();
+  }
+
+  /**
+   * reset computed statistic from m_stats list to it's initial values
+   */
+  public void clearComputedStats()
+  {
+    m_styleRatio = 1;
+    m_activityLevel = 0;
+    m_totalScoreSum = 0;
+    m_totalPlayerSum = 0;
+    m_finshedGameCount = 0;
+    m_victoryCount = 0;
+    m_trueSkillMean = ServerUtil.getGameInfo().getInitialMean();
+    m_trueSkillSD = ServerUtil.getGameInfo().getInitialStandardDeviation();
+    m_currentLevel = 0;
   }
 
   @Override
@@ -248,62 +305,94 @@ public class EbAccount extends EbPublicAccount
   }
 
   /**
+   * icon url to illustrate user level
+   * @return
+   */
+  public String getLevelUrl()
+  {
+    int normalizedLevel = 0;
+    double maxLevel = GlobalVars.getMaxLevel() - 0.1;
+    if( maxLevel > 1 && getCurrentLevel() > 1 )
+    {
+      // from 0 to 8
+      normalizedLevel = (int)((getCurrentLevel() * 8) / maxLevel);
+      normalizedLevel++;
+    }
+    if( normalizedLevel < 0 )
+      normalizedLevel = 0;
+    if( normalizedLevel > 8 || getCurrentLevel() > maxLevel )
+      normalizedLevel = 9;
+    return "/images/icons/level" + normalizedLevel + ".png";
+  }
+
+  /**
    * icon url to illustrate player fiability, level and style
    * @return
    */
   @Override
   public String getGradUrl()
   {
-    String iconName = "";
-    if( getFiability() == PlayerFiability.Banned )
+    if( getFairplay() < 0 )
     {
-      iconName = "b";
-    } else if( getFiability() == PlayerFiability.Vip )
-    {
-      iconName = "v";
+      return "http://www.fullmetalgalaxy.com/images/icons/unfair.png";
     }
+    if( getFinshedGameCount() == 0 )
+    {
+      // player didn't finshed any game
+      return "http://www.fullmetalgalaxy.com/images/clear.cache.gif";
+    }
+    String iconName = "";
     int normalizedLevel = 0;
-    int maxLevel = GlobalVars.getMaxLevel(); 
+    double maxLevel = GlobalVars.getMaxLevel();
     if( maxLevel > 1 && getCurrentLevel() > 1 )
     {
-      // from 1 to 9
-      // because even if current level is 2, player shoudn't have the same grad
-      // as new player
-      normalizedLevel = (int)(((float)(getCurrentLevel() - 1)) / (maxLevel - 1) * 8);
+      // from 0 to 9
+      normalizedLevel = (int)((getCurrentLevel() * 9) / maxLevel);
       normalizedLevel++;
     }
-    if( normalizedLevel < 0 ) normalizedLevel=0;
-    if( normalizedLevel > 9 ) normalizedLevel=9;
+    if( normalizedLevel < 0 )
+      normalizedLevel = 0;
+    if( normalizedLevel > 9 )
+      normalizedLevel = 9;
     iconName += normalizedLevel;
+
     if( getPlayerStyle() == PlayerStyle.Pacific )
     {
       iconName += "p"; 
-    } else if( getPlayerStyle() == PlayerStyle.Balanced )
-    {
-      iconName += "b"; 
     } else if( getPlayerStyle() == PlayerStyle.Aggressive )
     {
       iconName += "a"; 
     }
-    else if( getPlayerStyle() == PlayerStyle.Mysterious )
+    else
     {
-      iconName += "m";
-    } else
-    {
-      // PlayerStyle.Sheep
-      iconName += "s"; 
+      iconName += "b";
     }
+
     // we need to specify full url, as it is used on forum
     return "http://www.fullmetalgalaxy.com/images/icons/user/"+iconName+".png";
   }
   
+  /**
+   * @return the playerStyle
+   */
+  public PlayerStyle getPlayerStyle()
+  {
+    if( getFinshedGameCount() <= 0 )
+    {
+      return PlayerStyle.Mysterious;
+    }
+    return PlayerStyle.fromStyleRatio( getStyleRatio() );
+  }
+
   
+
   public String buildHtmlFragment()
   {
     String newsHtml = "<a href='"+getProfileUrl()+"'><table width='100%'><tr>";
     newsHtml += "<td><img src='" + getAvatarUrl() + "' height='40px' /></td>";
-    newsHtml += "<td>" + getPseudo() + "<br/><img src='" + getGradUrl() + "' /></td>";
-    newsHtml += "<td>"+getCurrentLevel()+" Pts</td>";
+    newsHtml += "<td>" + getPseudo() + "<br/>" + (int)getCurrentLevel() + " <img src='"
+        + getGradUrl() + "' style='margin:0px'/></td>";
+    // newsHtml += "<td>" + (int)getCurrentLevel() + " Pts</td>";
     newsHtml += "</tr></table></a>";
     return newsHtml;
   }
@@ -365,16 +454,6 @@ public class EbAccount extends EbPublicAccount
     return getEmail() != null && !getEmail().trim().isEmpty() && getEmail().contains( "@" );
   }
 
-  @Override
-  public void setCurrentLevel(int p_currentLevel)
-  {
-    super.setCurrentLevel( p_currentLevel );
-    if( getCurrentLevel() > getMaxLevel() )
-    {
-      setMaxLevel( getCurrentLevel() );
-    }
-  }
-  
 
 
   /* (non-Javadoc)
@@ -506,36 +585,17 @@ public class EbAccount extends EbPublicAccount
   }
 
 
-  public int getMaxLevel()
+
+  public List<FairPlayNote> getFairplayComments()
   {
-    return m_maxLevel;
-  }
-
-
-  public void setMaxLevel(int p_maxLevel)
-  {
-    if( m_maxLevel < p_maxLevel )
-    {
-      m_maxLevel = p_maxLevel;
-    }
-  }
-
-
-  public List<EbAccountStats> getStats()
-  {
-    if( m_stats == null )
+    if( m_fairplayComments == null )
     {
       // for old account
-      m_stats = new ArrayList<EbAccountStats>();
+      m_fairplayComments = new ArrayList<FairPlayNote>();
     }
-    return m_stats;
+    return m_fairplayComments;
   }
 
-
-  public void setStats(List<EbAccountStats> p_stats)
-  {
-    m_stats = p_stats;
-  }
 
 
   public String getPassword()
@@ -625,22 +685,7 @@ public class EbAccount extends EbPublicAccount
     m_locale = p_locale;
   }
 
-  /**
-   * @return the playerStyle
-   */
-  public PlayerStyle getPlayerStyle()
-  {
-    return m_playerStyle;
-  }
 
-  /**
-   * @param p_playerStyle the playerStyle to set
-   */
-  public void setPlayerStyle(PlayerStyle p_playerStyle)
-  {
-    m_playerStyle = p_playerStyle;
-  }
-  
   public Date getLastPasswordAsk()
   {
     return m_lastPasswordAsk;
@@ -649,22 +694,6 @@ public class EbAccount extends EbPublicAccount
   public void setLastPasswordAsk(Date p_lastPasswordAsk)
   {
     m_lastPasswordAsk = p_lastPasswordAsk;
-  }
-
-  /**
-   * @return the fiability
-   */
-  public PlayerFiability getFiability()
-  {
-    return m_fiability;
-  }
-
-  /**
-   * @param p_fiability the fiability to set
-   */
-  public void setFiability(PlayerFiability p_fiability)
-  {
-    m_fiability = p_fiability;
   }
 
   public String getCompactPseudo()
@@ -690,16 +719,6 @@ public class EbAccount extends EbPublicAccount
   public void setForumConnectorData(Object p_forumConnectorData)
   {
     m_forumConnectorData = p_forumConnectorData;
-  }
-
-  public int getMainColor()
-  {
-    return m_mainColor;
-  }
-
-  public void setMainColor(int p_mainColor)
-  {
-    m_mainColor = p_mainColor;
   }
 
   /**
@@ -742,6 +761,124 @@ public class EbAccount extends EbPublicAccount
   public void setNotificationQty(NotificationQty p_notificationQty)
   {
     m_notificationQty = p_notificationQty;
+  }
+
+  public int getActivityLevel()
+  {
+    return m_activityLevel;
+  }
+
+  public void setActivityLevel(int p_activityLevel)
+  {
+    m_activityLevel = p_activityLevel;
+  }
+
+  public int getTotalScoreSum()
+  {
+    return m_totalScoreSum;
+  }
+
+  public void setTotalScoreSum(int p_totalScoreSum)
+  {
+    m_totalScoreSum = p_totalScoreSum;
+  }
+
+  public int getTotalPlayerSum()
+  {
+    return m_totalPlayerSum;
+  }
+
+  public void setTotalPlayerSum(int p_totalPlayerSum)
+  {
+    m_totalPlayerSum = p_totalPlayerSum;
+  }
+
+  public int getFinshedGameCount()
+  {
+    return m_finshedGameCount;
+  }
+
+  public void setFinshedGameCount(int p_finshedGameCount)
+  {
+    m_finshedGameCount = p_finshedGameCount;
+  }
+
+  public int getVictoryCount()
+  {
+    return m_victoryCount;
+  }
+
+  public void setVictoryCount(int p_victoryCount)
+  {
+    m_victoryCount = p_victoryCount;
+  }
+
+  public double getTrueSkillMean()
+  {
+    return m_trueSkillMean;
+  }
+
+  public double getTrueSkillSD()
+  {
+    return m_trueSkillSD;
+  }
+
+  /**
+   * 
+   * @return current true skill conservative level that may be minored in future release
+   * for inactive players
+   */
+  public double getCurrentLevel()
+  {
+    return m_currentLevel;
+  }
+
+  public void resetTrueSkill()
+  {
+    setTrueSkill( ServerUtil.getGameInfo().getInitialMean(), ServerUtil.getGameInfo()
+        .getInitialStandardDeviation() );
+  }
+
+  public void setTrueSkill(double p_mean, double p_standardDeviation)
+  {
+    setTrueSkill( new Rating( p_mean, p_standardDeviation ) );
+  }
+
+  public void setTrueSkill(Rating p_rating)
+  {
+    m_trueSkillMean = p_rating.getMean();
+    m_trueSkillSD = p_rating.getStandardDeviation();
+    m_currentLevel = p_rating.getConservativeRating();
+  }
+
+  public int getFairplay()
+  {
+    return m_fairplay;
+  }
+
+  public void setFairplay(int p_fairplay)
+  {
+    m_fairplay = p_fairplay;
+  }
+
+  public int getRemainingScoring()
+  {
+    return m_remainingScoring;
+  }
+
+  public void setRemainingScoring(int p_remainingScoring)
+  {
+    m_remainingScoring = p_remainingScoring;
+  }
+
+  public float getStyleRatio()
+  {
+    return m_styleRatio;
+  }
+
+  public void setStyleRatio(float p_styleRatio)
+  {
+    m_styleRatio = p_styleRatio;
   }
 
 

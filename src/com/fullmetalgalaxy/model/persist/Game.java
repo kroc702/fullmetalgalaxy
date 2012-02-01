@@ -543,7 +543,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
       if( registration.estimateWinningScore(this) > point )
       {
         winner = registration;
-        point = registration.getWinningScore( this );
+        point = registration.estimateWinningScore( this );
       }
     }
     return winner;

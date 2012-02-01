@@ -25,6 +25,8 @@ package com.fullmetalgalaxy.server;
 
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -49,7 +51,8 @@ public class GlobalVars extends GlobalVarBase
     if( newsHtml == null )
     {
       newsHtml = "Joueurs: "+getAccountCount() +" ("+getActiveAccount()+" actifs)<br/>";
-      newsHtml += "Parties: "+getTotalGameCount() + " ("+(getOpenGameCount() + getRunningGameCount()) +" en cours)<br/>";
+      newsHtml += "Parties: " + (getFinishedGameCount() + getCurrentGameCount()) + " ("
+          + getCurrentGameCount() + " en cours)<br/>";
       // for debug
       /*newsHtml += "<br/>open: "+getOpenGameCount() + " <br/>";
       newsHtml += "running: "+getRunningGameCount() + " <br/>";
@@ -87,15 +90,77 @@ public class GlobalVars extends GlobalVarBase
   }
 
   
-  public static int getTotalGameCount()
+  // note: style repartition stuff aren't thread safe...
+  private static final int STYLE_RATIO_COUNT = 30;
+  private static final float STYLE_RATIO_MAX = 4f;
+  private static final float STYLE_RATIO_MIN = 0.2f;
+
+  public static void resetStyleRatioRepartition()
   {
-    return getOpenGameCount() + getRunningGameCount() + getFinishedGameCount() + getAbortedGameCount();
+    put( "StyleRatioRepartition", new int[STYLE_RATIO_COUNT] );
+  }
+
+  private static int[] getStyleRatioRepartition()
+  {
+    Object obj = get( "StyleRatioRepartition" );
+    if( obj instanceof int[] )
+    {
+      int[] repartition = (int[])obj;
+      return repartition;
+    }
+    return new int[STYLE_RATIO_COUNT];
+  }
+
+  private static int styleRatio2Index(float p_styleRatio)
+  {
+    int index = (int)((p_styleRatio - STYLE_RATIO_MIN) * STYLE_RATIO_COUNT / STYLE_RATIO_MAX);
+    if( index < 0 )
+      index = 0;
+    if( index >= STYLE_RATIO_COUNT )
+      index = STYLE_RATIO_COUNT - 1;
+    return index;
   }
   
+  public static void addStyleRatio(Game p_game)
+  {
+    int[] repartition = getStyleRatioRepartition();
+    for( EbRegistration registration : p_game.getSetRegistration() )
+    {
+      if( registration.getStats() != null )
+        repartition[styleRatio2Index( registration.getStats().getStyleRatio() )]++;
+    }
+    put( "StyleRatioRepartition", repartition );
+  }
   
-  
-  
-  
+  /**
+   * convert a style ratio into one of the three PlayerStyle according to all referenced style ratio
+   * @param p_styleRatio
+   * @return
+   */
+  public static PlayerStyle getPlayerStyle(float p_styleRatio)
+  {
+    int[] repartition = getStyleRatioRepartition();
+    int styleCount = 0;
+    for( int i = 0; i < STYLE_RATIO_COUNT; i++ )
+    {
+      styleCount += repartition[i];
+    }
+    int lowerStyleCount = 0;
+    for( int i = 0; i < styleRatio2Index( p_styleRatio ); i++ )
+    {
+      lowerStyleCount += repartition[i];
+    }
+    if( lowerStyleCount < styleCount / 3 )
+    {
+      return PlayerStyle.Pacific;
+    }
+    if( lowerStyleCount > 2 * styleCount / 3 )
+    {
+      return PlayerStyle.Aggressive;
+    }
+    return PlayerStyle.Balanced;
+  }
+
   
   public static int getAccountCount()
   {
@@ -119,95 +184,37 @@ public class GlobalVars extends GlobalVarBase
   }
 
 
-  public static int getMaxLevel()
+  public static double getMaxLevel()
   {
-    return getInt("MaxLevel");
+    return getDouble( "MaxLevel" );
   }
 
-  public static void setMaxLevel(int p_accountCount)
+  public static void setMaxLevel(double p_accountCount)
   {
     put("MaxLevel",p_accountCount);
   }
 
 
-  public static int getAbortedGameCount()
-  {
-    return getInt( "AbortedGameCount" );
-  }
-
-  public static void setAbortedGameCount(int p_accountCount)
-  {
-    put( "AbortedGameCount", p_accountCount );
-  }
-
-  public static int incrementAbortedGameCount(int p_toAdd)
-  {
-    return (int)increment( "AbortedGameCount", p_toAdd );
-  }
-
-
-  public static int getFinishedGameCount()
-  {
-    return getInt( "FinishedGameCount" );
-  }
-
-  public static void setFinishedGameCount(int p_accountCount)
-  {
-    put( "FinishedGameCount", p_accountCount );
-  }
 
   /**
-   * TODO remove this stat as it is included in FGameNbConfigGameTime
-   * @param p_toAdd
+   * sum of game with status Open, Paused, Running
    * @return
    */
-  public static int incrementFinishedGameCount(int p_toAdd)
+  public static int getCurrentGameCount()
   {
-    return (int)increment( "FinishedGameCount", p_toAdd );
+    return getInt( "CurrentGameCount" );
   }
 
-
-  public static int getOpenGameCount()
+  public static void setCurrentGameCount(int p_currentGameCount)
   {
-    return getInt("OpenGameCount");
+    put( "CurrentGameCount", p_currentGameCount );
   }
 
-  public static void setOpenGameCount(int p_accountCount)
+  public static int incrementCurrentGameCount(int p_toAdd)
   {
-    put("OpenGameCount",p_accountCount);
+    return (int)increment( "CurrentGameCount", p_toAdd );
   }
 
-  public static int incrementOpenGameCount(int p_toAdd)
-  {
-    return (int)increment( "OpenGameCount", p_toAdd );
-  }
-
-
-  public static int getRunningGameCount()
-  {
-    return getInt( "RunningGameCount" );
-  }
-
-  public static void setRunningGameCount(int p_accountCount)
-  {
-    put( "RunningGameCount", p_accountCount );
-  }
-
-  public static int incrementRunningGameCount(int p_toAdd)
-  {
-    return (int)increment( "RunningGameCount", p_toAdd );
-  }
-
-
-  public static int getDeletedGameCount()
-  {
-    return getInt( "DeletedGameCount" );
-  }
-
-  public static int incrementDeletedGameCount(int p_toAdd)
-  {
-    return (int)increment( "DeletedGameCount", p_toAdd );
-  }
 
   // =================================
   // finished games stats
@@ -283,7 +290,15 @@ public class GlobalVars extends GlobalVarBase
     return (int)increment( getVarName( p_config ), p_value );
   }
 
-
+  public static int getFinishedGameCount()
+  {
+    int count = 0;
+    for( ConfigGameVariant variant : ConfigGameVariant.values() )
+    {
+      count += getFGameNbConfigGameVariant( variant );
+    }
+    return count;
+  }
 
   public static long getFGameNbOfHexagon()
   {

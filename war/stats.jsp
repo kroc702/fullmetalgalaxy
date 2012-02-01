@@ -24,11 +24,8 @@ Niveau maximum : <%= GlobalVars.getMaxLevel() %>
 
 <h3>Les parties</h3>
 <pre>
-Nombre de partie ouverte : <%= GlobalVars.getOpenGameCount() %>
-Nombre de partie en cours : <%= GlobalVars.getRunningGameCount() %>
+Nombre de partie en cours : <%= GlobalVars.getCurrentGameCount() %>
 Nombre de partie terminée : <%= GlobalVars.getFinishedGameCount() %>
-Nombre de partie annulée : <%= GlobalVars.getAbortedGameCount() %>
-Nombre de partie effacée : <%= GlobalVars.getDeletedGameCount() %>
 </pre>
 <h3>Les parties terminées</h3>
 <pre>

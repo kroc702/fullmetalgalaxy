@@ -28,8 +28,9 @@ package com.fullmetalgalaxy.model;
  */
 public enum GameStatus
 {
+  Unknown,
   // multiplayer games status
-  Open, Playing, Closed,
+  Open, Pause, Running, Aborted, History,
   // other game type
   Puzzle, Scenario;
 }

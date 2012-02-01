@@ -23,7 +23,6 @@ String pseudo = Auth.getUserPseudo(request,response);
 
 <% if( Auth.isUserLogged(request,response) ) { %>
 	<meta name='gwt:property' id='fmp_userid' content='<%= Auth.getUserAccount(request,response).getId() %>' />
-	<meta name='gwt:property' id='fmp_userlevel' content='<%= Auth.getUserAccount(request,response).getCurrentLevel() %>' />
 	<% if( Auth.isUserAdmin(request,response) ) { %>
 		<meta name='gwt:property' id='fmp_useradmin' content='true' />
 	<% } %>

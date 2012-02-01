@@ -22,9 +22,10 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -83,7 +84,11 @@ public class EbAdminTimePause extends EbAdmin
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    p_game.setStarted( false );
+    p_game.setStatus( GameStatus.Pause );
+    if( p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer() )
+    {
+      p_game.setStatus( GameStatus.Open );
+    }
     if( !p_game.isAsynchron() )
     {
       // game is in pause

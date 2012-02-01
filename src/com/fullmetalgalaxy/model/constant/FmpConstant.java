@@ -28,13 +28,6 @@ import com.fullmetalgalaxy.model.EnuZoom;
 
 public class FmpConstant
 {
-  public final static int SCORE_REF = 2000;
-  // erosion per month at SCORE_REF points
-  public final static int SCORE_EROSION_REF = -150;
-  // lowest score where erosion apply
-  public final static int SCORE_EROSION_MIN = 100;
-  public final static int SCORE_BONUS_REF = 15;
-  public final static int SCORE_BONUS_MIN = 2;
 
   public static final int maximumActionPtWithoutLanding = 10;
   public static final int minimumPlayerNumber = 2;

@@ -21,27 +21,54 @@
  *
  * *********************************************************************/
 
-package com.fullmetalgalaxy.model.persist;
+package com.fullmetalgalaxy.server;
+
+import com.fullmetalgalaxy.model.persist.StatsPlayer;
 
 /**
  * @author Vincent
  *
  */
-public enum PlayerFiability
+public enum PlayerStyle
 {
-  Banned, Normal, Vip;
+  Mysterious, Sheep, Pacific, Balanced, Aggressive;
 
   public String getIconUrl()
   {
     switch( this )
     {
-    case Banned:
-      return "/images/icons/ban.png";
+    case Mysterious:
+      return "/images/icons/mysterious.png";
+    case Sheep:
+      return "/images/icons/sheep.png";
+    case Pacific:
+      return "/images/icons/pacific.png";
     default:
-    case Normal:
-      return "/images/clear.cache.gif";
-    case Vip:
-      return "/images/icons/vip.png";
+    case Balanced:
+      return "/images/icons/balanced.png";
+    case Aggressive:
+      return "/images/icons/aggressive.png";
     }
   }
+
+
+  public static PlayerStyle fromStatsPlayer(StatsPlayer p_stats)
+  {
+    if( p_stats.getLosedFreighterCount() > p_stats.getFreighterControlCount() )
+    {
+      return PlayerStyle.Sheep;
+    }
+    return GlobalVars.getPlayerStyle( p_stats.getStyleRatio() );
+  }
+
+  /**
+   * @param p_styleRatio
+   * @return
+   */
+  public static PlayerStyle fromStyleRatio(float p_styleRatio)
+  {
+    return GlobalVars.getPlayerStyle( p_styleRatio );
+  }
+
+
 }

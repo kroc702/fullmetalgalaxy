@@ -149,6 +149,7 @@ compilation file for Full Metal Galaxy
 				<exclude name="charabia.jar"/>
 				<exclude name="jdom.jar"/>
 				<exclude name="xerces*.jar"/>
+				<exclude name="JSkills**.jar"/>
 			</fileset>
 		</delete>
 		<delete dir="${javadocDir}" />

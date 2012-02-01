@@ -25,6 +25,7 @@ if( Auth.isUserAdmin( request, response ) )
 }
 
 DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );
+DecimalFormat df = new DecimalFormat("#.#");
 %>
 
 <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
@@ -41,9 +42,13 @@ Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <a href="<%= account.getPMUrl()%>">Ecrire un message</a><br/>
 <% } %>
 
-<p>level: <%= account.getCurrentLevel() %><br/>
-max level: <%= account.getMaxLevel() %><br/>
+<p>level: <%= df.format(account.getCurrentLevel()) %><br/>
 <img src='<%= account.getGradUrl() %>'/><br/>
+Gain total: <%= account.getTotalScoreSum() %><br/>
+Nb victoire: <%= account.getVictoryCount() %><br/>
+Nb partie joué: <%= account.getFinshedGameCount() %><br/>
+Agressivité: <%= df.format(account.getStyleRatio()) %><br/>
+Fairplay: <%= account.getFairplay() %><br/>
 Inscription : <span class='date'><%= dateFormat.format( account.getSubscriptionDate() ) %></span><br/>
 Dernière connexion : <span class='date'><%= dateFormat.format( account.getLastConnexion() ) %></span><br/>
 </p>

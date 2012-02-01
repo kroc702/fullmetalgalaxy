@@ -378,7 +378,7 @@ public class FmgMessage
           {
             gameResults += "???";
           }
-          gameResults += " : " + registration.getWinningScore( p_game ) + " pts\n";
+          gameResults += " : " + registration.estimateWinningScore( p_game ) + " pts\n";
         }
       }
       m_params.put( "game_results", gameResults );

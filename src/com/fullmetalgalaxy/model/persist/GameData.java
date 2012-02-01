@@ -29,6 +29,7 @@ import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
@@ -305,7 +306,7 @@ public class GameData implements java.io.Serializable, IsSerializable
   @Override
   public String toString()
   {
-    return m_preview.getName();
+    return m_preview.toString();
   }
 
   // delegate methods
@@ -479,16 +480,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.isAsynchron();
   }
 
-  public boolean isHistory()
-  {
-    return m_preview.isHistory();
-  }
-
-  public void setHistory(boolean p_history)
-  {
-    m_preview.setHistory( p_history );
-  }
-
   public int getCurrentTimeStep()
   {
     return m_preview.getCurrentTimeStep();
@@ -502,11 +493,6 @@ public class GameData implements java.io.Serializable, IsSerializable
   public boolean isStarted()
   {
     return m_preview.isStarted();
-  }
-
-  public void setStarted(boolean p_started)
-  {
-    m_preview.setStarted( p_started );
   }
 
   public String getDescription()
@@ -617,15 +603,6 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void decVersion()
   {
     m_preview.decVersion();
-  }
-
-  /**
-   * @return
-   * @see com.fullmetalgalaxy.model.persist.EbGamePreview#getScoreBonus()
-   */
-  public int getScoreBonus()
-  {
-    return m_preview.getScoreBonus();
   }
 
   /**
@@ -793,6 +770,16 @@ public class GameData implements java.io.Serializable, IsSerializable
   public Date getLastUpdate()
   {
     return m_preview.getLastUpdate();
+  }
+
+  public GameStatus getStatus()
+  {
+    return m_preview.getStatus();
+  }
+
+  public void setStatus(GameStatus p_status)
+  {
+    m_preview.setStatus( p_status );
   }
   
   

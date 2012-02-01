@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.server;
 
 import java.util.logging.Logger;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -142,7 +143,7 @@ public class GameNotification
       }
     }
 
-    if( p_game.isHistory() )
+    if( p_game.getStatus() == GameStatus.History )
     {
       send2AllPlayers( new FmgMessage( "gameFinish", p_game ), p_game, NotificationQty.Min, false );
       mailSended = true;

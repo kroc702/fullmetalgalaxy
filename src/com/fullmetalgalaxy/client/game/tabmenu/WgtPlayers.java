@@ -177,8 +177,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       }
       if( registration.haveAccount() )
       {
-        html += "<br/><img src='"+registration.getAccount().getGradUrl()+"' border=0 alt='GRAD'/>"
-             + " ("+registration.getAccount().getCurrentLevel()+")";
+        html += "<br/><img src='"+registration.getAccount().getGradUrl()+"' border=0 alt='GRAD'/>";
       }
       m_playerGrid.setHTML( index, 1, html );
 

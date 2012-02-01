@@ -24,8 +24,20 @@
 package com.fullmetalgalaxy.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import jskills.IPlayer;
+import jskills.ITeam;
+import jskills.Rating;
+import jskills.TrueSkillCalculator;
+
+import org.mortbay.log.Log;
+
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -34,9 +46,9 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.StatsPlayer;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
-import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
@@ -102,24 +114,22 @@ public class GameWorkflow
         }
       }
     }
-    if( (nextEvent.getType() == GameLogType.AdminTimePause)
-        && ((p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer())) )
+    if( nextEvent.getType() == GameLogType.AdminTimePause )
     {
-      // game was running, but it is now reopen
-      gameOpen( p_game );
+      if( p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer() )
+      {
+        // game was running, but it is now reopen
+        gameOpen( p_game );
+      }
+      else
+      {
+        gamePause( p_game );
+      }
     }
     if( (nextEvent.getType() == GameLogType.AdminTimePlay) )
     {
       // game was paused, but it is now running
       gameRun( p_game );
-    }
-    if( (nextEvent.getType() == GameLogType.AdminBan) )
-    {
-      EbAccount account = FmgDataStore.dao().get(
-          EbAccount.class,
-          p_game.getRegistration( ((EbAdminBan)nextEvent).getRegistrationId() ).getAccount()
-              .getId() );
-      AccountStatsManager.gameBan( account, p_game );
     }
 
     return eventAdded;
@@ -143,7 +153,7 @@ public class GameWorkflow
     ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
 
     // in some case, game is never updated
-    if( p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer )
+    if( p_game.getStatus() != GameStatus.Running )
     {
       return eventAdded;
     }
@@ -169,10 +179,6 @@ public class GameWorkflow
 
       if( lastEvent.getType() == GameLogType.GameJoin )
       {
-        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-            ((EbGameJoin)lastEvent).getAccountId() );
-        AccountStatsManager.gameJoin( account, p_game );
-        
         if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer() )
         {
           // TODO we may prefer starting game not in live mode only (slow game
@@ -367,7 +373,7 @@ public class GameWorkflow
       p_game.execTriggers();
     }
 
-    if( p_game.isFinished() && !p_game.isHistory() )
+    if( p_game.isFinished() && p_game.getStatus() != GameStatus.History )
     {
       // game have to be archived and user stat updated
       gameFinished( p_game );
@@ -393,7 +399,7 @@ public class GameWorkflow
 
     // in some case, game is never updated
     long lastHour = System.currentTimeMillis() - (1000 * 60 * 60);
-    if( p_game.isHistory() || p_game.getGameType() != GameType.MultiPlayer
+    if( p_game.getStatus() == GameStatus.History || p_game.getGameType() != GameType.MultiPlayer
         || p_game.getLastUpdate().getTime() > lastHour )
     {
       // in all these case, game isn't blocked
@@ -480,20 +486,103 @@ public class GameWorkflow
   }
 
 
+
+  public static class Team extends HashMap<IPlayer, Rating> implements ITeam
+  {
+    private static final long serialVersionUID = 1L;
+  }
+
+  private static void getTeams(Game p_game, Collection<ITeam> p_teams, int[] p_teamRanks)
+  {
+    int previousScore = 0;
+    int currentRank = 1;
+    int index = 0;
+    boolean mustSaveGame = false;
+    for( EbRegistration registration : p_game.getRegistrationByWinningRank() )
+    {
+      EbAccount account = null;
+      if( registration.getAccount() != null )
+      {
+        account = FmgDataStore.dao().get( EbAccount.class, registration.getAccount().getId() );
+      }
+      if( account == null )
+      {
+        Log.warn( "game " + p_game + " has account that wasn't found and then not updated." );
+      }
+      else
+      {
+        ITeam team = new Team();
+        team.put( account, new Rating( account.getTrueSkillMean(), account.getTrueSkillSD() ) );
+        p_teams.add( team );
+        if( registration.getStats() == null )
+        {
+          // create registration stats
+          registration.setStats( new StatsPlayer( p_game, registration ) );
+          mustSaveGame = true;
+        }
+        // and then update account stats
+        int oldFinishedGameCount = account.getFinshedGameCount();
+        account.setFinshedGameCount( oldFinishedGameCount + 1 );
+        if( registration.getStats().getGameRank() <= 1 )
+        {
+          account.setVictoryCount( account.getVictoryCount() + 1 );
+        }
+        account.setTotalPlayerSum( account.getTotalPlayerSum()
+            + p_game.getCurrentNumberOfRegiteredPlayer() );
+        account.setTotalScoreSum( account.getTotalScoreSum()
+            + registration.getStats().getFinalScore() );
+        account.setStyleRatio( (account.getStyleRatio() * oldFinishedGameCount + registration
+            .getStats().getStyleRatio()) / account.getFinshedGameCount() );
+        if( registration.getStats().getFinalScore() < previousScore )
+        {
+          previousScore = registration.getStats().getFinalScore();
+          currentRank++;
+        }
+        p_teamRanks[index] = currentRank;
+        index++;
+      }
+    }
+
+    if( index == 0 )
+    {
+      Log.warn( "game " + p_game + " has not registration found." );
+    }
+
+    if( mustSaveGame )
+    {
+      // add all style ratio into a global repartition
+      GlobalVars.addStyleRatio( p_game );
+      // then save game
+      FmgDataStore ds = new FmgDataStore( false );
+      ds.put( p_game );
+      ds.close();
+    }
+  }
+
+
+
   /**
    * called when a game is newly open due to his creation or paused with a missing player
    * @param p_game
    */
   public static void gameOpen(Game p_game)
   {
-    if( p_game.getLastLog() != null )
+    if( p_game.getLastLog() == null )
     {
       // if game have some event in his log
       // its mean that it was running before
-      GlobalVars.incrementRunningGameCount( -1 );
+      GlobalVars.incrementCurrentGameCount( 1 );
     }
-    GlobalVars.incrementOpenGameCount( 1 );
+    p_game.setStatus( GameStatus.Open );
+  }
 
+  /**
+   * called when a game start playing
+   * @param p_game
+   */
+  public static void gamePause(Game p_game)
+  {
+    p_game.setStatus( GameStatus.Pause );
   }
 
   /**
@@ -502,10 +591,35 @@ public class GameWorkflow
    */
   public static void gameRun(Game p_game)
   {
-    GlobalVars.incrementOpenGameCount( -1 );
-    GlobalVars.incrementRunningGameCount( 1 );
+    p_game.setStatus( GameStatus.Running );
   }
 
+  /**
+   * this function update true skill level and registration stats
+   * @param p_game
+   */
+  public static void updateAccountStat4FinishedGame(Game p_game)
+  {
+    ArrayList<ITeam> teams = new ArrayList<ITeam>();
+    int[] teamRanks = new int[p_game.getCurrentNumberOfRegiteredPlayer()];
+    GameWorkflow.getTeams( p_game, teams, teamRanks );
+
+    Map<IPlayer, Rating> newRating = TrueSkillCalculator.calculateNewRatings(
+        ServerUtil.getGameInfo(), teams, teamRanks );
+
+    // now save accounts
+    for( Entry<IPlayer, Rating> entry : newRating.entrySet() )
+    {
+      if( entry.getKey() instanceof EbAccount )
+      {
+        EbAccount account = (EbAccount)entry.getKey();
+        account.setTrueSkill( entry.getValue() );
+        FmgDataStore ds = new FmgDataStore( false );
+        ds.put( account );
+        ds.close();
+      }
+    }
+  }
 
   /**
    * called when a game finished normally
@@ -513,16 +627,16 @@ public class GameWorkflow
    */
   public static void gameFinished(Game p_game)
   {
-    AccountStatsManager.gameFinish( p_game );
-    p_game.setHistory( true );
-    GlobalVars.incrementRunningGameCount( -1 );
-    GlobalVars.incrementFinishedGameCount( 1 );
+    p_game.setStatus( GameStatus.History );
+    GlobalVars.incrementCurrentGameCount( -1 );
 
     // add all stat related to finished game
     GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), 1 );
     GlobalVars.incrementFGameNbConfigGameVariant( p_game.getConfigGameVariant(), 1 );
     GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
     GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
+
+    updateAccountStat4FinishedGame( p_game );
   }
 
   /**
@@ -531,42 +645,13 @@ public class GameWorkflow
    */
   public static void gameAbort(Game p_game)
   {
-    AccountStatsManager.gameAbort( p_game );
-    if( p_game.isOpen() )
+    if( p_game.getStatus() != GameStatus.Aborted )
     {
-      GlobalVars.incrementOpenGameCount( -1 );
+      GlobalVars.incrementCurrentGameCount( -1 );
     }
-    else if( !p_game.isFinished() )
-    {
-      GlobalVars.incrementRunningGameCount( -1 );
-    }
-    else
-    {
-      // well, game is finished, why do we cancel it ?
-      GlobalVars.incrementFinishedGameCount( -1 );
-    }
-    GlobalVars.incrementAbortedGameCount( 1 );
-    p_game.setHistory( true );
+    p_game.setStatus( GameStatus.Aborted );
   }
 
-  /**
-   * called when a game is deleted
-   * I may want to use this to make a difference between a deleted and aborted game.
-   * After this call, game is deleted from database.
-   * @param p_game
-   */
-  public static void gameDelete(Game p_game)
-  {
-    if( !p_game.isFinished() )
-    {
-      gameAbort(p_game);
-    }
-    GlobalVars.incrementDeletedGameCount( 1 );
-    AccountStatsManager.gameDelete( p_game );
-    p_game.setHistory( true );
-    FmgDataStore dataStore = new FmgDataStore( false );
-    dataStore.delete( Game.class, p_game.getId() );
-    dataStore.close();
-  }
+
 
 }

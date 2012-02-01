@@ -91,6 +91,10 @@ public class EbRegistration extends EbBase
   @Embedded
   private EbPublicAccount m_account = null;
 
+  @Serialized
+  private StatsPlayer m_stats = null;
+
+
 
   public int getOreCount(Game p_game)
   {
@@ -121,15 +125,34 @@ public class EbRegistration extends EbBase
     return count;
   }
 
+  /**
+   * if game is finished, return final score
+   * @param p_game
+   * @return
+   */
   public int estimateWinningScore(Game p_game)
   {
     int winningPoint = 0;
-    for( EbToken token : p_game.getSetToken() )
+    if( p_game.isFinished() )
     {
-      if( (token.getColor() != EnuColor.None) && (getEnuColor().isColored( token.getColor() )) 
-          && (token.getLocation() == Location.Board || token.getLocation() == Location.EndGame) )
+      for( EbToken token : p_game.getSetToken() )
       {
-        winningPoint += token.getWinningPoint();
+        if( (token.getType() == TokenType.Freighter) && getEnuColor().isColored( token.getColor() )
+            && (token.getLocation() == Location.EndGame) )
+        {
+          winningPoint += token.getWinningPoint();
+        }
+      }
+    }
+    else
+    {
+      for( EbToken token : p_game.getSetToken() )
+      {
+        if( (token.getColor() != EnuColor.None) && (getEnuColor().isColored( token.getColor() ))
+            && (token.getLocation() == Location.Board || token.getLocation() == Location.EndGame) )
+        {
+          winningPoint += token.getWinningPoint();
+        }
       }
     }
     winningPoint -= p_game.getEbConfigGameVariant().getInitialScore();
@@ -137,20 +160,6 @@ public class EbRegistration extends EbBase
   }
 
 
-  public int getWinningScore(Game p_game)
-  {
-    int winningPoint = 0;
-    for( EbToken token : p_game.getSetToken() )
-    {
-      if( (token.getType() == TokenType.Freighter) && getEnuColor().isColored( token.getColor() )
-          && (token.getLocation() == Location.EndGame) )
-      {
-        winningPoint += token.getWinningPoint();
-      }
-    }
-    winningPoint -= p_game.getEbConfigGameVariant().getInitialScore();
-    return winningPoint;
-  }
 
   /**
    * @return the account
@@ -403,6 +412,16 @@ public class EbRegistration extends EbBase
   public void setReplacement(boolean p_isReplacement)
   {
     m_isReplacement = p_isReplacement;
+  }
+
+  public StatsPlayer getStats()
+  {
+    return m_stats;
+  }
+
+  public void setStats(StatsPlayer p_stats)
+  {
+    m_stats = p_stats;
   }
 
 

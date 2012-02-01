@@ -35,6 +35,7 @@ import javax.servlet.ServletException;
 
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.GameServices;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
@@ -138,7 +139,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     {
       // game is just created
       GameWorkflow.gameOpen( p_game );
-      AccountStatsManager.gameCreate( account.getId(), p_game );
     }
 
     return p_game.createEbBase();
@@ -158,14 +158,14 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // anything to update ?
     try
     {
-      boolean wasHistory = model.isHistory();
+      GameStatus oldStatus = model.getStatus();
       ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
       modelUpdate.setGameId( model.getId() );
       modelUpdate.setFromVersion( model.getVersion() );
 
       ArrayList<AnEvent> events = GameWorkflow.checkUpdate( model );
 
-      if( !events.isEmpty() || wasHistory != model.isHistory() )
+      if( !events.isEmpty() || oldStatus != model.getStatus() )
       {
         // some was necessary
         if( !events.isEmpty() )

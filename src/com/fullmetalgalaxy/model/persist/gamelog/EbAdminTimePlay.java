@@ -24,9 +24,10 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -93,7 +94,7 @@ public class EbAdminTimePlay extends EbAdmin
   {
     super.exec(p_game);
     p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
-    p_game.setStarted( true );
+    p_game.setStatus( GameStatus.Running );
     if( !p_game.isAsynchron() )
     {
       // every player but me shouldn't have a time constain

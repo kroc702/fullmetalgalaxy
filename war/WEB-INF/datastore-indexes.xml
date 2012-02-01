@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="true">
+
+    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
+        <property name="m_setRegistration.m_account.m_pseudo" direction="asc"/>
+        <property name="m_creationDate" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
+        <property name="m_history" direction="asc"/>
+        <property name="m_lastUpdate" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
+        <property name="m_isOpen" direction="desc"/>
+        <property name="m_creationDate" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>
