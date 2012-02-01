@@ -306,7 +306,7 @@ public class GameData implements java.io.Serializable, IsSerializable
   @Override
   public String toString()
   {
-    return m_preview.toString();
+    return m_preview.getName();
   }
 
   // delegate methods
@@ -475,9 +475,9 @@ public class GameData implements java.io.Serializable, IsSerializable
     m_preview.setMaxNumberOfPlayer( p_maxNumberOfPlayer );
   }
 
-  public boolean isAsynchron()
+  public boolean isParallel()
   {
-    return m_preview.isAsynchron();
+    return m_preview.isParallel();
   }
 
   public int getCurrentTimeStep()

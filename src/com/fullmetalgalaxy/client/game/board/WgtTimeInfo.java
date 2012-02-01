@@ -92,7 +92,7 @@ public class WgtTimeInfo extends WgtView
 
     m_panel.clear();
 
-    if( game.getEbConfigGameTime().isAsynchron() )
+    if( game.getEbConfigGameTime().isParallel() )
     {
       m_iconTime.setUrl( "/images/icons/parallele16.png" );
     }
@@ -156,7 +156,7 @@ public class WgtTimeInfo extends WgtView
       lbl.setStyleName( "fmp-status-text" );
       m_panel.add( lbl );
     }
-    else if( game.isAsynchron() && GameEngine.model().getGame().isStarted()
+    else if( game.isParallel() && GameEngine.model().getGame().isStarted()
         && !GameEngine.model().getGame().isFinished() && !GameEngine.model().isTimeLineMode() )
     {
       displayEndTurn( game.estimateNextTimeStep() );
@@ -164,7 +164,7 @@ public class WgtTimeInfo extends WgtView
     }
 
 
-    if( (!game.isAsynchron()) && (GameEngine.model().getMyRegistration() != null)
+    if( (!game.isParallel()) && (GameEngine.model().getMyRegistration() != null)
         && (GameEngine.model().getMyRegistration() != game.getCurrentPlayerRegistration()) )
     {
       Label lblDate = new Label( ClientUtil.formatDateTime( GameEngine.model()

@@ -154,7 +154,7 @@ public class EbGameJoin extends AnEventUser
     registration.setSingleColor( registration.getColor() );
     registration.setOriginalColor( registration.getColor() );
     game.addRegistration( registration );
-    if( game.getCurrentTimeStep() != 0 )
+    if( game.getCurrentTimeStep() > 1 )
     {
       int pt = EbConfigGameTime.getActionInc( game, registration )
           * (game.getCurrentTimeStep() - p_game.getEbConfigGameTime().getDeploymentTimeStep());
