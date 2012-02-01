@@ -119,7 +119,7 @@ public class WgtPlayerInfo extends WgtView
             + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((GameEngine.model()
                 .getMyRegistration().getEnuColor().getNbColor() - 1) * game
                 .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
-        if( game.isAsynchron() )
+        if( game.isParallel() )
         {
           Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
           m_lblAction.setTitle( MAppBoard.s_messages.nextPA(
@@ -155,7 +155,7 @@ public class WgtPlayerInfo extends WgtView
           image.setTitle( MAppBoard.s_messages.nextTide()
               + Messages.getTideString( 0, game.getNextTide() ) );
         }
-        if( game.getEbConfigGameTime().isAsynchron() )
+        if( game.getEbConfigGameTime().isParallel() )
         {
           image.setTitle( image.getTitle() + " - "
               + ClientUtil.formatDateTime( game.estimateNextTideChange() ) );

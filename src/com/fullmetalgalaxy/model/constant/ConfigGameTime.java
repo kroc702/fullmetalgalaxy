@@ -59,17 +59,6 @@ public enum ConfigGameTime implements IsSerializable
   }
 
 
-  
-  /**
-   * not sure that this way is a very good idea...
-   * @param p_value
-   */
-  public static ConfigGameTime getFromOrdinal(int p_value)
-  {
-    assert p_value >= 0;
-    assert p_value < values().length;
-    return values()[p_value];
-  }
 
   public static ConfigGameTime getFromProperties(boolean p_isQuick, boolean p_isParallel)
   {
@@ -140,7 +129,7 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig.setAsynchron( false );
     timeConfig.setRoundActionPt( 5 );
     timeConfig.setDescription( "25 tours (pas de temps limite)" );
-    timeConfig.setDeploymentTimeStep( 1 );
+    timeConfig.setDeploymentTimeStep( 2 );
     s_configMap.put( Standard, timeConfig );
 
     // time config : QuickTurnBased
@@ -158,7 +147,7 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig.setAsynchron( false );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 tours (3 min pour jouer)" );
-    timeConfig.setDeploymentTimeStep( 1 );
+    timeConfig.setDeploymentTimeStep( 2 );
     s_configMap.put( QuickTurnBased, timeConfig );
 
     // Parallel
@@ -202,7 +191,7 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig.setAsynchron( true );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "1h20 en parallèle" );
-    timeConfig.setDeploymentTimeStep( 3 );
+    timeConfig.setDeploymentTimeStep( 4 );
     s_configMap.put( QuickAsynch, timeConfig );
 
   }

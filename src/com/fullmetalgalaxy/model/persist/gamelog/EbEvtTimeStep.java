@@ -113,7 +113,7 @@ public class EbEvtTimeStep extends AnEvent
     game.setLastTimeStepChange( new Date( getOldTimeStepChange().getTime()
         + game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
     game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
-    if( p_game.isAsynchron() )
+    if( p_game.isParallel() )
     {
       // update all players action point
       for( EbRegistration registration : game.getSetRegistration() )
@@ -158,7 +158,7 @@ public class EbEvtTimeStep extends AnEvent
     assert game != null;
     game.setLastTimeStepChange( getOldTimeStepChange() );
     game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
-    if( p_game.isAsynchron() )
+    if( p_game.isParallel() )
     {
       // update all players action point
       for( EbRegistration registration : game.getSetRegistration() )

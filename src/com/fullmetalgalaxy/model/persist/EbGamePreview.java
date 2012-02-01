@@ -183,6 +183,7 @@ public class EbGamePreview extends EbBase
     getStatus();
   }
 
+
   public int getLandPixWidth(EnuZoom p_zoom)
   {
     return getLandWidth() * ((FmpConstant.getHexWidth( p_zoom ) * 3) / 4)
@@ -443,7 +444,7 @@ public class EbGamePreview extends EbBase
       {
         strBuf.append( player.getAccount().getPseudo() );
       }
-      if( (!isAsynchron() || getCurrentTimeStep() == 0)
+      if( (!isParallel() || getCurrentTimeStep() <= 1)
           && (getCurrentPlayerRegistration() == player) )
       {
         strBuf
@@ -451,7 +452,7 @@ public class EbGamePreview extends EbBase
       }
       if( playerCount < sortedRegistration.size() )
       {
-        if( isAsynchron() )
+        if( isParallel() )
         {
           strBuf.append( " - " );
         }
@@ -515,7 +516,7 @@ public class EbGamePreview extends EbBase
     strBuf.append( "<td>" );
     strBuf.append( getIconsAsHtml() );
 
-    if( ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).isAsynchron() )
+    if( ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).isParallel() )
     {
       strBuf.append( ""
           + (getCurrentTimeStep() * 100 / ConfigGameTime.getEbConfigGameTime( getConfigGameTime() )
@@ -748,9 +749,9 @@ public class EbGamePreview extends EbBase
   /**
    * @return the isAsynchron
    */
-  public boolean isAsynchron()
+  public boolean isParallel()
   {
-    return getEbConfigGameTime().isAsynchron();
+    return getEbConfigGameTime().isParallel();
   }
 
 

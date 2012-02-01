@@ -215,7 +215,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );
 
       // display 'must play before'
-      if( (!GameEngine.model().getGame().isAsynchron())
+      if( (!GameEngine.model().getGame().isParallel())
           && (registration.getEndTurnDate() != null) )
       {
         m_playerGrid.setText( 0, 5, "doit jouer avant" );
@@ -311,8 +311,13 @@ public class WgtPlayers extends Composite implements ClickHandler
     else if( p_event.getSource() == m_btnSkipTurn )
     {
       EbRegistration registration = GameEngine.model().getGame().getCurrentPlayerRegistration();
+      String playerName = Messages.getColorString( 0, registration.getSingleColor());
+      if( registration.getAccount() != null )
+      {
+         playerName = registration.getAccount().getPseudo();
+      }
       if( Window.confirm( "Voulez-vous réellement sauter le tour de "
-          + registration.getAccount().getPseudo()
+          + playerName
           + ", il lui reste "+registration.getPtAction()+" points d'action.") )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
