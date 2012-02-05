@@ -61,7 +61,7 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
   // total score sum
   out.println("<td>"+account.getTotalScoreSum()+"</td>");
   // game victory / played count
-  out.println("<td>"+account.getVictoryCount()+"/"+account.getFinshedGameCount()+"<a href='/profile.jsp?id="+account.getId()+"'><img src='/images/icon_new_window.gif' border=0/></a></td>");
+  out.println("<td>"+account.getVictoryCount()+"/"+account.getFinshedGameCount()+"<a href='/profile.jsp?id="+account.getId()+"'> <img src='/images/icon_new_window.gif' border=0/></a></td>");
   // agressivity
   out.println("<td>"+df.format(account.getStyleRatio())+" <img src='"+ account.getPlayerStyle().getIconUrl() +"'/>");
   // fairplay

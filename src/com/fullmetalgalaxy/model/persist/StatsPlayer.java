@@ -67,6 +67,15 @@ public class StatsPlayer implements java.io.Serializable, IsSerializable
   /** unit count in freighter at end of game */
   private int m_tokenCount = 0;
 
+
+  /**
+   * used for serialization policy
+   */
+  protected StatsPlayer()
+  {
+  }
+
+
   /**
    * set a lot of statistic for this game/player
    * @param p_game

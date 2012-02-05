@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author LEG88888
  *
  */
-public enum TokenType implements IsSerializable
+public enum TokenType implements java.io.Serializable, IsSerializable
 {
   /**
    * Theses values are store as is in data base.

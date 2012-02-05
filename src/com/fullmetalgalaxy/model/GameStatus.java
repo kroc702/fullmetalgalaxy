@@ -22,11 +22,13 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 /**
  * @author Vincent Legendre
  * used for research.
  */
-public enum GameStatus
+public enum GameStatus implements java.io.Serializable, IsSerializable
 {
   Unknown,
   // multiplayer games status
