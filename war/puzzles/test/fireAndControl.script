@@ -81,3 +81,39 @@ board 34 4 false
 board 33 4 true
 board 33 3 false
 ok
+
+###############################
+
+# control speedboat
+# -> go into disable firecover and control disable unit
+board 28 3 false
+board 20 8 true
+ok
+board 20 8 false
+token 210
+board 19 8 false
+board 18 9 false
+board 18 9 false
+board 20 8 false
+token 211
+board 19 8 false
+board 19 8 false
+board 19 8 false
+action EvtControl
+board 18 9 false
+board 18 8 false
+board 18 8 false
+# then control orange barge
+board 18 9 false
+board 18 10 false
+board 17 10 false
+board 16 10 false
+board 16 10 false
+board 19 8 false
+board 17 10 true
+board 17 10 false
+board 17 10 false
+board 16 11 true
+board 16 10 false
+board 16 10 false
+# check that barge 16,11 and his content are cyan

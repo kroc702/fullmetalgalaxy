@@ -43,7 +43,7 @@ public class TestPuzzles
   public void testTutorial() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/tutorial/model.bin" );
-    gameEngine.play( "./war/puzzles/tutorial/solution.script" );
+    gameEngine.runScriptFile( "./war/puzzles/tutorial/solution.script" );
 
     // check that last action (turret repair) worked
     Assert.assertNotNull( gameEngine.getGame().getToken( new AnBoardPosition( 19, 6 ),

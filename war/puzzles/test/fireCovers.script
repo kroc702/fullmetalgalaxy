@@ -1,0 +1,25 @@
+
+# leave firecover while fire disabled
+board 5 5 false
+board 4 5 false
+board 4 5 false
+
+# enter into firecover and destroy units on pontoon
+# -> many clic sequence don't work...
+board 4 8 false
+board 4 7 true
+assert exception
+board 7 7 false
+board 7 6 false
+ok
+
+
+# check can't destroy orange heap with blue tank
+board 17 17 false
+board 14 20 false
+board 14 19 true
+assert exception
+board 17 18 false
+cancel
+board 17 18 false
+

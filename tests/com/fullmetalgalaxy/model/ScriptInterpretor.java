@@ -24,9 +24,11 @@
 package com.fullmetalgalaxy.model;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
@@ -134,7 +136,7 @@ public class ScriptInterpretor
     m_gameEngine.checkActionBuilder();
   }
 
-  public void play(BufferedReader p_reader) throws IOException
+  public void run(BufferedReader p_reader) throws IOException
   {
     String strLine;
     m_lineCount = 0;
@@ -165,12 +167,20 @@ public class ScriptInterpretor
     } while( strLine != null );
   }
 
-  public void play(String p_fileName) throws IOException
+  public void runFile(String p_fileName) throws IOException
   {
     FileInputStream fstream = new FileInputStream( p_fileName );
     // Get the object of DataInputStream
     DataInputStream in = new DataInputStream( fstream );
-    play( new BufferedReader( new InputStreamReader( in ) ) );
+    run( new BufferedReader( new InputStreamReader( in ) ) );
+  }
+
+  public void run(String p_script) throws IOException
+  {
+    InputStream fstream = new ByteArrayInputStream( p_script.getBytes() );
+    // Get the object of DataInputStream
+    DataInputStream in = new DataInputStream( fstream );
+    run( new BufferedReader( new InputStreamReader( in ) ) );
   }
 
 
