@@ -28,7 +28,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author Vincent Legendre
  *
  */
-public enum GameType implements IsSerializable
+public enum GameType implements java.io.Serializable, IsSerializable
 {
   // Standard game
   MultiPlayer,

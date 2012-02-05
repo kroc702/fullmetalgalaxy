@@ -35,8 +35,6 @@ import jskills.ITeam;
 import jskills.Rating;
 import jskills.TrueSkillCalculator;
 
-import org.mortbay.log.Log;
-
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
@@ -72,6 +70,8 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
  */
 public class GameWorkflow
 {
+  private final static FmpLogger log = FmpLogger.getLogger( GameWorkflow.class.getName() );
+
   static public ArrayList<AnEvent> checkUpdate(Game p_game, AnEvent p_futurEvents)
       throws RpcFmpException
   {
@@ -508,7 +508,7 @@ public class GameWorkflow
       }
       if( account == null )
       {
-        Log.warn( "game " + p_game + " has account that wasn't found and then not updated." );
+        log.error( "game " + p_game + " has account that wasn't found and then not updated." );
       }
       else
       {
@@ -546,7 +546,7 @@ public class GameWorkflow
 
     if( index == 0 )
     {
-      Log.warn( "game " + p_game + " has not registration found." );
+      log.error( "game " + p_game + " has not registration found." );
     }
 
     if( mustSaveGame )
