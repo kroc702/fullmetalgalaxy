@@ -1,0 +1,102 @@
+# A B C are destroyer, T target
+# * mean right clic
+# fire sequence A B* T T
+board 29 2 false
+board 31 2 true
+board 31 2 true
+board 31 2 false
+token 215
+board 32 3 false
+board 32 3 false
+board 31 2 false
+token 214
+board 31 3 false
+board 31 3 false
+board 31 3 false
+board 32 3 true
+board 33 4 false
+board 33 4 false
+# A B* T ok
+board 31 3 false
+board 31 4 false
+board 31 4 false
+board 32 3 false
+board 32 4 false
+board 32 4 false
+board 31 4 false
+board 32 4 true
+board 33 5 false
+ok
+# A T* B B
+board 29 1 false
+board 32 1 true
+board 32 1 true
+board 28 2 false
+board 32 2 true
+board 32 2 true
+board 32 2 false
+board 34 2 true
+board 32 1 false
+board 32 1 false
+# A T* B ok
+board 32 2 false
+board 34 1 true
+board 32 1 false
+ok
+# T A* B B
+board 28 3 false
+board 27 3 true
+board 27 3 true
+board 27 3 false
+token 211
+board 24 4 true
+board 24 4 true
+board 27 3 false
+token 210
+board 26 4 false
+board 26 4 false
+board 25 5 false
+board 26 4 true
+board 24 4 false
+board 24 4 false
+# T A* B ok
+board 26 4 false
+board 26 5 false
+board 26 5 false
+board 24 4 false
+board 25 5 true
+board 25 5 true
+board 26 7 false
+board 26 5 true
+board 25 5 false
+ok
+# A bf B T T
+board 6 2 false
+board 7 3 true
+board 7 3 true
+board 5 2 false
+board 6 4 true
+board 6 4 true
+board 7 3 false
+action EvtFire
+board 6 4 false
+board 7 5 false
+board 7 5 false
+# A bf B T ok
+board 6 4 false
+action EvtFire
+board 7 3 false
+board 8 3 false
+ok
+# T bf A B B
+board 2 6 false
+action EvtFire
+board 4 7 false
+board 4 8 false
+board 4 8 false
+# T bf A B ok
+board 5 8 false
+action EvtFire
+board 4 8 false
+board 4 7 false
+ok

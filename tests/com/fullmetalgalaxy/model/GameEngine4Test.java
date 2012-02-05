@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 
@@ -95,7 +96,10 @@ public class GameEngine4Test
     }
     else if( !getActionBuilder().getActionList().isEmpty() )
     {
-      for( AnEventPlay event : getActionBuilder().getActionList() )
+      ArrayList<AnEventPlay> actionList = new ArrayList<AnEventPlay>( getActionBuilder()
+          .getActionList() );
+      getActionBuilder().clear();
+      for( AnEventPlay event : actionList )
       {
         event.checkedExec( getGame() );
         getGame().addEvent( event );
@@ -111,9 +115,14 @@ public class GameEngine4Test
     getGame().execTriggers();
   }
 
-  public void play(String p_fileName) throws RpcFmpException, IOException
+  public void runScriptFile(String p_fileName) throws RpcFmpException, IOException
   {
-    m_scriptInterpretor.play( p_fileName );
+    m_scriptInterpretor.runFile( p_fileName );
+  }
+
+  public void runScript(String p_script) throws RpcFmpException, IOException
+  {
+    m_scriptInterpretor.run( p_script );
   }
 
   /**

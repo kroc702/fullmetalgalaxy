@@ -182,6 +182,7 @@ public class EbEvtMove extends AnEventPlay
         getNewPosition() );
     p_game.getBoardFireCover().incFireCover( getToken(p_game) );
     if( (fireCoverColorOld.getValue() != EnuColor.None)
+        && (p_game.getLastLog() != null)
         && (p_game.getLastLog().getType() == GameLogType.EvtMove)
         && (((EbEvtMove)p_game.getLastLog()).getPackedToken().getId() == getPackedToken().getId()) )
     {

@@ -26,7 +26,11 @@ package com.fullmetalgalaxy.model;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
+
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.EbToken;
 
 /**
  * @author Vincent
@@ -40,7 +44,7 @@ public class TestRules
   public void testOreManipulation() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
-    gameEngine.play( "./war/puzzles/test/oreManipulation.script" );
+    gameEngine.runScriptFile( "./war/puzzles/test/oreManipulation.script" );
 
     gameEngine.assertRewind();
   }
@@ -49,7 +53,16 @@ public class TestRules
   public void testFireAndControl() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
-    gameEngine.play( "./war/puzzles/test/fireAndControl.script" );
+    gameEngine.runScriptFile( "./war/puzzles/test/fireAndControl.script" );
+
+    // check that barge 16,11 and his content are cyan
+    EbToken barge = gameEngine.getGame().getToken( new AnBoardPosition( 16, 11 ) );
+    Assert.assertEquals( barge.getType(), TokenType.Barge );
+    Assert.assertEquals( barge.getColor(), EnuColor.Cyan );
+    for( EbToken token : barge.getContains() )
+    {
+      Assert.assertEquals( token.getColor(), EnuColor.Cyan );
+    }
 
     gameEngine.assertRewind();
   }
@@ -58,7 +71,8 @@ public class TestRules
   public void testFireSequences() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
-    // TODO
+    gameEngine.runScriptFile( "./war/puzzles/test/simpleFireSequences.script" );
+
     gameEngine.assertRewind();
   }
 
@@ -66,15 +80,49 @@ public class TestRules
   public void testFireCovers() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
-    // TODO
+    gameEngine.runScriptFile( "./war/puzzles/test/fireCovers.script" );
+
     gameEngine.assertRewind();
   }
 
   @Test
-  public void testFirePontoon() throws IOException, ClassNotFoundException, RpcFmpException
+  public void testWeatherHenBuilding() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
-    // TODO
+    gameEngine.runScriptFile( "./war/puzzles/test/weatherHenBuilding.script" );
+
+    gameEngine.assertRewind();
+  }
+
+  @Test
+  public void testDestroyPontoon() throws IOException, ClassNotFoundException, RpcFmpException
+  {
+    GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
+    gameEngine.runScriptFile( "./war/puzzles/test/destroyPontoon.script" );
+
+    // pontoon 19 4 shouldn't be destroyed
+    Assert.assertNotNull( gameEngine.getGame().getToken( new AnBoardPosition( 19, 4 ),
+        TokenType.Pontoon ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 19, 5 ) ) );
+    
+    // check all destroyed in ..
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 9, 10 ) ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 10 ) ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 11 ) ) );
+    Assert.assertNotNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 12 ) ) );
+
+    // same test (so undo all actions) but with crab
+    gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
+    gameEngine.runScript( "board 8 12 false\n" +
+                  		"board 8 13 false\n" +
+                  		"board 8 13 false\n" );
+    // check all destroyed in ...
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 9, 10 ) ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 10 ) ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 11 ) ) );
+    Assert.assertNull( gameEngine.getGame().getToken( new AnBoardPosition( 8, 12 ) ) );
+    
+    
     gameEngine.assertRewind();
   }
 
