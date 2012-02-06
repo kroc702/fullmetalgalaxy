@@ -74,11 +74,11 @@ public class EbAdminTimePlay extends EbAdmin
     super.check(p_game);
     // only admin or game creator sould be able to do this
     // TODO how to check my account is admin ?
-    if( p_game.isStarted() )
+    /*if( p_game.getStatus() == GameStatus.Running )
     {
       // no i18n (hmi don't display button in this case)
       throw new RpcFmpException( "la partie est deja en cours" );
-    }
+    }*/
     if( p_game.getCurrentNumberOfRegiteredPlayer() < 2 )
     {
       // TODO i18n

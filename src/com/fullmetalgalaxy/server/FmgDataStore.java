@@ -249,7 +249,7 @@ public class FmgDataStore extends DataStore
       return null;
     }
     // to update is open flag
-    p_game.isOpen();
+    p_game.updateOpenPauseStatus();
 
     Key<EbGamePreview> keyPreview = put( p_game.getPreview() );
     p_game.getData().setId( keyPreview.getId() );

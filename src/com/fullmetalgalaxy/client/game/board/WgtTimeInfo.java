@@ -32,7 +32,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.GameServices;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -145,7 +145,7 @@ public class WgtTimeInfo extends WgtView
 
 
       if( GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0
-          && GameEngine.model().getGame().isStarted()
+          && GameEngine.model().getGame().getStatus() == GameStatus.Running
           && !GameEngine.model().getGame().isFinished() && !GameEngine.model().isTimeLineMode() )
       {
         displayEndTurn( game.getCurrentPlayerRegistration().getEndTurnDate() );
@@ -156,7 +156,7 @@ public class WgtTimeInfo extends WgtView
       lbl.setStyleName( "fmp-status-text" );
       m_panel.add( lbl );
     }
-    else if( game.isParallel() && GameEngine.model().getGame().isStarted()
+    else if( game.isParallel() && GameEngine.model().getGame().getStatus() == GameStatus.Running
         && !GameEngine.model().getGame().isFinished() && !GameEngine.model().isTimeLineMode() )
     {
       displayEndTurn( game.estimateNextTimeStep() );

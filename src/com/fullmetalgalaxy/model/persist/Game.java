@@ -36,6 +36,7 @@ import javax.persistence.Transient;
 import com.fullmetalgalaxy.model.BoardFireCover;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Mobile;
@@ -268,7 +269,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   public Date estimateEndingDate()
   {
     Date date = null;
-    if( !isStarted() )
+    if( getStatus() != GameStatus.Running )
     {
       date = new Date( Long.MAX_VALUE );
     }

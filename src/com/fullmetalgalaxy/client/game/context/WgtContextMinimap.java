@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.context;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -73,7 +74,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       m_miniMapImage.setPixelSize( FmpConstant.miniMapWidth, FmpConstant.miniMapHeight );
     }
     m_panel.add( m_miniMapImage );
-    if( !game.isStarted() )
+    if( game.getStatus() == GameStatus.Open || game.getStatus() == GameStatus.Pause )
     {
       m_panel.add( Icons.s_instance.pause32().createImage(), FmpConstant.miniMapWidth / 2 - 16,
           FmpConstant.miniMapHeight / 2 - 16 );

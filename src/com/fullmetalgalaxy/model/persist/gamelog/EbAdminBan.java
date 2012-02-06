@@ -110,7 +110,7 @@ public class EbAdminBan extends EbAdmin
       registration.setEndTurnDate( null );
       
       // update isOpen flag
-      p_game.isOpen();
+      p_game.updateOpenPauseStatus();
     }
 
   }

@@ -154,7 +154,8 @@ public class GameWorkflow
     ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
 
     // in some case, game is never updated
-    if( p_game.getStatus() != GameStatus.Running )
+    if( p_game.getStatus() != GameStatus.Running && p_game.getStatus() != GameStatus.Open
+        && p_game.getStatus() != GameStatus.Pause )
     {
       return eventAdded;
     }
@@ -230,7 +231,8 @@ public class GameWorkflow
 
       // search any other update
       //
-      if( p_game.isParallel() && p_game.isStarted() && p_game.getCurrentTimeStep() > 1 )
+      if( p_game.isParallel() && p_game.getStatus() == GameStatus.Running
+          && p_game.getCurrentTimeStep() > 1 )
       {
         long currentTimeInMiliSec = System.currentTimeMillis();
         while( (!p_game.isFinished())
@@ -461,7 +463,7 @@ public class GameWorkflow
     }
 
     long last48Hour = System.currentTimeMillis() - (1000 * 60 * 60 * 48);
-    if( p_game.isStarted() && p_game.getLastUpdate().getTime() < last48Hour )
+    if( p_game.getStatus() == GameStatus.Running && p_game.getLastUpdate().getTime() < last48Hour )
     {
       // current player didn't play since 48 hours...
       EbRegistration registration = p_game.getCurrentPlayerRegistration();

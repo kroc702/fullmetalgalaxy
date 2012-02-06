@@ -92,7 +92,7 @@ public class GlobalVars extends GlobalVarBase
   
   // note: style repartition stuff aren't thread safe...
   private static final int STYLE_RATIO_COUNT = 30;
-  private static final float STYLE_RATIO_MAX = 4f;
+  private static final float STYLE_RATIO_MAX = 10f;
   private static final float STYLE_RATIO_MIN = 0.2f;
 
   public static void resetStyleRatioRepartition()

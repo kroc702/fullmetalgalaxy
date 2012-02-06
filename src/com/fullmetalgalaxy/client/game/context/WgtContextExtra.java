@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -44,6 +45,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
@@ -139,9 +141,11 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         && (action.getSelectedAction() == null) )
     {
       // so, no token is selected: find ship in orbit !
+      Game game = model.getGame();
       if( model.getGame().getGameType() != GameType.MultiPlayer
-          || model.getGame().getCurrentTimeStep() <= model.getGame().getEbConfigGameTime()
-              .getDeploymentTimeStep() || !model.getGame().isStarted() )
+          || game.getCurrentTimeStep() <= game.getEbConfigGameTime()
+              .getDeploymentTimeStep() || game.getStatus() == GameStatus.Open
+          || game.getStatus() == GameStatus.Pause )
       {
         Set<EbToken> list = GameEngine.model().getGame().getSetToken();
         boolean isTitleDisplayed = false;

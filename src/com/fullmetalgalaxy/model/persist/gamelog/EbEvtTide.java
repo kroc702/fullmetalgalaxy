@@ -24,13 +24,14 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.ArrayList;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -86,7 +87,7 @@ public class EbEvtTide extends AnEvent
   {
     super.check(p_game);
     assert p_game.getCurrentTide() == getOldTide();
-    if( !p_game.isStarted() )
+    if( p_game.getStatus() != GameStatus.Running )
     {
       // TODO i18n
       throw new RpcFmpException( "Cette partie n'est pas demarre" );

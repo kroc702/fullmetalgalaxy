@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
@@ -90,7 +91,7 @@ public class EbGameJoin extends AnEventUser
       // not probable error
       throw new RpcFmpException( "You have to select a color before joining a game" );
     }
-    if( p_game.isStarted() )
+    if( p_game.getStatus() != GameStatus.Open )
     {
       // not probable error
       throw new RpcFmpException( "You can't join a game wich is started" );
@@ -127,7 +128,8 @@ public class EbGameJoin extends AnEventUser
     registration.setAccount( getAccount() );
 
     // update isOpen flag
-    p_game.isOpen();
+    p_game.updateOpenPauseStatus();
+
   }
 
   /* (non-Javadoc)
