@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
@@ -77,7 +78,7 @@ public class EbEvtTimeStep extends AnEvent
   {
     super.check(p_game);
     assert p_game.getLastTimeStepChange().equals( getOldTimeStepChange() );
-    if( !p_game.isStarted() )
+    if( p_game.getStatus() != GameStatus.Running )
     {
       // TODO i18n
       throw new RpcFmpException( "Cette partie n'est pas demarre" );

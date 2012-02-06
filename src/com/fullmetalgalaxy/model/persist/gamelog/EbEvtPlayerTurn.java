@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
@@ -83,7 +84,7 @@ public class EbEvtPlayerTurn extends AnEvent
       // no check !
       return;
     }
-    if( !p_game.isStarted() )
+    if( p_game.getStatus() != GameStatus.Running )
     {
       // TODO i18n
       throw new RpcFmpException( "Cette partie n'est pas demarre" );

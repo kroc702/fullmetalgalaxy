@@ -33,6 +33,7 @@ import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
@@ -413,14 +414,14 @@ public class WgtContextAction extends WgtView implements ClickHandler
       {
         // display wait panel advise
         if( (myRegistration != null) && (model.getGame().getCurrentTimeStep() <= 0)
-            && (!model.getGame().isStarted()) )
+            && (model.getGame().getStatus() == GameStatus.Open || model.getGame().getStatus() == GameStatus.Pause) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlWait );
         }
         // display end turn button ?
         if( (!GameEngine.model().getGame().isParallel()) && (myRegistration != null)
             && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration)
-            && (GameEngine.model().getGame().isStarted()) )
+            && (model.getGame().getStatus() == GameStatus.Running) )
         {
           m_panel.add( m_btnEndTurn );
 
@@ -461,7 +462,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // display register icon and advise
         if( GameEngine.model().isLogged()
             && myRegistration == null
-            && !GameEngine.model().getGame().isStarted()
+            && (model.getGame().getStatus() == GameStatus.Open || model.getGame().getStatus() == GameStatus.Pause)
             && GameEngine.model().getGame().getMaxNumberOfPlayer() > GameEngine.model()
                 .getGame().getCurrentNumberOfRegiteredPlayer() )
         {
@@ -471,7 +472,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         
         // should we display pause to allow subscription advise ?
         if( (GameEngine.model().getGame().getCurrentNumberOfRegiteredPlayer() < GameEngine.model().getGame().getMaxNumberOfPlayer())
-          && (GameEngine.model().getGame().isStarted()) )
+            && (GameEngine.model().getGame().getStatus() == GameStatus.Running) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlPause );
         }
@@ -482,7 +483,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           EbToken myFreighter = GameEngine.model().getGame().getFreighter( myRegistration );
           if( myFreighter != null
-              && model.getGame().isStarted()
+              && model.getGame().getStatus() == GameStatus.Running
               && myFreighter.getLocation() == Location.Orbit
               && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration) )
           {

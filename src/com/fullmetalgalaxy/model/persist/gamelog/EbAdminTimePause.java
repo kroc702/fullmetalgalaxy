@@ -71,10 +71,10 @@ public class EbAdminTimePause extends EbAdmin
   {
     super.check(p_game);
 
-    if( !p_game.isStarted() )
+    /*if( p_game.getStatus() != GameStatus.Running )
     {
       throw new RpcFmpException( "la partie est deja en pause" );
-    }
+    }*/
   }
 
   /* (non-Javadoc)
@@ -85,10 +85,8 @@ public class EbAdminTimePause extends EbAdmin
   {
     super.exec(p_game);
     p_game.setStatus( GameStatus.Pause );
-    if( p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer() )
-    {
-      p_game.setStatus( GameStatus.Open );
-    }
+    p_game.updateOpenPauseStatus();
+
     if( !p_game.isParallel() )
     {
       // game is in pause

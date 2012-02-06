@@ -88,6 +88,24 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_data;
   }
   
+  /**
+   * this method update game status between open and pause
+   * according to number of current registered players
+   */
+  public void updateOpenPauseStatus()
+  {
+    if( getStatus() == GameStatus.Open
+        && (getCurrentNumberOfRegiteredPlayer() >= getMaxNumberOfPlayer()) )
+    {
+      setStatus( GameStatus.Pause );
+    }
+    else if( getStatus() == GameStatus.Pause
+        && (getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer()) )
+    {
+      setStatus( GameStatus.Open );
+    }
+  }
+
   // data access that need both class
   // ================================
 
@@ -395,11 +413,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getFreePlayersColors();
   }
 
-  public boolean isOpen()
-  {
-    return m_preview.isOpen();
-  }
-
   public int getCurrentNumberOfRegiteredPlayer()
   {
     return m_preview.getCurrentNumberOfRegiteredPlayer();
@@ -488,11 +501,6 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void setCurrentTimeStep(int p_currentTimeStep)
   {
     m_preview.setCurrentTimeStep( p_currentTimeStep );
-  }
-
-  public boolean isStarted()
-  {
-    return m_preview.isStarted();
   }
 
   public String getDescription()

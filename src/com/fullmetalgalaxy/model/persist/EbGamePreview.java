@@ -61,7 +61,7 @@ public class EbGamePreview extends EbBase
   private String m_description = "";
   private int m_maxNumberOfPlayer = 4;
   @Unindexed
-  private int m_currentTimeStep = 0;
+  private int m_currentTimeStep = 1;
   private GameType m_gameType = GameType.MultiPlayer;
   private PlanetType m_planetType = PlanetType.Desert;
 
@@ -122,7 +122,7 @@ public class EbGamePreview extends EbBase
   {
     m_maxNumberOfPlayer = 4;
     m_history = false;
-    m_currentTimeStep = 0;
+    m_currentTimeStep = 1;
     m_currentPlayerId = 0L;
     m_landWidth = 36;
     m_landHeight = 24;
@@ -577,8 +577,8 @@ public class EbGamePreview extends EbBase
    * update isOpen flag (for future query)
    * @return true if a player can join the game.
    */
-
-  public boolean isOpen()
+  @Deprecated
+  private boolean isOpen()
   {
     m_isOpen = ((getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer()) && (!isStarted()) && !isHistory());
     return m_isOpen;
@@ -759,7 +759,8 @@ public class EbGamePreview extends EbBase
    * @return the history
    * @WgtHidden
    */
-  public boolean isHistory()
+  @Deprecated
+  private boolean isHistory()
   {
     return m_history;
   }
@@ -792,7 +793,8 @@ public class EbGamePreview extends EbBase
   /**
    * @return the started
    */
-  public boolean isStarted()
+  @Deprecated
+  private boolean isStarted()
   {
     return m_started;
   }
@@ -800,7 +802,8 @@ public class EbGamePreview extends EbBase
   /**
    * @param p_started the started to set
    */
-  public void setStarted(boolean p_started)
+  @Deprecated
+  private void setStarted(boolean p_started)
   {
     m_started = p_started;
     m_isOpen = isOpen();

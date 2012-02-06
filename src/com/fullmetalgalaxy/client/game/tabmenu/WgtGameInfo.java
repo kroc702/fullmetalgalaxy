@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -202,13 +203,29 @@ public class WgtGameInfo extends Composite implements ClickHandler
 
     if( game.getGameType() == GameType.MultiPlayer )
     {
-      if( game.isStarted() )
+      switch( game.getStatus() )
       {
-        m_generalPanel.add( new Label( "Partie en cours" ) );
-      }
-      else
-      {
+      case Open:
+        m_generalPanel.add( new Label( "Partie en pause et ouverte aux inscriptions" ) );
+        break;
+      case Aborted:
+        m_generalPanel.add( new Label( "Partie annulée" ) );
+        break;
+      case Pause:
         m_generalPanel.add( new Label( "Partie en pause" ) );
+        break;
+      case History:
+        m_generalPanel.add( new Label( "Partie archivée" ) );
+        break;
+      case Puzzle:
+        m_generalPanel.add( new Label( "Partie solo" ) );
+        break;
+      case Running:
+        m_generalPanel.add( new Label( "Partie en cours" ) );
+        break;
+      default:
+        m_generalPanel.add( new Label( "Cette partie est dans un état inconnu" ) );
+        break;
       }
     }
 
@@ -219,11 +236,11 @@ public class WgtGameInfo extends Composite implements ClickHandler
       // play / pause button
       if( game.getGameType() == GameType.MultiPlayer )
       {
-        if( game.isStarted() )
+        if( game.getStatus() == GameStatus.Running )
         {
           m_generalPanel.add( m_btnPause );
         }
-        else
+        else if( game.getStatus() == GameStatus.Open || game.getStatus() == GameStatus.Pause )
         {
           m_generalPanel.add( m_btnPlay );
         }

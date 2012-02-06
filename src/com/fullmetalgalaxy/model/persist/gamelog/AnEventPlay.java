@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
@@ -148,7 +149,7 @@ public class AnEventPlay extends AnEventUser
     {
       throw new RpcFmpException( errMsg().NotYourTurn() );
     }
-    if( !p_game.isStarted() )
+    if( p_game.getStatus() == GameStatus.Open || p_game.getStatus() == GameStatus.Pause )
     {
       throw new RpcFmpException( errMsg().GameNotStarted() );
     }
