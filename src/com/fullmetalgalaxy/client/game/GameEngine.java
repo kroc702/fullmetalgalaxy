@@ -362,6 +362,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
       // handle game events first
       //
+      boolean isNewPlayerTurn = false;
       List<AnEvent> events = p_result.getGameEvents();
       for( AnEvent event : events )
       {
@@ -383,11 +384,22 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         {
           AppRoot.getEventBus().fireEvent( new MessageEvent((EbEvtMessage)event) );
         }
+        if( event.getType() == GameLogType.EvtPlayerTurn )
+        {
+          isNewPlayerTurn = true;
+        }
       }
 
       // assume that if we receive an update, something has changed !
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
 
+      if( isNewPlayerTurn
+          && getGame().getCurrentPlayerRegistration().getAccount().getId() == AppMain.instance()
+              .getMyAccount().getId() )
+      {
+        // TODO i18n
+        Window.alert( "C'est à votre tour de jouer" );
+      }
     } catch( Throwable e )
     {
       RpcUtil.logError( "error ", e );

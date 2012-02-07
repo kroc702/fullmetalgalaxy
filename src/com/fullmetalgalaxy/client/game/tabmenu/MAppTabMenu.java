@@ -259,7 +259,8 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   @Override
   public void onMessage(EbEvtMessage p_message)
   {
-    if( p_message.getAccountId() != AppMain.instance().getMyAccount().getId() )
+    if( AppMain.instance().getMyAccount().getId() == 0
+        || p_message.getAccountId() != AppMain.instance().getMyAccount().getId() )
     {
       closeAllTab();
       openTab( m_btnMessage );
