@@ -24,7 +24,6 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -36,11 +35,8 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class TokenWidget
 {
-  private long m_lastVersion = 0;
-  private LandType m_lastLand = LandType.None;
-  private boolean m_wasFireDisable = false;
-  private boolean m_wasFireDisabling = false;
-  private boolean m_wasTankCheating = false;
+  private long m_lastHash = 0;
+
   private Image m_tokenImage = new Image();
   private Image m_iconWarningImage = new Image();
 
@@ -54,15 +50,44 @@ public class TokenWidget
   }
 
   /**
+   * build an integer that 'represent' the token status.
+   * if graphical status of the token change, this hash shall change and vice versa
+   * @param p_token
+   * @return
+   */
+  public long getDisplayStatusHash(EbToken p_token)
+  {
+    long hash = p_token.getVersion() + 1;
+    hash += p_token.getColor();
+    hash ^= p_token.isFireDisabled() ? 0x1000000l : 0;
+    hash ^= p_token.isFireDisabling() ? 0x2000000l : 0;
+
+    Game game = GameEngine.model().getGame();
+    if( game == null )
+    {
+      return hash;
+    }
+    hash += 0xFFFF * game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() )
+        .hashCode();
+
+    hash ^= game.isTankCheating( p_token ) ? 0x4000000l : 0;
+
+    if( p_token.getType() == TokenType.Freighter
+        && game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep() + 1 )
+    {
+      hash += 0xFFFFFF * game.getCurrentTimeStep();
+    }
+    
+    return hash;
+  }
+
+  /**
    * invalid the freshness of this widget.
    * ie this widget will be redrawn next time.
    */
   public void invalidate()
   {
-    m_lastVersion = 0;
-    m_lastLand = LandType.None;
-    m_wasFireDisable = false;
-    m_wasFireDisabling = false;
+    m_lastHash = 0;
   }
 
   public void setVisible(boolean p_isVisible)
@@ -84,26 +109,8 @@ public class TokenWidget
     {
       return true;
     }
-    if( (p_token.getVersion() != getLastUpdate())
-        || (p_token.isFireDisabled() != m_wasFireDisable)
-        || (p_token.isFireDisabling() != m_wasFireDisabling)
-        || (game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() ) != getLastLand())
-        || (game.isTankCheating( p_token ) != m_wasTankCheating)
-        || ((p_token.getType() == TokenType.Freighter) && (game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep()+1)) )
-    {
-      return true;
-    }
-    return false;
+    return m_lastHash != getDisplayStatusHash( p_token );
   }
-
-  /**
-   * @return the p_lastUpdate
-   */
-  protected long getLastUpdate()
-  {
-    return m_lastVersion;
-  }
-
 
   /**
    * @return the tokenImage
@@ -122,13 +129,6 @@ public class TokenWidget
     return m_iconWarningImage;
   }
 
-  /**
-   * @return the lastLand
-   */
-  private LandType getLastLand()
-  {
-    return m_lastLand;
-  }
 
 
   /**
@@ -138,11 +138,7 @@ public class TokenWidget
   {
     Game game = GameEngine.model().getGame();
     assert game != null;
-    m_lastVersion = p_token.getVersion();
-    m_wasFireDisable = p_token.isFireDisabled();
-    m_wasFireDisabling = p_token.isFireDisabling();
-    m_wasTankCheating = game.isTankCheating( p_token );
-    m_lastLand = game.getLand( p_token.getPosition() ).getLandValue( game.getCurrentTide() );
+    m_lastHash = getDisplayStatusHash( p_token );
   }
 
 

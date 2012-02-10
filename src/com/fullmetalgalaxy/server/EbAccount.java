@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.PrePersist;
+
 import jskills.IPlayer;
 import jskills.Rating;
 
@@ -58,6 +60,18 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   {
     Min, Std, Max;
   }
+
+  @PrePersist
+  void onPersist()
+  {
+    // this code is only here for debug purpose
+    if( m_styleRatio == 0 )
+    {
+      System.err.println( "arg m_styleRatio == 0 !!!!!" );
+      new Throwable().printStackTrace( System.err );
+    }
+  }
+
 
   // theses data come from database (Account table)
   // -------------------------------------------
@@ -261,8 +275,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_totalPlayerSum = 0;
     m_finshedGameCount = 0;
     m_victoryCount = 0;
-    m_trueSkillMean = ServerUtil.getGameInfo().getInitialMean();
-    m_trueSkillSD = ServerUtil.getGameInfo().getInitialStandardDeviation();
+    resetTrueSkill();
     m_currentLevel = 0;
   }
 
@@ -305,10 +318,10 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   }
 
   /**
-   * icon url to illustrate user level
-   * @return
+   * 
+   * @return account level from 0 to 9
    */
-  public String getLevelUrl()
+  private int getNormalizedLevel()
   {
     int normalizedLevel = 0;
     double maxLevel = GlobalVars.getMaxLevel() - 0.1;
@@ -322,7 +335,17 @@ public class EbAccount extends EbPublicAccount implements IPlayer
       normalizedLevel = 0;
     if( normalizedLevel > 8 || getCurrentLevel() > maxLevel )
       normalizedLevel = 9;
-    return "/images/icons/level" + normalizedLevel + ".png";
+    return normalizedLevel;
+  }
+
+  /**
+   * icon url to illustrate user level
+   * @return
+   */
+  public String getLevelUrl()
+  {
+
+    return "/images/icons/level" + getNormalizedLevel() + ".png";
   }
 
   /**
@@ -342,19 +365,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
       return "http://www.fullmetalgalaxy.com/images/clear.cache.gif";
     }
     String iconName = "";
-    int normalizedLevel = 0;
-    double maxLevel = GlobalVars.getMaxLevel();
-    if( maxLevel > 1 && getCurrentLevel() > 1 )
-    {
-      // from 0 to 9
-      normalizedLevel = (int)((getCurrentLevel() * 9) / maxLevel);
-      normalizedLevel++;
-    }
-    if( normalizedLevel < 0 )
-      normalizedLevel = 0;
-    if( normalizedLevel > 9 )
-      normalizedLevel = 9;
-    iconName += normalizedLevel;
+    iconName += getNormalizedLevel();
 
     if( getPlayerStyle() == PlayerStyle.Pacific )
     {
