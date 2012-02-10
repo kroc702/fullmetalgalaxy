@@ -52,11 +52,6 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
 
   /**
-   * contain all loaded color. it's used to display the loading picture if at least 
-   * one image isn't loaded yet.
-   */
-  // private Set m_loadedColor = new HashSet();
-  /**
    * 
    */
   public WgtBoardLayerToken()

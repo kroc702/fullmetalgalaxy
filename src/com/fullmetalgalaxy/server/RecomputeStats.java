@@ -66,12 +66,7 @@ public class RecomputeStats
       EbAccount account = ds.get( p_key );
       if( account != null )
       {
-        account.resetTrueSkill();
-        account.setFinshedGameCount( 0 );
-        account.setVictoryCount( 0 );
-        account.setTotalPlayerSum( 0 );
-        account.setTotalScoreSum( 0 );
-        account.setStyleRatio( 1 );
+        account.clearComputedStats();
         ds.put( account );
         ds.close();
       }
