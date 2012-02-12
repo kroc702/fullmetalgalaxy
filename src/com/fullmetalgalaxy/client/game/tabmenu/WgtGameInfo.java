@@ -42,6 +42,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogFactory;
 import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -60,6 +61,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
   private Button m_btnPlay = new Button( "Play" );
   private Button m_btnPause = new Button( "Pause" );
   private Button m_btnEdit = new Button( "Edite" );
+  private Button m_btnAbort = new Button( "Annuler la partie" );
   private ToggleButton m_btnRecordEvent = new ToggleButton( "Enregistrer" );
   private ToggleButton m_btnGrid = new ToggleButton( "Grille" );
   private ToggleButton m_btnAtmosphere = new ToggleButton( "Atmosphere" );
@@ -78,6 +80,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     m_btnPlay.addClickHandler( this );
     m_btnPause.addClickHandler( this );
     m_btnEdit.addClickHandler( this );
+    m_btnAbort.addClickHandler( this );
     m_btnRecordEvent.addClickHandler( this );
     m_btnGrid.addClickHandler( this );
     m_btnAtmosphere.addClickHandler( this );
@@ -247,6 +250,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
       }
       // edit button
       m_generalPanel.add( m_btnEdit );
+      m_generalPanel.add( m_btnAbort );
     }
 
     if( AppMain.instance().iAmAdmin() )
@@ -301,6 +305,16 @@ public class WgtGameInfo extends Composite implements ClickHandler
     else if( p_event.getSource() == m_btnEdit )
     {
       ClientUtil.gotoUrl( "/editgame.jsp?id="+ GameEngine.model().getGame().getId() );
+    }
+    else if( p_event.getSource() == m_btnAbort )
+    {
+      // TODO i18n
+      if( Window.confirm( "êtes vous certain de vouloir annuler cette partie ?" ) )
+      {
+        AnEvent gameLog = GameLogFactory.newAdminAbort( AppMain.instance().getMyAccount().getId() );
+        gameLog.setGame( GameEngine.model().getGame() );
+        GameEngine.model().runSingleAction( gameLog );
+      }
     }
     else if( p_event.getSource() == m_btnRecordEvent )
     {

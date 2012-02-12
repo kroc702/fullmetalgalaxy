@@ -29,6 +29,13 @@ package com.fullmetalgalaxy.model.persist.gamelog;
  */
 public class GameLogFactory
 {
+  static public AnEvent newAdminAbort(long p_accountId)
+  {
+    EbAdminAbort event = new EbAdminAbort();
+    event.setAccountId( p_accountId );
+    return event;
+  }
+
   static public AnEvent newAdminTimePause(long p_accountId)
   {
     EbAdminTimePause event = new EbAdminTimePause();
