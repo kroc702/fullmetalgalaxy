@@ -177,23 +177,18 @@ public class Auth
       dataStore.put( account );
       dataStore.close();
     }
-    else if( account.getPseudo() == null )
-    {
-      account.setLogin( account.getLogin() );
-      FmgDataStore dataStore = new FmgDataStore(false);
-      dataStore.put( account );
-      dataStore.close();
-    }
 
     // if last connexion is older than one day, update it
     if( account.getLastConnexion() == null
         || account.getLastConnexion().before(
         new Date( System.currentTimeMillis() - (1000 * 60 * 60 * 24) ) ) )
     {
-      account.setLastConnexion( new Date() );
       FmgDataStore ds = new FmgDataStore( false );
+      account = ds.get( EbAccount.class, account.getId() );
+      account.setLastConnexion( new Date() );
       ds.put( account );
       ds.close();
+      p_request.getSession().setAttribute( "account", account );
     }
 
     return account;
