@@ -23,12 +23,8 @@
 package com.fullmetalgalaxy.model;
 
 
-import java.util.ArrayList;
-
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**

@@ -22,29 +22,24 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.Game;
 
-
 /**
- * @author Vincent Legendre
- *
+ * @author Vincent
+ * to change game status to aborted
  */
-public class EbAdmin extends AnEventUser
+public class EbAdminAbort extends EbAdmin
 {
-  static final long serialVersionUID = 1;
-
-  private String m_message = null;
+  private static final long serialVersionUID = 1L;
 
   /**
    * 
    */
-  public EbAdmin()
+  public EbAdminAbort()
   {
-    super();
-    init();
   }
-
 
   @Override
   public void reinit()
@@ -55,35 +50,55 @@ public class EbAdmin extends AnEventUser
 
   private void init()
   {
-    m_message = null;
+  }
+
+  @Override
+  public GameLogType getType()
+  {
+    return GameLogType.AdminAbort;
   }
 
   /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.persist.AnAction#unexec()
+   * @see com.fullmetalgalaxy.model.persist.AnAction#check()
+   */
+  @Override
+  public void check(Game p_game) throws RpcFmpException
+  {
+    super.check( p_game );
+    // only admin or game creator sould be able to do this
+    // TODO how to check my account is admin ?
+
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
+   */
+  @Override
+  public void exec(Game p_game) throws RpcFmpException
+  {
+    super.exec( p_game );
+    p_game.setStatus( GameStatus.Aborted );
+  }
+
+  /* (non-Javadoc)
+   * @see com.fullmetalgalaxy.model.persist.AnAction#exec()
    */
   @Override
   public void unexec(Game p_game) throws RpcFmpException
   {
-    throw new RpcFmpException( "les actions d'administrations ne peuvent être défaite" );
+    p_game.setStatus( GameStatus.Running );
   }
 
-  // Bean getter / setter
-  // ====================
-  /**
-   * if message start with './', '/' or 'http://', message is a web page url
-   * @return the message
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
    */
-  public String getMessage()
+  @Override
+  public String toString()
   {
-    return m_message;
+    String str = super.toString();
+    return str;
   }
 
-  /**
-   * @param p_message the message to set
-   */
-  public void setMessage(String p_message)
-  {
-    m_message = p_message;
-  }
+
 
 }
