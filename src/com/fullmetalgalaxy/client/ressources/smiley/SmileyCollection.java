@@ -38,7 +38,7 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
   
   public SmileyCollection()
   {
-    put( ":/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
+    put( " :/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
     put( ":-/", AbstractImagePrototype.create( Smiley.INSTANCE.skeptical() ) );
     put( "/'\\", AbstractImagePrototype.create( Smiley.INSTANCE.bell() ) );
     put( "/&#39;\\", AbstractImagePrototype.create( Smiley.INSTANCE.bell() ) );
@@ -73,7 +73,7 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
   
   public String remplace(String in)
   {
-    String out = in;
+    String out = in.replace( " :/", "  :/" );
     for( java.util.Map.Entry<String, AbstractImagePrototype> entry : this.entrySet() )
     {
       out = out.replace( entry.getKey(), entry.getValue().getHTML() );
