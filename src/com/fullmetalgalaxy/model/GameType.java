@@ -37,5 +37,9 @@ public enum GameType implements java.io.Serializable, IsSerializable
   // player have to play.
   Puzzle,
   // Scenario can't be played at all. it's only a game template.
-  Scenario;
+  Scenario,
+  // Practice is similar to Puzzle mode but for game that are originally
+  // Multiplayer
+  // -> some more restriction
+  Practice;
 }
