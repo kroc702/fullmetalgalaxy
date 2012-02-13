@@ -318,6 +318,10 @@ public class EbGamePreview extends EbBase
 
   public EbRegistration getPreviousPlayerRegistration()
   {
+    if( getCurrentPlayerRegistration() == null )
+    {
+      return null;
+    }
     EbRegistration registration = null;
     int index = getCurrentPlayerRegistration().getOrderIndex();
     do
