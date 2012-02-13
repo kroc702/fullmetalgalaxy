@@ -144,6 +144,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
        <url-pattern>/_ah/xmpp/subscription/unsubscribe/</url-pattern>
     </servlet-mapping>
   
+	<servlet>
+		<servlet-name>_ah_sessioncleanup</servlet-name>
+		<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>_ah_sessioncleanup</servlet-name>
+	  <url-pattern>/_ah/sessioncleanup</url-pattern>
+	</servlet-mapping>
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

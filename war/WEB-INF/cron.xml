@@ -18,4 +18,10 @@
     <schedule>every 5 hours</schedule>
     <timezone>Europe/Paris</timezone>
   </cron>
+  
+  <cron>
+    <url>/_ah/sessioncleanup?clear</url>
+    <description>Clean up sessions</description>
+    <schedule>every 10 hours</schedule>
+  </cron>
 </cronentries>
