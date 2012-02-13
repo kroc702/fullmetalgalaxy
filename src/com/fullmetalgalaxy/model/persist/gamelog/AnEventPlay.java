@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 
 import com.fullmetalgalaxy.model.GameStatus;
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
@@ -140,16 +141,18 @@ public class AnEventPlay extends AnEventUser
       // no i18n ?
       throw new RpcFmpException( "you didn't join this game." );
     }
-    if( registration.getPtAction() < getCost() )
+    if( registration.getPtAction() < getCost() && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
     if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
-        && (p_game.getCurrentPlayerRegistration() != registration) )
+        && (p_game.getCurrentPlayerRegistration() != registration)
+        && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().NotYourTurn() );
     }
-    if( p_game.getStatus() == GameStatus.Open || p_game.getStatus() == GameStatus.Pause )
+    if( (p_game.getStatus() == GameStatus.Open || p_game.getStatus() == GameStatus.Pause)
+        && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().GameNotStarted() );
     }

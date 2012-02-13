@@ -119,6 +119,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Player32.png")
   public AbstractImagePrototype player32();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Practice32.png")
+  public AbstractImagePrototype practice32();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Action16.png")
   public AbstractImagePrototype action16();
 

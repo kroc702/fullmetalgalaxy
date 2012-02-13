@@ -34,6 +34,7 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
@@ -78,6 +79,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
   PushButton m_btnGridOn = new PushButton( Icons.s_instance.gridOn32().createImage() );
   PushButton m_btnGridOff = new PushButton( Icons.s_instance.gridOff32().createImage() );
   PushButton m_btnRegister = new PushButton( Icons.s_instance.register32().createImage() );
+  PushButton m_btnPractice = new PushButton( Icons.s_instance.practice32().createImage() );
   FocusPanel m_pnlRegister = null;
   FocusPanel m_pnlWait = null;
   FocusPanel m_pnlLand = null;
@@ -85,6 +87,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
   FocusPanel m_pnlPause = null;
   FocusPanel m_pnlEndTurn = null;
   FocusPanel m_pnlTakeOff = null;
+  FocusPanel m_pnlPractice = null;
   FocusPanel m_pnlChannelDisconnected = null;
   PushButton m_btnTakeOff = new PushButton( Icons.s_instance.takeOff32().createImage() );
   Image m_iconAction = Icons.s_instance.action16().createImage();
@@ -137,6 +140,9 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnRegister.addClickHandler( this );
     m_btnRegister.setTitle( "S'inscrire a cette partie" );
     m_btnRegister.setStyleName( "fmp-PushButton32" );
+    m_btnPractice.addClickHandler( this );
+    m_btnPractice.setTitle( "Mode entrainement" );
+    m_btnPractice.setStyleName( "fmp-PushButton32" );
     HorizontalPanel hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.register32().createImage() );
     hPanel.add( new Label( "Cette partie recherche des joueurs. Inscrivez vous !" ) );
@@ -172,6 +178,11 @@ public class WgtContextAction extends WgtView implements ClickHandler
     hPanel.add( new Label( "Clickez sur votre astronef pour le faire décoller" ) );
     m_pnlTakeOff = new FocusPanel( hPanel );
     m_pnlTakeOff.addClickHandler( this );
+    hPanel = new HorizontalPanel();
+    hPanel.add( Icons.s_instance.practice32().createImage() );
+    hPanel.add( new Label( "Mode entrainement" ) );
+    m_pnlPractice = new FocusPanel( hPanel );
+    m_pnlPractice.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
     hPanel.add( new Label( "Déconnecté du serveur" ) );
@@ -282,6 +293,20 @@ public class WgtContextAction extends WgtView implements ClickHandler
         DlgJoinGame dlg = new DlgJoinGame();
         dlg.show();
         dlg.center();
+      }
+      else if( sender == m_btnPractice || sender == m_pnlPractice )
+      {
+        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+        {
+          Window
+              .alert( "Mode entrainement activé\nAucune de vos actions ne serons prise en compte\nAttention: si vous rechargez la page, vous quittez ce mode" );
+          GameEngine.model().getGame().setGameType( GameType.Practice );
+        }
+        else
+        {
+          Window.alert( "Mode entrainement desactivé" );
+          ClientUtil.reload();
+        }
       }
       else if( sender == m_btnEndTurn || sender == m_pnlEndTurn )
       {
@@ -421,7 +446,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // display end turn button ?
         if( (!GameEngine.model().getGame().isParallel()) && (myRegistration != null)
             && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration)
-            && (model.getGame().getStatus() == GameStatus.Running) )
+            && (model.getGame().getStatus() == GameStatus.Running)
+            && (model.getGame().getGameType() != GameType.Practice) )
         {
           m_panel.add( m_btnEndTurn );
 
@@ -498,6 +524,16 @@ public class WgtContextAction extends WgtView implements ClickHandler
                 .getCurrentPlayerRegistration() == myRegistration) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
+        }
+
+        // display practice icon and advise
+        if( GameEngine.model().getGame().getGameType() == GameType.Practice )
+        {
+          MAppMessagesStack.s_instance.showMessage( m_pnlPractice );
+        }
+        else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+        {
+          m_panel.add( m_btnPractice );
         }
       }
     }
