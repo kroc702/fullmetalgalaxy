@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -224,6 +225,9 @@ public class ClientUtil
   }-*/;
 
 
+  private static RegExp HTTP_URL_MATCHER = RegExp
+      .compile( "https?\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(/\\S*)?" );
+  
   /**
    * format a string written by a user to a string that can be displayed.
    * ie: html escape, \n and smiley convert
@@ -234,6 +238,7 @@ public class ClientUtil
   {
     String text = SafeHtmlUtils.htmlEscape( p_message );
     text = SmileyCollection.INSTANCE.remplace( text );
+    text = HTTP_URL_MATCHER.replace( text, "<a target='_blank' href='$&'>$&</a>" );
     text = text.replace( "\n", "<br/>" );
     return text;
   }
