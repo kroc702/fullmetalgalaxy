@@ -237,8 +237,8 @@ public class ClientUtil
   public static String formatUserMessage(String p_message)
   {
     String text = SafeHtmlUtils.htmlEscape( p_message );
-    text = SmileyCollection.INSTANCE.remplace( text );
     text = HTTP_URL_MATCHER.replace( text, "<a target='_blank' href='$&'>$&</a>" );
+    text = SmileyCollection.INSTANCE.replace( text );
     text = text.replace( "\n", "<br/>" );
     return text;
   }

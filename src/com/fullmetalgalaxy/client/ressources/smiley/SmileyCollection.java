@@ -71,7 +71,7 @@ public class SmileyCollection extends HashMap<String,AbstractImagePrototype>
     
   }
   
-  public String remplace(String in)
+  public String replace(String in)
   {
     String out = in.replace( " :/", "  :/" );
     for( java.util.Map.Entry<String, AbstractImagePrototype> entry : this.entrySet() )
