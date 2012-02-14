@@ -114,7 +114,7 @@ public class MAppChat extends GuiEntryPoint implements ChannelMessageEventHandle
       if( !p_msg.isEmpty() )
       {
         String text = SafeHtmlUtils.htmlEscape( p_msg.getText() );
-        text = SmileyCollection.INSTANCE.remplace( text );
+        text = SmileyCollection.INSTANCE.replace( text );
         text = text.replace( "\n", "<br/>" );
         HTML label = new HTML( "<b>[" + p_msg.getFromPseudo() + "]</b> " + text );
         m_msgList.add( label );

@@ -180,7 +180,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_pnlTakeOff.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.practice32().createImage() );
-    hPanel.add( new Label( "Mode entrainement" ) );
+    hPanel.add( new Label( "Mode entrainement\nClickez ici pour quitter" ) );
     m_pnlPractice = new FocusPanel( hPanel );
     m_pnlPractice.addClickHandler( this );
     hPanel = new HorizontalPanel();
@@ -301,6 +301,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           Window
               .alert( "Mode entrainement activé\nAucune de vos actions ne serons prise en compte\nAttention: si vous rechargez la page, vous quittez ce mode" );
           GameEngine.model().getGame().setGameType( GameType.Practice );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         }
         else
         {
