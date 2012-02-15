@@ -91,16 +91,16 @@ public class GlobalVars extends GlobalVarBase
 
   
   // note: style repartition stuff aren't thread safe...
-  private static final int STYLE_RATIO_COUNT = 30;
-  private static final float STYLE_RATIO_MAX = 10f;
-  private static final float STYLE_RATIO_MIN = 0.2f;
+  public static final int STYLE_RATIO_COUNT = 30;
+  public static final float STYLE_RATIO_MAX = 10f;
+  public static final float STYLE_RATIO_MIN = 0.2f;
 
   public static void resetStyleRatioRepartition()
   {
     put( "StyleRatioRepartition", new int[STYLE_RATIO_COUNT] );
   }
 
-  private static int[] getStyleRatioRepartition()
+  public static int[] getStyleRatioRepartition()
   {
     Object obj = get( "StyleRatioRepartition" );
     if( obj instanceof int[] )
@@ -146,7 +146,7 @@ public class GlobalVars extends GlobalVarBase
       styleCount += repartition[i];
     }
     int lowerStyleCount = 0;
-    for( int i = 0; i < styleRatio2Index( p_styleRatio ); i++ )
+    for( int i = 0; i <= styleRatio2Index( p_styleRatio ); i++ )
     {
       lowerStyleCount += repartition[i];
     }

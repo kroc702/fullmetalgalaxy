@@ -48,6 +48,43 @@ Nombre de control : <%= GlobalVars.getFGameUnitControlCount() %>
 Nombre de control d'astronef : <%= GlobalVars.getFGameFreighterControlCount() %>
 </pre>
 
+        
+
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Year');
+        data.addColumn('number', 'Agressivité');
+        data.addRows([
+        <%
+        float currentAgressivity = GlobalVars.STYLE_RATIO_MIN;
+        float incrementAgressivity = (GlobalVars.STYLE_RATIO_MAX - GlobalVars.STYLE_RATIO_MIN) / GlobalVars.STYLE_RATIO_COUNT;
+        for(int nbPlayer : GlobalVars.getStyleRatioRepartition())
+        {
+          out.println("['"+currentAgressivity+"', "+nbPlayer+"],");
+          currentAgressivity += incrementAgressivity;
+        }
+        %>
+          ['et plus...', 0]
+        ]);
+
+        var options = {
+          width: 400, height: 240,
+          title: 'répartition de l\'agressivité des joueurs',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div"></div>
+
 <%@include file="include/footer.jsp"%>
 </body>
 </html>
