@@ -72,6 +72,11 @@ public class EventsPlayBuilder implements GameEventStack
   private boolean m_isReadOnly = false;
 
   /**
+   * a flag to lock all the following actions as not executable
+   */
+  private boolean m_isRunnable = true;
+
+  /**
    * true if the action list is executed.
    */
   private boolean m_isExecuted = false;
@@ -109,6 +114,7 @@ public class EventsPlayBuilder implements GameEventStack
       }
     }
     m_actionList.clear();
+    m_isRunnable = true;
     unselectToken();
     // if no token is under the last click we don't need to clear it
     // and then we can select land by clicking again.
@@ -202,6 +208,10 @@ public class EventsPlayBuilder implements GameEventStack
 
   public boolean isRunnable()
   {
+    if( !m_isRunnable )
+    {
+      return false;
+    }
     boolean isRunnable = true;
     try
     {
@@ -233,6 +243,23 @@ public class EventsPlayBuilder implements GameEventStack
         exec();
       }
 
+      // check unit din't enter and leave fire cover in the same actions set
+      if( getActionList().size() > 1 && getLastAction().getType() == GameLogType.EvtMove )
+      {
+        EbEvtMove evtMove = ((EbEvtMove)getLastAction());
+        EnuColor tokenOwnerColor = getGame().getTokenOwnerColor( evtMove.getToken( getGame() ) );
+        EnuColor fireCoverColor = getGame().getOpponentFireCover( tokenOwnerColor.getValue(),
+            evtMove.getOldPosition() );
+        if( fireCoverColor.getValue() != EnuColor.None )
+        {
+          m_isRunnable = false;
+          throw new RpcFmpException(
+              "Une unité ne peut entrer et sortir d'une zone de feu dans le même mouvement" );
+        }
+      }
+
+      // check destroyer didn't enter in fire cover without destroying enough
+      // opponents destroyers
       if( (getLastAction().getType() == GameLogType.EvtMove || getLastAction().getType() == GameLogType.EvtFire) 
           && (getSelectedToken() != null)
           && (getSelectedToken().getLocation() == Location.Board) )
@@ -432,7 +459,7 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user click board " + p_position );
     assert p_position != null;
     assert getGame() != null;
-    if( p_position.equals( getLastUserClick() ) )
+    if( p_position.equals( getLastUserClick() ) || !m_isRunnable )
     {
       if( isRunnable() )
       {
