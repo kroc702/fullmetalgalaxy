@@ -105,16 +105,16 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnCancel.setTitle( "Annuler l'action [ESC]" );
     m_btnCancel.setStyleName( "fmp-PushButton32" );
     m_btnRepairTurret.addClickHandler( this );
-    m_btnRepairTurret.setTitle( "Reparer la tourelle" );
+    m_btnRepairTurret.setTitle( "Réparer la tourelle" );
     m_btnRepairTurret.setStyleName( "fmp-PushButton32" );
     m_btnTakeOff.addClickHandler( this );
-    m_btnTakeOff.setTitle( "Decollage" );
+    m_btnTakeOff.setTitle( "Décollage" );
     m_btnTakeOff.setStyleName( "fmp-PushButton32" );
     m_btnFire.addClickHandler( this );
     m_btnFire.setTitle( "Tirer" );
     m_btnFire.setStyleName( "fmp-PushButton32" );
     m_btnControl.addClickHandler( this );
-    m_btnControl.setTitle( "Controle" );
+    m_btnControl.setTitle( "Contrôle" );
     m_btnControl.setStyleName( "fmp-PushButton32" );
     m_btnFireCoverOn.addClickHandler( this );
     m_btnFireCoverOn.setTitle( "Afficher les couvertures de feux [F]" );
@@ -129,7 +129,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnZoomIn.setTitle( "Zoom tactique [+]" );
     m_btnZoomIn.setStyleName( "fmp-PushButton32" );
     m_btnZoomOut.addClickHandler( this );
-    m_btnZoomOut.setTitle( "Zoom strategique [-]" );
+    m_btnZoomOut.setTitle( "Zoom stratégique [-]" );
     m_btnZoomOut.setStyleName( "fmp-PushButton32" );
     m_btnGridOn.addClickHandler( this );
     m_btnGridOn.setTitle( "Afficher la grille [G]" );
@@ -138,7 +138,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_btnGridOff.setTitle( "Cacher la grille [G]" );
     m_btnGridOff.setStyleName( "fmp-PushButton32" );
     m_btnRegister.addClickHandler( this );
-    m_btnRegister.setTitle( "S'inscrire a cette partie" );
+    m_btnRegister.setTitle( "S'inscrire à cette partie" );
     m_btnRegister.setStyleName( "fmp-PushButton32" );
     m_btnPractice.addClickHandler( this );
     m_btnPractice.setTitle( "Mode entrainement" );
@@ -150,7 +150,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_pnlRegister.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.pause32().createImage() );
-    hPanel.add( new Label( "Vous devez attendre le démarage de la partie." ) );
+    hPanel.add( new Label( "Vous devez attendre le démarrage de la partie." ) );
     m_pnlWait = new FocusPanel( hPanel );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
@@ -170,12 +170,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_pnlPause = new FocusPanel( hPanel );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.endTurn32().createImage() );
-    hPanel.add( new Label( "Vous devez maintenant terminez votre tour !" ) );
+    hPanel.add( new Label( "Vous devez maintenant terminer votre tour !" ) );
     m_pnlEndTurn = new FocusPanel( hPanel );
     m_pnlEndTurn.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
-    hPanel.add( new Label( "Clickez sur votre astronef pour le faire décoller" ) );
+    hPanel.add( new Label( "Cliquez sur votre astronef pour le faire décoller" ) );
     m_pnlTakeOff = new FocusPanel( hPanel );
     m_pnlTakeOff.addClickHandler( this );
     hPanel = new HorizontalPanel();
@@ -190,7 +190,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_pnlChannelDisconnected.addClickHandler( this );
 
 
-    m_iconAction.setTitle( "Cout en point d'action" );
+    m_iconAction.setTitle( "Coût en point d'action" );
     m_lblAction.setStyleName( "fmp-status-text" );
 
     // subscribe all needed models update event
@@ -240,12 +240,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           // TODO i18n
           MAppMessagesStack.s_instance
-              .showMessage( "Selectionez un second destructeur à porté, puis votre cible" );
+              .showMessage( "Sélectionnez un second destructeur à portée, puis votre cible" );
         }
         else
         {
           // TODO i18n
-          MAppMessagesStack.s_instance.showMessage( "Selectionez les deux destructeurs à porté" );
+          MAppMessagesStack.s_instance.showMessage( "Sélectionnez les deux destructeurs à portée" );
         }
       }
       else if( sender == m_btnControl )
@@ -256,12 +256,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           // TODO i18n
           MAppMessagesStack.s_instance
-              .showMessage( "Selectionez un second destructeur au contact, puis votre cible" );
+              .showMessage( "Sélectionnez un second destructeur au contact, puis votre cible" );
         }
         else
         {
           // TODO i18n
-          MAppMessagesStack.s_instance.showMessage( "Selectionez les deux destructeurs au contact" );
+          MAppMessagesStack.s_instance.showMessage( "Sélectionnez les deux destructeurs au contact" );
         }
       }
       else if( sender == m_btnFireCoverOn )
@@ -299,13 +299,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
         if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
         {
           Window
-              .alert( "Mode entrainement activé\nAucune de vos actions ne serons prise en compte\nAttention: si vous rechargez la page, vous quittez ce mode" );
+              .alert( "Mode entraînement activé\nAucune de vos actions ne sera prise en compte\nAttention : si vous rechargez la page, vous quittez ce mode" );
           GameEngine.model().getGame().setGameType( GameType.Practice );
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         }
         else
         {
-          Window.alert( "Mode entrainement desactivé" );
+          Window.alert( "Mode entraînement desactivé" );
           ClientUtil.reload();
         }
       }
@@ -321,7 +321,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         }
         else
         {
-          msg = "Vos " + oldPt + " points d'action seront arrondi a " + newPt
+          msg = "Vos " + oldPt + " points d'action seront arrondis à " + newPt
               + " pts. Confirmez-vous la fin de tour ?";
         }
         if( Window.confirm( msg ) )
@@ -335,7 +335,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       else if( sender == m_btnTakeOff )
       {
         // TODO i18n
-        if( Window.confirm( "Confirmez-vous le decolage de "
+        if( Window.confirm( "Confirmez-vous le décollage de "
             + Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) + " ?" ) )
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
