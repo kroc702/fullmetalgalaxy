@@ -789,6 +789,21 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     m_preview.setStatus( p_status );
   }
+
+  public boolean isPasswordProtected()
+  {
+    return m_preview.isPasswordProtected();
+  }
+
+  public String getPassword()
+  {
+    return m_preview.getPassword();
+  }
+
+  public void setPassword(String p_password)
+  {
+    m_preview.setPassword( p_password );
+  }
   
   
   

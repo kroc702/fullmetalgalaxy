@@ -97,6 +97,11 @@ public class EbGamePreview extends EbBase
    * only VIP people can join VIP game.
    */
   private boolean m_isVip = false;
+  /**
+   * if m_password is not null, then this game is protected by password.
+   * ie player must know that password to subscribe to it.
+   */
+  private String m_password = null;
 
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
@@ -488,6 +493,10 @@ public class EbGamePreview extends EbBase
     else if( isHistory() )
     {
       strBuf.append( "<img src='/images/icons/history16.png' title='Archive' /> " );
+    }
+    if( isPasswordProtected() )
+    {
+      strBuf.append( "<img src='/images/icons/protected16.png' title='Partie privée' /> " );
     }
     strBuf.append( getConfigGameTime().getIconsAsHtml() );
 
@@ -1085,6 +1094,24 @@ public class EbGamePreview extends EbBase
     {
       setHistory( true );
     }
+  }
+
+
+  public boolean isPasswordProtected()
+  {
+    return getPassword() != null && !getPassword().isEmpty();
+  }
+
+  public String getPassword()
+  {
+    return m_password;
+  }
+
+
+
+  public void setPassword(String p_password)
+  {
+    m_password = p_password;
   }
 
 

@@ -236,6 +236,12 @@ public class WgtGameInfo extends Composite implements ClickHandler
         AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId() )
         || AppMain.instance().iAmAdmin() )
     {
+      // display password if present
+      if( game.isPasswordProtected() )
+      {
+        m_generalPanel.add( new Label( "Mot de passe: " + game.getPassword() ) );
+      }
+
       // play / pause button
       if( game.getGameType() == GameType.MultiPlayer )
       {

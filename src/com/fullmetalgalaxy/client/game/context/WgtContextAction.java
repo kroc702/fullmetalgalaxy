@@ -261,7 +261,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
         else
         {
           // TODO i18n
-          MAppMessagesStack.s_instance.showMessage( "Sélectionnez les deux destructeurs au contact" );
+          MAppMessagesStack.s_instance
+              .showMessage( "Sélectionnez les deux destructeurs au contact" );
         }
       }
       else if( sender == m_btnFireCoverOn )
@@ -290,9 +291,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnRegister || sender == m_pnlRegister )
       {
-        DlgJoinGame dlg = new DlgJoinGame();
-        dlg.show();
-        dlg.center();
+        DlgJoinGame.instance().show();
+        DlgJoinGame.instance().center();
       }
       else if( sender == m_btnPractice || sender == m_pnlPractice )
       {
