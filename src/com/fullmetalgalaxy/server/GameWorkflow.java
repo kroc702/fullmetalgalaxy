@@ -550,10 +550,11 @@ public class GameWorkflow
       log.error( "game " + p_game + " has not registration found." );
     }
 
+    // add all style ratio into a global repartition
+    GlobalVars.addStyleRatio( p_game );
+
     if( mustSaveGame )
     {
-      // add all style ratio into a global repartition
-      GlobalVars.addStyleRatio( p_game );
       // then save game
       FmgDataStore ds = new FmgDataStore( false );
       ds.put( p_game );

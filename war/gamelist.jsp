@@ -104,12 +104,6 @@ if(tab < 0 || tab > 3 )
 	    {
 	      out.println( "<tr>" );
 	      out.println( game.getDescriptionAsHtml() );
-	      
-	      // admin option
-	      if(Auth.isUserAdmin(request, response))
-	      {
-	      	out.println("<td><a href=\"/admin/Servlet?deletegame="+game.getId()+"\">effacer</a></td>" );
-	      }
 	      out.println("</tr>" );
 	    }
 	%>

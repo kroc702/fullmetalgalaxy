@@ -51,6 +51,7 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
   private TextBox m_name = new TextBox();
   private TextArea m_description = new TextArea();
   private ListBox m_maxPlayerCount = new ListBox();
+  private TextBox m_password = new TextBox();
   
   
   /**
@@ -121,6 +122,18 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
         });
     m_panel.add( m_description );
 
+    m_panel.add( new Label( "Mot de passe si partie privé :" ) );
+    m_password.addValueChangeHandler( new ValueChangeHandler<String>()
+    {
+      @Override
+      public void onValueChange(ValueChangeEvent<String> p_event)
+      {
+        GameEngine.model().getGame().setPassword( m_password.getText() );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+      }
+
+    } );
+    m_panel.add( m_password );
     
     // fill UI
     onModelUpdate(GameEngine.model());
@@ -136,6 +149,7 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
     m_name.setEnabled( !p_readOnly );
     m_description.setEnabled( !p_readOnly );
     m_maxPlayerCount.setEnabled( !p_readOnly );
+    m_password.setEnabled( !p_readOnly );
   }
 
 

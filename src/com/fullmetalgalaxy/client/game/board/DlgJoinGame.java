@@ -22,35 +22,47 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.ressources.BoardIcons;
-import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
-import com.fullmetalgalaxy.model.ressources.Messages;
+import com.fullmetalgalaxy.client.widget.WgtGameTime;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Kroc
- *
+ * 
+ * During the game join process, this dialog inform player that other players are real
+ * and ask password if game is private 
  */
 
 public class DlgJoinGame extends DialogBox implements ClickHandler
 {
   // UI
-  private Map<Image, Integer> m_icons = new HashMap<Image, Integer>();
   private Button m_btnCancel = new Button( "Cancel" );
-  private Panel m_panel = new FlowPanel();
+  private Button m_btnOk = new Button( "Ok" );
+  private Panel m_panel = new VerticalPanel();
+
+  private TextBox m_txtPassword = new TextBox();
+
+  private static DlgJoinGame s_dlg = null;
+
+  public static DlgJoinGame instance()
+  {
+    if( s_dlg == null )
+    {
+      s_dlg = new DlgJoinGame();
+    }
+    return s_dlg;
+  }
 
 
   /**
@@ -62,33 +74,11 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
     super( false, true );
 
     // Set the dialog box's caption.
-    setText( "Choisissez votre couleur" );
+    setText( "Inscription..." );
 
     m_btnCancel.addClickHandler( this );
+    m_btnOk.addClickHandler( this );
 
-    // configure color selector
-    Set<EnuColor> freeColors = null;
-    if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model()
-        .getGame().getMaxNumberOfPlayer() )
-    {
-      freeColors = GameEngine.model().getGame().getFreeRegistrationColors();
-    }
-    else
-    {
-      freeColors = GameEngine.model().getGame().getFreePlayersColors();
-    }
-    for( EnuColor color : freeColors )
-    {
-      Image image = new Image();
-      BoardIcons.icon64( color.getValue() ).applyTo( image );
-      image.setTitle( Messages.getColorString( 0, color.getValue() ) );
-      image.addStyleName( "fmp-button" );
-      image.addClickHandler( this );
-      m_icons.put( image, color.getValue() );
-      m_panel.add( image );
-    }
-
-    m_panel.add( m_btnCancel );
 
     setWidget( m_panel );
   }
@@ -105,19 +95,22 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
       this.hide();
       return;
     }
+    else if( p_event.getSource() == m_btnOk )
+    {
+      if( GameEngine.model().getGame().isPasswordProtected()
+          && !m_txtPassword.getText().equals( GameEngine.model().getGame().getPassword() ) )
+      {
+        // TODO i18n
+        Window.alert( "Veuillez vérifier le mot de passe pour cette partie." );
+        return;
+      }
+      this.hide();
+      DlgJoinChooseColor.instance().show();
+      DlgJoinChooseColor.instance().center();
+      return;
+    }
 
-    int color = m_icons.get( p_event.getSource() );
-
-    EbGameJoin action = new EbGameJoin();
-    action.setGame( GameEngine.model().getGame() );
-    action.setAccountId( AppMain.instance().getMyAccount().getId() );
-    action.setAccount( AppMain.instance().getMyAccount() );
-    action.setColor( color );
-    GameEngine.model().runSingleAction( action );
-
-    this.hide();
   }
-
 
 
   /* (non-Javadoc)
@@ -126,6 +119,40 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
   @Override
   public void show()
   {
+    m_panel.clear();
+
+    m_panel.add( new HTML( ClientUtil.formatUserMessage( GameEngine.model().getGame()
+        .getDescription() ) ) );
+    m_panel.add( new HTML( "<hr/>" ) );
+    
+    WgtGameTime wgtGameTime = new WgtGameTime();
+    wgtGameTime.setReadOnly( true );
+    m_panel.add( wgtGameTime );
+    m_panel.add( new HTML( "<hr/>" ) );
+
+
+    if( GameEngine.model().getGame().isPasswordProtected() )
+    {
+      HorizontalPanel hPanel = new HorizontalPanel();
+      // TODO i18n
+      hPanel.add( new Label( "Mot de passe:" ) );
+      hPanel.add( m_txtPassword );
+      m_panel.add( hPanel );
+    }
+    else
+    {
+      // TODO i18n
+      m_panel.add( new HTML( "N'oubliez pas que vous jouez avec de vrais joueur.<br/>" +
+      		"En vous inscrivant, vous vous engagez a faire votre possible pour terminer cette partie.<br/>" +
+      		"Merci.<br/>" ) );
+    }
+
+    HorizontalPanel hPanel = new HorizontalPanel();
+    hPanel.add( m_btnCancel );
+    hPanel.add( m_btnOk );
+    m_panel.add( hPanel );
+
     super.show();
   }
+
 }
