@@ -118,8 +118,8 @@ public class GameGenerator
       for( int iy = starty; iy < height; iy += 3 )
       {
         LandType type = getGame().getLand( ix, iy );
-        if( (type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain)
-            || (type == LandType.Montain) )
+        if( ((type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain) || (type == LandType.Montain))
+            && (getGame().getToken( new AnBoardPosition( ix, iy ) ) == null) )
         {
           EbToken token = new EbToken( TokenType.Ore );
           token.getPosition().setX( ix );
