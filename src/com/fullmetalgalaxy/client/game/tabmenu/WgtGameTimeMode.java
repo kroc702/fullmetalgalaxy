@@ -107,7 +107,10 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     assert GameEngine.model() != null;
     Game game = GameEngine.model().getGame();
 
-    m_lblTimePosition.setText( GameEngine.model().getCurrentActionIndex() + "/" + game.getLogs().size() );
+    m_lblTimePosition.setText( (GameEngine.model().getCurrentActionIndex() + game
+        .getAdditionalEventCount())
+        + "/"
+        + (game.getLogs().size() + game.getAdditionalEventCount()) );
     AnEvent currentEvent = GameEngine.model().getCurrentAction();
     if( currentEvent == null )
     {
@@ -129,6 +132,11 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     }
     
     m_btnPanel.remove( m_wgtGameLog );
+
+    if( m_wgtGameLog.getAdditionalEventCount() != game.getAdditionalEventCount() )
+    {
+      m_wgtGameLog.redraw();
+    }
     m_panel.add( m_wgtGameLog );
 }
 

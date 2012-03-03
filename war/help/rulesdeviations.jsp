@@ -29,7 +29,9 @@ feu). Les différences tactiques par rapport aux règles originales sont minimes
 <h3>Deux chars cote à cote sur une montagne</h3>
 <p>Ce n’est pas interdit, mais inutile en défense. Si deux chars, du même propriétaire, sont 
 côte à côte sur des montagnes, l'un des deux ne produit pas de zone de feu (il est toujours 
-possible de tirer).</p>
+possible de tirer).<br/>
+En mode tour par tour, il n'est cependant pas possible de valider la fin de tour dans cette
+configuration.</p>
 
 <h3>Les marées</h3>
 <p>
@@ -39,12 +41,21 @@ Les marées sont aléatoires et non plus moyenné sur l’ensemble de la partie.
 
 <h3>Le déploiement</h3>
 <p>Le déploiement est possible à 4 cases du centre de l’astronef et non plus 3 à partir des 
-podes. (cela ajoute 3 cases)
+podes. (cela ajoute 3 cases)<br/>
+Chacun a son tour et pas en simultané.
 </p>
 
 <h3>Le décollage</h3>
 <p>Le décollage d'un astronef est gratuit (0PA) pour éviter les frustrations inutiles des nouveaux
  joueurs ignorants de cette règle.
+</p>
+
+<h3>Le décollage anticipé</h3>
+<p>Il ce déclenche pendant son tour 21 en non en simultané au début du 21ième tour.
+</p>
+
+<h3>Bugs...</h3>
+<p>FMG comporte encore des bugs qui ce matérialisent parfois par des écarts des règles.
 </p>
 
 <%@include file="/include/footer.jsp"%>

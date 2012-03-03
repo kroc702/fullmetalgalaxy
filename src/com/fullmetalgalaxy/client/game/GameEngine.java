@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -673,6 +674,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   public void timeBack(int p_actionCount)
   {
+    if( p_actionCount > m_currentActionIndex )
+    {
+      GameEngine.model().loadAdditionalEvents();
+      return;
+    }
+
     List<AnEvent> logs = getGame().getLogs();
     while( (m_currentActionIndex > 0) && (p_actionCount > 0) )
     {
@@ -920,6 +927,36 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
 
 
+
+  /**
+   * if game have additional events that are not contained by current model
+   * load them with gwt RPC
+   */
+  public void loadAdditionalEvents()
+  {
+    if( getGame().getAdditionalEventCount() > 0 )
+    {
+      // callback
+      FmpCallback<EbGameLog> callbackLoadAdditionalEvents = new FmpCallback<EbGameLog>()
+      {
+        @Override
+        public void onSuccess(EbGameLog p_gameLog)
+        {
+          AppMain.instance().stopLoading();
+          getGame().setAdditionalEventCount(
+              getGame().getAdditionalEventCount() - p_gameLog.getLog().size() );
+          m_currentActionIndex += p_gameLog.getLog().size();
+          p_gameLog.getLog().addAll( getGame().getLogs() );
+          getGame().setLogs( p_gameLog.getLog() );
+          AppMain.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+        }
+      };
+
+      AppMain.instance().startLoading();
+      AppMain.getRpcService().getAdditionalGameLog( getGame().getId(),
+          callbackLoadAdditionalEvents );
+    }
+  }
 
 
 

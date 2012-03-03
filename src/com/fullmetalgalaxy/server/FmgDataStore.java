@@ -23,10 +23,14 @@
 package com.fullmetalgalaxy.server;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.EbGameData;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -54,6 +58,7 @@ public class FmgDataStore extends DataStore
     ObjectifyService.register( EbAccount.class );
     ObjectifyService.register( EbGameData.class );
     ObjectifyService.register( EbGamePreview.class );
+    ObjectifyService.register( EbGameLog.class );
   }
 
   /**
@@ -188,6 +193,14 @@ public class FmgDataStore extends DataStore
   }
 
 
+  public EbGameLog getGameLog(Long p_id)
+  {
+    Key<EbGamePreview> keyPreview = new Key<EbGamePreview>( EbGamePreview.class, p_id );
+    Key<EbGameLog> keyLog = new Key<EbGameLog>( keyPreview, EbGameLog.class, p_id );
+    EbGameLog gameLog = find( keyLog );
+    return gameLog;
+  }
+
   /**
    * 
    * @param p_id
@@ -252,6 +265,77 @@ public class FmgDataStore extends DataStore
     p_game.updateOpenPauseStatus();
 
     Key<EbGamePreview> keyPreview = put( p_game.getPreview() );
+
+    // should we split event log into several entity ?
+    int maxEvents = EbGameLog.MAX_EVENTS_PER_BLOB;
+    if( p_game.getAdditionalEventCount() > 0
+        && maxEvents > EbGameLog.MAX_EVENTS_PER_PLAYER * p_game.getCurrentNumberOfRegiteredPlayer() )
+    {
+      maxEvents = EbGameLog.MAX_EVENTS_PER_PLAYER * p_game.getCurrentNumberOfRegiteredPlayer();
+    }
+    if( p_game.getLogs().size() > maxEvents )
+    {
+      // read last additional event log
+      EbGameLog gameLog = null;
+      int lastGameLogCount = 0;
+      long lastGameLogId = 0;
+      if( !p_game.getAdditionalGameLog().isEmpty() )
+      {
+        lastGameLogId = p_game.getAdditionalGameLog()
+            .get( p_game.getAdditionalGameLog().size() - 1 );
+        gameLog = get( EbGameLog.class, lastGameLogId );
+      }
+      if( gameLog == null )
+      {
+        lastGameLogId = 0;
+        gameLog = new EbGameLog();
+        gameLog.setIndex( 1 );
+      }
+      lastGameLogCount = gameLog.getLog().size();
+      
+      // split events log in two or three parts
+      int minEvents = EbGameLog.MIN_EVENTS_PER_PLAYER * p_game.getCurrentNumberOfRegiteredPlayer();
+      int sizePart1 =  p_game.getLogs().size() - minEvents;
+      int sizePart2 = 0;
+      if( sizePart1 > EbGameLog.MAX_EVENTS_PER_BLOB - lastGameLogCount )
+      {
+        sizePart1 = EbGameLog.MAX_EVENTS_PER_BLOB - lastGameLogCount;
+        sizePart2 = p_game.getLogs().size() - minEvents - sizePart1;
+      }
+      List<AnEvent> logPart1 = p_game.getLogs().subList( 0, sizePart1 );
+      List<AnEvent> logPart2 = p_game.getLogs().subList( sizePart1, sizePart1 + sizePart2 );
+      List<AnEvent> logPart3 = p_game.getLogs().subList( sizePart1 + sizePart2, p_game.getLogs().size() );
+
+      // store part 1
+      gameLog.getLog().addAll( logPart1 );
+      gameLog.setKeyPreview( keyPreview );
+      put( gameLog );
+      if( lastGameLogId == 0 )
+      {
+        p_game.getAdditionalGameLog().add( gameLog.getId() );
+      }
+      p_game.setAdditionalEventCount( p_game.getAdditionalEventCount() + logPart1.size() );
+
+      // store part 2
+      if( !logPart2.isEmpty() )
+      {
+        EbGameLog gameLog2 = new EbGameLog();
+        gameLog2.setIndex( gameLog.getIndex() + 1 );
+        gameLog2.getLog().addAll( logPart2 );
+        gameLog2.setKeyPreview( keyPreview );
+        put( gameLog2 );
+        p_game.getAdditionalGameLog().add( gameLog2.getId() );
+        p_game.setAdditionalEventCount( p_game.getAdditionalEventCount() + logPart2.size() );
+      }
+
+      // store part 3
+      // can't use p_game.setLogs( logPart3 ); as we get:
+      // NotSerializableException: java.util.ArrayList$SubList
+      p_game.setLogs( new ArrayList<AnEvent>() );
+      p_game.getLogs().addAll( logPart3 );
+
+    }
+
     p_game.getData().setId( keyPreview.getId() );
     p_game.getData().setKeyPreview( keyPreview );
     put( p_game.getData() );
@@ -272,9 +356,10 @@ public class FmgDataStore extends DataStore
     }
   }
 
+
+
   /**
    * delete the minimap blob and both preview and data entity
-   * @param p_id
    */
   protected void deleteGame(EbGamePreview p_gamePreview)
   {
@@ -286,6 +371,11 @@ public class FmgDataStore extends DataStore
         deleteMinimap( p_gamePreview.getMinimapBlobKey() );
       }
       Key<EbGamePreview> keyPreview = new Key<EbGamePreview>(EbGamePreview.class, id );
+
+      // delete all additional logs
+      Iterable<Key<EbGameLog>> logs = FmgDataStore.dao().query( EbGameLog.class )
+          .ancestor( keyPreview ).fetchKeys();
+      super.delete( logs );
       Key<EbGameData> keyData = new Key<EbGameData>(keyPreview, EbGameData.class, id );
       super.delete( keyPreview, keyData );
     }

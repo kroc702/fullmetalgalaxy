@@ -43,6 +43,8 @@ import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -51,6 +53,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.Key;
 
 /**
  * TODO create only one dataStore per RPC request
@@ -434,5 +437,23 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   }
 
 
+  public static EbGameLog sgetAdditionalGameLog(long p_gameId)
+  {
+    EbGameLog gameLog = new EbGameLog();
+    Key<EbGamePreview> keyPreview = new Key<EbGamePreview>( EbGamePreview.class, p_gameId );
+    Iterable<EbGameLog> logs = FmgDataStore.dao().query( EbGameLog.class ).order( "m_index" )
+        .ancestor( keyPreview );
+    for( EbGameLog log : logs )
+    {
+      gameLog.getLog().addAll( log.getLog() );
+    }
+    return gameLog;
+  }
+
+  @Override
+  public EbGameLog getAdditionalGameLog(long p_gameId) throws RpcFmpException
+  {
+    return sgetAdditionalGameLog( p_gameId );
+  }
 
 }
