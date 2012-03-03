@@ -47,6 +47,7 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 
@@ -264,7 +265,15 @@ public class AdminServlet extends HttpServlet
     strid = p_req.getParameter( "downloadgame" );
     if( strid != null )
     {
+      // load game with standard api
       ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( strid );
+      if( modelInit.getGame().getAdditionalEventCount() > 0 )
+      {
+        // load additional events
+        EbGameLog gameLog = GameServicesImpl.sgetAdditionalGameLog( modelInit.getGame().getId() );
+        gameLog.getLog().addAll( modelInit.getGame().getLogs() );
+        modelInit.getGame().setLogs( gameLog.getLog() );
+      }
       if( modelInit != null )
       {
         ObjectOutputStream out = new ObjectOutputStream( p_resp.getOutputStream() );

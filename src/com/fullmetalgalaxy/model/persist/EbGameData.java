@@ -43,7 +43,6 @@ import com.googlecode.objectify.annotation.Unindexed;
  * As we don't need to query on these data, it is unindexed and serialized.
  * 
  * @author vlegendr
- * TODO split into EbGameData and EbGameLog
  */
 @Unindexed
 public class EbGameData extends EbBase
@@ -68,6 +67,17 @@ public class EbGameData extends EbBase
 
   @Serialized
   protected Set<com.fullmetalgalaxy.model.persist.EbToken> m_setToken = new HashSet<com.fullmetalgalaxy.model.persist.EbToken>();
+
+  /**
+   * if m_setGameLog isn't complete, this value contain the number of event stored in a separate entity.
+   */
+  @Unindexed
+  protected int m_additionalEventCount = 0;
+  /**
+   * key of all additional game log.
+   */
+  @Serialized
+  protected List<Long> m_additionalGameLog = null;
   @Serialized
   protected List<com.fullmetalgalaxy.model.persist.gamelog.AnEvent> m_setGameLog = new ArrayList<com.fullmetalgalaxy.model.persist.gamelog.AnEvent>();
   @Serialized
@@ -75,7 +85,7 @@ public class EbGameData extends EbBase
   @Serialized
   protected Set<EbPublicAccount> m_accounts = null;
 
-  
+  @Unindexed
   protected long m_nextLocalId = 0L;
 
   /**
@@ -392,4 +402,31 @@ public class EbGameData extends EbBase
     return getMessage() != null && ( getMessage().startsWith( "./" ) || getMessage().startsWith( "/" )
         || getMessage().startsWith( "http://" ) );
   }
+
+  public int getAdditionalEventCount()
+  {
+    return m_additionalEventCount;
+  }
+
+  public void setAdditionalEventCount(int p_additionalEventCount)
+  {
+    m_additionalEventCount = p_additionalEventCount;
+  }
+
+  public List<Long> getAdditionalGameLog()
+  {
+    if( m_additionalGameLog == null )
+    {
+      m_additionalGameLog = new ArrayList<Long>();
+    }
+    return m_additionalGameLog;
+  }
+
+  public void setAdditionalGameLog(List<Long> p_additionalGameLog)
+  {
+    m_additionalGameLog = p_additionalGameLog;
+  }
+
+
+
 }

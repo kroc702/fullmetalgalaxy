@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model;
 
 
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -58,6 +59,16 @@ public interface GameServicesAsync
    * @return
    */
   public void getModelFmpInit(String p_gameId, AsyncCallback<ModelFmpInit> callback);
+
+
+  /**
+   * get additional game events of a given game.
+   * @param p_gameId
+   * @return
+   * @throws RpcFmpException
+   */
+  public void getAdditionalGameLog(long p_gameId, AsyncCallback<EbGameLog> callback);
+
 
   public void checkUpdate(long p_gameId, AsyncCallback<Void> callback);
 

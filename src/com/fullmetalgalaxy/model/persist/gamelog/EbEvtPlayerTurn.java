@@ -43,9 +43,16 @@ public class EbEvtPlayerTurn extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  /** player that make this action (may be old player, admin or game creator, or automatic) */
   private long m_accountId = 0L;
   private int m_oldActionPt = 0;
   private Date m_endTurnDate = null;
+
+  // data used by timeline mode
+  private short m_oldTurn = 0;
+  private short m_newTurn = 0;
+  /** ie EbRegistration ID */
+  private long m_newPlayerId = 0;
 
   /**
    * 
@@ -149,6 +156,7 @@ public class EbEvtPlayerTurn extends AnEvent
     // backup for unexec
     m_oldActionPt = currentPlayerRegistration.getPtAction();
     currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt(p_game) );
+    m_oldTurn = (short)game.getCurrentTimeStep();
     
     // reset all end turn date
     for( EbRegistration player : game.getSetRegistration() )
@@ -163,6 +171,7 @@ public class EbEvtPlayerTurn extends AnEvent
       // next turn !
       game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
     }
+    m_newTurn = (short)game.getCurrentTimeStep();
 
     // update all his tokens bullets count
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
@@ -206,6 +215,7 @@ public class EbEvtPlayerTurn extends AnEvent
         }
         nextPlayerRegistration.setEndTurnDate( m_endTurnDate );
       }
+      m_newPlayerId = nextPlayerRegistration.getId();
     }
 
     game.setCurrentPlayerRegistration( nextPlayerRegistration );
@@ -280,4 +290,21 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     m_accountId = p_id;
   }
+
+  public short getOldTurn()
+  {
+    return m_oldTurn;
+  }
+
+  public short getNewTurn()
+  {
+    return m_newTurn;
+  }
+
+  public long getNewPlayerId()
+  {
+    return m_newPlayerId;
+  }
+
+
 }

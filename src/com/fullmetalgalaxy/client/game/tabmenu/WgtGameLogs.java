@@ -49,6 +49,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
 {
   private Tree m_tree = new Tree();
+  private int m_additionalEventCount = 0;
 
   /**
    * 
@@ -69,6 +70,12 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
   public void redraw()
   {
     m_tree.clear();
+    if( GameEngine.model().getGame().getAdditionalEventCount() > 0 )
+    {
+      m_tree.addItem( new TreeItemAdditionalEvent( GameEngine.model().getGame()
+          .getAdditionalEventCount() ) );
+    }
+    m_additionalEventCount = GameEngine.model().getGame().getAdditionalEventCount();
     if( GameEngine.model().getGame().getEbConfigGameTime().isParallel() )
     {
       buildTree4Parallel();
@@ -82,21 +89,29 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
   private void buildTree4Tbt()
   {
     int currentTurn = -1;
-    TreeItem turnTreeItem = new TreeItem( "inscriptions" );
-    m_tree.addItem( turnTreeItem );
-
     Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
-    // game starting
-    while( iterator.hasNext() )
+    TreeItem turnTreeItem = null;
+    if( GameEngine.model().getGame().getAdditionalEventCount() > 0 )
     {
-      AnEvent event = iterator.next();
-      turnTreeItem.addItem( new TreeItemEvent( event ) );
-      if( event instanceof EbEvtChangePlayerOrder )
+      turnTreeItem = new TreeItem( "tour ?" );
+    }
+    else
+    {
+      turnTreeItem = new TreeItem( "inscriptions" );
+      m_tree.addItem( turnTreeItem );
+
+      // game starting
+      while( iterator.hasNext() )
       {
-        currentTurn++;
-        turnTreeItem = new TreeItem( "tour " + currentTurn );
-        m_tree.addItem( turnTreeItem );
-        break;
+        AnEvent event = iterator.next();
+        turnTreeItem.addItem( new TreeItemEvent( event ) );
+        if( event instanceof EbEvtChangePlayerOrder )
+        {
+          currentTurn++;
+          turnTreeItem = new TreeItem( "tour " + currentTurn );
+          m_tree.addItem( turnTreeItem );
+          break;
+        }
       }
     }
     // game turn
@@ -166,18 +181,21 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
 
   private void buildTree4Parallel()
   {
-    TreeItem turnTreeItem = new TreeItem( "inscriptions" );
-    m_tree.addItem( turnTreeItem );
-
     Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
-    // game starting
-    while( iterator.hasNext() )
+    if( GameEngine.model().getGame().getAdditionalEventCount() == 0 )
     {
-      AnEvent event = iterator.next();
-      turnTreeItem.addItem( new TreeItemEvent( event ) );
-      if( event instanceof EbAdminTimePlay )
+      TreeItem turnTreeItem = new TreeItem( "inscriptions" );
+      m_tree.addItem( turnTreeItem );
+
+      // game starting
+      while( iterator.hasNext() )
       {
-        break;
+        AnEvent event = iterator.next();
+        turnTreeItem.addItem( new TreeItemEvent( event ) );
+        if( event instanceof EbAdminTimePlay )
+        {
+          break;
+        }
       }
     }
     // game time step
@@ -204,7 +222,17 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     {
       GameEngine.model().timePlay( ((TreeItemEvent)p_event.getSelectedItem()).getEvent() );
     }
-
+    if( p_event.getSelectedItem() instanceof TreeItemAdditionalEvent )
+    {
+      GameEngine.model().loadAdditionalEvents();
+    }
   }
+
+  public int getAdditionalEventCount()
+  {
+    return m_additionalEventCount;
+  }
+
+
 
 }

@@ -72,13 +72,13 @@ public class Games
   private static String buildNewsHtml()
   {
     String newsHtml = "";
+    int gameCount = 0;
 
     DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
 
     // find recently openened games
     Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class )
-    .order( "-m_isOpen" )
-    .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
+        .filter( "m_status", "Open" ).order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
 
     for( EbGamePreview game : query )
     {
@@ -89,6 +89,26 @@ public class Games
           // <h4> tag cause graphic glich on IE7
           + "</span><div class='h4'>" + game.getIconsAsHtml() + game.getName()
           + "</div></article></div></a>";
+      gameCount++;
+    }
+
+    if( gameCount < GAMES_ITEM_COUNT )
+    {
+      // find recently openened games
+      query = FmgDataStore.dao().query( EbGamePreview.class ).filter( "m_status", "Running" )
+          .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT - gameCount );
+
+      for( EbGamePreview game : query )
+      {
+        // add a news entry
+        newsHtml += "<a href='" + FmpConstant.getBaseUrl() + "/game.jsp?id=" + game.getId()
+            + "'><div class='article'><article><span class='date'>"
+            + dateFormat.format( game.getCreationDate() )
+            // <h4> tag cause graphic glich on IE7
+            + "</span><div class='h4'>" + game.getIconsAsHtml() + game.getName()
+            + "</div></article></div></a>";
+        gameCount++;
+      }
     }
     
     return newsHtml;

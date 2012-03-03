@@ -79,14 +79,14 @@ if(tab < 0 || tab > 3 )
 		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
 	} else if( tab == 0 ) {
 		// new or open games
-		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_isOpen", true ).order("-m_creationDate");
+		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_status", "Open" ).order("-m_creationDate");
 		gameCount = ((com.googlecode.objectify.Query<EbGamePreview>)gameList).count();
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).limit(COUNT_PER_PAGE);
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).offset( offset );
 	} else if( tab == 1 && Auth.isUserLogged( request, response ) ) {
 		// my games
 		String myPseudo = Auth.getUserPseudo( request, response );
-		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_history", false ).filter( "m_setRegistration.m_account.m_pseudo", myPseudo ).order("-m_creationDate");
+		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_status", "Running" ).filter( "m_setRegistration.m_account.m_pseudo", myPseudo ).order("-m_creationDate");
 		gameCount = ((com.googlecode.objectify.Query<EbGamePreview>)gameList).count();
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).limit(COUNT_PER_PAGE);
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).offset( offset );

@@ -804,6 +804,26 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     m_preview.setPassword( p_password );
   }
+
+  public int getAdditionalEventCount()
+  {
+    return m_data.getAdditionalEventCount();
+  }
+
+  public void setAdditionalEventCount(int p_additionalEventCount)
+  {
+    m_data.setAdditionalEventCount( p_additionalEventCount );
+  }
+
+  public List<Long> getAdditionalGameLog()
+  {
+    return m_data.getAdditionalGameLog();
+  }
+
+  public void setAdditionalGameLog(List<Long> p_additionalGameLog)
+  {
+    m_data.setAdditionalGameLog( p_additionalGameLog );
+  }
   
   
   

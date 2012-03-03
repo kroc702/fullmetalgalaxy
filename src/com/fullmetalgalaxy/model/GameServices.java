@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model;
 
 
 import com.fullmetalgalaxy.model.persist.EbBase;
+import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -61,6 +62,15 @@ public interface GameServices extends RemoteService
    * @return
    */
   public ModelFmpInit getModelFmpInit(String p_gameId) throws RpcFmpException;
+
+
+  /**
+   * get additional game events of a given game.
+   * @param p_gameId
+   * @return
+   * @throws RpcFmpException
+   */
+  public EbGameLog getAdditionalGameLog(long p_gameId) throws RpcFmpException;
 
 
   /**
