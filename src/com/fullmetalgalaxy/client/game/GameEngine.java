@@ -846,10 +846,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return true;
     }
-    if( AppMain.instance().iAmAdmin() )
-    {
-      return true;
-    }
     if( getMyRegistration() == null )
     {
       return false;

@@ -35,6 +35,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -121,7 +122,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       m_lblCurrentEvent.setHTML( EventPresenter.getDetailAsHtml( currentEvent ) );
     }
         
-    if( GameEngine.model().canCancelAction() )
+    if( AppMain.instance().iAmAdmin() || GameEngine.model().canCancelAction() )
     {
       // in puzzle or turn by turn on several day we allow cancel action
       m_btnPanel.add( m_btnOk );
@@ -180,6 +181,17 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
         GameEngine.model().setTimeLineMode( false );
         return;
       }
+
+      if( AppMain.instance().iAmAdmin() && !GameEngine.model().canCancelAction() )
+      {
+        // admin is going to perform admin action, show confirm dialog
+        // no i18n as it is only for admin
+        if( !Window.confirm( "Perform admin cancel ?" ) )
+        {
+          return;
+        }
+      }
+
       // just in case another action was in preparation
       EventsPlayBuilder actionBuilder = GameEngine.model().getActionBuilder();
       actionBuilder.clear();
