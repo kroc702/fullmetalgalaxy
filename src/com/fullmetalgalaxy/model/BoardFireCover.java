@@ -32,7 +32,6 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.google.gwt.core.client.GWT;
 
 
 /**
@@ -404,7 +403,8 @@ public class BoardFireCover implements Serializable
       }
       else
       {
-        GWT.log( "BUG: a token should be set as fire disabled, but we didn't found destroyer" );
+        RpcUtil
+            .logError( "BUG: a token should be set as fire disabled, but we didn't found destroyer" );
       }
       incFireCover( p_token );
       isFdUpdated = true;
