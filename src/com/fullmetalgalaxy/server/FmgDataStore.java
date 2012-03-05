@@ -283,7 +283,8 @@ public class FmgDataStore extends DataStore
       {
         lastGameLogId = p_game.getAdditionalGameLog()
             .get( p_game.getAdditionalGameLog().size() - 1 );
-        gameLog = get( EbGameLog.class, lastGameLogId );
+        Key<EbGameLog> keyGameLog = new Key<EbGameLog>( keyPreview, EbGameLog.class, lastGameLogId );
+        gameLog = find( keyGameLog );
       }
       if( gameLog == null )
       {
