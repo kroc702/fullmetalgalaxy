@@ -25,9 +25,9 @@ package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.creation.GameGenerator;
-import com.fullmetalgalaxy.client.creation.MapSize;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.MapSize;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml;

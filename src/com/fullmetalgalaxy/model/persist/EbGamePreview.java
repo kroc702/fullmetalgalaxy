@@ -38,6 +38,7 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.MapSize;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
@@ -503,6 +504,7 @@ public class EbGamePreview extends EbBase
       strBuf.append( "<img src='/images/icons/protected16.png' title='Partie privée' /> " );
     }
     strBuf.append( getConfigGameTime().getIconsAsHtml() );
+    strBuf.append( MapSize.getFromGame( this ).getIconAsHtml() );
 
     return strBuf.toString();
   }
@@ -639,6 +641,14 @@ public class EbGamePreview extends EbBase
   }
 
 
+  /**
+   * TODO we should count real number of hexagon...
+   * @return
+   */
+  public int getNumberOfHexagon()
+  {
+    return getLandHeight() * getLandWidth();
+  }
 
   /**
    * @return the account
