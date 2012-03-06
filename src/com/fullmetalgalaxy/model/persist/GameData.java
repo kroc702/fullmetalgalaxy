@@ -115,7 +115,7 @@ public class GameData implements java.io.Serializable, IsSerializable
    */
   public int getNumberOfHexagon()
   {
-    int hexagonCount = getLandHeight() * getLandWidth();
+    int hexagonCount = m_preview.getNumberOfHexagon();
     if( !isMapSquare() )
     {
       // assume map is an hexagon

@@ -20,7 +20,7 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.creation;
+package com.fullmetalgalaxy.model;
 
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -44,12 +44,11 @@ public enum MapSize
     return values()[p_value];
   }
 
-  public static MapSize getFromGame(Game p_game)
+  private static MapSize getFromGame(EbGamePreview p_game, int p_hexCount)
   {
-    int hexCount = p_game.getNumberOfHexagon(); // p_game.getLandWidth() * p_game.getLandHeight()
-    int diffSmall = Math.abs( Small.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
-    int diffMedium = Math.abs( Medium.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
-    int diffLarge = Math.abs( Large.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - hexCount );
+    int diffSmall = Math.abs( Small.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - p_hexCount );
+    int diffMedium = Math.abs( Medium.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - p_hexCount );
+    int diffLarge = Math.abs( Large.getHexagonPerPlayer() * p_game.getMaxNumberOfPlayer() - p_hexCount );
     
     if( diffSmall < diffMedium && diffSmall < diffLarge )
     {
@@ -60,6 +59,17 @@ public enum MapSize
       return Large;
     }
     return Medium;
+  }
+
+  public static MapSize getFromGame(EbGamePreview p_game)
+  {
+    int hexCount = p_game.getNumberOfHexagon(); 
+    return getFromGame( p_game, hexCount );
+  }
+
+  public static MapSize getFromGame(Game p_game)
+  {
+    return getFromGame( p_game.getPreview(), p_game.getNumberOfHexagon() ); 
   }
 
   public int getHexagonPerPlayer()
@@ -76,5 +86,17 @@ public enum MapSize
     }
   }
 
-
+  public String getIconAsHtml()
+  {
+    switch( this )
+    {
+    case Small:
+      return "<img src='/images/icons/small16.png' title='small' /> ";
+    default:
+    case Medium:
+      return "<img src='/images/icons/normal16.png' title='medium' /> ";
+    case Large:
+      return "<img src='/images/icons/big16.png' title='large' /> ";
+    }
+  }
 }
