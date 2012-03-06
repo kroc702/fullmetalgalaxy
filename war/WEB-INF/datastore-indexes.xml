@@ -1,20 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <datastore-indexes autoGenerate="true">
 
-	<datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+
+    <datastore-index kind="EbGameLog" ancestor="true" source="manual">
+        <property name="m_index" direction="asc"/>
+    </datastore-index>
+    
+    <!-- for game search request -->
+    <!-- without name or pseudo -->
+    <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_configGameTime" direction="asc"/>
+        <property name="m_status" direction="asc"/>
+        <property name="m_creationDate" direction="desc"/>
+    </datastore-index>
+
+    <!-- with pseudo only -->
+    <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_configGameTime" direction="asc"/>
         <property name="m_setRegistration.m_account.m_pseudo" direction="asc"/>
         <property name="m_status" direction="asc"/>
         <property name="m_creationDate" direction="desc"/>
     </datastore-index>
-    
+
+    <!-- with name only -->
     <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_configGameTime" direction="asc"/>
         <property name="m_status" direction="asc"/>
-        <property name="m_creationDate" direction="desc"/>
+        <property name="m_name" direction="asc"/>
     </datastore-index>
     
-    <datastore-index kind="EbGameLog" ancestor="true" source="manual">
-        <property name="m_index" direction="asc"/>
+    <!-- with name and pseudo -->
+    <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_configGameTime" direction="asc"/>
+        <property name="m_setRegistration.m_account.m_pseudo" direction="asc"/>
+        <property name="m_status" direction="asc"/>
+        <property name="m_name" direction="asc"/>
     </datastore-index>
+
     
 	<!-- should be obsolete -->
     <datastore-index kind="EbGamePreview" ancestor="false" source="auto">

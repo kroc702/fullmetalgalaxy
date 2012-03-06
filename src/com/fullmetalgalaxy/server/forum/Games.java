@@ -26,6 +26,8 @@ package com.fullmetalgalaxy.server.forum;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import com.fullmetalgalaxy.model.GameStatus;
+import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.ressources.SharedI18n;
@@ -78,7 +80,9 @@ public class Games
 
     // find recently openened games
     Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class )
-        .filter( "m_status", "Open" ).order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
+        .filter( "m_status", GameStatus.Open )
+        .filter( "m_configGameTime in", ConfigGameTime.values() )
+        .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT );
 
     for( EbGamePreview game : query )
     {
@@ -95,7 +99,9 @@ public class Games
     if( gameCount < GAMES_ITEM_COUNT )
     {
       // find recently openened games
-      query = FmgDataStore.dao().query( EbGamePreview.class ).filter( "m_status", "Running" )
+      query = FmgDataStore.dao().query( EbGamePreview.class )
+          .filter( "m_status in", new GameStatus[] { GameStatus.Running, GameStatus.Pause } )
+          .filter( "m_configGameTime in", ConfigGameTime.values() )
           .order( "-m_creationDate" ).limit( GAMES_ITEM_COUNT - gameCount );
 
       for( EbGamePreview game : query )

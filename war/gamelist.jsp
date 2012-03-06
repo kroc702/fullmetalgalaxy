@@ -79,20 +79,30 @@ if(tab < 0 || tab > 3 )
 		out.println("<center><h2>Vous n'êtes pas connecté</h2></center>");
 	} else if( tab == 0 ) {
 		// new or open games
-		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_status", "Open" ).order("-m_creationDate");
+		gameList = FmgDataStore.dao().query(EbGamePreview.class)
+									.filter( "m_status", GameStatus.Open )
+									.filter( "m_configGameTime in", ConfigGameTime.values()  )
+									.order("-m_creationDate");
 		gameCount = ((com.googlecode.objectify.Query<EbGamePreview>)gameList).count();
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).limit(COUNT_PER_PAGE);
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).offset( offset );
 	} else if( tab == 1 && Auth.isUserLogged( request, response ) ) {
 		// my games
 		String myPseudo = Auth.getUserPseudo( request, response );
-		gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_status", "Running" ).filter( "m_setRegistration.m_account.m_pseudo", myPseudo ).order("-m_creationDate");
+		gameList = FmgDataStore.dao().query(EbGamePreview.class)
+		    						.filter( "m_status in", new GameStatus[] {GameStatus.Running, GameStatus.Pause, GameStatus.Open} )
+		    						.filter( "m_setRegistration.m_account.m_pseudo", myPseudo )
+		    						.filter( "m_configGameTime in", ConfigGameTime.values()  )
+		    						.order("-m_creationDate");
 		gameCount = ((com.googlecode.objectify.Query<EbGamePreview>)gameList).count();
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).limit(COUNT_PER_PAGE);
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).offset( offset );
 	} else if( tab == 3 ) {
+		GameFilter gameFilter = new GameFilter( request );
+		out.println( gameFilter.getHtml() );
+		
 		// all games
-		gameList = FmgDataStore.dao().query(EbGamePreview.class).order("-m_creationDate");
+		gameList = gameFilter.getGameList();
 		gameCount = ((com.googlecode.objectify.Query<EbGamePreview>)gameList).count();
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).limit(COUNT_PER_PAGE);
 		((com.googlecode.objectify.Query<EbGamePreview>)gameList).offset( offset );
@@ -127,7 +137,10 @@ if(tab < 0 || tab > 3 )
 	<img src='/images/icons/parallele16.png'/> : Partie en mode parallèle<br/>
 	<img src='/images/icons/slow16.png'/> : Partie lente (25 jours ou illimité)<br/>
 	<img src='/images/icons/fast16.png'/> : Partie rapide (1h30)<br/>
+	<img src='/images/icons/protected16.png'/> : Partie protégé par un mot de passe<br/>
+	<img src='/images/icons/open16.png'/> : Partie ouverte aux inscriptions<br/>
 	<img src='/images/icons/pause16.png'/> : Partie en pause<br/>
+	<img src='/images/icons/canceled16.png'/> : Partie annulé<br/>
 	<img src='/images/icons/history16.png'/> : Partie archivé<br/>
 	</small>
 <% } %>
