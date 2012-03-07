@@ -3,7 +3,7 @@
 compilation file for Full Metal Galaxy
 -->
 
-<project name="FullMetalGalaxy" default="upload">
+<project name="FullMetalGalaxy" default="build">
 	<property environment="env" />
 
 	<property name="adminaccount" value="vincent.legendre@gmail.com" />
