@@ -133,8 +133,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       return;
     }
-
-    EventsPlayBuilder action = GameEngine.model().getActionBuilder();
+    EventsPlayBuilder action = model.getActionBuilder();
     EbToken mainToken = action.getSelectedToken();
 
     if( (!action.isBoardTokenSelected()) && (!action.isActionsPending())
@@ -185,47 +184,44 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       }
       addToken( token, token.getPosition().getSector() );
     }
-    else if( action.isBoardTokenSelected() )
+    else if( action.isBoardTokenSelected() && mainToken.containToken() )
     {
-      if( mainToken.containToken() )
+      m_lblTitle.setText( MAppBoard.s_messages.contain() );
+
+      // Add list of token contained by the selected token
+      // and won't be unload during the preparing action
+      for( EbToken token : mainToken.getContains() )
       {
-        m_lblTitle.setText( MAppBoard.s_messages.contain() );
-
-        // Add list of token contained by the selected token
-        // and won't be unload during the preparing action
-        for( EbToken token : mainToken.getContains() )
+        if( !action.containUnload( token )
+            && (token.getType() != TokenType.Ore || mainToken.getType() != TokenType.Freighter) )
         {
-          if( !action.containUnload( token )
-              && (token.getType() != TokenType.Ore || mainToken.getType() != TokenType.Freighter) )
-          {
-            addToken( token );
-          }
+          addToken( token );
         }
+      }
 
-        if( (mainToken.getType() == TokenType.WeatherHen)
-            && !(action.getSelectedAction() instanceof EbEvtConstruct) )
+      if( (mainToken.getType() == TokenType.WeatherHen)
+          && !(action.getSelectedAction() instanceof EbEvtConstruct) )
+      {
+        // Add list of token that can be constructed
+        //
+        EbToken ore = mainToken.getCopyContains().iterator().next();
+        m_lblTitle.setText( MAppBoard.s_messages.construct() );
+
+        EbConfigGameVariant variant = model.getGame().getEbConfigGameVariant();
+        for( Entry<TokenType, Integer> entry : variant.getConstructReserve().entrySet() )
         {
-          // Add list of token that can be constructed
-          //
-          EbToken ore = mainToken.getCopyContains().iterator().next();
-          m_lblTitle.setText( MAppBoard.s_messages.construct() );
-
-          EbConfigGameVariant variant = model.getGame().getEbConfigGameVariant();
-          for( Entry<TokenType, Integer> entry : variant.getConstructReserve().entrySet() )
+          if( variant.canConstruct( entry.getKey() ) )
           {
-            if( variant.canConstruct( entry.getKey() ) )
+            EbToken fakeToken = new EbToken( entry.getKey() );
+            fakeToken.setId( ore.getId() );
+            if( EbToken.canBeColored( entry.getKey() ) )
             {
-              EbToken fakeToken = new EbToken( entry.getKey() );
-              fakeToken.setId( ore.getId() );
-              if( EbToken.canBeColored( entry.getKey() ) )
-              {
-                fakeToken.setColor( mainToken.getColor() );
-              }
-              fakeToken.setVersion( ore.getVersion() );
-              fakeToken.setLocation( Location.ToBeConstructed );
-              fakeToken.setCarrierToken( mainToken );
-              addToken( fakeToken );
+              fakeToken.setColor( mainToken.getColor() );
             }
+            fakeToken.setVersion( ore.getVersion() );
+            fakeToken.setLocation( Location.ToBeConstructed );
+            fakeToken.setCarrierToken( mainToken );
+            addToken( fakeToken );
           }
         }
       }

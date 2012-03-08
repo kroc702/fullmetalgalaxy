@@ -57,8 +57,8 @@ Nombre de control d'astronef : <%= GlobalVars.getFGameFreighterControlCount() %>
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Year');
-        data.addColumn('number', 'Agressivité');
+        data.addColumn('string', 'Agressivité');
+        data.addColumn('number', 'Nombre de joueur');
         data.addRows([
         <%
         float currentAgressivity = GlobalVars.STYLE_RATIO_MIN;

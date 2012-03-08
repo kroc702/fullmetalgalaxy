@@ -203,6 +203,7 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
     m_panelMiniMap.remove( m_wgtMinimap );
     m_panelMiniMap.remove( m_wgtToken );
     m_panelMiniMap.remove( m_wgtLand );
+
     if( actionBuilder.isTokenSelected() )
     {
       // display current selected token

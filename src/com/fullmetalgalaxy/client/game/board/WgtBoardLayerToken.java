@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Tide;
@@ -128,6 +129,17 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   private void updateTokenWidget(EbToken p_token, boolean p_force)
   {
     assert p_token != null;
+    Game game = GameEngine.model().getGame();
+    if( game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep()
+        && p_token.getColor() != EnuColor.None
+        && (GameEngine.model().getMyRegistration() == null || !GameEngine.model()
+            .getMyRegistration().getEnuColor().contain( p_token.getColor() ))
+        && p_token.getType() != TokenType.Freighter && p_token.getType() != TokenType.Turret )
+    {
+      // durring deployement, we don't display token
+      return;
+    }
+
     TokenWidget tokenWidget = (TokenWidget)m_tokenMap.get( p_token );
     if( p_token.getLocation() != Location.Board )
     {
@@ -149,7 +161,6 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // update is needed !
 
       // token is on board: display it !
-      Game game = GameEngine.model().getGame();
       add( tokenWidget.getTokenImage() );
       tokenWidget.getTokenImage().setVisible( true );
       int landPixOffset = 0;
