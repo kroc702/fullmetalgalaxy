@@ -253,9 +253,20 @@ public class EventsPlayBuilder implements GameEventStack
         if( fireCoverColor.getValue() != EnuColor.None )
         {
           m_isRunnable = false;
+          // TODO i18n
           throw new RpcFmpException(
               "Une unité ne peut entrer et sortir d'une zone de feu dans le même mouvement" );
         }
+      }
+
+      // check unit din't try to convert after entering into a fire cover in the
+      // same actions set
+      if( getActionList().size() > 1 && getLastAction().getType() == GameLogType.EvtControl )
+      {
+        m_isRunnable = false;
+        // TODO i18n
+        throw new RpcFmpException(
+            "Une unité ne peut bouger et convertir une autre unité dans le même mouvement" );
       }
 
       // check destroyer didn't enter in fire cover without destroying enough
