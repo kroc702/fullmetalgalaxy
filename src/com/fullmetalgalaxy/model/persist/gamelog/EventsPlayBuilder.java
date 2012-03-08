@@ -459,6 +459,19 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user click board " + p_position );
     assert p_position != null;
     assert getGame() != null;
+
+    // get token under user board clic
+    EbToken token = getGame().getToken( p_position );
+    if( getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime().getDeploymentTimeStep()
+        && token != null
+        && token.getColor() != EnuColor.None
+        && (getMyRegistration() == null || !getMyRegistration().getEnuColor().contain(
+            token.getColor() )) )
+    {
+      // durring deployement, can't select other unit
+      token = null;
+    }
+
     if( p_position.equals( getLastUserClick() ) || !m_isRunnable )
     {
       if( isRunnable() )
@@ -466,7 +479,7 @@ public class EventsPlayBuilder implements GameEventStack
         privateOk();
         isUpdated = EventBuilderMsg.MustRun;
       }
-      else if( !isActionsPending() && getGame().getToken( p_position ) == null )
+      else if( !isActionsPending() && token == null )
       {
         // player click two time on same hexagon: select it
         clear();
@@ -495,7 +508,6 @@ public class EventsPlayBuilder implements GameEventStack
     exec();
     try
     {
-      EbToken token = getGame().getToken( p_position );
       if( (!isBoardTokenSelected()) && (token != null) && (getSelectedAction() == null) )
       {
         // nothing is selected but user click on a token

@@ -32,8 +32,8 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -79,6 +79,15 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
    */
   public void displayFireCover(boolean p_isVisible, EbRegistration p_registration)
   {
+    if( GameEngine.model().getGame().getCurrentTimeStep() <= GameEngine.model().getGame()
+        .getEbConfigGameTime().getDeploymentTimeStep()
+        && (GameEngine.model().getMyRegistration() == null || GameEngine.model()
+            .getMyRegistration() != p_registration) )
+    {
+      // durring deployement, don't display fire cover
+      return;
+    }
+
     HTML html = (HTML)m_fireCoverLayers.get( p_registration );
     if( p_isVisible )
     {
