@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.HTML;
 public class WgtBoardLayerLand extends WgtBoardLayerBase
 {
   protected HTML m_html = new HTML();
+  protected String m_baseUrl = null;
 
   /**
    * 
@@ -48,6 +49,15 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     super();
     add( m_html, 0, 0 );
 
+    m_baseUrl = ClientUtil.getUrlParameter( "graphicpack" );
+    if( m_baseUrl == null )
+    {
+      m_baseUrl = "/images/board/";
+    }
+    if( !m_baseUrl.endsWith( "/" ) )
+    {
+      m_baseUrl += "/";
+    }
   }
 
   private Tide m_lastTideValue = Tide.Unknown;
@@ -181,7 +191,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   public void onTideChange()
   {
     Game game = GameEngine.model().getGame();
-    String baseUrl = "images/board/" + game.getPlanetType().getFolderName();
+    String baseUrl = m_baseUrl + game.getPlanetType().getFolderName();
     if( getZoom().getValue() == EnuZoom.Small )
     {
       baseUrl += "/strategy/";
@@ -218,13 +228,14 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   }
 
   private static native void setBackgroundRules(int p_index, String p_value) /*-{
-    var theRules = new Array();
-    if ($doc.styleSheets[0].cssRules)
-      theRules = $doc.styleSheets[0].cssRules
-    else if ($doc.styleSheets[0].rules)
-      theRules = $doc.styleSheets[0].rules
-    else return;
-    theRules[p_index].style.background = p_value;
+		var theRules = new Array();
+		if ($doc.styleSheets[0].cssRules)
+			theRules = $doc.styleSheets[0].cssRules
+		else if ($doc.styleSheets[0].rules)
+			theRules = $doc.styleSheets[0].rules
+		else
+			return;
+		theRules[p_index].style.background = p_value;
   }-*/;
 
   public static void setLandsWidth(LandType p_land, int p_widthPx)
@@ -233,13 +244,14 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   }
 
   private static native void setWidthRules(int p_index, String p_value) /*-{
-    var theRules = new Array();
-    if ($doc.styleSheets[0].cssRules)
-      theRules = $doc.styleSheets[0].cssRules
-    else if ($doc.styleSheets[0].rules)
-      theRules = $doc.styleSheets[0].rules
-    else return;
-    theRules[p_index].style.width = p_value;
+		var theRules = new Array();
+		if ($doc.styleSheets[0].cssRules)
+			theRules = $doc.styleSheets[0].cssRules
+		else if ($doc.styleSheets[0].rules)
+			theRules = $doc.styleSheets[0].rules
+		else
+			return;
+		theRules[p_index].style.width = p_value;
   }-*/;
 
 
