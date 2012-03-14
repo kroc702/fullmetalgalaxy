@@ -348,26 +348,16 @@ public class GameWorkflow
       }
 
       // if new turn occur: trigger new tide
-      if( !p_game.isParallel() && p_game.getPreviousPlayerRegistration() != null )
+      if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
       {
-        int oldPlayerOrderIndex = p_game.getPreviousPlayerRegistration().getOrderIndex();
-        if( lastEvent instanceof EbEvtPlayerTurn
-            && (p_game.getCurrentPlayerRegistration() == null || p_game
-                .getCurrentPlayerRegistration().getOrderIndex() <= oldPlayerOrderIndex) )
-        {
-          // new turn !
-          if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
-          {
-            // next tide
-            EbEvtTide eventTide = new EbEvtTide();
-            eventTide.setGame( p_game );
-            eventTide.setNextTide( Tide.getRandom() );
-            eventTide.checkedExec( p_game );
-            p_game.addEvent( eventTide );
-            eventAdded.add( eventTide );
-            lastEvent = eventTide;
-          }
-        }
+        // next tide !
+        EbEvtTide eventTide = new EbEvtTide();
+        eventTide.setGame( p_game );
+        eventTide.setNextTide( Tide.getRandom() );
+        eventTide.checkedExec( p_game );
+        p_game.addEvent( eventTide );
+        eventAdded.add( eventTide );
+        lastEvent = eventTide;
       }
 
 

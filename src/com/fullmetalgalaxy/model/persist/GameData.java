@@ -393,11 +393,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getRegistrationByPlayerOrder();
   }
 
-  public EbRegistration getPreviousPlayerRegistration()
-  {
-    return m_preview.getPreviousPlayerRegistration();
-  }
-
   public Set<EnuColor> getFreeColors4Registration()
   {
     return m_preview.getFreeColors4Registration();
