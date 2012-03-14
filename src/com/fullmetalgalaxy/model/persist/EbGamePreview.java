@@ -322,29 +322,6 @@ public class EbGamePreview extends EbBase
 
 
 
-  public EbRegistration getPreviousPlayerRegistration()
-  {
-    if( getCurrentPlayerRegistration() == null )
-    {
-      return null;
-    }
-    EbRegistration registration = null;
-    int index = getCurrentPlayerRegistration().getOrderIndex();
-    do
-    {
-      index--;
-      if( index < 0 )
-      {
-        index = getCurrentNumberOfRegiteredPlayer() - 1;
-      }
-      registration = getRegistrationByOrderIndex( index );
-      assert registration != null;
-    } while( registration.getColor() == EnuColor.None );
-    return registration;
-  }
-
-
-
   /**
    * offset height in pixel to display token image in tactic zoom.
    * it represent the land height.
