@@ -436,7 +436,8 @@ public class BoardFireCover implements Serializable
 
 
   /**
-   * Check fire disable flag of all token in an area around p_position BUT NOT at p_position.
+   * Check fire disable flag of all token in an area around p_position BUT NOT at p_position
+   * AND NOT token that are controlled by same player.
    * Note that despite p_radius parameter, area ISN'T round but is square.
    * @param p_position
    * @param p_radius
@@ -450,14 +451,20 @@ public class BoardFireCover implements Serializable
   {
     assert m_game != null;
     boolean isFdChanged = false;
+    EbToken token = m_game.getToken( p_position );
+    EnuColor ownerColor = new EnuColor( EnuColor.None );
+    if( token != null )
+    {
+      ownerColor = m_game.getTokenOwnerColor( token );
+    }
     for( int ix = p_position.getX() - p_radius; ix <= p_position.getX() + p_radius; ix++ )
     {
       for( int iy = p_position.getY() - p_radius; iy <= p_position.getY() + p_radius; iy++ )
       {
         if( ix != p_position.getX() || iy != p_position.getY() )
         {
-          EbToken token = m_game.getToken( new AnBoardPosition( ix, iy ) );
-          if( token != null )
+          token = m_game.getToken( new AnBoardPosition( ix, iy ) );
+          if( token != null && !ownerColor.contain( token.getColor() ) )
           {
             isFdChanged |= recursiveCheckFireDisableFlag( token, p_fdChange, p_fdRemoved, p_fdAdded );
           }
