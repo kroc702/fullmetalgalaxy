@@ -348,7 +348,8 @@ public class GameWorkflow
       }
 
       // if new turn occur: trigger new tide
-      if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+      if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep()
+          && p_game.getStatus() == GameStatus.Running )
       {
         // next tide !
         EbEvtTide eventTide = new EbEvtTide();
