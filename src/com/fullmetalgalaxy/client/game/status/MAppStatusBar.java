@@ -20,20 +20,17 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.board;
+package com.fullmetalgalaxy.client.game.status;
 
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.creation.MAppGameCreation;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.ressources.fonts.ImageFont;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Panel;
 
 /**
  * @author Vincent Legendre
@@ -43,12 +40,10 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
 {
   public static final String HISTORY_ID = "status";
 
-  protected HorizontalPanel m_panel = new HorizontalPanel();
-  protected HTML m_title = new HTML();
-  private String m_strTitle = "";
+  protected Panel m_panel = new HorizontalPanel();
 
-  protected WgtPlayerInfo m_playerInfo = new WgtPlayerInfo();
-  protected WgtTimeInfo m_timeInfo = new WgtTimeInfo();
+  // protected WgtPlayerInfo m_playerInfo = new WgtPlayerInfo();
+  protected WgtGameStatus m_gameInfo = new WgtGameStatus();
 
   /**
    * 
@@ -56,22 +51,12 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
   public MAppStatusBar()
   {
     AppRoot.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
-    m_panel.setWidth( "100%" );
-    m_panel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
-    m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
+    // m_panel.setWidth( "100%" );
+    // m_panel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
+    // m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
 
-    VerticalPanel vpanel = new VerticalPanel();
-    vpanel.setSize( "100%", "40px" );
-    vpanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
-    vpanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
-    vpanel.add( m_playerInfo );
-    // vpanel.setCellWidth( m_playerInfo, "200px" );
-    vpanel.add( m_timeInfo );
-
-    m_panel.add( vpanel );
-    m_panel.setCellWidth( vpanel, "280px" );
-    m_panel.add( m_title );
-    m_panel.setCellHorizontalAlignment( m_title, HasHorizontalAlignment.ALIGN_LEFT );
+    redraw();
+    m_panel.setStyleName( "fmp-status" );
     initWidget( m_panel );
   }
 
@@ -81,24 +66,25 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
     return HISTORY_ID;
   }
 
-  private void setTitleStatus(String p_title)
+  private void redraw()
   {
-    if( m_strTitle.equals( p_title ) )
+    m_panel.clear();
+    m_panel.add( m_gameInfo );
+    for( EbRegistration registration : GameEngine.model().getGame().getRegistrationByPlayerOrder() )
     {
-      return;
+      if( registration.getColor() != EnuColor.None )
+      {
+        m_panel.add( new WgtPlayerInfo( registration ) );
+      }
     }
-    m_strTitle = p_title;
-    m_title.setHTML( ImageFont.getHTML( ImageFont.s_FontTitleBundle, m_strTitle ) );
   }
-
-
 
   @Override
   public void onModelUpdate(GameEngine p_modelSender)
   {
     // redraw everything after any model update
     //
-    setTitleStatus( GameEngine.model().getGame().getName() );
+    redraw();
   }
 
 

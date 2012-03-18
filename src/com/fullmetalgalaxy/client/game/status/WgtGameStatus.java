@@ -20,83 +20,148 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.board;
-
+package com.fullmetalgalaxy.client.game.status;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Tide;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.ressources.Messages;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtPlayerInfo extends WgtView
+public class WgtGameStatus extends WgtView
 {
-  HorizontalPanel m_panel = new HorizontalPanel();
+  private VerticalPanel m_panel = new VerticalPanel();
+  private Image m_iconTime = new Image();
+
+  Label m_lblGameName = new Label();
+  HTML m_lblDate = new HTML( "" );
+  Date m_endTurn = null;
   HorizontalPanel m_panelTide = new HorizontalPanel();
-  Image m_iconAction = Icons.s_instance.action16().createImage();
-  HTML m_lblAction = new HTML( "&nbsp;: 0  " );
-  Image m_iconOre = Icons.s_instance.ore16().createImage();
-  HTML m_lblOre = new HTML( "&nbsp;: 0  " );
   Image m_iconMoon = Icons.s_instance.moon16().createImage();
   Label m_lblMoon = new HTML( "&nbsp;:&nbsp;" );
+  HTML m_lblTurn = new HTML();
+
+  private AnEvent m_oldGameEvent = new AnEvent();
+
 
   /**
    * 
    */
-  public WgtPlayerInfo()
+  public WgtGameStatus()
   {
     // subscribe all needed models update event
     AppRoot.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
 
-    m_panel.add( m_iconAction );
-    m_iconAction.setTitle( MAppBoard.s_messages.remainingActionPoint() );
-    m_panel.add( m_lblAction );
-    m_lblAction.setTitle( MAppBoard.s_messages.remainingActionPoint() );
-    m_panel.setCellWidth( m_lblAction, "60px" );
-    m_lblAction.setStyleName( "fmp-status-text" );
-    m_panel.add( m_iconOre );
-    m_iconOre.setTitle( MAppBoard.s_messages.oreInHold() );
-    m_panel.add( m_lblOre );
-    m_lblOre.setTitle( MAppBoard.s_messages.oreInHold() );
-    m_panel.setCellWidth( m_lblOre, "40px" );
-    m_lblOre.setStyleName( "fmp-status-text" );
+    m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
 
-    m_panel.add( m_iconMoon );
+    // game name
+    m_lblGameName.setStyleName( "fmp-status-title" );
+    m_panel.add( m_lblGameName );
+
+    // game turn
+    Panel hPanel = new HorizontalPanel();
+    m_iconTime.setUrl( "/images/clear.cache.gif" );
+    hPanel.add( m_iconTime );
+    m_lblTurn.setStyleName( "fmp-status-text" );
+    m_lblTurn.setTitle( "Tour actuel / Nombre total de tours" );
+    hPanel.add( m_lblTurn );
+    m_lblDate.setText( "" );
+    m_lblDate.setStyleName( "fmp-status-text" );
+    m_lblDate.setTitle( "Date de fin de tour" );
+    hPanel.add( m_lblDate );
+
+    // game tide
+    hPanel.add( m_iconMoon );
     m_iconMoon.setTitle( MAppBoard.s_messages.tide() );
-    m_panel.add( m_lblMoon );
+    hPanel.add( m_lblMoon );
     m_lblMoon.setTitle( MAppBoard.s_messages.tide() );
     m_lblMoon.setStyleName( "fmp-status-text" );
-    m_panel.add( m_panelTide );
+    hPanel.add( m_panelTide );
 
-    // m_vPanel.setWidth( "100%" );
-    // m_vPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
+
+    m_panel.setStyleName( "fmp-status-game" );
+    m_panel.add( hPanel );
+
     initWidget( m_panel );
   }
 
+  private long m_gameLastVersion = -1;
 
-  private AnEvent m_oldGameEvent = new AnEvent();
 
   protected void redraw()
   {
     Game game = GameEngine.model().getGame();
+    if( game == null )
+    {
+      return;
+    }
+    if( m_gameLastVersion == game.getVersion() )
+    {
+      return;
+    }
+    m_gameLastVersion = game.getVersion();
+
+    m_lblGameName.setText( game.getName() );
+
+
+    // display end game date or player's turn
+    // ======================================
+
+    if( game.getEbConfigGameTime().isParallel() )
+    {
+      m_iconTime.setUrl( "/images/icons/parallele16.png" );
+    }
+    else
+    {
+      m_iconTime.setUrl( "/images/icons/turnbyturn16.png" );
+    }
+
+    m_lblTurn.setHTML( "&nbsp;: " + game.getCurrentTimeStep() + "/"
+        + game.getEbConfigGameTime().getTotalTimeStep() + "&nbsp;&nbsp;" );
+
+    if( GameEngine.model().getGame().getStatus() == GameStatus.Running
+        && !GameEngine.model().isTimeLineMode()
+        && GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+    {
+      if( game.getCurrentPlayerRegistration() != null )
+      {
+        displayEndTurn( game.getCurrentPlayerRegistration().getEndTurnDate() );
+      }
+      else
+      {
+        displayEndTurn( game.estimateNextTimeStep() );
+      }
+    }
+
+
+
+    // display tide and takeoff turn
+    // =============================
     AnEvent lastEvent = GameEngine.model().getCurrentAction();
 
     if( (lastEvent != m_oldGameEvent) )
@@ -113,23 +178,6 @@ public class WgtPlayerInfo extends WgtView
 
       if( GameEngine.model().getMyRegistration() != null )
       {
-        m_lblAction.setHTML( "&nbsp;: "
-            + GameEngine.model().getMyRegistration().getPtAction()
-            + "/"
-            + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((GameEngine.model()
-                .getMyRegistration().getEnuColor().getNbColor() - 1) * game
-                .getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
-        if( game.isParallel() )
-        {
-          Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
-          m_lblAction.setTitle( MAppBoard.s_messages.nextPA(
-              EbConfigGameTime.getActionInc( game, GameEngine.model().getMyRegistration() ),
-              ClientUtil.formatTimeElapsed( nextActionIncrement
-              .getTime() - System.currentTimeMillis() ) ) );
-        }
-        m_lblOre.setHTML( "&nbsp;: " + GameEngine.model().getMyRegistration().getOreCount(game) );
-
-
         // Display current take off turn
         if( game.getAllowedTakeOffTurns().contains( game.getCurrentTimeStep() ) )
         {
@@ -166,10 +214,11 @@ public class WgtPlayerInfo extends WgtView
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );
         }
-        
+
         if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() >= 2
-            && (game.getNextTideChangeTimeStep() + game.getEbConfigGameTime().getTideChangeFrequency() 
-                  <= game.getEbConfigGameTime().getTotalTimeStep()) )
+            && (game.getNextTideChangeTimeStep()
+                + game.getEbConfigGameTime().getTideChangeFrequency() <= game.getEbConfigGameTime()
+                .getTotalTimeStep()) )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
           image.setTitle( MAppBoard.s_messages.nextTide()
@@ -209,7 +258,9 @@ public class WgtPlayerInfo extends WgtView
       }
     }
 
+
   }
+
 
 
   /* (non-Javadoc)
@@ -220,5 +271,87 @@ public class WgtPlayerInfo extends WgtView
   {
     redraw();
   }
+
+
+
+  private AsyncCallback<Void> m_dummyCallback = new AsyncCallback<Void>()
+  {
+    @Override
+    public void onFailure(Throwable p_caught)
+    {
+    }
+
+    @Override
+    public void onSuccess(Void p_result)
+    {
+    }
+  };
+
+
+  private String secToStr(long p_sec)
+  {
+    if( p_sec <= 0 )
+    {
+      if( p_sec % 2 == 0 )
+      {
+        return "0:00";
+      }
+      else
+      {
+        return "    ";
+      }
+    }
+    StringBuffer strBuf = new StringBuffer( 10 );
+    strBuf.append( (int)(p_sec / 60) );
+    strBuf.append( ":" );
+    int sec = (int)(p_sec % 60);
+    if( sec < 10 )
+    {
+      strBuf.append( "0" );
+    }
+    strBuf.append( sec );
+    return strBuf.toString();
+  }
+
+  private void displayEndTurn(Date p_endTurn)
+  {
+    if( p_endTurn == null )
+    {
+      m_lblDate.setHTML( "&nbsp;(?:??)" );
+      return;
+    }
+    m_endTurn = p_endTurn;
+    m_clockTimer.cancel();
+    long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
+    if( sec >= 60 * 60 )
+    {
+      // if end turn is farrer than one hour, simply display date
+      m_lblDate.setHTML( "&nbsp;(&nbsp; " + ClientUtil.formatDateTime( m_endTurn ) + ")" );
+    }
+    else
+    {
+      // otherwise, display remaining time
+      m_lblDate.setHTML( "&nbsp;(&nbsp; -" + secToStr( sec ) + ")" );
+      // and start clock
+      m_clockTimer.schedule( 1000 );
+    }
+  }
+
+  private Timer m_clockTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
+      m_lblDate.setHTML( "&nbsp; -" + secToStr( sec ) );
+      if( sec == 0 )
+      {
+        AppMain.getRpcService().checkUpdate( GameEngine.model().getGame().getId(),
+            m_dummyCallback );
+      }
+      m_clockTimer.schedule( 1000 );
+    }
+  };
+
 
 }

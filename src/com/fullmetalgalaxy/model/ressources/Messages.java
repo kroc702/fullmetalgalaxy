@@ -57,7 +57,7 @@ public class Messages
   }
 
 
-  private static String getSingleColorString(long p_accountId, int p_colorValue)
+  public static String getSingleColorString(long p_accountId, int p_colorValue)
   {
     switch( p_colorValue )
     {

@@ -74,9 +74,28 @@ compilation file for Full Metal Galaxy
 			<arg value="8" />
 			<arg value="-style" />
 			<arg value="${jsstyle}" />
+			<arg value="-optimize" />
+			<arg value="9" />
 			<arg value="-war" />
 			<arg value="war" />
 			<arg value="com.fullmetalgalaxy.Game" />
+		</java>
+	</target>
+
+	<target name="compilclientdraft" depends="">
+		<echo message="Compiling client java code to javascript" />
+		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
+			<jvmarg value="-Xmx512M" />
+			<sysproperty key="ENCODING" value="UTF-8" />
+			<arg value="-localWorkers" />
+			<arg value="8" />
+			<arg value="-style" />
+			<arg value="PRETTY" />
+			<arg value="-draftCompile" />
+			<arg value="-ea" />
+			<arg value="-war" />
+			<arg value="war" />
+			<arg value="com.fullmetalgalaxy.GameDraft" />
 		</java>
 	</target>
 
