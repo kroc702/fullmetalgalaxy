@@ -323,14 +323,6 @@ code {
   background: transparent;
 }
 
-.fmp-board-gameTitle {
-  font-size: large;
-  font-weight: bold;
-  margin-top: 1em;
-  padding: 2px 0px 2px 0px;
-  width: 100%;
-  text-align : center;
-}
 
 .fmp-home-gameLine {
     border-style: none;
@@ -362,10 +354,36 @@ code {
     cursor: hand;
 }
 
+.fmp-status table {
+	color:#FFFFFF;
+	font-family: verdana;
+	font-weight: bold;
+	font-size: 10pt;
+}
 .fmp-status-text {
-    color:#FFFFFF;
+	font-size: 100%;
+}
+.fmp-status-title {
     font-weight: bold;
-    cursor: default;
+    font-size: 140%;
+    text-align : center;
+    padding: 2px 4px 3px 4px;
+}
+.fmp-status-game {
+	padding: 2px;
+	margin: 0px 4px 0px 4px;
+}
+.fmp-status-player {
+	padding: 2px 4px 2px 4px;
+	margin: 7px 0px 0px 0px;
+}
+.fmp-status-currentplayer {
+	border-width:4px;
+	border-style:ridge;
+	border-color:#FFFFFF;
+	border-radius: 10px;
+	padding: 2px 5px 2px 5px;
+	margin: 3px 4px 0px 4px;
 }
 
 .fmp-PushButton32-up {
