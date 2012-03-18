@@ -293,16 +293,19 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     if( p_modelUpdate.getGameEvents().isEmpty() )
     {
+      // no i18n as unusual
       throw new RpcFmpException( "No actions provided" );
     }
     FmgDataStore dataStore = new FmgDataStore(false);
     Game game = dataStore.getGame( p_modelUpdate.getGameId() );
     if( game == null )
     {
+      // no i18n as unusual
       throw new RpcFmpException( "run action on unknown game: "+p_modelUpdate.getGameId());
     }
     if( game.getVersion() != p_modelUpdate.getFromVersion() )
     {
+      // no i18n as unusual ?
       throw new RpcFmpException( "Send action on wrong game version" );
     }
     // security check
