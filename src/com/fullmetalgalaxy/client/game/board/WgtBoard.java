@@ -72,6 +72,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   WgtBoardLayerAction m_layerAction = new WgtBoardLayerAction();
   WgtBoardLayerSelect m_layerSelect = new WgtBoardLayerSelect();
   WgtBoardLayerAtmosphere m_layerAtmosphere = new WgtBoardLayerAtmosphere();
+  WgtBoardLayerLocked m_layerLock = new WgtBoardLayerLocked();
 
   BoardLayerCollection m_layerCollection = new BoardLayerCollection();
 
@@ -86,6 +87,7 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     addLayer( m_layerGrid );
     addLayer( m_layerSelect );
     addLayer( m_layerToken );
+    addLayer( m_layerLock );
     addLayer( m_layerAction );
     if( ClientUtil.getNavigator() == EnuNavigator.FF )
     {

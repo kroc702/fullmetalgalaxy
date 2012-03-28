@@ -80,6 +80,7 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
         ((BoardLayer)it.next()).onModelChange();
       } catch( Exception e )
       {
+        // no i18n
         RpcUtil.logError( "a board layer bug while notify a model update", e );
       }
     }

@@ -48,7 +48,10 @@ public class EbConfigGameTime extends EbBase
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
   /** if true, players can all play at same time. ie parallel mode
    * asynchron is the old name. it is keep for backward compatibility on database */
-  private boolean m_asynchron = false;
+  private boolean m_isParallel = false;
+  /** for parallel game: if a player move a unit, it lock the game for a short time period */
+  private int m_lockGameInMillis = 2000;
+
   /** in turn by turn, action point are rounded to this value */
   private int m_roundActionPt = 1;
   /** in turn by turn it's the time step during which we can deploy token.
@@ -73,7 +76,8 @@ public class EbConfigGameTime extends EbBase
     m_actionPtPerTimeStep = p_config.getActionPtPerTimeStep();
     m_actionPtPerExtraShip = p_config.getActionPtPerExtraShip();
     m_takeOffTurns = new ArrayList<Integer>( p_config.getTakeOffTurns() );
-    m_asynchron = p_config.isParallel();
+    m_isParallel = p_config.isParallel();
+    m_lockGameInMillis = p_config.getLockGameInMillis();
     m_roundActionPt = p_config.getRoundActionPt();
     m_deploymentTimeStep = p_config.getDeploymentTimeStep();
     m_description = new String( p_config.getDescription() );
@@ -90,7 +94,7 @@ public class EbConfigGameTime extends EbBase
     m_takeOffTurns = new ArrayList<Integer>();
     m_takeOffTurns.add( 21 );
     m_takeOffTurns.add( 25 );
-    m_asynchron = false;
+    m_isParallel = false;
     m_roundActionPt = 1;
     m_deploymentTimeStep = 1;
   }
@@ -291,15 +295,15 @@ public class EbConfigGameTime extends EbBase
    */
   public boolean isParallel()
   {
-    return m_asynchron;
+    return m_isParallel;
   }
 
   /**
    * @param p_asynchron the asynchron to set
    */
-  public void setAsynchron(boolean p_asynchron)
+  public void setParallel(boolean p_asynchron)
   {
-    m_asynchron = p_asynchron;
+    m_isParallel = p_asynchron;
   }
 
   public int getRoundActionPt()
@@ -328,6 +332,15 @@ public class EbConfigGameTime extends EbBase
     m_deploymentTimeStep = p_deploymentTimeStep;
   }
   
+  public int getLockGameInMillis()
+  {
+    return m_lockGameInMillis;
+  }
+
+  public void setLockGameInMillis(int p_lockGameInMillis)
+  {
+    m_lockGameInMillis = p_lockGameInMillis;
+  }
   
 
 }

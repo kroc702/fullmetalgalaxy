@@ -159,43 +159,37 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
 
     // anything to update ?
-    try
+    GameStatus oldStatus = model.getStatus();
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+    modelUpdate.setGameId( model.getId() );
+    modelUpdate.setFromVersion( model.getVersion() );
+
+    ArrayList<AnEvent> events = GameWorkflow.checkUpdate( model );
+
+    if( !events.isEmpty() || oldStatus != model.getStatus() )
     {
-      GameStatus oldStatus = model.getStatus();
-      ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-      modelUpdate.setGameId( model.getId() );
-      modelUpdate.setFromVersion( model.getVersion() );
-
-      ArrayList<AnEvent> events = GameWorkflow.checkUpdate( model );
-
-      if( !events.isEmpty() || oldStatus != model.getStatus() )
+      // some was necessary
+      if( !events.isEmpty() )
       {
-        // some was necessary
-        if( !events.isEmpty() )
-        {
-          modelUpdate.setGameEvents( events );
-          modelUpdate.setToVersion( model.getVersion() );
+        modelUpdate.setGameEvents( events );
+        modelUpdate.setToVersion( model.getVersion() );
 
-          // do we need to send an email ?
-          GameNotification.sendMail( model, modelUpdate );
-        }
-        dataStore.put( model );
-        try
-        {
-          // this action may lead to a ConcurrentModificationException
-          // in this case, it simply mean that several client ask for an update
-          // at same time
-          dataStore.close();
-
-          // so we broadcast change only once
-          ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
-        } catch( ConcurrentModificationException e )
-        {
-        }
+        // do we need to send an email ?
+        GameNotification.sendMail( model, modelUpdate );
       }
-    } catch( RpcFmpException e )
-    {
-      log.error( e );
+      dataStore.put( model );
+      try
+      {
+        // this action may lead to a ConcurrentModificationException
+        // in this case, it simply mean that several client ask for an update
+        // at same time
+        dataStore.close();
+
+        // so we broadcast change only once
+        ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
+      } catch( ConcurrentModificationException e )
+      {
+      }
     }
 
     if( model.getGameType() != GameType.MultiPlayer )

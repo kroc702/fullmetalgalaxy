@@ -24,9 +24,12 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 
 
+import java.util.Date;
+
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -135,18 +138,18 @@ public class AnEventPlay extends AnEventUser
       // if event is auto generated, assume everything are correct
       return;
     }
-    EbRegistration registration = getMyRegistration(p_game);
-    if( registration == null )
+    EbRegistration myRegistration = getMyRegistration( p_game );
+    if( myRegistration == null )
     {
       // no i18n ?
       throw new RpcFmpException( "you didn't join this game." );
     }
-    if( registration.getPtAction() < getCost() && p_game.getGameType() != GameType.Practice )
+    if( myRegistration.getPtAction() < getCost() && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
     if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
-        && (p_game.getCurrentPlayerRegistration() != registration)
+        && (p_game.getCurrentPlayerRegistration() != myRegistration)
         && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().NotYourTurn() );
@@ -156,6 +159,28 @@ public class AnEventPlay extends AnEventUser
     {
       throw new RpcFmpException( errMsg().GameNotStarted() );
     }
+
+    if( p_game.isParallel()
+        && p_game.getCurrentTimeStep() > p_game.getEbConfigGameTime().getDeploymentTimeStep() )
+    {
+      EbRegistration registration = p_game.getOtherRegistrationBoardLocked( myRegistration,
+          getLockedPosition(), SharedMethods.currentTimeMillis() );
+      if( registration != null )
+      {
+        // TODO i18n this board area is locked by another player.
+        throw new RpcFmpException( "Cette partie du plateau est bloqué par un autre joueur." );
+      }
+    }
+  }
+
+  private AnBoardPosition getLockedPosition()
+  {
+    AnBoardPosition position = getPosition();
+    if( position == null )
+    {
+      position = getNewPosition();
+    }
+    return position;
   }
 
   /* (non-Javadoc)
@@ -170,6 +195,9 @@ public class AnEventPlay extends AnEventUser
     {
       registration.setPtAction( registration.getPtAction() - getCost() );
       // registration.setLastUpdate( getLastUpdate() );
+      registration.setLockedPosition( getLockedPosition() );
+      registration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
+          + p_game.getEbConfigGameTime().getLockGameInMillis() ) );
     }
   }
 

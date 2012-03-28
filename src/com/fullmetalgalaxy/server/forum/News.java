@@ -102,6 +102,9 @@ public class News
       } catch( ParseException e )
       {
         e.printStackTrace();
+      } catch( IllegalArgumentException e )
+      {
+        e.printStackTrace();
       }
 
       if( itemCount >= NEWS_FULLITEM_COUNT )

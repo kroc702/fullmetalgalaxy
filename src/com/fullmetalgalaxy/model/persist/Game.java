@@ -47,6 +47,7 @@ import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.pathfinder.PathGraph;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
@@ -143,6 +144,36 @@ public class Game extends GameData implements PathGraph, GameEventStack
   }
 
 
+  /**
+   * if game is in parallel mode, search the registration that lock an hexagon.
+   * @param p_position
+   * @return null if no registration lock that hexagon
+   */
+  public EbRegistration getOtherRegistrationBoardLocked(EbRegistration p_myRegistration,
+      AnBoardPosition p_position, long p_currentTime)
+  {
+    if( !isParallel() || p_position == null || p_position.getX() < 0 )
+    {
+      return null;
+    }
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( p_myRegistration != registration && registration.getEndTurnDate() != null
+          && registration.getLockedPosition() != null )
+      {
+        if( registration.getEndTurnDate().getTime() < p_currentTime )
+        {
+          registration.setEndTurnDate( null );
+          registration.setLockedPosition( null );
+        }
+        else if( registration.getLockedPosition().getHexDistance( p_position ) <= FmpConstant.parallelLockRadius )
+        {
+          return registration;
+        }
+      }
+    }
+    return null;
+  }
 
   public void addToken(EbToken p_token)
   {

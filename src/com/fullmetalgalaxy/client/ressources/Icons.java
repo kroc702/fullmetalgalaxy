@@ -294,6 +294,11 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_nw.png")
   public AbstractImagePrototype strategy_arrow_nw();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/padlock.png")
+  public AbstractImagePrototype strategy_padlock();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/padlock.png")
+  public AbstractImagePrototype tactic_padlock();
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/warning.png")
   public AbstractImagePrototype tactic_warning();

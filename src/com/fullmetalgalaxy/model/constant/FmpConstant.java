@@ -33,6 +33,8 @@ public class FmpConstant
   public static final int minimumPlayerNumber = 2;
   public static final int maximumPlayerNumber = 9;
 
+  public static final int parallelLockRadius = 6;
+
   // in second
   public static final int clientMessagesLivePeriod = 15;
 

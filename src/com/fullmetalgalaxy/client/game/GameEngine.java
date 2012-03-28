@@ -395,8 +395,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
 
       if( isNewPlayerTurn
-          && getGame().getCurrentPlayerRegistration().getAccount().getId() == AppMain.instance()
-              .getMyAccount().getId() )
+          && (getGame().getCurrentPlayerRegistration() == null || getGame()
+              .getCurrentPlayerRegistration().getAccount().getId() == AppMain.instance()
+              .getMyAccount().getId()) )
       {
         // TODO i18n
         Window.alert( "C'est à votre tour de jouer" );

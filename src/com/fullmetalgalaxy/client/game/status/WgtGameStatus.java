@@ -298,7 +298,7 @@ public class WgtGameStatus extends WgtView
       }
       else
       {
-        return "    ";
+        return "&nbsp;&nbsp;&nbsp;&nbsp;";
       }
     }
     StringBuffer strBuf = new StringBuffer( 10 );
@@ -317,7 +317,7 @@ public class WgtGameStatus extends WgtView
   {
     if( p_endTurn == null )
     {
-      m_lblDate.setHTML( "&nbsp;(?:??)" );
+      m_lblDate.setHTML( "" );
       return;
     }
     m_endTurn = p_endTurn;
@@ -326,12 +326,13 @@ public class WgtGameStatus extends WgtView
     if( sec >= 60 * 60 )
     {
       // if end turn is farrer than one hour, simply display date
-      m_lblDate.setHTML( "&nbsp;(&nbsp; " + ClientUtil.formatDateTime( m_endTurn ) + ")" );
+      m_lblDate.setHTML( "&nbsp;(" + ClientUtil.formatDateTime( m_endTurn )
+          + ")&nbsp;&nbsp;" );
     }
     else
     {
       // otherwise, display remaining time
-      m_lblDate.setHTML( "&nbsp;(&nbsp; -" + secToStr( sec ) + ")" );
+      m_lblDate.setHTML( "&nbsp;(-" + secToStr( sec ) + ")&nbsp;&nbsp;" );
       // and start clock
       m_clockTimer.schedule( 1000 );
     }
@@ -343,13 +344,20 @@ public class WgtGameStatus extends WgtView
     public void run()
     {
       long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
-      m_lblDate.setHTML( "&nbsp; -" + secToStr( sec ) );
+      m_lblDate.setHTML( "&nbsp;(-" + secToStr( sec ) + ")&nbsp;&nbsp;" );
       if( sec == 0 )
       {
         AppMain.getRpcService().checkUpdate( GameEngine.model().getGame().getId(),
             m_dummyCallback );
       }
       m_clockTimer.schedule( 1000 );
+
+      // if game is paused, then cancel timer
+      if( GameEngine.model().getGame().getStatus() != GameStatus.Running )
+      {
+        m_lblDate.setHTML( "" );
+        m_clockTimer.cancel();
+      }
     }
   };
 

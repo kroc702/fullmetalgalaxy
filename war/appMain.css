@@ -362,6 +362,8 @@ code {
 }
 .fmp-status-text {
 	font-size: 100%;
+    color:#FFFFFF;
+    font-weight: bold;
 }
 .fmp-status-title {
     font-weight: bold;
