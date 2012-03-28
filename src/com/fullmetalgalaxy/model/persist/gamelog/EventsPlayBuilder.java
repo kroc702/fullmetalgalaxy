@@ -813,13 +813,19 @@ public class EventsPlayBuilder implements GameEventStack
                 // select first destroyer
                 ((EbEvtFire)getSelectedAction()).setTokenDestroyer1( token );
               }
-              else
+              else if( token.getId() != ((EbEvtFire)getSelectedAction()).getTokenDestroyer1(
+                  getGame() ).getId() )
               {
                 // select second destroyer
                 // if destroyer is already selected, we may send an error
                 // message...
                 // but its not a bug after all !
                 ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+              }
+              else if( previousAction != null && previousAction.getType() == GameLogType.EvtFire )
+              {
+                ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( ((EbEvtFire)previousAction)
+                    .getTokenDestroyer2( getGame() ) );
               }
               isUpdated = EventBuilderMsg.Updated;
             }
