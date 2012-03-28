@@ -22,6 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
@@ -203,7 +206,7 @@ public class AnBoardPosition extends AnPair implements PathNode
   }
 
   /**
-   * for debuguing purpose only
+   * for debugging purpose only
    */
   @Override
   public String toString()
@@ -221,6 +224,51 @@ public class AnBoardPosition extends AnPair implements PathNode
   public AnBoardPosition newInstance()
   {
     return new AnBoardPosition( this );
+  }
+
+  /**
+   * create a list of board position that draw an hexagon with a given center position and radius 
+   * @param p_center
+   * @param p_radius
+   * @return
+   */
+  public static List<AnBoardPosition> drawHexagon(AnBoardPosition p_center, int p_radius)
+  {
+    List<AnBoardPosition> list = new ArrayList<AnBoardPosition>();
+    p_center = p_center.newInstance();
+    p_center.setY( p_center.getY() - p_radius );
+    // add every side of hexagon one by one
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.SouthWest );
+      list.add( p_center );
+    }
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.South );
+      list.add( p_center );
+    }
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.SouthEast );
+      list.add( p_center );
+    }
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.NorthEast );
+      list.add( p_center );
+    }
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.North );
+      list.add( p_center );
+    }
+    for( int i = 0; i < p_radius; i++ )
+    {
+      p_center = p_center.getNeighbour( Sector.NorthWest );
+      list.add( p_center );
+    }
+    return list;
   }
 
 }

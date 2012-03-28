@@ -82,7 +82,6 @@ public class GameWorkflow
 
 
   static public ArrayList<AnEvent> checkUpdate(Game p_game, List<AnEvent> p_futurEvents)
-      throws RpcFmpException
   {
     ArrayList<AnEvent> eventAdded = checkUpdate( p_game );
     AnEvent nextEvent = p_futurEvents.get( 0 );
@@ -91,29 +90,38 @@ public class GameWorkflow
       return eventAdded;
     }
 
-    if( (nextEvent.getType() == GameLogType.EvtPlayerTurn)
-        && (p_game.getCurrentTimeStep() == p_game.getEbConfigGameTime().getTotalTimeStep()) )
+    try
     {
-      // end turn action in the last turn...
-      // check that his freighter take off, if not, take off automatically
-      for( EbToken token : p_game.getSetToken() )
+      if( (nextEvent.getType() == GameLogType.EvtPlayerTurn)
+          && (p_game.getCurrentTimeStep() == p_game.getEbConfigGameTime().getTotalTimeStep()) )
       {
-        if( (token.getType() == TokenType.Freighter)
-            && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() ))
-            && (token.getLocation() == Location.Board) )
+        // end turn action in the last turn...
+        // check that his freighter take off, if not, take off automatically
+        for( EbToken token : p_game.getSetToken() )
         {
-          // automatic take off for this freighter
-          EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
-          eventTakeOff.setGame( p_game );
-          eventTakeOff.setToken( token );
-          eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
-          eventTakeOff.setAuto( true );
-          eventTakeOff.checkedExec( p_game );
-          p_game.addEvent( eventTakeOff );
-          eventAdded.add( eventTakeOff );
+          if( (token.getType() == TokenType.Freighter)
+              && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() ))
+              && (token.getLocation() == Location.Board) )
+          {
+            // automatic take off for this freighter
+            EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
+            eventTakeOff.setGame( p_game );
+            eventTakeOff.setToken( token );
+            eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
+            eventTakeOff.setAuto( true );
+            eventTakeOff.checkedExec( p_game );
+            p_game.addEvent( eventTakeOff );
+            eventAdded.add( eventTakeOff );
+          }
         }
       }
+    } catch( RpcFmpException e )
+    {
+      // do nothing more as it is better to cancel update than cancel whole
+      // player action
+      log.error( e );
     }
+
     if( (nextEvent.getType() == GameLogType.AdminTimePause)
         && ((p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer())) )
     {
@@ -148,7 +156,7 @@ public class GameWorkflow
    * @param p_game
    * @return the getResultList of all event which occur during this update.
    */
-  static public ArrayList<AnEvent> checkUpdate(Game p_game) throws RpcFmpException
+  static public ArrayList<AnEvent> checkUpdate(Game p_game)
   {
     assert p_game != null;
     ArrayList<AnEvent> eventAdded = new ArrayList<AnEvent>();
@@ -159,211 +167,222 @@ public class GameWorkflow
     {
       return eventAdded;
     }
-    AnEvent lastEvent = p_game.getLastLog();
-    if( !p_game.isFinished() && lastEvent != null )
-    {
-      // game isn't finished: look for any update
-      // search update according to the last action
-      //
-      
-      if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
-      {
-        // a player is just landed and game is parallel: next player
-        EbEvtPlayerTurn action = new EbEvtPlayerTurn();
-        action.setLastUpdate( ServerUtil.currentDate() );
-        action.setAccountId( ((EbEvtLand)lastEvent).getAccountId() );
-        action.setGame( p_game );
-        action.checkedExec( p_game );
-        p_game.addEvent( action );
-        eventAdded.add( action );
-        lastEvent = action;
-      }
 
-      if( lastEvent.getType() == GameLogType.GameJoin )
+    try
+    {
+      AnEvent lastEvent = p_game.getLastLog();
+      if( !p_game.isFinished() && lastEvent != null )
       {
-        if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer() )
+        // game isn't finished: look for any update
+        // search update according to the last action
+        //
+
+        if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
         {
-          // TODO we may prefer starting game not in live mode only (slow game
-          // only)
-          // if the last player is just connected, automatically launch the
-          // game.
-          EbAdminTimePlay action = new EbAdminTimePlay();
-          action.setAuto( true );
+          // a player is just landed and game is parallel: next player
+          EbEvtPlayerTurn action = new EbEvtPlayerTurn();
           action.setLastUpdate( ServerUtil.currentDate() );
-          action.setAccountId( ((EbGameJoin)lastEvent).getAccountId() );
+          action.setAccountId( ((EbEvtLand)lastEvent).getAccountId() );
           action.setGame( p_game );
           action.checkedExec( p_game );
           p_game.addEvent( action );
           eventAdded.add( action );
           lastEvent = action;
-          gameRun( p_game );
         }
 
-        if( p_game.getCurrentTimeStep() == 1
-            && lastEvent.getType() == GameLogType.AdminTimePlay
-            && p_game.getFreighter( p_game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
+        if( lastEvent.getType() == GameLogType.GameJoin )
         {
-          // game is starting
+          if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer() )
+          {
+            // TODO we may prefer starting game not in live mode only (slow game
+            // only)
+            // if the last player is just connected, automatically launch the
+            // game.
+            EbAdminTimePlay action = new EbAdminTimePlay();
+            action.setAuto( true );
+            action.setLastUpdate( ServerUtil.currentDate() );
+            action.setAccountId( ((EbGameJoin)lastEvent).getAccountId() );
+            action.setGame( p_game );
+            action.checkedExec( p_game );
+            p_game.addEvent( action );
+            eventAdded.add( action );
+            lastEvent = action;
+            gameRun( p_game );
+          }
+
+          if( p_game.getCurrentTimeStep() == 1
+              && lastEvent.getType() == GameLogType.AdminTimePlay
+              && p_game.getFreighter( p_game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
+          {
+            // game is starting
+            EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
+            action.setLastUpdate( ServerUtil.currentDate() );
+            action.initRandomOrder( p_game );
+            action.setGame( p_game );
+            action.checkedExec( p_game );
+            p_game.addEvent( action );
+            eventAdded.add( action );
+            lastEvent = action;
+          }
+        }
+        if( p_game.getCurrentTimeStep() == 2 && !p_game.isParallel()
+            && p_game.getLastGameLog().getType() == GameLogType.EvtTide )
+        {
+          // second turn: everybody should be landed
           EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
           action.setLastUpdate( ServerUtil.currentDate() );
-          action.initRandomOrder( p_game );
+          action.initBoardOrder( p_game );
           action.setGame( p_game );
           action.checkedExec( p_game );
           p_game.addEvent( action );
           eventAdded.add( action );
           lastEvent = action;
         }
-      }
-      if( p_game.getCurrentTimeStep() == 2 && !p_game.isParallel()
-          && p_game.getLastGameLog().getType() == GameLogType.EvtTide )
-      {
-        // second turn: everybody should be landed
-        EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
-        action.setLastUpdate( ServerUtil.currentDate() );
-        action.initBoardOrder( p_game );
-        action.setGame( p_game );
-        action.checkedExec( p_game );
-        p_game.addEvent( action );
-        eventAdded.add( action );
-        lastEvent = action;
-      }
 
 
-      // search any other update
-      //
-      if( p_game.isParallel() && p_game.getStatus() == GameStatus.Running
-          && p_game.getCurrentTimeStep() > 1 )
-      {
-        long currentTimeInMiliSec = System.currentTimeMillis();
-        while( (!p_game.isFinished())
-            && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
-                .getEbConfigGameTime().getTimeStepDurationInMili()) )
+        // search any other update
+        //
+        if( p_game.isParallel() && p_game.getStatus() == GameStatus.Running
+            && p_game.getCurrentTimeStep() > 1 )
         {
-          // automatic take off for all freighter just before end game
-          if( p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTotalTimeStep() )
+          long currentTimeInMiliSec = System.currentTimeMillis();
+          while( (!p_game.isFinished())
+              && ((currentTimeInMiliSec - p_game.getLastTimeStepChange().getTime()) > p_game
+                  .getEbConfigGameTime().getTimeStepDurationInMili()) )
           {
-            for( EbToken token : p_game.getSetToken() )
+            // automatic take off for all freighter just before end game
+            if( p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTotalTimeStep() )
             {
-              if( (token.getType() == TokenType.Freighter)
-                  && (token.getLocation() == Location.Board) )
+              for( EbToken token : p_game.getSetToken() )
               {
-                // automatic take off for this freighter
-                EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
-                eventTakeOff.setGame( p_game );
-                eventTakeOff.setToken( token );
-                eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
-                eventTakeOff.setAuto( true );
-                eventTakeOff.checkedExec( p_game );
-                p_game.addEvent( eventTakeOff );
-                eventAdded.add( eventTakeOff );
-                lastEvent = eventTakeOff;
+                if( (token.getType() == TokenType.Freighter)
+                    && (token.getLocation() == Location.Board) )
+                {
+                  // automatic take off for this freighter
+                  EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
+                  eventTakeOff.setGame( p_game );
+                  eventTakeOff.setToken( token );
+                  eventTakeOff.setRegistration( p_game.getRegistrationByColor( token.getColor() ) );
+                  eventTakeOff.setAuto( true );
+                  eventTakeOff.checkedExec( p_game );
+                  p_game.addEvent( eventTakeOff );
+                  eventAdded.add( eventTakeOff );
+                  lastEvent = eventTakeOff;
+                }
               }
             }
+            // new time step
+            EbEvtTimeStep event = new EbEvtTimeStep();
+            event.setGame( p_game );
+            event.checkedExec( p_game );
+            p_game.addEvent( event );
+            eventAdded.add( event );
+            lastEvent = event;
+            if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+            {
+              // next tide
+              EbEvtTide eventTide = new EbEvtTide();
+              eventTide.setNextTide( Tide.getRandom() );
+              eventTide.setGame( p_game );
+              eventTide.checkedExec( p_game );
+              p_game.addEvent( eventTide );
+              eventAdded.add( eventTide );
+              lastEvent = eventTide;
+            }
           }
-          // new time step
-          EbEvtTimeStep event = new EbEvtTimeStep();
-          event.setGame( p_game );
-          event.checkedExec( p_game );
-          p_game.addEvent( event );
-          eventAdded.add( event );
-          lastEvent = event;
-          if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep() )
+        }
+        else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+        {
+          if( (p_game.getCurrentPlayerRegistration() != null)
+              && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
+              && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() <= System
+                  .currentTimeMillis()) && (p_game.getCurrentTimeStep() > 1) ) // never
+                                                                               // skip
+                                                                               // first
+                                                                               // turn
           {
-            // next tide
-            EbEvtTide eventTide = new EbEvtTide();
-            eventTide.setNextTide( Tide.getRandom() );
-            eventTide.setGame( p_game );
-            eventTide.checkedExec( p_game );
-            p_game.addEvent( eventTide );
-            eventAdded.add( eventTide );
-            lastEvent = eventTide;
+            // change player's turn
+            p_game.getCurrentPlayerRegistration().getOrderIndex();
+            EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+            event.setAuto( true );
+            event.setGame( p_game );
+            event.checkedExec( p_game );
+            p_game.addEvent( event );
+            eventAdded.add( event );
+            lastEvent = event;
           }
-        }
-      }
-      else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
-      {
-        if( (p_game.getCurrentPlayerRegistration() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() 
-                    <= System.currentTimeMillis())
-            && (p_game.getCurrentTimeStep() > 1) ) // never skip first turn
-        {
-          // change player's turn
-          p_game.getCurrentPlayerRegistration().getOrderIndex();
-          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
-          event.setAuto( true );
-          event.setGame( p_game );
-          event.checkedExec( p_game );
-          p_game.addEvent( event );
-          eventAdded.add( event );
-          lastEvent = event;
-        }
-        /* TODO
-        if( (p_game.getCurrentPlayerRegistration() != null)
-            && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
-        {
-          ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
-                                        // p_game.getId(), null );
-          if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
+          /* TODO
+          if( (p_game.getCurrentPlayerRegistration() != null)
+              && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
           {
-            // current player is connected, update his end turn
-            p_game.getCurrentPlayerRegistration().setEndTurnDate(
-                new Date( System.currentTimeMillis()
-                    + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-            // p_session.persist( p_game.getCurrentPlayerRegistration() );
-            updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
-                .setEndTurnDate(
-                    new Date( System.currentTimeMillis()
-                        + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+            ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
+                                          // p_game.getId(), null );
+            if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
+            {
+              // current player is connected, update his end turn
+              p_game.getCurrentPlayerRegistration().setEndTurnDate(
+                  new Date( System.currentTimeMillis()
+                      + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+              // p_session.persist( p_game.getCurrentPlayerRegistration() );
+              updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
+                  .setEndTurnDate(
+                      new Date( System.currentTimeMillis()
+                          + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+          
+              isUpdated = true;
+            }
+          }*/
+        }
 
-            isUpdated = true;
-          }
-        }*/
-      }
-
-      // are all player take off before the end ?
-      // -> in this case, we don't mind new tide
-      if( lastEvent instanceof EbEvtPlayerTurn
-          && (p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns().get( 0 ))
-          && (p_game.getCurrentPlayerRegistration() != null) )
-      {
-        boolean isGameFinish = true;
-        for( EbToken freighter : p_game.getAllFreighter( p_game.getCurrentPlayerRegistration() ) )
+        // are all player take off before the end ?
+        // -> in this case, we don't mind new tide
+        if( lastEvent instanceof EbEvtPlayerTurn
+            && (p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns()
+                .get( 0 )) && (p_game.getCurrentPlayerRegistration() != null) )
         {
-          if( freighter.getLocation() == Location.Board )
+          boolean isGameFinish = true;
+          for( EbToken freighter : p_game.getAllFreighter( p_game.getCurrentPlayerRegistration() ) )
           {
-            isGameFinish = false;
+            if( freighter.getLocation() == Location.Board )
+            {
+              isGameFinish = false;
+            }
+          }
+          while( isGameFinish && !p_game.isFinished() )
+          {
+            EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+            event.setAuto( true );
+            event.setGame( p_game );
+            event.checkedExec( p_game );
+            p_game.addEvent( event );
+            eventAdded.add( event );
+            lastEvent = event;
           }
         }
-        while( isGameFinish && !p_game.isFinished() )
+
+        // if new turn occur: trigger new tide
+        if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep()
+            && p_game.getStatus() == GameStatus.Running )
         {
-          EbEvtPlayerTurn event = new EbEvtPlayerTurn();
-          event.setAuto( true );
-          event.setGame( p_game );
-          event.checkedExec( p_game );
-          p_game.addEvent( event );
-          eventAdded.add( event );
-          lastEvent = event;
+          // next tide !
+          EbEvtTide eventTide = new EbEvtTide();
+          eventTide.setGame( p_game );
+          eventTide.setNextTide( Tide.getRandom() );
+          eventTide.checkedExec( p_game );
+          p_game.addEvent( eventTide );
+          eventAdded.add( eventTide );
+          lastEvent = eventTide;
         }
+
+
+        // triggers
+        p_game.execTriggers();
       }
-
-      // if new turn occur: trigger new tide
-      if( p_game.getNextTideChangeTimeStep() <= p_game.getCurrentTimeStep()
-          && p_game.getStatus() == GameStatus.Running )
-      {
-        // next tide !
-        EbEvtTide eventTide = new EbEvtTide();
-        eventTide.setGame( p_game );
-        eventTide.setNextTide( Tide.getRandom() );
-        eventTide.checkedExec( p_game );
-        p_game.addEvent( eventTide );
-        eventAdded.add( eventTide );
-        lastEvent = eventTide;
-      }
-
-
-      // triggers
-      p_game.execTriggers();
+    } catch( RpcFmpException e )
+    {
+      // do nothing more as it is better to cancel update than cancel whole
+      // player action
+      log.error( e );
     }
 
     if( p_game.isFinished() && p_game.getStatus() != GameStatus.History )

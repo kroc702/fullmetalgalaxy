@@ -3,6 +3,8 @@ package com.fullmetalgalaxy.model;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import com.fullmetalgalaxy.client.ClientUtil;
+
 /**
  * Method collection used in shared packaged but have different implementation 
  * Whether it's on server or client side.
@@ -61,4 +63,15 @@ public class SharedMethods
     }
     return decodedURLComponent;
   }
+  
+  /**
+   * on server, same as original method (ie System.currentTimeMillis())
+   * on client, this method return current time as seen by server ! (ie it remove an offset given at page loading) 
+   * @return current time in millis
+   */
+  public static long currentTimeMillis()
+  {
+    return System.currentTimeMillis();
+  }
+  
 }

@@ -41,7 +41,7 @@ public class ChatMessage implements IsSerializable, java.io.Serializable
   private String m_fromPseudo = "";
   private int m_fromPageId = 0;
 
-  private Date m_date = new Date( System.currentTimeMillis() );
+  private Date m_date = new Date( SharedMethods.currentTimeMillis() );
 
   public ChatMessage()
   {

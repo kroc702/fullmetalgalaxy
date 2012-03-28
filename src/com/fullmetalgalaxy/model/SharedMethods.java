@@ -1,5 +1,6 @@
 package com.fullmetalgalaxy.model;
 
+import com.fullmetalgalaxy.client.ClientUtil;
 import com.google.gwt.http.client.URL;
 
 /**
@@ -52,4 +53,15 @@ public class SharedMethods
     }
     return URL.encodePathSegment( decodedURLComponent );
   }
+
+  /**
+   * on server, same as original method (ie System.currentTimeMillis())
+   * on client, this method return current time as seen by server ! (ie it remove an offset given at page loading) 
+   * @return current time in millis
+   */
+  public static long currentTimeMillis()
+  {
+    return ClientUtil.serverTimeMillis();
+  }
+
 }

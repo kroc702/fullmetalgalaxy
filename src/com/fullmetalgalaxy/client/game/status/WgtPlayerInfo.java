@@ -32,10 +32,12 @@ import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -51,15 +53,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class WgtPlayerInfo extends Composite
 {
-  VerticalPanel m_panel = new VerticalPanel();
-  Image m_iconAction = Icons.s_instance.action16().createImage();
-  HTML m_lblAction = new HTML( "&nbsp;: 0  " );
+  private VerticalPanel m_panel = new VerticalPanel();
+  private Image m_iconAction = Icons.s_instance.action16().createImage();
+  private HTML m_lblAction = new HTML( "&nbsp;: 0  " );
+  private EbRegistration m_registration = null;
 
   /**
    * 
    */
   public WgtPlayerInfo(EbRegistration p_registration)
   {
+    m_registration = p_registration;
     Game game = GameEngine.model().getGame();
 
     m_panel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
@@ -67,7 +71,7 @@ public class WgtPlayerInfo extends Composite
     // player name and color(s)
     // ========================
     Panel hPanel = new HorizontalPanel();
-    EnuColor color = p_registration.getEnuColor();
+    EnuColor color = m_registration.getEnuColor();
 
     int colorIndex = 0;
     for( colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
@@ -83,9 +87,9 @@ public class WgtPlayerInfo extends Composite
     }
 
     Label lbl = null;
-    if( p_registration.haveAccount() )
+    if( m_registration.haveAccount() )
     {
-      lbl = new Label( p_registration.getAccount().getPseudo() );
+      lbl = new Label( m_registration.getAccount().getPseudo() );
     }
     else
     {
@@ -103,29 +107,23 @@ public class WgtPlayerInfo extends Composite
     hPanel.add( m_lblAction );
     m_lblAction.setTitle( MAppBoard.s_messages.remainingActionPoint() );
     m_lblAction.setHTML( "&nbsp;: "
-        + p_registration.getPtAction()
+        + m_registration.getPtAction()
         + "/"
-        + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((p_registration.getEnuColor()
+        + (game.getEbConfigGameVariant().getActionPtMaxReserve() + ((m_registration.getEnuColor()
             .getNbColor() - 1) * game.getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
     if( game.isParallel() )
     {
       Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
       m_lblAction
           .setTitle( MAppBoard.s_messages.nextPA(
-              EbConfigGameTime.getActionInc( game, p_registration ),
+              EbConfigGameTime.getActionInc( game, m_registration ),
               ClientUtil.formatTimeElapsed( nextActionIncrement.getTime()
                   - System.currentTimeMillis() ) ) );
     }
     m_panel.add( hPanel );
 
-    if( p_registration == game.getCurrentPlayerRegistration() )
-    {
-      m_panel.setStyleName( "fmp-status-currentplayer" );
-    }
-    else
-    {
-      m_panel.setStyleName( "fmp-status-player" );
-    }
+    // set style name now
+    resfreshStyle();
 
     // m_vPanel.setWidth( "100%" );
     // m_vPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_CENTER );
@@ -133,6 +131,35 @@ public class WgtPlayerInfo extends Composite
   }
 
 
+  private void resfreshStyle()
+  {
+    Game game = GameEngine.model().getGame();
+    if( m_registration == game.getCurrentPlayerRegistration() )
+    {
+      m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
+    }
+    else if( game.isParallel()
+        && m_registration.getEndTurnDate() != null
+        && m_registration.getEndTurnDate().getTime() > SharedMethods.currentTimeMillis() )
+    {
+      m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
+      m_clockTimer.schedule( (int)(m_registration.getEndTurnDate().getTime() - SharedMethods
+          .currentTimeMillis()) );
+    }
+    else
+    {
+      m_panel.setStylePrimaryName( "fmp-status-player" );
+    }
+  }
+
+  private Timer m_clockTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      resfreshStyle();
+    }
+  };
 
 
 

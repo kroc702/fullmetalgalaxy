@@ -82,7 +82,14 @@ public class EbRegistration extends EbBase
   private int m_turretsToRepair = 0;
   /** number of weather hen at the last time step change. */
   private int m_workingWeatherHenCount = 0;
+
+  /** in turn by turn mode this is the end turn date.
+   * and in parallel mode, this is the date up to which the board is locked (cf m_lockedPosition) */
   private Date m_endTurnDate = null;
+  /** in parallel mode, player lock a board area for a small period */
+  @Serialized
+  private AnBoardPosition m_lockedPosition = null;
+
   private Date m_lastConnexion = new Date();
   @Serialized
   private List<String> m_notifSended = null;
@@ -422,6 +429,16 @@ public class EbRegistration extends EbBase
   public void setStats(StatsPlayer p_stats)
   {
     m_stats = p_stats;
+  }
+
+  public AnBoardPosition getLockedPosition()
+  {
+    return m_lockedPosition;
+  }
+
+  public void setLockedPosition(AnBoardPosition p_lockedPosition)
+  {
+    m_lockedPosition = p_lockedPosition;
   }
 
 

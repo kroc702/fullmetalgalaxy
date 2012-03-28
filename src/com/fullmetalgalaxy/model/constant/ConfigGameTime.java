@@ -126,7 +126,7 @@ public enum ConfigGameTime implements IsSerializable
     takeOffTurns.add( 21 );
     takeOffTurns.add( 25 );
     timeConfig.setTakeOffTurns( takeOffTurns );
-    timeConfig.setAsynchron( false );
+    timeConfig.setParallel( false );
     timeConfig.setRoundActionPt( 5 );
     timeConfig.setDescription( "25 tours (pas de temps limite)" );
     timeConfig.setDeploymentTimeStep( 2 );
@@ -144,7 +144,7 @@ public enum ConfigGameTime implements IsSerializable
     takeOffTurns.add( 21 );
     takeOffTurns.add( 25 );
     timeConfig.setTakeOffTurns( takeOffTurns );
-    timeConfig.setAsynchron( false );
+    timeConfig.setParallel( false );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "25 tours (3 min pour jouer)" );
     timeConfig.setDeploymentTimeStep( 2 );
@@ -169,7 +169,8 @@ public enum ConfigGameTime implements IsSerializable
     takeOffTurns.add( 107 );
     takeOffTurns.add( 125 );
     timeConfig.setTakeOffTurns( takeOffTurns );
-    timeConfig.setAsynchron( true );
+    timeConfig.setParallel( true );
+    timeConfig.setLockGameInMillis( 30000 );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "30 jours en parallèle" );
     timeConfig.setDeploymentTimeStep( 8 );
@@ -188,7 +189,8 @@ public enum ConfigGameTime implements IsSerializable
     takeOffTurns.add( 42 );
     takeOffTurns.add( 50 );
     timeConfig.setTakeOffTurns( takeOffTurns );
-    timeConfig.setAsynchron( true );
+    timeConfig.setParallel( true );
+    timeConfig.setLockGameInMillis( 10000 );
     timeConfig.setRoundActionPt( 1 );
     timeConfig.setDescription( "1h20 en parallèle" );
     timeConfig.setDeploymentTimeStep( 4 );
