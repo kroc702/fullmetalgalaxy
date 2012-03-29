@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -69,6 +70,13 @@ public class EbEvtMessage extends AnEventUser
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec( p_game );
+    // if message start by recording, we don't touch it...
+    if( p_game.getGameType() == GameType.Puzzle
+        && (p_game.getMessage() == null || !p_game.getMessage().startsWith(
+            EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG )) )
+    {
+      p_game.setMessage( getMessage() );
+    }
   }
 
 
