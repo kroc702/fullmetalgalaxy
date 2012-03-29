@@ -442,14 +442,11 @@ public class EventsPlayBuilder implements GameEventStack
 
   protected EbRegistration getMyRegistration()
   {
-    if( getGame().getGameType() == GameType.MultiPlayer )
-    {
-      return getGame().getRegistrationByIdAccount( getAccountId() );
-    }
-    else
+    if( getGame().getGameType() == GameType.Puzzle )
     {
       return getGame().getCurrentPlayerRegistration();
     }
+    return getGame().getRegistrationByIdAccount( getAccountId() );
   }
 
   /**
