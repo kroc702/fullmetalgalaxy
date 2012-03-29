@@ -52,6 +52,7 @@ import com.fullmetalgalaxy.model.pathfinder.PathGraph;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
@@ -208,6 +209,24 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       getSetRegistration().add( p_registration );
     }
+  }
+
+  public boolean haveNewMessage(Date p_since)
+  {
+    if( p_since == null )
+      return true;
+    int index = getLogs().size() - 1;
+    Date lastEventDate = null;
+    while( index > 0 && (lastEventDate == null || lastEventDate.after( p_since )) )
+    {
+      if( getLogs().get( index ) instanceof EbEvtMessage )
+      {
+        return true;
+      }
+      lastEventDate = getLogs().get( index ).getLastUpdate();
+      index--;
+    }
+    return false;
   }
 
 
