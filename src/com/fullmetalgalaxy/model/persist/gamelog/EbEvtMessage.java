@@ -36,7 +36,6 @@ public class EbEvtMessage extends AnEventUser
   static final long serialVersionUID = 1;
 
   private String m_message = null;
-  private String m_oldMessage = null;
 
   /**
    * 
@@ -70,13 +69,6 @@ public class EbEvtMessage extends AnEventUser
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec( p_game );
-    // if message start by recording, we don't touch it...
-    if( p_game.getMessage() == null
-        || !p_game.getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG ) )
-    {
-      m_oldMessage = p_game.getMessage();
-      p_game.setMessage( getMessage() );
-    }
   }
 
 
@@ -84,19 +76,8 @@ public class EbEvtMessage extends AnEventUser
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec( p_game );
-    p_game.setMessage( m_oldMessage );
   }
 
-
-  /**
-   * if message start with './', '/' or 'http://', message is a web page url
-   * @return
-   */
-  public boolean isWebUrl()
-  {
-    return getMessage() != null && ( getMessage().startsWith( "./" ) || getMessage().startsWith( "/" )
-        || getMessage().startsWith( "http://" ) );
-  }
 
   // Bean getter / setter
   // ====================
