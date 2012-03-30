@@ -58,7 +58,6 @@ public class FmgSerializationPolicy extends SerializationPolicy
   @Override
   public boolean shouldSerializeFields(Class<?> clazz)
   {
-    // TODO Auto-generated method stub
     return defaultPolicy.shouldDeserializeFields( clazz );
   }
 

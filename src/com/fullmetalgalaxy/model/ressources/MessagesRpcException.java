@@ -30,8 +30,26 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesRpcException extends Messages
 {
-  String GameNotStarted();
+  String mustHaveTwoPlayerToStart();
+  String tooManyConstruction();
+  String mustWaitToDeploy(int p_turn);
+  String cantDeployTooFar(int p_HexagonCount);
+  String cantDeployPotoonInSea();
+  String cantDestroyYourUnits();
+  String cantFireOn(String p_destroyer, String p_target);
+  String noMoreAmo(String p_destroyer);
+  String gameNotStarted();
+  String mustLandFreighter();
+  String cantEndTurnTwoTankMontain();
+  String cantRepairTurretFireCover();
+  String cantEnterLeaveFireCover();
+  String cantMoveAndConvert();
+  String boardLocked();
+  
+  String cantBanPlayerNoFreighter();
 
+  String MustBeLogged();
+  
   String GameFinished(String p_date);
 
   String CantMoveDontControl(String p_tokenColor, String p_controlColor);

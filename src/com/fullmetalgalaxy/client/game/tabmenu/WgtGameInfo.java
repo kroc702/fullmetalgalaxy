@@ -103,16 +103,6 @@ public class WgtGameInfo extends Composite implements ClickHandler
     // ------------------------
     m_generalPanel.clear();
 
-    if( game.getGameType() == GameType.Puzzle )
-    {
-      m_generalPanel.add( new Label( "Partie en mode 'Puzzle'" ) );
-      if( GameEngine.model().getMyRegistration() != null )
-      {
-        m_generalPanel.add( new Label( ", vous controllez les pions "
-            + Messages.getColorString( 0, GameEngine.model().getMyRegistration().getColor() ) ) );
-      }
-    }
-
     m_generalPanel.add( new Label( game.getDescription() ) );
 
     // Display tides
@@ -150,10 +140,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
         + "' target='_blank'>"
           + (game.getAccountCreator() == null ? "???" : game.getAccountCreator().getPseudo())
           + "</a>" ) );
-      // TODO i18n
-      m_generalPanel
-          .add( new HTML(
-              "Reporter un problème à <a href='mailto:admin@fullmetalgalaxy.com'>admin@fullmetalgalaxy.com</a>" ) );
+      m_generalPanel.add( new HTML( MAppBoard.s_messages.reportAnIssueToAdmin() ) );
     }
 
     if( GameEngine.model().isJoined() )
@@ -204,33 +191,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     m_generalPanel.add( new Label( MAppBoard.s_messages.gameFinishAt( ClientUtil.s_dateTimeFormat
         .format( game.estimateEndingDate() ) ) ) );
 
-    if( game.getGameType() == GameType.MultiPlayer )
-    {
-      switch( game.getStatus() )
-      {
-      case Open:
-        m_generalPanel.add( new Label( "Partie en pause et ouverte aux inscriptions" ) );
-        break;
-      case Aborted:
-        m_generalPanel.add( new Label( "Partie annulée" ) );
-        break;
-      case Pause:
-        m_generalPanel.add( new Label( "Partie en pause" ) );
-        break;
-      case History:
-        m_generalPanel.add( new Label( "Partie archivée" ) );
-        break;
-      case Puzzle:
-        m_generalPanel.add( new Label( "Partie solo" ) );
-        break;
-      case Running:
-        m_generalPanel.add( new Label( "Partie en cours" ) );
-        break;
-      default:
-        m_generalPanel.add( new Label( "Cette partie est dans un état inconnu" ) );
-        break;
-      }
-    }
+    m_generalPanel.add( new HTML( game.getStatus().getIconAsHtml() +" "+ Messages.getGameStatusString( 0, game.getStatus() ) ) );
 
     if( (game.getAccountCreator() != null &&
         AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId() )
@@ -314,8 +275,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     }
     else if( p_event.getSource() == m_btnAbort )
     {
-      // TODO i18n
-      if( Window.confirm( "êtes vous certain de vouloir annuler cette partie ?" ) )
+      if( Window.confirm( MAppBoard.s_messages.confirmCancelGame() ) )
       {
         AnEvent gameLog = GameLogFactory.newAdminAbort( AppMain.instance().getMyAccount().getId() );
         gameLog.setGame( GameEngine.model().getGame() );

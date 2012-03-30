@@ -89,8 +89,8 @@ public class EbEvtTide extends AnEvent
     assert p_game.getCurrentTide() == getOldTide();
     if( p_game.getStatus() != GameStatus.Running )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Cette partie n'est pas demarre" );
+      // no i18n
+      throw new RpcFmpException( "game not started" );
     }
   }
 

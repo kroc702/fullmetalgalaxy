@@ -41,7 +41,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author vlegendr
  *
  * display and edit game map size
- * TODO add custom size
  */
 public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>, ModelUpdateEvent.Handler
 {

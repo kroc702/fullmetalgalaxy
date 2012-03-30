@@ -357,7 +357,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   @Override
   public void onMouseEnter(Widget p_sender)
   {
-    // TODO Auto-generated method stub
+    // nothing to do
   }
 
   /* (non-Javadoc)

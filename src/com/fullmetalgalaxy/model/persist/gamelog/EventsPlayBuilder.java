@@ -46,6 +46,8 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 
 
 /**
@@ -253,9 +255,7 @@ public class EventsPlayBuilder implements GameEventStack
         if( fireCoverColor.getValue() != EnuColor.None )
         {
           m_isRunnable = false;
-          // TODO i18n
-          throw new RpcFmpException(
-              "Une unité ne peut entrer et sortir d'une zone de feu dans le même mouvement" );
+          throw new RpcFmpException( errMsg().cantEnterLeaveFireCover() );
         }
       }
 
@@ -264,9 +264,7 @@ public class EventsPlayBuilder implements GameEventStack
       if( getActionList().size() > 1 && getLastAction().getType() == GameLogType.EvtControl )
       {
         m_isRunnable = false;
-        // TODO i18n
-        throw new RpcFmpException(
-            "Une unité ne peut bouger et convertir une autre unité dans le même mouvement" );
+        throw new RpcFmpException( errMsg().cantMoveAndConvert() );
       }
 
       // check destroyer didn't enter in fire cover without destroying enough
@@ -1757,6 +1755,11 @@ public class EventsPlayBuilder implements GameEventStack
   public void setReadOnly(boolean p_isReadOnly)
   {
     m_isReadOnly = p_isReadOnly;
+  }
+
+  protected MessagesRpcException errMsg()
+  {
+    return SharedI18n.getMessagesError( getAccountId() );
   }
 
 

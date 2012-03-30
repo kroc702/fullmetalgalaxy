@@ -136,9 +136,7 @@ public class EbEvtConstruct extends AnEventPlay
     // turn
     if( getTokenCarrier( p_game ).getBulletCount() < 1 )
     {
-      // TODO i18n
-      throw new RpcFmpException(
-          "Une pondeuse météo ne peut pas construire plus de 2 vehicules par tour" );
+      throw new RpcFmpException( errMsg().tooManyConstruction() );
     }
     // Check wheather hen do not construct two similar unit during same turn
     int reverseIndex = p_game.getLogs().size() - 1;
@@ -156,9 +154,7 @@ public class EbEvtConstruct extends AnEventPlay
           && ((EbEvtConstruct)event).getPackedTokenCarrier().getId() == getPackedTokenCarrier()
               .getId() )
       {
-        // TODO i18n
-        throw new RpcFmpException(
-            "Une même pondeuse météo ne peut pas construire 2 fois le même vehicules dans le même tour (sauf 2 tanks)" );
+        throw new RpcFmpException( errMsg().tooManyConstruction() );
       }
       reverseIndex--;
     }

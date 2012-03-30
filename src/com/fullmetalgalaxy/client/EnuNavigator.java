@@ -40,7 +40,6 @@ public class EnuNavigator extends MyEnum
    */
   public EnuNavigator()
   {
-    // TODO Auto-generated constructor stub
   }
 
   /**
@@ -49,7 +48,6 @@ public class EnuNavigator extends MyEnum
   public EnuNavigator(int p_value)
   {
     super( p_value );
-    // TODO Auto-generated constructor stub
   }
 
   @Override

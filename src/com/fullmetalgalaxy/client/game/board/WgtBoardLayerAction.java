@@ -77,7 +77,6 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   @Override
   public void onModelChange(boolean p_forceRedraw)
   {
-    // TODO Auto-generated method stub
     super.onModelChange( p_forceRedraw );
     EventsPlayBuilder action = GameEngine.model().getActionBuilder();
     if( action.getLastUpdate().getTime() != m_actionLastUpdate || p_forceRedraw )

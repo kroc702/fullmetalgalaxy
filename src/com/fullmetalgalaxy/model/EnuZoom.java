@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.model;
 
 
 /**
- * @author LEG88888
+ * @author vincent legendre
  *
  */
 public class EnuZoom extends MyEnum

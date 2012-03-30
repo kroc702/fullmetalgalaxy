@@ -26,7 +26,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author Vincent Legendre
- *
+ * 
+ * TODO should be merge with GameStatus
  */
 public enum GameType implements java.io.Serializable, IsSerializable
 {

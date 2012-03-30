@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.board;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
+import com.fullmetalgalaxy.model.ressources.MessagesRpc;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -47,8 +48,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class DlgJoinGame extends DialogBox implements ClickHandler
 {
   // UI
-  private Button m_btnCancel = new Button( "Cancel" );
-  private Button m_btnOk = new Button( "Ok" );
+  private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
+  private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Panel m_panel = new VerticalPanel();
 
   private TextBox m_txtPassword = new TextBox();
@@ -74,7 +75,7 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
     super( false, true );
 
     // Set the dialog box's caption.
-    setText( "Inscription..." );
+    setText( MAppBoard.s_messages.joinTitle() );
 
     m_btnCancel.addClickHandler( this );
     m_btnOk.addClickHandler( this );
@@ -100,8 +101,7 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
       if( GameEngine.model().getGame().isPasswordProtected()
           && !m_txtPassword.getText().equals( GameEngine.model().getGame().getPassword() ) )
       {
-        // TODO i18n
-        Window.alert( "Veuillez vérifier le mot de passe pour cette partie." );
+        Window.alert( MAppBoard.s_messages.pleaseCheckGamePasword() );
         return;
       }
       this.hide();
@@ -134,17 +134,13 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
     if( GameEngine.model().getGame().isPasswordProtected() )
     {
       HorizontalPanel hPanel = new HorizontalPanel();
-      // TODO i18n
-      hPanel.add( new Label( "Mot de passe:" ) );
+      hPanel.add( new Label( MAppBoard.s_messages.pasword() ) );
       hPanel.add( m_txtPassword );
       m_panel.add( hPanel );
     }
     else
     {
-      // TODO i18n
-      m_panel.add( new HTML( "N'oubliez pas que vous jouez avec de vrais joueur.<br/>" +
-      		"En vous inscrivant, vous vous engagez a faire votre possible pour terminer cette partie.<br/>" +
-      		"Merci.<br/>" ) );
+      m_panel.add( new HTML( MAppBoard.s_messages.joinWarning() ) );
     }
 
     HorizontalPanel hPanel = new HorizontalPanel();

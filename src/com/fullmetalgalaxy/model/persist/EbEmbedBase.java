@@ -35,7 +35,6 @@ public class EbEmbedBase extends AnPojoBase
    */
   public EbEmbedBase()
   {
-    // TODO Auto-generated constructor stub
   }
 
 }

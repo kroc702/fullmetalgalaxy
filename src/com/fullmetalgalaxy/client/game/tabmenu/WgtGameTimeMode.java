@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.EventPresenter;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -88,7 +89,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     m_btnPlay.setStyleName( "fmp-PushButton32" );
 
     m_btnOk.addClickHandler( this );
-    m_btnOk.setTitle( "Ok" );
+    m_btnOk.setTitle( MAppBoard.s_messages.ok() );
     m_btnOk.setStyleName( "fmp-PushButton32" );
 
     m_panel.add( m_lblTimePosition );

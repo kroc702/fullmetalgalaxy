@@ -57,7 +57,6 @@ public class AnGameZone extends EbEmbedBase
    */
   public AnGameZone()
   {
-    // TODO Auto-generated constructor stub
   }
 
   public boolean contain(EbToken p_token)

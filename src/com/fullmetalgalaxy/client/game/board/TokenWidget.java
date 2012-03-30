@@ -46,7 +46,6 @@ public class TokenWidget
    */
   public TokenWidget()
   {
-    // TODO Auto-generated constructor stub
   }
 
   /**

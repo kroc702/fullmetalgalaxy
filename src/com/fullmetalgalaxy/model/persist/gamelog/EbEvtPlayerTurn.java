@@ -33,6 +33,8 @@ import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
+import com.fullmetalgalaxy.model.ressources.SharedI18n;
 
 
 /**
@@ -93,31 +95,29 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     if( p_game.getStatus() != GameStatus.Running )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Cette partie n'est pas demarre" );
+      throw new RpcFmpException( errMsg().gameNotStarted() );
     }
     if( p_game.isFinished() )
     {
       // no i18n
-      throw new RpcFmpException( "Cette partie est termine" );
+      throw new RpcFmpException( "This game is finished" );
     }
     if( p_game.isParallel() && p_game.getCurrentTimeStep() > 1 )
     {
-      // no i18n
-      throw new RpcFmpException(
-          "Cette partie ne se joue pas en tour par tour mais en mode parallèle" );
+      // no i18n as HMI won't allow this action
+      throw new RpcFmpException( "You can't end your turn as this game is in parallele mode" );
     }
     if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccount().getId() )
     {
-      throw new RpcFmpException( "Seul le joueur dont c'est le tour peut ecourter sont tour de jeu" );
+      // no i18n as HMI won't allow this action
+      throw new RpcFmpException( "Not your turn" );
     }
     if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       EbToken freighter = p_game.getFreighter( p_game.getCurrentPlayerRegistration() );
       if(freighter != null && freighter.getLocation() != Location.Board)
       {
-        // TODO i18n
-        throw new RpcFmpException( "Vous devez poser votre astronef avant." );
+        throw new RpcFmpException( errMsg().mustLandFreighter() );
       }
     }
     // check that current player have no cheating tank (ie two tank on same
@@ -130,9 +130,7 @@ public class EbEvtPlayerTurn extends AnEvent
         if( token.getColor() != EnuColor.None && playerColor.isColored( token.getColor() )
             && p_game.getTankCheating( token ) != null )
         {
-          // TODO i18n
-          throw new RpcFmpException(
-              "Vous ne pouvez pas terminer votre tour avec deux chars cote à cote sur une montagne" );
+          throw new RpcFmpException( errMsg().cantEndTurnTwoTankMontain() );
         }
       }
     }
@@ -274,6 +272,12 @@ public class EbEvtPlayerTurn extends AnEvent
     registration.setPtAction( m_oldActionPt );
     game.setCurrentPlayerRegistration( registration );
   }
+
+  protected MessagesRpcException errMsg()
+  {
+    return SharedI18n.getMessagesError( getAccountId() );
+  }
+
 
   /**
    * @return the account

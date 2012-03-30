@@ -213,8 +213,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
   @Override
   public void onMouseMove(Widget p_sender, int p_x, int p_y)
   {
-    // TODO Auto-generated method stub
-
+    // nothing to do
   }
 
 

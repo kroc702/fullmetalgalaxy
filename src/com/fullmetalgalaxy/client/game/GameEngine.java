@@ -37,6 +37,7 @@ import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.event.MessageEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
@@ -133,8 +134,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       ModelFmpInit model = (ModelFmpInit)p_result;
       if( model==null )
       {
-        // TODO i18n
-        Window.alert( "Partie non trouve...\nVerifier l'url, mais il ce peut qu'elle ai ete suprime" );
+        Window.alert( MAppBoard.s_messages.unknownGame() );
         return;
       }
       else
@@ -399,11 +399,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
               .getCurrentPlayerRegistration().getAccount().getId() == AppMain.instance()
               .getMyAccount().getId()) )
       {
-        // TODO i18n
-        Window.alert( "C'est à votre tour de jouer" );
+        Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
       }
     } catch( Throwable e )
     {
+      // no i18n
       RpcUtil.logError( "error ", e );
       Window.alert( "unexpected error : " + e );
     }
@@ -430,7 +430,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     if( m_isActionPending )
     {
-      Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
+      // no i18n as HMI is lock, so it shouldn't occur
+      Window.alert( "An action is already send to server... wait for server response." );
       return;
     }
     m_isActionPending = true;
@@ -440,7 +441,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       if( !GameEngine.model().isLogged() && getGame().getGameType() == GameType.MultiPlayer )
       {
-        // TODO i18n ???
+        // no i18n as HMI won't allow that. so unusual
         throw new RpcFmpException( "You must be logged to do this action" );
       }
       // do not check player is logged to let him join action
