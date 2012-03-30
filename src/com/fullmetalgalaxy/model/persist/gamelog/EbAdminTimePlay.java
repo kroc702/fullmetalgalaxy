@@ -81,8 +81,7 @@ public class EbAdminTimePlay extends EbAdmin
     }*/
     if( p_game.getCurrentNumberOfRegiteredPlayer() < 2 )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Pour démarrer une partie il faut au moins deux joueurs" );
+      throw new RpcFmpException( errMsg().mustHaveTwoPlayerToStart() );
     }
   }
 

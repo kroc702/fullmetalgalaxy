@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.widget.WgtPlayerMessage;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -106,8 +107,7 @@ public class WgtMessages extends Composite implements BlurHandler
     }
     if( p_panel.getWidgetCount() == 0 )
     {
-      // TODO i18n
-      p_panel.add( new Label( "Aucun message pour le moment" ) );
+      p_panel.add( new Label( MAppBoard.s_messages.noMessages() ) );
     }
     p_panel.add( m_text );
     m_text.setPixelSize( 400, 60 );

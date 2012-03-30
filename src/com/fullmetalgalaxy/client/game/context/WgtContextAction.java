@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -99,98 +100,96 @@ public class WgtContextAction extends WgtView implements ClickHandler
   public WgtContextAction()
   {
     m_btnOk.addClickHandler( this );
-    m_btnOk.setTitle( "Valider l'action" );
+    m_btnOk.setTitle( MAppBoard.s_messages.validAction() );
     m_btnOk.setStyleName( "fmp-PushButton32" );
     m_btnCancel.addClickHandler( this );
-    m_btnCancel.setTitle( "Annuler l'action [ESC]" );
+    m_btnCancel.setTitle( MAppBoard.s_messages.cancelAction() );
     m_btnCancel.setStyleName( "fmp-PushButton32" );
     m_btnRepairTurret.addClickHandler( this );
-    m_btnRepairTurret.setTitle( "Réparer la tourelle" );
+    m_btnRepairTurret.setTitle( MAppBoard.s_messages.repairTurret() );
     m_btnRepairTurret.setStyleName( "fmp-PushButton32" );
     m_btnTakeOff.addClickHandler( this );
-    m_btnTakeOff.setTitle( "Décollage" );
+    m_btnTakeOff.setTitle( MAppBoard.s_messages.takeOff() );
     m_btnTakeOff.setStyleName( "fmp-PushButton32" );
     m_btnFire.addClickHandler( this );
-    m_btnFire.setTitle( "Tirer" );
+    m_btnFire.setTitle( MAppBoard.s_messages.fire() );
     m_btnFire.setStyleName( "fmp-PushButton32" );
     m_btnControl.addClickHandler( this );
-    m_btnControl.setTitle( "Contrôle" );
+    m_btnControl.setTitle( MAppBoard.s_messages.control() );
     m_btnControl.setStyleName( "fmp-PushButton32" );
     m_btnFireCoverOn.addClickHandler( this );
-    m_btnFireCoverOn.setTitle( "Afficher les couvertures de feux [F]" );
+    m_btnFireCoverOn.setTitle( MAppBoard.s_messages.displayFireCover() );
     m_btnFireCoverOn.setStyleName( "fmp-PushButton32" );
     m_btnFireCoverOff.addClickHandler( this );
-    m_btnFireCoverOff.setTitle( "Cacher les couvertures de feux [F]" );
+    m_btnFireCoverOff.setTitle( MAppBoard.s_messages.hideFireCover() );
     m_btnFireCoverOff.setStyleName( "fmp-PushButton32" );
     m_btnEndTurn.addClickHandler( this );
-    m_btnEndTurn.setTitle( "Fin de tour" );
+    m_btnEndTurn.setTitle( MAppBoard.s_messages.endTurn() );
     m_btnEndTurn.setStyleName( "fmp-PushButton32" );
     m_btnZoomIn.addClickHandler( this );
-    m_btnZoomIn.setTitle( "Zoom tactique [+]" );
+    m_btnZoomIn.setTitle( MAppBoard.s_messages.tacticalZoom() );
     m_btnZoomIn.setStyleName( "fmp-PushButton32" );
     m_btnZoomOut.addClickHandler( this );
-    m_btnZoomOut.setTitle( "Zoom stratégique [-]" );
+    m_btnZoomOut.setTitle( MAppBoard.s_messages.strategyZoom() );
     m_btnZoomOut.setStyleName( "fmp-PushButton32" );
     m_btnGridOn.addClickHandler( this );
-    m_btnGridOn.setTitle( "Afficher la grille [G]" );
+    m_btnGridOn.setTitle( MAppBoard.s_messages.displayGrid() );
     m_btnGridOn.setStyleName( "fmp-PushButton32" );
     m_btnGridOff.addClickHandler( this );
-    m_btnGridOff.setTitle( "Cacher la grille [G]" );
+    m_btnGridOff.setTitle( MAppBoard.s_messages.hideGrid() );
     m_btnGridOff.setStyleName( "fmp-PushButton32" );
     m_btnRegister.addClickHandler( this );
-    m_btnRegister.setTitle( "S'inscrire à cette partie" );
+    m_btnRegister.setTitle( MAppBoard.s_messages.joinGame() );
     m_btnRegister.setStyleName( "fmp-PushButton32" );
     m_btnPractice.addClickHandler( this );
-    m_btnPractice.setTitle( "Mode entrainement" );
+    m_btnPractice.setTitle( MAppBoard.s_messages.trainningMode() );
     m_btnPractice.setStyleName( "fmp-PushButton32" );
     HorizontalPanel hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.register32().createImage() );
-    hPanel.add( new Label( "Cette partie recherche des joueurs. Inscrivez vous !" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.joinThisGame() ) );
     m_pnlRegister = new FocusPanel( hPanel );
     m_pnlRegister.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.pause32().createImage() );
-    hPanel.add( new Label( "Vous devez attendre le démarrage de la partie." ) );
+    hPanel.add( new Label( MAppBoard.s_messages.waitGameStarting() ) );
     m_pnlWait = new FocusPanel( hPanel );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
-    hPanel.add( new Label( "Vous devez vous poser sur la carte." ) );
+    hPanel.add( new Label( MAppBoard.s_messages.mustLandFreighter() ) );
     m_pnlLand = new FocusPanel( hPanel );
     m_pnlLand.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
-    hPanel.add( new Label( "Vous pouvez déployer vos unités." ) );
+    hPanel.add( new Label( MAppBoard.s_messages.mustDeployUnits() ) );
     m_pnlDeploy = new FocusPanel( hPanel );
     m_pnlDeploy.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.pause32().createImage() );
-    hPanel
-        .add( new Label(
-            "Pour permettre l'inscription d'un nouveau joueur vous devriez mettre la partie en pause" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.pauseGameAllowNewPlayer() ) );
     m_pnlPause = new FocusPanel( hPanel );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.endTurn32().createImage() );
-    hPanel.add( new Label( "Vous devez maintenant terminer votre tour !" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.mustEndYourTurn() ) );
     m_pnlEndTurn = new FocusPanel( hPanel );
     m_pnlEndTurn.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
-    hPanel.add( new Label( "Cliquez sur votre astronef pour le faire décoller" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.SelectFreighterToTakeOff() ) );
     m_pnlTakeOff = new FocusPanel( hPanel );
     m_pnlTakeOff.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.practice32().createImage() );
-    hPanel.add( new Label( "Mode entrainement\nClickez ici pour quitter" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.trainningMode() + "\n" + MAppBoard.s_messages.clicToLeave() ) );
     m_pnlPractice = new FocusPanel( hPanel );
     m_pnlPractice.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( Icons.s_instance.takeOff32().createImage() );
-    hPanel.add( new Label( "Déconnecté du serveur" ) );
+    hPanel.add( new Label( MAppBoard.s_messages.unconnected() ) );
     m_pnlChannelDisconnected = new FocusPanel( hPanel );
     m_pnlChannelDisconnected.addClickHandler( this );
 
 
-    m_iconAction.setTitle( "Coût en point d'action" );
+    m_iconAction.setTitle( MAppBoard.s_messages.costInPA() );
     m_lblAction.setStyleName( "fmp-status-text" );
 
     // subscribe all needed models update event
@@ -238,14 +237,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
         if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( GameEngine.model()
             .getGame() ) == null )
         {
-          // TODO i18n
           MAppMessagesStack.s_instance
-              .showMessage( "Sélectionnez un second destructeur à portée, puis votre cible" );
+              .showMessage( MAppBoard.s_messages.selectDestroyerTarget() );
         }
         else
         {
-          // TODO i18n
-          MAppMessagesStack.s_instance.showMessage( "Sélectionnez les deux destructeurs à portée" );
+          MAppMessagesStack.s_instance.showMessage( MAppBoard.s_messages.selectTwoDestroyers() );
         }
       }
       else if( sender == m_btnControl )
@@ -254,15 +251,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
         if( ((EbEvtFire)actionBuilder.getSelectedAction()).getTokenTarget( GameEngine.model()
             .getGame() ) == null )
         {
-          // TODO i18n
           MAppMessagesStack.s_instance
-              .showMessage( "Sélectionnez un second destructeur au contact, puis votre cible" );
+              .showMessage( MAppBoard.s_messages.selectDestroyerTarget() );
         }
         else
         {
-          // TODO i18n
           MAppMessagesStack.s_instance
-              .showMessage( "Sélectionnez les deux destructeurs au contact" );
+              .showMessage( MAppBoard.s_messages.selectTwoDestroyers() );
         }
       }
       else if( sender == m_btnFireCoverOn )
@@ -299,13 +294,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
         if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
         {
           Window
-              .alert( "Mode entraînement activé\nAucune de vos actions ne sera prise en compte\nAttention : si vous rechargez la page, vous quittez ce mode" );
+              .alert( MAppBoard.s_messages.activateTrainningMode() );
           GameEngine.model().getGame().setGameType( GameType.Practice );
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         }
         else
         {
-          Window.alert( "Mode entraînement desactivé" );
+          Window.alert( MAppBoard.s_messages.deactivateTrainningMode() );
           ClientUtil.reload();
         }
       }
@@ -314,15 +309,13 @@ public class WgtContextAction extends WgtView implements ClickHandler
         String msg = null;
         int oldPt = GameEngine.model().getMyRegistration().getPtAction();
         int newPt = GameEngine.model().getMyRegistration().getRoundedActionPt(GameEngine.model().getGame());
-        // TODO i18n
         if( oldPt == newPt )
         {
-          msg = "Il vous reste " + oldPt + " points d'action. Confirmez-vous la fin de tour ?";
+          msg = MAppBoard.s_messages.confirmEndTurn( oldPt );
         }
         else
         {
-          msg = "Vos " + oldPt + " points d'action seront arrondis à " + newPt
-              + " pts. Confirmez-vous la fin de tour ?";
+          msg = MAppBoard.s_messages.confirmEndTurnRoundedPA( oldPt, newPt );
         }
         if( Window.confirm( msg ) )
         {
@@ -334,9 +327,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnTakeOff )
       {
-        // TODO i18n
-        if( Window.confirm( "Confirmez-vous le décollage de "
-            + Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) + " ?" ) )
+        if( Window.confirm( MAppBoard.s_messages.confirmTakeOff( Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) ) ) )
         {
           EbEvtTakeOff action = new EbEvtTakeOff();
           action.setGame( GameEngine.model().getGame() );

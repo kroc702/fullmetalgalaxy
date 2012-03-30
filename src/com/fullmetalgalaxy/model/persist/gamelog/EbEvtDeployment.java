@@ -107,9 +107,7 @@ public class EbEvtDeployment extends AnEventPlay
     // check that, in turn by turn, player don't wan't to deploy too early
     if( !p_game.isParallel() && p_game.getEbConfigGameTime().getDeploymentTimeStep() != p_game.getCurrentTimeStep() )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous devez attendre le tour " + p_game.getEbConfigGameTime().getDeploymentTimeStep()
-          + " pour deployer vos vehicules" );
+      throw new RpcFmpException( errMsg().mustWaitToDeploy( p_game.getEbConfigGameTime().getDeploymentTimeStep()) );
     }
     
     // check that, player don't wan't to deploy too late
@@ -130,10 +128,7 @@ public class EbEvtDeployment extends AnEventPlay
     if( freighter.getPosition().getHexDistance( getPosition() ) > p_game.getEbConfigGameVariant()
         .getDeploymentRadius() )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous ne pouvez pas deployer votre " + getToken( p_game )
-          + " a plus de " + p_game.getEbConfigGameVariant().getDeploymentRadius()
-          + " cases de votre astronef" );
+      throw new RpcFmpException( errMsg().cantDeployTooFar( p_game.getEbConfigGameVariant().getDeploymentRadius() ) );
     }
 
     // check token move to a 'clear' hexagon
@@ -163,8 +158,7 @@ public class EbEvtDeployment extends AnEventPlay
     if( getToken( p_game ).getType() == TokenType.Pontoon
         && !p_game.isPontoonLinkToGround( getPosition() ) )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous ne pouvez pas deployer votre ponton en pleine mer" );
+      throw new RpcFmpException( errMsg().cantDeployPotoonInSea() );
     }
   }
 

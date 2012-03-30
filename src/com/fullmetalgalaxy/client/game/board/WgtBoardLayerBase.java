@@ -51,7 +51,6 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    */
   public WgtBoardLayerBase()
   {
-    // TODO Auto-generated constructor stub
   }
 
   /* (non-Javadoc)

@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.chat;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,7 +50,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class DlgChatInput extends DialogBox implements ClickHandler, KeyDownHandler
 {
   // UI
-  private Button m_btnOk = new Button( "OK" );
+  private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Panel m_panel = new HorizontalPanel();
   private TextBox m_text = new TextBox();
   private boolean m_isChatMode = false;

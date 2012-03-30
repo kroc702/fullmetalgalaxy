@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+
 /**
  * @author Vincent Legendre
  * used for research.
@@ -34,5 +35,40 @@ public enum GameStatus implements java.io.Serializable, IsSerializable
   // multiplayer games status
   Open, Pause, Running, Aborted, History,
   // other game type
-  Puzzle, Scenario;
+  Puzzle, Scenario,
+  //Practice is similar to Puzzle mode but for game that are originally
+  // Multiplayer
+  // -> some more restriction
+  Practice;
+  
+  
+  private String getIconFileName()
+  {
+    switch( this )
+    {
+    case Open:
+      return "/images/icons/open16.png";
+    case Aborted:
+      return "/images/icons/canceled16.png";
+    case Pause:
+      return "/images/icons/pause16.png";
+    case History:
+      return "/images/icons/history16.png";
+    default:
+    case Scenario:
+    case Practice:
+    case Puzzle:
+      return "/images/icons/puzzle16.png";
+    case Running:
+      return "/images/icons/running16.png";
+    }
+  }
+  
+  public String getIconAsHtml()
+  {
+    return "<image src='"+getIconFileName()+"' />";
+  }
+  
+  
+
 }

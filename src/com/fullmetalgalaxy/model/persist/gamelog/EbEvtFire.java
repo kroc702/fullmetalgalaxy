@@ -118,8 +118,7 @@ public class EbEvtFire extends AnEventPlay
     if( (getTokenTarget( p_game ).getColor() != EnuColor.None)
         && (getMyRegistration(p_game).getEnuColor().isColored( getTokenTarget(p_game).getColor() )) )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous ne pouvez pas détruire vos propre pions" );
+      throw new RpcFmpException( errMsg().cantDestroyYourUnits() );
     }
 
     // check the first destroyer is not tide deactivated
@@ -159,26 +158,24 @@ public class EbEvtFire extends AnEventPlay
 
     if( !p_game.canTokenFireOn( getTokenDestroyer1(p_game), getTokenTarget(p_game) ) )
     {
-      // TODO i18n
-      throw new RpcFmpException( getTokenDestroyer1(p_game) + " ne peu pas tirer sur " + getTokenTarget(p_game) );
+      throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game )),
+          Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
     }
     if( !p_game.canTokenFireOn( getTokenDestroyer2(p_game), getTokenTarget(p_game) ) )
     {
-      // TODO i18n
-      throw new RpcFmpException( getTokenDestroyer2(p_game) + " ne peu pas tirer sur " + getTokenTarget(p_game) );
+      throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game )),
+          Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
     }
 
     if( getTokenDestroyer1( p_game ).getBulletCount() < 1
         && getTokenDestroyer1( p_game ).getType() != TokenType.Turret )
     {
-      // TODO i18n
-      throw new RpcFmpException( getTokenDestroyer1(p_game) + " n'a plus de munitions" );
+      errMsg().noMoreAmo( Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game )) );
     }
     if( getTokenDestroyer2( p_game ).getBulletCount() < 1
         && getTokenDestroyer2( p_game ).getType() != TokenType.Turret )
     {
-      // TODO i18n
-      throw new RpcFmpException( getTokenDestroyer2(p_game) + " n'a plus de munitions" );
+      errMsg().noMoreAmo( Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game )) );
     }
 
     // check that two destroyer are different

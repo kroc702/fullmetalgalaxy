@@ -40,8 +40,6 @@ public class AnEventUser extends AnEvent
   static final long serialVersionUID = 1;
 
   private long m_accountId = 0L;
-  // TODO remove this. is here for backward compatibility
-  private String m_remoteAddr = null;
   private byte[] m_remoteAddrAsArray = null;
   /**
    * 
@@ -62,7 +60,7 @@ public class AnEventUser extends AnEvent
   private void init()
   {
     m_accountId = 0;
-    m_remoteAddr = null;
+    m_remoteAddrAsArray = null;
   }
 
   /**
@@ -104,10 +102,9 @@ public class AnEventUser extends AnEvent
   {
     super.check(p_game);
     if( ((getAccountId() == 0)) && (!isAuto())
- && (p_game.getGameType() != GameType.Puzzle) )
+        && (p_game.getGameType() == GameType.MultiPlayer) )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous devez etre logger pour realiser cette action" );
+      throw new RpcFmpException( errMsg().MustBeLogged() );
     }
   }
 
@@ -145,10 +142,6 @@ public class AnEventUser extends AnEvent
    */
   public String getRemoteAddr()
   {
-    if( m_remoteAddr != null )
-    {
-      return m_remoteAddr;
-    }
     if( m_remoteAddrAsArray != null )
     {
       // should be tuned for IPV6

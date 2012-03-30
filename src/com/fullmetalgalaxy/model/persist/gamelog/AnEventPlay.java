@@ -96,7 +96,7 @@ public class AnEventPlay extends AnEventUser
   }
 
   /**
-   * @param p_game TODO
+   * @param p_game 
    * @return a board position where action is done or null if not relevant.
    */
   public AnBoardPosition getSelectedPosition(Game p_game)
@@ -157,7 +157,7 @@ public class AnEventPlay extends AnEventUser
     if( (p_game.getStatus() == GameStatus.Open || p_game.getStatus() == GameStatus.Pause)
         && p_game.getGameType() != GameType.Practice )
     {
-      throw new RpcFmpException( errMsg().GameNotStarted() );
+      throw new RpcFmpException( errMsg().gameNotStarted() );
     }
 
     if( p_game.isParallel()
@@ -167,8 +167,7 @@ public class AnEventPlay extends AnEventUser
           getLockedPosition(), SharedMethods.currentTimeMillis() );
       if( registration != null )
       {
-        // TODO i18n this board area is locked by another player.
-        throw new RpcFmpException( "Cette partie du plateau est bloqué par un autre joueur." );
+        throw new RpcFmpException( errMsg().boardLocked() );
       }
     }
   }

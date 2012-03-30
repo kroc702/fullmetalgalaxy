@@ -64,8 +64,7 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements Native
   @Override
   public void onPreviewNativeEvent(NativePreviewEvent p_event)
   {
-    // TODO Auto-generated method stub
-
+    // nothing to do
   }
 
 

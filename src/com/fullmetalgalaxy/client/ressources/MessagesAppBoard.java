@@ -30,6 +30,56 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesAppBoard extends Messages
 {
+  // error
+  String wrongGameVersion();
+  String unknownError();
+  String unknownGame();
+  
+  // dlg join
+  String pleaseCheckGamePasword();
+  
+  String pasword();
+  
+  String joinTitle();
+  
+  String joinWarning();
+  
+  // player tip on actions
+  String yourTurnToPlay();
+  String selectDestroyerTarget();
+  String selectTwoDestroyers();
+  String confirmEndTurn(int p_remainingPA);
+  String confirmEndTurnRoundedPA(int p_remainingPA, int p_roundedTo);
+  String confirmTakeOff(String p_freighter);         
+  String joinThisGame();
+  String waitGameStarting();
+  String mustLandFreighter();
+  String mustDeployUnits();
+  String pauseGameAllowNewPlayer();
+  String mustEndYourTurn();
+  String SelectFreighterToTakeOff();
+  String unconnected();
+  String trainningMode();
+  String clicToLeave();
+  String activateTrainningMode();
+  String deactivateTrainningMode();
+  // icons tooltip
+  String validAction();
+  String cancelAction();
+  String repairTurret();
+  String takeOff();
+  String fire();
+  String control();
+  String displayFireCover();
+  String hideFireCover();
+  String endTurn();
+  String tacticalZoom();
+  String strategyZoom();
+  String displayGrid();
+  String hideGrid();
+  String joinGame();
+  String costInPA();
+  
   String contain();
 
   String construct();
@@ -65,7 +115,17 @@ public interface MessagesAppBoard extends Messages
   String remainingActionPoint();
 
   String nextPA(int p_paIncrement, String p_remainingTime);
+  
+  String reportAnIssueToAdmin();
+  
+  String confirmCancelGame();
 
+  String noMessages();
+  
+  String ok();
+  
+  String cancel();
+  
   // unused ?
   String gameFinished();
 

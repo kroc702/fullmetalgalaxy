@@ -25,12 +25,14 @@ package com.fullmetalgalaxy.model.ressources;
 
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * this class is used to get a localized string of all class located in rpc package as 
@@ -216,5 +218,30 @@ public class Messages
     }
   }
 
-
+  public static String getGameStatusString(long p_accountId, GameStatus p_status)
+  {
+    switch( p_status )
+    {
+    case Open:
+      return SharedI18n.getMessages( p_accountId ).open();
+    case Aborted:
+      return SharedI18n.getMessages( p_accountId ).aborted();
+    case Pause:
+      return SharedI18n.getMessages( p_accountId ).pause();
+    case History:
+      return SharedI18n.getMessages( p_accountId ).history();
+    case Puzzle:
+      return SharedI18n.getMessages( p_accountId ).puzzle();
+    case Running:
+      return SharedI18n.getMessages( p_accountId ).running();
+    case Scenario:
+      return SharedI18n.getMessages( p_accountId ).scenario();
+    case Practice:
+      return SharedI18n.getMessages( p_accountId ).practice();
+    case Unknown:
+    default:
+      return SharedI18n.getMessages( p_accountId ).unknown();
+    }
+  }
+  
 }

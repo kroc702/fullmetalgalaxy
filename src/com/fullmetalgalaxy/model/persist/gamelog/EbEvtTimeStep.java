@@ -80,12 +80,13 @@ public class EbEvtTimeStep extends AnEvent
     assert p_game.getLastTimeStepChange().equals( getOldTimeStepChange() );
     if( p_game.getStatus() != GameStatus.Running )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Cette partie n'est pas demarre" );
+      // no i18n
+      throw new RpcFmpException( "game not started" );
     }
     if( p_game.isFinished() )
     {
-      throw new RpcFmpException( "Cette partie est termine" );
+      // no i18n
+      throw new RpcFmpException( "game is finished" );
     }
     if( getOldTimeStepChange() != null
         && !getOldTimeStepChange().equals( p_game.getLastTimeStepChange() ) )

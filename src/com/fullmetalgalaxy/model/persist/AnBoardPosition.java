@@ -37,7 +37,7 @@ import com.fullmetalgalaxy.model.pathfinder.PathNode;
  */
 
 /**
- * @author LEG88888
+ * @author vincent legendre
  * This class describe a position on an hexagonal board.
  */
 public class AnBoardPosition extends AnPair implements PathNode

@@ -45,7 +45,6 @@ public class EbAdminBan extends EbAdmin
    */
   public EbAdminBan()
   {
-    // TODO Auto-generated constructor stub
   }
 
   @Override
@@ -85,8 +84,7 @@ public class EbAdminBan extends EbAdmin
     }
     if( registration.getColor() == EnuColor.None )
     {
-      // TODO i18n
-      throw new RpcFmpException( "Vous ne pouvez pas banir les joueurs sans astronef" );
+      throw new RpcFmpException( errMsg().cantBanPlayerNoFreighter() );
     }
   }
 

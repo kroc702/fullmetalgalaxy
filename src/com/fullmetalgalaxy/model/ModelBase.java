@@ -45,7 +45,6 @@ public class ModelBase implements Serializable
    */
   public ModelBase()
   {
-    // TODO Auto-generated constructor stub
   }
 
   /**

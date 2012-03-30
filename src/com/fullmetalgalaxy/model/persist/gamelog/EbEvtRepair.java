@@ -89,31 +89,30 @@ public class EbEvtRepair extends AnEventPlay
     EbToken turret = p_game.getToken( getPosition(), TokenType.Turret );
     if( (freighter == null) || (turret != null) )
     {
-      // no i18n
+      // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can repair only destroyed turret" );
     }
     // check he don't repair center freighter
     if( freighter.getPosition().equals( getPosition() ) )
     {
-      // no i18n
+      // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can repair only destroyed turret" );
     }
     if( getMyRegistration(p_game).getTurretsToRepair() <= 0 )
     {
-      // no i18n
+      // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
     if( getMyRegistration( p_game ).getSingleColor() == freighter.getColor() )
     {
-      // no i18n
+      // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair your original turrets" );
     }
     EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
         getPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
-      // TODO i18n
-      throw new RpcFmpException( "you can't repair turrets under opponent fire cover" );
+      throw new RpcFmpException( errMsg().cantRepairTurretFireCover() );
     }
   }
 

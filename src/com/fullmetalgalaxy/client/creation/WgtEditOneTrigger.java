@@ -124,8 +124,7 @@ public class WgtEditOneTrigger extends Composite implements ClickHandler, Change
   @Override
   public void onChange(Widget p_sender)
   {
-    // TODO Auto-generated method stub
-
+    // nothing to do
   }
 
   /**

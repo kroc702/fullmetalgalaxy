@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 
 /**
- * @author LEG88888
+ * @author vincent legendre
  *
  */
 public enum TokenType implements java.io.Serializable, IsSerializable

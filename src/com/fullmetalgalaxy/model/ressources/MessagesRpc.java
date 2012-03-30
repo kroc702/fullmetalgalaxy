@@ -30,6 +30,9 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface MessagesRpc extends Messages
 {
+  // event check
+  
+  // token
   String freighter();
 
   String turret();
@@ -50,12 +53,14 @@ public interface MessagesRpc extends Messages
 
   String ore();
 
+  // tide
   String low();
 
   String medium();
 
   String hight();
 
+  // sector
   String north();
 
   String north_east();
@@ -68,6 +73,7 @@ public interface MessagesRpc extends Messages
 
   String north_west();
 
+  // lands
   String none();
 
   String sea();
@@ -80,6 +86,7 @@ public interface MessagesRpc extends Messages
 
   String montain();
 
+  // land type
   String desert();
 
   String grass();
@@ -88,6 +95,27 @@ public interface MessagesRpc extends Messages
 
   String lava();
 
+  // GameStatus
+  String unknown();
+
+  String open();
+
+  String pause();
+
+  String running();
+
+  String aborted();
+
+  String history();
+
+  String puzzle();
+
+  String scenario();
+
+  String practice();
+
+
+  // color
   String colorless();
 
   String blue();

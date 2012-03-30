@@ -102,7 +102,6 @@ public class EbGameData extends EbBase
   public EbGameData(EbBase p_base)
   {
     super( p_base );
-    // TODO Auto-generated constructor stub
   }
   protected void init()
   {
