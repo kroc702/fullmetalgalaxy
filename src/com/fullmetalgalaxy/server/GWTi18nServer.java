@@ -1,3 +1,19 @@
+package com.fullmetalgalaxy.server;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import com.google.gwt.i18n.client.ConstantsWithLookup;
+import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+import com.google.gwt.i18n.client.Messages.DefaultMessage;
+
 /**
  * Copyright (c) 2008 Raise Partner
  * 22, av. Doyen Louis Weil,
@@ -20,22 +36,6 @@
  *
  * Contact: sebastien@chassande.fr
  */
-package com.fullmetalgalaxy.server;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import com.google.gwt.i18n.client.ConstantsWithLookup;
-import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
-import com.google.gwt.i18n.client.LocalizableResource.Key;
-import com.google.gwt.i18n.client.Messages.DefaultMessage;
-
 
 /**
  * This class was downloaded from http://code.google.com/p/gwt-fusionchart
