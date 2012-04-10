@@ -141,7 +141,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
     return (WgtBoard)getParent().getParent();
   }
 
-  protected EnuZoom getZoom()
+  public EnuZoom getZoom()
   {
     return GameEngine.model().getZoomDisplayed();
   }
@@ -176,7 +176,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    * @param p_w
    * @param p_wgtHexPosition position in hexagon
    */
-  protected void setWidgetHexPosition(Widget p_w, AnPair p_wgtHexPosition)
+  public void setWidgetHexPosition(Widget p_w, AnPair p_wgtHexPosition)
   {
     AnPair wgtPxPosition = convertHexPositionToPixPosition( p_wgtHexPosition );
     setWidgetPixPosition( p_w, wgtPxPosition );
@@ -199,7 +199,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    * @param p_w
    * @param p_wgtPixPosition position in pixel
    */
-  protected void setWidgetPixPosition(Widget p_w, AnPair p_wgtPixPosition)
+  public void setWidgetPixPosition(Widget p_w, AnPair p_wgtPixPosition)
   {
     super.setWidgetPosition( p_w, p_wgtPixPosition.getX() - p_w.getOffsetWidth() / 2,
         p_wgtPixPosition.getY() - p_w.getOffsetHeight() / 2 );
@@ -247,7 +247,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
     return wgtPxPosition;
   }
 
-  protected AnPair convertHexPositionToPixPosition(AnPair p_wgtHexPosition)
+  public AnPair convertHexPositionToPixPosition(AnPair p_wgtHexPosition)
   {
     return convertHexPositionToPixPosition( p_wgtHexPosition, getZoom() );
   }

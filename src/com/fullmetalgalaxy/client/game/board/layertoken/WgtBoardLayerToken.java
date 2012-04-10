@@ -20,13 +20,18 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.board;
+package com.fullmetalgalaxy.client.game.board.layertoken;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.AppRoot;
+import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -34,9 +39,11 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
@@ -48,15 +55,19 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 
-public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
+public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler,
+    GameActionEvent.Handler
 {
   private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
+  private AnPair hexPositionLeftTop = new AnPair( 0, 0 );
+  private AnPair hexPositionRightBotom = new AnPair( 900, 900 );
 
   /**
    * 
    */
   public WgtBoardLayerToken()
   {
+    AppRoot.getEventBus().addHandler( GameActionEvent.TYPE, this );
   }
 
   /* (non-Javadoc)
@@ -73,10 +84,10 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     // little optimisation to avoid using isHexVisible for each token...
     AnPair pixPositionLeftTop = new AnPair( m_left, m_top );
     AnPair pixPositionRightBotom = new AnPair( m_right, m_botom );
-    AnPair hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
+    hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
     hexPositionLeftTop.setX( hexPositionLeftTop.getX() - 2 );
     hexPositionLeftTop.setY( hexPositionLeftTop.getY() - 2 );
-    AnPair hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
+    hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
     hexPositionRightBotom.setX( hexPositionRightBotom.getX() + 2 );
     hexPositionRightBotom.setY( hexPositionRightBotom.getY() + 2 );
 
@@ -126,7 +137,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
    * @param p_token
    * @return
    */
-  private void updateTokenWidget(EbToken p_token, boolean p_force)
+  public void updateTokenWidget(EbToken p_token, boolean p_force)
   {
     assert p_token != null;
     Game game = GameEngine.model().getGame();
@@ -153,8 +164,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     }
     if( tokenWidget == null )
     {
-      tokenWidget = new TokenWidget();
-      m_tokenMap.put( p_token, tokenWidget );
+      tokenWidget = getTokenWidget( p_token, true );
     }
     if( (tokenWidget.isUpdateRequired( p_token )) || (p_force == true) )
     {
@@ -245,7 +255,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     }
   }
 
-  private void addWarningImage(Image p_image, AbstractImagePrototype p_absImage, EbToken p_token,
+  protected void addWarningImage(Image p_image, AbstractImagePrototype p_absImage, EbToken p_token,
       int p_landPixOffset)
   {
     if( p_absImage == null )
@@ -338,14 +348,107 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       m_lastTideValue = game.getCurrentTide();
       redraw();
     }
-    if( m_lastTideValue != game.getCurrentTide() )
+  }
+
+
+
+  @Override
+  public void onGameEvent(AnEvent p_event)
+  {
+    super.onModelChange( false );
+    Game game = GameEngine.model().getGame();
+    AnimEvent animation = AnimFactory.createAnimEvent( this, p_event );
+    if( animation != null )
     {
-      m_lastTideValue = game.getCurrentTide();
-      invalidateTokenMap();
+      m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
+      addAnimation( animation );
+    }
+    else
+    {
+      if( m_tokenLastUpdate != game.getLastTokenUpdate().getTime() )
+      {
+        m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
+        m_lastTideValue = game.getCurrentTide();
+        redraw();
+      }
+      if( m_lastTideValue != game.getCurrentTide() )
+      {
+        m_lastTideValue = game.getCurrentTide();
+        invalidateTokenMap();
+        redraw();
+      }
+    }
+  }
+
+  public TokenWidget getTokenWidget(EbToken p_token)
+  {
+    return m_tokenMap.get( p_token );
+  }
+
+  public TokenWidget getTokenWidget(EbToken p_token, boolean p_newIfNeeded)
+  {
+    TokenWidget tokenWidget = m_tokenMap.get( p_token );
+    if( tokenWidget == null && p_newIfNeeded )
+    {
+      tokenWidget = new TokenWidget();
+      m_tokenMap.put( p_token, tokenWidget );
+    }
+    return tokenWidget;
+  }
+
+
+
+  private List<AnimEvent> m_animations = new LinkedList<AnimEvent>();
+  private boolean isAnimationRunning = false;
+
+  private void addAnimation(AnimEvent p_animation)
+  {
+    m_animations.add( p_animation );
+    if( !isAnimationRunning )
+    {
+      isAnimationRunning = true;
+      m_animations.get( 0 ).run();
+    }
+  }
+
+  public void nextAnimation()
+  {
+    if( m_animations.isEmpty() )
+    {
+      return;
+    }
+    m_animations.remove( 0 );
+    if( !m_animations.isEmpty() )
+    {
+      m_animations.get( 0 ).run();
+    }
+    else
+    {
+      isAnimationRunning = false;
       redraw();
     }
   }
 
+  /**
+   * 
+   * @param p_token
+   * @return true if given token is visible by user
+   */
+  public boolean isVisible(EbToken p_token)
+  {
+    if( p_token.getLocation() != Location.Board )
+    {
+      return false;
+    }
+    return isVisible( p_token.getPosition() );
+  }
 
+  public boolean isVisible(AnBoardPosition p_position)
+  {
+    return (p_position.getX() > hexPositionLeftTop.getX())
+        && (p_position.getY() > hexPositionLeftTop.getY())
+        && (p_position.getX() < hexPositionRightBotom.getX())
+        && (p_position.getY() < hexPositionRightBotom.getY());
+  }
 
 }

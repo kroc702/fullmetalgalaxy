@@ -23,7 +23,7 @@
 package com.fullmetalgalaxy.client.event;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -33,38 +33,38 @@ import com.google.gwt.event.shared.GwtEvent;
  * this event represent any {@link GameEngine} update: this is the legacy event. 
  * (ie the only existing event before the use of eventbus)
  */
-public class MessageEvent extends GwtEvent<MessageEvent.Handler>
+public class GameActionEvent extends GwtEvent<GameActionEvent.Handler>
 {
   /**
-   * Implemented by objects that handle {@link MessageEvent}.
+   * Implemented by objects that handle {@link GameActionEvent}.
    */
   public interface Handler extends EventHandler {
-    public void onMessage(EbEvtMessage p_message);
+    public void onGameEvent(AnEvent p_message);
   }
 
   /**
    * The event type.
    */
-  public static Type<MessageEvent.Handler> TYPE = new Type<MessageEvent.Handler>();
+  public static Type<GameActionEvent.Handler> TYPE = new Type<GameActionEvent.Handler>();
   
-  private EbEvtMessage m_modelSender = null;
+  private AnEvent m_modelSender = null;
   
-  public MessageEvent(EbEvtMessage p_modelSender)
+  public GameActionEvent(AnEvent p_modelSender)
   {
     m_modelSender = p_modelSender;
   }
   
   
   @Override
-  public com.google.gwt.event.shared.GwtEvent.Type<MessageEvent.Handler> getAssociatedType()
+  public com.google.gwt.event.shared.GwtEvent.Type<GameActionEvent.Handler> getAssociatedType()
   {
     return TYPE;
   }
 
   @Override
-  protected void dispatch(MessageEvent.Handler p_handler)
+  protected void dispatch(GameActionEvent.Handler p_handler)
   {
-    p_handler.onMessage( m_modelSender );
+    p_handler.onGameEvent( m_modelSender );
     
   }
 

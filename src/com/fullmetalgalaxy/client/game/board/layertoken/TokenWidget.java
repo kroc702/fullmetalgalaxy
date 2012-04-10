@@ -20,7 +20,7 @@
  *  Copyright 2010, 2011 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.client.game.board;
+package com.fullmetalgalaxy.client.game.board.layertoken;
 
 
 import com.fullmetalgalaxy.client.game.GameEngine;

@@ -23,7 +23,6 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;

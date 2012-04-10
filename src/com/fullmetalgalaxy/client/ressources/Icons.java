@@ -40,6 +40,9 @@ public interface Icons extends ImageBundle
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Pause32.png")
   public AbstractImagePrototype pause32();
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Forward32.png")
+  public AbstractImagePrototype forward32();
+
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Play32.png")
   public AbstractImagePrototype play32();
 
@@ -54,9 +57,6 @@ public interface Icons extends ImageBundle
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Winner32.png")
   public AbstractImagePrototype winner32();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/SwitchOff8.png")
-  public AbstractImagePrototype switchOff8();
 
 
   @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Cancel32.png")

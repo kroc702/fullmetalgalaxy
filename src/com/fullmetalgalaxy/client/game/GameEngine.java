@@ -35,9 +35,11 @@ import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
-import com.fullmetalgalaxy.client.event.MessageEvent;
+import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
+import com.fullmetalgalaxy.client.game.board.layertoken.AnimEvent;
+import com.fullmetalgalaxy.client.game.board.layertoken.AnimFactory;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameType;
@@ -60,6 +62,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
@@ -381,14 +384,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         }
         getGame().updateLastTokenUpdate( null );
         
-        if( event.getType() == GameLogType.EvtMessage )
-        {
-          AppRoot.getEventBus().fireEvent( new MessageEvent((EbEvtMessage)event) );
-        }
         if( event.getType() == GameLogType.EvtPlayerTurn )
         {
           isNewPlayerTurn = true;
         }
+        AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
       }
 
       // assume that if we receive an update, something has changed !
@@ -725,6 +725,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void timePlay(int p_actionCount)
   {
     List<AnEvent> logs = getGame().getLogs();
+    boolean execAnimation = p_actionCount == 1;
     while( (m_currentActionIndex < logs.size()) && (p_actionCount > 0) )
     {
       AnEvent action = logs.get( m_currentActionIndex );
@@ -752,6 +753,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
             && logs.get( m_currentActionIndex+1 ).isAuto() )
         {
           p_actionCount++;
+        }
+        if( !(action instanceof EbEvtMessage) && execAnimation )
+        {
+          AppRoot.getEventBus().fireEvent( new GameActionEvent( action ) );
         }
       }
       m_currentActionIndex++;
@@ -817,6 +822,83 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
+
+  private boolean m_isAnimationPlaying = false;
+
+  public boolean isAnimationPlaying()
+  {
+    return m_isAnimationPlaying;
+  }
+
+  public void startPlayAnimation()
+  {
+    if( isTimeLineMode() )
+    {
+      m_isAnimationPlaying = true;
+      m_animationTimer.schedule( 1 );
+    }
+  }
+
+  public void stopPlayAnimation()
+  {
+    m_isAnimationPlaying = false;
+    m_animationTimer.cancel();
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+  }
+
+  /**
+   * in time line mode this timer exec all games events with animation
+   */
+  private Timer m_animationTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      if( !isTimeLineMode() )
+      {
+        stopPlayAnimation();
+        return;
+      }
+      AnEvent action = getCurrentAction();
+      if( action == null )
+      {
+        stopPlayAnimation();
+        return;
+      }
+      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin)
+          && !(action instanceof EbEvtCancel) )
+      {
+        // exec action
+        try
+        {
+          action.exec( getGame() );
+        } catch( RpcFmpException e )
+        {
+          logger.severe( e.getMessage() );
+          Window.alert( "unexpected error : " + e );
+          stopPlayAnimation();
+          return;
+        }
+        if( !(action instanceof EbEvtMessage) )
+        {
+          AppRoot.getEventBus().fireEvent( new GameActionEvent( action ) );
+        }
+      }
+      m_currentActionIndex++;
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+
+      // Schedule next event execution
+      AnimEvent anim = AnimFactory.createAnimEvent( null, action );
+      if( anim != null )
+      {
+        m_animationTimer.schedule( anim.getDurration() );
+      }
+      else
+      {
+        m_animationTimer.schedule( 1 );
+      }
+    }
+  };
 
 
   public int getCurrentActionIndex()

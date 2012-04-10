@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.client.EnuNavigator;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.layertoken.WgtBoardLayerToken;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;

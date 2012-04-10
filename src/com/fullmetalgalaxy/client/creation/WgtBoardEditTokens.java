@@ -30,7 +30,7 @@ import com.fullmetalgalaxy.client.game.board.BoardLayer;
 import com.fullmetalgalaxy.client.game.board.BoardLayerCollection;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
-import com.fullmetalgalaxy.client.game.board.WgtBoardLayerToken;
+import com.fullmetalgalaxy.client.game.board.layertoken.WgtBoardLayerToken;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;

@@ -59,7 +59,9 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   PushButton m_btnFastBack = new PushButton( Icons.s_instance.fastBack32().createImage() );
   PushButton m_btnFastPlay = new PushButton( Icons.s_instance.fastPlay32().createImage() );
   PushButton m_btnBack = new PushButton( Icons.s_instance.back32().createImage() );
+  PushButton m_btnForward = new PushButton( Icons.s_instance.forward32().createImage() );
   PushButton m_btnPlay = new PushButton( Icons.s_instance.play32().createImage() );
+  PushButton m_btnPause = new PushButton( Icons.s_instance.pause32().createImage() );
   PushButton m_btnOk = new PushButton( Icons.s_instance.ok32().createImage() );
 
   private Panel m_btnPanel = new HorizontalPanel();
@@ -84,9 +86,15 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     m_btnBack.addClickHandler( this );
     m_btnBack.setTitle( "" );
     m_btnBack.setStyleName( "fmp-PushButton32" );
+    m_btnForward.addClickHandler( this );
+    m_btnForward.setTitle( "" );
+    m_btnForward.setStyleName( "fmp-PushButton32" );
     m_btnPlay.addClickHandler( this );
     m_btnPlay.setTitle( "" );
     m_btnPlay.setStyleName( "fmp-PushButton32" );
+    m_btnPause.addClickHandler( this );
+    m_btnPause.setTitle( "" );
+    m_btnPause.setStyleName( "fmp-PushButton32" );
 
     m_btnOk.addClickHandler( this );
     m_btnOk.setTitle( MAppBoard.s_messages.ok() );
@@ -94,10 +102,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
 
     m_panel.add( m_lblTimePosition );
     m_panel.add( m_lblCurrentEvent );
-    m_btnPanel.add( m_btnFastBack );
-    m_btnPanel.add( m_btnBack );
-    m_btnPanel.add( m_btnPlay );
-    m_btnPanel.add( m_btnFastPlay );
+    m_btnPanel.add( m_btnPause );
     m_panel.add( m_btnPanel );
     m_panel.add( m_wgtGameLog );
     
@@ -123,18 +128,42 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       m_lblCurrentEvent.setHTML( EventPresenter.getDetailAsHtml( currentEvent ) );
     }
         
-    if( AppMain.instance().iAmAdmin() || GameEngine.model().canCancelAction() )
+    if( GameEngine.model().isAnimationPlaying() )
     {
-      // in puzzle or turn by turn on several day we allow cancel action
-      m_btnPanel.add( m_btnOk );
+      m_btnPanel.clear();
+      m_btnPanel.add( m_btnPause );
     }
     else
     {
-      m_btnPanel.remove( m_btnOk );
+
+      if( m_btnPause.getParent() == m_btnPanel )
+      {
+        m_btnPanel.remove( m_btnPause );
+        m_btnPanel.add( m_btnFastBack );
+        m_btnPanel.add( m_btnBack );
+      }
+      if( currentEvent == null )
+      {
+        m_btnPanel.remove( m_btnPlay );
+        m_btnPanel.remove( m_btnForward );
+        m_btnPanel.remove( m_btnFastPlay );
+      }
+      else
+      {
+        if( m_btnPlay.getParent() != m_btnPanel )
+        {
+          m_btnPanel.add( m_btnPlay );
+          m_btnPanel.add( m_btnForward );
+          m_btnPanel.add( m_btnFastPlay );
+        }
+        if( AppMain.instance().iAmAdmin() || GameEngine.model().canCancelAction() )
+        {
+          // in puzzle or turn by turn on several day we allow cancel action
+          m_btnPanel.add( m_btnOk );
+        }
+      }
     }
     
-    m_btnPanel.remove( m_wgtGameLog );
-
     if( m_wgtGameLog.getAdditionalEventCount() != game.getAdditionalEventCount() )
     {
       m_wgtGameLog.redraw();
@@ -205,7 +234,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       GameEngine.model().setTimeLineMode( false );
       GameEngine.model().runSingleAction( evtCancel );
     }
-    else if( sender == m_btnPlay )
+    else if( sender == m_btnForward )
     {
       GameEngine.model().timePlay( 1 );
     }
@@ -220,6 +249,14 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     else if( sender == m_btnFastBack )
     {
       GameEngine.model().timeBack( 10 );
+    }
+    else if( sender == m_btnPlay )
+    {
+      GameEngine.model().startPlayAnimation();
+    }
+    else if( sender == m_btnPause )
+    {
+      GameEngine.model().stopPlayAnimation();
     }
   }
 

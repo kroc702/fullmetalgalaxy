@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
@@ -213,15 +212,6 @@ public class WgtPlayers extends Composite implements ClickHandler
 
       // display Wining points
       m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );
-
-      // display 'must play before'
-      if( (!GameEngine.model().getGame().isParallel())
-          && (registration.getEndTurnDate() != null) )
-      {
-        m_playerGrid.setText( 0, 5, "doit jouer avant" );
-        m_playerGrid.setText( index, 5, ClientUtil.s_dateTimeFormat.format( registration
-            .getEndTurnDate() ) );
-      }
 
       // display admin button
       if( (GameEngine.model().getGame().getAccountCreator() != null
