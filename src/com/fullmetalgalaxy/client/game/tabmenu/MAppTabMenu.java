@@ -24,12 +24,13 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 
 import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.event.MessageEvent;
+import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -52,7 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boolean>,
-    NativePreviewHandler, MessageEvent.Handler, ModelUpdateEvent.Handler
+    NativePreviewHandler, GameActionEvent.Handler, ModelUpdateEvent.Handler
 {
   public static final String HISTORY_ID = "tabmenu";
 
@@ -119,7 +120,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
     m_vTabPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
     m_hPanel.setHeight( "100%" );
     initWidget( m_hPanel );
-    AppMain.getEventBus().addHandler( MessageEvent.TYPE, this );
+    AppMain.getEventBus().addHandler( GameActionEvent.TYPE, this );
     
     if( GameEngine.model().getGame().getGameType() != GameType.MultiPlayer 
         && GameEngine.model().getGame().getMessage() != null
@@ -128,6 +129,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
       openTab(m_btnMessage);
     }
     else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+        && GameEngine.model().getMyRegistration() != null
         && GameEngine.model().getGame()
         .haveNewMessage( GameEngine.model().getMyRegistration().getLastConnexion() ) )
     {
@@ -264,10 +266,11 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   }
 
   @Override
-  public void onMessage(EbEvtMessage p_message)
+  public void onGameEvent(AnEvent p_message)
   {
+    if( p_message instanceof EbEvtMessage )
     if( AppMain.instance().getMyAccount().getId() == 0
-        || p_message.getAccountId() != AppMain.instance().getMyAccount().getId() )
+          || ((EbEvtMessage)p_message).getAccountId() != AppMain.instance().getMyAccount().getId() )
     {
       closeAllTab();
       openTab( m_btnMessage );

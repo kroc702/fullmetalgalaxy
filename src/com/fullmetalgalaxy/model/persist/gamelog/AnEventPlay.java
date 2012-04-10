@@ -179,6 +179,10 @@ public class AnEventPlay extends AnEventUser
     {
       position = getNewPosition();
     }
+    if( position == null )
+    {
+      position = getOldPosition();
+    }
     return position;
   }
 
@@ -194,9 +198,12 @@ public class AnEventPlay extends AnEventUser
     {
       registration.setPtAction( registration.getPtAction() - getCost() );
       // registration.setLastUpdate( getLastUpdate() );
-      registration.setLockedPosition( getLockedPosition() );
-      registration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
-          + p_game.getEbConfigGameTime().getLockGameInMillis() ) );
+      if( p_game.isParallel() )
+      {
+        registration.setLockedPosition( getLockedPosition() );
+        registration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
+            + p_game.getEbConfigGameTime().getLockGameInMillis() ) );
+      }
     }
   }
 
