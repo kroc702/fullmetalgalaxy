@@ -361,6 +361,12 @@ public interface Icons extends ImageBundle
   public AbstractImagePrototype tactic_icon_bullet2();
 
 
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/wreck.png")
+  public AbstractImagePrototype tactic_wreck();
+
+  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/wreck.png")
+  public AbstractImagePrototype strategy_wreck();
+
 
   // colorless token
   // ===============

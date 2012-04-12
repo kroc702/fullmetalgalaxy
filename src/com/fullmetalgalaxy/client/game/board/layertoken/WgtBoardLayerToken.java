@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
@@ -152,7 +153,9 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     }
 
     TokenWidget tokenWidget = (TokenWidget)m_tokenMap.get( p_token );
-    if( p_token.getLocation() != Location.Board )
+    if( (p_token.getLocation() != Location.Board && p_token.getLocation() != Location.Graveyard)
+        || (p_token.getLocation() == Location.Graveyard && (p_token.getColor() == EnuColor.None || game
+            .getLand( p_token.getPosition() ) == LandType.Sea)) )
     {
       if( tokenWidget != null )
       {
@@ -193,6 +196,12 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         tokenWidget.getTokenImage().addLoadListener( this );
       }*/
 
+      if( p_token.getLocation() == Location.Graveyard )
+      {
+        // no warning to display for wreck
+        remove( tokenWidget.getIconWarningImage() );
+      }
+      else
       // if token is under opponents fire cover, display a warning icon
       if( p_token.isFireDisabled() )
       {

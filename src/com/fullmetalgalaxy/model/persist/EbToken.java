@@ -186,6 +186,10 @@ public class EbToken extends EbBase
    */
   public int getZIndex()
   {
+    if( getLocation() == Location.Graveyard )
+    {
+      return 0;
+    }
     return getZIndex( getType(), getPosition().getSector() ) + getPosition().getY() * 2
         + getPosition().getX() % 2;
   }
