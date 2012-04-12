@@ -40,7 +40,7 @@ public class AnimUnload extends AnimMoveBase
   @Override
   public int getDurration()
   {
-    return 1300;
+    return 1000;
   }
 
 

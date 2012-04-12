@@ -55,7 +55,7 @@ public class AnimMove extends AnimMoveBase
   @Override
   public int getDurration()
   {
-    return 800;
+    return 700;
   }
 
 }

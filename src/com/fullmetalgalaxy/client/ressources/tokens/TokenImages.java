@@ -25,10 +25,10 @@ package com.fullmetalgalaxy.client.ressources.tokens;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -44,6 +44,17 @@ public class TokenImages
 
   public static AbstractImagePrototype getTokenImage(EbToken p_token, int p_zoom)
   {
+    if( p_token.getLocation() == Location.Graveyard )
+    {
+      switch( p_zoom )
+      {
+      default:
+      case EnuZoom.Medium:
+        return Icons.s_instance.tactic_wreck();
+      case EnuZoom.Small:
+        return Icons.s_instance.strategy_wreck();
+      }
+    }
     return getTokenImage( p_token.getEnuColor(), p_zoom, p_token.getType(), p_token.getPosition()
         .getSector() );
   }
