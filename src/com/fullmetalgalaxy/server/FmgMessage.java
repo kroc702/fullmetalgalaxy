@@ -40,7 +40,6 @@ import javax.mail.internet.MimeMessage;
 
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 
 /**
  * @author vlegendr
@@ -118,7 +117,7 @@ public class FmgMessage
 
   /**
    * send this message to a specific account regardless recipients string.
-   * According to user preference, this method will send nothing, a PM or email.
+   * According to user preference, this method will send nothing or email.
    * @param p_account
    * @return
    */
@@ -127,12 +126,7 @@ public class FmgMessage
     boolean isOk = true;
     String error = null;
     
-    if( p_account.getAllowMsgFromGame() == AllowMessage.PM && p_account.isIsforumIdConfirmed() )
-    {
-      // send a forum private message
-      isOk = sendPM(p_account);
-    }
-    else if( p_account.getAllowMsgFromGame() == AllowMessage.Mail && p_account.haveEmail() )
+    if( p_account.allowMsgFromGame() && p_account.haveEmail() )
     {
       // send an mail
       isOk = sendEMail(p_account);
@@ -198,9 +192,6 @@ public class FmgMessage
       log.fine( error );
     }
 
-    // send a copy to archive@fullmetalgalaxy.com
-    send2Archive( msg, "EMAIL", error );
-    
     return isOk;
   }
 

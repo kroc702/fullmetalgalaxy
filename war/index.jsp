@@ -47,15 +47,21 @@
 				Avez-vous l'étoffe d'un full metal pilote ?<br/>
 Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser votre astronef sur Full Metal Planète, ramasser un maximum de minerai, désintégrer ou capturer le coûteux matériel des compagnies adverses, et si possible vous emparer de leurs propres navettes, aux soutes pleines à craquer.
 </p>
-<p>
-FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque partie est indépendante.
-</p>
-		
-		<table><tr>
-			<td><a href="/game.jsp?id=/puzzles/tutorial/model.bin" class="bouton">Démo</a></td>		
-			<td><a href="/account.jsp" class="bouton">Inscrivez-vous!</a></td>
-			<td style="width : 100%;"><div id="draw2"></div></td>
-		</tr></table>
+<% if(Auth.isUserLogged( request, response )) { %>
+	<table><tr>
+		<td><img src='/images/robot_bar.jpg'/></td>		
+		<td style="width : 100%; text-align:center"><a href="/instructor.jsp" class="bouton">Les instructeurs</a></td>
+	</tr></table>
+<% } else { %>
+	<p>
+	FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque partie est indépendante.
+	</p>
+	<table><tr>
+		<td><a href="/game.jsp?id=/puzzles/tutorial/model.bin" class="bouton">Démo</a></td>		
+		<td><a href="/account.jsp" class="bouton">Inscrivez-vous!</a></td>
+		<td style="width : 100%;"><div id="draw2"></div></td>
+	</tr></table>
+<% } %>
 		</div>
 		
 		<div id="rssCollumn" class="collumn" >

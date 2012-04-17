@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
 
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.server.EbAccount;
-import com.fullmetalgalaxy.server.EbAccount.AllowMessage;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.FmgCookieStore;
 import com.fullmetalgalaxy.server.ServerUtil;
@@ -720,14 +719,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         {
           // 0 : email
           // 1 : PM
-          if( value.equalsIgnoreCase( "1" ) )
-          {
-            p_account.setAllowMsgFromGame( AllowMessage.PM );
-          }
-          else
-          {
-            p_account.setAllowMsgFromGame( AllowMessage.Mail );
-          }
+          p_account.setAllowMsgFromGame( true );
         }
       }
       else
@@ -775,11 +767,11 @@ public class ConectorImpl implements ForumConector, NewsConector
           // 2 : by forms
           if( value.equalsIgnoreCase( "0" ) )
           {
-            p_account.setAllowMsgFromPlayer( AllowMessage.PM );
+            p_account.setAllowMsgFromPlayer( false );
           }
           else
           {
-            p_account.setAllowMsgFromPlayer( AllowMessage.Mail );
+            p_account.setAllowMsgFromPlayer( true );
           }
         }
       }

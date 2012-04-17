@@ -22,7 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +97,7 @@ public class ServerUtil
 
 
   /**
-   * remove accentued from a string and replace with ascii equivalent
+   * remove accented from a string and replace with ascii equivalent
    */
   public static String convertNonAscii(String s)
   {
@@ -139,6 +141,51 @@ public class ServerUtil
     // date.
     return date;
   }
+
+  
+  
+  public static List<EbAccount> findRequestedAccounts(HttpServletRequest p_request)
+  {
+    List<EbAccount> accountList = new ArrayList<EbAccount>();
+    // read account from primary ID
+    String strArray[] = p_request.getParameterValues( "id" );
+    if( strArray != null )
+      for( String str : strArray )
+    {
+      try
+      {
+       EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong(str));
+       if( account != null )
+       {
+         accountList.add( account );
+       }
+      } catch(Exception e) {}
+    }
+    // from forum ID
+    strArray = p_request.getParameterValues( "forumid" );
+    if( strArray != null )
+    for( String str : p_request.getParameterValues("forumid") )
+    {
+      EbAccount account = FmgDataStore.dao().query(EbAccount.class).filter("m_forumId ==", str ).get();
+      if( account != null )
+      {
+        accountList.add( account );
+      }
+    }
+    // from pseudo
+    strArray = p_request.getParameterValues( "pseudo" );
+    if( strArray != null )
+    for( String str : p_request.getParameterValues("pseudo") )
+    {
+      EbAccount account = FmgDataStore.dao().query(EbAccount.class).filter("m_pseudo ==", str ).get();
+      if( account != null )
+      {
+        accountList.add( account );
+      }
+    }
+    return accountList;
+  }
+  
 
   public static EbAccount findRequestedAccount(HttpServletRequest p_request)
   {

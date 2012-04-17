@@ -34,8 +34,8 @@ import jskills.IPlayer;
 import jskills.Rating;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
+import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -50,11 +50,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
 {
   private static final long serialVersionUID = -6721026137413400063L;
 
-
-  public enum AllowMessage
-  {
-    No, PM, Mail;
-  }
 
   public enum NotificationQty
   {
@@ -89,10 +84,10 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   private AuthProvider m_authProvider = AuthProvider.Fmg;
   /** to allow message like 'it your turn on game xxx' */
   @Unindexed
-  private AllowMessage m_allowMsgFromGame = AllowMessage.Mail;
+  private boolean m_isAllowMsgFromGame = true;
   /** to allow message from other players */
   @Unindexed
-  private AllowMessage m_allowMsgFromPlayer = AllowMessage.Mail;
+  private boolean m_isAllowMsgFromPlayer = true;
   @Unindexed
   private NotificationQty m_notificationQty = NotificationQty.Std;
 
@@ -219,7 +214,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   }
 
   /**
-   * TODO remove this server package dependency. We can move EbAccount to server !
    * compute a compacted pseudo
    * @param p_pseudo
    * @return
@@ -251,8 +245,8 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_subscriptionDate = new Date( System.currentTimeMillis() );
     m_lastConnexion = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
-    m_allowMsgFromGame = AllowMessage.Mail;
-    m_allowMsgFromPlayer = AllowMessage.Mail;
+    m_isAllowMsgFromGame = true;
+    m_isAllowMsgFromPlayer = true;
     m_notificationQty = NotificationQty.Std;
     clearComputedStats();
   }
@@ -262,6 +256,35 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   {
     super.reinit();
     this.init();
+  }
+
+  /** TODO remove this */
+  @Deprecated
+  public void loadOldAllowMsgFromGame(@AlsoLoad("m_allowMsgFromGame") String p_allowMsgFromGame)
+  {
+    if( p_allowMsgFromGame != null )
+    {
+      m_isAllowMsgFromGame = true;
+      if( p_allowMsgFromGame.equalsIgnoreCase( "No" ) )
+      {
+        m_isAllowMsgFromGame = false;
+      }
+    }
+  }
+
+  /** TODO remove this */
+  @Deprecated
+  public void loadOldAllowMsgFromPlayer(
+      @AlsoLoad("m_allowMsgFromPlayer") String p_allowMsgFromPlayer)
+  {
+    if( p_allowMsgFromPlayer != null )
+    {
+      m_isAllowMsgFromPlayer = true;
+      if( p_allowMsgFromPlayer.equalsIgnoreCase( "No" ) )
+      {
+        m_isAllowMsgFromPlayer = false;
+      }
+    }
   }
 
   /**
@@ -289,33 +312,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     return "/images/avatar-default.jpg";
   }
 
-  @Override
-  public String getProfileUrl()
-  {
-    if( isIsforumIdConfirmed() && getForumId() != null )
-    {
-      return "http://" + FmpConstant.getForumHost() + "/u" + getForumId();
-    }
-    return "/profile.jsp?id=" + getId();
-  }
-
-  @Override
-  public String getPMUrl(String p_subject)
-  {
-    if( p_subject == null ) p_subject = "";
-    if( getAllowMsgFromPlayer() == AllowMessage.Mail && haveEmail() )
-    {
-      // then send an email with our form
-      return "/email.jsp?id=" + getId() + "&subject=" + p_subject;
-    }
-    else if( getAllowMsgFromPlayer() == AllowMessage.PM && isIsforumIdConfirmed()
-        && getForumId() != null )
-    {
-      // use forum to send a Private Message
-      return EbPublicAccount.getForumPMUrl( p_subject, getPseudo() ) + "&u=" + getForumId() ;
-    }
-    return "/genericmsg.jsp?title=" + getPseudo() + " ne souhaite pas être contacté";
-  }
 
   /**
    * 
@@ -567,21 +563,17 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   /**
    * @return the allowMsgFromGame
    */
-  public AllowMessage getAllowMsgFromGame()
+  public boolean allowMsgFromGame()
   {
-    if( m_allowMsgFromGame == AllowMessage.PM && (getForumId() == null || !isIsforumIdConfirmed()) )
-    {
-      m_allowMsgFromGame = AllowMessage.Mail;
-    }
-    return m_allowMsgFromGame;
+    return m_isAllowMsgFromGame;
   }
 
   /**
    * @param p_allowMsgFromGame the allowMsgFromGame to set
    */
-  public void setAllowMsgFromGame(AllowMessage p_allowMsgFromGame)
+  public void setAllowMsgFromGame(boolean p_allowMsgFromGame)
   {
-    m_allowMsgFromGame = p_allowMsgFromGame;
+    m_isAllowMsgFromGame = p_allowMsgFromGame;
   }
 
   public String getJabberId()
@@ -735,22 +727,17 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   /**
    * @return the allowMsgFromPlayer
    */
-  public AllowMessage getAllowMsgFromPlayer()
+  public boolean allowMsgFromPlayer()
   {
-    if( m_allowMsgFromPlayer == AllowMessage.PM
-        && (getForumId() == null || !isIsforumIdConfirmed()) )
-    {
-      m_allowMsgFromPlayer = AllowMessage.Mail;
-    }
-    return m_allowMsgFromPlayer;
+    return m_isAllowMsgFromPlayer;
   }
 
   /**
    * @param p_allowMsgFromPlayer the allowMsgFromPlayer to set
    */
-  public void setAllowMsgFromPlayer(AllowMessage p_allowMsgFromPlayer)
+  public void setAllowMsgFromPlayer(boolean p_allowMsgFromPlayer)
   {
-    m_allowMsgFromPlayer = p_allowMsgFromPlayer;
+    m_isAllowMsgFromPlayer = p_allowMsgFromPlayer;
   }
 
   /**

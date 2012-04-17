@@ -6,7 +6,8 @@
 <%
 String title = request.getParameter("title");
 if( title == null ) title = "";
-
+String text = request.getParameter("text");
+if( text == null ) text = "";
 %>
 
 <title>Full Metal Galaxy - <%= title %></title>
@@ -24,7 +25,7 @@ if( title == null ) title = "";
 
 </center>
 
-
+<p><%=text%></p>
 
 <%@include file="include/footer.jsp"%>
 </body>
