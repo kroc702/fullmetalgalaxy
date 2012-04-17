@@ -23,16 +23,11 @@
 package com.fullmetalgalaxy.server;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
@@ -42,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
@@ -76,7 +70,7 @@ public class PMServlet extends HttpServlet
       return;
     }
     String subject = p_req.getParameter("subject");
-    p_resp.sendRedirect( account.getPMUrl( subject ) );
+    p_resp.sendRedirect( account.getEMailUrl( subject ) );
   }
 
   /* (non-Javadoc)
@@ -86,10 +80,15 @@ public class PMServlet extends HttpServlet
   protected void doPost(HttpServletRequest p_request, HttpServletResponse p_response)
       throws ServletException, IOException
   {
-    Map<String, String> params = new HashMap<String, String>();
     ServletFileUpload upload = new ServletFileUpload();
     try
     {
+      // build message to send
+      Properties props = new Properties();
+      Session session = Session.getDefaultInstance( props, null );
+      MimeMessage msg = new MimeMessage( session );
+      msg.setSubject( "[FMG] no subject", "text/plain" );
+      
       // Parse the request
       FileItemIterator iter = upload.getItemIterator( p_request );
       while( iter.hasNext() )
@@ -97,79 +96,52 @@ public class PMServlet extends HttpServlet
         FileItemStream item = iter.next();
         if( item.isFormField() )
         {
-          params.put( item.getFieldName(), Streams.asString( item.openStream(), "UTF-8" ) );
+          if( "msg".equalsIgnoreCase( item.getFieldName() ) )
+          {
+            msg.setContent( Streams.asString( item.openStream(), "UTF-8" ), "text/plain" );
+          }
+          if( "subject".equalsIgnoreCase( item.getFieldName() ) )
+          {
+            msg.setSubject( "[FMG] " + Streams.asString( item.openStream(), "UTF-8" ), "text/plain" );
+          }
+          if( "toid".equalsIgnoreCase( item.getFieldName() ) )
+          {
+            EbAccount account = null;
+            try {
+              account = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
+            } catch(NumberFormatException e) {}
+            if( account != null )
+            {
+              msg.addRecipient( Message.RecipientType.BCC , new InternetAddress( account.getEmail(), account.getPseudo() ) );
+            }
+          }
+          if( "fromid".equalsIgnoreCase( item.getFieldName() ) )
+          {
+            EbAccount account = null;
+            try {
+              account = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
+            } catch(NumberFormatException e) {}
+            if( account != null )
+            {
+              msg.setFrom( new InternetAddress( account.getEmail(), account.getPseudo() ) );
+            }
+          }
         }
       }
 
-      sendMail( params );
+      msg.addRecipients( Message.RecipientType.BCC, InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
+      Transport.send( msg );
 
-    } catch( FileUploadException e )
+    } catch( Exception e )
     {
       log.error( e );
-    }
+      p_response.sendRedirect( "/genericmsg.jsp?title=Error&text="+e.getMessage() );
+      return;
+    } 
 
     p_response.sendRedirect( "/genericmsg.jsp?title=Message envoye" );
   }
 
 
-  protected void sendMail(Map<String, String> params)
-  {
-    EbAccount accountTo = null;
-    EbAccount accountFrom = null;
-
-    FmgDataStore ds = new FmgDataStore(true);
-    accountTo = ds.get( EbAccount.class, Long.parseLong( params.get( "toid" ) ) );
-    accountFrom = ds.get( EbAccount.class, Long.parseLong( params.get( "fromid" ) ) );
-    assert accountTo != null;
-    assert accountFrom != null;
-    String body = params.get( "msg" );
-    sendMail( "[FMG] MP : " + params.get( "subject" ), body, accountFrom.getEmail(),
-        accountFrom.getPseudo(), accountTo.getEmail() );
-  }
-
-  /**
-   * 
-   * @param p_subject
-   * @param p_body
-   * @param p_recipients
-   * @return false if an error occur in parameters
-   */
-  private static synchronized boolean sendMail(String p_subject, String p_body,
-      String p_fromEmail, String p_fromName, String p_recipients)
-  {
-    boolean isOk = true;
-    Properties props = new Properties();
-    Session session = Session.getDefaultInstance( props, null );
-    MimeMessage msg = new MimeMessage( session );
-
-    try
-    {
-      msg.setSender( new InternetAddress( p_fromEmail, p_fromName ) );
-      msg.setSubject( p_subject );
-      msg.setContent( p_body, "text/plain" );
-      msg.setRecipients( Message.RecipientType.TO, InternetAddress.parse( p_recipients ) );
-      msg.setRecipients( Message.RecipientType.BCC,
-          InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
-      Transport.send( msg );
-      log.fine( "Mail send to " + p_recipients + " subject:" + p_subject );
-    } catch( AddressException e )
-    {
-      isOk = false;
-      log.error( e );
-    } catch( MessagingException e )
-    {
-      isOk = false;
-      log.error( e );
-    } catch( UnsupportedEncodingException e )
-    {
-      isOk = false;
-      log.error( e );
-    } catch( Exception e )
-    {
-      isOk = false;
-      log.error( e );
-    }
-    return isOk;
-  }
 
 }

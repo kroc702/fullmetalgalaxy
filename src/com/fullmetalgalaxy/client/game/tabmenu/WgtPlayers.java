@@ -74,7 +74,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     super();
     
     m_btnChat.addClickHandler( this );
-    m_btnSkipTurn.setTitle( "Fin de tour" );
+    m_btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
     m_btnSkipTurn.setStyleName( "fmp-PushButton32" );
     m_btnSkipTurn.addClickHandler( this );
     
@@ -91,24 +91,23 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( playerCount, maxPlayerCount ) ) );
 
     // message to all link
-    String pseudoList[] = new String[playerCount];
+    long pseudoList[] = new long[playerCount];
     int i = 0;
     for( EbRegistration registration : GameEngine.model().getGame().getSetRegistration() )
     {
       if( registration.getAccount() != null )
       {
-        pseudoList[i] = registration.getAccount().getPseudo();
+        pseudoList[i] = registration.getAccount().getId();
       }
       else
       {
-        pseudoList[i] = "";
+        pseudoList[i] = 0;
       }
       i++;
     }
     m_playerPanel.add( new HTML( "<a href='"
-        + EbPublicAccount
-            .getForumPMUrl( "[FMG] " + GameEngine.model().getGame().getName(), pseudoList )
- + "' >Envoyer un message à tous</a>" ) );
+        + EbPublicAccount.getEMailUrl( GameEngine.model().getGame().getName(), pseudoList )
+        + "' >Envoyer un message à tous</a>" ) );
 
     // get player order
     List<EbRegistration> sortedRegistration = GameEngine.model().getGame()
@@ -166,7 +165,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       // display email messages
       if( registration.getAccount() != null )
       {
-        html += " <a target='_blank' href='" + registration.getAccount().getPMUrl(GameEngine.model().getGame().getName())
+        html += " <a target='_blank' href='" + registration.getAccount().getEMailUrl(GameEngine.model().getGame().getName())
             + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
       }
 

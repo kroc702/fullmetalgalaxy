@@ -1,4 +1,3 @@
-<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -15,36 +14,46 @@
 <h1>Envoyer un email</h1>
 
 <%
-EbAccount account = ServerUtil.findRequestedAccount(request);
-if( account == null ) 
-{ 
-	out.println("<h2>Le profil " + request.getParameter( "id" ) + " n'a pas été trouvé.</h2>" );
-	return;
-}
 if( !Auth.isUserLogged( request, response ) )
 {
 	out.println("<h2>Vous devez être connecté pour envoyer un email a un autre joueur.</h2>" );
 	return;
 }
-if( account.getAllowMsgFromPlayer() == AllowMessage.No || !account.haveEmail() )
-{
-	out.println("<h2>" + account.getPseudo() + " ne souhaite pas être contacté par email.</h2>" );
+List<EbAccount> accounts = ServerUtil.findRequestedAccounts(request);
+if( accounts.isEmpty() ) 
+{ 
+	out.println("<h2>Aucun destinataires.</h2>" );
 	return;
 }
 String subject = request.getParameter("subject");
 if( subject == null ) subject = "";
+String msg = request.getParameter("msg");
+if( msg == null ) msg = "";
 %>
 
-<p>Attention : votre email sera envoyé a votre destinataire pour lui permetre de répondre.</p>
-
-&nbsp;A : <%= account.getPseudo() %><br/>
+<p>Attention : votre email sera envoyé a votre/vos destinataire(s) pour lui permetre de répondre.</p>
 
 <form name="myform" action="/PMServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 <input type="hidden" name="fromid" value="<%= Auth.getUserAccount( request, response ).getId() %>"/>
-<input type="hidden" name="toid" value="<%= account.getId() %>"/>
+
+<% for( EbAccount account : accounts ) { 
+	if( !account.allowMsgFromPlayer() || !account.haveEmail() )
+	{
+		out.println("<h2>"+ account.getPseudo() + " ne souhaite pas être contacté par email.</h2>" );
+	}
+}%>
+<% for( EbAccount account : accounts ) { 
+	if( (account.allowMsgFromPlayer() || Auth.isUserAdmin(request, response)) && account.haveEmail() )
+	{
+		out.print("&nbsp;A : <img src='"+account.getAvatarUrl() +"' height='32px' /> "+ account.getPseudo()+"<br/>" );
+		out.println("<input type='hidden' name='toid' value='"+ account.getId() +"'/>");
+	} else if( !account.haveEmail() && Auth.isUserAdmin(request, response) ) {
+		out.print("&nbsp;A : <img src='"+account.getAvatarUrl() +"' height='32px' /> "+ account.getPseudo()+" have no email<br/>" );
+	}
+}%>
 Objet :
 <input type="text" name="subject" value="<%=subject%>"/><br/>
-<textarea cols="50" rows="10" name="msg">
+<textarea cols="50" rows="10" name="msg"><%=msg%>
 </textarea><br/>
 
 <input type="submit" name="Submit" value="Envoyer"/>

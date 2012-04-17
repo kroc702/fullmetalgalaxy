@@ -16,7 +16,7 @@
 		<div id="nav"><nav>
 			<ul>
 				<li><a href="/" >Accueil</a></li>
-				<li><a href="/gamelist.jsp" >Partie en cours</a>
+				<li><a href="/gamelist.jsp" >Les parties</a>
 					<ul>
 						<li><a href="/gamelist.jsp?tab=0" >Nouvelles Parties</a></li>
 						<li><a href="/gamelist.jsp?tab=1" >Mes Parties</a></li>
@@ -32,14 +32,14 @@
 					</ul>
 				</li>
 				<li><a href="/chat.jsp" >Chat</a></li>
-				<li><a href="/help/" >Aides de jeu</a>
+				<li><a href="/help/" >Guide</a>
 					<jsp:include page="/i18n/fr/help/menu.html" />
 				</li>																
-				<li><a href="/halloffames.jsp" >Joueurs</a>
+				<li><a href="/instructor.jsp" >Joueurs</a>
 					<ul>
+						<li><a href="/instructor.jsp" >Instructeurs</a></li>
 						<li><a href="/halloffames.jsp" >Classement</a></li>
-						<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Joueurs actif</a></li>
-						<li><a href="http://fullmetalplanete.forum2jeux.com/memberlist" >Annuaire forum</a></li>
+						<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Annuaire</a></li>
 						<li><a href="/stats.jsp" >Stats global</a></li>
 					</ul>
 				</li>																

@@ -88,45 +88,42 @@ public class EbPublicAccount extends EbBase
 
   public String getProfileUrl()
   {
-    return "/AccountServlet?profil=" + getId();
+    return "/profile.jsp?id=" + getId();
   }
 
-  public static String getForumPMUrl(String p_subject, String... p_pseudo)
+  /**
+   * private message url
+   * @param p_subject
+   * @param p_id
+   * @return
+   */
+  public static String getEMailUrl(String p_subject, long... p_id)
   {
     if( p_subject == null )
     {
-      p_subject = "[FMG] ";
-    }
-    else if( !p_subject.startsWith( "[FMG]" ) )
-    {
-      p_subject = "[FMG] " + p_subject;
+      p_subject = "";
     }
     p_subject = SharedMethods.encodePathSegment( p_subject );
-    for( String pseudo : p_pseudo )
+    
+    String url = "/email.jsp?subject=" + p_subject;
+    for( long id : p_id )
     {
-      pseudo = SharedMethods.encodePathSegment( pseudo );
-    }
-    String url = "http://" + FmpConstant.getForumHost() + "/privmsg?mode=post&subject=" + p_subject;
-    for( String pseudo : p_pseudo )
-    {
-      url += "&user=" + pseudo;
-    }
-    return url;
-  }
-
-  public String getPMUrl(String p_subject)
-  {
-    String url = "/PMServlet?id="+getId();
-    if( p_subject != null )
-    {
-      url += "&subject="+p_subject;
+      if( id != 0 )
+      {
+        url += "&id=" + id;
+      }
     }
     return url;
   }
 
-  public String getPMUrl()
+  public String getEMailUrl(String p_subject)
   {
-    return getPMUrl( "" );
+    return getEMailUrl(p_subject,getId());
+  }
+
+  public String getEMailUrl()
+  {
+    return getEMailUrl( "" );
   }
 
   // getters / setters

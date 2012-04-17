@@ -104,20 +104,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
         && getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG );
   }
 
-  public String getPMUrl()
-  {
-    String[] pseudo = new String[getCurrentNumberOfRegiteredPlayer()];
-    int i = 0;
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      if( registration.haveAccount() )
-      {
-        pseudo[i] = registration.getAccount().getPseudo();
-        i++;
-      }
-    }
-    return EbPublicAccount.getForumPMUrl( getName(), pseudo );
-  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.EbBase#setTrancient()

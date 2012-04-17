@@ -186,7 +186,7 @@ public class AdminServlet extends HttpServlet
     }
 
 
-    // send a test private message
+    // send a link private message
     // ===========================
     strid = p_req.getParameter( "linkpm" );
     if( strid != null )

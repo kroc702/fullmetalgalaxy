@@ -1,4 +1,3 @@
-<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.constant.*,com.googlecode.objectify.Query,com.fullmetalgalaxy.model.ressources.SharedI18n" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -78,9 +77,9 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
   // last connexion
   out.println("<td><span class='date'>"+ dateFormat.format( account.getLastConnexion() ) +"</span></td>");
   // private message
-  if( (account.getAllowMsgFromPlayer() == AllowMessage.Mail && account.haveEmail()) || (account.getAllowMsgFromPlayer() == AllowMessage.PM) )
+  if( (account.allowMsgFromPlayer() && account.haveEmail()) )
   {
-    out.println("<td><a href='"+ account.getPMUrl() + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
+    out.println("<td><a href='"+ account.getEMailUrl() + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );
   } else {
     out.println("<td></td>" );
   }
