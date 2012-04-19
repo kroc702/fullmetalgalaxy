@@ -1,4 +1,3 @@
-<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.ressources.SharedI18n" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -38,8 +37,8 @@ Un compte similaire existe sur le forum, mais n'est pas lié à FMG.<br/>
 <% } else { %>
 Ce compte FMG n'est pas lié a un compte du forum.<br/>
 <% } %>
-<% if(account.getAllowMsgFromPlayer() != AllowMessage.No) { %>
-<a href="<%= account.getPMUrl()%>">Ecrire un message</a><br/>
+<% if(account.allowMsgFromPlayer() ) { %>
+<a href="<%= account.getEMailUrl() %>">Ecrire un message</a><br/>
 <% } %>
 
 <p>level: <%= df.format(account.getCurrentLevel()) %><br/>

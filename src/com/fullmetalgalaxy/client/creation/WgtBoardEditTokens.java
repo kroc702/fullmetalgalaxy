@@ -39,8 +39,8 @@ import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -150,6 +150,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
         {
           if( token.getType() == TokenType.Turret && oldToken.getType() == TokenType.Freighter )
           {
+            token.setColor( oldToken.getColor() );
             game.moveToken( token, position );
           }
           else if( game.canTokenLoad( oldToken, token ) )
@@ -174,7 +175,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
           e.printStackTrace();
         }
       }
-      else
+      else if( token.getType() != TokenType.Turret )
       {
         game.moveToken( token, position );
       }

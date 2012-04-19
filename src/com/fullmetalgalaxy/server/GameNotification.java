@@ -184,7 +184,7 @@ public class GameNotification
     EbAccount account = null;
     if( p_registration != null && p_registration.getAccount() != null )
     {
-      account = FmgDataStore.dao().get( EbAccount.class, p_registration.getAccount().getId() );
+      account = FmgDataStore.dao().find( EbAccount.class, p_registration.getAccount().getId() );
     }
     if( account == null )
     {
