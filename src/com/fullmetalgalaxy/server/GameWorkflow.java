@@ -100,8 +100,8 @@ public class GameWorkflow
         for( EbToken token : p_game.getSetToken() )
         {
           if( (token.getType() == TokenType.Freighter)
-              && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() ))
-              && (token.getLocation() == Location.Board) )
+              && (token.getLocation() == Location.Board)
+              && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() )) )
           {
             // automatic take off for this freighter
             EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();

@@ -86,7 +86,7 @@ public class EbGameJoin extends AnEventUser
     {
       throw new RpcFmpException( "You can't join a game several times" );
     }
-    if( !getEnuColor().isSingleColor() )
+    if( getColor() == EnuColor.None )
     {
       // not probable error
       throw new RpcFmpException( "You have to select a color before joining a game" );

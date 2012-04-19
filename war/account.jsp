@@ -1,4 +1,3 @@
-<%@page import="com.fullmetalgalaxy.server.EbAccount.AllowMessage"%>
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
@@ -111,8 +110,8 @@ email :
 <br/>
 <% } else { %>
 <br/>
-AllowMsgFromGame : <%= account.getAllowMsgFromGame() %><br/>
-AllowMsgFromPlayer : <%= account.getAllowMsgFromPlayer() %><br/>
+AllowMsgFromGame : <%= account.allowMsgFromGame() %><br/>
+AllowMsgFromPlayer : <%= account.allowMsgFromPlayer() %><br/>
 NotificationQty : <%= account.getNotificationQty() %><br/>
 <% } %>
 
