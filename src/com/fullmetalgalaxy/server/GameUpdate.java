@@ -49,8 +49,10 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Query;
 
 /**
- * @author vlegendr
+ * @author Vincent Legendre
  *
+ * This serlvet is a cron task that check possible update on games.
+ * it also delete cancelled games
  */
 public class GameUpdate extends HttpServlet
 {
@@ -118,7 +120,6 @@ public class GameUpdate extends HttpServlet
           ds.close();
         }
 
-
         if( System.currentTimeMillis() - startTime > LIMIT_MILLIS )
         {
           Cursor cursor = iterator.getCursor();
@@ -153,14 +154,13 @@ public class GameUpdate extends HttpServlet
       query.filter( "m_status", GameStatus.Aborted );
       // one week older
       Date lastWeek = new Date( System.currentTimeMillis() - (1000l * 60 * 60 * 24 * 7) );
-      query.filter( "m_lastUpdate >", lastWeek );
+      query.filter( "m_lastUpdate <", lastWeek );
       return query;
     }
 
     @Override
     protected void processKey(Key<EbGamePreview> p_key)
     {
-      GlobalVars.incrementCurrentGameCount( -1 );
       FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.delete( Game.class, p_key );
       dataStore.close();

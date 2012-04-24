@@ -52,9 +52,6 @@ if(account == null) {
 	<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
 	ou sur le 
 	<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
-	<p>
-	level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
-	</p>
 <%} else if( account.getForumId() != null ){ 
 		if( account.getForumKey() == null ) {%>
 	Un message privé vous sera envoyé prochainement pour lier les comptes Forum et FMG<br/>
@@ -67,74 +64,89 @@ if(account == null) {
 	<a href="http://fullmetalplanete.forum2jeux.com/register">
 	<img src="/images/icons/canceled32.png" border=0 />
 	Nous vous conseillons de créer un compte sur le forum
-	pour facilier les contacts entre joueurs, avoir un avatar et quelques autres options.</a><br/>
+	pour avoir un avatar et quelques autres options.</a><br/>
 	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
+<%} %>
+
+<% if( account.getFinshedGameCount() > 0 ) { %>
+	<p>
+	level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
+	</p>
 <%} %>
 
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
 <input type="hidden" name="accountid" value="<%= account.getId() %>"/>
-<input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
 
-login :
-<input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
-<%= account.getAuthIconHtml() %><br/>
-
-<% if( account.getAuthProvider() == AuthProvider.Fmg ) {%>
-	<% if(Auth.isUserAdmin(request, response)) { %>
-		mot de passe :
-		<input type="text" name="password1" value="<%= account.getPassword() %>"/><br/>
-		confirmation :
-		<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
-		pseudo :
-		<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
-	<% } else { %>
+<% if(Auth.isUserAdmin(request, response)) { %>
+	update login : <input type="checkbox" name="credential"  value="1"  ><br/>
+	Auth provider :
+	<input type="text" name="authprovider" value="<%= account.getAuthProvider() %>"/>  (Google or Fmg)<br/>
+	login :
+	<input type="text" name="login" value="<%= account.getLogin() %>"/>
+	<%= account.getAuthIconHtml() %><br/>
+	mot de passe :
+	<input type="text" name="password1" value="<%= account.getPassword() %>"/><br/>
+	confirmation :
+	<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
+	pseudo :
+	<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
+	avatar url :
+	<input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
+	<% if( account.isIsforumIdConfirmed() && account.getForumId() != null )
+	  {
+		out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
+		out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
+		out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test PM</a><br/>" );
+	  } else if( account.getForumId() != null ){
+		out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
+		if( account.getForumKey() != null ){
+			out.println("<a href=\"/admin/Servlet?linkpm="+account.getId()+"\">Send a link forum PM</a><br/>" );
+		}
+	  } else {
+	    out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">pull account ID</a><br/>" );
+	    out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );
+	  } %>
+	<hr/>
+<% } else { %>
+	<input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
+	login :
+	<input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
+	<%= account.getAuthIconHtml() %><br/>
+	<% if( account.getAuthProvider() == AuthProvider.Fmg ) {%>
 		mot de passe :
 		<input type="password" name="password1" value=""/><br/>
 		confirmation :
 		<input type="password" name="password2" value=""/><br/>
 	<% } %>
-<%} else if( account.canChangePseudo() || Auth.isUserAdmin(request, response) ) {%>
-	pseudo :
-	<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/> ! Vous ne pourrez le modifier qu'une seule fois !<br/>
-<%} else {%>
-	pseudo :
-	<input type="text" readonly name="pseudo" value="<%= account.getPseudo() %>"/><br/>
-<%}%>
+	<% if( account.canChangePseudo() ) {%>
+		pseudo :
+		<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/> ! Vous ne pourrez le modifier qu'une seule fois !<br/>
+	<% } else {%>
+		pseudo :
+		<input type="text" readonly name="pseudo" value="<%= account.getPseudo() %>"/><br/>
+	<% } %>
+<% } %>
+
 
 <br/>
 email :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
+Jabber ID :
+<input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
+Autorisez les messages du jeu :
+	<SELECT name="NotificationQty">
+	<% for( EbAccount.NotificationQty notif : EbAccount.NotificationQty.values()) { %>
+		<OPTION VALUE="<%=notif%>" <%= account.getNotificationQty()==notif ? "SELECTED" : "" %> ><%=notif%></OPTION>
+	<% } %>
+	</SELECT><br/>
+Autorisez les messages des autre joueurs : <input type="checkbox" name="AllowMsgFromPlayer"  value="1" <%= account.allowMsgFromPlayer() ? "checked" : "" %> ><br/>
 <% if( id == 0 ) { %>
 <input type="checkbox" name="createforumaccount" value="1" checked /> Créer un compte sur le forum
 <br/>
-<% } else { %>
-<br/>
-AllowMsgFromGame : <%= account.allowMsgFromGame() %><br/>
-AllowMsgFromPlayer : <%= account.allowMsgFromPlayer() %><br/>
-NotificationQty : <%= account.getNotificationQty() %><br/>
 <% } %>
+<br/>
 
-<% if(Auth.isUserAdmin(request, response)) { %>
-  Jabber ID :
-  <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
-  
-<%
-  if( account.isIsforumIdConfirmed() && account.getForumId() != null )
-  {
-	out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
-	out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
-	out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test PM</a><br/>" );
-  } else if( account.getForumId() != null ){
-	out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
-	if( account.getForumKey() != null ){
-		out.println("<a href=\"/admin/Servlet?linkpm="+account.getId()+"\">Send a link forum PM</a><br/>" );
-	}
-  } else {
-    out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">pull account ID</a><br/>" );
-    out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );
-  }
-} %> <br/>
 
 <input type="submit" name="Submit" value="Enregistrer"/>
 <input type="reset" value="Annuler">

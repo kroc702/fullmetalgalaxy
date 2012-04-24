@@ -711,22 +711,7 @@ public class ConectorImpl implements ForumConector, NewsConector
         logger.warning( "pattern 'jabber id' failed" );
       }
 
-      matcher = s_notifModePattern.matcher( page );
-      if( matcher.matches() )
-      {
-        String value = matcher.group( 1 );
-        if( value != null )
-        {
-          // 0 : email
-          // 1 : PM
-          p_account.setAllowMsgFromGame( true );
-        }
-      }
-      else
-      {
-        logger.warning( "pattern 'FIELD_FMG_NOTIF_MODE' failed" );
-      }
-      
+
       matcher = s_notifQtyPattern.matcher( page );
       if( matcher.matches() )
       {

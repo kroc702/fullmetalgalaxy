@@ -35,6 +35,7 @@ import jskills.ITeam;
 import jskills.Rating;
 import jskills.TrueSkillCalculator;
 
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
@@ -65,8 +66,8 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
  * 
  * Life cycle of a game:
  * 
- * Open <-> Paused <-> Run -> Finished -> Deleted
- *                        \-> Aborted-/
+ * Open <-> Paused <-> Run -> Finished -> Deleted (not a real status)
+ *    \----------\--------\-> Aborted-/
  */
 public class GameWorkflow
 {
@@ -101,6 +102,7 @@ public class GameWorkflow
         {
           if( (token.getType() == TokenType.Freighter)
               && (token.getLocation() == Location.Board)
+              && (token.getColor() != EnuColor.None)
               && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() )) )
           {
             // automatic take off for this freighter
