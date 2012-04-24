@@ -40,6 +40,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 
 /**
  * @author vlegendr
@@ -63,7 +64,7 @@ public class FmgMessage
   private String m_body = "";
   private String m_name = null;
   private Map<String, String> m_params = new HashMap<String, String>();
-  
+  private NotificationQty m_notifLevel = NotificationQty.Std;
   
   public FmgMessage()
   {
@@ -126,7 +127,8 @@ public class FmgMessage
     boolean isOk = true;
     String error = null;
     
-    if( p_account.allowMsgFromGame() && p_account.haveEmail() )
+    if( p_account.getNotificationQty().ordinal() >= getNotifLevel().ordinal()
+        && p_account.haveEmail() )
     {
       // send an mail
       isOk = sendEMail(p_account);
@@ -437,6 +439,16 @@ public class FmgMessage
   public String getName()
   {
     return m_name;
+  }
+
+  public NotificationQty getNotifLevel()
+  {
+    return m_notifLevel;
+  }
+
+  public void setNotifLevel(NotificationQty p_notifLevel)
+  {
+    m_notifLevel = p_notifLevel;
   }
 
 

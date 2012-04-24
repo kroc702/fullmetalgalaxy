@@ -39,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -431,12 +432,29 @@ public class AccountServlet extends HttpServlet
         }
         account.setPseudo( params.get( "pseudo" ) );
       }
+
+      if( params.get( "credential" ) != null )
+      {
+        // update auth provider and login !
+        account.setAuthProvider( AuthProvider.valueOf( params.get( "authprovider" ) ) );
+        account.setLogin( params.get( "login" ) );
+      }
     }
 
-    account.setEmail( params.get( "email" ) );
+    if( params.get( "avatarurl" ) != null )
+    {
+      account.setForumAvatarUrl( params.get( "avatarurl" ) );
+    }
+    account.setAllowMsgFromPlayer( params.get( "AllowMsgFromPlayer" ) != null );
+    account.setNotificationQty( NotificationQty.valueOf( params.get( "NotificationQty" ) ) );
 
+    account.setEmail( params.get( "email" ) );
     account.setJabberId( params.get( "jabberId" ) );
-    account.setLogin( params.get( "login" ) );
+
+    if( account.isTrancient() )
+    {
+      account.setLogin( params.get( "login" ) );
+    }
 
     if( params.get( "password" ) != null )
     {

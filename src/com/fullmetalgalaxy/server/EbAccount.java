@@ -53,7 +53,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
 
   public enum NotificationQty
   {
-    Min, Std, Max;
+    No, Min, Std, Max;
   }
 
   @PrePersist
@@ -82,12 +82,10 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   private Date m_lastConnexion = null;
   @Unindexed
   private AuthProvider m_authProvider = AuthProvider.Fmg;
-  /** to allow message like 'it your turn on game xxx' */
-  @Unindexed
-  private boolean m_isAllowMsgFromGame = true;
   /** to allow message from other players */
   @Unindexed
   private boolean m_isAllowMsgFromPlayer = true;
+  /** to allow message like 'it your turn on game xxx' */
   @Unindexed
   private NotificationQty m_notificationQty = NotificationQty.Std;
 
@@ -245,7 +243,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_subscriptionDate = new Date( System.currentTimeMillis() );
     m_lastConnexion = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
-    m_isAllowMsgFromGame = true;
     m_isAllowMsgFromPlayer = true;
     m_notificationQty = NotificationQty.Std;
     clearComputedStats();
@@ -264,10 +261,10 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   {
     if( p_allowMsgFromGame != null )
     {
-      m_isAllowMsgFromGame = true;
+      m_notificationQty = NotificationQty.Std;
       if( p_allowMsgFromGame.equalsIgnoreCase( "No" ) )
       {
-        m_isAllowMsgFromGame = false;
+        m_notificationQty = NotificationQty.No;
       }
     }
   }
@@ -555,26 +552,12 @@ public class EbAccount extends EbPublicAccount implements IPlayer
    */
   public void setAuthProvider(AuthProvider p_authProvider)
   {
-    m_authProvider = p_authProvider;
+    if( p_authProvider != null )
+    {
+      m_authProvider = p_authProvider;
+    }
   }
 
-
-
-  /**
-   * @return the allowMsgFromGame
-   */
-  public boolean allowMsgFromGame()
-  {
-    return m_isAllowMsgFromGame;
-  }
-
-  /**
-   * @param p_allowMsgFromGame the allowMsgFromGame to set
-   */
-  public void setAllowMsgFromGame(boolean p_allowMsgFromGame)
-  {
-    m_isAllowMsgFromGame = p_allowMsgFromGame;
-  }
 
   public String getJabberId()
   {
@@ -659,6 +642,10 @@ public class EbAccount extends EbPublicAccount implements IPlayer
    */
   public void setForumAvatarUrl(String p_forumAvatarUrl)
   {
+    if( p_forumAvatarUrl != null && p_forumAvatarUrl.isEmpty() )
+    {
+      p_forumAvatarUrl = null;
+    }
     m_forumAvatarUrl = p_forumAvatarUrl;
   }
 
