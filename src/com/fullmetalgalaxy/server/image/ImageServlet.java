@@ -112,13 +112,13 @@ public class ImageServlet extends HttpServlet
       if( avatarid != null )
       {
         EbAccount account = findAccount(avatarid);
-        if( account != null && account.getForumAvatarUrl() != null )
+        if( account != null )
         {
-          response.sendRedirect( account.getForumAvatarUrl() );
+          response.sendRedirect( account.getAvatarUrl() );
         }
         else
         {
-          response.sendRedirect( "/images/avatar-default.jpg" );
+          response.sendRedirect( "/images/avatar/avatar-default.jpg" );
         }
       }
       else if( gradid != null )

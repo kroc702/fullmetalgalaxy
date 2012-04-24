@@ -47,7 +47,7 @@ public class WgtPlayerMessage extends Composite
   {
     super();
     EbPublicAccount account = p_game.getAccount( p_message.getAccountId() );
-    String avatarUrl = "/images/avatar-default.jpg";
+    String avatarUrl = "/images/avatar/avatar-default.jpg";
     String pseudo = "???";
     if( account != null )
     {

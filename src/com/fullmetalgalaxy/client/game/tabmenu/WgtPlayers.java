@@ -157,7 +157,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       {
         // display avatar
         m_playerGrid.setHTML( index, 0,
-            "<IMG SRC='/images/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+            "<IMG SRC='/images/avatar/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
         // display login
         html = "???";
       }
