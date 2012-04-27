@@ -92,7 +92,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   private String m_jabberId = null;
 
   @Unindexed
-  private String m_locale = "";
+  private LocaleFmg m_locale = LocaleFmg.getDefault();
   
   /** because of this data, EbAccount shoudln't be send on client side ! 
    * We may have to encrypt this data.
@@ -665,14 +665,19 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_isforumIdConfirmed = p_isforumIdConfirmed;
   }
 
-  public String getLocale()
+  public LocaleFmg getLocale()
   {
     return m_locale;
   }
 
-  public void setLocale(String p_locale)
+  public void setLocale(LocaleFmg p_locale)
   {
     m_locale = p_locale;
+  }
+
+  public void setLocale(String p_locale)
+  {
+    setLocale( LocaleFmg.fromString( p_locale ));
   }
 
 
