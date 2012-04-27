@@ -66,6 +66,7 @@ public class FmgMessage
   private Map<String, String> m_params = new HashMap<String, String>();
   private NotificationQty m_notifLevel = NotificationQty.Std;
   
+  
   public FmgMessage()
   {
   }
@@ -88,7 +89,7 @@ public class FmgMessage
   }
   
   
-  public static FmgMessage buildMessage(String p_locale, String p_msgName)
+  public static FmgMessage buildMessage(LocaleFmg p_locale, String p_msgName)
   {
     // compute file name
     String fileName = "";
@@ -104,9 +105,9 @@ public class FmgMessage
     
     // then read it
     FmgMessage msg = readFile( fileName );
-    if( msg == null && !I18n.getDefaultLocale().equals( p_locale ) )
+    if( msg == null && !LocaleFmg.getDefault().equals( p_locale ) )
     {
-      return buildMessage( I18n.getDefaultLocale(), p_msgName );
+      return buildMessage( LocaleFmg.getDefault(), p_msgName );
     }
     if( msg == null )
     {
@@ -237,10 +238,10 @@ public class FmgMessage
     FmgMessage msg = null;
     if( getName() != null )
     {
-      String locale = p_account.getLocale();
-      if( locale == null || locale.isEmpty() )
+      LocaleFmg locale = p_account.getLocale();
+      if( locale == null )
       {
-        locale = I18n.getDefaultLocale();
+        locale = LocaleFmg.getDefault();
       }
       msg = FmgMessage.buildMessage( locale, getName() );
     }
