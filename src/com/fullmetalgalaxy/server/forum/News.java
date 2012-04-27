@@ -23,20 +23,12 @@
 
 package com.fullmetalgalaxy.server.forum;
 
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-
-import com.fullmetalgalaxy.model.ressources.SharedI18n;
 import com.fullmetalgalaxy.server.ServerUtil;
+import com.fullmetalgalaxy.server.syndication.Article;
+import com.fullmetalgalaxy.server.syndication.ArticleFactory;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -44,7 +36,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 /**
  * create an html text from an RSS stream.
  * 
- * @author vlegendr
+ * @author Vincent Legendre
  *
  */
 public class News
@@ -53,12 +45,7 @@ public class News
   private static final int NEWS_ITEM_COUNT = 3;
   private static final String CACHE_NEWS_KEY = "CACHE_NEWS_KEY";
   private static final int CACHE_NEWS_TTL_SEC = 3600; // one hour
-  private static final int MAX_CHAR_DESCRIPTION = 190;
-  
-  private static final DateFormat s_pubDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
 
- 
-  
   
   /**
    * 
@@ -83,66 +70,14 @@ public class News
    */
   private static String buildNewsHtml()
   {
-    String newsHtml = "";
-    
     int itemCount = 0;
-    DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( 0 ).dateFormat() );
-    for( Element item : getNewsItem() )
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(baos);
+    for( Article article : ArticleFactory.createArticles(ServerUtil.newsConnector().getNewsRssUrl(
+        ConectorImpl.FORUM_NEWS_THREAD_ID )) )
     {
-      // for each item:
-      // read relevent informations
-      // title, link, description, pubDate
-      String title = item.getChild("title").getText();
-      String link = item.getChild("link").getText();
-      String description = item.getChild("description").getText();
-      Date pubDate = new Date();
-      try
-      {
-        pubDate = s_pubDateFormat.parse(item.getChild("pubDate").getText());
-      } catch( ParseException e )
-      {
-        e.printStackTrace();
-      } catch( IllegalArgumentException e )
-      {
-        e.printStackTrace();
-      }
+      article.writePreviewAsHtml( itemCount < NEWS_FULLITEM_COUNT, out );
 
-      if( itemCount >= NEWS_FULLITEM_COUNT )
-      {
-        description = "";
-      }
-      else
-      {
-        // cut description
-        int charIndex = 0;
-        int charCount = 0;
-        while( charCount < MAX_CHAR_DESCRIPTION )
-        {
-          int index = description.indexOf( "<img", charIndex );
-          if( index < 0 )
-          {
-            charIndex += MAX_CHAR_DESCRIPTION - charCount;
-            charCount = MAX_CHAR_DESCRIPTION;
-          }
-          else
-          {
-            charIndex = description.indexOf( '>', index );
-            charCount += index + 5;
-          }
-        }
-        if( description.length() > charIndex )
-        {
-          description = description.substring( 0, charIndex ) + " ...";
-        }
-        description = "<p>" + description + "</p>";
-      }
-
-      // add a news entry
-      newsHtml += "<a href='" + link + "'><div class='article'><article><span class='date'>"
- + dateFormat.format( pubDate )
-   // <h4> tag cause graphic glich on IE7
-          + "</span><div class='h4'>" + title + "</div>" + description + "</article></div></a>";
-        
       // and stop if we've got enough
       itemCount++;
       if( itemCount >= NEWS_ITEM_COUNT)
@@ -150,42 +85,11 @@ public class News
         break;
       }
     }
-    
-    return newsHtml;
+    return out.toString();
   }
   
 
-  @SuppressWarnings("unchecked")
-  private static List<Element> getNewsItem()
-  {
-    List<Element> listItem = new ArrayList<Element>();
-      
-    org.jdom.Document document;
-    // On crée une instance de SAXBuilder
-    SAXBuilder sxb = new SAXBuilder();
-    try
-    {
-      URL url = new URL( ServerUtil.newsConnector().getNewsRssUrl(
-          ConectorImpl.FORUM_NEWS_THREAD_ID ) );
-      // On crée un nouveau document JDOM avec en argument le fichier XML
-      // Le parsing est terminé ;)
-       document = sxb.build( url.openStream() );
-  
-      // On initialise un nouvel élément racine avec l'élément racine du
-      // document.
-      Element racine = document.getRootElement();
-  
-      // On crée une List contenant tous les noeuds "etudiant" de l'Element
-      // racine
-      listItem = racine.getChild("channel").getChildren("item");
-    }
-    catch(Exception e)
-    {
-      e.printStackTrace();
-    }
-    return listItem;
-  }
-  
+
   private static MemcacheService s_cache = null;
 
   /**
