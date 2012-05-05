@@ -52,8 +52,7 @@ public class News
    */
   public static String getHtml()
   {
-    String newsHtml = null;// String.class.cast( getCache().get( CACHE_NEWS_KEY
-                           // ) );
+    String newsHtml = String.class.cast( getCache().get( CACHE_NEWS_KEY ) );
     if( newsHtml == null )
     {
       newsHtml = buildNewsHtml();
