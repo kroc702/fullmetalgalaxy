@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.server;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
@@ -141,6 +142,8 @@ public class RecomputeStats
     private long m_nbOfHexagon = 0;
     private int m_nbPlayer = 0;
 
+    private int m_FGameInitiationCount = 0;
+
     private int m_ConstructionCount = 0;
     private int m_FireCount = 0;
     private int m_FmpScore = 0;
@@ -177,25 +180,32 @@ public class RecomputeStats
       // game is in history, but it may have been canceled
       if( game.isFinished() )
       {
-        m_nbConfigGameTime.put( game.getConfigGameTime(),
-            m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
-        m_nbConfigGameVariant.put( game.getConfigGameVariant(),
-            m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
-        m_nbOfHexagon += game.getNumberOfHexagon();
-        m_nbPlayer += game.getSetRegistration().size();
-
-        for( EbRegistration registration : game.getSetRegistration() )
+        if( game.getGameType() == GameType.Initiation )
         {
-          StatsPlayer stats = registration.getStats();
-          if( stats != null )
+          m_FGameInitiationCount++;
+        }
+        else
+        {
+          m_nbConfigGameTime.put( game.getConfigGameTime(),
+              m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
+          m_nbConfigGameVariant.put( game.getConfigGameVariant(),
+              m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
+          m_nbOfHexagon += game.getNumberOfHexagon();
+          m_nbPlayer += game.getSetRegistration().size();
+
+          for( EbRegistration registration : game.getSetRegistration() )
           {
-            m_ConstructionCount += stats.getConstructionCount();
-            m_FireCount += stats.getFireCount();
-            m_FmpScore += stats.getFinalScore();
-            m_FreighterControlCount += stats.getFreighterControlCount();
-            m_OreCount += stats.getOreCount();
-            m_TokenCount += stats.getTokenCount();
-            m_UnitControlCount += stats.getUnitControlCount();
+            StatsPlayer stats = registration.getStats();
+            if( stats != null )
+            {
+              m_ConstructionCount += stats.getConstructionCount();
+              m_FireCount += stats.getFireCount();
+              m_FmpScore += stats.getFinalScore();
+              m_FreighterControlCount += stats.getFreighterControlCount();
+              m_OreCount += stats.getOreCount();
+              m_TokenCount += stats.getTokenCount();
+              m_UnitControlCount += stats.getUnitControlCount();
+            }
           }
         }
       }
@@ -215,6 +225,7 @@ public class RecomputeStats
       }
       GlobalVars.setFGameNbOfHexagon( m_nbOfHexagon );
       GlobalVars.setFGameNbPlayer( m_nbPlayer );
+      GlobalVars.setFGameInitiationCount( m_FGameInitiationCount );
 
       // save process stats into datastore
       GlobalVars.setFGameConstructionCount( m_ConstructionCount );

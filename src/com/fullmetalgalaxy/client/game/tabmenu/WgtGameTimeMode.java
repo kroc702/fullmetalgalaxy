@@ -212,10 +212,14 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
         return;
       }
 
-      if( AppMain.instance().iAmAdmin() && !GameEngine.model().canCancelAction() )
+      if( GameEngine.model().getLastTurnPlayed() != GameEngine.model().getGame()
+          .getCurrentTimeStep()
+          || GameEngine.model().getMyRegistration() != GameEngine.model().getGame()
+              .getCurrentPlayerRegistration() )
       {
         // admin is going to perform admin action, show confirm dialog
-        // no i18n as it is only for admin
+        // it may also a training game
+        // TODO i18n
         if( !Window.confirm( "Perform admin cancel ?" ) )
         {
           return;

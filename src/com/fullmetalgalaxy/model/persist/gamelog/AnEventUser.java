@@ -79,7 +79,7 @@ public class AnEventUser extends AnEvent
 
   public EbRegistration getMyRegistration(Game p_game)
   {
-    if( p_game.getGameType() == GameType.MultiPlayer )
+    if( (p_game.getGameType() == GameType.MultiPlayer || p_game.getGameType() == GameType.Initiation) )
     {
       return p_game.getRegistrationByIdAccount( getAccountId() );
     }
@@ -102,7 +102,7 @@ public class AnEventUser extends AnEvent
   {
     super.check(p_game);
     if( ((getAccountId() == 0)) && (!isAuto())
-        && (p_game.getGameType() == GameType.MultiPlayer) )
+        && (p_game.getGameType() == GameType.MultiPlayer || p_game.getGameType() == GameType.Initiation) )
     {
       throw new RpcFmpException( errMsg().MustBeLogged() );
     }

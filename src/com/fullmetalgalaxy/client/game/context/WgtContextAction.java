@@ -291,7 +291,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
       }
       else if( sender == m_btnPractice || sender == m_pnlPractice )
       {
-        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+            || GameEngine.model().getGame().getGameType() == GameType.Initiation )
         {
           Window
               .alert( MAppBoard.s_messages.activateTrainningMode() );
@@ -523,7 +524,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlPractice );
         }
-        else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+        else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+            || GameEngine.model().getGame().getGameType() == GameType.Initiation )
         {
           m_panel.add( m_btnPractice );
         }

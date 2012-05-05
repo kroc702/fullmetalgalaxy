@@ -122,13 +122,15 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
     initWidget( m_hPanel );
     AppMain.getEventBus().addHandler( GameActionEvent.TYPE, this );
     
-    if( GameEngine.model().getGame().getGameType() != GameType.MultiPlayer 
+    if( GameEngine.model().getGame().getGameType() != GameType.MultiPlayer
+        && GameEngine.model().getGame().getGameType() != GameType.Initiation
         && GameEngine.model().getGame().getMessage() != null
         && !GameEngine.model().getGame().getMessage().isEmpty() )
     {
       openTab(m_btnMessage);
     }
-    else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+    else if( (GameEngine.model().getGame().getGameType() == GameType.MultiPlayer || GameEngine
+        .model().getGame().getGameType() == GameType.Initiation)
         && GameEngine.model().getMyRegistration() != null
         && GameEngine.model().getGame()
         .haveNewMessage( GameEngine.model().getMyRegistration().getLastConnexion() ) )

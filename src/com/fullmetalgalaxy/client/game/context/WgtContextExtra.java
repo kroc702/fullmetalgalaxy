@@ -141,7 +141,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       // so, no token is selected: find ship in orbit !
       Game game = model.getGame();
-      if( model.getGame().getGameType() != GameType.MultiPlayer
+      if( model.getGame().getGameType() == GameType.Puzzle
           || game.getCurrentTimeStep() <= game.getEbConfigGameTime()
               .getDeploymentTimeStep() || game.getStatus() == GameStatus.Open
           || game.getStatus() == GameStatus.Pause )

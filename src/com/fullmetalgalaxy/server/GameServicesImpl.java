@@ -125,7 +125,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       adminEvent.setMessage( p_modifDesc );
 
       if( !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )
-          && (p_game.getAccountCreator().getId() != account.getId() || p_game.getCurrentTimeStep() >= 2) )
+          && (p_game.getAccountCreator().getId() != account.getId() || (p_game.getCurrentTimeStep() >= 2 && p_game
+              .getGameType() != GameType.Initiation)) )
       {
         // TODO i18n
         throw new RpcFmpException(
@@ -192,7 +193,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       }
     }
 
-    if( model.getGameType() != GameType.MultiPlayer )
+    if( model.getGameType() == GameType.Puzzle )
     {
       model.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
     }

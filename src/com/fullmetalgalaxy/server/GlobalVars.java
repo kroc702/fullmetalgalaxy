@@ -300,6 +300,23 @@ public class GlobalVars extends GlobalVarBase
     return count;
   }
 
+  public static int getFGameInitiationCount()
+  {
+    return getInt( "InitiationGameCount" );
+  }
+
+  public static void setFGameInitiationCount(int p_currentGameCount)
+  {
+    put( "InitiationGameCount", p_currentGameCount );
+  }
+
+  public static int incrementFGameInitiationCount(int p_toAdd)
+  {
+    return (int)increment( "InitiationGameCount", p_toAdd );
+  }
+
+
+
   public static long getFGameNbOfHexagon()
   {
     return getLong( "FGameNbOfHexagon" );

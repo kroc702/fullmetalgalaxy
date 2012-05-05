@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.GameStatus;
-import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
@@ -81,10 +80,8 @@ public class GameUpdate extends HttpServlet
       long startTime = System.currentTimeMillis();
       Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
 
-      // TODO change this flag to check status instead
-      // //////////////////////////////////////////////
       query.filter( "m_history", false );
-      query.filter( "m_gameType", GameType.MultiPlayer );
+      query.filter( "m_status", GameStatus.Running );
       if( m_cursor != null )
       {
         query.startCursor( m_cursor );

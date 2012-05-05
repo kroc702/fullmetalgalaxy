@@ -460,22 +460,8 @@ public class EbGamePreview extends EbBase
   public String getIconsAsHtml()
   {
     StringBuffer strBuf = new StringBuffer( " " );
-    if( getStatus() == GameStatus.Aborted )
-    {
-      strBuf.append( "<img src='/images/icons/canceled16.png' title='Annulée' /> " );
-    }
-    else if( getStatus() == GameStatus.Open )
-    {
-      strBuf.append( "<img src='/images/icons/open16.png' title='Ouverte' /> " );
-    }
-    else if( getStatus() == GameStatus.Pause )
-    {
-      strBuf.append( "<img src='/images/icons/pause16.png' title='En pause' /> " );
-    }
-    else if( getStatus() == GameStatus.History )
-    {
-      strBuf.append( "<img src='/images/icons/history16.png' title='Archive' /> " );
-    }
+    strBuf.append( getGameType().getIconAsHtml() );
+    strBuf.append( getStatus().getIconAsHtml() );
     if( isPasswordProtected() )
     {
       strBuf.append( "<img src='/images/icons/protected16.png' title='Partie privée' /> " );
