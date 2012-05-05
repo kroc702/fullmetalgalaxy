@@ -71,7 +71,7 @@ public class Article implements Comparable<Article>
     
     String description = getBody();
 
-    if( p_withDescription )
+    if( !p_withDescription )
     {
       description = "";
     }
