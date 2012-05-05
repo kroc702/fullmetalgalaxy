@@ -246,7 +246,7 @@ public class AdminServlet extends HttpServlet
     strid = p_req.getParameter( "forumpostgame" );
     if( strid != null )
     {
-      FmgMessage msg = FmgMessage.buildMessage( "fr", "forumPostGame" );
+      FmgMessage msg = FmgMessage.buildMessage( LocaleFmg.getDefault(), "forumPostGame" );
       msg.putParam( "game_name", "Tutorial" );
       msg.putParam( "game_description",
           "La première partie que vous pouvez faire pour vous familiariser avec les règles (environ 15min)" );

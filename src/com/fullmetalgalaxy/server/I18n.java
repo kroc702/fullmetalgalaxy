@@ -38,39 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 public class I18n
 {
 
-  private final static String[] s_validLocale = { /*"en",*/"fr" };
-
-  /**
-   * 
-   * @return a list of all supported locale
-   */
-  public static String[] getLocales()
-  {
-    return s_validLocale;
-  }
-
-  public static String getDefaultLocale()
-  {
-    return "fr";
-  }
-
-
-  private static String validLocale(String p_locale)
-  {
-    assert p_locale != null;
-    /*if( p_locale.length() < 2 )
-      return "en";
-    p_locale = p_locale.substring( 0, 2 ).toLowerCase();
-    for( String locale : getLocales() )
-    {
-      if( p_locale.equals( locale ) )
-      {
-        return p_locale;
-      }
-    }*/
-    return getDefaultLocale();
-  }
-
   @SuppressWarnings("unchecked")
   public static String getURI(HttpServletRequest p_request, String p_locale)
   {
@@ -78,7 +45,7 @@ public class I18n
     String querry = p_request.getQueryString();
     if( querry == null )
     {
-      querry = "locale=" + validLocale( p_locale );
+      querry = "locale=" + LocaleFmg.fromString( p_locale );
     }
     else
     {
@@ -91,7 +58,7 @@ public class I18n
           querry += param.getKey() + "=" + param.getValue()[0] + "&";
         }
       }
-      querry += "locale=" + validLocale( p_locale );
+      querry += "locale=" + LocaleFmg.fromString( p_locale );
     }
     return p_request.getRequestURI() + "?" + querry;
   }
@@ -113,7 +80,7 @@ public class I18n
     String strLocale = p_request.getParameter( "locale" );
     if( strLocale != null )
     {
-      strLocale = validLocale( strLocale );
+      strLocale = LocaleFmg.fromString( strLocale ).name();
       p_request.getSession( true ).setAttribute( "locale", strLocale );
       // if user is logged, change his locale preference
       if( Auth.isUserLogged( p_request, p_response ) )
@@ -136,15 +103,15 @@ public class I18n
     }
     // search in account preference
     EbAccount account = Auth.getUserAccount( p_request, p_response );
-    if( account != null && account.getLocale() != null && !account.getLocale().isEmpty() )
+    if( account != null && account.getLocale() != null )
     {
-      return account.getLocale();
+      return account.getLocale().name();
     }
     // search in request header
     Locale locale = p_request.getLocale();
     if( locale != null )
     {
-      strLocale = validLocale( locale.getLanguage() );
+      strLocale = LocaleFmg.fromString( locale.getLanguage() ).name();
       if( account != null )
       {
         account.setLocale( strLocale );
@@ -155,7 +122,7 @@ public class I18n
       return strLocale;
     }
     // then give a default value
-    return getDefaultLocale();
+    return LocaleFmg.getDefault().name();
   }
 
 
