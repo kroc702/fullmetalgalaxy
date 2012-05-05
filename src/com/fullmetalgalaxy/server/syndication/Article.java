@@ -57,7 +57,7 @@ public class Article implements Comparable<Article>
   @Override
   public int compareTo(Article p_arg0)
   {
-    return m_pubDate.compareTo( p_arg0.getPubDate() );
+    return -1 * m_pubDate.compareTo( p_arg0.getPubDate() );
   }
  
   /**

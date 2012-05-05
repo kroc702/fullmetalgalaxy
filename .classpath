@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/antlr-runtime.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/charabia.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.0.jar" sourcepath="/objectify-appengine-read-only/src"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jdom.jar" sourcepath="C:/Users/Vincent/.m2/repository/org/jopendocument/jdom/1.1.1/jdom-1.1.1-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/JSkills_0.9.0.jar" sourcepath="C:/Sun/nsp-JSkills-c6a9d9a/src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
