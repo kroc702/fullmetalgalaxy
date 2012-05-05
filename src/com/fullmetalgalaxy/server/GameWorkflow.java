@@ -413,7 +413,8 @@ public class GameWorkflow
 
     // in some case, game is never updated
     long lastHour = System.currentTimeMillis() - (1000 * 60 * 60);
-    if( p_game.getStatus() == GameStatus.History || p_game.getGameType() != GameType.MultiPlayer
+    if( (p_game.getStatus() != GameStatus.Open && p_game.getStatus() != GameStatus.Pause && p_game
+        .getStatus() != GameStatus.Running)
         || p_game.getLastUpdate().getTime() > lastHour )
     {
       // in all these case, game isn't blocked
@@ -645,13 +646,20 @@ public class GameWorkflow
     p_game.setStatus( GameStatus.History );
     GlobalVars.incrementCurrentGameCount( -1 );
 
-    // add all stat related to finished game
-    GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), 1 );
-    GlobalVars.incrementFGameNbConfigGameVariant( p_game.getConfigGameVariant(), 1 );
-    GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
-    GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
+    if( p_game.getGameType() == GameType.MultiPlayer )
+    {
+      // add all stat related to finished game
+      GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), 1 );
+      GlobalVars.incrementFGameNbConfigGameVariant( p_game.getConfigGameVariant(), 1 );
+      GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
+      GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
 
-    updateAccountStat4FinishedGame( p_game );
+      updateAccountStat4FinishedGame( p_game );
+    }
+    else if( p_game.getGameType() == GameType.Initiation )
+    {
+      GlobalVars.incrementFGameInitiationCount( 1 );
+    }
   }
 
   /**

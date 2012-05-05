@@ -35,8 +35,13 @@ public enum GameStatus implements java.io.Serializable, IsSerializable
   // multiplayer games status
   Open, Pause, Running, Aborted, History,
   // other game type
-  Puzzle, Scenario,
-  //Practice is similar to Puzzle mode but for game that are originally
+  // Game is loaded once and never modified on server. player is alone.
+  // in Puzzle game, m_currentPlayerRegistration indicate which registration
+  // player have to play.
+  Puzzle,
+  // Scenario can't be played at all. it's only a game template.
+  Scenario,
+  // Practice is similar to Puzzle mode but for game that are originally
   // Multiplayer
   // -> some more restriction
   Practice;

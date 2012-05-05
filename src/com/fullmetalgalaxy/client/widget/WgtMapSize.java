@@ -39,7 +39,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author vlegendr
- *
+ * 
+ * TODO i18n
  * display and edit game map size
  */
 public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>, ModelUpdateEvent.Handler
@@ -79,7 +80,7 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
     
     m_panel.add( m_lblSize );
 
-    m_panel.add( new HTML( "<br/>plus elle sera petite plus il y aura de combats" ) );
+    m_panel.add( new HTML( "plus elle sera petite plus il y aura de combats...<br/>" ) );
     // fill UI
     m_maxPlayerCount = GameEngine.model().getGame().getMaxNumberOfPlayer();
     onModelUpdate(GameEngine.model());

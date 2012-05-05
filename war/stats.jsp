@@ -35,6 +35,7 @@ Nombre de partie time QuickTurnBased : <%= GlobalVars.getFGameNbConfigGameTime(C
 Nombre de partie time QuickTurnBased : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.QuickTurnBased) %>
 Nombre de partie time Custom : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.Custom) %>
 Nombre de partie variant Standard : <%= GlobalVars.getFGameNbConfigGameVariant(ConfigGameVariant.Standard) %>
+Nombre de partie d'initiation : <%= GlobalVars.getFGameInitiationCount() %>
 
 Nombre d'hexagon  : <%= GlobalVars.getFGameNbOfHexagon() %>
 Nombre de joueurs  : <%= GlobalVars.getFGameNbPlayer() %>

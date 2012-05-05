@@ -245,7 +245,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     // come from old WgtContextPlayers
     //
     Game game = GameEngine.model().getGame();
-    if( game.getGameType() == GameType.MultiPlayer )
+    if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
     {
       VerticalPanel vpanel = new VerticalPanel();
 
@@ -260,7 +260,7 @@ public class WgtPlayers extends Composite implements ClickHandler
           vpanel.add( html );
         }
       }
-      if( game.getGameType() == GameType.MultiPlayer )
+      if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
       {
         vpanel.add( m_btnChat );
         vpanel.add( new HTML("<a href='/chat.jsp?id="+game.getId()+"' target='_blank'><img src='/images/icon_new_window.gif'/></a>") );

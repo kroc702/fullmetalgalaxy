@@ -64,7 +64,8 @@ public class WgtMessages extends Composite implements BlurHandler
       initWidget( panel );
     }
     else if( (GameEngine.model().getGame().getGameType() == GameType.MultiPlayer || GameEngine
-        .model().getGame().getGameType() == GameType.Practice)
+.model().getGame().getGameType() == GameType.Practice || GameEngine.model()
+        .getGame().getGameType() == GameType.Initiation)
         && !GameEngine.model().getGame().isRecordingScript() )
     {
       VerticalPanel verticalPanel = new VerticalPanel();

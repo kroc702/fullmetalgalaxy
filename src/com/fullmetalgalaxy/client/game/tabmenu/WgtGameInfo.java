@@ -103,6 +103,10 @@ public class WgtGameInfo extends Composite implements ClickHandler
     // ------------------------
     m_generalPanel.clear();
 
+    m_generalPanel.add( new HTML( game.getGameType().getIconAsHtml()
+        + game.getStatus().getIconAsHtml() + " "
+        + Messages.getGameStatusString( 0, game.getStatus() ) ) );
+
     m_generalPanel.add( new Label( game.getDescription() ) );
 
     // Display tides
@@ -131,7 +135,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     m_generalPanel.add( tidePanel );
 
     // display start game date
-    if( game.getGameType() == GameType.MultiPlayer )
+    if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
     {
       m_generalPanel.add( new HTML( MAppBoard.s_messages.gameCreation( ClientUtil.s_dateTimeFormat
         .format( game.getCreationDate() ) )
@@ -188,10 +192,11 @@ public class WgtGameInfo extends Composite implements ClickHandler
       m_generalPanel.add( new Label( MAppBoard.s_messages.turn() + " " + game.getCurrentTimeStep()
           + "/" + game.getEbConfigGameTime().getTotalTimeStep() ) );
     }
-    m_generalPanel.add( new Label( MAppBoard.s_messages.gameFinishAt( ClientUtil.s_dateTimeFormat
-        .format( game.estimateEndingDate() ) ) ) );
-
-    m_generalPanel.add( new HTML( game.getStatus().getIconAsHtml() +" "+ Messages.getGameStatusString( 0, game.getStatus() ) ) );
+    if( game.estimateEndingDate().after( new Date() ) )
+    {
+      m_generalPanel.add( new Label( MAppBoard.s_messages.gameFinishAt( ClientUtil.s_dateTimeFormat
+          .format( game.estimateEndingDate() ) ) ) );
+    }
 
     if( (game.getAccountCreator() != null &&
         AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId() )
@@ -204,7 +209,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
       }
 
       // play / pause button
-      if( game.getGameType() == GameType.MultiPlayer )
+      if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
       {
         if( game.getStatus() == GameStatus.Running )
         {

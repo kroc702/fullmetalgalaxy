@@ -23,6 +23,7 @@
 
 package com.fullmetalgalaxy.client.creation;
 
+import com.fullmetalgalaxy.client.widget.WgtGameHeaderAdvanced;
 import com.fullmetalgalaxy.client.widget.WgtGameHeaderInfo;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
 import com.fullmetalgalaxy.client.widget.WgtMapSize;
@@ -40,7 +41,7 @@ public class WgtGeneralInfo extends Composite
   private WgtGameHeaderInfo m_headerInfo = new WgtGameHeaderInfo();
   private WgtMapSize m_mapSize = new WgtMapSize();
   private WgtGameTime m_time = new WgtGameTime();
-  
+  private WgtGameHeaderAdvanced m_advanced = new WgtGameHeaderAdvanced();
   
   public WgtGeneralInfo()
   {
@@ -48,6 +49,7 @@ public class WgtGeneralInfo extends Composite
     m_panel.add( m_headerInfo );
     m_panel.add( m_mapSize );
     m_panel.add( m_time );
+    m_panel.add( m_advanced );
     
     initWidget( m_panel );
   }

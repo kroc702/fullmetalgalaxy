@@ -114,7 +114,8 @@ public final class MAppContext extends GuiEntryPoint implements NativePreviewHan
       }
       if( p_event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER )
       {
-        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+        if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+            || GameEngine.model().getGame().getGameType() == GameType.Initiation )
         {
           DlgChatInput.showDialog();
         }

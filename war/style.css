@@ -1,5 +1,5 @@
 body {
-	background-image: url('/images/motif.jpg');
+	background-image: url('images/motif.jpg');
 	background-position: 0px -53px;
 	margin: 0;
 	padding: 0;
@@ -22,7 +22,7 @@ a:hover {
 }
 
 li {
-	list-style-image: url('/images/logo16.png');
+	list-style-image: url('images/logo16.png');
 }
 	
 #motifHeader {
@@ -276,7 +276,7 @@ h1 {
 	border:0px;
 	margin: 0px;
 	float: right;
-	background-image: url('/images/css/rss.jpg');
+	background-image: url('images/css/rss.jpg');
 	width: 19px;
 	height: 19px;
 }
@@ -393,7 +393,7 @@ h1 {
 }
 
 #footer #copyright {
-	background-image:url('/images/icon_opensource.png');
+	background-image:url('images/icon_opensource.png');
 	background-repeat:no-repeat;
 	background-position: 295px 5px;
 	float: right;
@@ -464,7 +464,7 @@ h1 {
 
 .icon-gamelisttab img.icon {
 	height:136px;
-	background-image: url(/images/css/tab_icons.png);
+	background-image: url(images/css/tab_icons.png);
 	-moz-opacity:0.5;
 	-opacity:0.5;
 	opacity: 0.5;
@@ -489,7 +489,7 @@ h1 {
 .selected-gamelisttab img.icon {
 	width:170px; 
 	height:136px;
-	background-image: url(/images/css/tab_icons.png);
+	background-image: url(images/css/tab_icons.png);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
 }
@@ -513,7 +513,7 @@ h1 {
   padding: 10px;
   /*width:55px;*/
   /*border:2px solid black;*/
-  background:url(/images/css/bloc-bkg.png);
+  background:url(images/css/bloc-bkg.png);
   box-shadow: 1px 1px 12px #555;
 }
 

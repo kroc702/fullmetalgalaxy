@@ -49,8 +49,10 @@ Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser
 </p>
 <% if(Auth.isUserLogged( request, response )) { %>
 	<table><tr>
-		<td><img src='/images/robot_bar.jpg'/></td>		
-		<td style="width : 100%; text-align:center"><a href="/instructor.jsp" class="bouton">Les instructeurs</a></td>
+		<td style="width:40px"></td>		
+		<td><img src='/images/lost.png'/></td>		
+		<td style="width:30px"></td>		
+		<td style=""><b>Vous êtes perdu ?</b><br/> <a href="/instructor.jsp">Contactez les instructeurs</a></td>
 	</tr></table>
 <% } else { %>
 	<p>

@@ -150,7 +150,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         getActionBuilder().setGame( getGame() );
         getActionBuilder().setMyAccount( AppMain.instance().getMyAccount() );
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-        if( m_game.getGameType() == GameType.MultiPlayer )
+        if( m_game.getGameType() == GameType.MultiPlayer
+            || m_game.getGameType() == GameType.Initiation )
         {
           AppMain.instance().addChannelMessageEventHandler( ModelFmpUpdate.class, GameEngine.model() );
         } 
@@ -298,7 +299,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     public void onSuccess(Void p_result)
     {
       if( !AppMain.instance().isChannelConnected()
-          && GameEngine.model().getGame().getGameType() == GameType.MultiPlayer )
+          && (GameEngine.model().getGame().getGameType() == GameType.MultiPlayer || GameEngine
+              .model().getGame().getGameType() == GameType.Initiation) )
       {
         // we just receive an action acknowledge but we arn't connected with
         // channel. ie we won't receive update event... reload page
@@ -439,14 +441,16 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
     try
     {
-      if( !GameEngine.model().isLogged() && getGame().getGameType() == GameType.MultiPlayer )
+      if( !GameEngine.model().isLogged()
+          && (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation) )
       {
         // no i18n as HMI won't allow that. so unusual
         throw new RpcFmpException( "You must be logged to do this action" );
       }
       // do not check player is logged to let him join action
       // action.check();
-      if( getGame().getGameType() == GameType.MultiPlayer )
+      if( getGame().getGameType() == GameType.MultiPlayer
+          || getGame().getGameType() == GameType.Initiation )
       {
         AppMain.instance().scheduleReloadTimer();
         ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
@@ -501,7 +505,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
       // action.check();
       getActionBuilder().unexec();
-      if( getGame().getGameType() == GameType.MultiPlayer )
+      if( getGame().getGameType() == GameType.MultiPlayer
+          || getGame().getGameType() == GameType.Initiation )
       {
         AppMain.instance().scheduleReloadTimer();
         // then send request
@@ -671,6 +676,18 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   }
 
   /**
+   * @return return the last time step played. ie the highest time step in this game
+   */
+  public int getLastTurnPlayed()
+  {
+    if( !isTimeLineMode() )
+    {
+      return getGame().getCurrentTimeStep();
+    }
+    return m_lastTurnPlayed;
+  }
+
+  /**
    * in time line mode, play several events backward
    * @param p_actionCount
    */
@@ -768,6 +785,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    * in time mode, play events up to the given one
    * @param p_actionCount
    */
+  @SuppressWarnings("null")
   public void timePlay(AnEvent p_event)
   {
     if( !isTimeLineMode() || p_event == null || p_event.getIdGame() != getGame().getId() )
@@ -933,6 +951,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     if( getMyRegistration() == null )
     {
       return false;
+    }
+    // for training game, creator can always cancel game event
+    if( getGame().getGameType() == GameType.Initiation
+        && getMyRegistration().getAccount().getId() == getGame().getAccountCreator().getId() )
+    {
+      return true;
     }
     if( m_lastTurnPlayed != getGame().getCurrentTimeStep() )
     {

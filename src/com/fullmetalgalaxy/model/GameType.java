@@ -33,6 +33,9 @@ public enum GameType implements java.io.Serializable, IsSerializable
 {
   // Standard game
   MultiPlayer,
+  // Initiation is similar to MultiPlayer but creator have all admin rights
+  // and doesn't count for ranking
+  Initiation,
   // Game is loaded once and never modified on server. player is alone.
   // in Puzzle game, m_currentPlayerRegistration indicate which registration
   // player have to play.
@@ -43,4 +46,32 @@ public enum GameType implements java.io.Serializable, IsSerializable
   // Multiplayer
   // -> some more restriction
   Practice;
+
+
+  private String getIconFileName()
+  {
+    switch( this )
+    {
+    default:
+    case MultiPlayer:
+      return "";
+    case Initiation:
+      return "/images/icons/initiation16.png";
+    case Scenario:
+    case Practice:
+    case Puzzle:
+      return "/images/icons/puzzle16.png";
+    }
+  }
+
+  public String getIconAsHtml()
+  {
+    if( getIconFileName().isEmpty() )
+    {
+      return "";
+    }
+    return "<image src='" + getIconFileName() + "' />";
+  }
+
+
 }
