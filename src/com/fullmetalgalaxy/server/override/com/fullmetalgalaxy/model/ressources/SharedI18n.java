@@ -106,7 +106,7 @@ public class SharedI18n
     String locale = null;
     if( account != null )
     {
-      locale = account.getLocale();
+      locale = account.getLocale().toString();
     }
     return locale;
   }

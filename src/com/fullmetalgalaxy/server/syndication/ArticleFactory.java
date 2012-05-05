@@ -29,12 +29,18 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+
+import com.fullmetalgalaxy.server.LocaleFmg;
 
 
 /**
@@ -45,6 +51,23 @@ import org.jdom.input.SAXBuilder;
 public class ArticleFactory
 {
   private static final DateFormat s_pubDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
+  private static final DateFormat s_dcDateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH );
+  
+  public static Logger logger = Logger.getLogger( "ArticleFactory" );
+
+  private static Properties s_articlesProperties = new Properties();
+
+  static
+  {
+    // try retrieve data from file
+    try
+    {
+      s_articlesProperties.load( ArticleFactory.class.getResourceAsStream( "articles.properties" ) );
+    } catch( Exception e )
+    {
+      logger.severe( e.getMessage() );
+    }
+  }
 
   /**
    * concat several url into on single article list
@@ -52,7 +75,35 @@ public class ArticleFactory
    */
   public static List<Article> createArticles()
   {
+    ArrayList<Article> listArticle = new ArrayList<Article>();
+    int rssIndex = 0;
     
+    // read all rss url
+    String rssUrl = s_articlesProperties.getProperty( "rssUrl_" + rssIndex );
+    while( rssUrl != null )
+    {
+      LocaleFmg locale = LocaleFmg.fromString( s_articlesProperties.getProperty( "locale_"
+          + rssIndex ) );
+      String author = s_articlesProperties.getProperty( "author_" + rssIndex );
+      String iconUrl = s_articlesProperties.getProperty( "iconUrl_" + rssIndex );
+      List<Article> tmpList = createArticles( rssUrl );
+      for( Article article : tmpList )
+      {
+        article.setLocale( locale );
+        article.setAuthor( author );
+        article.setIconUrl( iconUrl );
+      }
+      listArticle.addAll( tmpList );
+
+      // next rss
+      rssIndex++;
+      rssUrl = s_articlesProperties.getProperty( "rssUrl_" + rssIndex );
+    }
+
+    // sort according to date
+    Collections.sort( listArticle );
+
+    return listArticle;
   }
   
   
@@ -61,12 +112,11 @@ public class ArticleFactory
    * @param p_url
    * @return
    */
-  public static List<Article> createArticles(String p_url)
+  private static List<Article> createArticles(String p_url)
   {
     List<Article> listArticle = new ArrayList<Article>();
     for( Element item : fetchRssItem( p_url ) )
     {
-      // TODO add thread info like author, icon, locale
       listArticle.add( createArticleFromRss( item ) );
     }
     return listArticle;
@@ -74,7 +124,7 @@ public class ArticleFactory
   
   public static void writeRss(List<Article> p_articles, PrintStream p_out)
   {
-    
+    // TODO all
   }
   
   
@@ -87,16 +137,26 @@ public class ArticleFactory
   private static Article createArticleFromRss(Element p_item)
   {
     Article article = new Article();
+    if( p_item == null )
+      return article;
     
     // read relevent informations
     // title, link, description, pubDate
-    article.setTitle( p_item.getChild("title").getText() );
-    article.setLink( p_item.getChild("link").getText() );
-    article.setBody( p_item.getChild("description").getText() );
-    Date pubDate = new Date();
+    if( p_item.getChild( "title" ) != null )
+      article.setTitle( p_item.getChild( "title" ).getText() );
+    if( p_item.getChild( "link" ) != null )
+      article.setLink( p_item.getChild( "link" ).getText() );
+    if( p_item.getChild( "description" ) != null )
+      article.setBody( p_item.getChild( "description" ).getText() );
+    Date pubDate = new Date( 0 );
     try
     {
-      pubDate = s_pubDateFormat.parse(p_item.getChild("pubDate").getText());
+      if( p_item.getChild( "pubDate" ) != null )
+        pubDate = s_pubDateFormat.parse( p_item.getChild( "pubDate" ).getText() );
+      else if( p_item
+          .getChild( "date", Namespace.getNamespace( "http://purl.org/dc/elements/1.1/" ) ) != null )
+        pubDate = s_dcDateFormat.parse( p_item.getChild( "date",
+            Namespace.getNamespace( "http://purl.org/dc/elements/1.1/" ) ).getText() );
     } catch( ParseException e )
     {
       e.printStackTrace();

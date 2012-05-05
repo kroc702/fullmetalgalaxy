@@ -26,7 +26,6 @@ package com.fullmetalgalaxy.server.forum;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import com.fullmetalgalaxy.server.ServerUtil;
 import com.fullmetalgalaxy.server.syndication.Article;
 import com.fullmetalgalaxy.server.syndication.ArticleFactory;
 import com.google.appengine.api.memcache.Expiration;
@@ -53,7 +52,8 @@ public class News
    */
   public static String getHtml()
   {
-    String newsHtml = String.class.cast( getCache().get( CACHE_NEWS_KEY ) );
+    String newsHtml = null;// String.class.cast( getCache().get( CACHE_NEWS_KEY
+                           // ) );
     if( newsHtml == null )
     {
       newsHtml = buildNewsHtml();
@@ -73,8 +73,7 @@ public class News
     int itemCount = 0;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(baos);
-    for( Article article : ArticleFactory.createArticles(ServerUtil.newsConnector().getNewsRssUrl(
-        ConectorImpl.FORUM_NEWS_THREAD_ID )) )
+    for( Article article : ArticleFactory.createArticles() )
     {
       article.writePreviewAsHtml( itemCount < NEWS_FULLITEM_COUNT, out );
 
@@ -85,7 +84,7 @@ public class News
         break;
       }
     }
-    return out.toString();
+    return baos.toString();
   }
   
 
