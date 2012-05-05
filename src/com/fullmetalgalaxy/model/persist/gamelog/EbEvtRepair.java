@@ -29,9 +29,9 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 
 /**
@@ -103,7 +103,7 @@ public class EbEvtRepair extends AnEventPlay
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
-    if( getMyRegistration( p_game ).getSingleColor() == freighter.getColor() )
+    if( getMyRegistration( p_game ).getOriginalColor() == freighter.getColor() )
     {
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair your original turrets" );
