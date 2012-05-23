@@ -19,7 +19,7 @@
 	    		channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.GAME,presence);
 	    	    room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
 	      }
-	      ModelFmpInit modelFmpInit = GameServicesImpl.sgetModelFmpInit(request.getParameter("id"));
+	      ModelFmpInit modelFmpInit = GameServicesImpl.sgetModelFmpInit(request,response,request.getParameter("id"));
 	      String model = Serializer.escape(Serializer.toClient( modelFmpInit ));
 	    %>
 		<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />

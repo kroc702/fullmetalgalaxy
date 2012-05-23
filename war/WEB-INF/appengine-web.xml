@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>fullmetalgalaxy2</application>
-	<version>149</version>
+	<version>150</version>
 	
 	<sessions-enabled>true</sessions-enabled>
 	<precompilation-enabled>true</precompilation-enabled>
@@ -44,13 +44,12 @@
     </static-files>
     
     <resource-files>
+        <include path="/**_fr.html" />
+        <include path="/**_en.html" />
         <include path="/puzzles/**.bin" />
-        <include path="/i18n/**.html" />
-        <include path="/i18n/**.jsp" />
         <include path="/include/*" />
         <include path="/**txt" />
         <include path="/**rpc" />
-        <include path="/help/menu.html" />
         <include path="/images/**/minimap/*" />
     </resource-files>
     

@@ -26,7 +26,10 @@ package com.fullmetalgalaxy.server;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,16 +66,43 @@ public class I18n
     return p_request.getRequestURI() + "?" + querry;
   }
 
+  private static Pattern s_patternUrl = Pattern.compile( "(.*)(\\.\\w+)$" );
+  private static Pattern s_patternLocalized = Pattern.compile( ".*_\\w\\w$" );
+  
   /**
-   * 
-   * @param p_url relative to localized folder
-   * @return absolute url
+   * return a localized version of the given url. (add _en or _fr)
+   * this method don't check whether the resource exist or not.
+   * if already localized, don't change url
+   * @param p_request
+   * @param p_response
+   * @param p_url
+   * @return
    */
-  public static String localize(HttpServletRequest p_request, HttpServletResponse p_response,
+  public static String localizeUrl(HttpServletRequest p_request, HttpServletResponse p_response,
       String p_url)
   {
-    return "/i18n/" + getLocale( p_request, p_response ) + p_url;
+    String locale = LocaleFmg.getDefault().toString();
+    if( p_request != null && p_response != null )
+    {
+      locale = I18n.getLocale( p_request, p_response );
+    }
+
+    Matcher matcher = s_patternUrl.matcher( p_url );
+    if( matcher.matches() )
+    {
+      p_url = matcher.group( 1 );
+      // check if p_url is already localized !
+      Matcher matcherLocalized = s_patternLocalized.matcher( p_url );
+      if( !matcherLocalized.matches() )
+      {
+        p_url += "_" + locale;
+      }
+      p_url += matcher.group( 2 );
+    }
+    return p_url;
   }
+
+
 
   public static String getLocale(HttpServletRequest p_request, HttpServletResponse p_response)
   {
@@ -125,5 +155,14 @@ public class I18n
     return LocaleFmg.getDefault().name();
   }
 
+
+  public static String getRessource(HttpServletRequest p_request, HttpServletResponse p_response,
+      String p_key)
+  {
+    LocaleFmg locale = LocaleFmg.fromString( getLocale( p_request, p_response ) );
+    ResourceBundle res = ResourceBundle.getBundle( "index", locale.locale() );
+    return res.getString( p_key );
+
+  }
 
 }

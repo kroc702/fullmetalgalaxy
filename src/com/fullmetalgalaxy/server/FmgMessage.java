@@ -97,7 +97,7 @@ public class FmgMessage
     {
       fileName = ServerUtil.getBasePath();
     }
-    fileName += "/i18n/"+p_locale+"/msg/"+p_msgName;
+    fileName += "/messages/" + p_locale + "/" + p_msgName;
     if( !fileName.endsWith( ".txt" ) )
     {
       fileName += ".txt";

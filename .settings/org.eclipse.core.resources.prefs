@@ -1,18 +1,8 @@
-#Fri Mar 16 22:46:56 CET 2012
+#Wed May 23 21:15:22 CEST 2012
 eclipse.preferences.version=1
 encoding//src/com/fullmetalgalaxy/client/ressources/MessagesAppBoard_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/model/ressources/MessagesRpc_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/server/xmpp/MilleSabords.graph=ISO-8859-1
 encoding//src/com/fullmetalgalaxy/server/xmpp/pipo.graph=ISO-8859-1
-encoding//war/help/firecovers.jsp=UTF-8
-encoding//war/help/gamemodes.jsp=UTF-8
-encoding//war/help/index.jsp=UTF-8
-encoding//war/help/misc.jsp=UTF-8
-encoding//war/help/rulesdeviations.jsp=UTF-8
-encoding//war/help/units.jsp=UTF-8
-encoding//war/i18n/fr/help/index.html=UTF-8
-encoding//war/i18n/fr/help/menu.html=UTF-8
-encoding//war/i18n/fr/help/rules.html=UTF-8
-encoding//war/i18n/fr/index.html=UTF-8
-encoding//war/i18n/fr/msg/loseUnit.txt=ISO-8859-1
+encoding//war/messages/fr/loseUnit.txt=ISO-8859-1
 encoding/<project>=UTF-8

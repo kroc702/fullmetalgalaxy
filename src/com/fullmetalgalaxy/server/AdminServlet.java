@@ -266,7 +266,7 @@ public class AdminServlet extends HttpServlet
     if( strid != null )
     {
       // load game with standard api
-      ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( strid );
+      ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( p_req, p_resp, strid );
       if( modelInit.getGame().getAdditionalEventCount() > 0 )
       {
         // load additional events

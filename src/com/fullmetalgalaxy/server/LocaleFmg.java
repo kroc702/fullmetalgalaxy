@@ -23,6 +23,8 @@
 
 package com.fullmetalgalaxy.server;
 
+import java.util.Locale;
+
 /**
  * @author Vincent Legendre
  *
@@ -32,6 +34,22 @@ public enum LocaleFmg
 {
   en, fr;
   
+  /**
+   * 
+   * @return corresponding standard java locale
+   */
+  public Locale locale()
+  {
+    switch( this )
+    {
+    case fr:
+      return Locale.FRENCH;
+    default:
+    case en:
+      return Locale.ENGLISH;
+    }
+  }
+
   public static LocaleFmg getDefault()
   {
     return LocaleFmg.fr;
@@ -46,4 +64,5 @@ public enum LocaleFmg
     }
     return locale;
   }
+
 }

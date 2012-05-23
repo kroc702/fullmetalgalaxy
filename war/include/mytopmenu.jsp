@@ -1,4 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <div id="login">
@@ -38,8 +39,8 @@
 	<% } else { %>
 	<form id="login" method="POST" action="/AccountServlet" enctype="multipart/form-data">
 		<div>
-			<span><label>Username</label><input type="text" name="login" size="15" /></span>
-            <span><label>Password</label><input type="password" name="password" size="15" /></span>
+			<span><label><fmg:resource key="menu_username"/></label><input type="text" name="login" size="15" /></span>
+            <span><label><fmg:resource key="menu_password"/></label><input type="password" name="password" size="15" /></span>
 			<input type="hidden" name="connexion" value="1"/>
 			<input type="hidden" name="continue" value="<%= (request.getParameter("continue")==null) ? "/" : request.getParameter("continue") %>"/>
 			<span><input id="login-submit" type="submit" name="Submit" value="Go!" /></span>
@@ -47,10 +48,10 @@
 	</form>
 	<div id="loginlinks">
 	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
-        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion avec google 
+        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;<fmg:resource key="menu_googleconnexion"/> 
     </a>
-    <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;Inscription</a>
-    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;Identifiants oubliés</a>
+    <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;<fmg:resource key="menu_suscribe"/></a>
+    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;<fmg:resource key="menu_lostpassword"/></a>
     </div>
 	<% } %> 	
 </div>

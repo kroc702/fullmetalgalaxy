@@ -1,5 +1,6 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 
 	<div id="motifHeader">
 	<div id="bordure">
@@ -13,43 +14,4 @@
   				<div id="chart"></div>
 		<div id="sousMarin"></div>
 		</header></div>
-		<div id="nav"><nav>
-			<ul>
-				<li><a href="/" >Accueil</a></li>
-				<li><a href="/gamelist.jsp" >Les parties</a>
-					<ul>
-						<li><a href="/gamelist.jsp?tab=0" >Nouvelles Parties</a></li>
-						<li><a href="/gamelist.jsp?tab=1" >Mes Parties</a></li>
-						<li><a href="/gamelist.jsp?tab=2" >Jeux Solo</a></li>
-						<li><a href="/gamelist.jsp?tab=3" >Autres Parties</a></li>
-					</ul>
-				</li>
-				<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >Forum</a>
-					<ul>
-						<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >D&eacute;di&eacute; &agrave; FMG</a></li>
-						<li><a href="http://fullmetalplanete.forum2jeux.com/f12-recherche-planete-a-atterrir" >Recherche de joueurs</a></li>
-						<li><a href="http://fullmetalplanete.forum2jeux.com/" >Racine</a></li>
-					</ul>
-				</li>
-				<li><a href="/chat.jsp" >Chat</a></li>
-				<li><a href="/help/" >Guide</a>
-					<jsp:include page="/i18n/fr/help/menu.html" />
-				</li>																
-				<li><a href="/instructor.jsp" >Joueurs</a>
-					<ul>
-						<li><a href="/instructor.jsp" >Instructeurs</a></li>
-						<li><a href="/halloffames.jsp" >Classement</a></li>
-						<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Annuaire</a></li>
-						<li><a href="/stats.jsp" >Stats global</a></li>
-					</ul>
-				</li>																
-				<li><a href="/liens.jsp" >Liens</a></li>																
-				<li><a href="/development/" >Développement</a>
-					<jsp:include page="/i18n/fr/development/menu.html" />
-				</li>			
-				
-				<%--
-				<li><a href="" ><img src="/i18n/fr/images/icon_locale.png" /></a></li>
-				 --%>																
-			</ul>
-		</nav></div>
+		<fmg:include page="/include/menu.jsp" />
