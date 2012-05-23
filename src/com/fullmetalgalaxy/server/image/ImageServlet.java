@@ -182,7 +182,7 @@ public class ImageServlet extends HttpServlet
       }
       else if( p_gameId != null && !p_gameId.equals( "0" ) )
       {
-        ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( p_gameId );
+        ModelFmpInit modelInit = GameServicesImpl.sgetModelFmpInit( null, null, p_gameId );
         model = modelInit.getGame();
       }
 

@@ -1,0 +1,13 @@
+
+
+.icon-gamelisttab img.text {
+	background-image: url(images/tab_text_bw_fr.png);
+}
+
+.icon-gamelisttab:hover img.text {
+	background-image: url(images/tab_text_fr.png);
+}
+
+.selected-gamelisttab img.text {
+	background-image: url(images/tab_text_fr.png);
+}

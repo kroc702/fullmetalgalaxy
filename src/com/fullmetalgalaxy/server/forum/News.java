@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.server.forum;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 import com.fullmetalgalaxy.server.syndication.Article;
 import com.fullmetalgalaxy.server.syndication.ArticleFactory;
@@ -83,7 +84,14 @@ public class News
         break;
       }
     }
-    return baos.toString();
+    try
+    {
+      return baos.toString( "UTF-8" );
+    } catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+      return baos.toString();
+    }
   }
   
 

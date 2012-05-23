@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="/style.css" type="text/css" media="screen" />
 <!--[if lte IE 7]>
-<link rel="stylesheet" href="/style-ie7.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/style_ie7.css" type="text/css" media="screen" />
 <![endif]-->
 
 <%

@@ -32,6 +32,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.GameServices;
@@ -200,7 +202,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     return model;
   }
 
-  public static ModelFmpInit sgetModelFmpInit(String p_gameId)
+  public static ModelFmpInit sgetModelFmpInit(HttpServletRequest p_request,
+      HttpServletResponse p_response, String p_gameId)
   {
     long gameId = 0;
     try
@@ -211,23 +214,36 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     }
     ModelFmpInit modelInit = new ModelFmpInit();
     Game game = null;
-    if( gameId == 0 )
+    if( gameId == 0 && ServerUtil.getBasePath() != null )
     {
       FileInputStream fis = null;
       ObjectInputStream in = null;
       try
       {
-        if( ServerUtil.getBasePath() != null )
+        String localizedUrl = I18n.localizeUrl( p_request, p_response, p_gameId );
+        fis = new FileInputStream( new File( ServerUtil.getBasePath() + localizedUrl ) );
+        in = new ObjectInputStream( fis );
+        modelInit = ModelFmpInit.class.cast( in.readObject() );
+        in.close();
+        fis.close();
+      } catch( Exception ex )
+      {
+        log.warning( ex.getMessage() );
+      }
+      // if the localized game wasn't found, search with standard url
+      if( in == null )
+      {
+        try
         {
           fis = new FileInputStream( new File( ServerUtil.getBasePath() + p_gameId ) );
           in = new ObjectInputStream( fis );
           modelInit = ModelFmpInit.class.cast( in.readObject() );
           in.close();
           fis.close();
+        } catch( Exception ex )
+        {
+          log.error( ex );
         }
-      } catch( Exception ex )
-      {
-        ex.printStackTrace();
       }
     }
     else
@@ -247,7 +263,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   @Override
   public ModelFmpInit getModelFmpInit(String p_gameId) throws RpcFmpException
   {
-    ModelFmpInit modelInit = sgetModelFmpInit( p_gameId );
+    ModelFmpInit modelInit = sgetModelFmpInit( getThreadLocalRequest(), getThreadLocalResponse(),
+        p_gameId );
 
     if( modelInit.getGame() != null && modelInit.getGame().getId() != 0 )
     {

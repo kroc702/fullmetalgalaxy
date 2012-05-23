@@ -1,5 +1,6 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 
 <!DOCTYPE html>
 <html lang="<%= I18n.getLocale(request,response) %>">
@@ -42,39 +43,35 @@
 	    });
 		</script>
 		
-			<h1>Full Metal Galaxy, wargame en ligne</h1>
-			<p>
-				Avez-vous l'étoffe d'un full metal pilote ?<br/>
-Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser votre astronef sur Full Metal Planète, ramasser un maximum de minerai, désintégrer ou capturer le coûteux matériel des compagnies adverses, et si possible vous emparer de leurs propres navettes, aux soutes pleines à craquer.
-</p>
+			<h1><fmg:resource key="index_title"/></h1>
+			<p><fmg:resource key="index_catchphrase"/></p>
+
 <% if(Auth.isUserLogged( request, response )) { %>
 	<table><tr>
 		<td style="width:40px"></td>		
 		<td><img src='/images/lost.png'/></td>		
 		<td style="width:30px"></td>		
-		<td style=""><b>Vous êtes perdu ?</b><br/> <a href="/instructor.jsp">Contactez les instructeurs</a></td>
+		<td style=""><fmg:resource key="index_lost"/></td>
 	</tr></table>
 <% } else { %>
-	<p>
-	FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque partie est indépendante.
-	</p>
+	<p><fmg:resource key="index_fmgisfree"/></p>
 	<table><tr>
-		<td><a href="/game.jsp?id=/puzzles/tutorial/model.bin" class="bouton">Démo</a></td>		
-		<td><a href="/account.jsp" class="bouton">Inscrivez-vous!</a></td>
+		<td><a href="/game.jsp?id=/puzzles/tutorial/model.bin" class="bouton"><fmg:resource key="index_demo"/></a></td>		
+		<td><a href="/account.jsp" class="bouton"><fmg:resource key="index_suscribe"/></a></td>
 		<td style="width : 100%;"><div id="draw2"></div></td>
 	</tr></table>
 <% } %>
 		</div>
 		
 		<div id="rssCollumn" class="collumn" >
-			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news">Dernières nouvelles</a>
+			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news"><fmg:resource key="index_lastnew"/></a>
 				<a class="iconrss" href="http://fullmetalplanete.forum2jeux.com/feed?f=40" target="_blank"></a>
 			</h2>
 				<div id="newsrss">
 					<%= News.getHtml() %>
 				</div>
 
-			<h2>Dernières parties
+			<h2><a href="/gamelist.jsp"><fmg:resource key="index_lastgames"/></a>
 			</h2>
 				<div id="gamesrss">
 					<%= Games.getHtml() %>
@@ -83,33 +80,17 @@ Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser
 
 
 		<div id="keyPointsCollumn" class="collumn">
-			<h2><a href="/help">Les points clefs</a></h2>		
-<img style="float : right;" src="images/keyPoints.jpg" />
-<ul>
-<li>La carte interactive est l'unique interface</li>
-<li>Aucun hasard, seul votre tactique fera la différence</li>
-<li>Un mécanisme qui a fait ses preuves</li>
-<li>Entre 2 et 8 joueurs par partie</li>
-<li>Le terrain change en fonction des marées</li>
-<li>Partie lente sur un mois ou en temps réel (1h30)</li>
-<li>Mode tour par tour ou parallèle pour ne jamais être bloqué</li>
-</ul>
-<a href="/help" style="float: right;">En Savoir plus</a>
+			<fmg:resource key="index_keypoints"/>
 		</div>
 		
 		<div id="statCollumn" class="collumn">
-		<h2><a href="/stats.jsp">Stats en test:</a></h2>
+		<h2><a href="/stats.jsp"><fmg:resource key="index_statistiques"/></a></h2>
 		<%= GlobalVars.getStatsHtml() %>
 		</div>		
 		
 
-	<p id="nb">
-Full Metal Galaxy est une adaptation jeu web de Full Metal Planète, un jeu de stratégie sur table 
-de Gérard Mathieu, Gérard Delfanti et Pascal Trigaux, édité par Ludodélire entre 1989 et 1996. 
-Full Metal Galaxy est sous ma seule responsabilité, les auteurs n'ont pas pris part à son développement.
-	<p>
-
-
+	<p id="nb"><fmg:resource key="index_disclaimer"/></p>
+	
 
 <jsp:include page="include/footer.jsp" />
 </body>

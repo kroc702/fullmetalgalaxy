@@ -7,6 +7,7 @@
 
   <!-- Specify other supported languages -->  
   <extend-property name="locale" values="fr"/>
+  <extend-property name="locale" values="en"/>
     
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->

@@ -1,13 +1,15 @@
 <%@page import="com.google.gwt.i18n.client.impl.ConstantMap"%>
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>Full Metal Galaxy - Liste des parties</title>
         
 <%@include file="include/meta.jsp"%>
-<style type="text/css">@import url( <%= I18n.localize(request,response,"/style.css") %> );</style>
+<style type="text/css">@import url( <fmg:localize path="/style.css"/> );</style>
 	    <%
 	      Presence presence = new Presence();
     		String channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.CHAT,presence);
@@ -70,8 +72,7 @@ if(tab < 0 || tab > 3 )
 	<br/><br/>
 	
 <% if(tab==2) { /* solo games */ %>
-	<!-- puzzleslist.jsp: <%= I18n.localize(request,response,"/puzzleslist.html") %> -->
-	<jsp:include page="<%= I18n.localize(request,response,\"/puzzleslist.html\") %>" />
+	<fmg:include page="/puzzles/puzzleslist.html" />
 <% } else { 
 	Iterable<EbGamePreview> gameList = new ArrayList<EbGamePreview>();
 	if( !Auth.isUserLogged( request, response ) && (tab <= 1) ) {
@@ -137,6 +138,7 @@ if(tab < 0 || tab > 3 )
 	<img src='/images/icons/parallele16.png'/> : Partie en mode parallèle<br/>
 	<img src='/images/icons/slow16.png'/> : Partie lente (25 jours ou illimité)<br/>
 	<img src='/images/icons/fast16.png'/> : Partie rapide (1h30)<br/>
+	<img src='/images/icons/initiation16.png'/> : Partie d'inititiation<br/>
 	<img src='/images/icons/protected16.png'/> : Partie protégé par un mot de passe<br/>
 	<img src='/images/icons/open16.png'/> : Partie ouverte aux inscriptions<br/>
 	<img src='/images/icons/pause16.png'/> : Partie en pause<br/>
