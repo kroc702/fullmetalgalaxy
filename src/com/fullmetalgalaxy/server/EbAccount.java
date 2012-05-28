@@ -193,6 +193,11 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   private static Pattern s_pattern = Pattern.compile( "^(((\\w)+(\\p{Graph})?)+\\w)$" );
   
 
+  
+  void importLocale(@AlsoLoad("m_locale") String p_localeStr)
+  {
+    m_locale = LocaleFmg.fromString( p_localeStr );
+  }
 
   /**
    * check if p_pseudo can be used as a valid username.
