@@ -12,9 +12,9 @@
 				<li><a href="/gamelist.jsp?tab=3" >Autres Parties</a></li>
 			</ul>
 		</li>
-		<li><a href="/instructor.jsp" >Joueurs</a>
+		<li><a href="http://guide.fullmetalgalaxy.com/instructors?language=fr" >Joueurs</a>
 			<ul>
-				<li><a href="/instructor.jsp" >Instructeurs</a></li>
+				<li><a href="http://guide.fullmetalgalaxy.com/instructors?language=fr" >Instructeurs</a></li>
 				<li><a href="/halloffames.jsp" >Classement</a></li>
 				<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Annuaire</a></li>
 				<li><a href="/stats.jsp" >Stats global</a></li>
@@ -27,7 +27,7 @@
 				<li><a href="/chat.jsp" >Chat</a></li>
 			</ul>
 		</li>
-      <li><a href="http://guide.fullmetalgalaxy.com/guide/?language=fr" >Guide</a>
+      <li><a href="http://guide.fullmetalgalaxy.com/?language=fr" >Guide</a>
 			<ul>
                  <li><a href="http://guide.fullmetalgalaxy.com/guide/highlights?language=fr">Bon à savoir</a></li>
                  <li><a href="http://guide.fullmetalgalaxy.com/guide/create-game?language=fr">Créer une partie</a></li>
