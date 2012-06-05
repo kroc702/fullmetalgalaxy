@@ -81,6 +81,20 @@ public class Messages
       return SharedI18n.getMessages( p_accountId ).green();
     case EnuColor.Purple:
       return SharedI18n.getMessages( p_accountId ).purple();
+    case EnuColor.Brown:
+      return SharedI18n.getMessages( p_accountId ).brown();
+    case EnuColor.White:
+      return SharedI18n.getMessages( p_accountId ).white();
+    case EnuColor.Pink:
+      return SharedI18n.getMessages( p_accountId ).pink();
+    case EnuColor.Camouflage:
+      return SharedI18n.getMessages( p_accountId ).camouflage();
+    case EnuColor.Zebra:
+      return SharedI18n.getMessages( p_accountId ).zebra();
+    case EnuColor.Pantera:
+      return SharedI18n.getMessages( p_accountId ).pantera();
+    case EnuColor.Lightning:
+      return SharedI18n.getMessages( p_accountId ).lightning();
     case EnuColor.None:
       return SharedI18n.getMessages( p_accountId ).colorless();
     case EnuColor.Unknown:
@@ -151,10 +165,24 @@ public class Messages
       return SharedI18n.getMessages( p_accountId ).turret();
     case Speedboat:
       return SharedI18n.getMessages( p_accountId ).speedboat();
+    case Tarask:
+      return SharedI18n.getMessages( p_accountId ).tarask();
+    case Hovertank:
+      return SharedI18n.getMessages( p_accountId ).hovertank();
+    case Crayfish:
+      return SharedI18n.getMessages( p_accountId ).crayfish();
+    case Ore0:
+      return SharedI18n.getMessages( p_accountId ).ore0();
     case Ore:
       return SharedI18n.getMessages( p_accountId ).ore();
+    case Ore3:
+      return SharedI18n.getMessages( p_accountId ).ore3();
+    case Ore5:
+      return SharedI18n.getMessages( p_accountId ).ore5();
     case Pontoon:
       return SharedI18n.getMessages( p_accountId ).pontoon();
+    case Sluice:
+      return SharedI18n.getMessages( p_accountId ).sluice();
     case None:
     default:
       return p_tokenValue.toString();

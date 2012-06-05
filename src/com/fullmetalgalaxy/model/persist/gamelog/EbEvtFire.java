@@ -263,7 +263,7 @@ public class EbEvtFire extends AnEventPlay
         for( Long idToken : m_TokenIds )
         {
           EbToken token = p_game.getToken( idToken );
-          if( token != null && token.isDestroyer() )
+          if( token != null && token.getType().isDestroyer() )
           {
             p_game.getBoardFireCover().checkFireDisableFlag( token.getPosition(),
                 p_game.getTokenFireLength( token ), FdChange.ENABLE, fdRemoved, fdAdded );

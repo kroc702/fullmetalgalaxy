@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.fullmetalgalaxy.model.ressources.Messages;
+
 /**
  * @author Kroc
  * EnuColor is a bit field of colors.
@@ -40,6 +42,13 @@ public class EnuColor extends MyEnum
   public static final int Purple = 64;
   public static final int Yellow = 128;
   public static final int Grey = 256;
+  public static final int Brown = 512;
+  public static final int White = 1024;
+  public static final int Pink = 2048;
+  public static final int Camouflage = 4096;
+  public static final int Zebra = 8192;
+  public static final int Pantera = 16384;
+  public static final int Lightning = 32768;
 
 
   public EnuColor(int p_value)
@@ -55,12 +64,12 @@ public class EnuColor extends MyEnum
   @Override
   public int getMaxValue()
   {
-    return None + Blue + Cyan + Olive + Orange + Red + Green + Purple + Yellow + Grey;
+    return None + Blue + Cyan + Olive + Orange + Red + Green + Purple + Yellow + Grey + Brown + White + Pink + Camouflage + Zebra + Pantera + Lightning;
   }
 
   public static int getMaxColorValue()
   {
-    return None + Blue + Cyan + Olive + Orange + Red + Green + Purple + Yellow + Grey;
+    return None + Blue + Cyan + Olive + Orange + Red + Green + Purple + Yellow + Grey + Brown + White + Pink + Camouflage + Zebra + Pantera + Lightning;
   }
 
   /**
@@ -68,7 +77,7 @@ public class EnuColor extends MyEnum
    */
   public static int getTotalNumberOfColor()
   {
-    return 9;
+    return 16;
   }
 
   @Override
@@ -76,116 +85,28 @@ public class EnuColor extends MyEnum
   {
     if( getValue() == EnuColor.Unknown )
     {
-      return singleColorToString( EnuColor.Unknown );
+      return Messages.getSingleColorString( 0, EnuColor.Unknown );
     }
 
     String str = "";
     boolean isEmpty = true;
 
-    if( isColored( EnuColor.Blue ) )
+    for(int color=1; color<=getMaxColorValue(); color*=2)
     {
-      str += singleColorToString( EnuColor.Blue );
-      isEmpty = false;
+      if( isColored( color ) )
+      {
+        str += Messages.getSingleColorString( 0, color );
+        isEmpty = false;
+      }
     }
-    if( isColored( EnuColor.Cyan ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Cyan );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Grey ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Grey );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Yellow ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Yellow );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Olive ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Olive );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Orange ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Orange );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Red ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Red );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Green ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Green );
-      isEmpty = false;
-    }
-    if( isColored( EnuColor.Purple ) )
-    {
-      if( !isEmpty )
-        str += "+";
-      str += singleColorToString( EnuColor.Purple );
-      isEmpty = false;
-    }
-
+ 
     if( isEmpty )
     {
-      str = singleColorToString( EnuColor.None );
+      str = Messages.getSingleColorString( 0, EnuColor.None );
     }
     return str;
   }
 
-
-  /**
-   * 
-   * @param p_colorValue have to be a single color value.
-   * @return
-   */
-  public static String singleColorToString(int p_colorValue)
-  {
-    switch( p_colorValue )
-    {
-    case EnuColor.Blue:
-      return "blue";
-    case EnuColor.Cyan:
-      return "cyan";
-    case EnuColor.Grey:
-      return "grey";
-    case EnuColor.Yellow:
-      return "yellow";
-    case EnuColor.Olive:
-      return "olive";
-    case EnuColor.Red:
-      return "red";
-    case EnuColor.Orange:
-      return "orange";
-    case EnuColor.Green:
-      return "green";
-    case EnuColor.Purple:
-      return "purple";
-    case EnuColor.None:
-      return "colorless";
-    case EnuColor.Unknown:
-    default:
-      return "unknown";
-    }
-  }
 
   /**
    * 
@@ -214,6 +135,13 @@ public class EnuColor extends MyEnum
     case EnuColor.Orange:
     case EnuColor.Green:
     case EnuColor.Purple:
+    case EnuColor.Brown:
+    case EnuColor.White:
+    case EnuColor.Pink:
+    case EnuColor.Camouflage:
+    case EnuColor.Pantera:
+    case EnuColor.Zebra:
+    case EnuColor.Lightning:
       return true;
     case EnuColor.None:
     case EnuColor.Unknown:
@@ -244,6 +172,20 @@ public class EnuColor extends MyEnum
       return new EnuColor( EnuColor.Green );
     case 8:
       return new EnuColor( EnuColor.Purple );
+    case 9:
+      return new EnuColor( EnuColor.Brown );
+    case 10:
+      return new EnuColor( EnuColor.White );
+    case 11:
+      return new EnuColor( EnuColor.Pink );
+    case 12:
+      return new EnuColor( EnuColor.Camouflage );
+    case 13:
+      return new EnuColor( EnuColor.Zebra );
+    case 14:
+      return new EnuColor( EnuColor.Pantera );
+    case 15:
+      return new EnuColor( EnuColor.Lightning );
     default:
       return new EnuColor( EnuColor.None );
     }
@@ -271,6 +213,20 @@ public class EnuColor extends MyEnum
       return 7;
     case EnuColor.Purple:
       return 8;
+    case EnuColor.Brown:
+      return 9;
+    case EnuColor.White:
+      return 10;
+    case EnuColor.Pink :
+      return 11;
+    case EnuColor.Camouflage:
+      return 12;
+    case EnuColor.Zebra:
+      return 13;
+    case EnuColor.Pantera:
+      return 14;
+    case EnuColor.Lightning:
+      return 15;
     case EnuColor.None:
     case EnuColor.Unknown:
     default:
@@ -400,24 +356,12 @@ public class EnuColor extends MyEnum
   public int getNbColor()
   {
     int nb = 0;
-    if( isColored( EnuColor.Blue ) )
-      nb++;
-    if( isColored( EnuColor.Cyan ) )
-      nb++;
-    if( isColored( EnuColor.Grey ) )
-      nb++;
-    if( isColored( EnuColor.Yellow ) )
-      nb++;
-    if( isColored( EnuColor.Olive ) )
-      nb++;
-    if( isColored( EnuColor.Red ) )
-      nb++;
-    if( isColored( EnuColor.Orange ) )
-      nb++;
-    if( isColored( EnuColor.Green ) )
-      nb++;
-    if( isColored( EnuColor.Purple ) )
-      nb++;
+    
+    for(int color=1; color<=getMaxColorValue(); color*=2)
+    {
+      if( isColored( color ) )
+        nb++;
+    }
     return nb;
   }
 

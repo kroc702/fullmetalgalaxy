@@ -192,7 +192,7 @@ public class BoardFireCover implements Serializable
   {
     assert p_token != null;
     m_lockedToken.remove( p_token.getId() );
-    if( (!p_token.isDestroyer()) || p_token.getLocation() != Location.Board )
+    if( (!p_token.getType().isDestroyer()) || p_token.getLocation() != Location.Board )
     {
       return;
     }
@@ -260,7 +260,7 @@ public class BoardFireCover implements Serializable
       return;
     }
     m_lockedToken.add( p_token.getId() );
-    if( (!p_token.isDestroyer()) || p_token.getLocation() != Location.Board )
+    if( (!p_token.getType().isDestroyer()) || p_token.getLocation() != Location.Board )
     {
       return;
     }

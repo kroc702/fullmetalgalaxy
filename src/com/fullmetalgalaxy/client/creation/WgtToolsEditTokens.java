@@ -119,17 +119,24 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
 
     if( m_wgtBoardEditTokens.getColor().getValue() == EnuColor.None )
     {
+      addTokenBtn( TokenType.Ore0 );
       addTokenBtn( TokenType.Ore );
+      addTokenBtn( TokenType.Ore3 );
+      addTokenBtn( TokenType.Ore5 );
       addTokenBtn( TokenType.Pontoon );
+      addTokenBtn( TokenType.Sluice );
     }
-    addTokenBtn( TokenType.Freighter );
-    addTokenBtn( TokenType.Barge );
     addTokenBtn( TokenType.Crab );
-    addTokenBtn( TokenType.Heap );
-    addTokenBtn( TokenType.Speedboat );
     addTokenBtn( TokenType.Tank );
-    addTokenBtn( TokenType.Turret );
+    addTokenBtn( TokenType.Heap );
+    addTokenBtn( TokenType.Tarask );
+    addTokenBtn( TokenType.Hovertank );
+    addTokenBtn( TokenType.Speedboat );
+    addTokenBtn( TokenType.Crayfish );
+    addTokenBtn( TokenType.Barge );
     addTokenBtn( TokenType.WeatherHen );
+    addTokenBtn( TokenType.Freighter );
+    addTokenBtn( TokenType.Turret );
 
   }
 
