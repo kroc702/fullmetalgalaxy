@@ -729,10 +729,10 @@ public class EventsPlayBuilder implements GameEventStack
             {
               privateAction( GameLogType.EvtControl );
             }
-            else if( (getSelectedToken().isDestroyer() && token.isDestroyer())
-                || (getSelectedToken().canBeATarget( getGame() ) && token.isDestroyer()
+            else if( (getSelectedToken().getType().isDestroyer() && token.getType().isDestroyer())
+                || (getSelectedToken().canBeATarget( getGame() ) && token.getType().isDestroyer()
                     && !getMyRegistration().getEnuColor().contain( getSelectedToken().getColor() ))
-                || (token.canBeATarget( getGame() ) && getSelectedToken().isDestroyer()
+                || (token.canBeATarget( getGame() ) && getSelectedToken().getType().isDestroyer()
                     && !getMyRegistration().getEnuColor().contain( token.getColor() )) )
             {
               privateAction( GameLogType.EvtFire );
@@ -836,7 +836,7 @@ public class EventsPlayBuilder implements GameEventStack
           else if( getSelectedAction() instanceof EbEvtControl )
           {
             // a control action...
-            if( token.getColor() == EnuColor.None || !token.isDestroyer()
+            if( token.getColor() == EnuColor.None || !token.getType().isDestroyer()
                 || !getMyRegistration().getEnuColor().isColored( token.getColor() )
                 || (token.getColor() != getSelectedToken().getColor() && ((EbEvtControl)getSelectedAction())
                     .getTokenDestroyer2( getGame() ) != null) )
@@ -1591,7 +1591,7 @@ public class EventsPlayBuilder implements GameEventStack
     EbEvtLoad action = new EbEvtLoad();
     action.setRegistration( getMyRegistration() );
     action.setGame( getGame() );
-    if( p_tokenCarrier.getType() == TokenType.Ore )
+    if( p_tokenCarrier.getType().isOre() )
     {
       // user want to load something into an ore...
       // he probably want the reverse !

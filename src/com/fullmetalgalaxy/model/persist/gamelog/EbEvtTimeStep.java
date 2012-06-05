@@ -137,13 +137,13 @@ public class EbEvtTimeStep extends AnEvent
     // update all tokens bullets count
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.getBulletCount() < token.getMaxBulletCount() )
+      if( token.getBulletCount() < token.getType().getMaxBulletCount() )
       {
         token.setBulletCount( token.getBulletCount()
             + game.getEbConfigGameTime().getBulletCountIncrement() );
-        if( token.getBulletCount() > token.getMaxBulletCount() )
+        if( token.getBulletCount() > token.getType().getMaxBulletCount() )
         {
-          token.setBulletCount( token.getMaxBulletCount() );
+          token.setBulletCount( token.getType().getMaxBulletCount() );
         }
       }
     }

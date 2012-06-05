@@ -140,7 +140,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
       EbToken token = new EbToken();
       token.setType( getTokenType() );
       token.setEnuColor( getColor() );
-      token.setBulletCount( token.getMaxBulletCount() );
+      token.setBulletCount( token.getType().getMaxBulletCount() );
       game.addToken( token );
       position.setSector( getSector() );
 

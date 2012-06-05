@@ -193,7 +193,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       for( EbToken token : mainToken.getContains() )
       {
         if( !action.containUnload( token )
-            && (token.getType() != TokenType.Ore || mainToken.getType() != TokenType.Freighter) )
+            && (!token.getType().isOre() || mainToken.getType() != TokenType.Freighter) )
         {
           addToken( token );
         }
@@ -214,7 +214,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
           {
             EbToken fakeToken = new EbToken( entry.getKey() );
             fakeToken.setId( ore.getId() );
-            if( EbToken.canBeColored( entry.getKey() ) )
+            if( entry.getKey().canBeColored(  ) )
             {
               fakeToken.setColor( mainToken.getColor() );
             }
@@ -258,9 +258,9 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     else
     {
       String lblStr = Messages.getTokenString( 0, p_token.getType() );
-      if( (p_token.getMaxBulletCount() > 0) && (p_token.getBulletCount() != p_token.getMaxBulletCount()))
+      if( (p_token.getType().getMaxBulletCount() > 0) && (p_token.getBulletCount() != p_token.getType().getMaxBulletCount()))
       {
-        if( p_token.getMaxBulletCount() - p_token.getBulletCount() >= 2 )
+        if( p_token.getType().getMaxBulletCount() - p_token.getBulletCount() >= 2 )
           lblStr += "<br/>xx";
         else
           lblStr += "<br/>x";

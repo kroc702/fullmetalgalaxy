@@ -175,7 +175,7 @@ public class EbEvtPlayerTurn extends AnEvent
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.getBulletCount() < token.getMaxBulletCount()
+      if( token.getBulletCount() < token.getType().getMaxBulletCount()
           && nextPlayerColor.isColored( token.getColor() ) )
       {
         token.setBulletCount( token.getBulletCount()

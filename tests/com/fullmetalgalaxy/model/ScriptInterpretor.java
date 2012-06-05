@@ -113,7 +113,7 @@ public class ScriptInterpretor
       {
         EbToken fakeToken = new EbToken( TokenType.valueOf( line[2] ) );
         fakeToken.setId( token.getId() );
-        if( EbToken.canBeColored( fakeToken.getType() ) )
+        if( fakeToken.getType().canBeColored(  ) )
         {
           fakeToken.setColor( token.getCarrierToken().getColor() );
         }

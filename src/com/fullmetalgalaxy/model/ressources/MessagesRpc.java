@@ -49,9 +49,23 @@ public interface MessagesRpc extends Messages
 
   String weatherHen();
 
+  String tarask();
+  
+  String hovertank();
+  
+  String crayfish();
+   
   String pontoon();
 
+  String sluice();
+  
+  String ore0();
+
   String ore();
+
+  String ore3();
+
+  String ore5();
 
   // tide
   String low();
@@ -135,6 +149,20 @@ public interface MessagesRpc extends Messages
   String yellow();
 
   String grey();
+
+  String brown();
+
+  String white();
+
+  String pink();
+
+  String camouflage();
+
+  String zebra();
+
+  String lightning();
+
+  String pantera();
 
   String tokenDescription(String p_color, String p_type);
 }

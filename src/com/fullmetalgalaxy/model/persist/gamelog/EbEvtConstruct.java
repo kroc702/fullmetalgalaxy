@@ -41,7 +41,8 @@ public class EbEvtConstruct extends AnEventPlay
   static final long serialVersionUID = 1;
 
   private TokenType m_constructType = TokenType.None;
-
+  private TokenType m_oreType = TokenType.Ore;
+  
   /**
    * 
    */
@@ -99,7 +100,7 @@ public class EbEvtConstruct extends AnEventPlay
           + " must be on board to construct a token" );
     }
     // check that token is an ore
-    if( getToken(p_game).getType() != TokenType.Ore )
+    if( getToken(p_game).getType() != TokenType.Ore && getToken(p_game).getType() != TokenType.Ore3 )
     {
       // no i18n
       throw new RpcFmpException( "you need an ore to construct" );
@@ -167,13 +168,16 @@ public class EbEvtConstruct extends AnEventPlay
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
+    // backup
+    m_oreType = getToken(p_game).getType();
+        
     getTokenCarrier( p_game ).setBulletCount( getTokenCarrier( p_game ).getBulletCount() - 1 );
     getToken(p_game).setType( getConstructType() );
     if( getToken(p_game).canBeColored() )
     {
       getToken(p_game).setColor( getTokenCarrier(p_game).getColor() );
     }
-    getToken(p_game).setBulletCount( getToken(p_game).getMaxBulletCount() );
+    getToken(p_game).setBulletCount( getToken(p_game).getType().getMaxBulletCount() );
     p_game.getEbConfigGameVariant().decConstructQty( getConstructType() );
   }
 
@@ -185,9 +189,13 @@ public class EbEvtConstruct extends AnEventPlay
   {
     super.unexec(p_game);
     getTokenCarrier( p_game ).setBulletCount( getTokenCarrier( p_game ).getBulletCount() + 1 );
-    getToken(p_game).setType( TokenType.Ore );
+    if( m_oreType == null )
+    {
+      m_oreType = TokenType.Ore;
+    }
+    getToken(p_game).setType( m_oreType );
     getToken(p_game).setColor( EnuColor.None );
-    getToken(p_game).setBulletCount( getToken(p_game).getMaxBulletCount() );
+    getToken(p_game).setBulletCount( getToken(p_game).getType().getMaxBulletCount() );
     p_game.getEbConfigGameVariant().incConstructQty( getConstructType() );
   }
 

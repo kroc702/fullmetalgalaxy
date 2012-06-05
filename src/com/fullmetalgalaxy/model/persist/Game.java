@@ -922,12 +922,12 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return false;
     }
-    int freeLoadingSpace = p_carrier.getLoadingCapability();
+    int freeLoadingSpace = p_carrier.getType().getLoadingCapability();
     if( p_carrier.containToken() )
     {
       for( EbToken token : p_carrier.getContains() )
       {
-        freeLoadingSpace -= token.getLoadingSize();
+        freeLoadingSpace -= token.getType().getLoadingSize();
       }
     }
     return freeLoadingSpace >= p_token.getFullLoadingSize();
@@ -1009,6 +1009,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
         return false;
       }
     case Speedboat:
+    case Tarask:
+    case Crayfish:
       if( landValue != LandType.Sea )
       {
         return false;
@@ -1018,7 +1020,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Tank:
     case Crab:
     case WeatherHen:
+    case Ore0:
     case Ore:
+    case Ore3:
+    case Ore5:
       if( getToken( p_token.getPosition(), TokenType.Pontoon ) != null )
       {
         return true;
@@ -1031,6 +1036,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Turret:
     case Freighter:
     case Pontoon:
+    case Sluice:
+    case Hovertank:
     default:
       return true;
     }
@@ -1060,7 +1067,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public boolean isTokenFireCoverDisabled(EbToken p_token)
   {
-    if( p_token == null || !p_token.isDestroyer() )
+    if( p_token == null || !p_token.getType().isDestroyer() )
     {
       return false;
     }
@@ -1127,7 +1134,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public boolean canTokenFireOn(EbToken p_token, AnBoardPosition p_position)
   {
-    if( (p_token.getLocation() != Location.Board) || (!p_token.isDestroyer()) )
+    if( (p_token.getLocation() != Location.Board) || (!p_token.getType().isDestroyer()) )
     {
       return false;
     }
@@ -1171,6 +1178,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
     case Turret:
     case Speedboat:
+    case Hovertank:
       return 2;
     case Tank:
       if( getLand( p_token.getPosition() ) == LandType.Montain )
@@ -1179,6 +1187,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
       }
       return 2;
     case Heap:
+    case Tarask:
       return 3;
     case Freighter:
     case Barge:
