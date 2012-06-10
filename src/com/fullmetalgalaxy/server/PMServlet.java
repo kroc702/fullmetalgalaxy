@@ -40,6 +40,8 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
+import com.fullmetalgalaxy.model.AuthProvider;
+
 /**
  * @author Vincent
  *
@@ -88,6 +90,8 @@ public class PMServlet extends HttpServlet
       Session session = Session.getDefaultInstance( props, null );
       MimeMessage msg = new MimeMessage( session );
       msg.setSubject( "[FMG] no subject", "text/plain" );
+      msg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
+      msg.setFrom( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
       
       // Parse the request
       FileItemIterator iter = upload.getItemIterator( p_request );
@@ -112,7 +116,8 @@ public class PMServlet extends HttpServlet
             } catch(NumberFormatException e) {}
             if( account != null )
             {
-              msg.addRecipient( Message.RecipientType.BCC , new InternetAddress( account.getEmail(), account.getPseudo() ) );
+              msg.addRecipient( Message.RecipientType.TO, new InternetAddress( account.getEmail(),
+                  account.getPseudo() ) );
             }
           }
           if( "fromid".equalsIgnoreCase( item.getFieldName() ) )
@@ -121,7 +126,7 @@ public class PMServlet extends HttpServlet
             try {
               account = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
             } catch(NumberFormatException e) {}
-            if( account != null )
+            if( account != null && account.getAuthProvider() == AuthProvider.Google )
             {
               msg.setFrom( new InternetAddress( account.getEmail(), account.getPseudo() ) );
             }
