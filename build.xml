@@ -68,7 +68,7 @@ compilation file for Full Metal Galaxy
 	<target name="compilclient" depends="">
 		<echo message="Compiling client java code to javascript" />
 		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
-			<jvmarg value="-Xmx512M" />
+			<jvmarg value="-Xmx1024M" />
 			<sysproperty key="ENCODING" value="UTF-8" />
 			<arg value="-localWorkers" />
 			<arg value="8" />

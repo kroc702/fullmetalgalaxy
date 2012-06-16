@@ -95,8 +95,8 @@ public class AnimControl extends AnimEvent
       color = new EnuColor( m_event.getOldColor() );
     }
     
-    TokenImages.getTokenImage( color, m_layerToken.getZoom().getValue(), m_target.getType(),
-        m_target.getPosition().getSector() ).applyTo( m_tokenWidget.getTokenImage() );
+    m_tokenWidget.setTokenImage( TokenImages.getTokenImage( color, m_layerToken.getZoom()
+        .getValue(), m_target.getType(), m_target.getPosition().getSector() ) );
   }
 
 

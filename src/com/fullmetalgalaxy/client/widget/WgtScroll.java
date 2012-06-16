@@ -32,6 +32,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -432,7 +433,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
       int mouseScrollingKey = 0;
       if( p_x > getOffsetWidth() - m_mouseArrowSpaceEast )
       {
-        Icons.s_instance.arrow_e().applyTo( m_mouseScrollingImage );
+        AbstractImagePrototype.create( Icons.s_instance.arrow_e() ).applyTo( m_mouseScrollingImage );
         m_absPanel.setWidgetPosition( m_mouseScrollingImage, getOffsetWidth()
             - m_mouseScrollingImage.getWidth(), p_y - m_mouseScrollingImage.getHeight() / 2 );
         m_mouseScrollingImage.setVisible( true );
@@ -440,7 +441,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
       }
       else if( p_x < m_mouseArrowSpaceWest )
       {
-        Icons.s_instance.arrow_w().applyTo( m_mouseScrollingImage );
+        AbstractImagePrototype.create( Icons.s_instance.arrow_w() ).applyTo( m_mouseScrollingImage );
         m_absPanel.setWidgetPosition( m_mouseScrollingImage, 0, p_y
             - m_mouseScrollingImage.getHeight() / 2 );
         m_mouseScrollingImage.setVisible( true );
@@ -448,7 +449,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
       }
       else if( p_y > getOffsetHeight() - m_mouseArrowSpaceSouth )
       {
-        Icons.s_instance.arrow_s().applyTo( m_mouseScrollingImage );
+        AbstractImagePrototype.create( Icons.s_instance.arrow_s() ).applyTo( m_mouseScrollingImage );
         m_absPanel.setWidgetPosition( m_mouseScrollingImage, p_x - m_mouseScrollingImage.getWidth()
             / 2, getOffsetHeight() - m_mouseScrollingImage.getHeight() );
         m_mouseScrollingImage.setVisible( true );
@@ -456,7 +457,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
       }
       else if( p_y < m_mouseArrowSpaceNorth )
       {
-        Icons.s_instance.arrow_n().applyTo( m_mouseScrollingImage );
+        AbstractImagePrototype.create( Icons.s_instance.arrow_n() ).applyTo( m_mouseScrollingImage );
         m_absPanel.setWidgetPosition( m_mouseScrollingImage, p_x - m_mouseScrollingImage.getWidth()
             / 2, 0 );
         m_mouseScrollingImage.setVisible( true );

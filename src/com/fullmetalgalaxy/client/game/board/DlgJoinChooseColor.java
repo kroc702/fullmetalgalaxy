@@ -22,22 +22,20 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.ressources.Messages;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 
 /**
@@ -46,11 +44,14 @@ import com.google.gwt.user.client.ui.Panel;
  * During the game join process, this dialog ask player to choose his color.
  */
 
-public class DlgJoinChooseColor extends DialogBox implements ClickHandler
+public class DlgJoinChooseColor extends DialogBox
 {
   // UI
-  private Map<Image, Integer> m_icons = new HashMap<Image, Integer>();
-  private Button m_btnCancel = new Button( "Cancel" );
+  private ListBox m_colorSelection = new ListBox();
+  private Image m_preview = new Image();
+
+  private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
+  private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
   private Panel m_panel = new FlowPanel();
 
   private static DlgJoinChooseColor s_dlg = null;
@@ -75,73 +76,55 @@ public class DlgJoinChooseColor extends DialogBox implements ClickHandler
     // Set the dialog box's caption.
     setText( "Choisissez votre couleur" );
 
-    m_btnCancel.addClickHandler( this );
+    // add color list widget
+    for( int colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
+    {
+      EnuColor color = EnuColor.getColorFromIndex( colorIndex );
+      m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ) );
+    }
+    m_colorSelection.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        EnuColor color = EnuColor.getColorFromIndex( m_colorSelection.getSelectedIndex() );
+        m_preview.setUrl( "/images/board/" + color.toString() + "/preview.png" );
+      }
+    } );
+    m_panel.add( m_colorSelection );
+    m_panel.add( m_preview );
 
+    // add cancel button
+    m_btnCancel.addClickHandler( new ClickHandler()
+    {
+      @Override
+      public void onClick(ClickEvent p_event)
+      {
+        hide();
+      }
+    } );
+    m_panel.add( m_btnCancel );
+
+    // add OK button
+    m_btnOk.addClickHandler( new ClickHandler()
+    {
+      @Override
+      public void onClick(ClickEvent p_event)
+      {
+        EnuColor color = EnuColor.getColorFromIndex( m_colorSelection.getSelectedIndex() );
+        EbGameJoin action = new EbGameJoin();
+        action.setGame( GameEngine.model().getGame() );
+        action.setAccountId( AppMain.instance().getMyAccount().getId() );
+        action.setAccount( AppMain.instance().getMyAccount() );
+        action.setColor( color.getValue() );
+        GameEngine.model().runSingleAction( action );
+        hide();
+      }
+    } );
+    m_panel.add( m_btnCancel );
 
 
     setWidget( m_panel );
   }
 
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
-   */
-  @Override
-  public void onClick(ClickEvent p_event)
-  {
-    if( p_event.getSource() == m_btnCancel )
-    {
-      this.hide();
-      return;
-    }
-
-    int color = m_icons.get( p_event.getSource() );
-
-    EbGameJoin action = new EbGameJoin();
-    action.setGame( GameEngine.model().getGame() );
-    action.setAccountId( AppMain.instance().getMyAccount().getId() );
-    action.setAccount( AppMain.instance().getMyAccount() );
-    action.setColor( color );
-    GameEngine.model().runSingleAction( action );
-
-    this.hide();
-  }
-
-
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.PopupPanel#show()
-   */
-  @Override
-  public void show()
-  {
-    m_panel.clear();
-
-    // configure color selector
-    Set<EnuColor> freeColors = null;
-    if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
-        .getMaxNumberOfPlayer() )
-    {
-      freeColors = GameEngine.model().getGame().getFreeRegistrationColors();
-    }
-    else
-    {
-      freeColors = GameEngine.model().getGame().getFreePlayersColors();
-    }
-    for( EnuColor color : freeColors )
-    {
-      Image image = new Image();
-      BoardIcons.icon64( color.getValue() ).applyTo( image );
-      image.setTitle( Messages.getColorString( 0, color.getValue() ) );
-      image.addStyleName( "fmp-button" );
-      image.addClickHandler( this );
-      m_icons.put( image, color.getValue() );
-      m_panel.add( image );
-    }
-
-    m_panel.add( m_btnCancel );
-
-
-    super.show();
-  }
 }

@@ -97,8 +97,8 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
             .getSelectedAction().getType() == GameLogType.EvtDeployment) )
     {
       AnEventPlay action = (AnEventPlay)actionBuilder.getSelectedAction();
-      return TokenImages.getTokenImage( action.getToken( GameEngine.model().getGame() ),
-          getZoom().getValue() );
+      return AbstractImagePrototype.create( TokenImages.getTokenImage(
+          action.getToken( GameEngine.model().getGame() ), getZoom().getValue() ) );
     }
     return BoardIcons.hightlight_hexagon( getZoom().getValue() );
   }

@@ -81,10 +81,11 @@ public class WgtBoardLayerLocked extends WgtBoardLayerBase
 
   private Image addImage()
   {
-    AbstractImagePrototype imageprototype = Icons.s_instance.strategy_padlock();
+    AbstractImagePrototype imageprototype = AbstractImagePrototype.create( Icons.s_instance
+        .strategy_padlock() );
     if( GameEngine.model().getZoomDisplayed().getValue() == EnuZoom.Medium )
     {
-      imageprototype = Icons.s_instance.tactic_padlock();
+      imageprototype = AbstractImagePrototype.create( Icons.s_instance.tactic_padlock() );
     }
     Image image = null;
     if( !m_unusedImages.isEmpty() )

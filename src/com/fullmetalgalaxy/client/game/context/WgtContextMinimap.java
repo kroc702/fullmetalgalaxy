@@ -76,14 +76,14 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
     m_panel.add( m_miniMapImage );
     if( game.getStatus() == GameStatus.Open || game.getStatus() == GameStatus.Pause )
     {
-      m_panel.add( Icons.s_instance.pause32().createImage(), FmpConstant.miniMapWidth / 2 - 16,
+      m_panel.add( new Image( Icons.s_instance.pause32() ), FmpConstant.miniMapWidth / 2 - 16,
           FmpConstant.miniMapHeight / 2 - 16 );
       m_panel.add( new Label( "En Pause" ), 0, FmpConstant.miniMapHeight / 2 + 30 );
     }
     else if( game.isFinished() )
     {
       m_panel.add( new Label( "Partie terminée" ), 0, FmpConstant.miniMapHeight / 2 - 40 );
-      m_panel.add( Icons.s_instance.winner32().createImage(), FmpConstant.miniMapWidth / 2 - 16,
+      m_panel.add( new Image( Icons.s_instance.winner32() ), FmpConstant.miniMapWidth / 2 - 16,
           FmpConstant.miniMapHeight / 2 - 16 );
       String strWinner = "";
       EbRegistration winner = game.getWinnerRegistration();

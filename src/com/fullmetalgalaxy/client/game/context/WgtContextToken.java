@@ -70,9 +70,8 @@ public class WgtContextToken extends Composite
       m_panel.clear();
       m_actionLastUpdate = actionBuilder.getLastUpdate().getTime();
 
-      Image wgtToken = new Image();
-      TokenImages.getTokenImage( actionBuilder.getSelectedToken(), EnuZoom.Medium ).applyTo(
-          wgtToken );
+      Image wgtToken = new Image( TokenImages.getTokenImage( actionBuilder.getSelectedToken(),
+          EnuZoom.Medium ) );
       /*wgtToken.setUrl( FmpConstant.getTokenUrl( selectedToken, new EnuZoom( EnuZoom.Medium ) ) );
       wgtToken.setPixelSize( 70, 70 );*/
       wgtToken.setTitle( Messages.getTokenString( 0, actionBuilder.getSelectedToken() ) );

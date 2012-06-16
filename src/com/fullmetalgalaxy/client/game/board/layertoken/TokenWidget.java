@@ -27,6 +27,8 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -119,6 +121,17 @@ public class TokenWidget
     return m_tokenImage;
   }
 
+  protected void setTokenImage(Image p_image)
+  {
+    m_tokenImage = p_image;
+  }
+
+  protected void setTokenImage(ImageResource p_image)
+  {
+    AbstractImagePrototype.create( p_image ).applyTo( m_tokenImage );
+    // setTokenImage( new Image( p_image ) );
+  }
+
 
   /**
    * @return the warningImage
@@ -126,6 +139,17 @@ public class TokenWidget
   protected Image getIconWarningImage()
   {
     return m_iconWarningImage;
+  }
+
+  protected void setIconWarningImage(Image p_image)
+  {
+    m_iconWarningImage = p_image;
+  }
+
+  protected void setIconWarningImage(ImageResource p_image)
+  {
+    AbstractImagePrototype.create( p_image ).applyTo( m_iconWarningImage );
+    // setIconWarningImage( new Image( p_image ) );
   }
 
 

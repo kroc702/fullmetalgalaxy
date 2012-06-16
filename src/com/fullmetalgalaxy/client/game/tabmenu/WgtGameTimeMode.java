@@ -40,6 +40,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -56,13 +57,13 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   Label m_lblTimePosition = new Label();
   HTML m_lblCurrentEvent = new HTML();
   
-  PushButton m_btnFastBack = new PushButton( Icons.s_instance.fastBack32().createImage() );
-  PushButton m_btnFastPlay = new PushButton( Icons.s_instance.fastPlay32().createImage() );
-  PushButton m_btnBack = new PushButton( Icons.s_instance.back32().createImage() );
-  PushButton m_btnForward = new PushButton( Icons.s_instance.forward32().createImage() );
-  PushButton m_btnPlay = new PushButton( Icons.s_instance.play32().createImage() );
-  PushButton m_btnPause = new PushButton( Icons.s_instance.pause32().createImage() );
-  PushButton m_btnOk = new PushButton( Icons.s_instance.ok32().createImage() );
+  PushButton m_btnFastBack = new PushButton( new Image( Icons.s_instance.fastBack32() ) );
+  PushButton m_btnFastPlay = new PushButton( new Image( Icons.s_instance.fastPlay32() ) );
+  PushButton m_btnBack = new PushButton( new Image( Icons.s_instance.back32() ) );
+  PushButton m_btnForward = new PushButton( new Image( Icons.s_instance.forward32() ) );
+  PushButton m_btnPlay = new PushButton( new Image( Icons.s_instance.play32() ) );
+  PushButton m_btnPause = new PushButton( new Image( Icons.s_instance.pause32() ) );
+  PushButton m_btnOk = new PushButton( new Image( Icons.s_instance.ok32() ) );
 
   private Panel m_btnPanel = new HorizontalPanel();
   private WgtGameLogs m_wgtGameLog = new WgtGameLogs();

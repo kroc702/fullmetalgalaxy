@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
  * this class isn't a real widget.
@@ -48,9 +49,9 @@ public class EventPresenter
   {
     if(p_event instanceof EbEvtTide)
     {
-      // we can't determine imediate next tide without replaying event
+      // we can't determine immediate next tide without replaying event
       // event.getNextTide() is in fact two tide after...
-      return Icons.s_instance.tide_unknown().getHTML();
+      return AbstractImagePrototype.create( Icons.s_instance.tide_unknown() ).getHTML();
     }
 
     return "";

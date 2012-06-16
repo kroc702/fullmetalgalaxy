@@ -48,7 +48,7 @@ public class MAppLittlePresences extends GuiEntryPoint implements ChannelMessage
   public static final String HISTORY_ID = "LittlePresences";
 
   private Panel m_panel = new HorizontalPanel();
-  private PushButton m_btnChat = new PushButton( Icons.s_instance.chat32().createImage() );
+  private PushButton m_btnChat = new PushButton( new Image( Icons.s_instance.chat32() ) );
   
   
   public MAppLittlePresences()

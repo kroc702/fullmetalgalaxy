@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class WgtPlayerInfo extends Composite
 {
   private VerticalPanel m_panel = new VerticalPanel();
-  private Image m_iconAction = Icons.s_instance.action16().createImage();
+  private Image m_iconAction = new Image( Icons.s_instance.action16() );
   private HTML m_lblAction = new HTML( "&nbsp;: 0  " );
   private EbRegistration m_registration = null;
 

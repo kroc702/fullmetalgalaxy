@@ -240,7 +240,6 @@ public class WgtContextExtra extends WgtView implements ClickHandler
   private void addToken(EbToken p_token, Sector p_sectorValue)
   {
     FlowPanel panelToken = new FlowPanel();
-    Image wgtToken = new Image();
     HTML label = new HTML( "" );
     if( p_token.getType() == TokenType.Freighter )
     {
@@ -267,8 +266,8 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       }
       label.setHTML( lblStr );
     }
-    TokenImages.getTokenImage( p_token.getEnuColor(), EnuZoom.Small, p_token.getType(),
-        p_sectorValue ).applyTo( wgtToken );
+    Image wgtToken = new Image( TokenImages.getTokenImage( p_token.getEnuColor(), EnuZoom.Small,
+        p_token.getType(), p_sectorValue ) );
     wgtToken.addClickHandler( this );
     wgtToken.setTitle( Messages.getTokenString( 0, p_token ) );
     m_wgtTokenLink.put( wgtToken, p_token );
