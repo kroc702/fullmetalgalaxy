@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry excluding="com/fullmetalgalaxy/client/ressources/icons/|com/fullmetalgalaxy/client/ressources/tokens/render/|com/fullmetalgalaxy/client/ressources/tokens/textures/|com/fullmetalgalaxy/server/override/" kind="src" path="src"/>
+	<classpathentry excluding="com/fullmetalgalaxy/client/ressources/tokens/textures/|com/fullmetalgalaxy/server/override/" kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.1.jar"/>

@@ -113,7 +113,7 @@ public class EbEvtControl extends AnEventPlay
     }
 
     // check that two token are destroyer
-    if( !getTokenDestroyer1( p_game ).isDestroyer() || !getTokenDestroyer2( p_game ).isDestroyer() )
+    if( !getTokenDestroyer1( p_game ).getType().isDestroyer() || !getTokenDestroyer2( p_game ).getType().isDestroyer() )
     {
       throw new RpcFmpException(
           "Il vous faut deux destructeurs pour controler un vehicule adverse" );
@@ -175,7 +175,7 @@ public class EbEvtControl extends AnEventPlay
     setOldColor( getTokenTarget( p_game).getColor() );
     m_oldBulletCount = getTokenTarget( p_game ).getBulletCount();
     
-    getTokenTarget( p_game ).setBulletCount( getTokenTarget( p_game ).getMaxBulletCount() );
+    getTokenTarget( p_game ).setBulletCount( getTokenTarget( p_game ).getType().getMaxBulletCount() );
     p_game.changeTokenColor( getTokenTarget(p_game), getTokenDestroyer1(p_game).getColor() );
     if( !isFdComputed() )
     {

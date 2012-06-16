@@ -67,7 +67,13 @@ public class ScriptInterpretor
     {
       // action button click
       //
-      GameLogType type = GameLogType.valueOf( line[1] );
+      GameLogType type = GameLogType.None;
+      try
+      {
+        type = GameLogType.valueOf( line[1] );
+      } catch( Exception e )
+      {
+      }
       EventBuilderMsg eventBuilderMsg = m_gameEngine.getActionBuilder().userAction( type );
       if( eventBuilderMsg == EventBuilderMsg.MustRun )
       {
@@ -113,7 +119,7 @@ public class ScriptInterpretor
       {
         EbToken fakeToken = new EbToken( TokenType.valueOf( line[2] ) );
         fakeToken.setId( token.getId() );
-        if( EbToken.canBeColored( fakeToken.getType() ) )
+        if( fakeToken.getType().canBeColored(  ) )
         {
           fakeToken.setColor( token.getCarrierToken().getColor() );
         }

@@ -141,7 +141,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     }
 
     // check that controlling token is a destroyer
-    if( !getToken( p_game ).isDestroyer() )
+    if( !getToken( p_game ).getType().isDestroyer() )
     {
       throw new RpcFmpException( errMsg().OnlyDestroyerCanControl() );
     }
