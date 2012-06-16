@@ -64,7 +64,7 @@ public class EnuColor extends MyEnum
   }
 
   /**
-   * @return the number of possible color.
+   * @return the number of possible single color.
    */
   public static int getTotalNumberOfColor()
   {

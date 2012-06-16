@@ -39,6 +39,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -83,7 +84,7 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   @Override
   public void onModuleLoad()
   {
-    m_loadingPanel.setWidget( Icons.s_instance.loading().createImage() );
+    m_loadingPanel.setWidget( new Image( Icons.s_instance.loading() ) );
     m_loadingPanel.setVisible( true );
     m_loadingPanel.setStyleName( "gwt-DialogBox" );
     m_loadingPanel.addStyleName( "fmp-loading" );

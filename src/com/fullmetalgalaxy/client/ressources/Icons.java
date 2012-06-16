@@ -23,416 +23,413 @@
 package com.fullmetalgalaxy.client.ressources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author Vincent Legendre
  * image contained by folder icons. for user interface
  */
-public interface Icons extends ImageBundle
+public interface Icons extends ClientBundle
 {
   public static Icons s_instance = (Icons)GWT.create( Icons.class );
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/loading.png")
-  public AbstractImagePrototype loading();
+  @Source("icons/ui/loading.png")
+  public ImageResource loading();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Pause32.png")
-  public AbstractImagePrototype pause32();
+  @Source("icons/ui/Pause32.png")
+  public ImageResource pause32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Forward32.png")
-  public AbstractImagePrototype forward32();
+  @Source("icons/ui/Forward32.png")
+  public ImageResource forward32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Play32.png")
-  public AbstractImagePrototype play32();
+  @Source("icons/ui/Play32.png")
+  public ImageResource play32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/FastPlay32.png")
-  public AbstractImagePrototype fastPlay32();
+  @Source("icons/ui/FastPlay32.png")
+  public ImageResource fastPlay32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Back32.png")
-  public AbstractImagePrototype back32();
+  @Source("icons/ui/Back32.png")
+  public ImageResource back32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/FastBack32.png")
-  public AbstractImagePrototype fastBack32();
+  @Source("icons/ui/FastBack32.png")
+  public ImageResource fastBack32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Winner32.png")
-  public AbstractImagePrototype winner32();
+  @Source("icons/ui/Winner32.png")
+  public ImageResource winner32();
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Cancel32.png")
-  public AbstractImagePrototype cancel32();
+  @Source("icons/ui/Cancel32.png")
+  public ImageResource cancel32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Control32.png")
-  public AbstractImagePrototype control32();
+  @Source("icons/ui/Control32.png")
+  public ImageResource control32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Info32.png")
-  public AbstractImagePrototype info32();
+  @Source("icons/ui/Info32.png")
+  public ImageResource info32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/WebLinks32.png")
-  public AbstractImagePrototype webLinks32();
+  @Source("icons/ui/WebLinks32.png")
+  public ImageResource webLinks32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Message32.png")
-  public AbstractImagePrototype message32();
+  @Source("icons/ui/Message32.png")
+  public ImageResource message32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Chat32.png")
-  public AbstractImagePrototype chat32();
+  @Source("icons/ui/Chat32.png")
+  public ImageResource chat32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Ok32.png")
-  public AbstractImagePrototype ok32();
+  @Source("icons/ui/Ok32.png")
+  public ImageResource ok32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Repair32.png")
-  public AbstractImagePrototype repair32();
+  @Source("icons/ui/Repair32.png")
+  public ImageResource repair32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Shoot32.png")
-  public AbstractImagePrototype shoot32();
+  @Source("icons/ui/Shoot32.png")
+  public ImageResource shoot32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/ZoomIn32.png")
-  public AbstractImagePrototype zoomIn32();
+  @Source("icons/ui/ZoomIn32.png")
+  public ImageResource zoomIn32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/ZoomOut32.png")
-  public AbstractImagePrototype zoomOut32();
+  @Source("icons/ui/ZoomOut32.png")
+  public ImageResource zoomOut32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/GridOn32.png")
-  public AbstractImagePrototype gridOn32();
+  @Source("icons/ui/GridOn32.png")
+  public ImageResource gridOn32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/GridOff32.png")
-  public AbstractImagePrototype gridOff32();
+  @Source("icons/ui/GridOff32.png")
+  public ImageResource gridOff32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/EndTurn32.png")
-  public AbstractImagePrototype endTurn32();
+  @Source("icons/ui/EndTurn32.png")
+  public ImageResource endTurn32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/FireCoverOn32.png")
-  public AbstractImagePrototype fireCoverOn32();
+  @Source("icons/ui/FireCoverOn32.png")
+  public ImageResource fireCoverOn32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/FireCoverOff32.png")
-  public AbstractImagePrototype fireCoverOff32();
+  @Source("icons/ui/FireCoverOff32.png")
+  public ImageResource fireCoverOff32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Register32.png")
-  public AbstractImagePrototype register32();
+  @Source("icons/ui/Register32.png")
+  public ImageResource register32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Reserve32.png")
-  public AbstractImagePrototype reserve32();
+  @Source("icons/ui/Reserve32.png")
+  public ImageResource reserve32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOff32.png")
-  public AbstractImagePrototype takeOff32();
+  @Source("icons/ui/TakeOff32.png")
+  public ImageResource takeOff32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Player32.png")
-  public AbstractImagePrototype player32();
+  @Source("icons/ui/Player32.png")
+  public ImageResource player32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Practice32.png")
-  public AbstractImagePrototype practice32();
+  @Source("icons/ui/Practice32.png")
+  public ImageResource practice32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Action16.png")
-  public AbstractImagePrototype action16();
+  @Source("icons/ui/Action16.png")
+  public ImageResource action16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Char16.png")
-  public AbstractImagePrototype char16();
+  @Source("icons/ui/Char16.png")
+  public ImageResource char16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Ore16.png")
-  public AbstractImagePrototype ore16();
+  @Source("icons/ui/Ore16.png")
+  public ImageResource ore16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/Time32.png")
-  public AbstractImagePrototype time32();
+  @Source("icons/ui/Time32.png")
+  public ImageResource time32();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOff16.png")
-  public AbstractImagePrototype takeOff16();
+  @Source("icons/ui/TakeOff16.png")
+  public ImageResource takeOff16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/TakeOffBW16.png")
-  public AbstractImagePrototype takeOffBW16();
+  @Source("icons/ui/TakeOffBW16.png")
+  public ImageResource takeOffBW16();
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/moon16.png")
-  public AbstractImagePrototype moon16();
+  @Source("icons/ui/moon16.png")
+  public ImageResource moon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tide_low.png")
-  public AbstractImagePrototype tide_low();
+  @Source("icons/board/tide_low.png")
+  public ImageResource tide_low();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tide_medium.png")
-  public AbstractImagePrototype tide_medium();
+  @Source("icons/board/tide_medium.png")
+  public ImageResource tide_medium();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tide_hight.png")
-  public AbstractImagePrototype tide_hight();
+  @Source("icons/board/tide_hight.png")
+  public ImageResource tide_hight();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tide_unknown.png")
-  public AbstractImagePrototype tide_unknown();
+  @Source("icons/board/tide_unknown.png")
+  public ImageResource tide_unknown();
 
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/blue/icon16.png")
-  public AbstractImagePrototype blue_icon16();
+  @Source("icons/ui/colors/blue16.png")
+  public ImageResource blue_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/cyan/icon16.png")
-  public AbstractImagePrototype cyan_icon16();
+  @Source("icons/ui/colors/cyan16.png")
+  public ImageResource cyan_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/green/icon16.png")
-  public AbstractImagePrototype green_icon16();
+  @Source("icons/ui/colors/green16.png")
+  public ImageResource green_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/grey/icon16.png")
-  public AbstractImagePrototype grey_icon16();
+  @Source("icons/ui/colors/grey16.png")
+  public ImageResource grey_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/olive/icon16.png")
-  public AbstractImagePrototype olive_icon16();
+  @Source("icons/ui/colors/olive16.png")
+  public ImageResource olive_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/orange/icon16.png")
-  public AbstractImagePrototype orange_icon16();
+  @Source("icons/ui/colors/orange16.png")
+  public ImageResource orange_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/purple/icon16.png")
-  public AbstractImagePrototype purple_icon16();
+  @Source("icons/ui/colors/purple16.png")
+  public ImageResource purple_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/red/icon16.png")
-  public AbstractImagePrototype red_icon16();
+  @Source("icons/ui/colors/red16.png")
+  public ImageResource red_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/yellow/icon16.png")
-  public AbstractImagePrototype yellow_icon16();
+  @Source("icons/ui/colors/yellow16.png")
+  public ImageResource yellow_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/blue/icon48.png")
-  public AbstractImagePrototype blue_icon64();
+  @Source("icons/ui/colors/brown16.png")
+  public ImageResource brown_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/cyan/icon48.png")
-  public AbstractImagePrototype cyan_icon64();
+  @Source("icons/ui/colors/pink16.png")
+  public ImageResource pink_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/green/icon48.png")
-  public AbstractImagePrototype green_icon64();
+  @Source("icons/ui/colors/white16.png")
+  public ImageResource white_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/grey/icon48.png")
-  public AbstractImagePrototype grey_icon64();
+  @Source("icons/ui/colors/camouflage16.png")
+  public ImageResource camouflage_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/olive/icon48.png")
-  public AbstractImagePrototype olive_icon64();
+  @Source("icons/ui/colors/lightning16.png")
+  public ImageResource lightning_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/orange/icon48.png")
-  public AbstractImagePrototype orange_icon64();
+  @Source("icons/ui/colors/panter16.png")
+  public ImageResource panter_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/purple/icon48.png")
-  public AbstractImagePrototype purple_icon64();
+  @Source("icons/ui/colors/zebra16.png")
+  public ImageResource zebra_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/red/icon48.png")
-  public AbstractImagePrototype red_icon64();
+  @Source("icons/ui/colors/colorless16.png")
+  public ImageResource colorless_icon16();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/ui/yellow/icon48.png")
-  public AbstractImagePrototype yellow_icon64();
 
+  @Source("icons/board/arrow_n.png")
+  public ImageResource arrow_n();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/arrow_n.png")
-  public AbstractImagePrototype arrow_n();
+  @Source("icons/board/arrow_e.png")
+  public ImageResource arrow_e();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/arrow_e.png")
-  public AbstractImagePrototype arrow_e();
+  @Source("icons/board/arrow_s.png")
+  public ImageResource arrow_s();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/arrow_s.png")
-  public AbstractImagePrototype arrow_s();
+  @Source("icons/board/arrow_w.png")
+  public ImageResource arrow_w();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/arrow_w.png")
-  public AbstractImagePrototype arrow_w();
 
 
+  @Source("icons/board/tactic/deployment4.png")
+  public ImageResource tactic_deployment4();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/deployment4.png")
-  public AbstractImagePrototype tactic_deployment4();
+  @Source("icons/board/strategy/deployment4.png")
+  public ImageResource strategy_deployment4();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/deployment4.png")
-  public AbstractImagePrototype strategy_deployment4();
+  @Source("icons/board/tactic/hightlight_hexagon.png")
+  public ImageResource tactic_hightlight_hexagon();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/hightlight_hexagon.png")
-  public AbstractImagePrototype tactic_hightlight_hexagon();
+  @Source("icons/board/strategy/hightlight_hexagon.png")
+  public ImageResource strategy_hightlight_hexagon();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/hightlight_hexagon.png")
-  public AbstractImagePrototype strategy_hightlight_hexagon();
+  @Source("icons/board/tactic/select_hexagon.png")
+  public ImageResource tactic_select_hexagon();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/select_hexagon.png")
-  public AbstractImagePrototype tactic_select_hexagon();
+  @Source("icons/board/strategy/select_hexagon.png")
+  public ImageResource strategy_select_hexagon();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/select_hexagon.png")
-  public AbstractImagePrototype strategy_select_hexagon();
+  @Source("icons/board/tactic/target.png")
+  public ImageResource tactic_target();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/target.png")
-  public AbstractImagePrototype tactic_target();
+  @Source("icons/board/strategy/target.png")
+  public ImageResource strategy_target();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/target.png")
-  public AbstractImagePrototype strategy_target();
+  @Source("icons/board/tactic/target_control.png")
+  public ImageResource tactic_target_control();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/target_control.png")
-  public AbstractImagePrototype tactic_target_control();
+  @Source("icons/board/strategy/target_control.png")
+  public ImageResource strategy_target_control();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/target_control.png")
-  public AbstractImagePrototype strategy_target_control();
 
+  @Source("icons/board/tactic/arrow_n.png")
+  public ImageResource tactic_arrow_n();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_n.png")
-  public AbstractImagePrototype tactic_arrow_n();
+  @Source("icons/board/tactic/arrow_ne.png")
+  public ImageResource tactic_arrow_ne();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_ne.png")
-  public AbstractImagePrototype tactic_arrow_ne();
+  @Source("icons/board/tactic/arrow_se.png")
+  public ImageResource tactic_arrow_se();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_se.png")
-  public AbstractImagePrototype tactic_arrow_se();
+  @Source("icons/board/tactic/arrow_s.png")
+  public ImageResource tactic_arrow_s();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_s.png")
-  public AbstractImagePrototype tactic_arrow_s();
+  @Source("icons/board/tactic/arrow_sw.png")
+  public ImageResource tactic_arrow_sw();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_sw.png")
-  public AbstractImagePrototype tactic_arrow_sw();
+  @Source("icons/board/tactic/arrow_nw.png")
+  public ImageResource tactic_arrow_nw();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/arrow_nw.png")
-  public AbstractImagePrototype tactic_arrow_nw();
+  @Source("icons/board/strategy/arrow_n.png")
+  public ImageResource strategy_arrow_n();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_n.png")
-  public AbstractImagePrototype strategy_arrow_n();
+  @Source("icons/board/strategy/arrow_ne.png")
+  public ImageResource strategy_arrow_ne();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_ne.png")
-  public AbstractImagePrototype strategy_arrow_ne();
+  @Source("icons/board/strategy/arrow_se.png")
+  public ImageResource strategy_arrow_se();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_se.png")
-  public AbstractImagePrototype strategy_arrow_se();
+  @Source("icons/board/strategy/arrow_s.png")
+  public ImageResource strategy_arrow_s();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_s.png")
-  public AbstractImagePrototype strategy_arrow_s();
+  @Source("icons/board/strategy/arrow_sw.png")
+  public ImageResource strategy_arrow_sw();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_sw.png")
-  public AbstractImagePrototype strategy_arrow_sw();
+  @Source("icons/board/strategy/arrow_nw.png")
+  public ImageResource strategy_arrow_nw();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/arrow_nw.png")
-  public AbstractImagePrototype strategy_arrow_nw();
+  @Source("icons/board/strategy/padlock.png")
+  public ImageResource strategy_padlock();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/padlock.png")
-  public AbstractImagePrototype strategy_padlock();
+  @Source("icons/board/tactic/padlock.png")
+  public ImageResource tactic_padlock();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/padlock.png")
-  public AbstractImagePrototype tactic_padlock();
+  @Source("icons/board/tactic/warning.png")
+  public ImageResource tactic_warning();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/warning.png")
-  public AbstractImagePrototype tactic_warning();
+  @Source("icons/board/strategy/warning.png")
+  public ImageResource strategy_warning();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/warning.png")
-  public AbstractImagePrototype strategy_warning();
+  @Source("icons/board/tactic/disable_fire.png")
+  public ImageResource tactic_disable_fire();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/disable_fire.png")
-  public AbstractImagePrototype tactic_disable_fire();
+  @Source("icons/board/strategy/disable_fire.png")
+  public ImageResource strategy_disable_fire();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disable_fire.png")
-  public AbstractImagePrototype strategy_disable_fire();
+  @Source("icons/board/tactic/disabling_fire.png")
+  public ImageResource tactic_disabling_fire();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/disabling_fire.png")
-  public AbstractImagePrototype tactic_disabling_fire();
+  @Source("icons/board/strategy/disabling_fire.png")
+  public ImageResource strategy_disabling_fire();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disabling_fire.png")
-  public AbstractImagePrototype strategy_disabling_fire();
+  @Source("icons/board/tactic/disable_water.png")
+  public ImageResource tactic_disable_water();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/disable_water.png")
-  public AbstractImagePrototype tactic_disable_water();
+  @Source("icons/board/strategy/disable_water.png")
+  public ImageResource strategy_disable_water();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/disable_water.png")
-  public AbstractImagePrototype strategy_disable_water();
+  @Source("icons/board/strategy/icon_load1.png")
+  public ImageResource strategy_icon_load1();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load1.png")
-  public AbstractImagePrototype strategy_icon_load1();
+  @Source("icons/board/strategy/icon_load2.png")
+  public ImageResource strategy_icon_load2();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load2.png")
-  public AbstractImagePrototype strategy_icon_load2();
+  @Source("icons/board/strategy/icon_load3.png")
+  public ImageResource strategy_icon_load3();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load3.png")
-  public AbstractImagePrototype strategy_icon_load3();
+  @Source("icons/board/strategy/icon_load4.png")
+  public ImageResource strategy_icon_load4();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_load4.png")
-  public AbstractImagePrototype strategy_icon_load4();
+  @Source("icons/board/tactic/icon_load1.png")
+  public ImageResource tactic_icon_load1();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load1.png")
-  public AbstractImagePrototype tactic_icon_load1();
+  @Source("icons/board/tactic/icon_load2.png")
+  public ImageResource tactic_icon_load2();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load2.png")
-  public AbstractImagePrototype tactic_icon_load2();
+  @Source("icons/board/tactic/icon_load3.png")
+  public ImageResource tactic_icon_load3();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load3.png")
-  public AbstractImagePrototype tactic_icon_load3();
+  @Source("icons/board/tactic/icon_load4.png")
+  public ImageResource tactic_icon_load4();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_load4.png")
-  public AbstractImagePrototype tactic_icon_load4();
+  @Source("icons/board/strategy/icon_bullet1.png")
+  public ImageResource strategy_icon_bullet1();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_bullet1.png")
-  public AbstractImagePrototype strategy_icon_bullet1();
+  @Source("icons/board/strategy/icon_bullet2.png")
+  public ImageResource strategy_icon_bullet2();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/icon_bullet2.png")
-  public AbstractImagePrototype strategy_icon_bullet2();
+  @Source("icons/board/tactic/icon_bullet1.png")
+  public ImageResource tactic_icon_bullet1();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_bullet1.png")
-  public AbstractImagePrototype tactic_icon_bullet1();
+  @Source("icons/board/tactic/icon_bullet2.png")
+  public ImageResource tactic_icon_bullet2();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/icon_bullet2.png")
-  public AbstractImagePrototype tactic_icon_bullet2();
 
+  @Source("icons/board/tactic/wreck.png")
+  public ImageResource tactic_wreck();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/tactic/wreck.png")
-  public AbstractImagePrototype tactic_wreck();
-
-  @Resource("com/fullmetalgalaxy/client/ressources/icons/board/strategy/wreck.png")
-  public AbstractImagePrototype strategy_wreck();
+  @Source("icons/board/strategy/wreck.png")
+  public ImageResource strategy_wreck();
 
 
   // colorless token
   // ===============
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/ore20-0001.png")
-  public AbstractImagePrototype tactic_ore_01();
+  @Source("tokens/render/colorless/tactic/ore20-0001.png")
+  public ImageResource tactic_ore_01();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/ore2180-0001.png")
-  public AbstractImagePrototype tactic_ore_02();
+  @Source("tokens/render/colorless/tactic/ore2180-0001.png")
+  public ImageResource tactic_ore_02();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/ore2300-0001.png")
-  public AbstractImagePrototype tactic_ore_03();
+  @Source("tokens/render/colorless/tactic/ore2300-0001.png")
+  public ImageResource tactic_ore_03();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/ore20-0001.png")
-  public AbstractImagePrototype strategy_ore_01();
+  @Source("tokens/render/colorless/strategy/ore20-0001.png")
+  public ImageResource strategy_ore_01();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/ore2180-0001.png")
-  public AbstractImagePrototype strategy_ore_02();
+  @Source("tokens/render/colorless/strategy/ore2180-0001.png")
+  public ImageResource strategy_ore_02();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/ore2180-0001.png")
-  public AbstractImagePrototype strategy_ore_03();
+  @Source("tokens/render/colorless/strategy/ore2180-0001.png")
+  public ImageResource strategy_ore_03();
 
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon0-0001.png")
-  public AbstractImagePrototype tactic_pontoon_n();
+  @Source("tokens/render/colorless/tactic/pontoon0-0001.png")
+  public ImageResource tactic_pontoon_n();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon300-0001.png")
-  public AbstractImagePrototype tactic_pontoon_ne();
+  @Source("tokens/render/colorless/tactic/pontoon300-0001.png")
+  public ImageResource tactic_pontoon_ne();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon60-0001.png")
-  public AbstractImagePrototype tactic_pontoon_nw();
+  @Source("tokens/render/colorless/tactic/pontoon60-0001.png")
+  public ImageResource tactic_pontoon_nw();
 
   // as pontoon is symetric, use same images
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon180-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon0-0001.png")
-  public AbstractImagePrototype tactic_pontoon_s();
+  // @Source("tokens/render/colorless/tactic/pontoon180-0001.png")
+  @Source("tokens/render/colorless/tactic/pontoon0-0001.png")
+  public ImageResource tactic_pontoon_s();
 
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon120-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon300-0001.png")
-  public AbstractImagePrototype tactic_pontoon_sw();
+  // @Source("tokens/render/colorless/tactic/pontoon120-0001.png")
+  @Source("tokens/render/colorless/tactic/pontoon300-0001.png")
+  public ImageResource tactic_pontoon_sw();
 
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon240-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/tactic/pontoon60-0001.png")
-  public AbstractImagePrototype tactic_pontoon_se();
+  // @Source("tokens/render/colorless/tactic/pontoon240-0001.png")
+  @Source("tokens/render/colorless/tactic/pontoon60-0001.png")
+  public ImageResource tactic_pontoon_se();
 
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon0-0001.png")
-  public AbstractImagePrototype strategy_pontoon_n();
+  @Source("tokens/render/colorless/strategy/pontoon0-0001.png")
+  public ImageResource strategy_pontoon_n();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon300-0001.png")
-  public AbstractImagePrototype strategy_pontoon_ne();
+  @Source("tokens/render/colorless/strategy/pontoon300-0001.png")
+  public ImageResource strategy_pontoon_ne();
 
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon60-0001.png")
-  public AbstractImagePrototype strategy_pontoon_nw();
+  @Source("tokens/render/colorless/strategy/pontoon60-0001.png")
+  public ImageResource strategy_pontoon_nw();
 
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon180-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon0-0001.png")
-  public AbstractImagePrototype strategy_pontoon_s();
+  // @Source("tokens/render/colorless/strategy/pontoon180-0001.png")
+  @Source("tokens/render/colorless/strategy/pontoon0-0001.png")
+  public ImageResource strategy_pontoon_s();
 
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon120-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon300-0001.png")
-  public AbstractImagePrototype strategy_pontoon_sw();
+  // @Source("tokens/render/colorless/strategy/pontoon120-0001.png")
+  @Source("tokens/render/colorless/strategy/pontoon300-0001.png")
+  public ImageResource strategy_pontoon_sw();
 
-  // @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon240-0001.png")
-  @Resource("com/fullmetalgalaxy/client/ressources/tokens/render/colorless/strategy/pontoon60-0001.png")
-  public AbstractImagePrototype strategy_pontoon_se();
+  // @Source("tokens/render/colorless/strategy/pontoon240-0001.png")
+  @Source("tokens/render/colorless/strategy/pontoon60-0001.png")
+  public ImageResource strategy_pontoon_se();
 
 }

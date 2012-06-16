@@ -19,6 +19,9 @@
   <inherits name="com.googlecode.objectify.Objectify" />
   <inherits name="com.google.gwt.http.HTTP"/>
 
+  <inherits name="com.google.gwt.resources.Resources" />
+  <set-property name="ClientBundle.enableInlining" value="false" /> 
+
   <!-- Specify the client translatable source               -->
   <source path="client"/> 
   <source path="model"/>

@@ -43,6 +43,7 @@ import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -122,7 +123,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     }
     else
     {
-      htmlTide += Icons.s_instance.tide_unknown().getHTML();
+      htmlTide += AbstractImagePrototype.create( Icons.s_instance.tide_unknown() ).getHTML();
       // + MAppBoard.s_messages.noForecast() + "'> ";
     }
     if( game.isParallel() )

@@ -69,14 +69,14 @@ public class WgtConstructReserve extends Composite
     
     for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )
     {
-      Image wgtToken = new Image();
+      Image wgtToken = null;
       if( EbToken.canBeColored( entry.getKey() ) )
       {
-        TokenImages.getTokenImage( myColor, EnuZoom.Medium, entry.getKey(),
-            Sector.SouthEast ).applyTo( wgtToken );
+        wgtToken = new Image( TokenImages.getTokenImage( myColor, EnuZoom.Medium, entry.getKey(),
+            Sector.SouthEast ) );
       } else {
-        TokenImages.getTokenImage( new EnuColor(EnuColor.None), EnuZoom.Medium, entry.getKey(),
-            Sector.SouthEast ).applyTo( wgtToken );
+        wgtToken = new Image( TokenImages.getTokenImage( new EnuColor( EnuColor.None ),
+            EnuZoom.Medium, entry.getKey(), Sector.SouthEast ) );
       }
       m_panel.add( wgtToken );
       

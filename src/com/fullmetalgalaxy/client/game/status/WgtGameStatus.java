@@ -62,7 +62,7 @@ public class WgtGameStatus extends WgtView
   HTML m_lblDate = new HTML( "" );
   Date m_endTurn = null;
   HorizontalPanel m_panelTide = new HorizontalPanel();
-  Image m_iconMoon = Icons.s_instance.moon16().createImage();
+  Image m_iconMoon = new Image( Icons.s_instance.moon16() );
   Label m_lblMoon = new HTML( "&nbsp;:&nbsp;" );
   HTML m_lblTurn = new HTML();
 
@@ -182,7 +182,7 @@ public class WgtGameStatus extends WgtView
         if( game.getAllowedTakeOffTurns().contains( game.getCurrentTimeStep() ) )
         {
           // take off is allowed : display it !
-          image = Icons.s_instance.takeOff16().createImage();
+          image = new Image( Icons.s_instance.takeOff16() );
           image.setTitle( "Decollage autorisé !" );
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );
@@ -245,11 +245,11 @@ public class WgtGameStatus extends WgtView
         {
           if( allowedTakeOff.get( index ).intValue() == currentTurn + 1 )
           {
-            image = Icons.s_instance.takeOff16().createImage();
+            image = new Image( Icons.s_instance.takeOff16() );
           }
           else
           {
-            image = Icons.s_instance.takeOffBW16().createImage();
+            image = new Image( Icons.s_instance.takeOffBW16() );
           }
           image.setTitle( "prochain decolage : tour " + allowedTakeOff.get( index ) );
           m_panelTide.add( image );

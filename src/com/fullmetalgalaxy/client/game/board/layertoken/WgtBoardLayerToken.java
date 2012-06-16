@@ -47,6 +47,7 @@ import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
@@ -181,8 +182,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       {
         landPixOffset = p_token.getLandPixOffset( game );
       }
-      TokenImages.getTokenImage( p_token, getZoom().getValue() ).applyTo(
-          tokenWidget.getTokenImage() );
+      tokenWidget.setTokenImage( TokenImages.getTokenImage( p_token, getZoom().getValue() ) );
 
       setWidgetHexPosition( tokenWidget.getTokenImage(), p_token.getPosition(), landPixOffset );
       DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex", Integer
@@ -262,6 +262,12 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // last touch...
       tokenWidget.setLastTokenDrawn( p_token );
     }
+  }
+
+  protected void addWarningImage(Image p_image, ImageResource p_absImage, EbToken p_token,
+      int p_landPixOffset)
+  {
+    addWarningImage( p_image, AbstractImagePrototype.create( p_absImage ), p_token, p_landPixOffset );
   }
 
   protected void addWarningImage(Image p_image, AbstractImagePrototype p_absImage, EbToken p_token,

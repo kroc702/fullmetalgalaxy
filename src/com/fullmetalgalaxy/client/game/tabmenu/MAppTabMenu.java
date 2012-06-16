@@ -43,6 +43,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -59,12 +60,12 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
 
   private HorizontalPanel m_hPanel = new HorizontalPanel();
   private VerticalPanel m_vTabPanel = new VerticalPanel();
-  private ToggleButton m_btnWebLinks = new ToggleButton( Icons.s_instance.webLinks32().createImage() );
-  private ToggleButton m_btnInfo = new ToggleButton( Icons.s_instance.info32().createImage() );
-  private ToggleButton m_btnMessage = new ToggleButton( Icons.s_instance.message32().createImage() );
-  private ToggleButton m_btnPlayer = new ToggleButton( Icons.s_instance.player32().createImage() );
-  private ToggleButton m_btnReserve = new ToggleButton( Icons.s_instance.reserve32().createImage() );
-  private ToggleButton m_btnTime = new ToggleButton( Icons.s_instance.time32().createImage() );
+  private ToggleButton m_btnWebLinks = new ToggleButton( new Image( Icons.s_instance.webLinks32() ) );
+  private ToggleButton m_btnInfo = new ToggleButton( new Image( Icons.s_instance.info32() ) );
+  private ToggleButton m_btnMessage = new ToggleButton( new Image( Icons.s_instance.message32() ) );
+  private ToggleButton m_btnPlayer = new ToggleButton( new Image( Icons.s_instance.player32() ) );
+  private ToggleButton m_btnReserve = new ToggleButton( new Image( Icons.s_instance.reserve32() ) );
+  private ToggleButton m_btnTime = new ToggleButton( new Image( Icons.s_instance.time32() ) );
   
   private PushButton m_btnSwitchOff = new PushButton();
 

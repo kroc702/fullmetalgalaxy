@@ -33,7 +33,7 @@ import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author Vincent Legendre
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 public class TokenImages
 {
 
-  public static AbstractImagePrototype getTokenImage(EbToken p_token, int p_zoom)
+  public static ImageResource getTokenImage(EbToken p_token, int p_zoom)
   {
     if( p_token.getLocation() == Location.Graveyard )
     {
@@ -59,7 +59,7 @@ public class TokenImages
         .getSector() );
   }
 
-  public static AbstractImagePrototype getTokenImage(EnuColor p_color, int p_zoom,
+  public static ImageResource getTokenImage(EnuColor p_color, int p_zoom,
       TokenType p_token, Sector p_sector)
   {
     if( p_color.isSingleColor() )
@@ -89,7 +89,7 @@ public class TokenImages
 
 
 
-  protected static AbstractImagePrototype getColorlessTokenImageTactic(TokenType p_token,
+  protected static ImageResource getColorlessTokenImageTactic(TokenType p_token,
       Sector p_sector)
   {
     switch( p_token )
@@ -130,7 +130,7 @@ public class TokenImages
     }
   }
 
-  protected static AbstractImagePrototype getColorlessTokenImageStrategy(TokenType p_token,
+  protected static ImageResource getColorlessTokenImageStrategy(TokenType p_token,
       Sector p_sector)
   {
     switch( p_token )
@@ -188,7 +188,7 @@ public class TokenImages
     s_bundle.put( EnuColor.None, (Colorless)GWT.create( Colorless.class ) );
   }
 
-  private static Map<Integer, TokenImageFreighterBundle> s_bundleFreighter = new HashMap<Integer, TokenImageFreighterBundle>();
+  private static Map<Integer, TokenFreighterImageBundle> s_bundleFreighter = new HashMap<Integer, TokenFreighterImageBundle>();
   static
   {
     s_bundleFreighter.put( EnuColor.Purple, (PurpleFreighter)GWT.create( PurpleFreighter.class ) );
@@ -206,7 +206,7 @@ public class TokenImages
 
 
 
-  protected static AbstractImagePrototype getTokenImageTactic(int p_color, TokenType p_token,
+  protected static ImageResource getTokenImageTactic(int p_color, TokenType p_token,
       Sector p_sector)
   {
     switch( p_token )
@@ -231,7 +231,7 @@ public class TokenImages
     }
   }
 
-  protected static AbstractImagePrototype getTokenImageStrategy(int p_color, TokenType p_token,
+  protected static ImageResource getTokenImageStrategy(int p_color, TokenType p_token,
       Sector p_sector)
   {
     switch( p_token )
@@ -256,7 +256,7 @@ public class TokenImages
     }
   }
 
-  protected static AbstractImagePrototype getTokenImageStrategyBarge(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategyBarge(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -278,7 +278,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyCrab(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategyCrab(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -300,8 +300,8 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyFreighter(
-      TokenImageFreighterBundle p_bundle, Sector p_sector)
+  protected static ImageResource getTokenImageStrategyFreighter(
+      TokenFreighterImageBundle p_bundle, Sector p_sector)
   {
     switch( p_sector )
     {
@@ -322,7 +322,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyHeap(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategyHeap(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -344,7 +344,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategySpeedBoat(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategySpeedBoat(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -366,7 +366,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyTank(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategyTank(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -388,7 +388,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyTurret(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageStrategyTurret(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -410,7 +410,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageStrategyWeatherHen(
+  protected static ImageResource getTokenImageStrategyWeatherHen(
       TokenImageBundle p_bundle, Sector p_sector)
   {
     switch( p_sector )
@@ -432,7 +432,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticBarge(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticBarge(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -454,7 +454,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticCrab(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticCrab(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -476,8 +476,8 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticFreighter(
-      TokenImageFreighterBundle p_bundle, Sector p_sector)
+  protected static ImageResource getTokenImageTacticFreighter(
+      TokenFreighterImageBundle p_bundle, Sector p_sector)
   {
     switch( p_sector )
     {
@@ -498,7 +498,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticHeap(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticHeap(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -520,7 +520,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticSpeedBoat(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticSpeedBoat(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -542,7 +542,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticTank(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticTank(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -564,7 +564,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticTurret(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticTurret(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )
@@ -586,7 +586,7 @@ public class TokenImages
   }
 
 
-  protected static AbstractImagePrototype getTokenImageTacticWeatherHen(TokenImageBundle p_bundle,
+  protected static ImageResource getTokenImageTacticWeatherHen(TokenImageBundle p_bundle,
       Sector p_sector)
   {
     switch( p_sector )

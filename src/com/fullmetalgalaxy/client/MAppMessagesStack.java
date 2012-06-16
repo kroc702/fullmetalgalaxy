@@ -97,7 +97,7 @@ public class MAppMessagesStack extends GuiEntryPoint implements ChannelMessageEv
   public void showWarning(String p_msg)
   {
     Panel panel = new HorizontalPanel();
-    Image image = Icons.s_instance.cancel32().createImage();
+    Image image = new Image( Icons.s_instance.cancel32() );
     panel.add( image );
     panel.add( new Label( p_msg ) );
     showMessage( panel );

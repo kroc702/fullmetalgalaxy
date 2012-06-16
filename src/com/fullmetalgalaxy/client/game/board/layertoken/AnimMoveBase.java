@@ -87,9 +87,8 @@ public abstract class AnimMoveBase extends AnimEvent
       if( m_tokenWidget != null )
       {
         m_layerToken.add( m_tokenWidget.getTokenImage() );
-        TokenImages.getTokenImage( m_token.getEnuColor(), m_layerToken.getZoom().getValue(),
-            m_token.getType(), getNewPosition().getSector() ).applyTo(
-            m_tokenWidget.getTokenImage() );
+        m_tokenWidget.setTokenImage( TokenImages.getTokenImage( m_token.getEnuColor(), m_layerToken
+            .getZoom().getValue(), m_token.getType(), getNewPosition().getSector() ) );
         m_tokenWidget.getTokenImage().setVisible( true );
         DOM.setStyleAttribute( m_tokenWidget.getTokenImage().getElement(), "zIndex", "999" );
 

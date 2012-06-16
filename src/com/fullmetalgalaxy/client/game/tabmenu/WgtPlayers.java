@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -64,7 +65,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class WgtPlayers extends Composite implements ClickHandler
 {
   private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
-  private PushButton m_btnSkipTurn = new PushButton( Icons.s_instance.endTurn32().createImage() );
+  private PushButton m_btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
   private Panel m_playerPanel = new FlowPanel();
   
   private Button m_btnChat = new Button( "chat" );
@@ -171,7 +172,7 @@ public class WgtPlayers extends Composite implements ClickHandler
 
       if( GameEngine.model().getGame().getCurrentPlayerRegistration() == registration )
       {
-        html += Icons.s_instance.action16().getHTML();
+        html += AbstractImagePrototype.create( Icons.s_instance.action16() ).getHTML();
       }
       if( registration.haveAccount() )
       {

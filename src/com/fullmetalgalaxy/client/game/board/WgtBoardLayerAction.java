@@ -126,9 +126,11 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
     AbstractImagePrototype image = null;
     if( EbToken.canBeColored( p_type ) )
     {
-      image = TokenImages.getTokenImage( p_color, getZoom().getValue(), p_type, p_position.getSector() );
+      image = AbstractImagePrototype.create( TokenImages.getTokenImage( p_color, getZoom()
+          .getValue(), p_type, p_position.getSector() ) );
     } else {
-      image = TokenImages.getTokenImage( new EnuColor(EnuColor.None), getZoom().getValue(), p_type, p_position.getSector() );
+      image = AbstractImagePrototype.create( TokenImages.getTokenImage(
+          new EnuColor( EnuColor.None ), getZoom().getValue(), p_type, p_position.getSector() ) );
     }
     drawTransparentImage( image, p_position );
   }

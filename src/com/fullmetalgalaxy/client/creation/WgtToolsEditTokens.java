@@ -39,6 +39,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
@@ -112,8 +113,9 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
 
     m_panel.add( m_btnOre );
     m_panel.add( m_currentTool );
-    TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
-        m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ).applyTo(
+    AbstractImagePrototype.create(
+        TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
+            m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ) ).applyTo(
         m_currentTool );
     m_panel.add( m_lstColor );
 
@@ -135,8 +137,8 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
 
   private void addTokenBtn(TokenType p_token)
   {
-    Image btn = TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Small, p_token,
-        Sector.SouthWest ).createImage();
+    Image btn = new Image( TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(),
+        EnuZoom.Small, p_token, Sector.SouthWest ) );
     m_tools.put( btn, p_token );
     btn.addClickHandler( this );
     m_panel.add( btn );
@@ -157,8 +159,9 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     {
       m_wgtBoardEditTokens.setSector( m_wgtBoardEditTokens.getSector().getNext() );
     }
-    TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
-        m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ).applyTo(
+    AbstractImagePrototype.create(
+        TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
+            m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ) ).applyTo(
         m_currentTool );
     if( p_event.getSource() == m_btnOre )
     {

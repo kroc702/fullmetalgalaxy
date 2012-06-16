@@ -4,14 +4,14 @@ from Blender.Scene import Render
 
 from Blender.Mathutils import *
 
-g_coloredtokens = ('tank','weatherhen','freighter','barge','crab','turret','heap','speedboat')
+g_coloredtokens = ('tank','weatherhen','freighter','barge','crab','turret','heap','speedboat','walkerheap','crayfish','hovertank','tarask')
 g_noshadowtokens = ('turret')
-g_colors = ( 'blue', 'cyan', 'grey', 'olive', 'orange', 'purple', 'yellow', 'green', 'red' )
+g_colors = { 'brown':'metal', 'pink':'metal', 'blue':'metal', 'white':'metal', 'cyan':'metal', 'grey':'metal', 'olive':'metal', 'orange':'metal', 'purple':'metal', 'yellow':'metal', 'green':'metal', 'red':'metal', 'camouflage':'camouflage', 'lightning':'lightning', 'pantera':'pantera', 'zebra':'zebra' }
 g_angles = ( 0, 60, 120, 180, 240, 300 )
 
 
-g_strategySize = {'freighter':3.4, 'barge':3.2, 'weatherhen':2.2, 'tank':1.1, 'crab':1.1, 'heap':1.3, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2 }
-g_tacticSize = {'freighter':3.4, 'barge':3, 'weatherhen':2.4, 'tank':1.1, 'crab':1.2, 'turret':1.3, 'heap':1.5, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2}
+g_strategySize = {'freighter':3.4, 'barge':3.2, 'weatherhen':2.2, 'tank':1.1, 'crab':1.1, 'heap':1.3, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2, 'ore5':1.2, 'walkerheap':1.3, 'crayfish':1.2,'hovertank':1.2,'tarask':1.4 }
+g_tacticSize = {'freighter':3.4, 'barge':3, 'weatherhen':2.4, 'tank':1.1, 'crab':1.2, 'turret':1.3, 'heap':1.5, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2, 'ore5':1.2, 'walkerheap':1.5, 'crayfish':1.3,'hovertank':1.2,'tarask':1.6 }
 
 
 g_defaultTacticWidth = 76
@@ -33,11 +33,15 @@ def rotate(p_angle):
 	
 
 
-def renderColor(p_context, p_color, p_angle, p_path):
+def renderColor(p_context, p_texture, p_color, p_angle, p_path):
 	if( g_name in g_coloredtokens ):
-		footex = Texture.Get('color')             # get texture named 'foo'
+		footex = Texture.Get('color')             # get texture named 'color'
 		footex.setType('Image')                 # make foo be an image texture
 		img = Image.Load('textures/'+p_color+'.jpg')            # load an image
+		footex.image = img                      # link the image to the texture
+		footex = Texture.Get('Tex')             # get texture named 'Tex'
+		footex.setType('Image')                 # make foo be an image texture
+		img = Image.Load('textures/'+p_texture+'.jpg')            # load an image
 		footex.image = img                      # link the image to the texture
 	p_context.renderPath = p_path % (p_color, p_angle)
 	rotate(p_angle)
@@ -47,18 +51,27 @@ def renderColor(p_context, p_color, p_angle, p_path):
 	
 def renderAll(p_context):
 	for angle in g_angles:
-		renderColor( p_context, 'colorless', angle, '//render/%s/'+g_currentCamera+'/'+g_name+'%d-' )
+		renderColor( p_context, 'metal', 'colorless', angle, '//render/%s/'+g_currentCamera+'/'+g_name+'%d-' )
 			
 	if( g_name in g_coloredtokens ):
 		for color in g_colors:
 			for angle in g_angles:
-				renderColor( p_context, color, angle, '//render/%s/'+g_currentCamera+'/'+g_name+'%d-' )
-
+				renderColor( p_context, g_colors[color], color, angle, '//render/%s/'+g_currentCamera+'/'+g_name+'%d-' )
 
 
 scn = Blender.Scene.GetCurrent()
 context = scn.getRenderingContext()
-g_name = Blender.Get('filename').replace('.blend','')
+
+#get the root directory that the current file is in
+#we'll write the muray files there.  
+path = Blender.Get('filename')
+tokens = path.split('\\')
+g_name = tokens.pop();
+file = g_name.split('.')
+g_name = file[0]
+# this isn't working for me
+#g_name = Blender.Get('filename').replace('.blend','')
+
 context.extensions = True
 context.imageType = Render.PNG
 context.enableRGBAColor() 
