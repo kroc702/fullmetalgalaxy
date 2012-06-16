@@ -57,7 +57,13 @@ public enum LocaleFmg
   
   public static LocaleFmg fromString(String p_locale)
   {
-    LocaleFmg locale = LocaleFmg.valueOf( p_locale );
+    LocaleFmg locale = null;
+    try
+    {
+      locale = LocaleFmg.valueOf( p_locale );
+    } catch( Exception e )
+    {
+    }
     if( locale == null )
     {
       locale = getDefault();

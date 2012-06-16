@@ -155,7 +155,7 @@ public class FmgMessage
     {
       return false;
     }
-    boolean isOk = true;
+    boolean isOk = false;
     String error = null;
 
     // localize msg
@@ -181,6 +181,7 @@ public class FmgMessage
             InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
         Transport.send( mimemsg );
         log.fine( "Mail send to " + p_account.getEmail() + " subject:" + msg.getSubject() );
+        isOk = true;
       } catch( Exception e )
       {
         isOk = false;

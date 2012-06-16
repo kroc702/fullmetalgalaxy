@@ -108,7 +108,7 @@ public class EbRegistration extends EbBase
     int count = 0;
     for( EbToken token : p_game.getSetToken() )
     {
-      if( (token.getType() == TokenType.Ore) && (token.getCarrierToken() != null)
+      if( (token.getType().isOre()) && (token.getCarrierToken() != null)
           && (token.getCarrierToken().getType() == TokenType.Freighter)
           && getEnuColor().isColored( token.getCarrierToken().getColor() ) )
       {

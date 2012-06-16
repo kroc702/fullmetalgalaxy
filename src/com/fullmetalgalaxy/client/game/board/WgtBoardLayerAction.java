@@ -124,7 +124,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
   private void drawTransparentToken(TokenType p_type, EnuColor p_color, AnBoardPosition p_position)
   {
     AbstractImagePrototype image = null;
-    if( EbToken.canBeColored( p_type ) )
+    if( p_type.canBeColored(  ) )
     {
       image = AbstractImagePrototype.create( TokenImages.getTokenImage( p_color, getZoom()
           .getValue(), p_type, p_position.getSector() ) );
@@ -204,7 +204,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       {
         if( (nextAction == null)
             || ((nextAction.getType() == GameLogType.EvtLoad) 
-                && (((EbEvtLoad)nextAction).getToken(  GameEngine.model().getGame() ).getType() == TokenType.Ore)
+                && (((EbEvtLoad)nextAction).getToken(  GameEngine.model().getGame() ).getType().isOre())
                 && (firstAction != null)
                 && (firstAction.getType() != GameLogType.EvtConstruct) ) )
         {
@@ -269,7 +269,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           drawFoot( position );
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
-            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType() == TokenType.Ore)
+            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType().isOre())
             && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {
@@ -297,7 +297,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           drawFoot( position );
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
-            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType() == TokenType.Ore)
+            && (((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getType().isOre())
             && (firstAction != null)
             && (firstAction.getType() != GameLogType.EvtConstruct) )
         {

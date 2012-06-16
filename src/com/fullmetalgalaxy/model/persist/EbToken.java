@@ -101,7 +101,7 @@ public class EbToken extends EbBase
   {
     this();
     setType( p_type );
-    setBulletCount( getMaxBulletCount() );
+    setBulletCount( getType().getMaxBulletCount() );
   }
 
   private void init()
@@ -149,26 +149,13 @@ public class EbToken extends EbBase
     }
   }
 
-  public static int getWinningPoint(TokenType p_type)
-  {
-    switch( p_type )
-    {
-    case Freighter:
-      return 0;
-    case Ore:
-      return 2;
-    default:
-      return 1;
-    }
-  }
-
   /**
    * @param p_token
    * @return all winning point contained by p_token
    */
   public int getWinningPoint()
   {
-    int winningPoint = getWinningPoint( getType() );
+    int winningPoint = getType().getWinningPoint(  );
     if( containToken() )
     {
       for( EbToken token : getContains() )
@@ -190,35 +177,8 @@ public class EbToken extends EbBase
     {
       return 0;
     }
-    return getZIndex( getType(), getPosition().getSector() ) + getPosition().getY() * 2
+    return getType().getZIndex( getPosition().getSector() ) + getPosition().getY() * 2
         + getPosition().getX() % 2;
-  }
-
-  public static int getZIndex(TokenType p_tokenType, Sector p_sector)
-  {
-    switch( p_tokenType )
-    {
-    case Pontoon:
-      return 0;
-    case Freighter:
-      if( (p_sector == Sector.North) || (p_sector == Sector.SouthEast)
-          || (p_sector == Sector.SouthWest) )
-        return 1;
-      else
-        return 0;
-    case Ore:
-    case Barge:
-    case Crab:
-    case WeatherHen:
-    case Speedboat:
-    case Tank:
-    case Heap:
-      return 1;
-    case Turret:
-      return 4;
-    default:
-      return 10;
-    }
   }
 
   /**
@@ -234,7 +194,11 @@ public class EbToken extends EbBase
     case Freighter:
     case Turret:
       return 0;
+    case Ore0:
     case Ore:
+    case Ore3:
+    case Ore5:
+    case Crayfish:
       return Game.getLandPixOffset( p_game.getLand( getPosition() ) );
     case Barge:
     case Crab:
@@ -243,6 +207,9 @@ public class EbToken extends EbBase
     case Tank:
     case Heap:
     case Pontoon:
+    case Sluice:
+    case Hovertank:
+    case Tarask:
       return p_game.getLandPixOffset( getPosition() );
     }
   }
@@ -252,29 +219,8 @@ public class EbToken extends EbBase
    */
   public boolean canBeColored()
   {
-    return canBeColored( getType() );
+    return getType().canBeColored(  );
   }
-
-  public static boolean canBeColored(TokenType p_type)
-  {
-    switch( p_type )
-    {
-    case Turret:
-    case Barge:
-    case WeatherHen:
-    case Crab:
-    case Freighter:
-    case Speedboat:
-    case Tank:
-    case Heap:
-      return true;
-    case Pontoon:
-    case Ore:
-    default:
-      return false;
-    }
-  }
-
 
   /**
    * 
@@ -287,7 +233,7 @@ public class EbToken extends EbBase
     {
       for( EbToken token : getContains() )
       {
-        loadingSize += token.getLoadingSize();
+        loadingSize += token.getType().getLoadingSize();
       }
     }
     return loadingSize;
@@ -304,7 +250,7 @@ public class EbToken extends EbBase
     {
       for( EbToken token : getContains() )
       {
-        if( token.getType() == TokenType.Ore )
+        if( token.getType().isOre() && token.getType() != TokenType.Ore0 )
         {
           loadingSize += 1;
         }
@@ -321,107 +267,10 @@ public class EbToken extends EbBase
    */
   public int getFullLoadingSize()
   {
-    return getLoadingSize() + getContainSize();
+    return getType().getLoadingSize() + getContainSize();
   }
 
   
-  /**
-   * @return the size it take inside another token (don't take in account token inside him)
-   */
-  public int getLoadingSize()
-  {
-    switch( getType() )
-    {
-    case Freighter:
-      return 1000;
-    case Barge:
-      return 4;
-    case WeatherHen:
-    case Crab:
-      return 2;
-    case Pontoon:
-    case Speedboat:
-    case Tank:
-    case Heap:
-    case Ore:
-    case Turret:
-    default:
-      return 1;
-    }
-  }
-
-  /**
-   * @return the size it take inside another token
-   */
-  public int getLoadingCapability()
-  {
-    switch( getType() )
-    {
-    case Freighter:
-      return 1000;
-    case Barge:
-      return 4;
-    case WeatherHen:
-      return 1;
-    case Crab:
-      return 2;
-    case Pontoon:
-      return 10;
-    case Speedboat:
-    case Tank:
-    case Heap:
-    case Ore:
-    case Turret:
-    default:
-      return 0;
-    }
-  }
-
-  /**
-   * 
-   * @return the maximum number of bullet according to the token type
-   */
-  public int getMaxBulletCount()
-  {
-    switch( getType() )
-    {
-    case Turret:
-      return 10;
-    case Speedboat:
-    case Tank:
-    case Heap:
-    case WeatherHen:
-      return 2;
-    case Freighter:
-    case Barge:
-    case Crab:
-    case Pontoon:
-    case Ore:
-    default:
-      return 0;
-    }
-  }
-
-  
-  public boolean isDestroyer()
-  {
-    switch( getType() )
-    {
-    case Turret:
-    case Speedboat:
-    case Tank:
-    case Heap:
-      return true;
-    case Freighter:
-    case Barge:
-    case WeatherHen:
-    case Crab:
-    case Pontoon:
-    case Ore:
-    default:
-      return false;
-    }
-  }
 
   /**
    * @param p_token
@@ -491,7 +340,7 @@ public class EbToken extends EbBase
     {
       return false;
     }
-    boolean isDestroyer = isDestroyer();
+    boolean isDestroyer = getType().isDestroyer();
     if( getType() == TokenType.Freighter && p_game.getToken( p_position, TokenType.Turret ) != null )
     {
       isDestroyer = true;
@@ -505,7 +354,7 @@ public class EbToken extends EbBase
       {
         if( (token.canBeColored()) && (tokenColor.getValue() != token.getColor())
             && (token.isNeighbor( this ))
-            && ( isDestroyer || token.isDestroyer() ) )
+            && ( isDestroyer || token.getType().isDestroyer() ) )
         {
           return true;
         }
@@ -567,50 +416,9 @@ public class EbToken extends EbBase
    * @param p_tokenType the token type value we want to load
    * @return
    */
-  
   public boolean canLoad(TokenType p_tokenType)
   {
-    switch( getType() )
-    {
-    case Freighter:
-      return true;
-    case Barge:
-      if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Crab)
-          || (p_tokenType == TokenType.Heap) || (p_tokenType == TokenType.WeatherHen)
-          || (p_tokenType == TokenType.Ore) || (p_tokenType == TokenType.Pontoon) )
-      {
-        return true;
-      }
-      return false;
-    case Crab:
-      if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Heap)
-          || (p_tokenType == TokenType.Ore) || (p_tokenType == TokenType.Pontoon) )
-      {
-        return true;
-      }
-      return false;
-    case WeatherHen:
-      if( p_tokenType == TokenType.Ore )
-      {
-        return true;
-      }
-      return false;
-    case Pontoon:
-      if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Heap)
-          || (p_tokenType == TokenType.Ore) || (p_tokenType == TokenType.Crab)
-          || (p_tokenType == TokenType.WeatherHen) )
-      {
-        return true;
-      }
-      return false;
-    case Speedboat:
-    case Tank:
-    case Heap:
-    case Ore:
-    case Turret:
-    default:
-      return false;
-    }
+    return getType().canLoad( p_tokenType );
   }
 
   /**
@@ -630,12 +438,21 @@ public class EbToken extends EbBase
     {
     case Barge:
     case Speedboat:
+    case Crayfish:
+    case Tarask:
       if( p_land == LandType.Montain || p_land == LandType.Plain )
       {
         return false;
       }
       break;
+    case Hovertank:
+      if( p_land == LandType.Montain )
+      {
+        return false;
+      }
+      break;
     case Heap:
+    case Sluice:
       if( p_land == LandType.Montain || p_land == LandType.Sea )
       {
         return false;
@@ -654,13 +471,16 @@ public class EbToken extends EbBase
       }
     case Tank:
     case WeatherHen:
-    case Ore:
       if( p_land == LandType.Sea )
       {
         return false;
       }
       break;
     case Pontoon:
+    case Ore0:
+    case Ore:
+    case Ore3:
+    case Ore5:
       return true;
     case Freighter:
     case Turret:
@@ -687,7 +507,7 @@ public class EbToken extends EbBase
     // if newTokenOnWay == this, this mean that barge head want to move on barge tail: this is allowed
     if( newTokenOnWay != null && newTokenOnWay != this)
     {
-      if( newTokenOnWay.getType() == TokenType.Pontoon )
+      if( (newTokenOnWay.getType() == TokenType.Pontoon) || (newTokenOnWay.getType() == TokenType.Sluice) )
       {
         return p_game.canTokenLoad( newTokenOnWay, this );
       }
@@ -754,6 +574,10 @@ public class EbToken extends EbBase
       // plain or montain
       LandType land = p_game.getLand( p_position ).getLandValue( p_game.getCurrentTide() );
       EbToken tokenPontoon = p_game.getToken( p_position, TokenType.Pontoon );
+      if( tokenPontoon == null )
+      {
+        tokenPontoon = p_game.getToken( p_position, TokenType.Sluice );
+      }
       if( (tokenPontoon != null) && !(tokenPontoon.canLoad( getType() )) )
       {
         return false;
@@ -1037,9 +861,9 @@ public class EbToken extends EbBase
     {
       m_bulletCount = 0;
     }
-    if( m_bulletCount > getMaxBulletCount()*10 )
+    if( m_bulletCount > getType().getMaxBulletCount()*10 )
     {
-      m_bulletCount = getMaxBulletCount()*10;
+      m_bulletCount = getType().getMaxBulletCount()*10;
     }
   }
 

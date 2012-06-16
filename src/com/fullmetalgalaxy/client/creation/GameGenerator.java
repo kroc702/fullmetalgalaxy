@@ -84,7 +84,7 @@ public class GameGenerator
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
-      if( token.getType() == TokenType.Ore && token.getLocation() == Location.Board )
+      if( token.getType().isOre() && token.getLocation() == Location.Board )
       {
         token2Remove.add( token );
       }
