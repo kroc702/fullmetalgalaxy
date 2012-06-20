@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
+import java.util.Set;
+
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -48,7 +50,7 @@ public class DlgJoinChooseColor extends DialogBox
 {
   // UI
   private ListBox m_colorSelection = new ListBox();
-  private Image m_preview = new Image();
+  private Image m_preview = new Image("/images/board/icon.gif");
 
   private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
@@ -77,18 +79,29 @@ public class DlgJoinChooseColor extends DialogBox
     setText( "Choisissez votre couleur" );
 
     // add color list widget
-    for( int colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
+    Set<EnuColor> freeColors = null;
+    if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
+        .getMaxNumberOfPlayer() )
     {
-      EnuColor color = EnuColor.getColorFromIndex( colorIndex );
-      m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ) );
+      freeColors = GameEngine.model().getGame().getFreeRegistrationColors();
+    }
+    else
+    {
+      freeColors = GameEngine.model().getGame().getFreePlayersColors();
+    }
+    for( EnuColor color : freeColors )
+    {
+      m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
     }
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        EnuColor color = EnuColor.getColorFromIndex( m_colorSelection.getSelectedIndex() );
+        int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
+        EnuColor color = new EnuColor(colorValue);
         m_preview.setUrl( "/images/board/" + color.toString() + "/preview.png" );
+        m_btnOk.setEnabled( true );
       }
     } );
     m_panel.add( m_colorSelection );
@@ -121,7 +134,8 @@ public class DlgJoinChooseColor extends DialogBox
         hide();
       }
     } );
-    m_panel.add( m_btnCancel );
+    m_btnOk.setEnabled( false );
+    m_panel.add( m_btnOk );
 
 
     setWidget( m_panel );

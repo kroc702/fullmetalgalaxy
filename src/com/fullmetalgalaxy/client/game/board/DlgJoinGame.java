@@ -25,7 +25,6 @@ package com.fullmetalgalaxy.client.game.board;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
-import com.fullmetalgalaxy.model.ressources.MessagesRpc;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;

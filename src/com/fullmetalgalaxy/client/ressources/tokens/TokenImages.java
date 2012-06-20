@@ -138,6 +138,7 @@ public class TokenImages
     case Pontoon:
       switch( p_sector )
       {
+      default:
       case North:
         return Icons.s_instance.strategy_pontoon_n();
       case NorthEast:
@@ -150,11 +151,30 @@ public class TokenImages
         return Icons.s_instance.strategy_pontoon_se();
       case SouthWest:
         return Icons.s_instance.strategy_pontoon_sw();
-      default:
       }
+    case Sluice:
+      switch( p_sector )
+      {
+      default:
+      case North:
+        return Icons.s_instance.strategy_sluice_n();
+      case NorthEast:
+        return Icons.s_instance.strategy_sluice_ne();
+      case NorthWest:
+        return Icons.s_instance.strategy_sluice_nw();
+      case South:
+        return Icons.s_instance.strategy_sluice_s();
+      case SouthEast:
+        return Icons.s_instance.strategy_sluice_se();
+      case SouthWest:
+        return Icons.s_instance.strategy_sluice_sw();
+      }
+    case Ore0:
+      return Icons.s_instance.strategy_ore0_01();
     case Ore:
       switch( p_sector )
       {
+      default:
       case South:
       case North:
         return Icons.s_instance.strategy_ore_01();
@@ -164,8 +184,22 @@ public class TokenImages
       case SouthWest:
       case NorthWest:
         return Icons.s_instance.strategy_ore_03();
-      default:
       }
+    case Ore3:
+      switch( p_sector )
+      {
+      default:
+      case South:
+      case North:
+      case SouthWest:
+        return Icons.s_instance.strategy_ore3_01();
+      case SouthEast:
+      case NorthEast:
+      case NorthWest:
+        return Icons.s_instance.strategy_ore3_02();
+      }
+    case Ore5:
+      return Icons.s_instance.strategy_ore5_01();
     default:
       return getTokenImageStrategy( EnuColor.None, p_token, p_sector );
     }
@@ -185,6 +219,13 @@ public class TokenImages
     s_bundle.put( EnuColor.Orange, (Orange)GWT.create( Orange.class ) );
     s_bundle.put( EnuColor.Red, (Red)GWT.create( Red.class ) );
     s_bundle.put( EnuColor.Yellow, (Yellow)GWT.create( Yellow.class ) );
+    s_bundle.put( EnuColor.Brown, (Brown)GWT.create( Brown.class ) );
+    s_bundle.put( EnuColor.Camouflage, (Camouflage)GWT.create( Camouflage.class ) );
+    s_bundle.put( EnuColor.Lightning, (Lightning)GWT.create( Lightning.class ) );
+    s_bundle.put( EnuColor.Pantera, (Pantera)GWT.create( Pantera.class ) );
+    s_bundle.put( EnuColor.Pink, (Pink)GWT.create( Pink.class ) );
+    s_bundle.put( EnuColor.White, (White)GWT.create( White.class ) );
+    s_bundle.put( EnuColor.Zebra, (Zebra)GWT.create( Zebra.class ) );
     s_bundle.put( EnuColor.None, (Colorless)GWT.create( Colorless.class ) );
   }
 
@@ -200,8 +241,38 @@ public class TokenImages
     s_bundleFreighter.put( EnuColor.Orange, (OrangeFreighter)GWT.create( OrangeFreighter.class ) );
     s_bundleFreighter.put( EnuColor.Red, (RedFreighter)GWT.create( RedFreighter.class ) );
     s_bundleFreighter.put( EnuColor.Yellow, (YellowFreighter)GWT.create( YellowFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Brown, (BrownFreighter)GWT.create( BrownFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Camouflage, (CamouflageFreighter)GWT.create( CamouflageFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Lightning, (LightningFreighter)GWT.create( LightningFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Pantera, (PanteraFreighter)GWT.create( PanteraFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Pink, (PinkFreighter)GWT.create( PinkFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.White, (WhiteFreighter)GWT.create( WhiteFreighter.class ) );
+    s_bundleFreighter.put( EnuColor.Zebra, (ZebraFreighter)GWT.create( ZebraFreighter.class ) );
     s_bundleFreighter
         .put( EnuColor.None, (ColorlessFreighter)GWT.create( ColorlessFreighter.class ) );
+  }
+
+  private static Map<Integer, TokenExtraImageBundle> s_bundleExtra = new HashMap<Integer, TokenExtraImageBundle>();
+  static
+  {
+    s_bundleExtra.put( EnuColor.Purple, (PurpleExtra)GWT.create( PurpleExtra.class ) );
+    s_bundleExtra.put( EnuColor.Blue, (BlueExtra)GWT.create( BlueExtra.class ) );
+    s_bundleExtra.put( EnuColor.Cyan, (CyanExtra)GWT.create( CyanExtra.class ) );
+    s_bundleExtra.put( EnuColor.Green, (GreenExtra)GWT.create( GreenExtra.class ) );
+    s_bundleExtra.put( EnuColor.Grey, (GreyExtra)GWT.create( GreyExtra.class ) );
+    s_bundleExtra.put( EnuColor.Olive, (OliveExtra)GWT.create( OliveExtra.class ) );
+    s_bundleExtra.put( EnuColor.Orange, (OrangeExtra)GWT.create( OrangeExtra.class ) );
+    s_bundleExtra.put( EnuColor.Red, (RedExtra)GWT.create( RedExtra.class ) );
+    s_bundleExtra.put( EnuColor.Yellow, (YellowExtra)GWT.create( YellowExtra.class ) );
+    s_bundleExtra.put( EnuColor.Brown, (BrownExtra)GWT.create( BrownExtra.class ) );
+    s_bundleExtra.put( EnuColor.Camouflage, (CamouflageExtra)GWT.create( CamouflageExtra.class ) );
+    s_bundleExtra.put( EnuColor.Lightning, (LightningExtra)GWT.create( LightningExtra.class ) );
+    s_bundleExtra.put( EnuColor.Pantera, (PanteraExtra)GWT.create( PanteraExtra.class ) );
+    s_bundleExtra.put( EnuColor.Pink, (PinkExtra)GWT.create( PinkExtra.class ) );
+    s_bundleExtra.put( EnuColor.White, (WhiteExtra)GWT.create( WhiteExtra.class ) );
+    s_bundleExtra.put( EnuColor.Zebra, (ZebraExtra)GWT.create( ZebraExtra.class ) );
+    s_bundleExtra
+        .put( EnuColor.None, (ColorlessExtra)GWT.create( ColorlessExtra.class ) );
   }
 
 
@@ -228,6 +299,12 @@ public class TokenImages
       return getTokenImageTacticTurret( s_bundle.get( p_color ), p_sector );
     case WeatherHen:
       return getTokenImageTacticWeatherHen( s_bundle.get( p_color ), p_sector );
+    case Crayfish:
+      return getTokenImageTacticCrayfish( s_bundleExtra.get( p_color ), p_sector );
+    case Hovertank:
+      return getTokenImageTacticHovertank( s_bundleExtra.get( p_color ), p_sector );
+    case Tarask:
+      return getTokenImageTacticTarask( s_bundleExtra.get( p_color ), p_sector );
     }
   }
 
@@ -253,6 +330,12 @@ public class TokenImages
       return getTokenImageStrategyTurret( s_bundle.get( p_color ), p_sector );
     case WeatherHen:
       return getTokenImageStrategyWeatherHen( s_bundle.get( p_color ), p_sector );
+    case Crayfish:
+      return getTokenImageStrategyCrayfish( s_bundleExtra.get( p_color ), p_sector );
+    case Hovertank:
+      return getTokenImageStrategyHovertank( s_bundleExtra.get( p_color ), p_sector );
+    case Tarask:
+      return getTokenImageStrategyTarask( s_bundleExtra.get( p_color ), p_sector );
     }
   }
 
@@ -431,6 +514,70 @@ public class TokenImages
     }
   }
 
+  protected static ImageResource getTokenImageStrategyCrayfish(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.strategy_crayfish_n();
+    case NorthEast:
+      return p_bundle.strategy_crayfish_ne();
+    case NorthWest:
+      return p_bundle.strategy_crayfish_nw();
+    case South:
+      return p_bundle.strategy_crayfish_s();
+    case SouthEast:
+      return p_bundle.strategy_crayfish_se();
+    case SouthWest:
+      return p_bundle.strategy_crayfish_sw();
+    }
+  }
+
+  protected static ImageResource getTokenImageStrategyHovertank(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.strategy_hovertank_n();
+    case NorthEast:
+      return p_bundle.strategy_hovertank_ne();
+    case NorthWest:
+      return p_bundle.strategy_hovertank_nw();
+    case South:
+      return p_bundle.strategy_hovertank_s();
+    case SouthEast:
+      return p_bundle.strategy_hovertank_se();
+    case SouthWest:
+      return p_bundle.strategy_hovertank_sw();
+    }
+  }
+
+  protected static ImageResource getTokenImageStrategyTarask(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.strategy_tarask_n();
+    case NorthEast:
+      return p_bundle.strategy_tarask_ne();
+    case NorthWest:
+      return p_bundle.strategy_tarask_nw();
+    case South:
+      return p_bundle.strategy_tarask_s();
+    case SouthEast:
+      return p_bundle.strategy_tarask_se();
+    case SouthWest:
+      return p_bundle.strategy_tarask_sw();
+    }
+  }
+
+
 
   protected static ImageResource getTokenImageTacticBarge(TokenImageBundle p_bundle,
       Sector p_sector)
@@ -606,5 +753,69 @@ public class TokenImages
       return p_bundle.tactic_weatherhen_sw();
     }
   }
+
+  protected static ImageResource getTokenImageTacticCrayfish(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.tactic_crayfish_n();
+    case NorthEast:
+      return p_bundle.tactic_crayfish_ne();
+    case NorthWest:
+      return p_bundle.tactic_crayfish_nw();
+    case South:
+      return p_bundle.tactic_crayfish_s();
+    case SouthEast:
+      return p_bundle.tactic_crayfish_se();
+    case SouthWest:
+      return p_bundle.tactic_crayfish_sw();
+    }
+  }
+
+  protected static ImageResource getTokenImageTacticHovertank(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.tactic_hovertank_n();
+    case NorthEast:
+      return p_bundle.tactic_hovertank_ne();
+    case NorthWest:
+      return p_bundle.tactic_hovertank_nw();
+    case South:
+      return p_bundle.tactic_hovertank_s();
+    case SouthEast:
+      return p_bundle.tactic_hovertank_se();
+    case SouthWest:
+      return p_bundle.tactic_hovertank_sw();
+    }
+  }
+
+  protected static ImageResource getTokenImageTacticTarask(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.tactic_tarask_n();
+    case NorthEast:
+      return p_bundle.tactic_tarask_ne();
+    case NorthWest:
+      return p_bundle.tactic_tarask_nw();
+    case South:
+      return p_bundle.tactic_tarask_s();
+    case SouthEast:
+      return p_bundle.tactic_tarask_se();
+    case SouthWest:
+      return p_bundle.tactic_tarask_sw();
+    }
+  }
+
 
 }

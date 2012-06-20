@@ -80,9 +80,17 @@ public class EnuColor extends MyEnum
     return 16;
   }
 
+  /**
+   * Warning: no i18n !
+   * 
+   * this method can't be internationalized, as its returned value is used in url.
+   */
   @Override
   public String toString()
   {
+    if( isSingleColor() || getValue() == EnuColor.None)
+      return singleColorToString(getValue());
+      
     if( getValue() == EnuColor.Unknown )
     {
       return Messages.getSingleColorString( 0, EnuColor.Unknown );
@@ -105,6 +113,55 @@ public class EnuColor extends MyEnum
       str = Messages.getSingleColorString( 0, EnuColor.None );
     }
     return str;
+  }
+
+  /**
+   * 
+   * @param p_colorValue have to be a single color value.
+   * @return returned value is compliant with local url. so no i18n
+   */
+  public static String singleColorToString(int p_colorValue)
+  {
+    switch( p_colorValue )
+    {
+    case EnuColor.Blue:
+      return "blue";
+    case EnuColor.Cyan:
+      return "cyan";
+    case EnuColor.Grey:
+      return "grey";
+    case EnuColor.Yellow:
+      return "yellow";
+    case EnuColor.Olive:
+      return "olive";
+    case EnuColor.Red:
+      return "red";
+    case EnuColor.Orange:
+      return "orange";
+    case EnuColor.Green:
+      return "green";
+    case EnuColor.Purple:
+      return "purple";
+    case EnuColor.Brown:
+      return "brown";
+    case EnuColor.Camouflage:
+      return "camouflage";
+    case EnuColor.Lightning:
+      return "lightning";
+    case EnuColor.Pantera:
+      return "pantera";
+    case EnuColor.Pink:
+      return "pink";
+    case EnuColor.White:
+      return "white";
+    case EnuColor.Zebra:
+      return "zebra";
+    case EnuColor.None:
+      return "colorless";
+    case EnuColor.Unknown:
+    default:
+      return "unknown";
+    }
   }
 
 

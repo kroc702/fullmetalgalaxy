@@ -25,6 +25,12 @@ package com.fullmetalgalaxy.client.ressources.tokens;
 import com.google.gwt.resources.client.ImageResource;
 
 
+/**
+ * @author Vincent Legendre
+ *
+ * this bundle regroup images for extra units. 
+ * ie not present in default fmp rules
+ */
 public interface TokenExtraImageBundle
 {
   public ImageResource tactic_crayfish_n();

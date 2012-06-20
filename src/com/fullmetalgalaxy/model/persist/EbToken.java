@@ -666,7 +666,7 @@ public class EbToken extends EbBase
   }
 
   /**
-   * this method is used for eclipse debuger
+   * this method is used for eclipse debugger
    */
   @Override
   public String toString()
