@@ -134,12 +134,13 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );
     for( int ix = 0; ix < p_game.getLandWidth(); ix++ )
     {
-      int pxX = ix * (pxHexWidth * 3 / 4);
+      int pxX = ix * (pxHexWidth * 3 / 4) - FmpConstant.getHexWidthMargin( p_zoom );
       int yOffset = 0;
       if( ix % 2 != 0 )
       {
         yOffset = pxHexHeight / 2;
       }
+      yOffset -= FmpConstant.getHexHeightMargin( p_zoom );
       int iy = 0;
       while( iy < p_game.getLandHeight() )
       {
@@ -147,13 +148,15 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
         LandType land = p_game.getLand( ix, iy );
         int hexHeight = 1;
         iy++;
-        while( (iy < p_game.getLandHeight()) && (land == p_game.getLand( ix, iy )) )
+        while( (iy < p_game.getLandHeight()) 
+            && (land == p_game.getLand( ix, iy )) 
+            && (hexHeight < FmpConstant.getTextureHexCount( land )) )
         {
           hexHeight++;
           iy++;
         }
         html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
-            + (hexHeight * pxHexHeight) + "px;\" class=\"fmp-" + land + "\"></div>" );
+            + ((hexHeight * pxHexHeight)+(FmpConstant.getHexHeightMargin( p_zoom )*2)) + "px;\" class=\"fmp-" + land + "\"></div>" );
       }
     }
     html.append( "</div>" );
@@ -168,7 +171,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    String width = "" + FmpConstant.getHexWidth( p_zoom ) + "px";
+    String width = "" + (FmpConstant.getHexWidth( p_zoom )+(FmpConstant.getHexWidthMargin( p_zoom.getValue() )*2)) + "px";
     setWidthRules( s_firstLandRuleIndex + LandType.Sea.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Reef.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Marsh.ordinal(), width );

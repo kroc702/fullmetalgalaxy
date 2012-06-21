@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.model.constant;
 
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.LandType;
 
 
 
@@ -110,6 +111,46 @@ public class FmpConstant
     }
   }
 
+  public static int getHexHeightMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 4;
+    }
+  }
 
+  public static int getHexWidthMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 4;
+    }
+  }
 
+  public static int getTextureHexCount(LandType p_land)
+  {
+   switch(p_land)
+   {
+   default:
+   case Montain: 
+     return 1;
+   case Marsh:
+   case Reef:
+     return 2;
+   case Plain:
+   case Sea:
+     return 4;
+   case None:
+     return 50;
+   }
+  }
+  
 }
