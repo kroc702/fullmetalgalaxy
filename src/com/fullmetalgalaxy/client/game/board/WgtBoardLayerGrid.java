@@ -86,9 +86,9 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
   public static int createGridRules()
   {
     int oldLength = ClientUtil.setCssRule( ".fmp-grid-tactic",
-        "{background: url(images/board/desert/tactic/grid.gif);}" ) - 1;
+        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/tactic/grid.gif);}" ) - 1;
     ClientUtil.setCssRule( ".fmp-grid-strategy",
-        "{background: url(images/board/desert/strategy/grid.gif);}" );
+        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/strategy/grid.gif);}" );
     return oldLength;
   }
 }
