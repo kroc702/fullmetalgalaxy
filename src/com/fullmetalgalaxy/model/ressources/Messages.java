@@ -32,7 +32,6 @@ import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * this class is used to get a localized string of all class located in rpc package as 

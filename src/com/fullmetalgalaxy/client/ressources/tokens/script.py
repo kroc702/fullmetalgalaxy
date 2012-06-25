@@ -11,7 +11,7 @@ g_angles = ( 0, 60, 120, 180, 240, 300 )
 
 
 g_strategySize = {'freighter':3.4, 'barge':3.2, 'weatherhen':2.2, 'tank':1.1, 'crab':1.1, 'heap':1.3, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2, 'ore5':1.2, 'walkerheap':1.3, 'crayfish':1.2,'hovertank':1.2,'tarask':1.4 }
-g_tacticSize = {'freighter':3.4, 'barge':3, 'weatherhen':2.4, 'tank':1.1, 'crab':1.2, 'turret':1.3, 'heap':1.5, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2, 'ore5':1.2, 'walkerheap':1.5, 'crayfish':1.3,'hovertank':1.2,'tarask':1.6 }
+g_tacticSize = {'freighter':3.4, 'barge':3, 'weatherhen':2.4, 'tank':1.1, 'crab':1.2, 'turret':1.3, 'heap':1.5, 'speedboat':1.1, 'ore1':1.2, 'ore3':1.2, 'ore2':1.2, 'ore5':1.3, 'walkerheap':1.5, 'crayfish':1.3,'hovertank':1.2,'tarask':1.6,'sluice':1.1 }
 
 
 g_defaultTacticWidth = 76

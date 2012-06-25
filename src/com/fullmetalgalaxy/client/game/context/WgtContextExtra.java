@@ -187,6 +187,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     else if( action.isBoardTokenSelected() && mainToken.containToken() )
     {
       m_lblTitle.setText( MAppBoard.s_messages.contain() );
+      TokenType lastTokenType = TokenType.None;
 
       // Add list of token contained by the selected token
       // and won't be unload during the preparing action
@@ -196,10 +197,12 @@ public class WgtContextExtra extends WgtView implements ClickHandler
             && (!token.getType().isOre() || mainToken.getType() != TokenType.Freighter) )
         {
           addToken( token );
+          lastTokenType = token.getType();
         }
       }
 
       if( (mainToken.getType() == TokenType.WeatherHen)
+          && (lastTokenType == TokenType.Ore || lastTokenType == TokenType.Ore3)
           && !(action.getSelectedAction() instanceof EbEvtConstruct) )
       {
         // Add list of token that can be constructed

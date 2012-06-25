@@ -147,7 +147,8 @@ public class EbEvtLoad extends AnEventPlay
     }
 
     // check this token is allowed to move from this hexagon
-    if( !p_game.isTokenTideActive( getToken(p_game) ) )
+    if( !p_game.isTokenTideActive( getToken( p_game ) )
+        && (!getToken( p_game ).getType().isOre() || getTokenCarrier( p_game ).getType() != TokenType.Crayfish) )
     {
       throw new RpcFmpException( errMsg()
           .CantMoveOn(
