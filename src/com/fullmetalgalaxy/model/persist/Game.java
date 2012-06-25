@@ -1002,10 +1002,14 @@ public class Game extends GameData implements PathGraph, GameEventStack
     switch( p_token.getType() )
     {
     case Barge:
-      LandType extraLandValue = getLand( (AnBoardPosition)p_token.getExtraPositions().get( 0 ) )
+      LandType extraLandValue = getLand( p_token.getExtraPositions().get( 0 ) )
           .getLandValue( getCurrentTide() );
       if( extraLandValue != LandType.Sea )
       {
+        if( getToken( p_token.getExtraPositions().get( 0 ), TokenType.Sluice ) != null )
+        {
+          return true;
+        }
         return false;
       }
     case Speedboat:
@@ -1013,6 +1017,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Crayfish:
       if( landValue != LandType.Sea )
       {
+        if( getToken( p_token.getPosition(), TokenType.Sluice ) != null )
+        {
+          return true;
+        }
         return false;
       }
       return true;
@@ -1024,12 +1032,12 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Ore:
     case Ore3:
     case Ore5:
-      if( getToken( p_token.getPosition(), TokenType.Pontoon ) != null )
-      {
-        return true;
-      }
       if( landValue == LandType.Sea )
       {
+        if( getToken( p_token.getPosition(), TokenType.Pontoon ) != null )
+        {
+          return true;
+        }
         return false;
       }
       return true;
@@ -1243,6 +1251,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
         }
       }
     }
+    // TODO check if pontoon is connected to freighter at high tide
     return false;
   }
 

@@ -145,7 +145,7 @@ public class EbEvtUnLoad extends AnEventPlay
     {
       if( (token != getToken(p_game)) && (token.getType() != TokenType.Pontoon) )
       {
-        throw new RpcFmpException( "Vous devez dï¿½placer votre pions sur une case libre" );
+        throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
       }
       if( token.getType() == TokenType.Pontoon )
       {

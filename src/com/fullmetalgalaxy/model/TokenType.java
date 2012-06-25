@@ -204,6 +204,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Tank:
     case Heap:
     case WeatherHen:
+    case Tarask:
+    case Hovertank:
       return 2;
     case Freighter:
     case Barge:

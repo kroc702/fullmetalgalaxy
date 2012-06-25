@@ -368,7 +368,7 @@ public interface Icons extends ClientBundle
   // colorless token
   // ===============
 
-  @Source("tokens/render/colorless/tactic/ore00-0001.png")
+  @Source("tokens/render/colorless/tactic/ore0240-0001.png")
   public ImageResource tactic_ore0_01();
 
   @Source("tokens/render/colorless/strategy/ore00-0001.png")
@@ -397,7 +397,7 @@ public interface Icons extends ClientBundle
   @Source("tokens/render/colorless/tactic/ore30-0001.png")
   public ImageResource tactic_ore3_01();
 
-  @Source("tokens/render/colorless/tactic/ore3180-0001.png")
+  @Source("tokens/render/colorless/tactic/ore3240-0001.png")
   public ImageResource tactic_ore3_02();
 
   @Source("tokens/render/colorless/strategy/ore30-0001.png")
@@ -459,6 +459,27 @@ public interface Icons extends ClientBundle
   @Source("tokens/render/colorless/strategy/pontoon60-0001.png")
   public ImageResource strategy_pontoon_se();
 
+
+  @Source("tokens/render/colorless/tactic/sluice0-0001.png")
+  public ImageResource tactic_sluice_n();
+
+  @Source("tokens/render/colorless/tactic/sluice300-0001.png")
+  public ImageResource tactic_sluice_ne();
+
+  @Source("tokens/render/colorless/tactic/sluice60-0001.png")
+  public ImageResource tactic_sluice_nw();
+
+  // @Source("tokens/render/colorless/tactic/sluice180-0001.png")
+  @Source("tokens/render/colorless/tactic/sluice0-0001.png")
+  public ImageResource tactic_sluice_s();
+
+  // @Source("tokens/render/colorless/tactic/sluice120-0001.png")
+  @Source("tokens/render/colorless/tactic/sluice300-0001.png")
+  public ImageResource tactic_sluice_sw();
+
+  // @Source("tokens/render/colorless/tactic/sluice240-0001.png")
+  @Source("tokens/render/colorless/tactic/sluice60-0001.png")
+  public ImageResource tactic_sluice_se();
 
   @Source("tokens/render/colorless/strategy/sluice0-0001.png")
   public ImageResource strategy_sluice_n();

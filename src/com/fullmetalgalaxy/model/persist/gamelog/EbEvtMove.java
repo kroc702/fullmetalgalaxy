@@ -146,11 +146,13 @@ public class EbEvtMove extends AnEventPlay
     Set<EbToken> tokensOnWay = p_game.getAllToken( getNewPosition() );
     for( EbToken token : tokensOnWay )
     {
-      if( (token != getToken(p_game)) && (token.getType() != TokenType.Pontoon) )
+      if( (token != getToken( p_game )) && (token.getType() != TokenType.Pontoon)
+          && (token.getType() != TokenType.Sluice) )
       {
+        // TODO i18n
         throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
       }
-      if( token.getType() == TokenType.Pontoon )
+      if( token.getType() == TokenType.Pontoon || token.getType() == TokenType.Sluice )
       {
         if( token.canLoad( getToken(p_game).getType() ) )
         {
@@ -158,7 +160,10 @@ public class EbEvtMove extends AnEventPlay
         }
         else
         {
-          throw new RpcFmpException( "Ce bateau ne peut pas se deplacer sur le ponton" );
+          // TODO i18n
+          throw new RpcFmpException( Messages.getTokenString( 0, getToken( p_game ) )
+              + " ne peut pas se deplacer sur le "
+              + Messages.getTokenString( 0, token ) );
         }
       }
     }
