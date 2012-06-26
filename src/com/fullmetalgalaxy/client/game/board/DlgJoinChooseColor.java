@@ -51,7 +51,7 @@ public class DlgJoinChooseColor extends DialogBox
 {
   // UI
   private ListBox m_colorSelection = new ListBox();
-  private Image m_preview = new Image("/images/board/icon.gif");
+  private Image m_preview = new Image();
 
   private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
@@ -81,6 +81,7 @@ public class DlgJoinChooseColor extends DialogBox
 
     // add color list widget
     Set<EnuColor> freeColors = null;
+    EnuColor firstColor = new EnuColor( EnuColor.None );
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
         .getMaxNumberOfPlayer() )
     {
@@ -93,8 +94,13 @@ public class DlgJoinChooseColor extends DialogBox
     for( EnuColor color : freeColors )
     {
       m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
+      if( firstColor.getValue() == EnuColor.None )
+      {
+        firstColor = color;
+      }
     }
-    m_colorSelection.setSelectedIndex( -1 );
+    m_colorSelection.setSelectedIndex( 0 );
+    m_preview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override
@@ -130,7 +136,9 @@ public class DlgJoinChooseColor extends DialogBox
       @Override
       public void onClick(ClickEvent p_event)
       {
-        EnuColor color = EnuColor.getColorFromIndex( m_colorSelection.getSelectedIndex() );
+        int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection
+            .getSelectedIndex() ) );
+        EnuColor color = new EnuColor( colorValue );
         EbGameJoin action = new EbGameJoin();
         action.setGame( GameEngine.model().getGame() );
         action.setAccountId( AppMain.instance().getMyAccount().getId() );
@@ -140,7 +148,6 @@ public class DlgJoinChooseColor extends DialogBox
         hide();
       }
     } );
-    m_btnOk.setEnabled( false );
     hpanel.add( m_btnOk );
     m_panel.add( hpanel );
 

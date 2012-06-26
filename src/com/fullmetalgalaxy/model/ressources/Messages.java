@@ -98,7 +98,7 @@ public class Messages
       return SharedI18n.getMessages( p_accountId ).colorless();
     case EnuColor.Unknown:
     default:
-      return new EnuColor( p_colorValue ).toString();
+      return "Unknown";
     }
   }
 
