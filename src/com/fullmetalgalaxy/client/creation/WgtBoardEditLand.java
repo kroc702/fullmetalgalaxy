@@ -71,7 +71,7 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
     {
       m_lastGameId = -1;
     }
-    super.onModelChange( p_forceRedraw );
+    super.onModelChange( true );
   }
 
   /*private void redrawAllLands()

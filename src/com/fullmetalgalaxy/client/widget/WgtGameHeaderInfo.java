@@ -99,6 +99,10 @@ public class WgtGameHeaderInfo extends Composite implements ModelUpdateEvent.Han
     m_maxPlayerCount.addItem( "6" );
     m_maxPlayerCount.addItem( "7" );
     m_maxPlayerCount.addItem( "8" );
+    m_maxPlayerCount.addItem( "9" );
+    m_maxPlayerCount.addItem( "10" );
+    m_maxPlayerCount.addItem( "11" );
+    m_maxPlayerCount.addItem( "12" );
     m_maxPlayerCount.setVisibleItemCount( 1 );
     m_maxPlayerCount.setItemSelected( 2, true );
     m_maxPlayerCount.addChangeHandler( new ChangeHandler()

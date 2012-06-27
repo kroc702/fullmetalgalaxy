@@ -322,7 +322,7 @@ public class GameGenerator
     {
       // Au Debut il y avait la Mer ...
       // Et Dieu crea la Terre ...
-      max = (((getGame().getLandHeight() * getGame().getLandWidth()) * s_landPercent) / 100) / 13;
+      max = (((getGame().getLandHeight() * getGame().getLandWidth()) * s_landPercent) / 100) / 6;
       for( int i = 0; i < max; i++ )
       {
         do
