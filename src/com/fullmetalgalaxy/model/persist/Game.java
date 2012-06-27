@@ -1251,7 +1251,15 @@ public class Game extends GameData implements PathGraph, GameEventStack
         }
       }
     }
-    // TODO check if pontoon is connected to freighter at high tide
+    // check if pontoon is connected to freighter at high tide
+    if( getCurrentTide() == Tide.Hight )
+    {
+      for( Sector sector : Sector.values() )
+      {
+        if( getToken( p_position.getNeighbour( sector ), TokenType.Freighter ) != null )
+          return true;
+      }
+    }
     return false;
   }
 
@@ -1282,6 +1290,15 @@ public class Game extends GameData implements PathGraph, GameEventStack
         {
           return true;
         }
+      }
+    }
+    // check if pontoon is connected to freighter at high tide
+    if( getCurrentTide() == Tide.Hight )
+    {
+      for( Sector sector : Sector.values() )
+      {
+        if( getToken( p_token.getPosition().getNeighbour( sector ), TokenType.Freighter ) != null )
+          return true;
       }
     }
     return false;
