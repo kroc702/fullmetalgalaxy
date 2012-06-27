@@ -92,7 +92,8 @@ public class PMServlet extends HttpServlet
       msg.setSubject( "[FMG] no subject", "text/plain" );
       msg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
       msg.setFrom( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
-      
+      EbAccount fromAccount = null;
+
       // Parse the request
       FileItemIterator iter = upload.getItemIterator( p_request );
       while( iter.hasNext() )
@@ -122,16 +123,25 @@ public class PMServlet extends HttpServlet
           }
           if( "fromid".equalsIgnoreCase( item.getFieldName() ) )
           {
-            EbAccount account = null;
             try {
-              account = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
+              fromAccount = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
             } catch(NumberFormatException e) {}
-            if( account != null && account.getAuthProvider() == AuthProvider.Google )
+            if( fromAccount != null && fromAccount.getAuthProvider() == AuthProvider.Google )
             {
-              msg.setFrom( new InternetAddress( account.getEmail(), account.getPseudo() ) );
+              msg.setFrom( new InternetAddress( fromAccount.getEmail(), fromAccount.getPseudo() ) );
             }
           }
         }
+      }
+
+      // add identity of sender
+      // TODO we should create mail like pseudo@fullmetalgalaxy2.appspot.com
+      // instead of this trick
+      if( fromAccount != null )
+      {
+        msg.setContent( "This message is sended by " + fromAccount.getPseudo()
+            + ", answer here: http://www.fullmetalgalaxy.com/email.jsp?id=" + fromAccount.getId()
+            + "\n\n" + (String)msg.getContent(), "text/plain" );
       }
 
       msg.addRecipients( Message.RecipientType.BCC, InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
