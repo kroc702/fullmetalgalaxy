@@ -56,9 +56,11 @@
 			</ul>
 		</li>			
         <li>
-          <a class="addthis_button_compact"></a>
-          <script type="text/javascript">var addthis_config={ui_language: "fr"}</script>
-          <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fb165675985725b"></script>
+        <%-- addthis button was causing issue with ClientUtils.jsNewCssRules method ! --%>
+        <span class='st_sharethis' displayText=''></span>
+        <script type="text/javascript">var switchTo5x=false;</script>
+		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+		<script type="text/javascript">stLight.options({publisher: "ur-eb8265ad-beed-67c5-b458-486fe5f7d419"}); </script>
         </li>		
 		<li><a href="" ><img src="/images/icons/flag16_fr.png" /></a>
 			<ul>
