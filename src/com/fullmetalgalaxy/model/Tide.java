@@ -29,11 +29,13 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 /**
  * @author Kroc
  *
+ * I known there is a misspelling in enum name... but changing that cause issue in loading database
  */
 public enum Tide implements IsSerializable
 {
 
   Unknown, Low, Medium, Hight;
+
 
   public static Tide getRandom()
   {

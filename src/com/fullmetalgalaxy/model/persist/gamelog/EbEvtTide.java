@@ -115,7 +115,7 @@ public class EbEvtTide extends AnEvent
     
     // check that all pontoon are still linked to ground
     m_PontoonIds = new ArrayList<Long>();
-    if(getOldTide().ordinal() < getNextTide().ordinal() )
+    if( getOldTide().ordinal() < game.getCurrentTide().ordinal() )
     {
       for(EbToken token : p_game.getSetToken())
       {

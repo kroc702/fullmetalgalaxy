@@ -111,20 +111,54 @@ public class TokenImages
         return Icons.s_instance.tactic_pontoon_sw();
       default:
       }
+    case Sluice:
+      switch( p_sector )
+      {
+      default:
+      case North:
+        return Icons.s_instance.tactic_sluice_n();
+      case NorthEast:
+        return Icons.s_instance.tactic_sluice_ne();
+      case NorthWest:
+        return Icons.s_instance.tactic_sluice_nw();
+      case South:
+        return Icons.s_instance.tactic_sluice_s();
+      case SouthEast:
+        return Icons.s_instance.tactic_sluice_se();
+      case SouthWest:
+        return Icons.s_instance.tactic_sluice_sw();
+      }
+    case Ore0:
+      return Icons.s_instance.tactic_ore0_01();
     case Ore:
       switch( p_sector )
       {
+      default:
       case South:
       case North:
         return Icons.s_instance.tactic_ore_01();
-      case NorthEast:
       case SouthEast:
+      case NorthEast:
         return Icons.s_instance.tactic_ore_02();
-      case NorthWest:
       case SouthWest:
+      case NorthWest:
         return Icons.s_instance.tactic_ore_03();
-      default:
       }
+    case Ore3:
+      switch( p_sector )
+      {
+      default:
+      case South:
+      case North:
+      case SouthWest:
+        return Icons.s_instance.tactic_ore3_01();
+      case SouthEast:
+      case NorthEast:
+      case NorthWest:
+        return Icons.s_instance.tactic_ore3_02();
+      }
+    case Ore5:
+      return Icons.s_instance.tactic_ore5_01();
     default:
       return getTokenImageTactic( EnuColor.None, p_token, p_sector );
     }

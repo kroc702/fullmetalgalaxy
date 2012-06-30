@@ -523,7 +523,8 @@ public class EventsPlayBuilder implements GameEventStack
       else if( isBoardTokenSelected() )
       {
         // a token was already selected
-        if( (token != null) && (token.getType() == TokenType.Pontoon)
+        if( (token != null)
+            && (token.getType() == TokenType.Pontoon || token.getType() == TokenType.Sluice)
             && !(getSelectedAction() instanceof EbEvtFire) )
         {
           // pontoon don't really load other token

@@ -154,6 +154,20 @@ public class BoardIconsRessource
       return Icons.s_instance.red_icon16();
     case EnuColor.Yellow:
       return Icons.s_instance.yellow_icon16();
+    case EnuColor.Brown:
+      return Icons.s_instance.brown_icon16();
+    case EnuColor.Camouflage:
+      return Icons.s_instance.camouflage_icon16();
+    case EnuColor.Lightning:
+      return Icons.s_instance.lightning_icon16();
+    case EnuColor.Pantera:
+      return Icons.s_instance.panter_icon16();
+    case EnuColor.Pink:
+      return Icons.s_instance.pink_icon16();
+    case EnuColor.White:
+      return Icons.s_instance.white_icon16();
+    case EnuColor.Zebra:
+      return Icons.s_instance.zebra_icon16();
     }
   }
 

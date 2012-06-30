@@ -35,10 +35,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Kroc
@@ -50,11 +51,11 @@ public class DlgJoinChooseColor extends DialogBox
 {
   // UI
   private ListBox m_colorSelection = new ListBox();
-  private Image m_preview = new Image("/images/board/icon.gif");
+  private Image m_preview = new Image();
 
   private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
-  private Panel m_panel = new FlowPanel();
+  private Panel m_panel = new VerticalPanel();
 
   private static DlgJoinChooseColor s_dlg = null;
 
@@ -80,6 +81,7 @@ public class DlgJoinChooseColor extends DialogBox
 
     // add color list widget
     Set<EnuColor> freeColors = null;
+    EnuColor firstColor = new EnuColor( EnuColor.None );
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
         .getMaxNumberOfPlayer() )
     {
@@ -92,7 +94,13 @@ public class DlgJoinChooseColor extends DialogBox
     for( EnuColor color : freeColors )
     {
       m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
+      if( firstColor.getValue() == EnuColor.None )
+      {
+        firstColor = color;
+      }
     }
+    m_colorSelection.setSelectedIndex( 0 );
+    m_preview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override
@@ -100,13 +108,17 @@ public class DlgJoinChooseColor extends DialogBox
       {
         int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
         EnuColor color = new EnuColor(colorValue);
-        m_preview.setUrl( "/images/board/" + color.toString() + "/preview.png" );
+        m_preview.setUrl( "/images/board/" + color.toString() + "/preview.jpg" );
         m_btnOk.setEnabled( true );
       }
     } );
-    m_panel.add( m_colorSelection );
-    m_panel.add( m_preview );
+    Panel hpanel = new HorizontalPanel();
+    hpanel.add( m_colorSelection );
+    hpanel.add( m_preview );
+    m_panel.add( hpanel );
 
+    // add buttons
+    hpanel = new HorizontalPanel();
     // add cancel button
     m_btnCancel.addClickHandler( new ClickHandler()
     {
@@ -116,7 +128,7 @@ public class DlgJoinChooseColor extends DialogBox
         hide();
       }
     } );
-    m_panel.add( m_btnCancel );
+    hpanel.add( m_btnCancel );
 
     // add OK button
     m_btnOk.addClickHandler( new ClickHandler()
@@ -124,7 +136,9 @@ public class DlgJoinChooseColor extends DialogBox
       @Override
       public void onClick(ClickEvent p_event)
       {
-        EnuColor color = EnuColor.getColorFromIndex( m_colorSelection.getSelectedIndex() );
+        int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection
+            .getSelectedIndex() ) );
+        EnuColor color = new EnuColor( colorValue );
         EbGameJoin action = new EbGameJoin();
         action.setGame( GameEngine.model().getGame() );
         action.setAccountId( AppMain.instance().getMyAccount().getId() );
@@ -134,9 +148,8 @@ public class DlgJoinChooseColor extends DialogBox
         hide();
       }
     } );
-    m_btnOk.setEnabled( false );
-    m_panel.add( m_btnOk );
-
+    hpanel.add( m_btnOk );
+    m_panel.add( hpanel );
 
     setWidget( m_panel );
   }
