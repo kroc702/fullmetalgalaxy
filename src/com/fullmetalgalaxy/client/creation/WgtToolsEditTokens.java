@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -60,6 +61,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
   private ListBox m_lstColor = new ListBox();
   private List<EnuColor> m_colors = new ArrayList<EnuColor>();
   private Image m_currentTool = new Image();
+  private Label m_lblUnit = new Label();
   private Map<Image, TokenType> m_tools = new HashMap<Image, TokenType>();
 
   WgtBoardEditTokens m_wgtBoardEditTokens = null;
@@ -117,6 +119,8 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
         TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
             m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ) ).applyTo(
         m_currentTool );
+    m_panel.add( m_lblUnit );
+    m_lblUnit.setText( Messages.getTokenString( 0, m_wgtBoardEditTokens.getTokenType() ) );
     m_panel.add( m_lstColor );
 
     if( m_wgtBoardEditTokens.getColor().getValue() == EnuColor.None )
@@ -170,6 +174,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
         TokenImages.getTokenImage( m_wgtBoardEditTokens.getColor(), EnuZoom.Medium,
             m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ) ).applyTo(
         m_currentTool );
+    m_lblUnit.setText( Messages.getTokenString( 0, m_wgtBoardEditTokens.getTokenType() ) );
     if( p_event.getSource() == m_btnOre )
     {
       GameGenerator.populateOres();
