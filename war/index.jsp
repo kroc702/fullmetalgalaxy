@@ -1,4 +1,4 @@
-<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
+<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 
@@ -80,7 +80,36 @@
 
 
 		<div id="keyPointsCollumn" class="collumn">
-			<fmg:resource key="index_keypoints"/>
+<% if(Auth.isUserLogged( request, response )) { 
+  String myPseudo = Auth.getUserPseudo( request, response );
+  com.googlecode.objectify.Query<EbGamePreview> gameList = FmgDataStore.dao().query(EbGamePreview.class)
+	    						.filter( "m_status in", new GameStatus[] {GameStatus.Running, GameStatus.Pause, GameStatus.Open} )
+	    						.filter( "m_setRegistration.m_account.m_pseudo", myPseudo )
+	    						.filter( "m_configGameTime in", ConfigGameTime.values()  )
+	    						.order("-m_creationDate");
+  gameList.limit( 5 );
+	%>
+	<fmg:resource key="index_mygames"/>
+	<%
+	int gameCount = 0;
+	for( EbGamePreview game : gameList )
+	{
+	  gameCount++;
+	  out.println( "<a href='" + FmpConstant.getBaseUrl() + "/game.jsp?id=" + game.getId()
+	      + "'><div class='article'><article>"
+	      // <h4> tag cause graphic glich on IE7
+	      + "<div class='h4'>" + game.getIconsAsHtml() + game.getName()
+	      + "</div></article></div></a>" );
+	}
+	if( gameCount > 0 ) { %>
+	<fmg:resource key="index_allmygames"/>
+	<% } else { %>  
+	<fmg:resource key="index_nogamesuscribe"/>
+	<% } %>
+
+<% } else { %>
+	<fmg:resource key="index_keypoints"/>
+<% } %>
 		</div>
 		
 		<div id="statCollumn" class="collumn">
