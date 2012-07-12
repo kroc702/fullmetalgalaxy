@@ -33,9 +33,7 @@ import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author Vincent Legendre
@@ -64,12 +62,12 @@ public class TokenImages
   public static ImageResource getTokenImage(EnuColor p_color, int p_zoom,
       TokenType p_token, Sector p_sector)
   {
-    if( s_bundle.isEmpty() )
-    {
-      return Icons.s_instance.cancel32();
-    }
     if( p_color.isSingleColor() )
     {
+      if( s_bundle.isEmpty() )
+      {
+        return Icons.s_instance.cancel32();
+      }
       switch( p_zoom )
       {
       default:
@@ -105,16 +103,8 @@ public class TokenImages
     loadAllBundle();
   }
 
-  private static void loadAllBundle()
+  public static void loadAllBundle()
   {
-    GWT.runAsync(new RunAsyncCallback() {
-      @Override
-      public void onFailure(Throwable caught) {
-        Window.alert( "Error while downloading script: "+caught.getLocalizedMessage() );
-      }
-
-      @Override
-      public void onSuccess() {
         if( s_bundle.isEmpty() )
         {
           s_bundle.put( EnuColor.Purple, (Purple)GWT.create( Purple.class ) );
@@ -183,8 +173,6 @@ public class TokenImages
           s_bundleExtra.put( EnuColor.Zebra, (ZebraExtra)GWT.create( ZebraExtra.class ) );
           s_bundleExtra.put( EnuColor.None, (ColorlessExtra)GWT.create( ColorlessExtra.class ) );
         }
-      }
-    } );
   }
 
 
