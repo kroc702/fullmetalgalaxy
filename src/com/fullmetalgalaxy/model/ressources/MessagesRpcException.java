@@ -42,6 +42,8 @@ public interface MessagesRpcException extends Messages
   String mustLandFreighter();
   String cantEndTurnTwoTankMontain();
   String cantRepairTurretFireCover();
+
+  String cantRepairTurretTwice();
   String cantEnterLeaveFireCover();
   String cantMoveAndConvert();
   String boardLocked();

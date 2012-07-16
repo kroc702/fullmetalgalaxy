@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -175,7 +176,8 @@ public class EbEvtPlayerTurn extends AnEvent
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.getBulletCount() < token.getType().getMaxBulletCount()
+      if( token.getType() != TokenType.Freighter
+          && token.getBulletCount() < token.getType().getMaxBulletCount()
           && nextPlayerColor.isColored( token.getColor() ) )
       {
         token.setBulletCount( token.getBulletCount()

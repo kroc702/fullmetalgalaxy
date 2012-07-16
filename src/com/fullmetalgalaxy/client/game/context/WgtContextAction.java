@@ -603,14 +603,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
 
       if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
           && (mainSelectedToken.getType() == TokenType.Freighter) && (myRegistration != null)
-          && (myRegistration.getTurretsToRepair() > 0) && (myRegistration.getPtAction() >= 2)
-          && (!mainSelectedToken.getEnuColor().isColored( myRegistration.getSingleColor() ))
+          && (mainSelectedToken.getBulletCount() > 0) && (myRegistration.getPtAction() >= 2)
           && (myRegistration.getEnuColor().isColored( mainSelectedToken.getColor() ))
           && (model.getGame().getToken( action.getSelectedPosition(), TokenType.Turret ) == null)
           && (!mainSelectedToken.getPosition().equals( action.getSelectedPosition() )) )
       {
-        // player select a destroyed pod. of a freighter he own (but different
-        // from the original one)
+        // player select a destroyed pod. of a freighter he own
         // add the repair turret button
         m_panel.add( m_btnRepairTurret );
       }

@@ -244,6 +244,15 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return null;
   }
 
+  @Override
+  public AnEvent getLastGameLog(int p_count)
+  {
+    if( getLogs().size() < p_count )
+    {
+      return null;
+    }
+    return getLogs().get( getLogs().size() - (1 + p_count) );
+  }
 
   public AnEvent getLastLog()
   {
@@ -255,6 +264,20 @@ public class Game extends GameData implements PathGraph, GameEventStack
     if( event == null )
     {
       return getLastGameLog();
+    }
+    return event;
+  }
+
+  public AnEvent getLastLog(int p_count)
+  {
+    if( m_eventStack == null )
+    {
+      return getLastGameLog( p_count );
+    }
+    AnEvent event = m_eventStack.getLastGameLog( p_count );
+    if( event == null )
+    {
+      return getLastGameLog( p_count );
     }
     return event;
   }

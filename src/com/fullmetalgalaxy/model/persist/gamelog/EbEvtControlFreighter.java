@@ -44,6 +44,8 @@ public class EbEvtControlFreighter extends AnEventPlay
   private EbBase m_packedOldRegistration = null;
   private int m_oldRegistrationSingleColor = EnuColor.None;
   private boolean m_wasColorlessFreighter = false;
+  // ie bullet count from freighter
+  private float m_oldTurretToRepair = 0f;
 
   /**
    * 
@@ -205,7 +207,8 @@ public class EbEvtControlFreighter extends AnEventPlay
           EnuColor.addColor( getMyRegistration( p_game ).getColor(), getTokenFreighter( p_game )
               .getColor() ) );
     }
-    getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() + 3 );
+    m_oldTurretToRepair = getTokenFreighter( p_game ).getBulletCount();
+    getTokenFreighter( p_game ).setBulletCount( 3 );
 
     execFireDisabling( p_game );
     // we need to force recomputing fire cover even if fire disabling flags was
@@ -242,7 +245,7 @@ public class EbEvtControlFreighter extends AnEventPlay
         }
       }
     }
-    getMyRegistration(p_game).setTurretsToRepair( getMyRegistration(p_game).getTurretsToRepair() - 3 );
+    getTokenFreighter( p_game ).setBulletCount( m_oldTurretToRepair );
 
     p_game.invalidateFireCover();
     unexecFireDisabling( p_game );

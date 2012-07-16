@@ -52,6 +52,9 @@ public class EbToken extends EbBase
   /**
    * due to legacy, we must keep bullet count as integer.
    * So, it represent 1/10th of a bullet.
+   * 
+   * depending of unit, it can also represent construction count for weather hen or
+   * turret repair for freighter. 
    */
   private int m_bulletCount = 0;
 

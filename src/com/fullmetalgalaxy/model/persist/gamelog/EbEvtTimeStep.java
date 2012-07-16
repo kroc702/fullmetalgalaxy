@@ -26,6 +26,7 @@ import java.util.Date;
 
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -137,7 +138,8 @@ public class EbEvtTimeStep extends AnEvent
     // update all tokens bullets count
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.getBulletCount() < token.getType().getMaxBulletCount() )
+      if( token.getType() != TokenType.Freighter
+          && token.getBulletCount() < token.getType().getMaxBulletCount() )
       {
         token.setBulletCount( token.getBulletCount()
             + game.getEbConfigGameTime().getBulletCountIncrement() );
