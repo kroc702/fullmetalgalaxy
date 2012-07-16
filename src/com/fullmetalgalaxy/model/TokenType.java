@@ -200,6 +200,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     {
     case Turret:
       return 10;
+    case Freighter:
+      return 3;
     case Speedboat:
     case Tank:
     case Heap:
@@ -207,7 +209,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Tarask:
     case Hovertank:
       return 2;
-    case Freighter:
     case Barge:
     case Crab:
     case Pontoon:

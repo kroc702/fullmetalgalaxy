@@ -115,6 +115,12 @@ public class WgtContextToken extends Composite
       {
         absPanel.add( new HTML( Messages.getTokenString( 0, TokenType.Ore ) +" : " 
             + token.getContainOre() ), 150, 0 );
+        if( token.getBulletCount() > 0 )
+        {
+          absPanel.add(
+              new HTML( MAppBoard.s_messages.repairTurret() + " : " + token.getBulletCount() ),
+              150, 30 );
+        }
       }
       else if( token != null && token.getType().isDestroyer() )
       {

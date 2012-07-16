@@ -23,7 +23,6 @@
 package com.fullmetalgalaxy.model.persist;
 
 import com.fullmetalgalaxy.model.SharedMethods;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 
 
 

@@ -164,6 +164,10 @@ public class ArticleFactory
     {
       e.printStackTrace();
     }
+
+    // for debug purpose only !
+    logger.severe( "create article from rss: " + article.getTitle() );
+
     article.setPubDate( pubDate );
     return article;
   }

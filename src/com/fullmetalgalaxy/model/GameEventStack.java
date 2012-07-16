@@ -35,4 +35,12 @@ public interface GameEventStack
 {
   @Transient
   public AnEvent getLastGameLog();
+
+  /**
+   * 
+   * @param p_count number of event in past
+   * @return
+   */
+  @Transient
+  public AnEvent getLastGameLog(int p_count);
 }

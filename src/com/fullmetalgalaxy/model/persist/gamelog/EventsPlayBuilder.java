@@ -363,6 +363,16 @@ public class EventsPlayBuilder implements GameEventStack
     return getLastAction();
   }
 
+  @Override
+  public AnEvent getLastGameLog(int p_count)
+  {
+    if( getActionList().size() < p_count )
+    {
+      return null;
+    }
+    return getAction( getActionList().size() - (1 + p_count) );
+  }
+
   /**
    * @return the lastUpdate
    */

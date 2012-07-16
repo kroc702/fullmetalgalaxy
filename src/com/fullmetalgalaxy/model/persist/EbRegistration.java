@@ -79,7 +79,6 @@ public class EbRegistration extends EbBase
   private int m_singleColor = EnuColor.Unknown;
   private int m_ptAction = 0;
   private int m_orderIndex = 0;
-  private int m_turretsToRepair = 0;
   /** number of weather hen at the last time step change. */
   private int m_workingWeatherHenCount = 0;
 
@@ -322,21 +321,6 @@ public class EbRegistration extends EbBase
   }
 
 
-  /**
-   * @return the turretsToRepair
-   */
-  public int getTurretsToRepair()
-  {
-    return m_turretsToRepair;
-  }
-
-  /**
-   * @param p_turretsToRepair the turretsToRepair to set
-   */
-  public void setTurretsToRepair(int p_turretsToRepair)
-  {
-    m_turretsToRepair = p_turretsToRepair;
-  }
 
   /**
    * @return the endTurnDate

@@ -29,7 +29,6 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -98,21 +97,35 @@ public class EbEvtRepair extends AnEventPlay
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can repair only destroyed turret" );
     }
-    if( getMyRegistration(p_game).getTurretsToRepair() <= 0 )
+    if( freighter.getBulletCount() <= 0 )
     {
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair any more turrets" );
-    }
-    if( getMyRegistration( p_game ).getOriginalColor() == freighter.getColor() )
-    {
-      // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "you can't repair your original turrets" );
     }
     EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
         getPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
       throw new RpcFmpException( errMsg().cantRepairTurretFireCover() );
+    }
+    // check that no other turret construction occur on this hex since last
+    // control
+    int iback = 0;
+    AnEvent event = p_game.getLastLog( iback );
+    while( event != null )
+    {
+      if( event instanceof EbEvtControlFreighter
+          && ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getId() == freighter
+              .getId() )
+      {
+        break;
+      }
+      if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition().equals( getPosition() ) )
+      {
+        throw new RpcFmpException( errMsg().cantRepairTurretTwice() );
+      }
+      iback++;
+      event = p_game.getLastLog( iback );
     }
   }
 
@@ -131,8 +144,7 @@ public class EbEvtRepair extends AnEventPlay
     p_game.moveToken( turret, getPosition() );
     turret.getPosition().setSector( freighter.getPosition().getNeighbourSector( getPosition() ) );
     turret.incVersion();
-    EbRegistration registration = getMyRegistration(p_game);
-    registration.setTurretsToRepair( registration.getTurretsToRepair() - 1 );
+    freighter.setBulletCount( freighter.getBulletCount() - 1 );
 
     execFireDisabling( p_game, getPosition() );
   }
@@ -144,11 +156,11 @@ public class EbEvtRepair extends AnEventPlay
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
+    EbToken freighter = p_game.getToken( getPosition(), TokenType.Freighter );
     EbToken turret = p_game.getToken( getPosition(), TokenType.Turret );
     turret.setLocation( Location.Graveyard );
     turret.decVersion();
-    EbRegistration registration = getMyRegistration(p_game);
-    registration.setTurretsToRepair( registration.getTurretsToRepair() + 1 );
+    freighter.setBulletCount( freighter.getBulletCount() + 1 );
 
     unexecFireDisabling( p_game );
   }
