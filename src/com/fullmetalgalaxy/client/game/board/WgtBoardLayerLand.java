@@ -134,17 +134,16 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );
     for( int ix = 0; ix < p_game.getLandWidth(); ix++ )
     {
-      int pxX = ix * (pxHexWidth * 3 / 4) - FmpConstant.getHexWidthMargin( p_zoom );
+      int tmppxX = ix * (pxHexWidth * 3 / 4);
       int yOffset = 0;
       if( ix % 2 != 0 )
       {
         yOffset = pxHexHeight / 2;
       }
-      yOffset -= FmpConstant.getHexHeightMargin( p_zoom );
       int iy = 0;
       while( iy < p_game.getLandHeight() )
       {
-        int pxY = iy * pxHexHeight + yOffset;
+        int pxY = iy * pxHexHeight;
         LandType land = p_game.getLand( ix, iy );
         int hexHeight = 1;
         iy++;
@@ -155,8 +154,23 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
           hexHeight++;
           iy++;
         }
-        html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
-            + ((hexHeight * pxHexHeight)+(FmpConstant.getHexHeightMargin( p_zoom )*2)) + "px;\" class=\"fmp-" + land + "\"></div>" );
+        int pxX = tmppxX;
+        if( land == LandType.Montain )
+        {
+          pxX -= FmpConstant.getHexMontainWidthMargin( p_zoom );
+          pxY += yOffset - FmpConstant.getHexMontainHeightMargin( p_zoom );
+          html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
+              + ((hexHeight * pxHexHeight) + FmpConstant.getHexMontainHeightMargin( p_zoom ) + (FmpConstant
+                  .getHexHeightMargin( p_zoom ))) + "px;\" class=\"fmp-" + land + "\"></div>" );
+        }
+        else
+        {
+          pxX -= FmpConstant.getHexWidthMargin( p_zoom );
+          pxY += yOffset - FmpConstant.getHexHeightMargin( p_zoom );
+          html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
+              + ((hexHeight * pxHexHeight) + (FmpConstant.getHexHeightMargin( p_zoom ) * 2))
+              + "px;\" class=\"fmp-" + land + "\"></div>" );
+        }
       }
     }
     html.append( "</div>" );
@@ -176,6 +190,9 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     setWidthRules( s_firstLandRuleIndex + LandType.Reef.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Marsh.ordinal(), width );
     setWidthRules( s_firstLandRuleIndex + LandType.Plain.ordinal(), width );
+    width = ""
+        + (FmpConstant.getHexWidth( p_zoom ) + (FmpConstant.getHexMontainWidthMargin( p_zoom
+            .getValue() ) * 2)) + "px";
     setWidthRules( s_firstLandRuleIndex + LandType.Montain.ordinal(), width );
     Game game = GameEngine.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
