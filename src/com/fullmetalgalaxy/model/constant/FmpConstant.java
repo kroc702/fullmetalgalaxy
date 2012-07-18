@@ -119,7 +119,7 @@ public class FmpConstant
       return 3;
     default:
     case EnuZoom.Medium:
-      return 4;
+      return 6;
     }
   }
 
@@ -131,7 +131,31 @@ public class FmpConstant
       return 3;
     default:
     case EnuZoom.Medium:
-      return 4;
+      return 6;
+    }
+  }
+
+  public static int getHexMontainHeightMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 26;
+    }
+  }
+
+  public static int getHexMontainWidthMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 39;
     }
   }
 
@@ -144,7 +168,6 @@ public class FmpConstant
      return 1;
    case Marsh:
    case Reef:
-     return 2;
    case Plain:
    case Sea:
      return 4;
