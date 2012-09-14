@@ -69,6 +69,7 @@ public class AnBoardPosition extends AnPair implements PathNode
     sector = p_sector;
   }
 
+
   /**
    * 
    * @param p_sector
