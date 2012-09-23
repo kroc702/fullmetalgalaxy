@@ -25,9 +25,6 @@ package com.fullmetalgalaxy.model.persist;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
 
@@ -44,7 +41,6 @@ public class AnBoardPosition extends AnPair implements PathNode
 {
   static final long serialVersionUID = 16;
 
-  @Enumerated(EnumType.ORDINAL)
   private Sector sector = Sector.North;
 
   public AnBoardPosition()
