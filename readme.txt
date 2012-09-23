@@ -1,7 +1,7 @@
 
 You should have a look here: http://code.google.com/p/fullmetalgalaxy/wiki/Welcome
 
-dependences directes:
+direct dependency:
 =====================
 - gwt
 - appengine
@@ -9,8 +9,8 @@ dependences directes:
 - objectify
 
 
-mon environement de dev:
-========================
+my dev environement :
+=====================
 eclipse + ant (standard)
     html jsp [...] editor\JST Web UI (ou bien amateras editor)
 	MercurialEclipse: http://cbes.javaforge.com/update
@@ -29,9 +29,9 @@ Si vous n'utilisez pas eclipse il vous faut au minimum:
 - un client mercurial
 - Ant (pour lancer le mode debug, la compilation)
 
-generation des images statiques:
-================================
-- imagemagick (fonts + post processing)
+static images generation (in option as images are in repository):
+=================================================================
+- imagemagick (post processing)
 - blender (pions)
 -> les fichiers doivent avoir 2 cameras 'tactic' et 'strategy' correspondants aux deux 
 niveaux de zoom et une texture nommée 'color'. pas de taille imposée, 

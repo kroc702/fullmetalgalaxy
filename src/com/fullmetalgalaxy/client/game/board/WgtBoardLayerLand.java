@@ -367,7 +367,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     switch( p_zoom )
     {
     case EnuZoom.Small:
-      return 3;
+      return 17;
     default:
     case EnuZoom.Medium:
       return 27;
@@ -379,7 +379,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     switch( p_zoom )
     {
     case EnuZoom.Small:
-      return 3;
+      return 22;
     default:
     case EnuZoom.Medium:
       return 40;

@@ -105,7 +105,7 @@ compilation file for Full Metal Galaxy
 			<echo message="reduce color file @{filename}" level="info" />
 			<exec executable="${imagemagickDir}convert">
 				<env key="PATH" path="${env.PATH}:${imagemagickDir}" />
-				<arg line="@{filename} -type Optimize +dither -colors 128 @{filename}" />
+				<arg line="@{filename} -fuzz 10% -transparent none -type Optimize +dither -colors 128 @{filename}" />
 			</exec>
 		</sequential>
 	</macrodef>

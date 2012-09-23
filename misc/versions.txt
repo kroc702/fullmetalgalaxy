@@ -1,4 +1,6 @@
 
+this file is obsolete since the use of google code and mercurial
+
 28/03/10:
 =========
 - Quelques ajustements suite a une partie a 4
