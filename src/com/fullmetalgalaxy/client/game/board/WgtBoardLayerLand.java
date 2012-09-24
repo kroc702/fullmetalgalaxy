@@ -123,6 +123,11 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   private static String buildHtmlLand(Game p_game, int p_zoom)
   {
     StringBuffer html = new StringBuffer();
+    int[] indexTextures = new int[LandType.values().length];
+    for( int i = 0; i < indexTextures.length; i++ )
+    {
+      indexTextures[i] = 1;
+    }
 
     // compute the size of the widget
     int pxW = p_game.getLandPixWidth( new EnuZoom( p_zoom ) );
@@ -134,7 +139,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );
     for( int ix = 0; ix < p_game.getLandWidth(); ix++ )
     {
-      int pxX = ix * (pxHexWidth * 3 / 4);
+      int tmppxX = ix * (pxHexWidth * 3 / 4);
       int yOffset = 0;
       if( ix % 2 != 0 )
       {
@@ -143,17 +148,41 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
       int iy = 0;
       while( iy < p_game.getLandHeight() )
       {
-        int pxY = iy * pxHexHeight + yOffset;
+        int pxY = iy * pxHexHeight;
         LandType land = p_game.getLand( ix, iy );
         int hexHeight = 1;
         iy++;
-        while( (iy < p_game.getLandHeight()) && (land == p_game.getLand( ix, iy )) )
+        while( (iy < p_game.getLandHeight()) 
+            && (land == p_game.getLand( ix, iy )) 
+            && (hexHeight < getTextureHexCount( land )) )
         {
           hexHeight++;
           iy++;
         }
-        html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
-            + (hexHeight * pxHexHeight) + "px;\" class=\"fmp-" + land + "\"></div>" );
+        int pxX = tmppxX;
+        if( land == LandType.Montain )
+        {
+          pxX -= getHexMontainWidthMargin( p_zoom );
+          pxY += yOffset - getHexMontainHeightMargin( p_zoom );
+          html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
+              + ((hexHeight * pxHexHeight) + getHexMontainHeightMargin( p_zoom ) + (getHexHeightMargin( p_zoom )))
+              + "px; z-index:" + (iy * 2 + ix % 2 - 1) + ";\" class=\"fmp-" + land
+              + indexTextures[land.ordinal()] + "\"></div>" );
+        }
+        else
+        {
+          pxX -= getHexWidthMargin( p_zoom );
+          pxY += yOffset - getHexHeightMargin( p_zoom );
+          html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
+              + ((hexHeight * pxHexHeight) + (getHexHeightMargin( p_zoom ) * 2))
+              + "px;\" class=\"fmp-" + land + indexTextures[land.ordinal()]
+              + "\"></div>" );
+        }
+
+        if( indexTextures[land.ordinal()] == 1 )
+          indexTextures[land.ordinal()] = 2;
+        else
+          indexTextures[land.ordinal()] = 1;
       }
     }
     html.append( "</div>" );
@@ -168,12 +197,14 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    String width = "" + FmpConstant.getHexWidth( p_zoom ) + "px";
-    setWidthRules( s_firstLandRuleIndex + LandType.Sea.ordinal(), width );
-    setWidthRules( s_firstLandRuleIndex + LandType.Reef.ordinal(), width );
-    setWidthRules( s_firstLandRuleIndex + LandType.Marsh.ordinal(), width );
-    setWidthRules( s_firstLandRuleIndex + LandType.Plain.ordinal(), width );
-    setWidthRules( s_firstLandRuleIndex + LandType.Montain.ordinal(), width );
+    int width = (FmpConstant.getHexWidth( p_zoom ) + (getHexWidthMargin( p_zoom.getValue() ) * 2));
+    setLandsWidth( LandType.Sea, width );
+    setLandsWidth( LandType.Reef, width );
+    setLandsWidth( LandType.Marsh, width );
+    setLandsWidth( LandType.Plain, width );
+    width = (FmpConstant.getHexWidth( p_zoom ) + (getHexMontainWidthMargin( p_zoom.getValue() ) + getHexWidthMargin( p_zoom
+        .getValue() )));
+    setLandsWidth( LandType.Montain, width );
     Game game = GameEngine.model().getGame();
     int pxW = game.getLandPixWidth( getZoom() );
     int pxH = game.getLandPixHeight( getZoom() );
@@ -203,28 +234,29 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     switch( game.getCurrentTide() )
     {
     case Low:
-      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_low.png" );
-      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_low.png" );
+      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_low" );
+      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_low" );
       break;
     default:
     case Medium:
-      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_hight.png" );
-      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_low.png" );
+      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_hight" );
+      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_low" );
       break;
     case Hight:
-      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_hight.png" );
-      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_hight.png" );
+      WgtBoardLayerLand.setLandsImages( LandType.Reef, baseUrl + "reef_hight" );
+      WgtBoardLayerLand.setLandsImages( LandType.Marsh, baseUrl + "swamp_hight" );
       break;
     }
-    WgtBoardLayerLand.setLandsImages( LandType.Sea, baseUrl + "sea.png" );
-    WgtBoardLayerLand.setLandsImages( LandType.Plain, baseUrl + "plain.png" );
-    WgtBoardLayerLand.setLandsImages( LandType.Montain, baseUrl + "montain.png" );
+    WgtBoardLayerLand.setLandsImages( LandType.Sea, baseUrl + "sea" );
+    WgtBoardLayerLand.setLandsImages( LandType.Plain, baseUrl + "plain" );
+    WgtBoardLayerLand.setLandsImages( LandType.Montain, baseUrl + "montain" );
   }
 
 
   public static void setLandsImages(LandType p_land, String p_imageUrl)
   {
-    setBackgroundRules( s_firstLandRuleIndex + p_land.ordinal(), "url(" + p_imageUrl + ")" );
+    setBackgroundRules( s_firstLandRuleIndex1 + p_land.ordinal(), "url(" + p_imageUrl + "1.png)" );
+    setBackgroundRules( s_firstLandRuleIndex2 + p_land.ordinal(), "url(" + p_imageUrl + "2.png)" );
   }
 
   private static native void setBackgroundRules(int p_index, String p_value) /*-{
@@ -240,7 +272,8 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
 
   public static void setLandsWidth(LandType p_land, int p_widthPx)
   {
-    setWidthRules( s_firstLandRuleIndex + p_land.ordinal(), "" + p_widthPx + "px" );
+    setWidthRules( s_firstLandRuleIndex1 + p_land.ordinal(), "" + p_widthPx + "px" );
+    setWidthRules( s_firstLandRuleIndex2 + p_land.ordinal(), "" + p_widthPx + "px" );
   }
 
   private static native void setWidthRules(int p_index, String p_value) /*-{
@@ -256,28 +289,119 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
 
 
 
-  private static int s_firstLandRuleIndex = createLandsRules();
+  private static int s_firstLandRuleIndex1 = 0;
+  private static int s_firstLandRuleIndex2 = 0;
 
-  public static int createLandsRules()
+  static
   {
-    int oldLength = ClientUtil.setCssRule( ".fmp-None",
+    createLandsRules();
+  }
+
+  public static void createLandsRules()
+  {
+    s_firstLandRuleIndex1 = ClientUtil.setCssRule( ".fmp-None1",
         "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
-    ClientUtil.setCssRule( ".fmp-Sea",
+    ClientUtil.setCssRule( ".fmp-Sea1",
         " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea.png);}" );
     ClientUtil
-        .setCssRule( ".fmp-Reef",
+        .setCssRule( ".fmp-Reef1",
             " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight.png);}" );
     ClientUtil
-        .setCssRule( ".fmp-Marsh",
+        .setCssRule( ".fmp-Marsh1",
             " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low.png);}" );
     ClientUtil
-        .setCssRule( ".fmp-Plain",
+        .setCssRule( ".fmp-Plain1",
             " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain.png);}" );
     ClientUtil
-        .setCssRule( ".fmp-Montain",
+        .setCssRule( ".fmp-Montain1",
             " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain.png);}" );
 
-    return oldLength;
+    s_firstLandRuleIndex2 = ClientUtil.setCssRule( ".fmp-None2",
+        "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
+    ClientUtil
+        .setCssRule( ".fmp-Sea2",
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea2.png);}" );
+    ClientUtil
+        .setCssRule( ".fmp-Reef2",
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight2.png);}" );
+    ClientUtil
+        .setCssRule( ".fmp-Marsh2",
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low2.png);}" );
+    ClientUtil
+        .setCssRule( ".fmp-Plain2",
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain2.png);}" );
+    ClientUtil
+        .setCssRule( ".fmp-Montain2",
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain2.png);}" );
+
+  }
+
+
+
+  private static int getHexHeightMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 6;
+    }
+  }
+
+  private static int getHexWidthMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 3;
+    default:
+    case EnuZoom.Medium:
+      return 6;
+    }
+  }
+
+  private static int getHexMontainHeightMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 17;
+    default:
+    case EnuZoom.Medium:
+      return 27;
+    }
+  }
+
+  private static int getHexMontainWidthMargin(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    case EnuZoom.Small:
+      return 22;
+    default:
+    case EnuZoom.Medium:
+      return 40;
+    }
+  }
+
+  private static int getTextureHexCount(LandType p_land)
+  {
+    switch( p_land )
+    {
+    default:
+    case Montain:
+      return 1;
+    case Marsh:
+    case Reef:
+      return 2;
+    case Plain:
+    case Sea:
+      return 4;
+    case None:
+      return 50;
+    }
   }
 
 }
