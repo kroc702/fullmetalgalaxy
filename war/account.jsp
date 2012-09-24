@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,9 +43,9 @@ if(account == null) {
 <h1><%= (request.getParameter("msg")==null) ? "" : request.getParameter("msg") %></h1>
 
 <% if( id == 0 ) { %>
-	<h2>Création d'un nouveau compte</h2>
+	<h2><fmg:resource key="account_createnewaccount"/></h2>
 	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
-	Vous pouvez aussi utiliser votre compte google pour vous connecter a Full Metal Galaxy.</a>
+	<fmg:resource key="account_canusegoogleaccount"/></a>
 <%} else if(account.isIsforumIdConfirmed() && account.getForumId() != null){ %>
 	<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
@@ -82,16 +83,16 @@ if(account == null) {
 	update login : <input type="checkbox" name="credential"  value="1"  ><br/>
 	Auth provider :
 	<input type="text" name="authprovider" value="<%= account.getAuthProvider() %>"/>  (Google or Fmg)<br/>
-	login :
+	<fmg:resource key="account_login"/> :
 	<input type="text" name="login" value="<%= account.getLogin() %>"/>
 	<%= account.getAuthIconHtml() %><br/>
-	mot de passe :
+	<fmg:resource key="account_password"/> :
 	<input type="text" name="password1" value="<%= account.getPassword() %>"/><br/>
-	confirmation :
+	<fmg:resource key="account_confirm"/> :
 	<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
-	pseudo :
+	<fmg:resource key="account_pseudo"/> :
 	<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
-	avatar url :
+	<fmg:resource key="account_avatarurl"/> :
 	<input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
 	<% if( account.isIsforumIdConfirmed() && account.getForumId() != null )
 	  {
@@ -110,48 +111,48 @@ if(account == null) {
 	<hr/>
 <% } else { %>
 	<input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
-	login :
+	<fmg:resource key="account_login"/> :
 	<input type="text" <%= (id == 0) ? "" : "readonly" %> name="login" value="<%= account.getLogin() %>"/>
 	<%= account.getAuthIconHtml() %><br/>
 	<% if( account.getAuthProvider() == AuthProvider.Fmg ) {%>
-		mot de passe :
+		<fmg:resource key="account_password"/> :
 		<input type="password" name="password1" value=""/><br/>
-		confirmation :
+		<fmg:resource key="account_confirm"/> :
 		<input type="password" name="password2" value=""/><br/>
 	<% } %>
 	<% if( account.canChangePseudo() ) {%>
-		pseudo :
+		<fmg:resource key="account_pseudo"/> :
 		<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/> ! Vous ne pourrez le modifier qu'une seule fois !<br/>
-	<% } else {%>
-		pseudo :
+	<% } else if( !account.isTrancient() ) {%>
+		<fmg:resource key="account_pseudo"/> :
 		<input type="text" readonly name="pseudo" value="<%= account.getPseudo() %>"/><br/>
 	<% } %>
 <% } %>
 
 
 <br/>
-email :
+<fmg:resource key="account_email"/> :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
-Jabber ID :
+<fmg:resource key="account_jabberid"/> :
 <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
-Autorisez les messages du jeu :
+<fmg:resource key="account_allowgamemessages"/> :
 	<SELECT name="NotificationQty">
 	<% for( EbAccount.NotificationQty notif : EbAccount.NotificationQty.values()) { %>
 		<OPTION VALUE="<%=notif%>" <%= account.getNotificationQty()==notif ? "SELECTED" : "" %> ><%=notif%></OPTION>
 	<% } %>
 	</SELECT><br/>
-Autorisez les messages des autre joueurs : <input type="checkbox" name="AllowMsgFromPlayer"  value="1" <%= account.allowMsgFromPlayer() ? "checked" : "" %> ><br/>
+<fmg:resource key="account_allowplayermessages"/> : <input type="checkbox" name="AllowMsgFromPlayer"  value="1" <%= account.allowMsgFromPlayer() ? "checked" : "" %> ><br/>
 <% if( id == 0 ) { %>
-<input type="checkbox" name="createforumaccount" value="1" checked /> Créer un compte sur le forum
+<fmg:resource key="account_createforumaccount"/> <input type="checkbox" name="createforumaccount" value="1" checked /> 
 <br/>
 <% } %>
 <br/>
 
 
-<input type="submit" name="Submit" value="Enregistrer"/>
-<input type="reset" value="Annuler">
+<input type="submit" name="Submit" value="<fmg:resource key="account_save"/>"/>
+<input type="reset" value="<fmg:resource key="account_cancel"/>">
 <% if(Auth.isUserAdmin(request, response)) {
-	out.println("<a href=\"/admin/Servlet?deleteaccount="+account.getId()+"\">effacer</a>" );
+	out.println("<a href=\"/admin/Servlet?deleteaccount="+account.getId()+"\">delete</a>" );
 } %>
 </form>
 

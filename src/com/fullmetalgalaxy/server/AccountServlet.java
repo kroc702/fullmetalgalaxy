@@ -370,7 +370,8 @@ public class AccountServlet extends HttpServlet
       return "pas de champs accountid";
     if( params.get( "login" ) == null || params.get( "login" ).length() < 4 )
       return "votre login doit faire plus de 3 caracteres";
-    if( params.get( "pseudo" ) != null && params.get( "pseudo" ).length() < 4 )
+    if( params.get( "pseudo" ) != null && params.get( "pseudo" ).length() > 0
+        && params.get( "pseudo" ).length() < 4 )
       return "votre pseudo doit faire plus de 3 caracteres";
     return null;
   }

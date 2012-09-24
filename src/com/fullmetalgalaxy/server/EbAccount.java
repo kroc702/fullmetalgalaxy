@@ -89,7 +89,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   @Unindexed
   private NotificationQty m_notificationQty = NotificationQty.Std;
 
-  private String m_jabberId = null;
+  private String m_jabberId = "";
 
   @Unindexed
   private LocaleFmg m_locale = LocaleFmg.getDefault();

@@ -149,7 +149,7 @@ if(tab < 0 || tab > 3 )
 
         <div id="LittlePresences" style="display:none; position:fixed; bottom:1px; right:1px; z-index:9999999999;"></div>
         <div id="MessagesStack" style="display:none; position:fixed; bottom:45px; right:1px; z-index:9999999999; width: 250px;"></div>
-        <script type="text/javascript" language="javascript" src="/game/game.nocache.js"></script>
+        <%--script type="text/javascript" language="javascript" src="/game/game.nocache.js"></script--%>
 
 <%@include file="include/footer.jsp"%>
 </body>
