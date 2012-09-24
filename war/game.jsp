@@ -53,7 +53,7 @@
     	<div style="min-height:50px;"></div>
     </td></tr>
     <tr style="height:100%;"><td>
-    	<div id="board" style="width:100%; height:100%; background-color:#d09750;"></div>
+    	<div id="board" style="width:100%; height:100%; background-color:hsl(32, 12%, 44%);"></div>
     </td></tr>
     </table>
     

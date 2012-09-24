@@ -1,0 +1,25 @@
+
+# to refresh header from all java file
+# ====================================
+cd src
+find . -name "*.java" -exec ../misc/rh/replace_header.sh {} \;
+
+# don't commit package info
+
+
+# to reduce color from several images
+# ===================================
+cd war/images/board
+find */tactic/ -name "*.png" -exec convert {} -fuzz 10% -transparent none -type Optimize +dither -colors 1024 {} \;
+find */tactic/ -name "*.png" -exec optipng -strip all -o7 -zc9 {} \;
+find */strategy/ -name "*.png" -exec convert {} -fuzz 10% -transparent none -type Optimize +dither -colors 1024 {} \;
+find */strategy/ -name "*.png" -exec optipng -strip all -o7 -zc9 {} \;
+
+
+# to resize strategy textures
+# ===========================
+find */strategy/ -name "reef*.png" -exec convert {} -resize 40x64! {} \;
+find */strategy/ -name "swamp*.png" -exec convert {} -resize 40x64! {} \;
+find */strategy/ -name "plain*.png" -exec convert {} -resize 40x122! {} \;
+find */strategy/ -name "sea*.png" -exec convert {} -resize 40x122! {} \;
+
