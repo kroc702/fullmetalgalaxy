@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.client.game.board.layertoken;
 
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -159,9 +160,12 @@ public class TokenWidget
    */
   public void setLastTokenDrawn(EbToken p_token)
   {
-    Game game = GameEngine.model().getGame();
-    assert game != null;
-    m_lastHash = getDisplayStatusHash( p_token );
+    if( TokenImages.isBundleLoaded() )
+    {
+      Game game = GameEngine.model().getGame();
+      assert game != null;
+      m_lastHash = getDisplayStatusHash( p_token );
+    }
   }
 
 

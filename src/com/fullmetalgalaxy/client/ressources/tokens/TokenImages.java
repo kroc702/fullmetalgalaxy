@@ -25,6 +25,9 @@ package com.fullmetalgalaxy.client.ressources.tokens;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fullmetalgalaxy.client.AppRoot;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -33,7 +36,9 @@ import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author Vincent Legendre
@@ -103,8 +108,24 @@ public class TokenImages
     loadAllBundle();
   }
 
-  public static void loadAllBundle()
+  public static boolean isBundleLoaded()
   {
+    return !s_bundle.isEmpty();
+  }
+
+  protected static void loadAllBundle()
+  {
+    GWT.runAsync( new RunAsyncCallback()
+    {
+      @Override
+      public void onFailure(Throwable caught)
+      {
+        Window.alert( "Error while downloading script: " + caught.getLocalizedMessage() );
+      }
+
+      @Override
+      public void onSuccess()
+      {
         if( s_bundle.isEmpty() )
         {
           s_bundle.put( EnuColor.Purple, (Purple)GWT.create( Purple.class ) );
@@ -173,6 +194,11 @@ public class TokenImages
           s_bundleExtra.put( EnuColor.Zebra, (ZebraExtra)GWT.create( ZebraExtra.class ) );
           s_bundleExtra.put( EnuColor.None, (ColorlessExtra)GWT.create( ColorlessExtra.class ) );
         }
+
+        // TODO create special event
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+      }
+    } );
   }
 
 
