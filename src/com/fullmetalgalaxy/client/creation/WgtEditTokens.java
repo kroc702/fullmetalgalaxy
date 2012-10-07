@@ -88,9 +88,9 @@ public class WgtEditTokens extends WgtView implements WindowResizeListener
     {
       m_wgtScroll.fireScroll();
       m_wgtBoard.notifyModelUpdate( p_modelSender );
+      m_tools.redraw();
     }
   }
-
 
 
 }

@@ -67,9 +67,9 @@ public class TokenImages
   public static ImageResource getTokenImage(EnuColor p_color, int p_zoom,
       TokenType p_token, Sector p_sector)
   {
-    if( p_color.isSingleColor() )
+    if( p_token.canBeColored() )
     {
-      if( s_bundle.isEmpty() )
+      if( !isBundleLoaded() )
       {
         return Icons.s_instance.cancel32();
       }
@@ -82,7 +82,7 @@ public class TokenImages
         return getTokenImageStrategy( p_color.getValue(), p_token, p_sector );
       }
     }
-    else
+    else if( p_color.getValue() == EnuColor.None )
     {
       // no specific color, it could be an ore or pontoon
       switch( p_zoom )
@@ -94,7 +94,7 @@ public class TokenImages
         return getColorlessTokenImageStrategy( p_token, p_sector );
       }
     }
-
+    return Icons.s_instance.cancel32();
   }
 
 
@@ -103,19 +103,19 @@ public class TokenImages
   private static Map<Integer, TokenFreighterImageBundle> s_bundleFreighter = new HashMap<Integer, TokenFreighterImageBundle>();
   private static Map<Integer, TokenExtraImageBundle> s_bundleExtra = new HashMap<Integer, TokenExtraImageBundle>();
 
-  static
-  {
-    loadAllBundle();
-  }
-
   public static boolean isBundleLoaded()
   {
-    return !s_bundle.isEmpty();
+    synchronized( s_bundle )
+    {
+      return !s_bundle.isEmpty();
+    }
   }
 
-  protected static void loadAllBundle()
+  public static void loadAllBundle()
   {
-    GWT.runAsync( new RunAsyncCallback()
+    synchronized( s_bundle )
+    {
+    GWT.runAsync( TokenImages.class, new RunAsyncCallback()
     {
       @Override
       public void onFailure(Throwable caught)
@@ -199,6 +199,7 @@ public class TokenImages
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
       }
     } );
+    }
   }
 
 

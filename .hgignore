@@ -36,3 +36,5 @@ syntax: regexp
 \.blend1$
 syntax: regexp
 \.blend1$
+syntax: regexp
+^extras$

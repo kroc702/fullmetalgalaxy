@@ -28,6 +28,7 @@ import java.util.List;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
@@ -73,16 +74,33 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
 
   private Image m_leftLand = new Image();
   private Image m_rightLand = new Image();
-  private Image m_btnPlain = new Image( "images/board/desert/strategy/plain.png", 0, 0, FmpConstant
-      .getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
-  private Image m_btnMontain = new Image( "images/board/desert/strategy/montain.png", 0, 0,
-      FmpConstant.getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
-  private Image m_btnReef = new Image( "images/board/desert/strategy/reef_low.png", 0, 0,
-      FmpConstant.getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
-  private Image m_btnMarsh = new Image( "images/board/desert/strategy/swamp_low.png", 0, 0,
-      FmpConstant.getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
-  private Image m_btnSea = new Image( "images/board/desert/strategy/sea.png", 0, 0, FmpConstant
-      .getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
+  private Image m_btnPlain = new Image( "images/board/desert/strategy/plain1.png", 0, 0,
+      FmpConstant
+.getHexWidth( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small ),
+      FmpConstant.getHexHeight( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small ) );
+  private Image m_btnMontain = new Image( "images/board/desert/strategy/montain1.png", 0, 0,
+      FmpConstant.getHexWidth( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexMontainWidthMargin( EnuZoom.Small ),
+      FmpConstant.getHexHeight( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexMontainHeightMargin( EnuZoom.Small ) );
+  private Image m_btnReef = new Image( "images/board/desert/strategy/reef_low1.png", 0, 0,
+      FmpConstant.getHexWidth( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small ),
+      FmpConstant.getHexHeight( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small ) );
+  private Image m_btnMarsh = new Image( "images/board/desert/strategy/swamp_low1.png", 0, 0,
+      FmpConstant.getHexWidth( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small ),
+      FmpConstant.getHexHeight( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small ) );
+  private Image m_btnSea = new Image( "images/board/desert/strategy/sea1.png", 0, 0,
+      FmpConstant
+.getHexWidth( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small ),
+      FmpConstant.getHexHeight( EnuZoom.Small )
+          + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small ) );
   private Image m_btnNone = new Image( "images/board/desert/strategy/grid.gif", 0, 0, FmpConstant
       .getHexWidth( EnuZoom.Small ), FmpConstant.getHexHeight( EnuZoom.Small ) );
 
@@ -154,17 +172,19 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   protected void redraw()
   {
     String base = "images/board/" + GameEngine.model().getGame().getPlanetType().getFolderName();
-    m_btnPlain.setUrl( base + "/strategy/plain.png" );
-    m_btnMontain.setUrl( base + "/strategy/montain.png" );
-    m_btnReef.setUrl( base + "/strategy/reef_low.png" );
-    m_btnMarsh.setUrl( base + "/strategy/swamp_low.png" );
-    m_btnSea.setUrl( base + "/strategy/sea.png" );
+    m_btnPlain.setUrl( base + "/strategy/plain1.png" );
+    m_btnMontain.setUrl( base + "/strategy/montain1.png" );
+    m_btnReef.setUrl( base + "/strategy/reef_low1.png" );
+    m_btnMarsh.setUrl( base + "/strategy/swamp_low1.png" );
+    m_btnSea.setUrl( base + "/strategy/sea1.png" );
     m_leftLand.setUrlAndVisibleRect( base + "/tactic/"
-        + m_wgtlayerEditLand.getLeftClic().getImageName(), 0, 0, FmpConstant
-        .getHexWidth( EnuZoom.Medium ), FmpConstant.getHexHeight( EnuZoom.Medium ) );
+        + m_wgtlayerEditLand.getLeftClic().getImageName(), 0, 0, 
+        FmpConstant.getHexWidth( EnuZoom.Medium ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Medium ), 
+        FmpConstant.getHexHeight( EnuZoom.Medium ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Medium ) );
     m_rightLand.setUrlAndVisibleRect( base + "/tactic/"
-        + m_wgtlayerEditLand.getRightClic().getImageName(), 0, 0, FmpConstant
-        .getHexWidth( EnuZoom.Medium ), FmpConstant.getHexHeight( EnuZoom.Medium ) );
+        + m_wgtlayerEditLand.getRightClic().getImageName(), 0, 0, 
+        FmpConstant.getHexWidth( EnuZoom.Medium ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Medium ), 
+        FmpConstant.getHexHeight( EnuZoom.Medium ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Medium ) );
 
     m_txtLandWidth.setText( "" + GameEngine.model().getGame().getLandWidth() );
     m_txtLandHeight.setText( "" + GameEngine.model().getGame().getLandHeight() );

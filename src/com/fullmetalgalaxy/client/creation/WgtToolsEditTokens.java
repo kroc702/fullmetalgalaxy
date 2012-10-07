@@ -80,7 +80,6 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     // add all colors
     EnuColor color = null;
     int i = 0;
-    int nbColor = 1;
     if( AppMain.instance().iAmAdmin() )
     {
       while( i < EnuColor.getTotalNumberOfColor() )
@@ -108,7 +107,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     initWidget( m_panel );
   }
 
-  private void redraw()
+  protected void redraw()
   {
     m_tools.clear();
     m_panel.clear();

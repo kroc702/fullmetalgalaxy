@@ -338,7 +338,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
 
 
 
-  private static int getHexHeightMargin(int p_zoom)
+  public static int getHexHeightMargin(int p_zoom)
   {
     switch( p_zoom )
     {
@@ -350,7 +350,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     }
   }
 
-  private static int getHexWidthMargin(int p_zoom)
+  public static int getHexWidthMargin(int p_zoom)
   {
     switch( p_zoom )
     {
@@ -362,7 +362,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     }
   }
 
-  private static int getHexMontainHeightMargin(int p_zoom)
+  public static int getHexMontainHeightMargin(int p_zoom)
   {
     switch( p_zoom )
     {
@@ -374,7 +374,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     }
   }
 
-  private static int getHexMontainWidthMargin(int p_zoom)
+  public static int getHexMontainWidthMargin(int p_zoom)
   {
     switch( p_zoom )
     {
