@@ -10,8 +10,8 @@ compilation file for Full Metal Galaxy
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
 	<property name="eclipsedir" value="C:\Sun\eclipse-indigo" />
-	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.6.5\appengine-java-sdk-1.6.5" />
-	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.4.0.v201203300216-rel-r37\gwt-2.4.0" />
+	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.7.2.1\appengine-java-sdk-1.7.2.1" />
+	<property name="gwtsdkdir" value="C:\Sun\gwt-2.5.0.rc1" />
 
 
 	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
@@ -43,6 +43,7 @@ compilation file for Full Metal Galaxy
 			</fileset>
 			<fileset dir="${gwtsdkdir}">
 				<include name="gwt-servlet.jar" />
+				<include name="gwt-dev.jar" />
 			</fileset>
 		</copy>
 	</target>
@@ -74,8 +75,13 @@ compilation file for Full Metal Galaxy
 			<arg value="8" />
 			<arg value="-style" />
 			<arg value="${jsstyle}" />
+			<arg value="-strict" />
+			<arg value="-logLevel" />
+			<arg value="WARN" />
 			<arg value="-optimize" />
 			<arg value="9" />
+			<arg value="-XenableClosureCompiler" />
+			<arg value="-compileReport" />
 			<arg value="-war" />
 			<arg value="war" />
 			<arg value="com.fullmetalgalaxy.Game" />
@@ -92,6 +98,9 @@ compilation file for Full Metal Galaxy
 			<arg value="-style" />
 			<arg value="PRETTY" />
 			<arg value="-draftCompile" />
+			<arg value="-strict" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
 			<arg value="-ea" />
 			<arg value="-war" />
 			<arg value="war" />

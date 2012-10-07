@@ -33,4 +33,10 @@
   <!-- Specify the app Remote service for RPC.              -->
   <servlet class="com.fullmetalgalaxy.server.GameServicesImpl" path="/Services"/>
   
+  <!-- code loading sequence -->
+  <!-- well it doesn't work :(
+  <extend-configuration-property name="compiler.splitpoint.initial.sequence"
+    value="com.fullmetalgalaxy.client.AppMain"/>
+    -->
+    
 </module>

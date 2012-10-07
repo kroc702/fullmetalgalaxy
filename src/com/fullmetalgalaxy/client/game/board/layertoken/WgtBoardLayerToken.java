@@ -60,6 +60,11 @@ import com.google.gwt.user.client.ui.Image;
 public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler,
     GameActionEvent.Handler
 {
+  static
+  {
+    TokenImages.loadAllBundle();
+  }
+
   private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
   private AnPair hexPositionLeftTop = new AnPair( 0, 0 );
   private AnPair hexPositionRightBotom = new AnPair( 900, 900 );

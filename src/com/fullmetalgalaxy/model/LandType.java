@@ -120,29 +120,29 @@ public enum LandType implements IsSerializable
     switch( this )
     {
     case Sea:
-      return "sea.png";
+      return "sea1.png";
     case Reef:
       if( p_tide == Tide.Low )
       {
-        return "reef_low.png";
+        return "reef_low1.png";
       }
       else
       {
-        return "reef_hight.png";
+        return "reef_hight1.png";
       }
     case Marsh:
       if( p_tide == Tide.Hight )
       {
-        return "swamp_hight.png";
+        return "swamp_hight1.png";
       }
       else
       {
-        return "swamp_low.png";
+        return "swamp_low1.png";
       }
     case Plain:
-      return "plain.png";
+      return "plain1.png";
     case Montain:
-      return "montain.png";
+      return "montain1.png";
     case None:
     default:
       return "grid.gif";
