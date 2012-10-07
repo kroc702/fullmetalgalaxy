@@ -38,6 +38,8 @@ public interface MessagesAppGameCreation extends Messages
 
     String map();
 
+  String putOre();
+
     String errorActionPt();
 
     String errorName();

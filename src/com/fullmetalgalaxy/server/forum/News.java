@@ -72,7 +72,14 @@ public class News
   {
     int itemCount = 0;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    PrintStream out = new PrintStream(baos);
+    PrintStream out;
+    try
+    {
+      out = new PrintStream( baos, false, "UTF-8" );
+    } catch( UnsupportedEncodingException e1 )
+    {
+      out = new PrintStream( baos );
+    }
     for( Article article : ArticleFactory.createArticles() )
     {
       article.writePreviewAsHtml( itemCount < NEWS_FULLITEM_COUNT, out );

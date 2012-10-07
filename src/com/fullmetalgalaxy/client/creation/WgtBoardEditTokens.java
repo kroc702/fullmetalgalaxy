@@ -164,7 +164,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
               game.moveToken( token, oldToken );
             }
           }
-          else
+          else if( token.getType() != TokenType.Turret )
           {
             game.moveToken( oldToken, Location.Graveyard );
             game.moveToken( token, position );

@@ -166,7 +166,7 @@ public class ArticleFactory
     }
 
     // for debug purpose only !
-    logger.severe( "create article from rss: " + article.getTitle() );
+    // logger.severe( "create article from rss: " + article.getTitle() );
 
     article.setPubDate( pubDate );
     return article;
