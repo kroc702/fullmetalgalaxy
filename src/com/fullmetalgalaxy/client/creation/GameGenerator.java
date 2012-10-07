@@ -112,11 +112,13 @@ public class GameGenerator
     clearOre();
     int width = getGame().getLandWidth();
     int height = getGame().getLandHeight();
-    int startx = Random.nextInt( 3 );
+    int ix = Random.nextInt( 3 );
     int starty = Random.nextInt( 3 );
-    for( int ix = startx; ix < width; ix += 3 )
+
+    while( ix < width )
     {
-      for( int iy = starty; iy < height; iy += 3 )
+      int iy = starty;
+      while( iy < height )
       {
         LandType type = getGame().getLand( ix, iy );
         if( ((type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain) || (type == LandType.Montain))
@@ -129,7 +131,14 @@ public class GameGenerator
           token.setLocation( Location.Board );
           getGame().addToken( token );
         }
+
+        iy += 3;
       }
+      AnBoardPosition startPosition = new AnBoardPosition( ix, starty )
+          .getNeighbour( Sector.NorthEast ).getNeighbour( Sector.NorthEast )
+          .getNeighbour( Sector.NorthEast );
+      ix = startPosition.getX();
+      starty = startPosition.getY();
     }
   }
 

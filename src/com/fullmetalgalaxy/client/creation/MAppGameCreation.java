@@ -64,7 +64,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
   public static final String s_TokenIdGame = "idGame";
 
 
-  private static MessagesAppGameCreation s_messages = (MessagesAppGameCreation)GWT
+  public static MessagesAppGameCreation s_messages = (MessagesAppGameCreation)GWT
       .create( MessagesAppGameCreation.class );
 
   // model controller

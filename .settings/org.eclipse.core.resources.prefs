@@ -1,5 +1,6 @@
-#Wed May 23 21:15:22 CEST 2012
+#Sun Oct 07 21:54:36 CEST 2012
 eclipse.preferences.version=1
+encoding//src/com/fullmetalgalaxy/client/creation/MessagesAppGameCreation_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/client/ressources/MessagesAppBoard_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/model/ressources/MessagesRpc_fr.properties=UTF-8
 encoding//src/com/fullmetalgalaxy/server/xmpp/MilleSabords.graph=ISO-8859-1

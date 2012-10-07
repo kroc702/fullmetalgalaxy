@@ -57,7 +57,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class WgtToolsEditTokens extends Composite implements ClickHandler, ChangeListener
 {
   private Panel m_panel = new VerticalPanel();
-  private Button m_btnOre = new Button( "pose minerais" );
+  private Button m_btnOre = new Button( MAppGameCreation.s_messages.putOre() );
   private ListBox m_lstColor = new ListBox();
   private List<EnuColor> m_colors = new ArrayList<EnuColor>();
   private Image m_currentTool = new Image();
