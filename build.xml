@@ -43,7 +43,6 @@ compilation file for Full Metal Galaxy
 			</fileset>
 			<fileset dir="${gwtsdkdir}">
 				<include name="gwt-servlet.jar" />
-				<include name="gwt-dev.jar" />
 			</fileset>
 		</copy>
 	</target>
@@ -246,6 +245,7 @@ compilation file for Full Metal Galaxy
 				<exclude name="commons-fileupload*.jar"/>
 				<exclude name="objectify*.jar"/>
 				<exclude name="gwt-gae-channel*.jar"/>
+				<exclude name="*4fmg.jar"/>
 				<exclude name="antlr*.jar"/>
 				<exclude name="charabia.jar"/>
 				<exclude name="jdom.jar"/>
