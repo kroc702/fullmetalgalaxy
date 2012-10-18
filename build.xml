@@ -12,8 +12,8 @@ compilation file for Full Metal Galaxy
 	<property name="eclipsedir" value="C:\Sun\eclipse-indigo" />
 	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.7.2.1\appengine-java-sdk-1.7.2.1" />
 	<property name="gwtsdkdir" value="C:\Sun\gwt-2.5.0.rc1" />
-
-
+	<property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705" />
+	
 	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
@@ -34,6 +34,14 @@ compilation file for Full Metal Galaxy
 			<include name="*.jar" />
 		</fileset>
 	</path>
+	
+    <path id="classpath.tests" cache="true">
+      <path refid="classpath"/>
+      <pathelement location="tests" />
+      <fileset dir="${junitdir}">
+      	<include name="*.jar" />
+      </fileset>
+    </path>
 
 	<target name="copyjars" description="Copies the App Engine JARs to the WAR.">
 		<copy todir="war/WEB-INF/lib" flatten="true">
@@ -63,6 +71,11 @@ compilation file for Full Metal Galaxy
 		<delete file="war/WEB-INF/classes/com/fullmetalgalaxy/model/SharedMethods.class" />
 		<javac srcdir="src/com/fullmetalgalaxy/server/override" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" >
 		</javac>
+	</target>
+
+	<target name="compiltests" depends="compilserver" description="Compiles JUnit tests.">
+		<mkdir dir="war/WEB-INF/classes" />
+		<javac srcdir="tests" destdir="war/WEB-INF/classes" classpathref="classpath.tests" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" />
 	</target>
 
 	<target name="compilclient" depends="">

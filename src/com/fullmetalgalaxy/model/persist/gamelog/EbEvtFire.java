@@ -170,12 +170,14 @@ public class EbEvtFire extends AnEventPlay
     if( getTokenDestroyer1( p_game ).getBulletCount() < 1
         && getTokenDestroyer1( p_game ).getType() != TokenType.Turret )
     {
-      errMsg().noMoreAmo( Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game )) );
+      throw new RpcFmpException( errMsg().noMoreAmo(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
     }
     if( getTokenDestroyer2( p_game ).getBulletCount() < 1
         && getTokenDestroyer2( p_game ).getType() != TokenType.Turret )
     {
-      errMsg().noMoreAmo( Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game )) );
+      throw new RpcFmpException( errMsg().noMoreAmo(
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
     }
 
     // check that two destroyer are different
