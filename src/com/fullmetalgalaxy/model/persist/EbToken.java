@@ -244,7 +244,7 @@ public class EbToken extends EbBase
 
   /**
    * 
-   * @return contained ore count
+   * @return contained ore points
    */
   public int getContainOre()
   {
@@ -253,9 +253,9 @@ public class EbToken extends EbBase
     {
       for( EbToken token : getContains() )
       {
-        if( token.getType().isOre() && token.getType() != TokenType.Ore0 )
+        if( token.getType().isOre() )
         {
-          loadingSize += 1;
+          loadingSize += token.getType().getWinningPoint();
         }
       }
     }
