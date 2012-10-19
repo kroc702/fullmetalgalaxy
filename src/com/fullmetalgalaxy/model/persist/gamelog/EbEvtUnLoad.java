@@ -243,6 +243,15 @@ public class EbEvtUnLoad extends AnEventPlay
 
   // Bean getter / setter
   // ====================
-
+  @Override
+  public void setToken(EbToken p_token)
+  {
+    super.setToken( p_token );
+    setCost( 1 );
+    if( p_token.getType() == TokenType.Ore0 )
+    {
+      setCost( 0 );
+    }
+  }
 
 }
