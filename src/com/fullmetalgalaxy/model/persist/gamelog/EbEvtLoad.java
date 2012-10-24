@@ -220,7 +220,7 @@ public class EbEvtLoad extends AnEventPlay
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
       
-    execFireDisabling( p_game, getOldPosition() );
+    checkFireDisabling( p_game );
 
     // if token is a pontoon, check that other pontoon are linked to ground
     m_TokenIds = null ;
@@ -306,6 +306,83 @@ public class EbEvtLoad extends AnEventPlay
     unexecFireDisabling( p_game );
   }
 
+  // TODO merge with EbEvtMove
+  private void checkFireDisabling(Game p_game)
+  {
+    if( isFdComputed() )
+    {
+      // save CPU by avoiding recompute fire disabling flags
+      p_game.getBoardFireCover().addFireDisabling( getFdAdded() );
+      p_game.getBoardFireCover().removeFireDisabling( getFdRemoved() );
+    }
+    else
+    {
+      int fireRange = p_game.getTokenFireLength( getToken( p_game ) );
+      List<FireDisabling> fdRemoved = new ArrayList<FireDisabling>();
+      List<FireDisabling> fdAdded = new ArrayList<FireDisabling>();
+
+      if( getToken( p_game ).isFireDisabling() )
+      {
+        // lock current moving destroyer and remove all his fire disabling
+        // action
+        // to allow his target to defend themself
+        p_game.getBoardFireCover().decFireCover( getToken( p_game ) );
+        List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+        fd2Remove.addAll( getToken( p_game ).getFireDisablingList() );
+        fdRemoved.addAll( getToken( p_game ).getFireDisablingList() );
+        p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
+        // check if old target can disable unit
+        for( FireDisabling fd : fd2Remove )
+        {
+          EbToken target = fd.getTarget( p_game );
+          if( !target.isFireDisabled() )
+          {
+            p_game.getBoardFireCover().checkFireDisableFlag( target.getPosition(),
+                p_game.getTokenFireLength( target ),
+                FdChange.fromDestroyerFireDisableStatus( target.isFireDisabled() ), fdRemoved,
+                fdAdded );
+          }
+        }
+        // now check if old target can be re-disable with other destroyer
+        for( FireDisabling fd : fd2Remove )
+        {
+          EbToken target = fd.getTarget( p_game );
+          if( !target.isFireDisabled() )
+          {
+            p_game.getBoardFireCover().recursiveCheckFireDisableFlag( target, FdChange.DISABLE,
+                fdRemoved, fdAdded );
+          }
+        }
+
+        // p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game
+        // ).getPosition(),
+        // fireRange - 1, fdRemoved, fdAdded );
+        p_game.getBoardFireCover().incFireCover( getToken( p_game ) );
+      }
+      else if( getToken( p_game ).isFireDisabled() )
+      {
+        // if token was fire disabled, the only allowed moved is to leave a fire
+        // cover...
+        List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+        fd2Remove.addAll( getToken( p_game ).getFireDisablingList() );
+        fdRemoved.addAll( getToken( p_game ).getFireDisablingList() );
+        p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
+      }
+
+      // fire range +1 to look for all tokens that may be impacted (ie enter or
+      // leave fire cover)
+      p_game.getBoardFireCover().checkFireDisableFlag( getToken( p_game ).getPosition(),
+          fireRange + 1,
+          FdChange.fromDestroyerFireDisableStatus( getToken( p_game ).isFireDisabled() ),
+          fdRemoved, fdAdded );
+
+      p_game.getBoardFireCover().cleanFireDisableCollection( fdRemoved, fdAdded );
+
+      addFdRemoved( fdRemoved );
+      addFdAdded( fdAdded );
+      setFdComputed( true );
+    }
+  }
 
 
   /**
