@@ -1,0 +1,51 @@
+board 29 2 false
+board 30 3 false
+board 30 3 false
+board 30 3 false
+token 215
+board 32 3 true
+board 32 3 true
+board 30 3 false
+token 214
+board 31 3 false
+board 31 3 false
+board 28 3 false
+token 211
+board 31 4 true
+board 31 4 false
+# simple rotating neutralisation
+board 31 3 false
+assert exception
+board 32 4 false
+cancel
+# rotating neutralisation with load/unload
+board 31 3 false
+board 30 3 false
+board 30 3 false
+board 31 4 false
+board 33 4 true
+assert exception
+board 32 3 false
+cancel
+# other rotating neutralisation
+board 30 3 false
+token 214
+board 31 3 false
+board 31 3 false
+board 31 4 false
+board 31 5 false
+board 31 5 false
+# move inside fire cover
+board 31 3 false
+board 31 2 false
+board 31 2 false
+board 31 5 false
+assert exception
+board 32 6 false
+cancel
+# leave fire cover
+board 31 5 false
+board 30 6 false
+board 30 6 false
+
+

@@ -180,12 +180,21 @@ public class EbEvtMove extends AnEventPlay
       
     }
     // check this token is not going from AND to an opponent fire cover
-    checkFireDisabling( p_game );
-    EnuColor fireCoverColorOld = p_game.getOpponentFireCover( myRegistration.getColor(),
-        tokenPosition );
     EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
         getNewPosition() );
-    unexecFireDisabling( p_game );
+    if( getToken( p_game ).isFireDisabled() && fireCoverColorNew.getValue() != EnuColor.None )
+    {
+      throw new RpcFmpException( errMsg().CantMoveDisableFire(
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ),
+          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ) );
+    }
+
+    exec( p_game );
+    EnuColor fireCoverColorOld = p_game.getOpponentFireCover( myRegistration.getColor(),
+        tokenPosition );
+    fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
+        getNewPosition() );
+    unexec( p_game );
     if( (fireCoverColorOld.getValue() != EnuColor.None)
         && (p_game.getLastLog() != null)
         && (p_game.getLastLog().getType() == GameLogType.EvtMove)

@@ -79,7 +79,8 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
     m_speedQuickButton.addValueChangeHandler( this );
     m_panel.add( m_speedQuickButton );
 
-    m_panel.add( new HTML( "<a href='/help/gamemodes.jsp'>plus de détail ici</a>" ) );
+    m_panel.add( new HTML(
+        "<a href='http://guide.fullmetalgalaxy.com/guide/game-modes'>plus de détail ici</a>" ) );
     // fill UI
     onModelUpdate(GameEngine.model());
 
