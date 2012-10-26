@@ -1,0 +1,71 @@
+# test for Issue 99:	rotating neutralization in special case
+board 29 2 false
+token 214
+board 32 3 true
+board 32 3 false
+board 29 2 false
+token 215
+board 31 6 true
+board 31 6 false
+board 29 1 false
+board 31 3 true
+board 31 3 false
+board 31 6 false
+board 32 5 true
+board 32 5 false
+board 32 3 false
+assert exception
+board 32 4 false
+board 32 5 false
+assert exception
+board 33 7 true
+board 32 3 false
+board 32 2 false
+ok
+board 32 5 false
+assert exception
+board 31 5 false
+
+board 28 3 false
+token 210
+board 30 5 true
+board 30 5 false
+board 30 5 false
+# check that blue tank is fire disable (so cyan tank can't enter)
+assert exception
+board 31 5 false
+
+board 32 2 false
+board 32 3 false
+board 32 3 false
+board 28 2 false
+board 28 6 true
+board 31 8 true
+board 31 8 false
+board 30 5 false
+board 32 8 true
+ok
+board 32 8 false
+assert exception
+board 32 9 false
+assert exception
+board 33 10 true
+board 31 8 false
+board 31 8 false
+board 32 5 false
+board 33 7 true
+board 33 7 false
+board 32 9 false
+board 30 10 true
+board 30 10 true
+board 32 3 false
+board 32 2 false
+board 32 2 false
+board 29 2 false
+# check that blue tank are still enabled (so red tank are disabled)
+board 31 4 true
+board 31 4 false
+
+# small bug...
+board 31 8 false
+board 32 6 true

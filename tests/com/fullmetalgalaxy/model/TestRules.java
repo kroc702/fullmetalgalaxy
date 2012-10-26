@@ -96,6 +96,16 @@ public class TestRules
   }
 
   @Test
+  public void testRotatingNeutralisation2() throws IOException, ClassNotFoundException,
+      RpcFmpException
+  {
+    GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
+    gameEngine.runScriptFile( "./war/puzzles/test/rotatingNeutralisation2.script" );
+
+    gameEngine.assertRewind();
+  }
+
+  @Test
   public void testWeatherHenBuilding() throws IOException, ClassNotFoundException, RpcFmpException
   {
     GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );

@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
+
 
 
 
@@ -262,9 +264,40 @@ public class EbEvtMove extends AnEventPlay
         // action
         // to allow his target to defend themself
         p_game.getBoardFireCover().decFireCover( getToken( p_game ) );
-        List<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
-        fd2Remove.addAll( getToken( p_game ).getFireDisablingList() );
-        fdRemoved.addAll( getToken( p_game ).getFireDisablingList() );
+        AbstractCollection<FireDisabling> fd2Remove = new ArrayList<FireDisabling>();
+        for( FireDisabling fd : getToken( p_game ).getFireDisablingList() )
+        {
+          fd2Remove.add( fd );
+          if( fd.getDestroyer1Id() != getToken( p_game ).getId() )
+          {
+            for( FireDisabling fd2 : fd.getDestroyer1( p_game ).getFireDisablingList() )
+            {
+              if( fd2.getTargetId() != fd.getTargetId()
+                  && p_game.canTokenFireOn( fd.getTarget( p_game ), fd2.getDestroyer2( p_game ) ) )
+              {
+                // may be a small bug: we shouldn't removed fd2 if fd2 is older than fd...
+                fd2Remove.add( fd2 );
+              }
+            }
+          }
+          else if( fd.getDestroyer2Id() != getToken( p_game ).getId() )
+          {
+            for( FireDisabling fd2 : fd.getDestroyer2( p_game ).getFireDisablingList() )
+            {
+              if( fd2.getTargetId() != fd.getTargetId()
+                  && p_game.canTokenFireOn( fd.getTarget( p_game ), fd2.getDestroyer1( p_game ) ) )
+              {
+                fd2Remove.add( fd2 );
+              }
+            }
+          }
+          // fd2Remove.addAll( fd.getDestroyer1( p_game ).getFireDisablingList()
+          // );
+          // fd2Remove.addAll( fd.getDestroyer2( p_game ).getFireDisablingList()
+          // );
+        }
+
+        fdRemoved.addAll( fd2Remove );
         p_game.getBoardFireCover().removeFireDisabling( fd2Remove );
         // check if old target can disable unit
         for( FireDisabling fd : fd2Remove )
