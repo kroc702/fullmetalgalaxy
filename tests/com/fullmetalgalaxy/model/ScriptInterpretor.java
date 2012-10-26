@@ -79,6 +79,7 @@ public class ScriptInterpretor
       {
         m_gameEngine.runCurrentAction();
       }
+      m_gameEngine.checkActionBuilder();
     }
     else if( line[0].equalsIgnoreCase( "board" ) )
     {
@@ -93,6 +94,7 @@ public class ScriptInterpretor
       {
         m_gameEngine.runCurrentAction();
       }
+      m_gameEngine.checkActionBuilder();
     }
     else if( line[0].equalsIgnoreCase( "cancel" ) )
     {
@@ -106,6 +108,7 @@ public class ScriptInterpretor
       //
       m_gameEngine.getActionBuilder().userOk();
       m_gameEngine.runCurrentAction();
+      m_gameEngine.checkActionBuilder();
     }
     else if( line[0].equalsIgnoreCase( "token" ) )
     {
@@ -129,6 +132,7 @@ public class ScriptInterpretor
         token = fakeToken;
       }
       m_gameEngine.getActionBuilder().userTokenClick( token );
+      m_gameEngine.checkActionBuilder();
     }
     else if( line[0].equalsIgnoreCase( "assert" ) )
     {
@@ -139,7 +143,7 @@ public class ScriptInterpretor
         m_assertExceptionLine = m_lineCount + 1;
       }
     }
-    m_gameEngine.checkActionBuilder();
+
   }
 
   public void run(BufferedReader p_reader) throws IOException
