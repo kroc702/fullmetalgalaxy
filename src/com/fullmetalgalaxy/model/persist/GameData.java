@@ -819,6 +819,11 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     m_data.setAdditionalGameLog( p_additionalGameLog );
   }
+
+  public EnuColor getUnusedColors()
+  {
+    return m_preview.getUnusedColors();
+  }
   
   
   

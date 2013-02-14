@@ -320,7 +320,19 @@ public class EbGamePreview extends EbBase
     return sortedRegistration;
   }
 
-
+  /**
+   * 
+   * @return all colors that are not used by any registration
+   */
+  public EnuColor getUnusedColors()
+  {
+    EnuColor color = new EnuColor( EnuColor.getMaxColorValue() );
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      color.removeColor( registration.getColor() );
+    }
+    return color;
+  }
 
   /**
    * offset height in pixel to display token image in tactic zoom.

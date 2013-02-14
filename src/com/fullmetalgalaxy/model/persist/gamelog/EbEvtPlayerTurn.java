@@ -116,7 +116,7 @@ public class EbEvtPlayerTurn extends AnEvent
     if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       EbToken freighter = p_game.getFreighter( p_game.getCurrentPlayerRegistration() );
-      if(freighter != null && freighter.getLocation() != Location.Board)
+      if( freighter != null && freighter.getLocation() == Location.Orbit )
       {
         throw new RpcFmpException( errMsg().mustLandFreighter() );
       }

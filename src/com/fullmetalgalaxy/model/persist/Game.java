@@ -837,7 +837,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
-      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
+      if( token.getType() == TokenType.Freighter && token.getColor() != EnuColor.None
+          && color.isColored( token.getColor() ) )
       {
         return token;
       }
@@ -855,7 +856,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
-      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
+      if( token.getType() == TokenType.Freighter && token.getColor() != EnuColor.None
+          && color.isColored( token.getColor() ) )
       {
         list.add( token );
       }

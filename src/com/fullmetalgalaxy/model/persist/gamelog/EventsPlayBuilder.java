@@ -1618,7 +1618,8 @@ public class EventsPlayBuilder implements GameEventStack
     // control
     if( (action.getTokenCarrier( m_game ).getType() == TokenType.Freighter)
         && (!action.getMyRegistration( m_game ).getEnuColor().isColored(
-            action.getTokenCarrier( m_game ).getColor() )) )
+            action.getTokenCarrier( m_game ).getColor() )
+            || action.getTokenCarrier( m_game ).getColor() == EnuColor.None) )
     {
       actionControlFreighter( action.getToken( m_game ), action.getTokenCarrier( m_game ) );
     }
