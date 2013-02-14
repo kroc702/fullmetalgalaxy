@@ -26,18 +26,14 @@
   	</admin-console>
   
 	<static-files>
-        <include path="/**.cache.**" expiration="365d" />
-        <include path="/**.nocache.**" expiration="20s" />
-        <include path="/game/**" expiration="10d" />
-        <include path="/chat/**" expiration="10d" />
-        <include path="/puzzles/**" expiration="10d" />
-        <include path="/**images/**" expiration="10d" />
-        <include path="/**.css" expiration="10d" />
-        <include path="/ImageServlet" expiration="1d" />
         <!-- We can't cache game.jsp since game data is now embedded -->
-        <include path="/game.jsp" expiration="1s" />
-        <include path="/**.jsp" expiration="2h" />
-        <include path="/*" expiration="10d" />
+        <include path="/game.jsp" expiration="0s" />
+        <include path="/**.nocache.**" expiration="0s" />
+        <include path="/**.jsp" expiration="1h" />
+        <include path="/**.cache.**" expiration="365d" />
+        <include path="/**images/**" expiration="10d" />
+        <!-- include path="/ImageServlet" expiration="1d" /-->
+        <include path="/**" expiration="1h" />
         <exclude path="/include/**" />
         <exclude path="/**.pspimage" />
         <exclude path="/images/**/minimap/*" />

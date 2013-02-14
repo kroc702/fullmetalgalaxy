@@ -132,7 +132,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     switch( this )
     {
     case Freighter:
-      return 1000;
+      return 10;
     case Barge:
       return 4;
     case WeatherHen:

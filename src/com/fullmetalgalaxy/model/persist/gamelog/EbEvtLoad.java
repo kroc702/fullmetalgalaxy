@@ -120,20 +120,21 @@ public class EbEvtLoad extends AnEventPlay
     // check that player control both token color
     EbRegistration myRegistration = getMyRegistration(p_game);
     assert myRegistration != null;
-    if( !myRegistration.getEnuColor().isColored( getToken(p_game).getColor() ) )
+    if( !myRegistration.getEnuColor().isColored( getToken( p_game ).getColor() ) )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
-    if( getToken(p_game).canBeColored() && getToken(p_game).getColor() == EnuColor.None )
+    if( getToken( p_game ).canBeColored() && getToken( p_game ).getColor() == EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
-    if( !myRegistration.getEnuColor().isColored( getTokenCarrier(p_game).getColor() )
-        || getTokenCarrier(p_game).getColor() == EnuColor.None )
+    if( (!myRegistration.getEnuColor().isColored( getTokenCarrier( p_game ).getColor() )
+        || getTokenCarrier( p_game ).getColor() == EnuColor.None )
+        && getTokenCarrier( p_game ).getType() != TokenType.Freighter )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
