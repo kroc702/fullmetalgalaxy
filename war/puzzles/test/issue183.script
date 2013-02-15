@@ -35,8 +35,7 @@ assert exception
 action EvtFire
 assert exception
 board 17 21 false
-board 17 18 false
 assert exception
-ok
+board 17 18 false
 
 
