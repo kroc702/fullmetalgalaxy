@@ -159,9 +159,21 @@ public class EbEvtTransfer extends AnEventPlay
     if( !p_game.isTokenTideActive( getNewTokenCarrier(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantUnloadDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getNewTokenCarrier( p_game ) ) ) );
     }
     if( !p_game.isTokenFireActive( getNewTokenCarrier( p_game ) ) )
+    {
+      throw new RpcFmpException( errMsg().CantUnloadDisableFire(
+          Messages.getTokenString( getAccountId(), getNewTokenCarrier( p_game ) ),
+          Messages.getColorString( getAccountId(),
+              p_game.getOpponentFireCover( getNewTokenCarrier( p_game ) ).getValue() ) ) );
+    }
+    if( !p_game.isTokenTideActive( getTokenCarrier( p_game ) ) )
+    {
+      throw new RpcFmpException( errMsg().CantUnloadDisableTide(
+          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ) ) );
+    }
+    if( !p_game.isTokenFireActive( getTokenCarrier( p_game ) ) )
     {
       throw new RpcFmpException( errMsg().CantUnloadDisableFire(
           Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
