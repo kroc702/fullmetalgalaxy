@@ -33,7 +33,6 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -156,7 +155,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
         // Display next action point increments
         Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
         m_generalPanel.add( new Label( MAppBoard.s_messages.nextActionPt(
-            EbConfigGameTime.getActionInc( game, registration ),
+            registration.getActionInc( game ),
             ClientUtil.s_dateTimeFormat.format( nextActionIncrement ) ) ) );
       }
       else if( registration.getEndTurnDate() != null )

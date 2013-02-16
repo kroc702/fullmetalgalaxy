@@ -30,7 +30,6 @@ import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -196,7 +195,7 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     else
     {
-      int actionInc = EbConfigGameTime.getActionInc( p_game, nextPlayerRegistration );
+      int actionInc = nextPlayerRegistration.getActionInc( p_game );
       int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
       if( actionPt > nextPlayerRegistration.getMaxActionPt( p_game ) )
       {
@@ -247,7 +246,7 @@ public class EbEvtPlayerTurn extends AnEvent
     else
     {
       // current player action points
-      int actionInc = EbConfigGameTime.getActionInc( p_game, game.getCurrentPlayerRegistration() );
+      int actionInc = game.getCurrentPlayerRegistration().getActionInc( p_game );
       int actionPt = game.getCurrentPlayerRegistration().getPtAction() - actionInc;
       if( actionPt < 0 )
       {

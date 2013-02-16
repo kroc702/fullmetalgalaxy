@@ -33,7 +33,6 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.SharedMethods;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -116,7 +115,7 @@ public class WgtPlayerInfo extends Composite
       Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
       m_lblAction
           .setTitle( MAppBoard.s_messages.nextPA(
-              EbConfigGameTime.getActionInc( game, m_registration ),
+              m_registration.getActionInc( game ),
               ClientUtil.formatTimeElapsed( nextActionIncrement.getTime()
                   - System.currentTimeMillis() ) ) );
     }
