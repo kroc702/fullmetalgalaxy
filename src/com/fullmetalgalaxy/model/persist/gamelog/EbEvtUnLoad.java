@@ -143,19 +143,23 @@ public class EbEvtUnLoad extends AnEventPlay
     Set<EbToken> tokensOnWay = p_game.getAllToken( getNewPosition() );
     for( EbToken token : tokensOnWay )
     {
-      if( (token != getToken(p_game)) && (token.getType() != TokenType.Pontoon) )
+      if( (token != getToken( p_game )) )
       {
-        throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
-      }
-      if( token.getType() == TokenType.Pontoon )
-      {
-        if( token.canLoad( getToken(p_game).getType() ) )
+        if( (token.getType() != TokenType.Pontoon) && (token.getType() != TokenType.Sluice) )
         {
-          moveToPontoon = true;
+          throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
         }
         else
         {
-          throw new RpcFmpException( "Ce bateau ne peut pas se deplacer sur le ponton" );
+          if( token.canLoad( getToken( p_game ).getType() ) )
+          {
+            moveToPontoon = true;
+          }
+          else
+          {
+            throw new RpcFmpException( "Cette unité ne peut pas ce deplacer sur le "
+                + token.getType() );
+          }
         }
       }
     }
