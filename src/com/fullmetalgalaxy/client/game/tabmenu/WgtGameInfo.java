@@ -87,6 +87,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     m_btnCustomMap.addClickHandler( this );
     
     initGeneralPanel();
+    m_generalPanel.setStyleName( "fmp-general-panel" );
     initWidget( m_generalPanel );
   }
 

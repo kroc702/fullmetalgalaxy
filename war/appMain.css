@@ -462,16 +462,24 @@ code {
     min-width: 400px;
     height: 320px; 
 	overflow: scroll;
+	padding: 10;
 }
 
+.fmp-players-panel,
+.fmp-general-panel {
+    min-width: 500px;
+    height: 360px; 
+	overflow-y: scroll;
+	padding: 10;
+}
 .fmp-msg-panel {
     min-width: 420px;
     height: 380px; 
 	overflow-y: scroll;
-	overflow-x: hidden;
 }
 .fmp-msg-panel .article {
 	width: 380px;
+	overflow-x: hidden;
 	word-wrap: break-word;
 }
 

@@ -55,6 +55,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -80,7 +81,10 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_btnSkipTurn.addClickHandler( this );
     
     initPlayerPanel();
-    initWidget( m_playerPanel );
+    ScrollPanel m_scrollPanel = new ScrollPanel();
+    m_scrollPanel.setStyleName( "fmp-players-panel" );
+    m_scrollPanel.add( m_playerPanel );
+    initWidget( m_scrollPanel );
   }
   
   private void initPlayerPanel()
@@ -181,7 +185,8 @@ public class WgtPlayers extends Composite implements ClickHandler
       if( registration.isReplacement() )
       {
         EbPublicAccount resigned = registration.getOriginalAccount( GameEngine.model().getGame() );
-        html += "<br/><small>remplace <a href='" + resigned.getProfileUrl() + "' target='_blank'>"
+        html += "<br/><small>remplace&nbsp;<a href='" + resigned.getProfileUrl()
+            + "' target='_blank'>"
             + resigned.getPseudo() + "</a></small>";
       }
       m_playerGrid.setHTML( index, 1, html );
