@@ -47,12 +47,14 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Key;
@@ -357,6 +359,13 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           {
             registration.updateLastConnexion();
             registration.clearNotifSended();
+          }
+          else if( (event instanceof EbEvtMessage)
+              && (game.getAccount( ((AnEventUser)event).getAccountId() ) == null) )
+          {
+            // add our account info into this game
+            game.addAccount( new EbPublicAccount( FmgDataStore.dao().get( EbAccount.class,
+                ((AnEventUser)event).getAccountId() ) ) );
           }
         }
         event.setLastUpdate( ServerUtil.currentDate() );
