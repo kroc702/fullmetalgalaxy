@@ -61,7 +61,7 @@ public class EbRegistration extends EbBase
     m_color = EnuColor.None;
     m_ptAction = 0;
     m_orderIndex = 0;
-    m_isReplacement = false;
+    m_originalAccountId = 0;
   }
 
   @Override
@@ -92,7 +92,7 @@ public class EbRegistration extends EbBase
   private Date m_lastConnexion = new Date();
   @Serialized
   private List<String> m_notifSended = null;
-  private boolean m_isReplacement = false;
+  private long m_originalAccountId = 0;
 
   @Embedded
   private EbPublicAccount m_account = null;
@@ -444,16 +444,9 @@ public class EbRegistration extends EbBase
    */
   public boolean isReplacement()
   {
-    return m_isReplacement;
+    return m_originalAccountId != 0;
   }
 
-  /**
-   * @param p_isReplacement the isReplacement to set
-   */
-  public void setReplacement(boolean p_isReplacement)
-  {
-    m_isReplacement = p_isReplacement;
-  }
 
   public StatsPlayer getStats()
   {
@@ -473,6 +466,21 @@ public class EbRegistration extends EbBase
   public void setLockedPosition(AnBoardPosition p_lockedPosition)
   {
     m_lockedPosition = p_lockedPosition;
+  }
+
+  public long getOriginalAccountId()
+  {
+    return m_originalAccountId;
+  }
+
+  public EbPublicAccount getOriginalAccount(Game p_game)
+  {
+    return p_game.getAccount( getOriginalAccountId() );
+  }
+
+  public void setOriginalAccountId(long p_originalAccountId)
+  {
+    m_originalAccountId = p_originalAccountId;
   }
 
 

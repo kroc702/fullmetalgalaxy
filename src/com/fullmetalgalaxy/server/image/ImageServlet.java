@@ -124,9 +124,9 @@ public class ImageServlet extends HttpServlet
       else if( gradid != null )
       {
         EbAccount account = findAccount(gradid);
-        if( account != null && account.getGradUrl() != null )
+        if( account != null )
         {
-          response.sendRedirect( account.getGradUrl() );
+          response.sendRedirect( account.getGradStaticUrl() );
         }
         else
         {
