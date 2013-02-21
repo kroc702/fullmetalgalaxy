@@ -178,6 +178,12 @@ public class WgtPlayers extends Composite implements ClickHandler
       {
         html += "<br/><img src='"+registration.getAccount().getGradUrl()+"' border=0 alt='GRAD'/>";
       }
+      if( registration.isReplacement() )
+      {
+        EbPublicAccount resigned = registration.getOriginalAccount( GameEngine.model().getGame() );
+        html += "<br/><small>remplace <a href='" + resigned.getProfileUrl() + "' target='_blank'>"
+            + resigned.getPseudo() + "</a></small>";
+      }
       m_playerGrid.setHTML( index, 1, html );
 
       // display all colors

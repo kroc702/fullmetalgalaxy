@@ -103,7 +103,10 @@ public class EbAdminBan extends EbAdmin
       m_oldAccountId = registration.getAccount().getId();
       p_game.addAccount( registration.getAccount() );
 
-      registration.setReplacement( true );
+      if( !registration.isReplacement() )
+      {
+        registration.setOriginalAccountId( registration.getAccount().getId() );
+      }
       registration.setAccount( null );
       registration.setEndTurnDate( null );
       

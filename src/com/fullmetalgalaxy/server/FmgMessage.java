@@ -38,6 +38,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
@@ -372,6 +373,11 @@ public class FmgMessage
           else
           {
             gameResults += "???";
+          }
+          if( registration.isReplacement() )
+          {
+            EbPublicAccount resigned = registration.getOriginalAccount( p_game );
+            gameResults += " (remplace " + resigned.getPseudo() + ")";
           }
           gameResults += " : " + registration.estimateWinningScore( p_game ) + " pts\n";
         }

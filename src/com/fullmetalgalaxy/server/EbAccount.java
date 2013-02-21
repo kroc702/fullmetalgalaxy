@@ -348,10 +348,9 @@ public class EbAccount extends EbPublicAccount implements IPlayer
 
   /**
    * icon url to illustrate player fiability, level and style
-   * @return
+   * @return a static url (no more server processing)
    */
-  @Override
-  public String getGradUrl()
+  public String getGradStaticUrl()
   {
     if( getFairplay() < 0 )
     {
@@ -400,7 +399,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     String newsHtml = "<a href='"+getProfileUrl()+"'><table width='100%'><tr>";
     newsHtml += "<td><img src='" + getAvatarUrl() + "' height='40px' /></td>";
     newsHtml += "<td>" + getPseudo() + "<br/>" + (int)getCurrentLevel() + " <img src='"
-        + getGradUrl() + "' style='margin:0px'/></td>";
+        + getGradStaticUrl() + "' style='margin:0px'/></td>";
     // newsHtml += "<td>" + (int)getCurrentLevel() + " Pts</td>";
     newsHtml += "</tr></table></a>";
     return newsHtml;
