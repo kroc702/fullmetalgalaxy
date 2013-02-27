@@ -86,6 +86,15 @@ public class TestRules
   }
 
   @Test
+  public void testFireCoversIssue183() throws IOException, ClassNotFoundException, RpcFmpException
+  {
+    GameEngine4Test gameEngine = new GameEngine4Test( "./war/puzzles/test/model.bin" );
+    gameEngine.runScriptFile( "./war/puzzles/test/issue183.script" );
+
+    gameEngine.assertRewind();
+  }
+
+  @Test
   public void testRotatingNeutralisation() throws IOException, ClassNotFoundException,
       RpcFmpException
   {

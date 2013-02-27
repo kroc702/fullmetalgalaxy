@@ -148,7 +148,7 @@ public class EbEvtPlayerTurn extends AnEvent
     if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       EbToken freighter = p_game.getFreighter( myRegistration );
-      if(freighter != null && freighter.getLocation() != Location.Board)
+      if( freighter != null && freighter.getLocation() == Location.Orbit )
       {
         throw new RpcFmpException( errMsg().mustLandFreighter() );
       }
@@ -279,7 +279,7 @@ public class EbEvtPlayerTurn extends AnEvent
     // don't add action points
     if( !p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
     {
-      int actionInc = EbConfigGameTime.getActionInc( p_game, nextPlayerRegistration );
+      int actionInc = nextPlayerRegistration.getActionInc( p_game );
       int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
       if( actionPt > nextPlayerRegistration.getMaxActionPt( p_game ) )
       {
@@ -358,7 +358,7 @@ public class EbEvtPlayerTurn extends AnEvent
       for( long currentPlayerId : p_game.getCurrentPlayerIds() )
       {
         EbRegistration registration = p_game.getRegistration( currentPlayerId );
-        int actionInc = EbConfigGameTime.getActionInc( p_game, registration );
+        int actionInc = registration.getActionInc( p_game );
         int actionPt = registration.getPtAction() - actionInc;
         if( actionPt < 0 )
         {

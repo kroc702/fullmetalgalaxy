@@ -43,7 +43,8 @@ public class EbEvtControlFreighter extends AnEventPlay
 
   private EbBase m_packedOldRegistration = null;
   private int m_oldRegistrationSingleColor = EnuColor.None;
-  private boolean m_wasColorlessFreighter = false;
+  private int m_oldFreighterColor = EnuColor.None;
+  private int m_newFreighterColor = EnuColor.None;
   // ie bullet count from freighter
   private float m_oldTurretToRepair = 0f;
 
@@ -68,6 +69,8 @@ public class EbEvtControlFreighter extends AnEventPlay
     setCost( 0 );
     setAuto( true );
     m_packedOldRegistration = null;
+    m_oldFreighterColor = EnuColor.None;
+    m_newFreighterColor = EnuColor.None;
   }
 
   @Override
@@ -173,15 +176,23 @@ public class EbEvtControlFreighter extends AnEventPlay
   {
     super.exec(p_game);
 
-    if( getTokenFreighter( p_game ).getColor() == EnuColor.None )
+    m_oldFreighterColor = getTokenFreighter( p_game ).getColor();
+    if( m_oldFreighterColor == EnuColor.None )
     {
       // uncolored freighter is a special case where no other player is
       // eliminated
-      getTokenFreighter( p_game ).setColor( getToken( p_game ).getColor() );
-      m_wasColorlessFreighter = true;
+      if( m_newFreighterColor == EnuColor.None )
+      {
+        m_newFreighterColor = p_game.getUnusedColors().getSingleColor().getValue();
+      }
+      if( m_newFreighterColor == EnuColor.None )
+      {
+        throw new RpcFmpException( "No more color available to control freighter" );
+      }
     }
     else
     {
+      m_newFreighterColor = m_oldFreighterColor;
       // backup old registration (used by unexec)
       for( EbRegistration registration : p_game.getSetRegistration() )
       {
@@ -192,27 +203,28 @@ public class EbEvtControlFreighter extends AnEventPlay
           m_oldRegistrationSingleColor = registration.getSingleColor();
         }
       }
-
-      if( getOldRegistration( p_game ) != null )
-      {
-        getOldRegistration( p_game ).setColor(
-            EnuColor.removeColor( getOldRegistration( p_game ).getColor(),
-                getTokenFreighter( p_game ).getColor() ) );
-        if( getOldRegistration( p_game ).getColor() != EnuColor.None
-            && !getOldRegistration( p_game ).getEnuColor().isColored(
-                getOldRegistration( p_game ).getSingleColor() ) )
-        {
-          // player loose his main freighter but still have another one: change
-          // his fire cover color
-          getOldRegistration( p_game ).setSingleColor(
-              getOldRegistration( p_game ).getEnuColor().getSingleColor().getValue() );
-        }
-      }
-      // the new color owner
-      getMyRegistration( p_game ).setColor(
-          EnuColor.addColor( getMyRegistration( p_game ).getColor(), getTokenFreighter( p_game )
-              .getColor() ) );
     }
+
+    if( getOldRegistration( p_game ) != null )
+    {
+      getOldRegistration( p_game ).setColor(
+          EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenFreighter( p_game )
+              .getColor() ) );
+      if( getOldRegistration( p_game ).getColor() != EnuColor.None
+          && !getOldRegistration( p_game ).getEnuColor().isColored(
+              getOldRegistration( p_game ).getSingleColor() ) )
+      {
+        // player loose his main freighter but still have another one: change
+        // his fire cover color
+        getOldRegistration( p_game ).setSingleColor(
+            getOldRegistration( p_game ).getEnuColor().getSingleColor().getValue() );
+      }
+    }
+
+    getTokenFreighter( p_game ).setColor( m_newFreighterColor );
+    // the new color owner
+    getMyRegistration( p_game ).setColor(
+        EnuColor.addColor( getMyRegistration( p_game ).getColor(), m_newFreighterColor ) );
     m_oldTurretToRepair = getTokenFreighter( p_game ).getBulletCount();
     getTokenFreighter( p_game ).setBulletCount( 3 );
 
@@ -229,27 +241,16 @@ public class EbEvtControlFreighter extends AnEventPlay
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    if( m_wasColorlessFreighter )
+    getTokenFreighter( p_game ).setColor( m_oldFreighterColor );
+    // the new color owner
+    getMyRegistration( p_game ).setColor(
+        EnuColor.removeColor( getMyRegistration( p_game ).getColor(), m_newFreighterColor ) );
+
+    if( getOldRegistration( p_game ) != null )
     {
-      getTokenFreighter( p_game ).setColor( EnuColor.None );
-    }
-    else
-    {
-      // the new color owner
-      getMyRegistration( p_game ).setColor(
-          EnuColor.removeColor( getMyRegistration( p_game ).getColor(), getTokenFreighter( p_game )
-              .getColor() ) );
-      if( getOldRegistration( p_game ) != null )
-      {
-        getOldRegistration( p_game ).setColor(
-            EnuColor.addColor( getOldRegistration( p_game ).getColor(), getTokenFreighter( p_game )
-                .getColor() ) );
-        // test is here for backward compatibility
-        if( m_oldRegistrationSingleColor != EnuColor.None )
-        {
-          getOldRegistration( p_game ).setSingleColor( m_oldRegistrationSingleColor );
-        }
-      }
+      getOldRegistration( p_game ).setColor(
+          EnuColor.addColor( getOldRegistration( p_game ).getColor(), m_oldFreighterColor ) );
+      getOldRegistration( p_game ).setSingleColor( m_oldRegistrationSingleColor );
     }
     getTokenFreighter( p_game ).setBulletCount( m_oldTurretToRepair );
 
@@ -282,6 +283,10 @@ public class EbEvtControlFreighter extends AnEventPlay
 
   public EbRegistration getOldRegistration(Game p_game)
   {
+    if( getPackedOldRegistration() == null )
+    {
+      return null;
+    }
     if( m_oldRegistration == null )
     {
       m_oldRegistration = p_game.getRegistration( getPackedOldRegistration().getId() );
@@ -291,8 +296,16 @@ public class EbEvtControlFreighter extends AnEventPlay
 
   private void setOldRegistration(EbRegistration p_oldRegistration)
   {
-    m_packedOldRegistration = p_oldRegistration.createEbBase();
-    m_oldRegistration = p_oldRegistration;
+    if( p_oldRegistration == null )
+    {
+      m_packedOldRegistration = null;
+      m_oldRegistration = null;
+    }
+    else
+    {
+      m_packedOldRegistration = p_oldRegistration.createEbBase();
+      m_oldRegistration = p_oldRegistration;
+    }
   }
 
 }

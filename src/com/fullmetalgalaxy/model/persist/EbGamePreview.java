@@ -326,6 +326,19 @@ public class EbGamePreview extends EbBase
     return sortedRegistration;
   }
 
+  /**
+   * 
+   * @return all colors that are not used by any registration
+   */
+  public EnuColor getUnusedColors()
+  {
+    EnuColor color = new EnuColor( EnuColor.getMaxColorValue() );
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      color.removeColor( registration.getColor() );
+    }
+    return color;
+  }
 
 
   /**
@@ -997,6 +1010,15 @@ public class EbGamePreview extends EbBase
   }
 
 
+  public void incVersion()
+  {
+    m_version++;
+  }
+
+  public void decVersion()
+  {
+    m_version--;
+  }
 
   public boolean isVip()
   {

@@ -127,44 +127,6 @@ public class EbConfigGameTime extends EbBase
   }
 
 
-  private static int getDefaultActionInc(Game p_game)
-  {
-    int timeStep = p_game.getCurrentTimeStep();
-    timeStep -= p_game.getEbConfigGameTime().getDeploymentTimeStep();
-    int actionInc = p_game.getEbConfigGameTime().getActionPtPerTimeStep();
-
-    if( timeStep <= 0 )
-    {
-      actionInc = 0;
-    }
-    else if( timeStep == 1 )
-    {
-      actionInc = actionInc / 3;
-    }
-    else if( timeStep == 2 )
-    {
-      actionInc = (2 * actionInc) / 3;
-    }
-    return actionInc;
-  }
-
-  public static int getActionInc(Game p_game, EbRegistration p_registration)
-  {
-    if( p_game.getCurrentTimeStep() <= 1
-        || p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
-    {
-      return 0;
-    }
-    int action = 0;
-    int nbColor = p_registration.getEnuColor().getNbColor();
-    if( nbColor >= 1 )
-    {
-      action += EbConfigGameTime.getDefaultActionInc( p_game );
-      action += (nbColor - 1) * p_game.getEbConfigGameTime().getActionPtPerExtraShip();
-    }
-    return action;
-  }
-
   // =============================
 
   /**

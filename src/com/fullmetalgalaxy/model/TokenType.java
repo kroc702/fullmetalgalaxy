@@ -132,7 +132,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     switch( this )
     {
     case Freighter:
-      return 1000;
+      return 10;
     case Barge:
       return 4;
     case WeatherHen:
@@ -230,9 +230,9 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Freighter:
       if( (p_sector == Sector.North) || (p_sector == Sector.SouthEast)
           || (p_sector == Sector.SouthWest) )
-        return 1;
+        return 3;
       else
-        return 0;
+        return 2;
     case Ore0:
     case Ore:
     case Ore3:
@@ -246,9 +246,9 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
     case Hovertank:
     case Tarask:
-      return 1;
+      return 3;
     case Turret:
-      return 4;
+      return 6;
     default:
       return 10;
     }

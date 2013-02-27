@@ -460,46 +460,40 @@ public interface Icons extends ClientBundle
   public ImageResource strategy_pontoon_se();
 
 
-  @Source("tokens/render/colorless/tactic/sluice0-0001.png")
+  @Source("tokens/tactic_sluice0.png")
   public ImageResource tactic_sluice_n();
 
-  @Source("tokens/render/colorless/tactic/sluice300-0001.png")
+  @Source("tokens/tactic_sluice300.png")
   public ImageResource tactic_sluice_ne();
 
-  @Source("tokens/render/colorless/tactic/sluice60-0001.png")
+  @Source("tokens/tactic_sluice60.png")
   public ImageResource tactic_sluice_nw();
 
-  // @Source("tokens/render/colorless/tactic/sluice180-0001.png")
-  @Source("tokens/render/colorless/tactic/sluice0-0001.png")
+  @Source("tokens/tactic_sluice0.png")
   public ImageResource tactic_sluice_s();
 
-  // @Source("tokens/render/colorless/tactic/sluice120-0001.png")
-  @Source("tokens/render/colorless/tactic/sluice300-0001.png")
+  @Source("tokens/tactic_sluice300.png")
   public ImageResource tactic_sluice_sw();
 
-  // @Source("tokens/render/colorless/tactic/sluice240-0001.png")
-  @Source("tokens/render/colorless/tactic/sluice60-0001.png")
+  @Source("tokens/tactic_sluice60.png")
   public ImageResource tactic_sluice_se();
 
-  @Source("tokens/render/colorless/strategy/sluice0-0001.png")
+  @Source("tokens/strategy_sluice0.png")
   public ImageResource strategy_sluice_n();
 
-  @Source("tokens/render/colorless/strategy/sluice300-0001.png")
+  @Source("tokens/strategy_sluice300.png")
   public ImageResource strategy_sluice_ne();
 
-  @Source("tokens/render/colorless/strategy/sluice60-0001.png")
+  @Source("tokens/strategy_sluice60.png")
   public ImageResource strategy_sluice_nw();
 
-  // @Source("tokens/render/colorless/strategy/sluice180-0001.png")
-  @Source("tokens/render/colorless/strategy/sluice0-0001.png")
+  @Source("tokens/strategy_sluice0.png")
   public ImageResource strategy_sluice_s();
 
-  // @Source("tokens/render/colorless/strategy/sluice120-0001.png")
-  @Source("tokens/render/colorless/strategy/sluice300-0001.png")
+  @Source("tokens/strategy_sluice300.png")
   public ImageResource strategy_sluice_sw();
 
-  // @Source("tokens/render/colorless/strategy/sluice240-0001.png")
-  @Source("tokens/render/colorless/strategy/sluice60-0001.png")
+  @Source("tokens/strategy_sluice60.png")
   public ImageResource strategy_sluice_se();
 
 }

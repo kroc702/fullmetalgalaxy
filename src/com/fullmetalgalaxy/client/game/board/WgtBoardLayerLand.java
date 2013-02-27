@@ -302,19 +302,19 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     s_firstLandRuleIndex1 = ClientUtil.setCssRule( ".fmp-None1",
         "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
     ClientUtil.setCssRule( ".fmp-Sea1",
-        " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea.png);}" );
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea1.png);}" );
     ClientUtil
         .setCssRule( ".fmp-Reef1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight.png);}" );
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight1.png);}" );
     ClientUtil
         .setCssRule( ".fmp-Marsh1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low.png);}" );
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low1.png);}" );
     ClientUtil
         .setCssRule( ".fmp-Plain1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain.png);}" );
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain1.png);}" );
     ClientUtil
         .setCssRule( ".fmp-Montain1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain.png);}" );
+            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain1.png);}" );
 
     s_firstLandRuleIndex2 = ClientUtil.setCssRule( ".fmp-None2",
         "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;

@@ -156,7 +156,8 @@ public class EbEvtControl extends AnEventPlay
     }
 
     // check that target isn't freighter
-    if( getTokenTarget(p_game).getType() == TokenType.Freighter )
+    if( getTokenTarget( p_game ).getType() == TokenType.Freighter
+        || getTokenTarget( p_game ).getType() == TokenType.Turret )
     {
       throw new RpcFmpException(
           "les astronefs ne peuvent etres controlé de cette façon. Vous devez détruire toute les tourelles puis entrer dedans" );

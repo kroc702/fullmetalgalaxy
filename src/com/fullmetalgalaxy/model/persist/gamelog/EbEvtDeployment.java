@@ -163,14 +163,15 @@ public class EbEvtDeployment extends AnEventPlay
             Messages.getTokenString( getAccountId(), getToken( p_game ) ),
             Messages.getLandString( getAccountId(), p_game.getLand( getPosition() ) ) ) );
       }
+
+      // for pontoon, check they are linked to the ground
+      if( getToken( p_game ).getType() == TokenType.Pontoon
+          && !p_game.isPontoonLinkToGround( getPosition() ) )
+      {
+        throw new RpcFmpException( errMsg().cantDeployPotoonInSea() );
+      }
     }
 
-    // for pontoon, check they are linked to the ground
-    if( getToken( p_game ).getType() == TokenType.Pontoon
-        && !p_game.isPontoonLinkToGround( getPosition() ) )
-    {
-      throw new RpcFmpException( errMsg().cantDeployPotoonInSea() );
-    }
   }
 
   /* (non-Javadoc)

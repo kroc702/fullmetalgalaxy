@@ -62,7 +62,7 @@ public class EbRegistration extends EbBase
     m_color = EnuColor.None;
     m_ptAction = 0;
     m_orderIndex = 0;
-    m_isReplacement = false;
+    m_originalAccountId = 0;
   }
 
   @Override
@@ -99,7 +99,7 @@ public class EbRegistration extends EbBase
   private Date m_lastConnexion = new Date();
   @Serialized
   private List<String> m_notifSended = null;
-  private boolean m_isReplacement = false;
+  private long m_originalAccountId = 0;
 
   @Embedded
   private EbPublicAccount m_account = null;
@@ -209,11 +209,61 @@ public class EbRegistration extends EbBase
 
   public int getMaxActionPt(Game p_game)
   {
-    int nbColor = getEnuColor().getNbColor();
+    int freighterCount = getOnBoardFreighterCount( p_game );
     return p_game.getEbConfigGameVariant().getActionPtMaxReserve()
-        + ((nbColor - 1) * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
+        + ((freighterCount - 1) * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
   }
 
+
+  private static int getDefaultActionInc(Game p_game)
+  {
+    int timeStep = p_game.getCurrentTimeStep();
+    timeStep -= p_game.getEbConfigGameTime().getDeploymentTimeStep();
+    int actionInc = p_game.getEbConfigGameTime().getActionPtPerTimeStep();
+
+    if( timeStep <= 0 )
+    {
+      actionInc = 0;
+    }
+    else if( timeStep == 1 )
+    {
+      actionInc = actionInc / 3;
+    }
+    else if( timeStep == 2 )
+    {
+      actionInc = (2 * actionInc) / 3;
+    }
+    return actionInc;
+  }
+
+
+  protected int getOnBoardFreighterCount(Game p_game)
+  {
+    int freighterCount = getEnuColor().getNbColor();
+    // after turn 21, we really count number of landed freighter
+    if( p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns().get( 0 ) )
+    {
+      freighterCount = 0;
+      for( EbToken freighter : p_game.getAllFreighter( this ) )
+      {
+        if( freighter.getLocation() == Location.Board )
+          freighterCount++;
+      }
+    }
+    return freighterCount;
+  }
+
+  public int getActionInc(Game p_game)
+  {
+    int action = 0;
+    int freighterCount = getOnBoardFreighterCount( p_game );
+    if( freighterCount >= 1 )
+    {
+      action += getDefaultActionInc( p_game );
+      action += (freighterCount - 1) * p_game.getEbConfigGameTime().getActionPtPerExtraShip();
+    }
+    return action;
+  }
 
   public boolean isNotifSended(String p_msgName)
   {
@@ -413,16 +463,9 @@ public class EbRegistration extends EbBase
    */
   public boolean isReplacement()
   {
-    return m_isReplacement;
+    return m_originalAccountId != 0;
   }
 
-  /**
-   * @param p_isReplacement the isReplacement to set
-   */
-  public void setReplacement(boolean p_isReplacement)
-  {
-    m_isReplacement = p_isReplacement;
-  }
 
   public StatsPlayer getStats()
   {
@@ -442,6 +485,21 @@ public class EbRegistration extends EbBase
   public void setLockedPosition(AnBoardPosition p_lockedPosition)
   {
     m_lockedPosition = p_lockedPosition;
+  }
+
+  public long getOriginalAccountId()
+  {
+    return m_originalAccountId;
+  }
+
+  public EbPublicAccount getOriginalAccount(Game p_game)
+  {
+    return p_game.getAccount( getOriginalAccountId() );
+  }
+
+  public void setOriginalAccountId(long p_originalAccountId)
+  {
+    m_originalAccountId = p_originalAccountId;
   }
 
 
