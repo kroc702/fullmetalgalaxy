@@ -63,6 +63,14 @@ public class EbPublicAccount extends EbBase
     m_pseudo = "";
   }
 
+
+
+  @Override
+  public String toString()
+  {
+    return getPseudo();
+  }
+
   @Override
   public void reinit()
   {

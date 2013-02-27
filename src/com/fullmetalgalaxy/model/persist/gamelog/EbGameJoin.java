@@ -172,7 +172,8 @@ public class EbGameJoin extends AnEventUser
     }
     registration.setOrderIndex( game.getSetRegistration().size() - 1 );
     // set current player as the first player
-    game.setCurrentPlayerRegistration( game.getRegistrationByOrderIndex( 0 ) );
+    game.getCurrentPlayerIds().clear();
+    game.getCurrentPlayerIds().add( game.getRegistrationByOrderIndex( 0 ).getId() );
 
     // create all tokens
     EbToken shipToken = new EbToken();

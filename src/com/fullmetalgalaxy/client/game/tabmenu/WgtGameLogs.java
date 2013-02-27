@@ -84,11 +84,32 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     {
       buildTree4Tbt();
     }
+    if( GameEngine.model().getGame()
+        .isTimeStepParallelHidden( GameEngine.model().getGame().getCurrentTimeStep() ) )
+    {
+      addParallelHiddenEvent();
+    }
   }
+
+
+  private void addParallelHiddenEvent()
+  {
+    EbRegistration myRegistration = GameEngine.model().getMyRegistration();
+    if( myRegistration != null && !myRegistration.getMyEvents().isEmpty() )
+    {
+      TreeItem turnTreeItem = new TreeItem( myRegistration.getAccount().getPseudo() );
+      m_tree.addItem( turnTreeItem );
+      for( AnEvent event : myRegistration.getMyEvents() )
+      {
+        turnTreeItem.addItem( new TreeItemEvent( event ) );
+      }
+    }
+  }
+
 
   private void buildTree4Tbt()
   {
-    int currentTurn = -1;
+    int currentTurn = 0;
     Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
     TreeItem turnTreeItem = null;
     if( GameEngine.model().getGame().getAdditionalEventCount() > 0 )

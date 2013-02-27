@@ -17,7 +17,7 @@ compilation file for Full Metal Galaxy
 	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
-	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
+	<property name="jsstyle" value="PRETTY" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
 
 	<import file="${appenginesdkdir}/config/user/ant-macros.xml" />
 

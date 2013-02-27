@@ -109,7 +109,6 @@ public class GameUpdate extends HttpServlet
 
           // do we need to send an email ?
           modelUpdate.getGameEvents().addAll( eventAdded );
-          modelUpdate.setToVersion( game.getVersion() );
           GameNotification.sendMail( game, modelUpdate );
 
           // and save game

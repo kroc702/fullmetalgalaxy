@@ -450,9 +450,9 @@ public class EventsPlayBuilder implements GameEventStack
 
   protected EbRegistration getMyRegistration()
   {
-    if( getGame().getGameType() == GameType.Puzzle )
+    if( getGame().getGameType() == GameType.Puzzle && !getGame().getCurrentPlayerIds().isEmpty() )
     {
-      return getGame().getCurrentPlayerRegistration();
+      return getGame().getRegistration( getGame().getCurrentPlayerIds().get( 0 ) );
     }
     return getGame().getRegistrationByIdAccount( getAccountId() );
   }
@@ -478,16 +478,6 @@ public class EventsPlayBuilder implements GameEventStack
 
     // get token under user board clic
     EbToken token = getGame().getToken( p_position );
-    if( getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime().getDeploymentTimeStep()
-        && token != null
-        && token.getColor() != EnuColor.None
-        && (getMyRegistration() == null || !getMyRegistration().getEnuColor().contain(
-            token.getColor() )) )
-    {
-      // durring deployement, can't select other unit
-      token = null;
-    }
-
     if( p_position.equals( getLastUserClick() ) || !m_isRunnable )
     {
       if( isRunnable() )

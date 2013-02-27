@@ -83,9 +83,9 @@ public class AnEventUser extends AnEvent
     {
       return p_game.getRegistrationByIdAccount( getAccountId() );
     }
-    else if( p_game.getGameType() == GameType.Puzzle )
+    else if( p_game.getGameType() == GameType.Puzzle && !p_game.getCurrentPlayerIds().isEmpty() )
     {
-      return p_game.getCurrentPlayerRegistration();
+      return p_game.getRegistration( p_game.getCurrentPlayerIds().get( 0 ) );
     }
     return null;
   }

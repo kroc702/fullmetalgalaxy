@@ -291,10 +291,6 @@ public class EbEvtMove extends AnEventPlay
               }
             }
           }
-          // fd2Remove.addAll( fd.getDestroyer1( p_game ).getFireDisablingList()
-          // );
-          // fd2Remove.addAll( fd.getDestroyer2( p_game ).getFireDisablingList()
-          // );
         }
 
         fdRemoved.addAll( fd2Remove );

@@ -193,6 +193,12 @@ public class EbEvtFire extends AnEventPlay
       throw new RpcFmpException( errMsg().CantDestroyFreighter() );
     }
 
+    // check that game isn't in parallel hidden phase
+    if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+    }
+
   }
 
   /* (non-Javadoc)

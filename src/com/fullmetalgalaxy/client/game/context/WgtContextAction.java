@@ -438,7 +438,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         }
         // display end turn button ?
         if( (!GameEngine.model().getGame().isParallel()) && (myRegistration != null)
-            && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration)
+            && (GameEngine.model().getGame().getCurrentPlayerIds().contains( myRegistration.getId()))
             && (model.getGame().getStatus() == GameStatus.Running)
             && (model.getGame().getGameType() != GameType.Practice) )
         {
@@ -504,17 +504,16 @@ public class WgtContextAction extends WgtView implements ClickHandler
           if( myFreighter != null
               && model.getGame().getStatus() == GameStatus.Running
               && myFreighter.getLocation() == Location.Orbit
-              && (GameEngine.model().getGame().getCurrentPlayerRegistration() == myRegistration) )
+              && myRegistration != null
+              && (GameEngine.model().getGame().getCurrentPlayerIds().contains( myRegistration
+                  .getId() )) )
           {
             MAppMessagesStack.s_instance.showMessage( m_pnlLand );
           }
         }
 
         // should we display take off advise ?
-        if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
-            .getCurrentTimeStep() ))
-            && (GameEngine.model().getGame().isParallel() || GameEngine.model().getGame()
-                .getCurrentPlayerRegistration() == myRegistration) )
+        if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() )) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
         }
@@ -613,9 +612,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         m_panel.add( m_btnRepairTurret );
       }
 
-      if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() ))
-          && (GameEngine.model().getGame().isParallel() || GameEngine.model().getGame()
-              .getCurrentPlayerRegistration() == myRegistration) )
+      if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() )) )
       {
         if( (action.isBoardTokenSelected()) && (!action.isActionsPending())
             && (mainSelectedToken.getType() == TokenType.Freighter)

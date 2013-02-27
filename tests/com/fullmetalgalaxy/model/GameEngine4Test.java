@@ -73,7 +73,8 @@ public class GameEngine4Test
     fis.close();
 
     setGame( modelInit.getGame() );
-    EbRegistration registration = getGame().getCurrentPlayerRegistration();
+    EbRegistration registration = getGame().getRegistration(
+        getGame().getCurrentPlayerIds().get( 0 ) );
     if( registration == null || registration.getAccount() == null )
     {
       registration = getGame().getRegistrationByPlayerOrder().get( 0 );

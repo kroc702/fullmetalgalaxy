@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 
 /**
  * @author Vincent
@@ -48,7 +49,9 @@ public class TestPuzzles
     // check that last action (turret repair) worked
     Assert.assertNotNull( gameEngine.getGame().getToken( new AnBoardPosition( 19, 6 ),
         TokenType.Turret ) );
-    Assert.assertEquals( gameEngine.getGame().getCurrentPlayerRegistration().getPtAction(), 25 );
+    EbRegistration registration = gameEngine.getGame().getRegistration(
+        gameEngine.getGame().getCurrentPlayerIds().get( 0 ) );
+    Assert.assertEquals( registration.getPtAction(), 25 );
 
     gameEngine.assertRewind();
   }

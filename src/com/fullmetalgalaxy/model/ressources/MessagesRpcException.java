@@ -92,4 +92,6 @@ public interface MessagesRpcException extends Messages
 
   String OnlyDestroyerCanControl();
 
+  String CantAttackInParallelHiddenPhase();
+
 }

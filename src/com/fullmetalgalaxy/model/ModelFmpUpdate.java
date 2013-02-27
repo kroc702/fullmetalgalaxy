@@ -50,8 +50,9 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
   private int m_fromPageId = 0;
 
   private long m_fromVersion = 0;
+  // this field is used only from server to client, because client can't change
+  // game version.
   private long m_toVersion = 0;
-
 
 
   public ModelFmpUpdate()
@@ -144,24 +145,15 @@ public class ModelFmpUpdate implements IsSerializable, java.io.Serializable
 
 
 
-  /**
-   * @return the toVersion
-   */
   public long getToVersion()
   {
     return m_toVersion;
   }
 
-
-
-  /**
-   * @param p_toVersion the toVersion to set
-   */
   public void setToVersion(long p_toVersion)
   {
     m_toVersion = p_toVersion;
   }
-
 
   public String getFromPseudo()
   {

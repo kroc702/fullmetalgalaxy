@@ -31,6 +31,7 @@ import javax.persistence.Embedded;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
 
 
@@ -71,6 +72,12 @@ public class EbRegistration extends EbBase
     this.init();
   }
 
+  @Override
+  public String toString()
+  {
+    return new EnuColor( getSingleColor() ) + "(" + getAccount() + ")";
+  }
+
 
   // theses data come from database (Game table)
   // ------------------------------------------
@@ -99,6 +106,14 @@ public class EbRegistration extends EbBase
 
   @Serialized
   private StatsPlayer m_stats = null;
+
+  /**
+   * action list that player made during a parallel and hidden turn (ie deployement or take off turn)
+   * these actions are seen by player but hidden to others. This event list will be merged with main log
+   * at the end of current turn.
+   */
+  @Serialized
+  protected List<AnEvent> m_myEvents = new ArrayList<AnEvent>();
 
 
 
@@ -185,6 +200,10 @@ public class EbRegistration extends EbBase
   {
     int futurActionPt = getPtAction() / p_game.getEbConfigGameTime().getRoundActionPt();
     futurActionPt *= p_game.getEbConfigGameTime().getRoundActionPt();
+    if( futurActionPt > p_game.getEbConfigGameVariant().getActionPtMaxReserve() - 15 )
+    {
+      futurActionPt = p_game.getEbConfigGameVariant().getActionPtMaxReserve() - 15;
+    }
     return futurActionPt;
   }
 
@@ -425,5 +444,40 @@ public class EbRegistration extends EbBase
     m_lockedPosition = p_lockedPosition;
   }
 
+
+  /**
+   * don't use this method to add event !
+   * @return a read only list
+   */
+  public List<AnEvent> getMyEvents()
+  {
+    if( m_myEvents == null )
+    {
+      return new ArrayList<AnEvent>();
+    }
+    return m_myEvents;
+  }
+
+  public void setMyEvents(List<AnEvent> p_myEvents)
+  {
+    m_myEvents = p_myEvents;
+  }
+
+  public void clearMyEvents()
+  {
+    m_myEvents = null;
+  }
+
+  public void addMyEvent(AnEvent p_action)
+  {
+    if( m_myEvents == null )
+    {
+      m_myEvents = new ArrayList<AnEvent>();
+    }
+    if( !m_myEvents.contains( p_action ) )
+    {
+      m_myEvents.add( p_action );
+    }
+  }
 
 }

@@ -47,6 +47,7 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.StatsPlayer;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
@@ -100,10 +101,12 @@ public class GameWorkflow
         // check that his freighter take off, if not, take off automatically
         for( EbToken token : p_game.getSetToken() )
         {
+          EbRegistration registration = p_game.getRegistration( ((AnEventPlay)nextEvent)
+              .getRegistrationId() );
           if( (token.getType() == TokenType.Freighter)
               && (token.getLocation() == Location.Board)
               && (token.getColor() != EnuColor.None)
-              && (p_game.getCurrentPlayerRegistration().getEnuColor().isColored( token.getColor() )) )
+              && (registration.getEnuColor().isColored( token.getColor() )) )
           {
             // automatic take off for this freighter
             EbEvtTakeOff eventTakeOff = new EbEvtTakeOff();
@@ -295,59 +298,67 @@ public class GameWorkflow
         }
         else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
         {
-          if( (p_game.getCurrentPlayerRegistration() != null)
-              && (p_game.getCurrentPlayerRegistration().getEndTurnDate() != null)
-              && (p_game.getCurrentPlayerRegistration().getEndTurnDate().getTime() <= System
-                  .currentTimeMillis()) && (p_game.getCurrentTimeStep() > 1) ) // never
-                                                                               // skip
-                                                                               // first
-                                                                               // turn
+          for( EbRegistration registration : p_game.getSetRegistration() )
           {
-            // change player's turn
-            p_game.getCurrentPlayerRegistration().getOrderIndex();
-            EbEvtPlayerTurn event = new EbEvtPlayerTurn();
-            event.setAuto( true );
-            event.setGame( p_game );
-            event.checkedExec( p_game );
-            p_game.addEvent( event );
-            eventAdded.add( event );
-            lastEvent = event;
-          }
-          /* TODO
-          if( (p_game.getCurrentPlayerRegistration() != null)
-              && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
-          {
-            ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
-                                          // p_game.getId(), null );
-            if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
+            if( (p_game.getCurrentPlayerIds().contains( registration.getId() ))
+                && (registration.getEndTurnDate() != null)
+                && (registration.getEndTurnDate().getTime() <= System.currentTimeMillis())
+                && (p_game.getCurrentTimeStep() > 1) ) // never
+                                                       // skip
+                                                       // first
+                                                       // turn
             {
-              // current player is connected, update his end turn
-              p_game.getCurrentPlayerRegistration().setEndTurnDate(
-                  new Date( System.currentTimeMillis()
-                      + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-              // p_session.persist( p_game.getCurrentPlayerRegistration() );
-              updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
-                  .setEndTurnDate(
-                      new Date( System.currentTimeMillis()
-                          + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
-          
-              isUpdated = true;
+              // change player's turn
+              EbEvtPlayerTurn event = new EbEvtPlayerTurn();
+              event.setAuto( true );
+              event.setGame( p_game );
+              event.checkedExec( p_game );
+              p_game.addEvent( event );
+              eventAdded.add( event );
+              lastEvent = event;
             }
-          }*/
+            /* TODO
+            if( (p_game.getCurrentPlayerRegistration() != null)
+                && (p_game.getCurrentPlayerRegistration().getEndTurnDate() == null) )
+            {
+              ModelFmpUpdate updates = null;// FmpUpdateStatus.getModelUpdate( null,
+                                            // p_game.getId(), null );
+              if( updates.isUserConnected( p_game.getCurrentPlayerRegistration().getAccountPseudo() ) )
+              {
+                // current player is connected, update his end turn
+                p_game.getCurrentPlayerRegistration().setEndTurnDate(
+                    new Date( System.currentTimeMillis()
+                        + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+                // p_session.persist( p_game.getCurrentPlayerRegistration() );
+                updates.getConnectedUser( p_game.getCurrentPlayerRegistration().getAccountId() )
+                    .setEndTurnDate(
+                        new Date( System.currentTimeMillis()
+                            + p_game.getEbConfigGameTime().getTimeStepDurationInMili() ) );
+            
+                isUpdated = true;
+              }
+            }*/
+          }
         }
 
         // are all player take off before the end ?
         // -> in this case, we don't mind new tide
         if( lastEvent instanceof EbEvtPlayerTurn
             && (p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns()
-                .get( 0 )) && (p_game.getCurrentPlayerRegistration() != null) )
+                .get( 0 )) )
         {
           boolean isGameFinish = true;
-          for( EbToken freighter : p_game.getAllFreighter( p_game.getCurrentPlayerRegistration() ) )
+          for( EbRegistration registration : p_game.getSetRegistration() )
           {
-            if( freighter.getLocation() == Location.Board )
+            if( p_game.getCurrentPlayerIds().contains( registration.getId() ) )
             {
-              isGameFinish = false;
+              for( EbToken freighter : p_game.getAllFreighter( registration ) )
+              {
+                if( freighter.getLocation() == Location.Board )
+                {
+                  isGameFinish = false;
+                }
+              }
             }
           }
           while( isGameFinish && !p_game.isFinished() )
@@ -355,6 +366,8 @@ public class GameWorkflow
             EbEvtPlayerTurn event = new EbEvtPlayerTurn();
             event.setAuto( true );
             event.setGame( p_game );
+            event.setAccountId( p_game.getRegistration( p_game.getCurrentPlayerIds().get( 0 ) )
+                .getAccount().getId() );
             event.checkedExec( p_game );
             p_game.addEvent( event );
             eventAdded.add( event );
@@ -478,23 +491,27 @@ public class GameWorkflow
     if( p_game.getStatus() == GameStatus.Running && p_game.getLastUpdate().getTime() < last48Hour )
     {
       // current player didn't play since 48 hours...
-      EbRegistration registration = p_game.getCurrentPlayerRegistration();
-      if( registration != null && registration.getAccount() != null )
+      for( EbRegistration registration : p_game.getSetRegistration() )
       {
-        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-            registration.getAccount().getId() );
-        if( new FmgMessage( "playerDontPlay", p_game ).sendEMail( account ) )
+        if( p_game.getCurrentPlayerIds().contains( registration.getId() ) )
         {
-          registration.addNotifSended( "playerDontPlay" );
-          // to save game & registration
-          EbAdmin event = new EbAdmin();
-          event.setAuto( true );
-          event.setMessage( "send a notification to current player" );
-          p_game.addEvent( event );
-          eventAdded.add( event );
+          if( registration != null && registration.getAccount() != null )
+          {
+            EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+                registration.getAccount().getId() );
+            if( new FmgMessage( "playerDontPlay", p_game ).sendEMail( account ) )
+            {
+              registration.addNotifSended( "playerDontPlay" );
+              // to save game & registration
+              EbAdmin event = new EbAdmin();
+              event.setAuto( true );
+              event.setMessage( "send a notification to current player" );
+              p_game.addEvent( event );
+              eventAdded.add( event );
+            }
+          }
         }
       }
-      
     }
 
     return eventAdded;

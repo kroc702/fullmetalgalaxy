@@ -43,6 +43,7 @@ import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -82,7 +83,11 @@ public class EbGamePreview extends EbBase
   private String m_minimapUri = null;
 
   /** registration ID */
+  @Serialized
+  private List<Long> m_currentPlayerIds = new ArrayList<Long>();
+  /** This is kept for backward data compatibility */
   @Unindexed
+  @Deprecated
   private long m_currentPlayerId = 0L;
 
   @Embedded
@@ -129,7 +134,7 @@ public class EbGamePreview extends EbBase
     m_maxNumberOfPlayer = 4;
     m_history = false;
     m_currentTimeStep = 1;
-    m_currentPlayerId = 0L;
+    m_currentPlayerIds = new ArrayList<Long>();
     m_landWidth = 36;
     m_landHeight = 24;
     m_creationDate = new Date( System.currentTimeMillis() );
@@ -165,6 +170,15 @@ public class EbGamePreview extends EbBase
       {
         registration.setAccount( null );
       }
+      if( registration.getMyEvents().isEmpty() )
+      {
+        registration.clearMyEvents();
+      }
+    }
+    if( m_currentPlayerId != 0 && (m_currentPlayerIds == null || m_currentPlayerIds.isEmpty()) )
+    {
+      m_currentPlayerIds = new ArrayList<Long>();
+      m_currentPlayerIds.add( m_currentPlayerId );
     }
   }
 
@@ -174,16 +188,23 @@ public class EbGamePreview extends EbBase
   {
     /* do something before persisting */
     getLastUpdate().setTime( System.currentTimeMillis() );
+    m_version++;
 
     // This is a workarround because we can't store an @Embedded collection with
     // a null field
     for( EbRegistration registration : getSetRegistration() )
     {
+      if( registration.m_myEvents == null )
+      {
+        registration.setMyEvents( new ArrayList<AnEvent>() );
+      }
       if( registration.getAccount() == null )
       {
         registration.setAccount( new EbPublicAccount() );
       }
     }
+
+    m_currentPlayerId = m_currentPlayerIds.get( 0 );
 
     // set status for old game
     getStatus();
@@ -203,27 +224,11 @@ public class EbGamePreview extends EbBase
 
 
   /**
-   * @return the currentPlayerRegistration
-   * @WgtHidden
+   * @return the list of all current Player Registration ID
    */
-  public EbRegistration getCurrentPlayerRegistration()
+  public List<Long> getCurrentPlayerIds()
   {
-    return getRegistration( m_currentPlayerId );
-  }
-
-  /**
-   * @param p_currentPlayerRegistration the currentPlayerRegistration to set
-   */
-  public void setCurrentPlayerRegistration(EbRegistration p_currentPlayerRegistration)
-  {
-    if( p_currentPlayerRegistration == null )
-    {
-      m_currentPlayerId = 0L;
-    }
-    else
-    {
-      m_currentPlayerId = p_currentPlayerRegistration.getId();
-    }
+    return m_currentPlayerIds;
   }
 
 
@@ -245,6 +250,7 @@ public class EbGamePreview extends EbBase
   }
 
   /**
+   * @param start at zero
    * @return null if p_index doesn't exist
    */
   public EbRegistration getRegistrationByOrderIndex(int p_index)
@@ -345,6 +351,17 @@ public class EbGamePreview extends EbBase
   }
 
 
+  /**
+   * 
+   * @return true if given time step have to be played in parallel and hiden
+   * from other. ie deployment or take off.
+   */
+  public boolean isTimeStepParallelHidden(int p_timeStep)
+  {
+    return (p_timeStep > 1 && p_timeStep <= getEbConfigGameTime().getDeploymentTimeStep())
+        || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep ));
+  }
+
 
   /**
    * @return a set of free (not controlled by any registration, account may be null)
@@ -431,8 +448,9 @@ public class EbGamePreview extends EbBase
       {
         strBuf.append( player.getAccount().getPseudo() );
       }
-      if( (!isParallel() || getCurrentTimeStep() <= 1)
-          && (getCurrentPlayerRegistration() == player) )
+      if( player != null
+          && (!isParallel() || getCurrentTimeStep() < 1 || isTimeStepParallelHidden( getCurrentTimeStep() ))
+          && (getCurrentPlayerIds().contains( player.getId() )) )
       {
         strBuf
             .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );
@@ -973,24 +991,12 @@ public class EbGamePreview extends EbBase
     return m_version;
   }
 
-  /**
-   * @param p_version the version to set
-   */
   public void setVersion(long p_version)
   {
     m_version = p_version;
   }
 
 
-  public void incVersion()
-  {
-    m_version++;
-  }
-
-  public void decVersion()
-  {
-    m_version--;
-  }
 
   public boolean isVip()
   {

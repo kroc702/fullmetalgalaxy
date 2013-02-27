@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.constant.*,com.googlecode.objectify.Query" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
+<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -63,7 +64,7 @@ search pseudo: <input type="text" name="pseudo" value="<%= pseudo %>">
 	      out.println("<td style='width:30px;'>"+account.getAuthIconHtml()+"</td>" );
 	   
 	   	  // locale
-	      out.println("<td style='width:30px;'><img src='/i18n/"+account.getLocale()+"/images/icon_locale.png' border='0'/></td>" );
+	      out.println("<td style='width:30px;'><img src='"+I18n.localizeUrl(request, response,"/images/icons/flag16.png")+"' border='0'/></td>" );
 	      
 	      // account email
 	      out.println("<td style='width:30px;'><a href='mailto:"+ account.getEmail() + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM'></a></td>" );

@@ -162,6 +162,12 @@ public class EbEvtControl extends AnEventPlay
           "les astronefs ne peuvent etres controlé de cette façon. Vous devez détruire toute les tourelles puis entrer dedans" );
     }
 
+    // check that game isn't in parallel hidden phase
+    if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+    }
+
   }
 
   /* (non-Javadoc)

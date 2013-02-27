@@ -150,6 +150,11 @@ public class EbConfigGameTime extends EbBase
 
   public static int getActionInc(Game p_game, EbRegistration p_registration)
   {
+    if( p_game.getCurrentTimeStep() <= 1
+        || p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      return 0;
+    }
     int action = 0;
     int nbColor = p_registration.getEnuColor().getNbColor();
     if( nbColor >= 1 )

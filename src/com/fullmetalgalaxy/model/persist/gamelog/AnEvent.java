@@ -130,7 +130,6 @@ public class AnEvent extends EbBase
    */
   public void exec(Game p_game) throws RpcFmpException
   {
-    p_game.incVersion();
   }
 
   /**
@@ -143,7 +142,6 @@ public class AnEvent extends EbBase
    */
   public void unexec(Game p_game) throws RpcFmpException
   {
-    p_game.decVersion();
   }
 
   /**
