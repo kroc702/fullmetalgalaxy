@@ -71,7 +71,6 @@ public class LocalGame
       }
     }
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     p_model.receiveModelUpdate( updates );
   }
 
@@ -85,7 +84,6 @@ public class LocalGame
     events.add( p_action );
     events.addAll( game.createTriggersEvents() );
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
 
@@ -95,7 +93,6 @@ public class LocalGame
     updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
   }
@@ -114,7 +111,6 @@ public class LocalGame
       events.add( eventPlay );
     }
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
 
@@ -126,7 +122,6 @@ public class LocalGame
     updates.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
     updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
   }
@@ -149,7 +144,6 @@ public class LocalGame
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
     updates.setGameEvents( events );
-    updates.setToVersion( game.getVersion() );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
   }

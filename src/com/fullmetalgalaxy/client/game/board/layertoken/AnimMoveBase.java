@@ -60,8 +60,11 @@ public abstract class AnimMoveBase extends AnimEvent
   protected void onComplete()
   {
     super.onComplete();
-    DOM.setStyleAttribute( m_tokenWidget.getTokenImage().getElement(), "zIndex",
-        Integer.toString( m_token.getZIndex() ) );
+    if( m_tokenWidget != null && m_tokenWidget.getTokenImage() != null && m_token != null )
+    {
+      DOM.setStyleAttribute( m_tokenWidget.getTokenImage().getElement(), "zIndex",
+          Integer.toString( m_token.getZIndex() ) );
+    }
   }
 
 

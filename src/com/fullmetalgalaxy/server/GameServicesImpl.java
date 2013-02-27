@@ -189,6 +189,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         dataStore.close();
 
         // so we broadcast change only once
+        modelUpdate.setToVersion( model.getVersion() );
         ChannelManager.broadcast( ChannelManager.getRoom( model.getId() ), modelUpdate );
       } catch( ConcurrentModificationException e )
       {
@@ -342,6 +343,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // then run all provided event
       for( AnEvent event : p_modelUpdate.getGameEvents() )
       {
+        EbRegistration registration = null;
         if( event instanceof AnEventUser )
         {
           try
@@ -352,7 +354,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           {
             log.error( e );
           }
-          EbRegistration registration = ((AnEventUser)event).getMyRegistration( game );
+          registration = ((AnEventUser)event).getMyRegistration( game );
           if( registration != null )
           {
             registration.updateLastConnexion();
@@ -361,14 +363,18 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         }
         event.setLastUpdate( ServerUtil.currentDate() );
         
+        // execute action
         if(event.getType() == GameLogType.EvtCancel)
         {
           // cancel action doesn't work in exact same way as other event
           ((EbEvtCancel)event).execCancel( game );
         }
+        else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
+        {
+          registration.addMyEvent( event );
+        }
         else
         {
-          // execute action
           event.checkedExec( game );
           game.addEvent( event );
 
@@ -384,8 +390,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       throw e;
     }
 
-    modelUpdate.setToVersion( game.getVersion() );
-
     // do we need to send an email ?
     GameNotification.sendMail( game, modelUpdate );
 
@@ -394,6 +398,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     dataStore.close();
 
     // broadcast changes to all clients
+    modelUpdate.setToVersion( game.getVersion() );
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
 
   

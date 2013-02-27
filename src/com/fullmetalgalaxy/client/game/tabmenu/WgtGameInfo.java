@@ -161,7 +161,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
       }
       else if( registration.getEndTurnDate() != null )
       {
-        if( registration.getId() == game.getCurrentPlayerRegistration().getId() )
+        if( game.getCurrentPlayerIds().contains( registration.getId() ) )
         {
           m_generalPanel.add( new Label( "Fin du tour: "
               + ClientUtil.s_dateTimeFormat.format( registration.getEndTurnDate() ) ) );

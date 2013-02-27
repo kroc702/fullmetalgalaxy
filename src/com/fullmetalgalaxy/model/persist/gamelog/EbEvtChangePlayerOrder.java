@@ -30,9 +30,9 @@ import java.util.Map;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.Game;
 
 /**
  * @author Vincent Legendre
@@ -105,7 +105,22 @@ public class EbEvtChangePlayerOrder extends AnEvent
       p_game.getRegistration( idRegistration ).setOrderIndex( orderIndex );
       orderIndex++;
     }
-    p_game.setCurrentPlayerRegistration( p_game.getRegistrationByOrderIndex( 0 ) );
+
+    p_game.getCurrentPlayerIds().clear();
+    if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      // a change player order occur after landing, next turn is deployment
+      // and all player can play simultaneously
+      for( EbRegistration registration : sortedRegistration )
+      {
+        p_game.getCurrentPlayerIds().add( registration.getId() );
+      }
+    }
+    else
+    {
+      // only first player can play
+      p_game.getCurrentPlayerIds().add( p_game.getRegistrationByOrderIndex( 0 ).getId() );
+    }
   }
   
   /* (non-Javadoc)
@@ -118,11 +133,15 @@ public class EbEvtChangePlayerOrder extends AnEvent
     assert m_oldRegistrationOrder != null;
     
     int orderIndex = 0;
+    long lastPlayerId = 0;
     for(long idRegistration : m_oldRegistrationOrder)
     {
       p_game.getRegistration( idRegistration ).setOrderIndex( orderIndex );
       orderIndex++;
+      lastPlayerId = idRegistration;
     }
+    p_game.getCurrentPlayerIds().clear();
+    p_game.getCurrentPlayerIds().add( lastPlayerId );
   }
 
   public ArrayList<Long> getNewRegistrationOrder()

@@ -74,13 +74,6 @@ public class WgtContextLand extends Composite
       m_panel.add( new HTML( "<div style=\"height: " + pxHexHeight + "px;\" class=\"fmp-"
           + land2Display + "\"></div>" ) );
       
-      if( GameEngine.model().getGame().getCurrentTimeStep() <= GameEngine.model().getGame()
-          .getEbConfigGameTime().getDeploymentTimeStep() )
-      {
-        // durring deployement, don't display fire cover !
-        return;
-      }
-
       // display firecover
       BoardFireCover firecover = GameEngine.model().getGame().getBoardFireCover();
       int x = actionBuilder.getSelectedPosition().getX();

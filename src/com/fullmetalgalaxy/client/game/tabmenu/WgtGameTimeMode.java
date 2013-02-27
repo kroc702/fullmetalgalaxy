@@ -114,11 +114,13 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
   {
     assert GameEngine.model() != null;
     Game game = GameEngine.model().getGame();
-
+    int totalEventCount = game.getLogs().size() + game.getAdditionalEventCount();
+    if( GameEngine.model().getMyRegistration() != null )
+    {
+      totalEventCount += GameEngine.model().getMyRegistration().getMyEvents().size();
+    }
     m_lblTimePosition.setText( (GameEngine.model().getCurrentActionIndex() + game
-        .getAdditionalEventCount())
-        + "/"
-        + (game.getLogs().size() + game.getAdditionalEventCount()) );
+        .getAdditionalEventCount()) + "/" + totalEventCount );
     AnEvent currentEvent = GameEngine.model().getCurrentAction();
     if( currentEvent == null )
     {
@@ -204,8 +206,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     Object sender = p_event.getSource();
     if( sender == m_btnOk )
     {
-      if( GameEngine.model().getCurrentActionIndex() >= GameEngine.model().getGame().getLogs()
-          .size() )
+      if( GameEngine.model().getCurrentAction() == null )
       {
         // user click ok to cancel action
         // but action selected was then last one: no cancel
@@ -215,9 +216,15 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
 
       if( GameEngine.model().getLastTurnPlayed() != GameEngine.model().getGame()
           .getCurrentTimeStep()
-          || GameEngine.model().getMyRegistration() != GameEngine.model().getGame()
-              .getCurrentPlayerRegistration() )
+          || !GameEngine.model().getGame().getCurrentPlayerIds()
+              .contains( GameEngine.model().getMyRegistration().getId() ) )
       {
+        if( !AppMain.instance().iAmAdmin() )
+        {
+          // no i18n: this dialog shouldn't appear
+          Window.alert( "Only admin can cancel such action" );
+          return;
+        }
         // admin is going to perform admin action, show confirm dialog
         // it may also a training game
         // TODO i18n
@@ -232,7 +239,8 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       actionBuilder.clear();
       EbEvtCancel evtCancel = new EbEvtCancel();
       evtCancel.setGame( GameEngine.model().getGame() );
-      evtCancel.setFromActionIndex( GameEngine.model().getGame() );
+      evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
+          + GameEngine.model().getMyRegistration().getMyEvents().size() - 1 );
       evtCancel.setToActionIndex( GameEngine.model().getCurrentActionIndex() );
       evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
       // this action is required to send the last game version to server

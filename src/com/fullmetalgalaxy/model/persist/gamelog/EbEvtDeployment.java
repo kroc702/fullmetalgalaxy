@@ -64,6 +64,17 @@ public class EbEvtDeployment extends AnEventPlay
   }
 
   @Override
+  public String toString()
+  {
+    String str = super.toString();
+    if( m_token != null )
+    {
+      str += m_token;
+    }
+    return str;
+  }
+
+  @Override
   public GameLogType getType()
   {
     return GameLogType.EvtDeployment;
@@ -173,7 +184,8 @@ public class EbEvtDeployment extends AnEventPlay
     setTokenCarrier( getToken( p_game ).getCarrierToken() );
 
     EbToken tokensOnWay = p_game.getToken( getPosition() );
-    if( tokensOnWay != null && tokensOnWay.getType() != TokenType.Pontoon )
+    if( tokensOnWay != null && tokensOnWay.getType() != TokenType.Pontoon
+        && tokensOnWay.getType() != TokenType.Sluice )
     {
       p_game.moveToken( getToken( p_game ), tokensOnWay );
       tokensOnWay.incVersion();

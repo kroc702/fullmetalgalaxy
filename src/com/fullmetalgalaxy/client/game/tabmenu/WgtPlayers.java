@@ -65,7 +65,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class WgtPlayers extends Composite implements ClickHandler
 {
   private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
-  private PushButton m_btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
+  private Map<Widget, EbRegistration> m_skipTurnButtons = new HashMap<Widget, EbRegistration>();
   private Panel m_playerPanel = new FlowPanel();
   
   private Button m_btnChat = new Button( "chat" );
@@ -75,10 +75,6 @@ public class WgtPlayers extends Composite implements ClickHandler
     super();
     
     m_btnChat.addClickHandler( this );
-    m_btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
-    m_btnSkipTurn.setStyleName( "fmp-PushButton32" );
-    m_btnSkipTurn.addClickHandler( this );
-    
     initPlayerPanel();
     initWidget( m_playerPanel );
   }
@@ -86,6 +82,7 @@ public class WgtPlayers extends Composite implements ClickHandler
   private void initPlayerPanel()
   {
     m_banButtons.clear();
+    m_skipTurnButtons.clear();
     m_playerPanel.clear();
     int playerCount = GameEngine.model().getGame().getSetRegistration().size();
     int maxPlayerCount = GameEngine.model().getGame().getMaxNumberOfPlayer();
@@ -170,7 +167,7 @@ public class WgtPlayers extends Composite implements ClickHandler
             + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
       }
 
-      if( GameEngine.model().getGame().getCurrentPlayerRegistration() == registration )
+      if( GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() ) )
       {
         html += AbstractImagePrototype.create( Icons.s_instance.action16() ).getHTML();
       }
@@ -231,9 +228,14 @@ public class WgtPlayers extends Composite implements ClickHandler
         }
         
         // display endTurn button
-        if( (GameEngine.model().getGame().getCurrentPlayerRegistration() == registration) )
+        if( (GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() )) )
         {
-          m_playerGrid.setWidget( index, 8, m_btnSkipTurn );
+          PushButton btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
+          btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
+          btnSkipTurn.setStyleName( "fmp-PushButton32" );
+          btnSkipTurn.addClickHandler( this );
+          m_playerGrid.setWidget( index, 8, btnSkipTurn );
+          m_skipTurnButtons.put( btnSkipTurn, registration );
         }
         
       }
@@ -298,9 +300,9 @@ public class WgtPlayers extends Composite implements ClickHandler
     {
       DlgChatInput.showDialog();
     }
-    else if( p_event.getSource() == m_btnSkipTurn )
+    else if( m_skipTurnButtons.get( p_event.getSource() ) != null )
     {
-      EbRegistration registration = GameEngine.model().getGame().getCurrentPlayerRegistration();
+      EbRegistration registration = m_skipTurnButtons.get( p_event.getSource() );
       String playerName = Messages.getColorString( 0, registration.getSingleColor());
       if( registration.getAccount() != null )
       {
@@ -312,7 +314,11 @@ public class WgtPlayers extends Composite implements ClickHandler
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
         action.setGame( GameEngine.model().getGame() );
-        action.setAccountId( AppMain.instance().getMyAccount().getId() );
+        if( registration.getAccount() != null )
+        {
+          action.setAccountId( registration.getAccount().getId() );
+        }
+        action.setOldPlayerId( registration.getId() );
         // ok itsn't an automatic action, but with this trick I can track of the guy which
         // end this turn and pass through action checking
         action.setAuto( true );

@@ -107,13 +107,25 @@ public class EbEvtCancel extends AnEventUser
     {
       timeSinceLastTimeStepChange = 0;
     }
-    if( m_fromActionIndex != p_game.getLogs().size() -1 || m_toActionIndex < 0 )
+    int totalEventCount = p_game.getLogs().size() + p_game.getAdditionalEventCount();
+    if( getMyRegistration( p_game ) != null )
+    {
+      totalEventCount += getMyRegistration( p_game ).getMyEvents().size();
+    }
+    if( m_fromActionIndex != totalEventCount - 1 || m_toActionIndex < 0 )
     {
       throw new RpcFmpException( "this cancel action isn't for this game state" );
     }
-    while( m_toActionIndex < p_game.getLogs().size() )
+
+    List<AnEvent> eventLogs = p_game.getLogs();
+    if( getMyRegistration( p_game ) != null && m_toActionIndex >= p_game.getLogs().size() )
     {
-      AnEvent action = p_game.getLastGameLog();
+      m_toActionIndex -= p_game.getLogs().size();
+      eventLogs = getMyRegistration( p_game ).getMyEvents();
+    }
+    while( m_toActionIndex < eventLogs.size() )
+    {
+      AnEvent action = eventLogs.get( eventLogs.size() - 1 );
       if( !(action instanceof EbAdmin) )
       {
         // unexec action
@@ -130,7 +142,7 @@ public class EbEvtCancel extends AnEventUser
           RpcUtil.logError( "error ", e );
         }
       }
-      p_game.getLogs().remove( p_game.getLogs().size() -1 );
+      eventLogs.remove( eventLogs.size() - 1 );
       m_eventsBackup.add( 0, action );
     }
     // this is to avoid timestep replay right after the cancel action.
@@ -159,7 +171,7 @@ public class EbEvtCancel extends AnEventUser
     }
   }
 
-  protected void setFromActionIndex(int p_fromActionIndex)
+  public void setFromActionIndex(int p_fromActionIndex)
   {
     m_fromActionIndex = p_fromActionIndex;
   }

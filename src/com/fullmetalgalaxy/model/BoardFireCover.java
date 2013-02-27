@@ -204,6 +204,7 @@ public class BoardFireCover implements Serializable
     if( m_fireCover == null )
     {
       reComputeFireCover();
+      return;
     }
 
     // destroyer range

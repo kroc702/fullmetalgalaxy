@@ -154,6 +154,12 @@ public class EbEvtControlFreighter extends AnEventPlay
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
 
+    // check that game isn't in parallel hidden phase
+    if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+    }
+
     // player have extra action points.
     assert getCost() == -1 * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip();
 

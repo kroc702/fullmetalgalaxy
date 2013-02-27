@@ -215,8 +215,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return false;
   }
 
-
-
   public void addEvent(AnEvent p_action)
   {
     p_action.setGame( this );
@@ -633,10 +631,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
   }
 
 
-  public EbRegistration getNextPlayerRegistration()
-  {
-    return getNextPlayerRegistration( getCurrentPlayerRegistration().getOrderIndex() );
-  }
 
   /**
    * return next registration which control at least one freighter on board.

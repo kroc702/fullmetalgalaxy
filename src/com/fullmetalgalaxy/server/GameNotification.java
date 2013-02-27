@@ -63,7 +63,7 @@ public class GameNotification
       if( ((action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn))
           && !p_game.isFinished() )
       {
-        if( p_game.getCurrentPlayerRegistration() == null )
+        if( p_game.getCurrentPlayerIds().isEmpty() )
         {
           // Parallel mode is starting
           // send email to all players
@@ -75,18 +75,12 @@ public class GameNotification
           send2AllPlayers( msg, p_game, NotificationQty.Min, false );
           mailSended = true;
         }
-        else if( p_game.getCurrentTimeStep() <= 2 )
+        else 
         {
           // new turn in begin game => email to current player
-          send2Player( new FmgMessage( "newTurn", p_game ), p_game,
-              p_game.getCurrentPlayerRegistration(), NotificationQty.Min, false );
-          mailSended = true;
-        }
-        else
-        {
-          // new turn => email to current player
-          send2Player( new FmgMessage( "newTurn", p_game ), p_game,
-              p_game.getCurrentPlayerRegistration(), NotificationQty.Std, false );
+          NotificationQty notif = NotificationQty.Std;
+          if( p_game.getCurrentTimeStep() <= 2 ) notif = NotificationQty.Min;
+          send2CurrentPlayers( new FmgMessage( "newTurn", p_game ), p_game, notif, false );
           mailSended = true;
         }
       }
@@ -160,6 +154,18 @@ public class GameNotification
     for( EbRegistration registration : p_game.getSetRegistration() )
     {
       send2Player( p_msg, p_game, registration, p_level, p_checkDoubleSend );
+    }
+  }
+
+  private static void send2CurrentPlayers(FmgMessage p_msg, Game p_game, NotificationQty p_level,
+      boolean p_checkDoubleSend)
+  {
+    for( EbRegistration registration : p_game.getSetRegistration() )
+    {
+      if( p_game.getCurrentPlayerIds().contains( registration.getId() ) )
+      {
+        send2Player( p_msg, p_game, registration, p_level, p_checkDoubleSend );
+      }
     }
   }
 

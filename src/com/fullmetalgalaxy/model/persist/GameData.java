@@ -358,15 +358,16 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getLandPixHeight( p_zoom );
   }
 
-  public EbRegistration getCurrentPlayerRegistration()
+  public List<Long> getCurrentPlayerIds()
   {
-    return m_preview.getCurrentPlayerRegistration();
+    return m_preview.getCurrentPlayerIds();
   }
 
-  public void setCurrentPlayerRegistration(EbRegistration p_currentPlayerRegistration)
+  public boolean isTimeStepParallelHidden(int p_timeStep)
   {
-    m_preview.setCurrentPlayerRegistration( p_currentPlayerRegistration );
+    return m_preview.isTimeStepParallelHidden( p_timeStep );
   }
+
 
   public EbRegistration getRegistration(long p_idRegistration)
   {
@@ -598,15 +599,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     m_preview.setVersion( p_version );
   }
 
-  public void incVersion()
-  {
-    m_preview.incVersion();
-  }
-
-  public void decVersion()
-  {
-    m_preview.decVersion();
-  }
 
   /**
    * @return

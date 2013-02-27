@@ -134,7 +134,7 @@ public class WgtPlayerInfo extends Composite
   private void resfreshStyle()
   {
     Game game = GameEngine.model().getGame();
-    if( m_registration == game.getCurrentPlayerRegistration() )
+    if( game.getCurrentPlayerIds().contains( m_registration.getId() ) )
     {
       m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
     }

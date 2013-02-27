@@ -53,9 +53,11 @@ import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
@@ -149,6 +151,23 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         m_game = model.getGame();
         getActionBuilder().setGame( getGame() );
         getActionBuilder().setMyAccount( AppMain.instance().getMyAccount() );
+        // play my events (for parallel hidden turns)
+        try
+        {
+          if( getMyRegistration() != null )
+          {
+            for( AnEvent event : getMyRegistration().getMyEvents() )
+            {
+              event.exec( getGame() );
+            }
+          }
+        } catch( Throwable e )
+        {
+          // no i18n
+          RpcUtil.logError( "error ", e );
+          Window.alert( "unexpected error : " + e );
+        }
+
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
         if( m_game.getGameType() == GameType.MultiPlayer
             || m_game.getGameType() == GameType.Initiation )
@@ -169,7 +188,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     if( getGame().getGameType() == GameType.Puzzle )
     {
-      return getGame().getCurrentPlayerRegistration();
+      return getGame().getRegistration( getGame().getCurrentPlayerIds().get( 0 ) );
     }
     if( !isLogged() )
     {
@@ -365,6 +384,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       {
         getActionBuilder().clear();
       }
+      getGame().setVersion( p_result.getToVersion() );
 
       // handle game events first
       //
@@ -372,34 +392,54 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       List<AnEvent> events = p_result.getGameEvents();
       for( AnEvent event : events )
       {
+        // if we receive and end turn event after an hidden parallel time step
+        // we need to unexec my private event logs
+        if( event instanceof EbEvtPlayerTurn && getGame().getCurrentPlayerIds().size() == 1 )
+        {
+          isNewPlayerTurn = true;
+          if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
+              && getMyRegistration() != null && !getMyRegistration().getMyEvents().isEmpty() )
+          {
+            for( int i = getMyRegistration().getMyEvents().size() - 1; i >= 0; i-- )
+            {
+              getMyRegistration().getMyEvents().get( i ).unexec( getGame() );
+            }
+          }
+        }
+
         if( event.getType() == GameLogType.EvtCancel )
         {
           ((EbEvtCancel)event).execCancel( getGame() );
         }
-
-        event.exec( getGame() );
-        // getGame().getLastUpdate().setTime(
-        // event.getLastUpdate().getTime() );
-        if( event.getType() != GameLogType.EvtCancel )
+        else if( event instanceof AnEventUser
+            && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() ) )
         {
+          EbRegistration registration = ((AnEventUser)event).getMyRegistration( getGame() );
+          registration.addMyEvent( event );
+          if( registration == getMyRegistration() )
+          {
+            event.exec( getGame() );
+            getGame().updateLastTokenUpdate( null );
+            AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
+          }
+        }
+        else
+        {
+          event.exec( getGame() );
           getGame().addEvent( event );
+          getGame().updateLastTokenUpdate( null );
+          AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
         }
-        getGame().updateLastTokenUpdate( null );
         
-        if( event.getType() == GameLogType.EvtPlayerTurn )
-        {
-          isNewPlayerTurn = true;
-        }
-        AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
       }
 
       // assume that if we receive an update, something has changed !
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
 
       if( isNewPlayerTurn
-          && (getGame().getCurrentPlayerRegistration() == null || getGame()
-              .getCurrentPlayerRegistration().getAccount().getId() == AppMain.instance()
-              .getMyAccount().getId()) )
+          && getMyRegistration() != null
+          && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds()
+              .contains( getMyRegistration().getId() )) )
       {
         Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
       }
@@ -453,10 +493,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           || getGame().getGameType() == GameType.Initiation )
       {
         AppMain.instance().scheduleReloadTimer();
-        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-        modelUpdate.setFromVersion( getGame().getVersion() );
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
         modelUpdate.setFromPageId( AppMain.instance().getPageId() );
-        modelUpdate.setGameId( getGame().getId() );
         modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
         modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
         modelUpdate.getGameEvents().add( p_action );
@@ -510,10 +548,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       {
         AppMain.instance().scheduleReloadTimer();
         // then send request
-        ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
-        modelUpdate.setFromVersion( getGame().getVersion() );
+        ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
         modelUpdate.setFromPageId( AppMain.instance().getPageId() );
-        modelUpdate.setGameId( getGame().getId() );
         modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
         modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
         modelUpdate.getGameEvents().addAll( getActionBuilder().getActionList() );
@@ -672,6 +708,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       timePlay( 99999 );
     }
     m_currentActionIndex = getGame().getLogs().size();
+    if( getMyRegistration() != null )
+    {
+      m_currentActionIndex += getMyRegistration().getMyEvents().size();
+    }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
@@ -699,19 +739,31 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       return;
     }
 
+
+
     List<AnEvent> logs = getGame().getLogs();
     while( (m_currentActionIndex > 0) && (p_actionCount > 0) )
     {
       m_currentActionIndex--;
-      AnEvent action = logs.get( m_currentActionIndex );
-      if( !(action instanceof EbAdmin) 
+
+      AnEvent action = null;
+      if( m_currentActionIndex >= logs.size() && getMyRegistration() != null )
+      {
+        action = getMyRegistration().getMyEvents().get( m_currentActionIndex - logs.size() );
+      }
+      else
+      {
+        action = logs.get( m_currentActionIndex );
+      }
+
+      if( action != null && !(action instanceof EbAdmin)
           && !(action instanceof EbGameJoin)
           && !(action instanceof EbEvtCancel) )
       {
         // unexec action
         try
         {
-          logs.get( m_currentActionIndex ).unexec( getGame() );
+          action.unexec( getGame() );
         } catch( RpcFmpException e )
         {
           RpcUtil.logError( "error ", e );
@@ -725,8 +777,16 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           p_actionCount--;
         }
         // if previous action is EvtConstruct, then unexec too
-        if( m_currentActionIndex>0 
-            && logs.get( m_currentActionIndex-1 ).getType() == GameLogType.EvtConstruct )
+        action = null;
+        if( m_currentActionIndex >= logs.size() + 1 && getMyRegistration() != null )
+        {
+          action = getMyRegistration().getMyEvents().get( m_currentActionIndex - logs.size() - 1 );
+        }
+        else if( m_currentActionIndex > 0 )
+        {
+          action = logs.get( m_currentActionIndex - 1 );
+        }
+        if( action != null && action.getType() == GameLogType.EvtConstruct )
         {
           p_actionCount++;
         }
@@ -743,9 +803,23 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     List<AnEvent> logs = getGame().getLogs();
     boolean execAnimation = p_actionCount == 1;
-    while( (m_currentActionIndex < logs.size()) && (p_actionCount > 0) )
+    int totalEventCount = logs.size();
+    if( GameEngine.model().getMyRegistration() != null )
     {
-      AnEvent action = logs.get( m_currentActionIndex );
+      totalEventCount += GameEngine.model().getMyRegistration().getMyEvents().size();
+    }
+    while( (m_currentActionIndex < totalEventCount) && (p_actionCount > 0) )
+    {
+      AnEvent action = null;
+      if( m_currentActionIndex >= logs.size() && getMyRegistration() != null )
+      {
+        action = getMyRegistration().getMyEvents().get( m_currentActionIndex - logs.size() );
+      }
+      else
+      {
+        action = logs.get( m_currentActionIndex );
+      }
+
       if( !(action instanceof EbAdmin) 
           && !(action instanceof EbGameJoin)
           && !(action instanceof EbEvtCancel) )
@@ -793,11 +867,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       logger.warning( "time play command but wrong mode or wrong params" );
       return;
     }
-    AnEvent currentEvent = null;
-    if( m_currentActionIndex < getGame().getLogs().size() )
-    {
-      currentEvent = getGame().getLogs().get( m_currentActionIndex );
-    }
+    AnEvent currentEvent = getCurrentAction();
     boolean timeForward = false;
     if( currentEvent != null
         && currentEvent.getLastUpdate().getTime() < p_event.getLastUpdate().getTime() )
@@ -814,12 +884,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         {
           currentEvent.exec( getGame() );
           m_currentActionIndex++;
-          currentEvent = getGame().getLogs().get( m_currentActionIndex );
+          currentEvent = getCurrentAction();
         }
         else
         {
           m_currentActionIndex--;
-          currentEvent = getGame().getLogs().get( m_currentActionIndex );
+          currentEvent = getCurrentAction();
           if( !(currentEvent instanceof EbAdmin) && !(currentEvent instanceof EbGameJoin)
               && !(currentEvent instanceof EbEvtCancel) )
           {
@@ -934,6 +1004,13 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return getGame().getLogs().get( m_currentActionIndex );
     }
+    if( getMyRegistration() != null
+        && m_currentActionIndex < getGame().getLogs().size()
+            + getMyRegistration().getMyEvents().size() )
+    {
+      return getMyRegistration().getMyEvents().get(
+          m_currentActionIndex - getGame().getLogs().size() );
+    }
     return null;
   }
 
@@ -966,11 +1043,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return false;
     }
-    if( !getGame().getEbConfigGameTime().isParallel()
-        && getMyRegistration() == getGame().getCurrentPlayerRegistration() )
-    {
-      return true;
-    }
     if( getGame().getConfigGameTime() == ConfigGameTime.StandardAsynch )
     {
       AnEvent event = null;
@@ -983,6 +1055,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           return false;
         }
       }
+      return true;
+    }
+    if( getGame().getCurrentPlayerIds().contains( getMyRegistration().getId() ) )
+    {
       return true;
     }
     return false;

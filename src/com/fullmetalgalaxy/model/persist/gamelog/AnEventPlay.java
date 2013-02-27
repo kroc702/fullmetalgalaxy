@@ -149,7 +149,8 @@ public class AnEventPlay extends AnEventUser
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
     if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
-        && (p_game.getCurrentPlayerRegistration() != myRegistration)
+        && (!p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ))
+        && (!p_game.getCurrentPlayerIds().contains( myRegistration.getId() ))
         && p_game.getGameType() != GameType.Practice )
     {
       throw new RpcFmpException( errMsg().NotYourTurn() );
@@ -365,7 +366,7 @@ public class AnEventPlay extends AnEventUser
   // cache to avoid researching again and again
   // and to implement getter
   // ===========================================
-  transient private EbToken m_token = null;
+  transient protected EbToken m_token = null;
   transient private EbToken m_tokenCarrier = null;
   transient private EbToken m_newTokenCarrier = null;
   transient private EbToken m_tokenDestroyer1 = null;

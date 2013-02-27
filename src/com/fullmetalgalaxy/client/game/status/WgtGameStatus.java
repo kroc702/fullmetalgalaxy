@@ -148,9 +148,10 @@ public class WgtGameStatus extends WgtView
         && !GameEngine.model().isTimeLineMode()
         && GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
     {
-      if( game.getCurrentPlayerRegistration() != null && game.getCurrentTimeStep() > 1 )
+      if( !game.getCurrentPlayerIds().isEmpty() && game.getCurrentTimeStep() > 1 )
       {
-        displayEndTurn( game.getCurrentPlayerRegistration().getEndTurnDate() );
+        displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) )
+            .getEndTurnDate() );
       }
       else
       {

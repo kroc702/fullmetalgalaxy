@@ -55,7 +55,8 @@ public class EbEvtPlayerTurn extends AnEvent
   private short m_oldTurn = 0;
   private short m_newTurn = 0;
   /** ie EbRegistration ID */
-  private long m_newPlayerId = 0;
+  private long m_oldPlayerId = 0;
+  private int m_oldCurrentPlayersCount = 0;
 
   /**
    * 
@@ -84,6 +85,31 @@ public class EbEvtPlayerTurn extends AnEvent
     return GameLogType.EvtPlayerTurn;
   }
 
+  /**
+   * if player id isn't set, this method will read it from account id
+   * @param p_game
+   * @return
+   */
+  private long getOldPlayerId(Game p_game)
+  {
+    if( m_oldPlayerId <= 0 )
+    {
+      for( EbRegistration registration : p_game.getSetRegistration() )
+      {
+        if( p_game.getCurrentPlayerIds().contains( registration.getId() )
+            && registration.getAccount().getId() == getAccountId() )
+        {
+          m_oldPlayerId = registration.getId();
+        }
+      }
+    }
+    return m_oldPlayerId;
+  }
+
+  public void setOldPlayerId(long p_oldPlayerId)
+  {
+    m_oldPlayerId = p_oldPlayerId;
+  }
 
   @Override
   public void check(Game p_game) throws RpcFmpException
@@ -106,16 +132,22 @@ public class EbEvtPlayerTurn extends AnEvent
     if( p_game.isParallel() && p_game.getCurrentTimeStep() > 1 )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "You can't end your turn as this game is in parallele mode" );
+      throw new RpcFmpException( "You can't end your turn in parallele mode" );
     }
-    if( getAccountId() != p_game.getCurrentPlayerRegistration().getAccount().getId() )
+    if( p_game.getCurrentPlayerIds().isEmpty() )
+    {
+      // no i18n as HMI won't allow this action
+      throw new RpcFmpException( "You can't end your turn: no current player" );
+    }
+    EbRegistration myRegistration = p_game.getRegistration( getOldPlayerId( p_game ) );
+    if( myRegistration == null )
     {
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "Not your turn" );
     }
     if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
-      EbToken freighter = p_game.getFreighter( p_game.getCurrentPlayerRegistration() );
+      EbToken freighter = p_game.getFreighter( myRegistration );
       if(freighter != null && freighter.getLocation() != Location.Board)
       {
         throw new RpcFmpException( errMsg().mustLandFreighter() );
@@ -125,7 +157,7 @@ public class EbEvtPlayerTurn extends AnEvent
     // montain)
     if( !isAuto() )
     {
-      EnuColor playerColor = p_game.getCurrentPlayerRegistration().getEnuColor();
+      EnuColor playerColor = myRegistration.getEnuColor();
       for( EbToken token : p_game.getSetToken() )
       {
         if( token.getColor() != EnuColor.None && playerColor.isColored( token.getColor() )
@@ -150,28 +182,86 @@ public class EbEvtPlayerTurn extends AnEvent
     assert game != null;
     
     // round down players action point
-    EbRegistration currentPlayerRegistration = game.getCurrentPlayerRegistration();
+    EbRegistration currentPlayerRegistration = p_game.getRegistration( getOldPlayerId( p_game ) );
     assert currentPlayerRegistration != null;
     // backup for unexec
     m_oldActionPt = currentPlayerRegistration.getPtAction();
     currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt(p_game) );
     m_oldTurn = (short)game.getCurrentTimeStep();
-    
-    // reset all end turn date
-    for( EbRegistration player : game.getSetRegistration() )
-    {
-      player.setEndTurnDate( null );
-    }
+    m_newTurn = m_oldTurn;
+    m_oldCurrentPlayersCount = game.getCurrentPlayerIds().size();
 
-    // next player
-    EbRegistration nextPlayerRegistration = game.getNextPlayerRegistration();
-    if( nextPlayerRegistration.getOrderIndex() <= currentPlayerRegistration.getOrderIndex() )
-    {
-      // next turn !
-      game.setCurrentTimeStep( game.getCurrentTimeStep() + 1 );
-    }
-    m_newTurn = (short)game.getCurrentTimeStep();
 
+    if( game.getCurrentPlayerIds().size() > 1 )
+    {
+      // several player are playing at the same time.
+      // so this action only end turn of one single player
+      game.getCurrentPlayerIds().remove( (Long)getOldPlayerId( p_game ) );
+    }
+    else
+    {
+      // assume there is one and only one current player
+
+      // next player
+      EbRegistration nextPlayerRegistration = null;
+      if( game.isTimeStepParallelHidden( m_oldTurn ) )
+      {
+        nextPlayerRegistration = game.getRegistrationByOrderIndex( 0 );
+      }
+      else
+      {
+        nextPlayerRegistration = game.getNextPlayerRegistration( currentPlayerRegistration
+            .getOrderIndex() );
+      }
+
+      if( nextPlayerRegistration.getOrderIndex() <= currentPlayerRegistration.getOrderIndex() )
+      {
+        // next turn !
+        m_newTurn++;
+        if( game.isTimeStepParallelHidden( m_oldTurn ) )
+        {
+          // play in main event stack all events in registrations
+          playRegistrationEvents( p_game );
+
+          // compute next turn
+          while( game.isTimeStepParallelHidden( m_newTurn ) )
+            m_newTurn++;
+        }
+        game.setCurrentTimeStep( m_newTurn );
+        if( game.isParallel() )
+        {
+          // this is the real start time for parallele game
+          // as player may took a while to land
+          // start parallel mode
+          p_game.setLastTimeStepChange( new Date() );
+        }
+      }
+
+      // reset all end turn date
+      for( EbRegistration player : game.getSetRegistration() )
+      {
+        player.setEndTurnDate( null );
+      }
+      game.getCurrentPlayerIds().clear();
+
+
+      if( game.isParallel() || game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
+      {
+        // all players become current players !
+        for( EbRegistration registration : game.getSetRegistration() )
+        {
+          addCurrentPlayer( game, registration );
+        }
+      }
+      else
+      {
+        addCurrentPlayer( game, nextPlayerRegistration );
+      }
+    }
+  }
+
+  private void addCurrentPlayer(Game p_game, EbRegistration nextPlayerRegistration)
+  {
     // update all his tokens bullets count
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
     for( EbToken token : p_game.getSetToken() )
@@ -181,20 +271,13 @@ public class EbEvtPlayerTurn extends AnEvent
           && nextPlayerColor.isColored( token.getColor() ) )
       {
         token.setBulletCount( token.getBulletCount()
-            + game.getEbConfigGameTime().getBulletCountIncrement() );
+            + p_game.getEbConfigGameTime().getBulletCountIncrement() );
       }
     }
 
-    // if game is parallel (old asynchron) and turn 1, all players are landed:
-    // start parallel mode
-    if( game.isParallel() && game.getCurrentTimeStep() == 2 )
-    {
-      nextPlayerRegistration = null;
-      // this is the real start time for parallele game
-      // as player may took a while to land
-      p_game.setLastTimeStepChange( new Date() );
-    }
-    else
+    // parallel hidden phase correspond to deployment or take off phase:
+    // don't add action points
+    if( !p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
     {
       int actionInc = EbConfigGameTime.getActionInc( p_game, nextPlayerRegistration );
       int actionPt = nextPlayerRegistration.getPtAction() + actionInc;
@@ -205,20 +288,54 @@ public class EbEvtPlayerTurn extends AnEvent
       nextPlayerRegistration.setPtAction( actionPt );
 
       // set End turn date for future current player
-      if( game.getCurrentTimeStep() > 1
-          && game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+      if( p_game.getCurrentTimeStep() > 1
+          && p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
       {
         if( m_endTurnDate == null )
         {
           m_endTurnDate = new Date( System.currentTimeMillis()
-              + game.getEbConfigGameTime().getTimeStepDurationInMili() );
+              + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
         }
         nextPlayerRegistration.setEndTurnDate( m_endTurnDate );
       }
-      m_newPlayerId = nextPlayerRegistration.getId();
     }
+    p_game.getCurrentPlayerIds().add( nextPlayerRegistration.getId() );
 
-    game.setCurrentPlayerRegistration( nextPlayerRegistration );
+  }
+
+  private void playRegistrationEvents(Game p_game)
+  {
+    List<EbRegistration> players = p_game.getRegistrationByPlayerOrder();
+    int eventIndex[] = new int[players.size()];
+    boolean morePrivateEvent = true;
+    while( morePrivateEvent )
+    {
+      morePrivateEvent = false;
+      for( int playerIndex = 0; playerIndex < players.size(); playerIndex++ )
+      {
+        boolean eventAdded = false;
+        while( !eventAdded
+            && eventIndex[playerIndex] < players.get( playerIndex ).getMyEvents().size() )
+        {
+          morePrivateEvent = true;
+          try
+          {
+            AnEvent event = players.get( playerIndex ).getMyEvents().get( eventIndex[playerIndex] );
+            event.checkedExec( p_game );
+            p_game.addEvent( event );
+            eventAdded = true;
+          } catch( RpcFmpException e )
+          {
+          }
+          eventIndex[playerIndex]++;
+        }
+      }
+    }
+    // remove all private events
+    for( EbRegistration player : players )
+    {
+      player.clearMyEvents();
+    }
   }
 
   /**
@@ -229,50 +346,35 @@ public class EbEvtPlayerTurn extends AnEvent
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    Game game = p_game;
-    assert game != null;
+    assert p_game != null;
 
-    // previous player
-    EbRegistration registration = null;
-
-    if( game.isParallel() && game.getCurrentTimeStep() == 2 )
+    if( m_oldCurrentPlayersCount > 1 )
     {
-      // this event turn is a special case: last turn of last player
-      // in other word it's the event which really switch from turn by turn to
-      // asynchron mode
-      List<EbRegistration> list = game.getRegistrationByPlayerOrder();
-      registration = list.get( list.size() - 1 );
-      game.setCurrentTimeStep( 1 );
+      p_game.getCurrentPlayerIds().add( (Long)getOldPlayerId( p_game ) );
     }
     else
     {
-      // current player action points
-      int actionInc = EbConfigGameTime.getActionInc( p_game, game.getCurrentPlayerRegistration() );
-      int actionPt = game.getCurrentPlayerRegistration().getPtAction() - actionInc;
-      if( actionPt < 0 )
+      // remove action point to all current players
+      for( long currentPlayerId : p_game.getCurrentPlayerIds() )
       {
-        actionPt = 0;
-      }
-      game.getCurrentPlayerRegistration().setPtAction( actionPt );
-
-      // find index player
-      int index = game.getCurrentPlayerRegistration().getOrderIndex();
-      do
-      {
-        index--;
-        if( index < 0 )
+        EbRegistration registration = p_game.getRegistration( currentPlayerId );
+        int actionInc = EbConfigGameTime.getActionInc( p_game, registration );
+        int actionPt = registration.getPtAction() - actionInc;
+        if( actionPt < 0 )
         {
-          // previous turn !
-          index = game.getSetRegistration().size() - 1;
-          game.setCurrentTimeStep( game.getCurrentTimeStep() - 1 );
+          actionPt = 0;
         }
-        registration = game.getRegistrationByOrderIndex( index );
-        assert registration != null;
-      } while( registration.getColor() == EnuColor.None );
-    }
+        registration.setPtAction( actionPt );
+      }
 
-    registration.setPtAction( m_oldActionPt );
-    game.setCurrentPlayerRegistration( registration );
+      // previous player
+      EbRegistration previousPlayer = p_game.getRegistration( getOldPlayerId( p_game ) );
+      previousPlayer.setPtAction( m_oldActionPt );
+      p_game.getCurrentPlayerIds().clear();
+      p_game.getCurrentPlayerIds().add( previousPlayer.getId() );
+
+      p_game.setCurrentTimeStep( m_oldTurn );
+    }
   }
 
   protected MessagesRpcException errMsg()
@@ -307,10 +409,6 @@ public class EbEvtPlayerTurn extends AnEvent
     return m_newTurn;
   }
 
-  public long getNewPlayerId()
-  {
-    return m_newPlayerId;
-  }
 
 
 }
