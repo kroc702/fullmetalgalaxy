@@ -1,0 +1,41 @@
+#recording
+board 14 20 false
+board 18 22 true
+board 18 22 false
+board 14 19 false
+board 16 22 true
+board 16 22 false
+board 16 22 false
+assert exception
+board 17 21 false
+assert exception
+board 18 19 true
+board 18 22 false
+board 18 22 false
+board 28 3 false
+board 28 10 true
+board 28 10 true
+board 28 10 false
+board 24 14 true
+board 24 14 true
+board 24 14 false
+board 22 18 true
+board 22 18 true
+board 22 18 false
+token 210
+board 21 18 false
+board 21 18 false
+board 21 18 false
+assert exception
+board 20 19 false
+# second movement into firecover
+assert exception
+board 19 19 false
+assert exception
+action EvtFire
+assert exception
+board 17 21 false
+assert exception
+board 17 18 false
+
+

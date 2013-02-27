@@ -248,7 +248,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor(
           p_token.getColor() );
-      if( registration.haveAccount() )
+      if( registration != null && registration.haveAccount() )
       {
         label.setHTML( registration.getAccount().getPseudo() );
       }

@@ -88,6 +88,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
     m_btnCustomMap.addClickHandler( this );
     
     initGeneralPanel();
+    m_generalPanel.setStyleName( "fmp-general-panel" );
     initWidget( m_generalPanel );
   }
 
@@ -156,7 +157,7 @@ public class WgtGameInfo extends Composite implements ClickHandler
         // Display next action point increments
         Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
         m_generalPanel.add( new Label( MAppBoard.s_messages.nextActionPt(
-            EbConfigGameTime.getActionInc( game, registration ),
+            registration.getActionInc( game ),
             ClientUtil.s_dateTimeFormat.format( nextActionIncrement ) ) ) );
       }
       else if( registration.getEndTurnDate() != null )

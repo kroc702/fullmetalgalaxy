@@ -28,7 +28,6 @@ import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -122,7 +121,7 @@ public class EbEvtTimeStep extends AnEvent
       for( EbRegistration registration : game.getSetRegistration() )
       {
         int action = registration.getPtAction();
-        action += EbConfigGameTime.getActionInc( game, registration );
+        action += registration.getActionInc( game );
         if( (action > FmpConstant.maximumActionPtWithoutLanding)
             && (!game.isLanded( registration.getEnuColor() )) )
         {

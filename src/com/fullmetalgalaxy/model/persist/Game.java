@@ -831,7 +831,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
-      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
+      if( token.getType() == TokenType.Freighter && token.getColor() != EnuColor.None
+          && color.isColored( token.getColor() ) )
       {
         return token;
       }
@@ -849,7 +850,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
-      if( token.getType() == TokenType.Freighter && color.isColored( token.getColor() ) )
+      if( token.getType() == TokenType.Freighter && token.getColor() != EnuColor.None
+          && color.isColored( token.getColor() ) )
       {
         list.add( token );
       }
@@ -1130,9 +1132,11 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       AnBoardPosition position = p_position.getNeighbour( p_position.getSector() );
       EbToken tokenPontoon = getToken( position, TokenType.Pontoon );
-      if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
+      if( tokenPontoon == null )
+        tokenPontoon = getToken( position, TokenType.Sluice );
+      if( tokenPontoon != null )
       {
-        return false;
+        return tokenPontoon.canLoad( p_token.getType() );
       }
       // check this token is allowed to move on this hexagon
       if( p_token.canMoveOn( this, getLand( position ) ) == false )
@@ -1142,9 +1146,11 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
 
     EbToken tokenPontoon = getToken( p_position, TokenType.Pontoon );
-    if( (tokenPontoon != null) && !(tokenPontoon.canLoad( p_token.getType() )) )
+    if( tokenPontoon == null )
+      tokenPontoon = getToken( p_position, TokenType.Sluice );
+    if( tokenPontoon != null )
     {
-      return false;
+      return tokenPontoon.canLoad( p_token.getType() );
     }
     // check this token is allowed to move on this hexagon
     return p_token.canMoveOn( this, getLand( p_position ) );

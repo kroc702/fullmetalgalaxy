@@ -365,6 +365,8 @@ public class EbGameData extends EbBase
    */
   public void addAccount(EbPublicAccount p_otherAccount)
   {
+    if( p_otherAccount == null )
+      return;
     if( m_accounts == null )
     {
       m_accounts = new HashSet<EbPublicAccount>();

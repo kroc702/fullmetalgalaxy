@@ -116,7 +116,7 @@ public class WgtPlayerInfo extends Composite
       Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );
       m_lblAction
           .setTitle( MAppBoard.s_messages.nextPA(
-              EbConfigGameTime.getActionInc( game, m_registration ),
+              m_registration.getActionInc( game ),
               ClientUtil.formatTimeElapsed( nextActionIncrement.getTime()
                   - System.currentTimeMillis() ) ) );
     }
