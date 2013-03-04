@@ -146,16 +146,17 @@ public class WgtGameStatus extends WgtView
 
     if( GameEngine.model().getGame().getStatus() == GameStatus.Running
         && !GameEngine.model().isTimeLineMode()
-        && GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+        && GameEngine.model().getGame().getEbConfigGameTime().getTimeStepDurationInSec() != 0
+        && game.getCurrentTimeStep() > 1 )
     {
-      if( !game.getCurrentPlayerIds().isEmpty() && game.getCurrentTimeStep() > 1 )
+      if( game.isParallel() )
       {
-        displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) )
-            .getEndTurnDate() );
+        displayEndTurn( game.estimateNextTimeStep() );
       }
       else
       {
-        displayEndTurn( game.estimateNextTimeStep() );
+        displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) )
+            .getEndTurnDate() );
       }
     }
 

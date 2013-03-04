@@ -33,7 +33,6 @@ import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.SharedMethods;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -134,17 +133,23 @@ public class WgtPlayerInfo extends Composite
   private void resfreshStyle()
   {
     Game game = GameEngine.model().getGame();
-    if( game.getCurrentPlayerIds().contains( m_registration.getId() ) )
+    if( game.isParallel() && game.getCurrentTimeStep() > 1 )
     {
-      m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
+      if( m_registration.getEndTurnDate() != null
+          && m_registration.getEndTurnDate().getTime() > SharedMethods.currentTimeMillis() )
+      {
+        m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
+        m_clockTimer.schedule( (int)(m_registration.getEndTurnDate().getTime() - SharedMethods
+            .currentTimeMillis()) );
+      }
+      else
+      {
+        m_panel.setStylePrimaryName( "fmp-status-player" );
+      }
     }
-    else if( game.isParallel()
-        && m_registration.getEndTurnDate() != null
-        && m_registration.getEndTurnDate().getTime() > SharedMethods.currentTimeMillis() )
+    else if( game.getCurrentPlayerIds().contains( m_registration.getId() ) )
     {
       m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
-      m_clockTimer.schedule( (int)(m_registration.getEndTurnDate().getTime() - SharedMethods
-          .currentTimeMillis()) );
     }
     else
     {

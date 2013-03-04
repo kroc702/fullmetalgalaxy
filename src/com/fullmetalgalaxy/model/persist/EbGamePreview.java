@@ -204,7 +204,11 @@ public class EbGamePreview extends EbBase
       }
     }
 
-    m_currentPlayerId = m_currentPlayerIds.get( 0 );
+    m_currentPlayerId = 0;
+    if( !m_currentPlayerIds.isEmpty() )
+    {
+      m_currentPlayerId = m_currentPlayerIds.get( 0 );
+    }
 
     // set status for old game
     getStatus();
@@ -365,12 +369,14 @@ public class EbGamePreview extends EbBase
 
 
   /**
-   * 
+   * parallel games are never in parallele hidden mode
    * @return true if given time step have to be played in parallel and hiden
    * from other. ie deployment or take off.
    */
   public boolean isTimeStepParallelHidden(int p_timeStep)
   {
+    if( isParallel() )
+      return false;
     return (p_timeStep > 1 && p_timeStep <= getEbConfigGameTime().getDeploymentTimeStep())
         || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep ));
   }

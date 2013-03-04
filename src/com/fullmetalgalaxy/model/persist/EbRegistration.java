@@ -237,7 +237,7 @@ public class EbRegistration extends EbBase
   }
 
 
-  protected int getOnBoardFreighterCount(Game p_game)
+  public int getOnBoardFreighterCount(Game p_game)
   {
     int freighterCount = getEnuColor().getNbColor();
     // after turn 21, we really count number of landed freighter

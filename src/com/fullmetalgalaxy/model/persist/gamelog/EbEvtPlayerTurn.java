@@ -30,7 +30,6 @@ import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -245,12 +244,17 @@ public class EbEvtPlayerTurn extends AnEvent
       game.getCurrentPlayerIds().clear();
 
 
-      if( game.isParallel() || game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
+      if( game.isTimeStepParallelHidden( game.getCurrentTimeStep() )
+          || (game.isParallel() && game.getCurrentTimeStep() > 1) )
       {
         // all players become current players !
+        // except those without any landed freighter
         for( EbRegistration registration : game.getSetRegistration() )
         {
-          addCurrentPlayer( game, registration );
+          if( registration.getOnBoardFreighterCount( game ) > 0 )
+          {
+            addCurrentPlayer( game, registration );
+          }
         }
       }
       else

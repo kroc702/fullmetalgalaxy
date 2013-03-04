@@ -311,7 +311,13 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     {
       return getForumAvatarUrl();
     }
-    return "/images/avatar/avatar" + (getId() % 12) + ".jpg";
+    int avatarId = 0;
+    for( int i = 0; i < getPseudo().length(); i++ )
+    {
+      avatarId += getPseudo().charAt( i );
+    }
+    avatarId %= 12;
+    return "/images/avatar/avatar" + avatarId + ".jpg";
   }
 
 
