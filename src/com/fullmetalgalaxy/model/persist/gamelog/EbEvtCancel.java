@@ -108,22 +108,23 @@ public class EbEvtCancel extends AnEventUser
       timeSinceLastTimeStepChange = 0;
     }
     int totalEventCount = p_game.getLogs().size() + p_game.getAdditionalEventCount();
+    int toActionIndex = m_toActionIndex;
     if( getMyRegistration( p_game ) != null )
     {
       totalEventCount += getMyRegistration( p_game ).getMyEvents().size();
     }
-    if( m_fromActionIndex != totalEventCount - 1 || m_toActionIndex < 0 )
+    if( m_fromActionIndex != totalEventCount - 1 || toActionIndex < 0 )
     {
       throw new RpcFmpException( "this cancel action isn't for this game state" );
     }
 
     List<AnEvent> eventLogs = p_game.getLogs();
-    if( getMyRegistration( p_game ) != null && m_toActionIndex >= p_game.getLogs().size() )
+    if( getMyRegistration( p_game ) != null && toActionIndex >= p_game.getLogs().size() )
     {
-      m_toActionIndex -= p_game.getLogs().size();
+      toActionIndex -= p_game.getLogs().size();
       eventLogs = getMyRegistration( p_game ).getMyEvents();
     }
-    while( m_toActionIndex < eventLogs.size() )
+    while( toActionIndex < eventLogs.size() )
     {
       AnEvent action = eventLogs.get( eventLogs.size() - 1 );
       if( !(action instanceof EbAdmin) )

@@ -47,7 +47,6 @@ import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.StatsPlayer;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
@@ -101,8 +100,8 @@ public class GameWorkflow
         // check that his freighter take off, if not, take off automatically
         for( EbToken token : p_game.getSetToken() )
         {
-          EbRegistration registration = p_game.getRegistration( ((AnEventPlay)nextEvent)
-              .getRegistrationId() );
+          EbRegistration registration = p_game
+              .getRegistrationByIdAccount( ((EbEvtPlayerTurn)nextEvent).getAccountId() );
           if( (token.getType() == TokenType.Freighter)
               && (token.getLocation() == Location.Board)
               && (token.getColor() != EnuColor.None)
@@ -312,6 +311,8 @@ public class GameWorkflow
               EbEvtPlayerTurn event = new EbEvtPlayerTurn();
               event.setAuto( true );
               event.setGame( p_game );
+              event.setAccountId( registration.getAccount().getId() );
+              event.setOldPlayerId( registration.getId() );
               event.checkedExec( p_game );
               p_game.addEvent( event );
               eventAdded.add( event );

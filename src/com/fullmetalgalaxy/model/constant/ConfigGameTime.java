@@ -118,17 +118,17 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig = new EbConfigGameTime();
     timeConfig.setTimeStepDurationInSec( 0 ); // no limit
     timeConfig.setTideChangeFrequency( 1 ); // tide change every time steps
-    timeConfig.setTotalTimeStep( 25 ); // 25 turns
+    timeConfig.setTotalTimeStep( 26 ); // 25 turns + turn 21
     timeConfig.setActionPtPerTimeStep( 15 ); // 15 pt per time step
     timeConfig.setActionPtPerExtraShip( 5 ); // 5 more pt per extra ship
     timeConfig.setBulletCountIncrement( 2 ); // 2 more bullet every time step
     takeOffTurns = new ArrayList<Integer>();
     takeOffTurns.add( 21 );
-    takeOffTurns.add( 25 );
+    takeOffTurns.add( 26 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setParallel( false );
     timeConfig.setRoundActionPt( 5 );
-    timeConfig.setDescription( "25 tours (pas de temps limite)" );
+    timeConfig.setDescription( "26 tours (pas de temps limite)" );
     timeConfig.setDeploymentTimeStep( 2 );
     s_configMap.put( Standard, timeConfig );
 
@@ -136,17 +136,17 @@ public enum ConfigGameTime implements IsSerializable
     timeConfig = new EbConfigGameTime();
     timeConfig.setTimeStepDurationInSec( 180 ); // 3 min
     timeConfig.setTideChangeFrequency( 1 ); // tide change every time steps
-    timeConfig.setTotalTimeStep( 25 ); // 25 turns
+    timeConfig.setTotalTimeStep( 26 ); // 25 turns + turn 21
     timeConfig.setActionPtPerTimeStep( 15 ); // 15 pt per time step
     timeConfig.setActionPtPerExtraShip( 5 ); // 5 more pt per extra ship
     timeConfig.setBulletCountIncrement( 2 ); // 2 more bullet every time step
     takeOffTurns = new ArrayList<Integer>();
     takeOffTurns.add( 21 );
-    takeOffTurns.add( 25 );
+    takeOffTurns.add( 26 );
     timeConfig.setTakeOffTurns( takeOffTurns );
     timeConfig.setParallel( false );
-    timeConfig.setRoundActionPt( 1 );
-    timeConfig.setDescription( "25 tours (3 min pour jouer)" );
+    timeConfig.setRoundActionPt( 5 );
+    timeConfig.setDescription( "26 tours (3 min pour jouer)" );
     timeConfig.setDeploymentTimeStep( 2 );
     s_configMap.put( QuickTurnBased, timeConfig );
 
