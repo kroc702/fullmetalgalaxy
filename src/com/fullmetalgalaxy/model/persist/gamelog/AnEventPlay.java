@@ -149,7 +149,6 @@ public class AnEventPlay extends AnEventUser
       throw new RpcFmpException( errMsg().NotEnouthActionPt() );
     }
     if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
-        && (!p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ))
         && (!p_game.getCurrentPlayerIds().contains( myRegistration.getId() ))
         && p_game.getGameType() != GameType.Practice )
     {

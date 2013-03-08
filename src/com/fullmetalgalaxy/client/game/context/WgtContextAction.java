@@ -513,7 +513,10 @@ public class WgtContextAction extends WgtView implements ClickHandler
         }
 
         // should we display take off advise ?
-        if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame().getCurrentTimeStep() )) )
+        if( (model.getGame().getAllowedTakeOffTurns().contains( model.getGame()
+            .getCurrentTimeStep() ))
+            && myRegistration != null
+            && model.getGame().getCurrentPlayerIds().contains( myRegistration.getId() ) )
         {
           MAppMessagesStack.s_instance.showMessage( m_pnlTakeOff );
         }
