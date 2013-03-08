@@ -385,6 +385,16 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         }
         else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
         {
+          for( AnEvent myevent : registration.getMyEvents() )
+          {
+            myevent.exec( game );
+          }
+          event.check( game );
+          for( int i = registration.getMyEvents().size() - 1; i >= 0; i-- )
+          {
+            AnEvent myevent = registration.getMyEvents().get( i );
+            myevent.unexec( game );
+          }
           registration.addMyEvent( event );
         }
         else
