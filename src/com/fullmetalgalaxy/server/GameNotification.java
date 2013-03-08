@@ -63,7 +63,7 @@ public class GameNotification
       if( ((action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn))
           && !p_game.isFinished() )
       {
-        if( p_game.getCurrentPlayerIds().isEmpty() )
+        if( p_game.isParallel() )
         {
           // Parallel mode is starting
           // send email to all players
@@ -72,10 +72,12 @@ public class GameNotification
           {
             msg = new FmgMessage( "paralleleGameUnpause", p_game );
           }
-          send2AllPlayers( msg, p_game, NotificationQty.Min, false );
+          send2CurrentPlayers( msg, p_game, NotificationQty.Min, false );
           mailSended = true;
         }
-        else 
+        else if( !(action instanceof EbEvtPlayerTurn)
+            || !p_game.isTimeStepParallelHidden( ((EbEvtPlayerTurn)action).getOldTurn() )
+            || ((EbEvtPlayerTurn)action).getOldTurn() != ((EbEvtPlayerTurn)action).getNewTurn() )
         {
           // new turn in begin game => email to current player
           NotificationQty notif = NotificationQty.Std;

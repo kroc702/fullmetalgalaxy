@@ -191,7 +191,8 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
       }
       if( event instanceof EbEvtControlFreighter )
       {
-        if( ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() )
+        if( ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() ) != null
+            && ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() )
             .getColor() == EnuColor.None )
         {
           playerCount--;
