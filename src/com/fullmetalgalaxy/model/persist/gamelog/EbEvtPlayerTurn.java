@@ -225,6 +225,8 @@ public class EbEvtPlayerTurn extends AnEvent
           // compute next turn
           while( game.isTimeStepParallelHidden( m_newTurn ) )
             m_newTurn++;
+
+          nextPlayerRegistration = game.getNextPlayerRegistration( -1 );
         }
         game.setCurrentTimeStep( m_newTurn );
         if( game.isParallel() )
@@ -266,6 +268,9 @@ public class EbEvtPlayerTurn extends AnEvent
 
   private void addCurrentPlayer(Game p_game, EbRegistration nextPlayerRegistration)
   {
+    if( nextPlayerRegistration == null )
+      return;
+
     // update all his tokens bullets count
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
     for( EbToken token : p_game.getSetToken() )
@@ -372,11 +377,13 @@ public class EbEvtPlayerTurn extends AnEvent
       }
 
       // previous player
-      EbRegistration previousPlayer = p_game.getRegistration( getOldPlayerId( p_game ) );
-      previousPlayer.setPtAction( m_oldActionPt );
       p_game.getCurrentPlayerIds().clear();
-      p_game.getCurrentPlayerIds().add( previousPlayer.getId() );
-
+      EbRegistration previousPlayer = p_game.getRegistration( getOldPlayerId( p_game ) );
+      if( previousPlayer != null )
+      {
+        previousPlayer.setPtAction( m_oldActionPt );
+        p_game.getCurrentPlayerIds().add( previousPlayer.getId() );
+      }
       p_game.setCurrentTimeStep( m_oldTurn );
     }
   }

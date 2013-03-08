@@ -635,6 +635,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   /**
    * return next registration which control at least one freighter on board.
    * If no registration control any freighter on board, return the current players registration.
+   * If p_currentIndex == -1, return the first registration that control one freighter
    * @param p_currentIndex
    * @return
    */
@@ -651,6 +652,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
         // next turn !
         index = 0;
         registration = getRegistrationByOrderIndex( index );
+        // avoid infinite loop
+        if( p_currentIndex < 0 )
+          break;
       }
       assert registration != null;
     } while( (!haveBoardFreighter( registration ) || !registration.haveAccount()) && (index != p_currentIndex) );

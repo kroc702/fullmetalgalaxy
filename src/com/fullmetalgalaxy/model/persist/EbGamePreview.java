@@ -159,7 +159,7 @@ public class EbGamePreview extends EbBase
   }
 
   @PostLoad
-  void onLoad()
+  public void onLoad()
   {
     /* do something after load */
     // This is a workarround because we can't store an @Embedded collection with
