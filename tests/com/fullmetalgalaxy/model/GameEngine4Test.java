@@ -72,6 +72,8 @@ public class GameEngine4Test
     in.close();
     fis.close();
 
+    modelInit.getGame().getPreview().onLoad();
+
     setGame( modelInit.getGame() );
     EbRegistration registration = getGame().getRegistration(
         getGame().getCurrentPlayerIds().get( 0 ) );

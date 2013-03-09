@@ -56,4 +56,22 @@ public class TestPuzzles
     gameEngine.assertRewind();
   }
 
+  @Test
+  public void testLesTourellesSauterontTroisFois() throws IOException, ClassNotFoundException,
+      RpcFmpException
+  {
+    GameEngine4Test gameEngine = new GameEngine4Test(
+        "./war/puzzles/lestourellessauteronttroisfois/model.bin" );
+    gameEngine.runScriptFile( "./war/puzzles/lestourellessauteronttroisfois/solution.script" );
+
+    // check that last action (turret repair) worked
+    Assert.assertNotNull( gameEngine.getGame().getToken( new AnBoardPosition( 11, 7 ),
+        TokenType.Turret ) );
+    EbRegistration registration = gameEngine.getGame().getRegistration(
+        gameEngine.getGame().getCurrentPlayerIds().get( 0 ) );
+    Assert.assertEquals( registration.getPtAction(), 3 );
+
+    gameEngine.assertRewind();
+  }
+
 }
