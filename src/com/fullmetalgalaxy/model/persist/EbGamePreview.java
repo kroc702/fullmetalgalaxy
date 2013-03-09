@@ -187,6 +187,10 @@ public class EbGamePreview extends EbBase
   void onPersist()
   {
     /* do something before persisting */
+    if( getLastUpdate() == null )
+    {
+      m_lastUpdate = new Date();
+    }
     getLastUpdate().setTime( System.currentTimeMillis() );
     m_version++;
 
