@@ -330,7 +330,7 @@ public class EbEvtPlayerTurn extends AnEvent
           try
           {
             AnEvent event = players.get( playerIndex ).getMyEvents().get( eventIndex[playerIndex] );
-            event.checkedExec( p_game );
+            event.exec( p_game );
             p_game.addEvent( event );
             eventAdded = true;
           } catch( RpcFmpException e )
