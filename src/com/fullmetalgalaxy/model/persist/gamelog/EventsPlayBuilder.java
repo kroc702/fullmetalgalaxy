@@ -1478,6 +1478,30 @@ public class EventsPlayBuilder implements GameEventStack
       p_position.setSector( getSelectedToken().getPosition().getNeighbourSector( p_position ) );
     }
     EbEvtMove action = new EbEvtMove();
+    if( getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime().getDeploymentTimeStep() )
+    {
+      for( EbToken freighter : getGame().getAllFreighter( getMyRegistration() ) )
+      {
+        if( freighter.getLocation() == Location.Board
+            && freighter.getPosition().getHexDistance( p_position ) <= getGame()
+                .getEbConfigGameVariant().getDeploymentRadius() )
+        {
+          if( getSelectedToken().getHexagonSize() == 1 )
+          {
+            // allow free move during deployment turn
+            action.setCost( 0 );
+          }
+          else if( getSelectedToken().getHexagonSize() == 2
+              && freighter.getPosition().getHexDistance(
+                  p_position.getNeighbour( p_position.getSector() ) ) <= getGame()
+                  .getEbConfigGameVariant().getDeploymentRadius() )
+          {
+            // allow free move during deployment turn
+            action.setCost( 0 );
+          }
+        }
+      }
+    }
     action.setGame( getGame() );
     action.setRegistration( getMyRegistration() );
     action.setToken( getSelectedToken() );
