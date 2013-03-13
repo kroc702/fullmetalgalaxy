@@ -17,7 +17,7 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010, 2011, 2012 Vincent Legendre
+ *  Copyright 2010, 2011, 2012, 2013 Vincent Legendre
  *
  * *********************************************************************/
 package com.fullmetalgalaxy.model;

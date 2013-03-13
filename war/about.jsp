@@ -18,7 +18,7 @@
 <li>Techno : HTML / Java / GWT / AppEngine</li>
 <li>Licence : <a href="http://www.gnu.org/licenses/agpl.html"><img border="none" src="/images/agplv3-88x31.cache.png" alt="AGPL v3"/></a> 
 			<a href="http://www.rodage.org/gpl-3.0.fr.html">(fr)</a>.<br/>
-<small>Copyright 2010, 2011 Vincent Legendre</small></li>			
+<small>Copyright 2010 - 2013 Vincent Legendre</small></li>			
 <li>Sources dispo ici : <a href="http://dev.fullmetalgalaxy.com">http://dev.fullmetalgalaxy.com</a></li>
 <li>Commit : <a href="http://code.google.com/p/fullmetalgalaxy/source/detail?r=<%@include file="/include/commitid.html"%>">
        <%@include file="/include/commitid.html"%></a> </li>
