@@ -141,6 +141,14 @@ public class EbEvtDeployment extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().cantDeployTooFar( p_game.getEbConfigGameVariant().getDeploymentRadius() ) );
     }
+    if( getToken( p_game ).getHexagonSize() == 2
+        && freighter.getPosition().getHexDistance(
+            getPosition().getNeighbour( getPosition().getSector() ) ) > p_game
+            .getEbConfigGameVariant().getDeploymentRadius() )
+    {
+      throw new RpcFmpException( errMsg().cantDeployTooFar(
+          p_game.getEbConfigGameVariant().getDeploymentRadius() ) );
+    }
 
     // check token move to a 'clear' hexagon
     EbToken tokensOnWay = p_game.getToken( getPosition() );
