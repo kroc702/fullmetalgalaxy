@@ -80,6 +80,7 @@ public class LocalGame
     Game game = GameEngine.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
+    updates.setToVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
     events.add( p_action );
     events.addAll( game.createTriggersEvents() );
@@ -92,6 +93,7 @@ public class LocalGame
     events.addAll( game.createTriggersEvents() );
     updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
+    updates.setToVersion( game.getVersion() );
     updates.setGameEvents( events );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
@@ -105,6 +107,7 @@ public class LocalGame
     updates.setFromPageId( AppMain.instance().getPageId() );
     updates.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
     updates.setFromVersion( game.getVersion() );
+    updates.setToVersion( game.getVersion() );
     List<AnEvent> events = new ArrayList<AnEvent>();
     for( AnEvent eventPlay : p_actionList )
     {
@@ -121,6 +124,7 @@ public class LocalGame
     updates.setFromPageId( AppMain.instance().getPageId() );
     updates.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
     updates.setFromVersion( game.getVersion() );
+    updates.setToVersion( game.getVersion() );
     updates.setGameEvents( events );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
@@ -143,6 +147,7 @@ public class LocalGame
     events.addAll( game.createTriggersEvents() );
     ModelFmpUpdate updates = new ModelFmpUpdate();
     updates.setFromVersion( game.getVersion() );
+    updates.setToVersion( game.getVersion() );
     updates.setGameEvents( events );
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );

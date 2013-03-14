@@ -132,6 +132,38 @@ public class MAppMessagesStack extends GuiEntryPoint implements ChannelMessageEv
     timer.schedule( FmpConstant.clientMessagesLivePeriod * 1000 );
   }
 
+  public void showPersitentMessage(Widget p_wgt)
+  {
+    if( p_wgt == null )
+    {
+      return;
+    }
+
+    PopupTimer timer = s_messagesPanels.get( p_wgt );
+    if( timer != null )
+    {
+      timer.cancel();
+      s_messagesPanels.remove( timer );
+    }
+    m_panel.add( p_wgt );
+  }
+
+  public void removeMessage(Widget p_wgt)
+  {
+    if( p_wgt == null )
+    {
+      return;
+    }
+
+    PopupTimer timer = s_messagesPanels.get( p_wgt );
+    if( timer != null )
+    {
+      timer.cancel();
+      s_messagesPanels.remove( timer );
+    }
+    m_panel.remove( p_wgt );
+  }
+
   @Override
   public void onChannelMessage(Object p_message)
   {
