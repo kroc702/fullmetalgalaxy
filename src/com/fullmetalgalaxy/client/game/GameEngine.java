@@ -113,6 +113,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    * - if game is puzzle or standard (turn by turn, no time limit) validate to cancel some actions
    */
   private boolean m_isTimeLineMode = false;
+  /** correspond to currently displayed action index in time line mode */
   private int m_currentActionIndex = 0;
   /** game currentTimeStep at the moment we start time line mode */
   private int m_lastTurnPlayed = 0;

@@ -23,6 +23,8 @@
 package com.fullmetalgalaxy.client.game.context;
 
 
+import java.util.ArrayList;
+
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
@@ -41,6 +43,9 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
@@ -81,6 +86,11 @@ public class WgtContextAction extends WgtView implements ClickHandler
   PushButton m_btnGridOff = new PushButton( new Image( Icons.s_instance.gridOff32() ) );
   PushButton m_btnRegister = new PushButton( new Image( Icons.s_instance.register32() ) );
   PushButton m_btnPractice = new PushButton( new Image( Icons.s_instance.practice32() ) );
+  PushButton m_btnPracticeOk = new PushButton( new Image( Icons.s_instance.ok32() ) );
+  PushButton m_btnPracticeCancel = new PushButton( new Image( Icons.s_instance.cancel32() ) );
+  private int m_actionIndexBeforePracticeMode = 0;
+
+
   FocusPanel m_pnlRegister = null;
   FocusPanel m_pnlWait = null;
   FocusPanel m_pnlLand = null;
@@ -179,9 +189,12 @@ public class WgtContextAction extends WgtView implements ClickHandler
     m_pnlTakeOff.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( new Image( Icons.s_instance.practice32()) );
-    hPanel.add( new Label( MAppBoard.s_messages.trainningMode() + "\n" + MAppBoard.s_messages.clicToLeave() ) );
+    hPanel.add( new Label( MAppBoard.s_messages.trainningMode() ) );
+    hPanel.add( m_btnPracticeCancel );
+    m_btnPracticeCancel.addClickHandler( this );
+    hPanel.add( m_btnPracticeOk );
+    m_btnPracticeOk.addClickHandler( this );
     m_pnlPractice = new FocusPanel( hPanel );
-    m_pnlPractice.addClickHandler( this );
     hPanel = new HorizontalPanel();
     hPanel.add( new Image( Icons.s_instance.takeOff32()) );
     hPanel.add( new Label( MAppBoard.s_messages.unconnected() ) );
@@ -289,21 +302,63 @@ public class WgtContextAction extends WgtView implements ClickHandler
         DlgJoinGame.instance().show();
         DlgJoinGame.instance().center();
       }
-      else if( sender == m_btnPractice || sender == m_pnlPractice )
+      else if( sender == m_btnPractice || sender == m_btnPracticeCancel )
       {
         if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
             || GameEngine.model().getGame().getGameType() == GameType.Initiation )
         {
           Window
               .alert( MAppBoard.s_messages.activateTrainningMode() );
+          m_actionIndexBeforePracticeMode = GameEngine.model().getGame().getLogs().size();
           GameEngine.model().getGame().setGameType( GameType.Practice );
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         }
         else
         {
-          Window.alert( MAppBoard.s_messages.deactivateTrainningMode() );
-          ClientUtil.reload();
+          // Window.alert( MAppBoard.s_messages.deactivateTrainningMode() );
+          // ClientUtil.reload();
+          // cancel locally
+          EbEvtCancel evtCancel = new EbEvtCancel();
+          evtCancel.setGame( GameEngine.model().getGame() );
+          evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
+              + GameEngine.model().getMyRegistration().getMyEvents().size() - 1 );
+          evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
+          evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
+          GameEngine.model().runSingleAction( evtCancel );
+          GameEngine.model().getGame().setGameType( GameType.MultiPlayer );
+          MAppMessagesStack.s_instance.removeMessage( m_pnlPractice );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         }
+      }
+      else if( sender == m_btnPracticeOk )
+      {
+        // after playing offline, user want to commit his turn to server
+        // put all actions to event builder
+        GameEngine.model().getActionBuilder().clear();
+        int iAction = m_actionIndexBeforePracticeMode;
+        ArrayList<AnEventPlay> eventsBackup = new ArrayList<AnEventPlay>();
+        while( GameEngine.model().getGame().getLogs().size() > iAction )
+        {
+          AnEvent event = GameEngine.model().getGame().getLogs().get( iAction );
+          if( event instanceof AnEventPlay )
+          {
+            eventsBackup.add( (AnEventPlay)event );
+          }
+          iAction++;
+        }
+        // cancel locally
+        EbEvtCancel evtCancel = new EbEvtCancel();
+        evtCancel.setGame( GameEngine.model().getGame() );
+        evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
+            + GameEngine.model().getMyRegistration().getMyEvents().size() - 1 );
+        evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
+        evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
+        GameEngine.model().runSingleAction( evtCancel );
+        // finally send actions to server
+        GameEngine.model().getGame().setGameType( GameType.MultiPlayer );
+        GameEngine.model().getActionBuilder().getActionList().addAll( eventsBackup );
+        GameEngine.model().runCurrentAction();
+        MAppMessagesStack.s_instance.removeMessage( m_pnlPractice );
       }
       else if( sender == m_btnEndTurn || sender == m_pnlEndTurn )
       {
@@ -524,7 +579,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         // display practice icon and advise
         if( GameEngine.model().getGame().getGameType() == GameType.Practice )
         {
-          MAppMessagesStack.s_instance.showMessage( m_pnlPractice );
+          MAppMessagesStack.s_instance.showPersitentMessage( m_pnlPractice );
         }
         else if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
             || GameEngine.model().getGame().getGameType() == GameType.Initiation )
