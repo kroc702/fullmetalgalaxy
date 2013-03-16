@@ -63,6 +63,7 @@ public class EventsPlayBuilder implements GameEventStack
   private AnEventPlay m_selectedAction = null;
   private EbToken m_selectedToken = null;
   private AnBoardPosition m_selectedPosition = null;
+  private ArrayList<EbToken> m_extraSelectedToken = new ArrayList<EbToken>();
 
   private AnBoardPosition m_lastClick = null;
 
@@ -118,6 +119,7 @@ public class EventsPlayBuilder implements GameEventStack
     m_actionList.clear();
     m_isRunnable = true;
     unselectToken();
+    getExtraSelectedToken().clear();
     // if no token is under the last click we don't need to clear it
     // and then we can select land by clicking again.
     // otherwise we need one click to unselect (ie clear) and two other click to
@@ -324,6 +326,10 @@ public class EventsPlayBuilder implements GameEventStack
         {
           return true;
         }
+        if( getExtraSelectedToken().contains( p_token ) )
+        {
+          return true;
+        }
       }
       if( getSelectedAction() instanceof EbEvtConstruct )
       {
@@ -419,6 +425,7 @@ public class EventsPlayBuilder implements GameEventStack
   protected void setSelectedToken(EbToken p_selectedToken)
   {
     m_selectedToken = p_selectedToken;
+    getExtraSelectedToken().clear();
   }
 
   /**
@@ -625,6 +632,9 @@ public class EventsPlayBuilder implements GameEventStack
           }
           else if( getSelectedAction() instanceof EbEvtUnLoad )
           {
+            // backup for later use
+            EbEvtUnLoad unloadAction = (EbEvtUnLoad)getSelectedAction();
+
             // an unload action...
             AnBoardPosition closePosition = getSelectedPosition().getNeighbour(
                 getSelectedPosition().getNeighbourSector( p_position ) );
@@ -673,7 +683,7 @@ public class EventsPlayBuilder implements GameEventStack
               // TODO remove this, its not logic
               // they where other action before this unload:
               // reselect the original selected token
-              selectBoardToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ), getAction( 0 )
+              selectBoardToken( ((EbEvtUnLoad)previousAction).getToken( m_game ), getAction( 0 )
                   .getSelectedPosition( m_game ) );
             }
             
@@ -688,7 +698,7 @@ public class EventsPlayBuilder implements GameEventStack
                 } else {
                   setSelectedAction( null );
                   setSelectedPosition( closePosition2 );
-                  setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
+                  setSelectedToken( unloadAction.getToken( m_game ) );
                   moveSelectedTo( p_position );
                   setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
                 }
@@ -703,7 +713,7 @@ public class EventsPlayBuilder implements GameEventStack
               } else {
                 setSelectedAction( null );
                 setSelectedPosition( closePosition );
-                setSelectedToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ) );
+                setSelectedToken( unloadAction.getToken( m_game ) );
                 moveSelectedTo( p_position );
                 setSelectedPosition( getAction( 0 ).getSelectedPosition( m_game ) );
               }
@@ -1092,11 +1102,29 @@ public class EventsPlayBuilder implements GameEventStack
           userBoardClick( selectedPosition, false );
         }
         // a token inside another token: prepare to unload !
-        EbEvtUnLoad action = new EbEvtUnLoad();
-        action.setGame( getGame() );
-        action.setTokenCarrier( getSelectedToken() );
-        action.setToken( p_token );
-        setSelectedAction( action );
+        if( getSelectedAction() != null && getSelectedAction() instanceof EbEvtUnLoad
+            && getSelectedAction().getToken( getGame() ).canLoad( p_token.getType() ) )
+        {
+          // unload action is already build and user select another unit
+          // he want to unload a loaded unit
+          if( getExtraSelectedToken().contains( p_token ) )
+          {
+            getExtraSelectedToken().remove( p_token );
+          }
+          else
+          {
+            getExtraSelectedToken().add( p_token );
+          }
+        }
+        else
+        {
+          // build new unload action
+          EbEvtUnLoad action = new EbEvtUnLoad();
+          action.setGame( getGame() );
+          action.setTokenCarrier( getSelectedToken() );
+          action.setToken( p_token );
+          setSelectedAction( action );
+        }
         isUpdated = true;
       }
       else if( p_token.getLocation() == Location.ToBeConstructed )
@@ -1140,12 +1168,18 @@ public class EventsPlayBuilder implements GameEventStack
 
   private void privateOk() throws RpcFmpException
   {
-    if( getSelectedAction() != null
-        && (getSelectedAction().getType() == GameLogType.EvtLand || getSelectedAction().getType() == GameLogType.EvtDeployment) )
+    if( getSelectedAction() == null )
+      return;
+    if( getSelectedAction().getType() == GameLogType.EvtLand
+        || getSelectedAction().getType() == GameLogType.EvtDeployment )
     {
       actionAdd( getSelectedAction() );
       m_isExecuted = true;
       unexec();
+    }
+    else if( getSelectedAction().getType() == GameLogType.EvtUnLoad )
+    {
+      actionTransferExtraSelected();
     }
   }
 
@@ -1572,6 +1606,35 @@ public class EventsPlayBuilder implements GameEventStack
     setSelectedAction( actionUnload );
   }
 
+  protected void actionTransferExtraSelected()
+  {
+    AnEvent lastEvent = getLastAction();
+    if( lastEvent != null && lastEvent instanceof EbEvtUnLoad )
+    {
+      EbEvtUnLoad unload = (EbEvtUnLoad)lastEvent;
+      for( EbToken extraSelectedToken : getExtraSelectedToken() )
+      {
+        EbEvtTransfer evtTransfer = new EbEvtTransfer();
+        evtTransfer.setGame( getGame() );
+        evtTransfer.setRegistration( getMyRegistration() );
+        evtTransfer.setToken( extraSelectedToken );
+        evtTransfer.setTokenCarrier( unload.getTokenCarrier( m_game ) );
+        evtTransfer.setNewTokenCarrier( unload.getToken( m_game ) );
+        evtTransfer.setAuto( true );
+        evtTransfer.setCost( 0 );
+        try
+        {
+          actionAdd( evtTransfer );
+        } catch( RpcFmpException e )
+        {
+          // we should add a little message for user...
+          // but it is hard because we aren't in client package
+        }
+      }
+    }
+    getExtraSelectedToken().clear();
+  }
+
   protected void actionUnloadSelected(AnBoardPosition p_position) throws RpcFmpException
   {
     assert m_selectedAction != null;
@@ -1589,6 +1652,8 @@ public class EventsPlayBuilder implements GameEventStack
     }
     
     actionAdd( action );
+    actionTransferExtraSelected();
+
     setSelectedToken( action.getToken( m_game ) );
     // setSelectedPosition( p_position );
     setSelectedAction( null );
@@ -1786,6 +1851,11 @@ public class EventsPlayBuilder implements GameEventStack
   protected MessagesRpcException errMsg()
   {
     return SharedI18n.getMessagesError( getAccountId() );
+  }
+
+  public ArrayList<EbToken> getExtraSelectedToken()
+  {
+    return m_extraSelectedToken;
   }
 
 
