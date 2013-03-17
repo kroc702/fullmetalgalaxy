@@ -286,7 +286,7 @@ public class GameWorkflow
             {
               // next tide
               EbEvtTide eventTide = new EbEvtTide();
-              eventTide.setNextTide( Tide.getRandom() );
+              eventTide.setNextTide( Tide.getRandom( p_game.getAverageTideLevel() ) );
               eventTide.setGame( p_game );
               eventTide.checkedExec( p_game );
               p_game.addEvent( eventTide );
@@ -383,7 +383,7 @@ public class GameWorkflow
           // next tide !
           EbEvtTide eventTide = new EbEvtTide();
           eventTide.setGame( p_game );
-          eventTide.setNextTide( Tide.getRandom() );
+          eventTide.setNextTide( Tide.getRandom( p_game.getAverageTideLevel() ) );
           eventTide.checkedExec( p_game );
           p_game.addEvent( eventTide );
           eventAdded.add( eventTide );

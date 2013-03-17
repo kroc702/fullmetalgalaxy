@@ -52,6 +52,8 @@ public class EbGameData extends EbBase
   protected Tide m_currentTide = Tide.Medium;
   protected Tide m_nextTide = Tide.Medium;
   protected Tide m_nextTide2 = Tide.Medium;
+  /** this average level is computed as follow: +1 for high tide and -1 for low tide */
+  protected int m_averageTideLevel = 0;
   protected int m_lastTideChange = 0;
   protected Date m_lastTimeStepChange = new Date( System.currentTimeMillis() );
   protected ArrayList<Integer> m_takeOffTurns = null;
@@ -105,6 +107,7 @@ public class EbGameData extends EbBase
     m_currentTide = Tide.Medium;
     m_nextTide = Tide.Medium;
     m_nextTide2 = Tide.Medium;
+    m_averageTideLevel = 0;
     m_lastTideChange = 0;
     m_lands = new byte[0];
     m_lastTimeStepChange = new Date( System.currentTimeMillis() );
@@ -211,7 +214,8 @@ public class EbGameData extends EbBase
   {
     if( m_nextTide == null )
     {
-      m_nextTide = Tide.getRandom();
+      m_nextTide = Tide.getRandom( getAverageTideLevel() );
+      setAverageTideLevel( getAverageTideLevel() + m_nextTide.getLevel() );
     }
     return m_nextTide;
   }
@@ -233,7 +237,8 @@ public class EbGameData extends EbBase
   {
     if( m_nextTide2 == null )
     {
-      m_nextTide2 = Tide.getRandom();
+      m_nextTide2 = Tide.getRandom( getAverageTideLevel() );
+      setAverageTideLevel( getAverageTideLevel() + m_nextTide2.getLevel() );
     }
     return m_nextTide2;
   }
@@ -423,6 +428,16 @@ public class EbGameData extends EbBase
   public void setAdditionalGameLog(List<Long> p_additionalGameLog)
   {
     m_additionalGameLog = p_additionalGameLog;
+  }
+
+  public int getAverageTideLevel()
+  {
+    return m_averageTideLevel;
+  }
+
+  public void setAverageTideLevel(int p_averageTideLevel)
+  {
+    m_averageTideLevel = p_averageTideLevel;
   }
 
 

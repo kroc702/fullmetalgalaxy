@@ -37,8 +37,30 @@ public enum Tide implements IsSerializable
   Unknown, Low, Medium, Hight;
 
 
-  public static Tide getRandom()
+  public static Tide getRandom(int p_averageLevel)
   {
+    if( p_averageLevel > 2 )
+    {
+      switch( (int)Math.floor( Math.random() * 2 ) )
+      {
+      case 0:
+        return Low;
+      default:
+      case 1:
+        return Medium;
+      }
+    }
+    else if( p_averageLevel < -2 )
+    {
+      switch( (int)Math.floor( Math.random() * 2 ) )
+      {
+      case 0:
+        return Medium;
+      default:
+      case 1:
+        return Hight;
+      }
+    }
     switch( (int)Math.floor( Math.random() * 3 ) )
     {
     case 0:
@@ -51,5 +73,16 @@ public enum Tide implements IsSerializable
     }
   }
 
+  public int getLevel()
+  {
+    switch( this )
+    {
+    case Low:
+      return -1;
+    case Hight:
+      return 1;
+    }
+    return 0;
+  }
 
 }

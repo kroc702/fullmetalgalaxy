@@ -82,7 +82,7 @@ public class EbActChangeTide extends AnAction
     Tide nextTide = getNextTide();
     if( nextTide == null )
     {
-      nextTide = Tide.getRandom();
+      nextTide = Tide.getRandom( p_game.getAverageTideLevel() );
     }
     EbEvtTide event = new EbEvtTide();
     event.setGame( p_game );

@@ -816,6 +816,16 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     return m_preview.getUnusedColors();
   }
+
+  public int getAverageTideLevel()
+  {
+    return m_data.getAverageTideLevel();
+  }
+
+  public void setAverageTideLevel(int p_averageTideLevel)
+  {
+    m_data.setAverageTideLevel( p_averageTideLevel );
+  }
   
   
   
