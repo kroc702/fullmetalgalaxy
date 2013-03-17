@@ -134,7 +134,7 @@ public enum ConfigGameTime implements IsSerializable
 
     // time config : QuickTurnBased
     timeConfig = new EbConfigGameTime();
-    timeConfig.setTimeStepDurationInSec( 180 ); // 3 min
+    timeConfig.setTimeStepDurationInSec( 270 ); // 4:30 min
     timeConfig.setTideChangeFrequency( 1 ); // tide change every time steps
     timeConfig.setTotalTimeStep( 26 ); // 25 turns + turn 21
     timeConfig.setActionPtPerTimeStep( 15 ); // 15 pt per time step
@@ -178,7 +178,7 @@ public enum ConfigGameTime implements IsSerializable
 
     // time config : QuickAsynch
     timeConfig = new EbConfigGameTime();
-    timeConfig.setTimeStepDurationInSec( 100 ); // 1:40 min
+    timeConfig.setTimeStepDurationInSec( 140 ); // 2:20 min
     timeConfig.setTideChangeFrequency( 2 ); // tide change every 3:20 min
     timeConfig.setTotalTimeStep( 50 ); // 50 time step
     timeConfig.setActionPtPerTimeStep( 8 ); // 8 pt per time step
