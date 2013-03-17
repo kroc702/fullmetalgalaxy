@@ -1102,19 +1102,19 @@ public class EventsPlayBuilder implements GameEventStack
           userBoardClick( selectedPosition, false );
         }
         // a token inside another token: prepare to unload !
+        // unload action is already build and user select another unit
         if( getSelectedAction() != null && getSelectedAction() instanceof EbEvtUnLoad
-            && getSelectedAction().getToken( getGame() ).canLoad( p_token.getType() ) )
+            && getExtraSelectedToken().contains( p_token ) )
         {
-          // unload action is already build and user select another unit
+          getExtraSelectedToken().remove( p_token );
+        }
+        else if( getSelectedAction() != null && getSelectedAction() instanceof EbEvtUnLoad
+            && getSelectedAction().getToken( getGame() ).canLoad( p_token.getType() ) 
+            && getExtraSelectedTokenLoadingSize() + p_token.getFullLoadingSize() <= getSelectedAction()
+                .getToken( getGame() ).getType().getLoadingCapability() )
+        {
           // he want to unload a loaded unit
-          if( getExtraSelectedToken().contains( p_token ) )
-          {
-            getExtraSelectedToken().remove( p_token );
-          }
-          else
-          {
-            getExtraSelectedToken().add( p_token );
-          }
+          getExtraSelectedToken().add( p_token );
         }
         else
         {
@@ -1856,6 +1856,16 @@ public class EventsPlayBuilder implements GameEventStack
   public ArrayList<EbToken> getExtraSelectedToken()
   {
     return m_extraSelectedToken;
+  }
+
+  public int getExtraSelectedTokenLoadingSize()
+  {
+    int size = 0;
+    for( EbToken token : getExtraSelectedToken() )
+    {
+      size += token.getFullLoadingSize();
+    }
+    return size;
   }
 
 
