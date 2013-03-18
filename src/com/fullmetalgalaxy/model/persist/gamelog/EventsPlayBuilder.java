@@ -683,7 +683,7 @@ public class EventsPlayBuilder implements GameEventStack
               // TODO remove this, its not logic
               // they where other action before this unload:
               // reselect the original selected token
-              selectBoardToken( ((EbEvtUnLoad)previousAction).getToken( m_game ), getAction( 0 )
+              selectBoardToken( ((EbEvtUnLoad)getLastAction()).getToken( m_game ), getAction( 0 )
                   .getSelectedPosition( m_game ) );
             }
             
@@ -1119,6 +1119,7 @@ public class EventsPlayBuilder implements GameEventStack
         else
         {
           // build new unload action
+          getExtraSelectedToken().clear();
           EbEvtUnLoad action = new EbEvtUnLoad();
           action.setGame( getGame() );
           action.setTokenCarrier( getSelectedToken() );
