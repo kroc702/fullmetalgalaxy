@@ -161,11 +161,25 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     FmgDataStore dataStore = new FmgDataStore(false);
     Game model = dataStore.getGame( p_gameId );
+    boolean isGameUpdated = false;
     if( model == null )
     {
       return null;
     }
 
+
+    // check that registration event log are not corrupted
+    if( !model.isTimeStepParallelHidden( model.getCurrentTimeStep() ) )
+    {
+      for( EbRegistration registration : model.getSetRegistration() )
+      {
+        if( !registration.getMyEvents().isEmpty() )
+        {
+          registration.clearMyEvents();
+          isGameUpdated = true;
+        }
+      }
+    }
 
     // anything to update ?
     GameStatus oldStatus = model.getStatus();
@@ -186,6 +200,10 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         // do we need to send an email ?
         GameNotification.sendMail( model, modelUpdate );
       }
+      isGameUpdated = true;
+    }
+    if( isGameUpdated )
+    {
       dataStore.put( model );
       try
       {

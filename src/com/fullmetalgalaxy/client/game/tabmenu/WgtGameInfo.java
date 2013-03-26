@@ -33,7 +33,6 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
