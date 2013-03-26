@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -302,7 +303,7 @@ public class EbEvtPlayerTurn extends AnEvent
       {
         if( m_endTurnDate == null )
         {
-          m_endTurnDate = new Date( System.currentTimeMillis()
+          m_endTurnDate = new Date( SharedMethods.currentTimeMillis()
               + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
         }
         nextPlayerRegistration.setEndTurnDate( m_endTurnDate );

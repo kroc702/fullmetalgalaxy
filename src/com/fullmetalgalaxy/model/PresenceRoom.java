@@ -159,7 +159,7 @@ public class PresenceRoom implements IsSerializable, java.io.Serializable, List<
     ArrayList<Presence> toRemove = new ArrayList<Presence>();
     for( Presence presence : getPresenceList() )
     {
-      if( System.currentTimeMillis() - presence.lastUp.getTime() > 100 * 1000 )
+      if( SharedMethods.currentTimeMillis() - presence.lastUp.getTime() > 100 * 1000 )
       {
         toRemove.add( presence );
       }
@@ -182,7 +182,7 @@ public class PresenceRoom implements IsSerializable, java.io.Serializable, List<
     {
       if( p_pseudo.equals( presence.pseudo ) && p_channelId == presence.pageId )
       {
-        presence.lastUp.setTime( System.currentTimeMillis() );
+        presence.lastUp.setTime( SharedMethods.currentTimeMillis() );
         isUpdated = true;
       }
     }

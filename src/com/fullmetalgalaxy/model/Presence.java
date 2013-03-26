@@ -38,7 +38,7 @@ public class Presence implements IsSerializable, java.io.Serializable
   private long m_gameId = 0;
   private int m_pageId = 0;
   private String m_jabberId = null;
-  private Date m_lastConnexion = new Date( System.currentTimeMillis() );
+  private Date m_lastConnexion = new Date( SharedMethods.currentTimeMillis() );
   private ClientType m_clientType = ClientType.UNKNOWN;
   
   public enum ClientType implements IsSerializable, java.io.Serializable
@@ -150,7 +150,7 @@ public class Presence implements IsSerializable, java.io.Serializable
    */
   public void setLastConnexion()
   {
-    getLastConnexion().setTime( System.currentTimeMillis() );
+    getLastConnexion().setTime( SharedMethods.currentTimeMillis() );
   }
 
 

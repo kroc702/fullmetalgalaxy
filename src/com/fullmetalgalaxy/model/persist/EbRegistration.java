@@ -30,6 +30,7 @@ import javax.persistence.Embedded;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
@@ -455,7 +456,7 @@ public class EbRegistration extends EbBase
     {
       m_lastConnexion = new Date();
     }
-    m_lastConnexion.setTime( System.currentTimeMillis() );
+    m_lastConnexion.setTime( SharedMethods.currentTimeMillis() );
   }
 
   /**

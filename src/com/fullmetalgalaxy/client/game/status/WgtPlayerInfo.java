@@ -117,7 +117,7 @@ public class WgtPlayerInfo extends Composite
           .setTitle( MAppBoard.s_messages.nextPA(
               m_registration.getActionInc( game ),
               ClientUtil.formatTimeElapsed( nextActionIncrement.getTime()
-                  - System.currentTimeMillis() ) ) );
+                  - SharedMethods.currentTimeMillis() ) ) );
     }
     m_panel.add( hPanel );
 

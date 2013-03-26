@@ -40,6 +40,7 @@ import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.MapSize;
 import com.fullmetalgalaxy.model.PlanetType;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
@@ -95,7 +96,7 @@ public class EbGamePreview extends EbBase
 
   private int m_landWidth = 36;
   private int m_landHeight = 24;
-  private Date m_creationDate = new Date( System.currentTimeMillis() );
+  private Date m_creationDate = new Date( SharedMethods.currentTimeMillis() );
 
   private Date m_lastUpdate = new Date();
 
@@ -137,7 +138,7 @@ public class EbGamePreview extends EbBase
     m_currentPlayerIds = new ArrayList<Long>();
     m_landWidth = 36;
     m_landHeight = 24;
-    m_creationDate = new Date( System.currentTimeMillis() );
+    m_creationDate = new Date( SharedMethods.currentTimeMillis() );
     m_description = "";
     m_name = "";
     m_gameType = GameType.MultiPlayer;
@@ -191,7 +192,7 @@ public class EbGamePreview extends EbBase
     {
       m_lastUpdate = new Date();
     }
-    getLastUpdate().setTime( System.currentTimeMillis() );
+    getLastUpdate().setTime( SharedMethods.currentTimeMillis() );
     m_version++;
 
     // This is a workarround because we can't store an @Embedded collection with

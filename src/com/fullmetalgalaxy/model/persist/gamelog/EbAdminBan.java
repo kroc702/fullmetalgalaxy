@@ -26,6 +26,7 @@ import java.util.Date;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -95,7 +96,7 @@ public class EbAdminBan extends EbAdmin
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec( p_game );
-    p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
+    p_game.setLastTimeStepChange( new Date( SharedMethods.currentTimeMillis() ) );
     EbRegistration registration = p_game.getRegistration( getRegistrationId() );
     if( registration != null )
     {
