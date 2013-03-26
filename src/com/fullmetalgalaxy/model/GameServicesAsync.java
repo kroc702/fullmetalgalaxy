@@ -69,11 +69,10 @@ public interface GameServicesAsync
    */
   public void getAdditionalGameLog(long p_gameId, AsyncCallback<EbGameLog> callback);
 
-
   public void checkUpdate(long p_gameId, AsyncCallback<Void> callback);
 
 
-  public void runModelUpdate(ModelFmpUpdate p_modelUpdate, AsyncCallback<Void> callback);
+  public void runModelUpdate(ModelFmpUpdate p_modelUpdate, AsyncCallback<ModelFmpUpdate> callback);
 
   /**
    * Get all changes in an fmp model since p_currentVersion and send back all needed data
@@ -100,5 +99,8 @@ public interface GameServicesAsync
   public void getChatMessage(long p_gameId, AsyncCallback<ChatMessage> callback);
 
   public void getRoom(long p_gameId, AsyncCallback<PresenceRoom> callback);
+
+  void getUpdate(long p_gameId, long p_myVersion, AsyncCallback<ModelFmpUpdate> callback);
+
 
 }

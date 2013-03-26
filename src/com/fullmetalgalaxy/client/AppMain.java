@@ -37,9 +37,11 @@ import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.game.context.MAppContext;
 import com.fullmetalgalaxy.client.game.status.MAppStatusBar;
 import com.fullmetalgalaxy.client.game.tabmenu.MAppTabMenu;
+import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.ChatMessage;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameServicesAsync;
+import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.PresenceRoom;
@@ -56,6 +58,10 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -65,11 +71,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Window.ClosingHandler
 {
   private static AppMain s_instance = null;
-  private static final int WATCHDOG_PERIOD_MS = 1000 * 60 * 3; // 3 min
+  private static final int WATCHDOG_PERIOD_MS = 1000 * 60 * 2; // 2 min
   /**
    * Create a remote service proxy to talk to the server-side Greeting service.
    */
   private static final GameServicesAsync s_gameService = GWT.create( GameServices.class );
+
+  private FocusPanel m_pnlChannelDisconnected = null;
+
 
   public static GameServicesAsync getRpcService()
   {
@@ -95,14 +104,14 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
 
   private ChannelMessageHandlerCollection m_channelMessageHandlerCollection = new ChannelMessageHandlerCollection();
   
-  public boolean m_isReloadTimerScheduled = false;
-  private Timer m_reloadTimer = new Timer()
+  public boolean m_isCheckChannelTimerScheduled = false;
+  private Timer m_checkChannelTimer = new Timer()
   {
     @Override
     public void run()
     {
-      ClientUtil.reload();
-      m_isReloadTimerScheduled = false;
+      m_isCheckChannelTimerScheduled = false;
+      onChannelDisconnected();
     }
   };
 
@@ -115,7 +124,7 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
       // server should answer with an empty chat message.
       ChatMessage msg = new ChatMessage( m_gameId, getMyPresence().getPseudo(), null );
       AppMain.getRpcService().sendChatMessage( msg, m_dummyCallback );
-      scheduleReloadTimer();
+      scheduleCheckChannelTimer();
     }
   };
 
@@ -130,6 +139,12 @@ private ChatEngine m_chatEngine = null;
     super();
     s_instance = this;
     loadAccountInfoFromPage();
+
+    HorizontalPanel hPanel = new HorizontalPanel();
+    hPanel.add( new Image( Icons.s_instance.takeOff32() ) );
+    hPanel.add( new Label( MAppBoard.s_messages.unconnected() ) );
+    m_pnlChannelDisconnected = new FocusPanel( hPanel );
+
 
     // disconnect if leaving this page
     Window.addWindowClosingHandler( this );
@@ -234,7 +249,7 @@ private ChatEngine m_chatEngine = null;
           //MAppMessagesStack.s_instance.showMessage( "onMessage" );
           
           // we receive a message from channel: we won't need to reload page
-          cancelReloadTimer();
+          cancelCheckChannelTimer();
           // also reshedule channel watchdog
           if( isChannelConnected() )
           {
@@ -244,7 +259,7 @@ private ChatEngine m_chatEngine = null;
 
           // We could set this flag in onOpen callback
           // but on some browser this doesn't reflect reality
-          m_isChannelConnected = true;
+          onChannelConnected();
 
           Object object = deserialize( message );
           
@@ -271,15 +286,14 @@ private ChatEngine m_chatEngine = null;
         @Override
         public void onError(SocketError error)
         {
-          m_isChannelConnected = false;
+          onChannelDisconnected();
           MAppMessagesStack.s_instance.showWarning( "Error: " + error.getDescription() );
         }
 
         @Override
         public void onClose()
         {
-          //MAppMessagesStack.s_instance.showWarning( "onClose" );
-          m_isChannelConnected = false;
+          onChannelDisconnected();
           // This occur after two hours. in this case, we ask server for a new
           // channel token
           AppMain.getRpcService().reconnect( getMyPresence(), m_reconnectCallback );
@@ -288,6 +302,30 @@ private ChatEngine m_chatEngine = null;
     }
   };
 
+  private void onChannelConnected()
+  {
+    m_isChannelConnected = true;
+    MAppMessagesStack.s_instance.removeMessage( m_pnlChannelDisconnected );
+  }
+  private void onChannelDisconnected()
+  {
+    m_isChannelConnected = false;
+    if( GameEngine.model().getGame().getGameType() == GameType.MultiPlayer
+        || GameEngine.model().getGame().getGameType() == GameType.Initiation )
+    {
+      MAppMessagesStack.s_instance.showPersitentMessage( m_pnlChannelDisconnected );
+    }
+  }
+  
+  /**
+   * this method is used to simulate channel event
+   * @param p_object
+   */
+  public static void fireEventChannelMessage(Object p_object)
+  {
+    if( p_object != null )
+      instance().m_channelMessageHandlerCollection.fireEventChanelMessage( p_object );
+  }
 
   private Object deserialize(String p_serial)
   {
@@ -370,6 +408,8 @@ private ChatEngine m_chatEngine = null;
       new MAppChat().onModuleLoad();
     }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+
+    onChannelDisconnected();
   }
 
   public boolean isChannelConnected()
@@ -431,19 +471,19 @@ private ChatEngine m_chatEngine = null;
    * This method should be called if we are waiting for Channel Message.
    * If we don't receive it after a short time period, page will be reloaded.
    */
-  public void scheduleReloadTimer()
+  public void scheduleCheckChannelTimer()
   {
-    // reload page if no response after 5 seconds
-    m_reloadTimer.schedule( 5000 );
-    m_isReloadTimerScheduled = true;
+    // channel is disconnected no response after 5 seconds
+    m_checkChannelTimer.schedule( 5000 );
+    m_isCheckChannelTimerScheduled = true;
   }
   
-  public void cancelReloadTimer()
+  public void cancelCheckChannelTimer()
   {
-    if( m_isReloadTimerScheduled )
+    if( m_isCheckChannelTimerScheduled )
     {
-      m_reloadTimer.cancel();
-      m_isReloadTimerScheduled = false;
+      m_checkChannelTimer.cancel();
+      m_isCheckChannelTimerScheduled = false;
     }
   }
   

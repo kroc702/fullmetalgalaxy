@@ -29,7 +29,7 @@
 		</li>
       <li><a href="http://guide.fullmetalgalaxy.com/?language=en" >Guide</a>
 			<ul>
-				                                    <li><a href="http://guide.fullmetalgalaxy.com/guide/highlights?language=en">Highlights</a></li>
+				                    <li><a href="http://guide.fullmetalgalaxy.com/guide/highlights?language=en">Highlights</a></li>
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/create-game?language=en">Create game</a></li>
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/rules-deviations?language=en">Rules deviations</a></li>
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/game-modes?language=en">Game modes</a></li>
@@ -40,6 +40,7 @@
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/faq?language=en">FAQ</a></li>
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/original-rules?language=en">Original rules</a></li>
                                     <li><a href="http://guide.fullmetalgalaxy.com/guide/standard-units?language=en">Standard units</a></li>
+				                 	<li><a href="http://guide.fullmetalgalaxy.com/guide/additional-units?language=en">Extra units</a></li>
                 			</ul>
 		</li>																
         <li><a href="http://guide.fullmetalgalaxy.com/resources/external-links?language=en" >Resources</a>

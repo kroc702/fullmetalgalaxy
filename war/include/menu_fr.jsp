@@ -40,6 +40,7 @@
                  <li><a href="http://guide.fullmetalgalaxy.com/guide/faq?language=fr">FAQ</a></li>
                  <li><a href="http://guide.fullmetalgalaxy.com/guide/original-rules?language=fr">Règles original</a></li>
                  <li><a href="http://guide.fullmetalgalaxy.com/guide/standard-units?language=fr">Unités standards</a></li>
+                 <li><a href="http://guide.fullmetalgalaxy.com/guide/additional-units?language=fr">Unités supplémentaires</a></li>
    			</ul>
 		</li>																
         <li><a href="http://guide.fullmetalgalaxy.com/resources/external-links?language=fr" >Ressources</a>

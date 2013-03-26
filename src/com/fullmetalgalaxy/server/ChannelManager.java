@@ -359,6 +359,11 @@ public class ChannelManager extends HttpServlet
     }
   }
 
+  /**
+   * TODO should we put this method in a asynchron task (queue)
+   * @param p_room
+   * @param p_modelUpdate
+   */
   protected static void broadcast(PresenceRoom p_room, ModelFmpUpdate p_modelUpdate)
   {
     boolean isRoomUpdated = false;

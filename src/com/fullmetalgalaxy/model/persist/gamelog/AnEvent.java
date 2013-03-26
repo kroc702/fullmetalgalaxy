@@ -41,17 +41,16 @@ import com.fullmetalgalaxy.model.persist.Game;
  * it is the base class to represent any event or action which can be performed on to a game.
  * 'exec()' have to be launch at least once before saving this event. @see unexec()
  * 
- * TODO should we store game version ? or use ModelFmpUpdate in GameServices
  */
 public class AnEvent extends EbBase
 {
   static final long serialVersionUID = 1;
 
+  /** the date when server receive or create this event */
   private Date m_lastUpdate = null;
-
-  // TODO is it really usefull now ?
-  private GameLogType m_type = null;
-
+  /** game version on server, when it receive or create this event */
+  private long m_gameVersion = 0;
+  /** game id on which this action shall be run */
   private long m_idGame = 0;
 
 
@@ -102,7 +101,6 @@ public class AnEvent extends EbBase
   {
     setLastUpdate( new Date() );
     m_idGame = 0;
-    m_type = null;
 
     m_fdRemoved = null;
     m_fdAdded = null;
@@ -111,14 +109,7 @@ public class AnEvent extends EbBase
 
   public GameLogType getType()
   {
-    if( m_type == null )
-    {
-      return GameLogType.None;
-    }
-    else
-    {
-      return m_type;
-    }
+    return GameLogType.None;
   }
 
 
@@ -198,18 +189,22 @@ public class AnEvent extends EbBase
     return m_idGame;
   }
 
-  /**
-   * @param p_idGame the idGame to set
-   */
-  public void setIdGame(long p_idGame)
-  {
-    m_idGame = p_idGame;
-  }
-
-
   public void setGame(Game p_game)
   {
     m_idGame = p_game.getId();
+    m_gameVersion = p_game.getVersion();
+  }
+
+
+  public long getGameVersion()
+  {
+    return m_gameVersion;
+  }
+
+
+  public void setGameVersion(long p_gameVersion)
+  {
+    m_gameVersion = p_gameVersion;
   }
 
 

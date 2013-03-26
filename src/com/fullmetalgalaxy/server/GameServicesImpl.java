@@ -25,8 +25,6 @@ package com.fullmetalgalaxy.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
@@ -153,6 +151,12 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   }
 
 
+  /**
+   * load a game from database and check if any update is required.
+   * if update are required, their are broadcasted to clients.
+   * @param p_gameId
+   * @return the returned game can be saved after any update
+   */
   static protected Game getEbGame(long p_gameId)
   {
     FmgDataStore dataStore = new FmgDataStore(false);
@@ -204,6 +208,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     }
     return model;
   }
+
 
   public static ModelFmpInit sgetModelFmpInit(HttpServletRequest p_request,
       HttpServletResponse p_response, String p_gameId)
@@ -309,7 +314,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
 
   @Override
-  public void runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException
+  public ModelFmpUpdate runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException
   {
     if( p_modelUpdate.getGameEvents().isEmpty() )
     {
@@ -325,7 +330,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     }
     if( game.getVersion() != p_modelUpdate.getFromVersion() )
     {
-      // no i18n as unusual ?
+      // TODO should we try to apply this update ?
       throw new RpcFmpException( "Send action on wrong game version" );
     }
     // security check
@@ -353,14 +358,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         EbRegistration registration = null;
         if( event instanceof AnEventUser )
         {
-          try
-          {
-            ((AnEventUser)event).setRemoteAddr( InetAddress.getByName(
-                getThreadLocalRequest().getRemoteAddr() ).getAddress() );
-          } catch( UnknownHostException e )
-          {
-            log.error( e );
-          }
           registration = ((AnEventUser)event).getMyRegistration( game );
           if( registration != null )
           {
@@ -376,6 +373,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           }
         }
         event.setLastUpdate( ServerUtil.currentDate() );
+        event.setGameVersion( game.getVersion() );
         
         // execute action
         if(event.getType() == GameLogType.EvtCancel)
@@ -423,9 +421,10 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
     // broadcast changes to all clients
     modelUpdate.setToVersion( game.getVersion() );
+    modelUpdate.setClientID( p_modelUpdate.getClientID() );
     ChannelManager.broadcast( ChannelManager.getRoom( game.getId() ), modelUpdate );
 
-  
+    return modelUpdate;
   }
 
   /* (non-Javadoc)
@@ -498,6 +497,51 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   public EbGameLog getAdditionalGameLog(long p_gameId) throws RpcFmpException
   {
     return sgetAdditionalGameLog( p_gameId );
+  }
+
+
+  @Override
+  public ModelFmpUpdate getUpdate(long p_gameId, long p_myVersion) throws RpcFmpException
+  {
+    Game game = getEbGame( p_gameId );
+
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate();
+    modelUpdate.setGameId( game.getId() );
+    modelUpdate.setFromVersion( p_myVersion );
+    modelUpdate.setToVersion( game.getVersion() );
+
+    if( game.getVersion() > p_myVersion )
+    {
+      // get events from main event list
+      if( !game.getLogs().isEmpty() )
+      {
+        int firstEventIndex = game.getLogs().size();
+        while( firstEventIndex > 0
+            && game.getLogs().get( firstEventIndex - 1 ).getGameVersion() >= p_myVersion )
+        {
+          firstEventIndex--;
+        }
+
+        for( int iEvent = firstEventIndex; iEvent < game.getLogs().size(); iEvent++ )
+        {
+          modelUpdate.getGameEvents().add( game.getLogs().get( iEvent ) );
+        }
+      }
+
+      // get events from registration event lists
+      for( EbRegistration registration : game.getSetRegistration() )
+      {
+        for( AnEvent event : registration.getMyEvents() )
+        {
+          if( event.getGameVersion() > p_myVersion )
+          {
+            modelUpdate.getGameEvents().add( event );
+          }
+        }
+      }
+    }
+   
+    return modelUpdate;
   }
 
 }

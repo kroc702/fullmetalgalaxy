@@ -14,7 +14,7 @@
 	      Presence presence = new Presence();
 	      String channelToken = null;
 	      String room = null;
-	      if( id != 0 ) {
+	      if( id != 0 && !withoutChannel) {
 	      		// if id != 0, then it's a multiplayer game
 	    		channelToken = ChannelManager.connect(pseudo,id,Presence.ClientType.GAME,presence);
 	    	    room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));

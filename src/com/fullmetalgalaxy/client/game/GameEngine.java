@@ -64,6 +64,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -80,6 +81,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public static final String HISTORY_ID = "GameEngine";
   public static Logger logger = Logger.getLogger( "GameEngine" );
   private static GameEngine s_ModelFmpMain = null;
+  /** polling method is used as a fallback is channel is disconnected */
+  private static final int EVENTS_POLLING_PERIOD_MS = 1000 * 30; // 30 sec
 
   /**
    * @return a unique instance of the model on client side
@@ -174,7 +177,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
             || m_game.getGameType() == GameType.Initiation )
         {
           AppMain.instance().addChannelMessageEventHandler( ModelFmpUpdate.class, GameEngine.model() );
-        } 
+          // this timer poll server for update if channel isn't connected
+          m_eventsPollingTimer.scheduleRepeating( EVENTS_POLLING_PERIOD_MS );
+        }
         else
         {
           LocalGame.loadGame( GameEngine.model() );
@@ -184,6 +189,22 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     }
   };
 
+  private Timer m_eventsPollingTimer = new Timer()
+  {
+    @Override
+    public void run()
+    {
+      // don't ask for update if we are waiting for response !
+      if( !AppMain.instance().isChannelConnected()
+          && m_lastModelUpdateClientID == 0
+          && (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation) )
+      {
+        AppMain.getRpcService().getUpdate( getGame().getId(), getGame().getVersion(),
+            m_callbackEvents );
+
+      }
+    }
+  };
 
   public EbRegistration getMyRegistration()
   {
@@ -310,28 +331,22 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
 
 
+  /** last model update client ID that was send without any response.
+   * if 0: no action was send to server. */
+  private int m_lastModelUpdateClientID = 0;
 
-  private boolean m_isActionPending = false;
 
-  private FmpCallback<Void> m_callbackEvents = new FmpCallback<Void>()
+  private FmpCallback<ModelFmpUpdate> m_callbackEvents = new FmpCallback<ModelFmpUpdate>()
   {
     @Override
-    public void onSuccess(Void p_result)
+    public void onSuccess(ModelFmpUpdate p_result)
     {
-      if( !AppMain.instance().isChannelConnected()
-          && (GameEngine.model().getGame().getGameType() == GameType.MultiPlayer || GameEngine
-              .model().getGame().getGameType() == GameType.Initiation) )
-      {
-        // we just receive an action acknowledge but we arn't connected with
-        // channel. ie we won't receive update event... reload page
-        ClientUtil.reload();
-      }
       super.onSuccess( p_result );
       m_successiveRpcErrorCount = 0;
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().clear();
-      //AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      AppMain.fireEventChannelMessage( p_result );
     }
 
     @Override
@@ -339,12 +354,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       m_successiveRpcErrorCount++;
       //super.onFailure( p_caught );
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
       // maybe the action failed because the model isn't up to date
-      if( m_successiveRpcErrorCount <= 2 )
+      if( m_successiveRpcErrorCount <= 2 && AppMain.instance().isChannelConnected() )
       {
         if( p_caught instanceof RpcFmpException )
         {
@@ -365,7 +380,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
   protected void receiveModelUpdate(ModelFmpUpdate p_result)
   {
-    if( p_result == null )
+    if( p_result == null || getGame() == null )
     {
       // this shouldn't occur anymore !
       return;
@@ -373,13 +388,31 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
     try
     {
-      if( getGame() == null || getGame().getVersion() != p_result.getFromVersion() )
+      if( (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation)
+          && getGame().getVersion() >= p_result.getToVersion() )
+      {
+        // assume we can discard this update !
+        return;
+      }
+
+      if( getGame().getVersion() < p_result.getFromVersion()
+          || (getGame().getVersion() != p_result.getFromVersion() && getGame().getVersion() < p_result
+              .getToVersion()) )
       {
         Window.alert( "Error: receive incoherant model update (" + p_result.getFromVersion()
             + " expected " + getGame().getVersion() + "). reload page" );
         ClientUtil.reload();
         return;
       }
+
+      if( p_result.getClientID() == m_lastModelUpdateClientID )
+      {
+        // this update correspond to the last action request
+        // and we receive response from channel before RCP !
+        AppMain.instance().stopLoading();
+        getActionBuilder().clear();
+      }
+
 
       if( p_result.getAccountId() == AppMain.instance().getMyAccount().getId() )
       {
@@ -471,14 +504,16 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   public void runSingleAction(AnEvent p_action)
   {
-    if( m_isActionPending )
+    if( m_lastModelUpdateClientID != 0 )
     {
       // no i18n as HMI is lock, so it shouldn't occur
       Window.alert( "An action is already send to server... wait for server response." );
       return;
     }
-    m_isActionPending = true;
     AppMain.instance().startLoading();
+    m_lastModelUpdateClientID = Random.nextInt();
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
+    modelUpdate.setClientID( m_lastModelUpdateClientID );
 
     try
     {
@@ -493,8 +528,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       if( getGame().getGameType() == GameType.MultiPlayer
           || getGame().getGameType() == GameType.Initiation )
       {
-        AppMain.instance().scheduleReloadTimer();
-        ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
+        AppMain.instance().scheduleCheckChannelTimer();
         modelUpdate.setFromPageId( AppMain.instance().getPageId() );
         modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
         modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
@@ -508,14 +542,14 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     } catch( RpcFmpException ex )
     {
       Window.alert( ex.getLocalizedMessage() );
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
     }
@@ -527,13 +561,15 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   public void runCurrentAction()
   {
-    if( m_isActionPending )
+    if( m_lastModelUpdateClientID != 0 )
     {
       Window.alert( "Une action a déjà été envoyé au serveur... sans réponse pour l'instant" );
       return;
     }
-    m_isActionPending = true;
     AppMain.instance().startLoading();
+    m_lastModelUpdateClientID = Random.nextInt();
+    ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
+    modelUpdate.setClientID( m_lastModelUpdateClientID );
 
     try
     {
@@ -547,9 +583,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       if( getGame().getGameType() == GameType.MultiPlayer
           || getGame().getGameType() == GameType.Initiation )
       {
-        AppMain.instance().scheduleReloadTimer();
+        AppMain.instance().scheduleCheckChannelTimer();
         // then send request
-        ModelFmpUpdate modelUpdate = new ModelFmpUpdate( getGame() );
         modelUpdate.setFromPageId( AppMain.instance().getPageId() );
         modelUpdate.setFromPseudo( AppMain.instance().getMyAccount().getPseudo() );
         modelUpdate.setGameEvents( new ArrayList<AnEvent>() );
@@ -563,13 +598,13 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     } catch( RpcFmpException ex )
     {
       Window.alert( ex.getLocalizedMessage() );
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
-      m_isActionPending = false;
+      m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
