@@ -18,6 +18,8 @@ try
 	id = Long.parseLong(request.getParameter("id"));
 } catch(Exception e) {}
 String pseudo = Auth.getUserPseudo(request,response);
+String channel = request.getParameter("channel");
+boolean withoutChannel = (channel != null) && (channel.equalsIgnoreCase( "no" ));
 %>
 <meta name='gwt:property' id='fmp_userpseudo' content='<%= pseudo %>' />
 

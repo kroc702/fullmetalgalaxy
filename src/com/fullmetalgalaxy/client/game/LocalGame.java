@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 import com.fullmetalgalaxy.model.persist.triggers.actions.AnAction;
 import com.fullmetalgalaxy.model.persist.triggers.conditions.AnCondition;
@@ -74,7 +75,7 @@ public class LocalGame
     p_model.receiveModelUpdate( updates );
   }
 
-  public static void runEvent(AnEvent p_action, AsyncCallback<Void> callbackUpdates,
+  public static void runEvent(AnEvent p_action, AsyncCallback<ModelFmpUpdate> callbackUpdates,
       GameEngine p_model)
   {
     Game game = GameEngine.model().getGame();
@@ -88,6 +89,12 @@ public class LocalGame
     callbackUpdates.onSuccess( null );
     p_model.receiveModelUpdate( updates );
 
+    if( p_action instanceof EbEvtCancel )
+    {
+      // remove event cancel from event stack
+      p_model.getGame().getLogs().remove( p_action );
+    }
+
     // check triggers
     events = new ArrayList<AnEvent>();
     events.addAll( game.createTriggersEvents() );
@@ -100,7 +107,7 @@ public class LocalGame
   }
 
   public static void runAction(ArrayList<AnEventPlay> p_actionList,
-      AsyncCallback<Void> callbackUpdates, GameEngine p_model)
+      AsyncCallback<ModelFmpUpdate> callbackUpdates, GameEngine p_model)
   {
     Game game = GameEngine.model().getGame();
     ModelFmpUpdate updates = new ModelFmpUpdate();

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
@@ -99,7 +98,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
   FocusPanel m_pnlEndTurn = null;
   FocusPanel m_pnlTakeOff = null;
   FocusPanel m_pnlPractice = null;
-  FocusPanel m_pnlChannelDisconnected = null;
   PushButton m_btnTakeOff = new PushButton( new Image( Icons.s_instance.takeOff32() ) );
   Image m_iconAction = new Image( Icons.s_instance.action16() );
   Label m_lblAction = new Label( "" );
@@ -195,11 +193,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
     hPanel.add( m_btnPracticeOk );
     m_btnPracticeOk.addClickHandler( this );
     m_pnlPractice = new FocusPanel( hPanel );
-    hPanel = new HorizontalPanel();
-    hPanel.add( new Image( Icons.s_instance.takeOff32()) );
-    hPanel.add( new Label( MAppBoard.s_messages.unconnected() ) );
-    m_pnlChannelDisconnected = new FocusPanel( hPanel );
-    m_pnlChannelDisconnected.addClickHandler( this );
 
 
     m_iconAction.setTitle( MAppBoard.s_messages.costInPA() );
@@ -450,11 +443,6 @@ public class WgtContextAction extends WgtView implements ClickHandler
     EbToken mainSelectedToken = action.getSelectedToken();
     EbRegistration myRegistration = model.getMyRegistration();
 
-    if( !AppMain.instance().isChannelConnected()
-        && (System.currentTimeMillis() - ClientUtil.pageLoadTimeMillis()) > 2000 )
-    {
-      MAppMessagesStack.s_instance.showMessage( m_pnlChannelDisconnected );
-    }
 
     if( !action.isTokenSelected() || GameEngine.model().getGame().isFinished() )
     {

@@ -81,8 +81,18 @@ public interface GameServices extends RemoteService
    */
   public void checkUpdate(long p_gameId) throws RpcFmpException;
 
+  /**
+   * this method should be used by client as a fallback if channel is not available.
+   * in this case, client will poll server for update
+   * @param p_gameId
+   * @param p_myVersion
+   * @return
+   * @throws RpcFmpException
+   */
+  public ModelFmpUpdate getUpdate(long p_gameId, long p_myVersion) throws RpcFmpException;
 
-  public void runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException;
+
+  public ModelFmpUpdate runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException;
 
   
   /**

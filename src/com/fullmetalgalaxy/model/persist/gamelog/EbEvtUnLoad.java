@@ -124,6 +124,12 @@ public class EbEvtUnLoad extends AnEventPlay
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
+    // check no hexagon are skipped
+    if( !getTokenCarrier( p_game ).isNeighbor( getNewPosition() ) )
+    {
+      // unusual error: no i18n
+      throw new RpcFmpException( "You must select all moving step without any gap between them." );
+    }
     // check that carrier isn't tide deactivate
     if( !p_game.isTokenTideActive( getToken( p_game ).getCarrierToken() ) )
     {

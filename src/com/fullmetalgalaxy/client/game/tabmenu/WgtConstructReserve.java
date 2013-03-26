@@ -31,7 +31,6 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
-import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -61,7 +60,7 @@ public class WgtConstructReserve extends Composite
     m_panel.clear();
     EbConfigGameVariant variant = GameEngine.model().getGame().getEbConfigGameVariant();
     
-    EnuColor myColor = new EnuColor();
+    EnuColor myColor = new EnuColor( 0 );
     if( GameEngine.model().getMyRegistration() != null )
     {
       myColor.setValue( GameEngine.model().getMyRegistration().getSingleColor() );

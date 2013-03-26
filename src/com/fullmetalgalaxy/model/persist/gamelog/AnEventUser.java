@@ -40,7 +40,7 @@ public class AnEventUser extends AnEvent
   static final long serialVersionUID = 1;
 
   private long m_accountId = 0L;
-  private byte[] m_remoteAddrAsArray = null;
+
   /**
    * 
    */
@@ -60,7 +60,6 @@ public class AnEventUser extends AnEvent
   private void init()
   {
     m_accountId = 0;
-    m_remoteAddrAsArray = null;
   }
 
   /**
@@ -137,27 +136,4 @@ public class AnEventUser extends AnEvent
     m_accountId = p_id;
   }
 
-  /**
-   * @return the remoteAddr
-   */
-  public String getRemoteAddr()
-  {
-    if( m_remoteAddrAsArray != null )
-    {
-      // should be tuned for IPV6
-      StringBuffer str = new StringBuffer();
-      for( int i = 0; i < m_remoteAddrAsArray.length; i++ )
-      {
-        str.append( m_remoteAddrAsArray[i] );
-        str.append( '.' );
-      }
-      return str.substring( 0, str.length() - 1 );
-    }
-    return "???";
-  }
-
-  public void setRemoteAddr(byte[] p_remoteAddr)
-  {
-    m_remoteAddrAsArray = p_remoteAddr;
-  }
 }
