@@ -296,18 +296,18 @@ public class EbEvtPlayerTurn extends AnEvent
         actionPt = nextPlayerRegistration.getMaxActionPt( p_game );
       }
       nextPlayerRegistration.setPtAction( actionPt );
+    }
 
-      // set End turn date for future current player
-      if( p_game.getCurrentTimeStep() > 1
-          && p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+    // set End turn date for future current player
+    if( p_game.getCurrentTimeStep() > 1
+        && p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+    {
+      if( m_endTurnDate == null )
       {
-        if( m_endTurnDate == null )
-        {
-          m_endTurnDate = new Date( SharedMethods.currentTimeMillis()
-              + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
-        }
-        nextPlayerRegistration.setEndTurnDate( m_endTurnDate );
+        m_endTurnDate = new Date( SharedMethods.currentTimeMillis()
+            + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
       }
+      nextPlayerRegistration.setEndTurnDate( m_endTurnDate );
     }
     p_game.getCurrentPlayerIds().add( nextPlayerRegistration.getId() );
 
