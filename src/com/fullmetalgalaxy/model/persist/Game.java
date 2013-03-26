@@ -43,6 +43,7 @@ import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Sector;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
@@ -804,7 +805,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   {
     if( m_lastTokenUpdate == null )
     {
-      m_lastTokenUpdate = new Date( System.currentTimeMillis() );
+      m_lastTokenUpdate = new Date( SharedMethods.currentTimeMillis() );
     }
     return m_lastTokenUpdate;
   }
@@ -813,7 +814,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   {
     if( p_lastUpdate == null )
     {
-      m_lastTokenUpdate = new Date( System.currentTimeMillis() );
+      m_lastTokenUpdate = new Date( SharedMethods.currentTimeMillis() );
     }
     else if( p_lastUpdate.after( m_lastTokenUpdate ) )
     {

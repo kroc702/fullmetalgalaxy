@@ -35,6 +35,7 @@ import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Sector;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.pathfinder.PathFinder;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
@@ -67,7 +68,7 @@ public class EventsPlayBuilder implements GameEventStack
 
   private AnBoardPosition m_lastClick = null;
 
-  private Date m_lastUpdate = new Date( System.currentTimeMillis() );
+  private Date m_lastUpdate = new Date( SharedMethods.currentTimeMillis() );
 
   private Game m_game = null;
   private boolean m_isRecording = false;
@@ -998,7 +999,7 @@ public class EventsPlayBuilder implements GameEventStack
           EbToken freighter = action.getToken( m_game ).getCarrierToken();
           action.getPosition().setSector( freighter.getPosition().getNeighbourSector( action.getPosition() ) );
         }
-        setLastUpdate( new Date( System.currentTimeMillis() ) );
+        setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
         isUpdated = EventBuilderMsg.Updated;
       }
       else if( isActionsPending() || isEmptyLandSelected() )
@@ -1012,7 +1013,7 @@ public class EventsPlayBuilder implements GameEventStack
      }
     if( isUpdated == EventBuilderMsg.Updated )
     {
-      setLastUpdate( new Date( System.currentTimeMillis() ) );
+      setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
     }
     return isUpdated;
   }
@@ -1147,7 +1148,7 @@ public class EventsPlayBuilder implements GameEventStack
     }
     if( isUpdated )
     {
-      setLastUpdate( new Date( System.currentTimeMillis() ) );
+      setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
       // ModelFmpMain.model().notifyModelUpdate();
     }
     return isUpdated;
@@ -1341,7 +1342,7 @@ public class EventsPlayBuilder implements GameEventStack
     setSelectedToken( p_token );
     setSelectedPosition( p_position );
     setSelectedAction( null );
-    setLastUpdate( new Date( System.currentTimeMillis() ) );
+    setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
   }
 
   protected void selectLoadToken(EbToken p_token)
@@ -1358,7 +1359,7 @@ public class EventsPlayBuilder implements GameEventStack
     action.setToken( p_token );
     action.setTokenCarrier( m_selectedToken );
     setSelectedAction( action );
-    setLastUpdate( new Date( System.currentTimeMillis() ) );
+    setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
   }
 
   public void unselectToken()
@@ -1367,7 +1368,7 @@ public class EventsPlayBuilder implements GameEventStack
     m_selectedToken = null;
     m_selectedPosition = null;
     m_selectedAction = null;
-    setLastUpdate( new Date( System.currentTimeMillis() ) );
+    setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
   }
 
 
@@ -1382,7 +1383,7 @@ public class EventsPlayBuilder implements GameEventStack
       m_selectedToken = null;
       m_selectedPosition = null;
     }*/
-    setLastUpdate( new Date( System.currentTimeMillis() ) );
+    setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
   }
 
   protected void actionAdd(AnEventPlay p_action) throws RpcFmpException

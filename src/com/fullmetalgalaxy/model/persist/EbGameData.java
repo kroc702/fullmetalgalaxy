@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Parent;
@@ -55,7 +56,7 @@ public class EbGameData extends EbBase
   /** this average level is computed as follow: +1 for high tide and -1 for low tide */
   protected int m_averageTideLevel = 0;
   protected int m_lastTideChange = 0;
-  protected Date m_lastTimeStepChange = new Date( System.currentTimeMillis() );
+  protected Date m_lastTimeStepChange = new Date( SharedMethods.currentTimeMillis() );
   protected ArrayList<Integer> m_takeOffTurns = null;
   protected String m_mapUri = null;
   protected String m_messages = null;
@@ -110,7 +111,7 @@ public class EbGameData extends EbBase
     m_averageTideLevel = 0;
     m_lastTideChange = 0;
     m_lands = new byte[0];
-    m_lastTimeStepChange = new Date( System.currentTimeMillis() );
+    m_lastTimeStepChange = new Date( SharedMethods.currentTimeMillis() );
     m_takeOffTurns = null;
     m_mapUri = null;
     m_messages = null;

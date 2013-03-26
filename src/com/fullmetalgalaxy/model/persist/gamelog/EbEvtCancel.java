@@ -28,6 +28,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.Game;
 
 /**
@@ -101,7 +102,7 @@ public class EbEvtCancel extends AnEventUser
     assert p_game != null;
     assert p_game.getId() == getIdGame();
     boolean isTimeStepCanceled = false;
-    long timeSinceLastTimeStepChange = System.currentTimeMillis()
+    long timeSinceLastTimeStepChange = SharedMethods.currentTimeMillis()
         - p_game.getLastTimeStepChange().getTime();
     if( timeSinceLastTimeStepChange > p_game.getEbConfigGameTime().getTimeStepDurationInMili() )
     {
@@ -149,7 +150,7 @@ public class EbEvtCancel extends AnEventUser
     // this is to avoid timestep replay right after the cancel action.
     if( p_game.isParallel() && isTimeStepCanceled )
     {
-      p_game.setLastTimeStepChange( new Date( System.currentTimeMillis()
+      p_game.setLastTimeStepChange( new Date( SharedMethods.currentTimeMillis()
           - timeSinceLastTimeStepChange ) );
     }
     p_game.addEvent( this );

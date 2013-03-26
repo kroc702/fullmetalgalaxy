@@ -26,6 +26,7 @@ import java.util.Date;
 
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -92,7 +93,7 @@ public class EbAdminTimePlay extends EbAdmin
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    p_game.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
+    p_game.setLastTimeStepChange( new Date( SharedMethods.currentTimeMillis() ) );
     p_game.setStatus( GameStatus.Running );
     if( !p_game.isParallel() )
     {
@@ -104,7 +105,7 @@ public class EbAdminTimePlay extends EbAdmin
       EbRegistration myRegistration = getMyRegistration(p_game);
       if( myRegistration != null )
       {
-        myRegistration.setEndTurnDate( new Date( System.currentTimeMillis()
+        myRegistration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
             + p_game.getFullTurnDurationInMili() ) );
       }
     }
