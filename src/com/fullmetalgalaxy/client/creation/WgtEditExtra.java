@@ -24,9 +24,14 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.FmpCallback;
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.IntegerBox;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -38,8 +43,26 @@ public class WgtEditExtra extends Composite
 {
   private VerticalPanel m_panel = new VerticalPanel();
 
+  private IntegerBox m_intCurrentTurn = new IntegerBox();
+
+
   public WgtEditExtra()
   {
+    m_panel.add( new Label( "current turn:" ) );
+    m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
+    m_panel.add( m_intCurrentTurn );
+    m_intCurrentTurn.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        if( m_intCurrentTurn.getValue() == null )
+        {
+          m_intCurrentTurn.setValue( 0 );
+        }
+        GameEngine.model().getGame().setCurrentTimeStep( m_intCurrentTurn.getValue() );
+      }
+    } );
 
     initWidget( m_panel );
   }

@@ -24,10 +24,13 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -43,6 +46,8 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
 
   // UI
   private Label m_lblAccount = new Label( "" );
+  private IntegerBox m_intActionPoints = new IntegerBox();
+  private IntegerBox m_intColors = new IntegerBox();
   private Button m_btnBan = new Button( "Bannir ce joueur" );
 
 
@@ -53,6 +58,38 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
   {
     VerticalPanel panel = new VerticalPanel();
     panel.add( m_lblAccount );
+    panel.add( new Label( "action points:" ) );
+    panel.add( m_intActionPoints );
+    m_intActionPoints.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        if( m_registration == null )
+          return;
+        if( m_intActionPoints.getValue() == null )
+        {
+          m_intActionPoints.setValue( 0 );
+        }
+        m_registration.setPtAction( m_intActionPoints.getValue() );
+      }
+    } );
+    panel.add( new Label( "colors:" ) );
+    panel.add( m_intColors );
+    m_intColors.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        if( m_registration == null )
+          return;
+        if( m_intColors.getValue() == null )
+        {
+          m_intColors.setValue( 0 );
+        }
+        m_registration.setColor( m_intColors.getValue() );
+      }
+    } );
     m_btnBan.addClickHandler( this );
     panel.add( m_btnBan );
     initWidget( panel );
@@ -86,6 +123,10 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     {
       m_lblAccount.setText( p_reg.getAccount().getPseudo() );
     }
+    m_intActionPoints.setValue( p_reg.getPtAction() );
+    m_intColors.setValue( p_reg.getColor() );
   }
+
+
 
 }
