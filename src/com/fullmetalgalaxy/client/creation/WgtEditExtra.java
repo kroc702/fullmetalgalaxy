@@ -49,7 +49,6 @@ public class WgtEditExtra extends Composite
   public WgtEditExtra()
   {
     m_panel.add( new Label( "current turn:" ) );
-    m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
     m_panel.add( m_intCurrentTurn );
     m_intCurrentTurn.addChangeHandler( new ChangeHandler()
     {
@@ -65,6 +64,12 @@ public class WgtEditExtra extends Composite
     } );
 
     initWidget( m_panel );
+  }
+
+
+  public void onTabSelected()
+  {
+    m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
   }
 
   FmpCallback<Void> m_callback = new FmpCallback<Void>()

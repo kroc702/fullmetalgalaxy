@@ -231,6 +231,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       getLogs().add( p_action );
     }
+    else
+    {
+      RpcUtil.logError( "EbGame::addEvent(): logs already contain " + p_action );
+    }
   }
 
   @Override

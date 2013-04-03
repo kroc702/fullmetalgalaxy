@@ -325,6 +325,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
       m_wgtEditTriggers.refreshTriggerList();
       break;
     case 5: // Extra
+      m_wgtEditExtra.onTabSelected();
       break;
     default:
       break;
