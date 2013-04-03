@@ -441,16 +441,18 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           }
         }
 
+
         if( event.getType() == GameLogType.EvtCancel )
         {
           ((EbEvtCancel)event).execCancel( getGame() );
         }
         else if( event instanceof AnEventUser
-            && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() ) )
+            && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
+            && ((AnEventUser)event).getMyRegistration( getGame() ) != null )
         {
-          EbRegistration registration = ((AnEventUser)event).getMyRegistration( getGame() );
-          registration.addMyEvent( event );
-          if( registration == getMyRegistration() )
+          EbRegistration myRegistration = ((AnEventUser)event).getMyRegistration( getGame() );
+          myRegistration.addMyEvent( event );
+          if( myRegistration == getMyRegistration() )
           {
             event.exec( getGame() );
             getGame().updateLastTokenUpdate( null );

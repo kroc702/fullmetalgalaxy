@@ -23,12 +23,14 @@
 package com.fullmetalgalaxy.client.creation;
 
 
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
@@ -49,7 +51,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
   private IntegerBox m_intActionPoints = new IntegerBox();
   private IntegerBox m_intColors = new IntegerBox();
   private Button m_btnBan = new Button( "Bannir ce joueur" );
-
+  private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
 
   /**
    * 
@@ -90,6 +92,8 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
         m_registration.setColor( m_intColors.getValue() );
       }
     } );
+    m_chkCurrentPlayer.addClickHandler( this );
+    panel.add( m_chkCurrentPlayer );
     m_btnBan.addClickHandler( this );
     panel.add( m_btnBan );
     initWidget( panel );
@@ -112,19 +116,32 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
       m_registration.setAccount( null );
       loadRegistration( m_registration );
     }
+    else if( p_event.getSource() == m_chkCurrentPlayer )
+    {
+      if( m_chkCurrentPlayer.getValue() )
+      {
+        GameEngine.model().getGame().getCurrentPlayerIds().add( m_registration.getId() );
+      }
+      else
+      {
+        GameEngine.model().getGame().getCurrentPlayerIds().remove( (Long)m_registration.getId() );
+      }
+    }
 
   }
 
   public void loadRegistration(EbRegistration p_reg)
   {
     m_registration = p_reg;
-    m_lblAccount.setText( "" );
+    m_lblAccount.setText( "???" );
     if( p_reg.haveAccount() )
     {
       m_lblAccount.setText( p_reg.getAccount().getPseudo() );
     }
     m_intActionPoints.setValue( p_reg.getPtAction() );
     m_intColors.setValue( p_reg.getColor() );
+    m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
+        .contains( p_reg.getId() ) );
   }
 
 

@@ -216,8 +216,8 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
 
       if( GameEngine.model().getLastTurnPlayed() != GameEngine.model().getGame()
           .getCurrentTimeStep()
-          || !GameEngine.model().getGame().getCurrentPlayerIds()
-              .contains( GameEngine.model().getMyRegistration().getId() ) )
+          || (GameEngine.model().getMyRegistration() != null && !GameEngine.model().getGame()
+              .getCurrentPlayerIds().contains( GameEngine.model().getMyRegistration().getId() )) )
       {
         if( !AppMain.instance().iAmAdmin() )
         {

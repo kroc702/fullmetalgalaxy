@@ -373,6 +373,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // then run all provided event
       for( AnEvent event : p_modelUpdate.getGameEvents() )
       {
+        event.setTrancient();
         EbRegistration registration = null;
         if( event instanceof AnEventUser )
         {
