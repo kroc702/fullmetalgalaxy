@@ -112,7 +112,8 @@ public class EbEvtRepair extends AnEventPlay
     // control
     int iback = 0;
     AnEvent event = p_game.getLastLog( iback );
-    while( event != null )
+    int maxIBack = p_game.getLogs().size() - 10;
+    while( event != null && iback < maxIBack )
     {
       if( event instanceof EbEvtControlFreighter
           && ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getId() == freighter
