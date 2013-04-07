@@ -23,15 +23,25 @@
 package com.fullmetalgalaxy.client.creation;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
 import com.fullmetalgalaxy.model.RpcFmpException;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.IntegerBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -39,29 +49,56 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * other actions
  */
 
-public class WgtEditExtra extends Composite  
+public class WgtEditAdmin extends Composite  
 {
   private VerticalPanel m_panel = new VerticalPanel();
 
-  private IntegerBox m_intCurrentTurn = new IntegerBox();
+  // to change current turn
+  private WgtIntBox m_intCurrentTurn = new WgtIntBox();
 
 
-  public WgtEditExtra()
+  // to edit registration
+  private Map<String, EbRegistration> m_mapReg = new HashMap<String, EbRegistration>();
+  private ListBox m_lstReg = new ListBox( false );
+  private WgtEditOneRegistration m_wgtOneReg = new WgtEditOneRegistration();
+
+
+
+  public WgtEditAdmin()
   {
     m_panel.add( new Label( "current turn:" ) );
     m_panel.add( m_intCurrentTurn );
-    m_intCurrentTurn.addChangeHandler( new ChangeHandler()
+    m_intCurrentTurn.addValueChangeHandler( new ValueChangeHandler<Integer>()
+    {
+      @Override
+      public void onValueChange(ValueChangeEvent<Integer> p_event)
+      {
+        int delta = m_intCurrentTurn.getValue() - GameEngine.model().getGame().getCurrentTimeStep();
+        GameEngine.model().getGame()
+            .setLastTideChange( GameEngine.model().getGame().getLastTideChange() + delta );
+        GameEngine.model().getGame().setCurrentTimeStep( m_intCurrentTurn.getValue() );
+      }
+    } );
+
+    m_panel.add( new HTML( "<hr>" ) );
+    // ===================
+
+    m_lstReg.addChangeHandler( new ChangeHandler()
     {
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        if( m_intCurrentTurn.getValue() == null )
-        {
-          m_intCurrentTurn.setValue( 0 );
-        }
-        GameEngine.model().getGame().setCurrentTimeStep( m_intCurrentTurn.getValue() );
+        m_wgtOneReg.loadRegistration( m_mapReg.get( m_lstReg.getItemText( m_lstReg
+            .getSelectedIndex() ) ) );
+
       }
     } );
+    m_lstReg.setVisibleItemCount( 10 );
+    HorizontalPanel hpanel = new HorizontalPanel();
+    hpanel.add( m_lstReg );
+    hpanel.add( m_wgtOneReg );
+    m_panel.add( hpanel );
+
 
     initWidget( m_panel );
   }
@@ -69,7 +106,19 @@ public class WgtEditExtra extends Composite
 
   public void onTabSelected()
   {
+    // load current turn
     m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
+
+    // reload all registration
+    m_mapReg = new HashMap<String, EbRegistration>();
+    int selectedIndex = m_lstReg.getSelectedIndex();
+    m_lstReg.clear();
+    for( EbRegistration registration : GameEngine.model().getGame().getSetRegistration() )
+    {
+      m_lstReg.addItem( Messages.getColorString( 0, registration.getColor() ) );
+      m_mapReg.put( Messages.getColorString( 0, registration.getColor() ), registration );
+    }
+    m_lstReg.setSelectedIndex( selectedIndex );
   }
 
   FmpCallback<Void> m_callback = new FmpCallback<Void>()

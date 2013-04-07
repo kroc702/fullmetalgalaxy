@@ -24,12 +24,15 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.TokenType;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Parent;
 import com.googlecode.objectify.annotation.Serialized;
@@ -84,6 +87,8 @@ public class EbGameData extends EbBase
   protected List<com.fullmetalgalaxy.model.persist.triggers.EbTrigger> m_triggers = new ArrayList<com.fullmetalgalaxy.model.persist.triggers.EbTrigger>();
   @Serialized
   protected Set<EbPublicAccount> m_accounts = null;
+  @Serialized
+  protected Map<TokenType, Integer> m_constructReserve = new HashMap<TokenType, Integer>();
 
   @Unindexed
   protected long m_nextLocalId = 0L;
@@ -146,6 +151,10 @@ public class EbGameData extends EbBase
   }
 
 
+  public Map<TokenType, Integer> getConstructReserve()
+  {
+    return m_constructReserve;
+  }
 
   /**
    * Don't use this method directly, it's for hibernate and h4gwt use only

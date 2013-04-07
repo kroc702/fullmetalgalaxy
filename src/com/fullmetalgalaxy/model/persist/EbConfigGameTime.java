@@ -41,8 +41,15 @@ public class EbConfigGameTime extends EbBase
   private int m_timeStepDurationInSec = 86400; // one day
   private int m_tideChangeFrequency = 1; // every time steps
   private int m_totalTimeStep = 25;
+  /** standard action point increment */
   private int m_actionPtPerTimeStep = 15;
+  /** extra action point increment per extra freighter */
   private int m_actionPtPerExtraShip = 5;
+  /** maximum number of action points */
+  private int m_actionPtMaxReserve = 25;
+  /** extra maximum number of action points */
+  private int m_actionPtMaxPerExtraShip = 5;
+
   private int m_bulletCountIncrement = 20;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
@@ -75,6 +82,8 @@ public class EbConfigGameTime extends EbBase
     m_totalTimeStep = p_config.getTotalTimeStep();
     m_actionPtPerTimeStep = p_config.getActionPtPerTimeStep();
     m_actionPtPerExtraShip = p_config.getActionPtPerExtraShip();
+    m_actionPtMaxReserve = p_config.getActionPtMaxReserve();
+    m_actionPtMaxPerExtraShip = p_config.getActionPtMaxPerExtraShip();
     m_takeOffTurns = new ArrayList<Integer>( p_config.getTakeOffTurns() );
     m_isParallel = p_config.isParallel();
     m_lockGameInMillis = p_config.getLockGameInMillis();
@@ -91,6 +100,8 @@ public class EbConfigGameTime extends EbBase
     m_totalTimeStep = 25;
     m_actionPtPerTimeStep = 15;
     m_actionPtPerExtraShip = 5;
+    m_actionPtMaxReserve = 25;
+    m_actionPtMaxPerExtraShip = 5;
     m_takeOffTurns = new ArrayList<Integer>();
     m_takeOffTurns.add( 21 );
     m_takeOffTurns.add( 25 );
@@ -307,6 +318,32 @@ public class EbConfigGameTime extends EbBase
   public void setLockGameInMillis(int p_lockGameInMillis)
   {
     m_lockGameInMillis = p_lockGameInMillis;
+  }
+
+  public int getActionPtMaxReserve()
+  {
+    // TODO remove this (for backward compatibility)
+    if( m_actionPtMaxReserve == 0 )
+      m_actionPtMaxReserve = 25;
+    return m_actionPtMaxReserve;
+  }
+
+  public void setActionPtMaxReserve(int p_actionPtMaxReserve)
+  {
+    m_actionPtMaxReserve = p_actionPtMaxReserve;
+  }
+
+  public int getActionPtMaxPerExtraShip()
+  {
+    // TODO remove this (for backward compatibility)
+    if( m_actionPtMaxPerExtraShip == 0 )
+      m_actionPtMaxPerExtraShip = 5;
+    return m_actionPtMaxPerExtraShip;
+  }
+
+  public void setActionPtMaxPerExtraShip(int p_actionPtMaxPerExtraShip)
+  {
+    m_actionPtMaxPerExtraShip = p_actionPtMaxPerExtraShip;
   }
   
 

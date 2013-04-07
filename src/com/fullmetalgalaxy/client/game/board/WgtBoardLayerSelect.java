@@ -27,6 +27,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
@@ -131,7 +132,7 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
     {
       int distance = evDeploy.getToken( GameEngine.model().getGame() ).getCarrierToken()
           .getPosition().getHexDistance( p_anBoardPosition );
-      if( distance > GameEngine.model().getGame().getEbConfigGameVariant().getDeploymentRadius() )
+      if( distance > FmpConstant.deployementRadius )
       {
         BoardIcons.hightlight_hexagon( getZoom().getValue() ).applyTo( m_hexagonHightlight );
       }

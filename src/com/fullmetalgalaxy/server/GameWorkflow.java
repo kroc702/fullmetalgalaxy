@@ -668,7 +668,6 @@ public class GameWorkflow
     {
       // add all stat related to finished game
       GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), 1 );
-      GlobalVars.incrementFGameNbConfigGameVariant( p_game.getConfigGameVariant(), 1 );
       GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
       GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
 

@@ -224,6 +224,10 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     {
       model.setLastTimeStepChange( new Date( System.currentTimeMillis() ) );
     }
+    if( dataStore.isActive() )
+    {
+      dataStore.rollback();
+    }
     return model;
   }
 

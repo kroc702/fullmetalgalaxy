@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -138,7 +137,6 @@ public class RecomputeStats
   {
     private static final long serialVersionUID = 1L;
     private HashMap<ConfigGameTime, Integer> m_nbConfigGameTime = new HashMap<ConfigGameTime, Integer>();
-    private HashMap<ConfigGameVariant, Integer> m_nbConfigGameVariant = new HashMap<ConfigGameVariant, Integer>();
     private long m_nbOfHexagon = 0;
     private int m_nbPlayer = 0;
 
@@ -158,10 +156,6 @@ public class RecomputeStats
       for( ConfigGameTime config : ConfigGameTime.values() )
       {
         m_nbConfigGameTime.put( config, 0 );
-      }
-      for( ConfigGameVariant config : ConfigGameVariant.values() )
-      {
-        m_nbConfigGameVariant.put( config, 0 );
       }
     }
 
@@ -188,8 +182,6 @@ public class RecomputeStats
         {
           m_nbConfigGameTime.put( game.getConfigGameTime(),
               m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
-          m_nbConfigGameVariant.put( game.getConfigGameVariant(),
-              m_nbConfigGameVariant.get( game.getConfigGameVariant() ) + 1 );
           m_nbOfHexagon += game.getNumberOfHexagon();
           m_nbPlayer += game.getSetRegistration().size();
 
@@ -218,10 +210,6 @@ public class RecomputeStats
       for( Entry<ConfigGameTime, Integer> entry : m_nbConfigGameTime.entrySet() )
       {
         GlobalVars.setFGameNbConfigGameTime( entry.getKey(), entry.getValue() );
-      }
-      for( Entry<ConfigGameVariant, Integer> entry : m_nbConfigGameVariant.entrySet() )
-      {
-        GlobalVars.setFGameNbConfigGameVariant( entry.getKey(), entry.getValue() );
       }
       GlobalVars.setFGameNbOfHexagon( m_nbOfHexagon );
       GlobalVars.setFGameNbPlayer( m_nbPlayer );

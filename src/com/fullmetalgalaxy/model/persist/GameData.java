@@ -24,7 +24,10 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -35,8 +38,8 @@ import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -66,6 +69,21 @@ public class GameData implements java.io.Serializable, IsSerializable
     super();
     m_preview = p_preview;
     m_data = p_data;
+
+    /* do something after load */
+    if( m_data.getConstructReserve() == null || m_data.getConstructReserve().isEmpty() )
+    {
+      m_data.m_constructReserve = getEbConfigGameVariant().getConstructReserve();
+    }
+    if( m_data.getConstructReserve() == null || m_data.getConstructReserve().isEmpty() )
+    {
+      m_data.m_constructReserve = new HashMap<TokenType, Integer>();
+      // build default construct reserve
+      setConstructQty( TokenType.Pontoon, 1 );
+      setConstructQty( TokenType.Crab, 1 );
+      setConstructQty( TokenType.Tank, 4 );
+      multiplyConstructQty( getPreview().getCurrentNumberOfRegiteredPlayer() );
+    }
   }
 
   private void init()
@@ -276,6 +294,57 @@ public class GameData implements java.io.Serializable, IsSerializable
       return registration.getAccount();
     }
     return null;
+  }
+
+
+  public boolean canConstruct(TokenType p_type)
+  {
+    Integer qty = getConstructReserve().get( p_type );
+    return qty != null && qty != 0;
+  }
+
+  public void incConstructQty(TokenType p_type)
+  {
+    Integer qty = getConstructReserve().get( p_type );
+    if( qty != null && qty >= 0 )
+    {
+      qty++;
+      setConstructQty( p_type, qty );
+    }
+  }
+
+  public void decConstructQty(TokenType p_type)
+  {
+    Integer qty = getConstructReserve().get( p_type );
+    if( qty != null && qty > 0 )
+    {
+      qty--;
+      setConstructQty( p_type, qty );
+    }
+  }
+
+  /**
+   * Set allowed construct quantity for a given token type
+   * Note that, for predefined variant, theses quantity will be multiply by
+   * players number.
+   * @param p_type
+   * @param p_qty if < 0, unlimited
+   */
+  public void setConstructQty(TokenType p_type, int p_qty)
+  {
+    getConstructReserve().put( p_type, p_qty );
+  }
+
+  /**
+   * @see setConstructQty
+   * @param p_playerNumber
+   */
+  public void multiplyConstructQty(int p_playerNumber)
+  {
+    for( Entry<TokenType, Integer> entry : getConstructReserve().entrySet() )
+    {
+      entry.setValue( entry.getValue() * p_playerNumber );
+    }
   }
 
   // common methods
@@ -514,10 +583,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getConfigGameTime();
   }
 
-  public ConfigGameVariant getConfigGameVariant()
-  {
-    return m_preview.getConfigGameVariant();
-  }
 
   public GameType getGameType()
   {
@@ -569,12 +634,8 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getEbConfigGameTime();
   }
 
-  public void setEbConfigGameVariant(EbConfigGameVariant p_config)
-  {
-    m_preview.setEbConfigGameVariant( p_config );
-  }
-
-  public EbConfigGameVariant getEbConfigGameVariant()
+  @Deprecated
+  private EbConfigGameVariant getEbConfigGameVariant()
   {
     return m_preview.getEbConfigGameVariant();
   }
@@ -582,11 +643,6 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void setConfigGameTime(ConfigGameTime p_configGameTime)
   {
     m_preview.setConfigGameTime( p_configGameTime );
-  }
-
-  public void setConfigGameVariant(ConfigGameVariant p_configGameVariant)
-  {
-    m_preview.setConfigGameVariant( p_configGameVariant );
   }
 
   public long getVersion()
@@ -825,6 +881,11 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void setAverageTideLevel(int p_averageTideLevel)
   {
     m_data.setAverageTideLevel( p_averageTideLevel );
+  }
+
+  public Map<TokenType, Integer> getConstructReserve()
+  {
+    return m_data.getConstructReserve();
   }
   
   

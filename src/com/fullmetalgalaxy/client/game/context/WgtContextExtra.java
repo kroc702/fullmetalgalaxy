@@ -42,7 +42,6 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -210,10 +209,9 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         EbToken ore = mainToken.getCopyContains().iterator().next();
         m_lblTitle.setText( MAppBoard.s_messages.construct() );
 
-        EbConfigGameVariant variant = model.getGame().getEbConfigGameVariant();
-        for( Entry<TokenType, Integer> entry : variant.getConstructReserve().entrySet() )
+        for( Entry<TokenType, Integer> entry : model.getGame().getConstructReserve().entrySet() )
         {
-          if( variant.canConstruct( entry.getKey() ) )
+          if( model.getGame().canConstruct( entry.getKey() ) )
           {
             EbToken fakeToken = new EbToken( entry.getKey() );
             fakeToken.setId( ore.getId() );

@@ -37,6 +37,7 @@ import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.pathfinder.PathFinder;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
 import com.fullmetalgalaxy.model.pathfinder.PathNode;
@@ -1519,8 +1520,7 @@ public class EventsPlayBuilder implements GameEventStack
       for( EbToken freighter : getGame().getAllFreighter( getMyRegistration() ) )
       {
         if( freighter.getLocation() == Location.Board
-            && freighter.getPosition().getHexDistance( p_position ) <= getGame()
-                .getEbConfigGameVariant().getDeploymentRadius() )
+            && freighter.getPosition().getHexDistance( p_position ) <= FmpConstant.deployementRadius )
         {
           if( getSelectedToken().getHexagonSize() == 1 )
           {
@@ -1529,8 +1529,7 @@ public class EventsPlayBuilder implements GameEventStack
           }
           else if( getSelectedToken().getHexagonSize() == 2
               && freighter.getPosition().getHexDistance(
-                  p_position.getNeighbour( p_position.getSector() ) ) <= getGame()
-                  .getEbConfigGameVariant().getDeploymentRadius() )
+                  p_position.getNeighbour( p_position.getSector() ) ) <= FmpConstant.deployementRadius )
           {
             // allow free move during deployment turn
             action.setCost( 0 );
@@ -1669,7 +1668,7 @@ public class EventsPlayBuilder implements GameEventStack
     action.setGame( getGame() );
     action.setToken( p_token );
     action.setTokenFreighter( p_tokenFreighter );
-    action.setCost( -1 * getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip() );
+    action.setCost( -1 * getGame().getEbConfigGameTime().getActionPtMaxPerExtraShip() );
     actionAdd( action );
   }
 

@@ -47,7 +47,6 @@ import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.pathfinder.PathGraph;
 import com.fullmetalgalaxy.model.pathfinder.PathMobile;
@@ -85,7 +84,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
   private void init()
   {
     setConfigGameTime( ConfigGameTime.Standard );
-    setConfigGameVariant( ConfigGameVariant.Standard );
   }
 
   @Override
@@ -1503,6 +1501,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
     return m_tokenIndexSet;
   }
+
 
 
 

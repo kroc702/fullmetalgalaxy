@@ -24,7 +24,6 @@
 package com.fullmetalgalaxy.server;
 
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.appengine.api.memcache.Expiration;
@@ -266,36 +265,13 @@ public class GlobalVars extends GlobalVarBase
     return (int)increment( getVarName( p_config ), p_value );
   }
 
-  private static String getVarName(ConfigGameVariant p_config)
-  {
-    switch( p_config )
-    {
-    case Standard:
-    default:
-      return "FGameNbVariantStandard";
-    }
-  }
-
-  public static int getFGameNbConfigGameVariant(ConfigGameVariant p_config)
-  {
-    return getInt( getVarName( p_config ) );
-  }
-
-  public static void setFGameNbConfigGameVariant(ConfigGameVariant p_config, int p_value)
-  {
-    put( getVarName( p_config ), p_value );
-  }
-  public static int incrementFGameNbConfigGameVariant(ConfigGameVariant p_config, int p_value)
-  {
-    return (int)increment( getVarName( p_config ), p_value );
-  }
 
   public static int getFinishedGameCount()
   {
     int count = 0;
-    for( ConfigGameVariant variant : ConfigGameVariant.values() )
+    for( ConfigGameTime variant : ConfigGameTime.values() )
     {
-      count += getFGameNbConfigGameVariant( variant );
+      count += getFGameNbConfigGameTime( variant );
     }
     return count;
   }

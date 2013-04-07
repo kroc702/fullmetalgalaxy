@@ -164,7 +164,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     }
 
     // player have extra action points.
-    assert getCost() == -1 * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip();
+    assert getCost() == -1 * p_game.getEbConfigGameTime().getActionPtMaxPerExtraShip();
 
   }
 

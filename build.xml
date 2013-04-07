@@ -10,14 +10,14 @@ compilation file for Full Metal Galaxy
 	<property name="passwordfile" value="..\password" />
 	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
 	<property name="eclipsedir" value="C:\Sun\eclipse-indigo" />
-	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.7.2.1\appengine-java-sdk-1.7.2.1" />
-	<property name="gwtsdkdir" value="C:\Sun\gwt-2.5.0.rc1" />
+	<property name="appenginesdkdir" value="C:\Sun\appengine-java-sdk-1.7.6" />
+	<property name="gwtsdkdir" value="C:\Sun\gwt-2.5.1" />
 	<property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705" />
 	
 	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
 	<property name="path" value="C:\Sun\SDK\jdk\bin" />
 	<property name="javadocDir" value="javadoc" />
-	<property name="jsstyle" value="PRETTY" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
+	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
 
 	<import file="${appenginesdkdir}/config/user/ant-macros.xml" />
 
@@ -93,7 +93,7 @@ compilation file for Full Metal Galaxy
 			<arg value="-optimize" />
 			<arg value="9" />
 			<arg value="-XenableClosureCompiler" />
-			<arg value="-compileReport" />
+			<!--arg value="-compileReport" /-->
 			<arg value="-war" />
 			<arg value="war" />
 			<arg value="com.fullmetalgalaxy.Game" />

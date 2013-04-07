@@ -214,9 +214,10 @@ public class WgtPlayers extends Composite implements ClickHandler
               3,
               ""  + registration.getPtAction()
                   + "/"
-                  + (GameEngine.model().getGame().getEbConfigGameVariant()
+                  + (GameEngine.model().getGame().getEbConfigGameTime()
                       .getActionPtMaxReserve() + ((registration.getEnuColor().getNbColor() - 1) * GameEngine
-                      .model().getGame().getEbConfigGameVariant().getActionPtMaxPerExtraShip())) );
+.model().getGame()
+                      .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
 
       // display Wining points
       m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );

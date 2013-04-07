@@ -45,6 +45,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 
@@ -55,6 +56,7 @@ import com.google.gwt.user.client.ui.IntegerBox;
  */
 public class WgtIntBox extends Composite 
  implements HasValueChangeHandlers<Integer>,
+    HasValue<Integer>,
     HasClickHandlers, HasDoubleClickHandlers, HasDropHandlers, HasFocusHandlers, HasKeyUpHandlers,
     HasKeyDownHandlers, HasMouseWheelHandlers
 {
@@ -70,17 +72,17 @@ public class WgtIntBox extends Composite
   public WgtIntBox()
   {
     super();
-    m_btnMinus.setWidth( "25%" );
+    m_btnMinus.setWidth( "30px" );
     m_btnMinus.addClickHandler( new ClickHandler()
     {
       @Override
       public void onClick(ClickEvent p_event)
       {
-        setValue( getValue() - 1 );
+        setValue( getValue() - 1, true );
       }
     } );
     m_panel.add( m_btnMinus );
-    m_intBox.setWidth( "50%" );
+    m_intBox.setWidth( "100%" );
     m_intBox.addValueChangeHandler( new ValueChangeHandler<Integer>()
     {
       @Override
@@ -94,34 +96,42 @@ public class WgtIntBox extends Composite
       @Override
       public void onMouseWheel(MouseWheelEvent p_event)
       {
-        setValue( getValue() + p_event.getDeltaY() );
+        setValue( getValue() + (p_event.getDeltaY() < 0 ? 1 : -1), true );
       }
     } );
     m_panel.add( m_intBox );
-    m_btnPlus.setWidth( "25%" );
+    m_btnPlus.setWidth( "30px" );
     m_btnPlus.addClickHandler( new ClickHandler()
     {
       @Override
       public void onClick(ClickEvent p_event)
       {
-        setValue( getValue() + 1 );
+        setValue( getValue() + 1, true );
       }
     } );
     m_panel.add( m_btnPlus );
+    initWidget( m_panel );
   }
 
 
-  public void setLimits(int p_minValue, int p_maxValue)
+  public void setMinValue(int p_minValue)
   {
     m_minValue = p_minValue;
+  }
+
+
+  public void setMaxValue(int p_maxValue)
+  {
     m_maxValue = p_maxValue;
   }
+
 
   /**
    * Always return a value.
    * @return zero if string can't be parsed
    */
-  public int getValue()
+  @Override
+  public Integer getValue()
   {
     Integer value = m_intBox.getValue();
     if( value == null )
@@ -129,14 +139,21 @@ public class WgtIntBox extends Composite
     return value;
   }
 
-  public void setValue(int p_value)
+  @Override
+  public void setValue(Integer p_value)
+  {
+    setValue( p_value, false );
+  }
+
+  @Override
+  public void setValue(Integer p_value, boolean p_fireEvents)
   {
     if( p_value < m_minValue )
-      m_intBox.setValue( m_minValue );
+      m_intBox.setValue( m_minValue, p_fireEvents );
     else if( p_value > m_maxValue )
-      m_intBox.setValue( m_maxValue );
+      m_intBox.setValue( m_maxValue, p_fireEvents );
     else
-      m_intBox.setValue( p_value );
+      m_intBox.setValue( p_value, p_fireEvents );
   }
 
 
@@ -193,6 +210,19 @@ public class WgtIntBox extends Composite
   public HandlerRegistration addMouseWheelHandler(MouseWheelHandler p_handler)
   {
     return m_intBox.addMouseWheelHandler( p_handler );
+  }
+
+  public boolean isEnabled()
+  {
+    return m_intBox.isEnabled();
+  }
+
+
+  public void setEnabled(boolean p_enabled)
+  {
+    m_btnMinus.setVisible( p_enabled );
+    m_btnPlus.setVisible( p_enabled );
+    m_intBox.setEnabled( p_enabled );
   }
 
 
