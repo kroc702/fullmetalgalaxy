@@ -27,6 +27,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -136,18 +137,15 @@ public class EbEvtDeployment extends AnEventPlay
     
     // check token isn't deployed too far from his freighter
     // AnBoardPosition position = getToken( p_game )
-    if( freighter.getPosition().getHexDistance( getPosition() ) > p_game.getEbConfigGameVariant()
-        .getDeploymentRadius() )
+    if( freighter.getPosition().getHexDistance( getPosition() ) > FmpConstant.deployementRadius )
     {
-      throw new RpcFmpException( errMsg().cantDeployTooFar( p_game.getEbConfigGameVariant().getDeploymentRadius() ) );
+      throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
     }
     if( getToken( p_game ).getHexagonSize() == 2
         && freighter.getPosition().getHexDistance(
-            getPosition().getNeighbour( getPosition().getSector() ) ) > p_game
-            .getEbConfigGameVariant().getDeploymentRadius() )
+            getPosition().getNeighbour( getPosition().getSector() ) ) > FmpConstant.deployementRadius )
     {
-      throw new RpcFmpException( errMsg().cantDeployTooFar(
-          p_game.getEbConfigGameVariant().getDeploymentRadius() ) );
+      throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
     }
 
     // check token move to a 'clear' hexagon

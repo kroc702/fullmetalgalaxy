@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
 
@@ -177,7 +178,7 @@ public class EbRegistration extends EbBase
         }
       }
     }
-    winningPoint -= p_game.getEbConfigGameVariant().getInitialScore();
+    winningPoint -= FmpConstant.initialScore;
     return winningPoint;
   }
 
@@ -201,9 +202,9 @@ public class EbRegistration extends EbBase
   {
     int futurActionPt = getPtAction() / p_game.getEbConfigGameTime().getRoundActionPt();
     futurActionPt *= p_game.getEbConfigGameTime().getRoundActionPt();
-    if( futurActionPt > p_game.getEbConfigGameVariant().getActionPtMaxReserve() - 15 )
+    if( futurActionPt > p_game.getEbConfigGameTime().getActionPtMaxReserve() - 15 )
     {
-      futurActionPt = p_game.getEbConfigGameVariant().getActionPtMaxReserve() - 15;
+      futurActionPt = p_game.getEbConfigGameTime().getActionPtMaxReserve() - 15;
     }
     return futurActionPt;
   }
@@ -211,8 +212,8 @@ public class EbRegistration extends EbBase
   public int getMaxActionPt(Game p_game)
   {
     int freighterCount = getOnBoardFreighterCount( p_game );
-    return p_game.getEbConfigGameVariant().getActionPtMaxReserve()
-        + ((freighterCount - 1) * p_game.getEbConfigGameVariant().getActionPtMaxPerExtraShip());
+    return p_game.getEbConfigGameTime().getActionPtMaxReserve()
+        + ((freighterCount - 1) * p_game.getEbConfigGameTime().getActionPtMaxPerExtraShip());
   }
 
 

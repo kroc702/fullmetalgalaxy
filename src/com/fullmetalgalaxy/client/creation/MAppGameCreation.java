@@ -35,29 +35,28 @@ import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.MapSize;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
+import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Kroc
  *
  */
 
-public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, ChangeListener,
-    TabListener, ModelUpdateEvent.Handler
+public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
+    ModelUpdateEvent.Handler
 {
   public static final String HISTORY_ID = "new";
 
@@ -77,9 +76,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
   private WgtGeneralInfo m_simpleForm = new WgtGeneralInfo();
   private WgtEditLand m_wgtEditLand = new WgtEditLand();
   private WgtEditTokens m_wgtEditTokens = new WgtEditTokens();
-  private WgtEditForces m_wgtEditForces = new WgtEditForces();
-  private WgtEditTriggers m_wgtEditTriggers = new WgtEditTriggers();
-  private WgtEditExtra m_wgtEditExtra = new WgtEditExtra();
+  private WgtEditReserve m_wgtEditReserve = new WgtEditReserve();
+  private WgtEditAdmin m_wgtEditAdmin = new WgtEditAdmin();
   private Button m_btnCreateGame = new Button( s_messages.createGame() );
   private Button m_btnCancel = new Button( s_messages.cancel() );
 
@@ -94,15 +92,68 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     m_tabPanel.add( m_simpleForm, s_messages.simpleCreation() );
     m_tabPanel.setSize( "100%", "90%" );
     m_tabPanel.selectTab( 0 );
-    m_tabPanel.addTabListener( this );
-
-    // m_tabPanel.add( m_form, s_messages.hardWay() );
+    m_tabPanel.addBeforeSelectionHandler( new BeforeSelectionHandler<Integer>()
+    {
+      @Override
+      public void onBeforeSelection(BeforeSelectionEvent<Integer> p_event)
+      {
+        if( p_event.getItem() == 4 // tab admin
+            && !AppMain.instance().iAmAdmin() )
+        {
+          Window.alert( "Vous n'avez pas les droits pour cet onglet" );
+            p_event.cancel();
+        }
+      }
+    } );
+    m_tabPanel.addSelectionHandler( new SelectionHandler<Integer>()
+    {
+      @Override
+      public void onSelection(SelectionEvent<Integer> p_event)
+      {
+     // Let the user know what they just did.
+        switch( p_event.getSelectedItem() )
+        {
+        case 0:
+          break;
+        case 1: // map
+          m_wgtEditLand.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
+          if( m_isLandGenerated == false )
+          {
+            GameGenerator.generLands();
+            m_isLandGenerated = true;
+          }
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+          break;
+        case 2: // tokens
+          m_wgtEditTokens.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
+          if( m_isOreGenerated == false )
+          {
+            if( m_isLandGenerated == false )
+            {
+              GameGenerator.generLands();
+              m_isLandGenerated = true;
+            }
+            GameGenerator.populateOres();
+            m_isOreGenerated = true;
+          }
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+          break;
+        case 3: // réserve
+          m_wgtEditReserve.onTabSelected();
+          break;
+        case 4: // Extra
+          m_wgtEditAdmin.onTabSelected();
+          break;
+        default:
+          break;
+        }
+      }
+    });
 
     m_tabPanel.add( m_wgtEditLand, s_messages.map() );
-    m_tabPanel.add( m_wgtEditTokens, "Pions" );
-    m_tabPanel.add( m_wgtEditForces, "Forces" );
-    m_tabPanel.add( m_wgtEditTriggers, "Triggers" );
-    m_tabPanel.add( m_wgtEditExtra, "Extra" );
+    m_tabPanel.add( m_wgtEditTokens, s_messages.tokens() );
+    m_tabPanel.add( m_wgtEditReserve, s_messages.reserve() );
+    m_tabPanel.add( m_wgtEditAdmin, "Admin" );
 
     m_panel.setSize( "100%", "100%" );
     m_panel.add( m_tabPanel );
@@ -147,13 +198,6 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
 
     game.setAccountCreator( AppMain.instance().getMyAccount() );
 
-    // tune configuration
-    if(game.getConfigGameVariant() != null)
-    {
-      // standard variant configuration: construct quantity have to be multiply by player count
-      game.setConfigGameVariant( game.getConfigGameVariant() );
-      game.getEbConfigGameVariant().multiplyConstructQty( game.getMaxNumberOfPlayer() );
-    }
     
     if( GameEngine.model().getGame().isTrancient() )
     {
@@ -258,15 +302,6 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     }
   }
 
-  /**
-   * @see com.google.gwt.user.client.ui.ChangeListener#onChange(com.google.gwt.user.client.ui.Widget)
-   */
-  @Override
-  public void onChange(Widget p_sender)
-  {
-    // m_form.initFromBean();
-  }
-
 
 
   /**
@@ -278,7 +313,6 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     game.setAccountCreator( AppMain.instance().getMyAccount() );
 
     game.setConfigGameTime( ConfigGameTime.Standard );
-    game.setConfigGameVariant( ConfigGameVariant.Standard );
     game.setMaxNumberOfPlayer( 4 );
     GameGenerator.setSize( MapSize.Medium );
     GameGenerator.clearLand( LandType.Plain );
@@ -287,73 +321,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler, Cha
     m_isOreGenerated = false;
   }
 
-  @Override
-  public void onTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
-  {
-    // Let the user know what they just did.
-    switch( p_tabIndex )
-    {
-    case 0:
-      break;
-    case 1: // map
-      m_wgtEditLand.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
-      if( m_isLandGenerated == false )
-      {
-        GameGenerator.generLands();
-        m_isLandGenerated = true;
-      }
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-      break;
-    case 2: // tokens
-      m_wgtEditTokens.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
-      if( m_isOreGenerated == false )
-      {
-        if( m_isLandGenerated == false )
-        {
-          GameGenerator.generLands();
-          m_isLandGenerated = true;
-        }
-        GameGenerator.populateOres();
-        m_isOreGenerated = true;
-      }
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-      break;
-    case 3: // forces
-      m_wgtEditForces.refreshRegistrationList();
-      break;
-    case 4: // triggers
-      m_wgtEditTriggers.refreshTriggerList();
-      break;
-    case 5: // Extra
-      m_wgtEditExtra.onTabSelected();
-      break;
-    default:
-      break;
-    }
-  }
 
-  @Override
-  public boolean onBeforeTabSelected(SourcesTabEvents p_sender, int p_tabIndex)
-  {
-    switch( p_tabIndex )
-    {
-    case 0: // general
-    case 1: // map
-    case 2: // tokens
-      // allows click
-      return true;
-    case 3: // forces
-    case 4: // triggers
-    case 5: // Extra
-    default:
-      if( AppMain.instance().iAmAdmin() )
-      {
-        return true;
-      }
-      Window.alert( "Vous n'avez pas les droits pour cet onglet" );
-      return false;
-    }
-  }
 
 
   @Override

@@ -42,7 +42,6 @@ import com.fullmetalgalaxy.model.MapSize;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.ConfigGameVariant;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
@@ -112,7 +111,6 @@ public class EbGamePreview extends EbBase
 
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
-  private ConfigGameVariant m_configGameVariant = ConfigGameVariant.Standard;
   @Serialized
   private EbConfigGameTime m_ebConfigGameTime = null;
   @Serialized
@@ -868,14 +866,6 @@ public class EbGamePreview extends EbBase
   }
 
 
-  /**
-   * @return the configGameVariant
-   */
-  public ConfigGameVariant getConfigGameVariant()
-  {
-    return m_configGameVariant;
-  }
-
 
   /**
    * @return the gameType
@@ -967,26 +957,17 @@ public class EbGamePreview extends EbBase
   }
 
 
-  /**
-   * Don't forget to reset to null m_configGameVariantDefault if you change any value of this config
-   * @return the configGameVariant
-   */
-  public void setEbConfigGameVariant(EbConfigGameVariant p_config)
-  {
-    m_ebConfigGameVariant = p_config;
-  }
 
   /**
    * Don't forget to reset to null m_configGameVariantDefault if you change any value of this config
    * @return the configGameVariant
    */
-  public EbConfigGameVariant getEbConfigGameVariant()
+  @Deprecated
+  protected EbConfigGameVariant getEbConfigGameVariant()
   {
-    // this patch is to handle old data game
-    if( m_ebConfigGameVariant == null && getConfigGameVariant() != null )
+    if( m_ebConfigGameVariant == null )
     {
-      setConfigGameVariant( getConfigGameVariant() );
-      assert m_ebConfigGameVariant != null;
+      m_ebConfigGameVariant = new EbConfigGameVariant();
       m_ebConfigGameVariant.multiplyConstructQty( getMaxNumberOfPlayer() );
     }
     return m_ebConfigGameVariant;
@@ -1001,14 +982,7 @@ public class EbGamePreview extends EbBase
     m_configGameTime = p_configGameTime;
   }
 
-  /**
-   * @param p_configGameVariant the configGameVariant to set
-   */
-  public void setConfigGameVariant(ConfigGameVariant p_configGameVariant)
-  {
-    m_configGameVariant = p_configGameVariant;
-    setEbConfigGameVariant( new EbConfigGameVariant( m_configGameVariant.getEbConfigGameVariant() ) );
-  }
+
 
   public long getVersion()
   {

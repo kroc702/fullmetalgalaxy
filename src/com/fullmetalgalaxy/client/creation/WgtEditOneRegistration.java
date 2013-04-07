@@ -24,11 +24,14 @@ package com.fullmetalgalaxy.client.creation;
 
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -48,7 +51,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
 
   // UI
   private Label m_lblAccount = new Label( "" );
-  private IntegerBox m_intActionPoints = new IntegerBox();
+  private WgtIntBox m_intActionPoints = new WgtIntBox();
   private IntegerBox m_intColors = new IntegerBox();
   private Button m_btnBan = new Button( "Bannir ce joueur" );
   private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
@@ -61,18 +64,13 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     VerticalPanel panel = new VerticalPanel();
     panel.add( m_lblAccount );
     panel.add( new Label( "action points:" ) );
+    m_intActionPoints.setMinValue( 0 );
     panel.add( m_intActionPoints );
-    m_intActionPoints.addChangeHandler( new ChangeHandler()
+    m_intActionPoints.addValueChangeHandler( new ValueChangeHandler<Integer>()
     {
       @Override
-      public void onChange(ChangeEvent p_event)
+      public void onValueChange(ValueChangeEvent<Integer> p_event)
       {
-        if( m_registration == null )
-          return;
-        if( m_intActionPoints.getValue() == null )
-        {
-          m_intActionPoints.setValue( 0 );
-        }
         m_registration.setPtAction( m_intActionPoints.getValue() );
       }
     } );

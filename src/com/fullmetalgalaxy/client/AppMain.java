@@ -52,6 +52,7 @@ import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCall
 import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -377,7 +378,19 @@ private ChatEngine m_chatEngine = null;
     }
     if( RootPanel.get(MAppGameCreation.HISTORY_ID) != null )
     {
-      new MAppGameCreation().onModuleLoad();
+      GWT.runAsync( MAppGameCreation.class, new RunAsyncCallback()
+      {
+        @Override
+        public void onFailure(Throwable caught)
+        {
+          Window.alert( "Error while downloading script: " + caught.getLocalizedMessage() );
+        }
+        @Override
+        public void onSuccess()
+        {
+          new MAppGameCreation().onModuleLoad();
+        }
+      } );
     }
     if( RootPanel.get(MAppStatusBar.HISTORY_ID) != null )
     {

@@ -128,7 +128,7 @@ public class EbEvtConstruct extends AnEventPlay
       throw new RpcFmpException( "player must have one more action point to unload that token" );
     }
     // check token construct reserve
-    if( !p_game.getEbConfigGameVariant().canConstruct( getConstructType() ) )
+    if( !p_game.canConstruct( getConstructType() ) )
     {
       // no i18n
       throw new RpcFmpException( getConstructType().toString() + " construct reserve is empty" );
@@ -178,7 +178,7 @@ public class EbEvtConstruct extends AnEventPlay
       getToken(p_game).setColor( getTokenCarrier(p_game).getColor() );
     }
     getToken(p_game).setBulletCount( getToken(p_game).getType().getMaxBulletCount() );
-    p_game.getEbConfigGameVariant().decConstructQty( getConstructType() );
+    p_game.decConstructQty( getConstructType() );
   }
 
   /* (non-Javadoc)
@@ -196,7 +196,7 @@ public class EbEvtConstruct extends AnEventPlay
     getToken(p_game).setType( m_oreType );
     getToken(p_game).setColor( EnuColor.None );
     getToken(p_game).setBulletCount( getToken(p_game).getType().getMaxBulletCount() );
-    p_game.getEbConfigGameVariant().incConstructQty( getConstructType() );
+    p_game.incConstructQty( getConstructType() );
   }
 
   /**

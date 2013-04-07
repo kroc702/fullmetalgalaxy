@@ -25,16 +25,11 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import java.util.Map.Entry;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
+import com.fullmetalgalaxy.client.widget.WgtReserveToken;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.EbConfigGameVariant;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Grid;
 
 /**
  * @author vlegendr
@@ -42,7 +37,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class WgtConstructReserve extends Composite
 {
-  private VerticalPanel m_panel = new VerticalPanel();
+  private Grid m_panel = new Grid( 5, 3 );
 
   /**
    * 
@@ -57,30 +52,28 @@ public class WgtConstructReserve extends Composite
   
   public void redraw()
   {
+    int iRow = 0;
+    int iCol = 0;
     m_panel.clear();
-    EbConfigGameVariant variant = GameEngine.model().getGame().getEbConfigGameVariant();
-    
+
+
     EnuColor myColor = new EnuColor( 0 );
     if( GameEngine.model().getMyRegistration() != null )
     {
       myColor.setValue( GameEngine.model().getMyRegistration().getSingleColor() );
     }
     
-    for(Entry<TokenType,Integer> entry : variant.getConstructReserve().entrySet() )
+    for( Entry<TokenType, Integer> entry : GameEngine.model().getGame().getConstructReserve()
+        .entrySet() )
     {
-      Image wgtToken = null;
-      if( entry.getKey().canBeColored(  ) )
+      WgtReserveToken wgt = new WgtReserveToken( entry.getKey(), myColor );
+      m_panel.setWidget( iRow, iCol, wgt );
+      iCol++;
+      if( iCol >= m_panel.getColumnCount() )
       {
-        wgtToken = new Image( TokenImages.getTokenImage( myColor, EnuZoom.Medium, entry.getKey(),
-            Sector.SouthEast ) );
-      } else {
-        wgtToken = new Image( TokenImages.getTokenImage( new EnuColor( EnuColor.None ),
-            EnuZoom.Medium, entry.getKey(), Sector.SouthEast ) );
+        iCol = 0;
+        iRow++;
       }
-      m_panel.add( wgtToken );
-      
-      Label label = new Label( entry.getValue().toString() );
-      m_panel.add( label );
     }
   }
   

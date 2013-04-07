@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -154,11 +155,9 @@ public class EbEvtLand extends AnEventPlay
       if( (currentToken.getType() == TokenType.Freighter)
           && (currentToken.getLocation() == Location.Board)
           && (currentToken.getId() != getToken(p_game).getId())
-          && (landingPosition[0].getHexDistance( currentToken.getPosition() ) <= p_game
-              .getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) )
+          && (landingPosition[0].getHexDistance( currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenFreighter) )
       {
-        throw new RpcFmpException( errMsg().CantLandCloser(
-            p_game.getEbConfigGameVariant().getMinSpaceBetweenFreighter() ) );
+        throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ) );
       }
     }
     // check that freighter isn't landing too close of map boarder
@@ -184,8 +183,7 @@ public class EbEvtLand extends AnEventPlay
     {
       if( (currentToken.getColor() == EnuColor.None)
           && (currentToken.getLocation() == Location.Board)
-          && (getPosition().getHexDistance( currentToken.getPosition() ) <= p_game
-              .getEbConfigGameVariant().getDeploymentRadius()) )
+          && (getPosition().getHexDistance( currentToken.getPosition() ) <= FmpConstant.deployementRadius) )
       {
         // destroy this colorless token
         m_TokenIds.add( currentToken.getId() );

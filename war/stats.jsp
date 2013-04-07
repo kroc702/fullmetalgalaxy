@@ -33,8 +33,7 @@ Nombre de partie time Standard : <%= GlobalVars.getFGameNbConfigGameTime(ConfigG
 Nombre de partie time StandardAsynch : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.StandardAsynch) %>
 Nombre de partie time QuickTurnBased : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.QuickTurnBased) %>
 Nombre de partie time QuickAsynch : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.QuickAsynch) %>
-Nombre de partie time Custom : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.Custom) %>
-Nombre de partie variant Standard : <%= GlobalVars.getFGameNbConfigGameVariant(ConfigGameVariant.Standard) %>
+<!-- Nombre de partie time Custom : <%= GlobalVars.getFGameNbConfigGameTime(ConfigGameTime.Custom) %> -->
 Nombre de partie d'initiation : <%= GlobalVars.getFGameInitiationCount() %>
 
 Nombre d'hexagon  : <%= GlobalVars.getFGameNbOfHexagon() %>

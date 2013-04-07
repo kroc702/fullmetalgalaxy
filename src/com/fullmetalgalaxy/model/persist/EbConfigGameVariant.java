@@ -34,20 +34,20 @@ import com.fullmetalgalaxy.model.TokenType;
  * this class represent a rule variant configuration. it could have been mapped onto an sql table.
  * but for performance reason, it's only a set of constant.
  * see ConfigGameVariant
+ * 
+ * this class is only used to load old data
  */
+@Deprecated
 public class EbConfigGameVariant extends EbBase
 {
   static final long serialVersionUID = 1;
 
 
-  private int m_actionPtMaxReserve = 25;
-  private int m_minSpaceBetweenFreighter = 8;
-  private int m_deployementRadius = 4;
-  private String m_description = "";
+
   private Map<TokenType,Integer> m_constructReserve = new HashMap<TokenType,Integer>();
-  private int m_actionPtMaxPerExtraShip = 5;
-  private int m_initialScore = 14;
+
   
+
   /**
    * 
    */
@@ -60,22 +60,15 @@ public class EbConfigGameVariant extends EbBase
   public EbConfigGameVariant(EbConfigGameVariant p_config)
   {
     super(p_config);
-    m_actionPtMaxReserve = p_config.getActionPtMaxReserve();
-    m_minSpaceBetweenFreighter = p_config.getMinSpaceBetweenFreighter();
-    m_deployementRadius = p_config.getDeploymentRadius();
-    m_description = new String( p_config.getDescription() );
     m_constructReserve = new HashMap<TokenType,Integer>(p_config.m_constructReserve);
   }
 
   private void init()
   {
-    m_actionPtMaxReserve = 25;
-    m_actionPtMaxPerExtraShip = 5;
-    m_minSpaceBetweenFreighter = 8;
-    m_deployementRadius = 4;
-    m_description = "";
     m_constructReserve = new HashMap<TokenType,Integer>();
-    m_initialScore = 16;
+    setConstructQty( TokenType.Pontoon, 1 );
+    setConstructQty( TokenType.Crab, 1 );
+    setConstructQty( TokenType.Tank, 4 );
   }
 
   @Override
@@ -91,32 +84,7 @@ public class EbConfigGameVariant extends EbBase
     return m_constructReserve;
   }
   
-  public boolean canConstruct(TokenType p_type)
-  {
-    Integer qty = m_constructReserve.get( p_type );
-    return qty != null && qty != 0;
-  }
-  
-  public void incConstructQty(TokenType p_type)
-  {
-    Integer qty = m_constructReserve.get( p_type );
-    if(qty != null && qty >= 0)
-    {
-      qty++;
-      setConstructQty(p_type,qty);
-    }
-  }
-  
-  public void decConstructQty(TokenType p_type)
-  {
-    Integer qty = m_constructReserve.get( p_type );
-    if(qty != null && qty > 0)
-    {
-      qty--;
-      setConstructQty(p_type,qty);
-    }
-  }
-  
+
   /**
    * Set allowed construct quantity for a given token type
    * Note that, for predefined variant, theses quantity will be multiply by
@@ -124,7 +92,7 @@ public class EbConfigGameVariant extends EbBase
    * @param p_type
    * @param p_qty if < 0, unlimited
    */
-  public void setConstructQty(TokenType p_type, int p_qty)
+  private void setConstructQty(TokenType p_type, int p_qty)
   {
     m_constructReserve.put( p_type, p_qty );
   }
@@ -141,100 +109,5 @@ public class EbConfigGameVariant extends EbBase
     }
   }
   
-  /**
-   * @return the actionPtMaxReserve
-   */
-  public int getActionPtMaxReserve()
-  {
-    return m_actionPtMaxReserve;
-  }
-
-  /**
-   * @param p_actionPtMaxReserve the actionPtMaxReserve to set
-   */
-  public void setActionPtMaxReserve(int p_actionPtMaxReserve)
-  {
-    m_actionPtMaxReserve = p_actionPtMaxReserve;
-  }
-
-  /**
-   * @return the minSpaceBetweenFreighter
-   */
-  public int getMinSpaceBetweenFreighter()
-  {
-    return m_minSpaceBetweenFreighter;
-  }
-
-  /**
-   * @param p_minSpaceBetweenFreighter the minSpaceBetweenFreighter to set
-   */
-  public void setMinSpaceBetweenFreighter(int p_minSpaceBetweenFreighter)
-  {
-    m_minSpaceBetweenFreighter = p_minSpaceBetweenFreighter;
-  }
-
-  /**
-   * @return the deployementRadius
-   */
-  public int getDeploymentRadius()
-  {
-    return m_deployementRadius;
-  }
-
-  /**
-   * @param p_deployementRadius the deployementRadius to set
-   */
-  public void setDeployementRadius(int p_deployementRadius)
-  {
-    m_deployementRadius = p_deployementRadius;
-  }
-
-  /**
-   * @return the description
-   */
-  public String getDescription()
-  {
-    return m_description;
-  }
-
-  /**
-   * @param p_description the description to set
-   */
-  public void setDescription(String p_description)
-  {
-    m_description = p_description;
-  }
-
-  /**
-   * @return the actionPtMaxPerExtraShip
-   */
-  public int getActionPtMaxPerExtraShip()
-  {
-    return m_actionPtMaxPerExtraShip;
-  }
-
-  /**
-   * @param p_actionPtMaxPerExtraShip the actionPtMaxPerExtraShip to set
-   */
-  public void setActionPtMaxPerExtraShip(int p_actionPtMaxPerExtraShip)
-  {
-    m_actionPtMaxPerExtraShip = p_actionPtMaxPerExtraShip;
-  }
-
-  /**
-   * @return the initialScore
-   */
-  public int getInitialScore()
-  {
-    return m_initialScore;
-  }
-
-  /**
-   * @param p_initialScore the initialScore to set
-   */
-  public void setInitialScore(int p_initialScore)
-  {
-    m_initialScore = p_initialScore;
-  }
 
 }
