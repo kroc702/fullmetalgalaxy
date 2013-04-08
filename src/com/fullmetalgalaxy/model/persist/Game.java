@@ -104,30 +104,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
   }
 
 
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.model.persist.EbBase#setTrancient()
-   */
-  @Override
-  public void setTrancient()
-  {
-    super.setTrancient();
-    for( EbTrigger trigger : getTriggers() )
-    {
-      trigger.setTrancient();
-    }
-    setTriggers( new ArrayList<EbTrigger>( getTriggers() ) );
-    setSetToken( new HashSet<EbToken>( getSetToken() ) );
-    for( EbRegistration registration : getSetRegistration() )
-    {
-      registration.setTrancient();
-    }
-    setSetRegistration( new HashSet<EbRegistration>( getSetRegistration() ) );
-    for( AnEvent event : getLogs() )
-    {
-      event.setTrancient();
-    }
-    setLogs( new ArrayList<AnEvent>( getLogs() ) );
-  }
 
 
   /**
@@ -1501,9 +1477,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
     return m_tokenIndexSet;
   }
-
-
-
 
 
 
