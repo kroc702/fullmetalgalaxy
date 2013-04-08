@@ -239,10 +239,10 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       actionBuilder.clear();
       EbEvtCancel evtCancel = new EbEvtCancel();
       evtCancel.setGame( GameEngine.model().getGame() );
-      int fromIndex = GameEngine.model().getGame().getLogs().size();
+      int fromIndex = GameEngine.model().getGame().getLogs().size() - 1;
       if( GameEngine.model().getMyRegistration() != null )
       {
-        fromIndex += GameEngine.model().getMyRegistration().getMyEvents().size() - 1;
+        fromIndex += GameEngine.model().getMyRegistration().getMyEvents().size();
       }
       evtCancel.setFromActionIndex( fromIndex );
       evtCancel.setToActionIndex( GameEngine.model().getCurrentActionIndex() );

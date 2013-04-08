@@ -49,6 +49,7 @@ import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
 
 /**
@@ -361,7 +362,7 @@ public class AdminServlet extends HttpServlet
       log.error( e2 );
     }
 
-
+    // import game from file
     if( modelInit != null )
     {
       // set transient to avoid override data
@@ -372,6 +373,30 @@ public class AdminServlet extends HttpServlet
       // construct minimap image
       FmgDataStore.storeMinimap( modelInit.getGame() );
 
+      // search all accounts in database to correct ID
+      for( EbRegistration registration : modelInit.getGame().getSetRegistration() )
+      {
+        if( registration.haveAccount() )
+        {
+          EbAccount account = FmgDataStore.dao().find( EbAccount.class,
+              registration.getAccount().getId() );
+          if( account == null )
+          {
+            // corresponding account from this player doesn't exist in database
+            try
+            {
+              // try to find corresponding pseudo
+              account = FmgDataStore.dao().query( EbAccount.class )
+                  .filter( "m_compactPseudo ==",
+                      EbAccount.compactPseudo( registration.getAccount().getPseudo() ) ).get();
+            } catch( Exception e )
+            {
+            }
+          }
+          registration.setAccount( account );
+        }
+      }
+      
       // then save game
       FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.put( modelInit.getGame() );
