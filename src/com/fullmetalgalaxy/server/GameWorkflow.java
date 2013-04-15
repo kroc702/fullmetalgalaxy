@@ -100,11 +100,12 @@ public class GameWorkflow
         // check that his freighter take off, if not, take off automatically
         for( EbToken token : p_game.getSetToken() )
         {
-          EbRegistration registration = p_game
-              .getRegistrationByIdAccount( ((EbEvtPlayerTurn)nextEvent).getAccountId() );
+          EbRegistration registration = p_game.getRegistration( ((EbEvtPlayerTurn)nextEvent)
+              .getOldPlayerId( p_game ) );
           if( (token.getType() == TokenType.Freighter)
               && (token.getLocation() == Location.Board)
               && (token.getColor() != EnuColor.None)
+              && (registration != null)
               && (registration.getEnuColor().isColored( token.getColor() )) )
           {
             // automatic take off for this freighter
@@ -367,8 +368,15 @@ public class GameWorkflow
             EbEvtPlayerTurn event = new EbEvtPlayerTurn();
             event.setAuto( true );
             event.setGame( p_game );
-            event.setAccountId( p_game.getRegistration( p_game.getCurrentPlayerIds().get( 0 ) )
-                .getAccount().getId() );
+            if( !p_game.getCurrentPlayerIds().isEmpty() )
+            {
+              event.setOldPlayerId( p_game.getCurrentPlayerIds().get( 0 ) );
+              EbRegistration oldPlayer = p_game.getRegistration( event.getOldPlayerId( p_game ) );
+              if( oldPlayer.haveAccount() )
+              {
+                event.setAccountId( oldPlayer.getAccount().getId() );
+              }
+            }
             event.checkedExec( p_game );
             p_game.addEvent( event );
             eventAdded.add( event );
