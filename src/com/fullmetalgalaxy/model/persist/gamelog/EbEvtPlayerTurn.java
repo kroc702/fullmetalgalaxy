@@ -90,7 +90,7 @@ public class EbEvtPlayerTurn extends AnEvent
    * @param p_game
    * @return
    */
-  private long getOldPlayerId(Game p_game)
+  public long getOldPlayerId(Game p_game)
   {
     if( m_oldPlayerId <= 0 )
     {
@@ -180,16 +180,23 @@ public class EbEvtPlayerTurn extends AnEvent
     super.exec(p_game);
     Game game = p_game;
     assert game != null;
-    
+
+
     // round down players action point
     EbRegistration currentPlayerRegistration = p_game.getRegistration( getOldPlayerId( p_game ) );
-    assert currentPlayerRegistration != null;
+    if( currentPlayerRegistration == null )
+    {
+      // special case where this action is automatic and no player have to play
+      // this likely to quickly finish the game
+      game.setCurrentTimeStep( (short)game.getCurrentTimeStep() + 1 );
+      return;
+    }
     // backup for unexec
     m_oldActionPt = currentPlayerRegistration.getPtAction();
     currentPlayerRegistration.setPtAction( currentPlayerRegistration.getRoundedActionPt(p_game) );
+    m_oldCurrentPlayersCount = game.getCurrentPlayerIds().size();
     m_oldTurn = (short)game.getCurrentTimeStep();
     m_newTurn = m_oldTurn;
-    m_oldCurrentPlayersCount = game.getCurrentPlayerIds().size();
 
 
     if( game.getCurrentPlayerIds().size() > 1 )
@@ -206,7 +213,7 @@ public class EbEvtPlayerTurn extends AnEvent
       EbRegistration nextPlayerRegistration = null;
       if( game.isTimeStepParallelHidden( m_oldTurn ) )
       {
-        nextPlayerRegistration = game.getRegistrationByOrderIndex( 0 );
+        nextPlayerRegistration = game.getNextPlayerRegistration( -1 );
       }
       else
       {
@@ -357,6 +364,15 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     super.unexec(p_game);
     assert p_game != null;
+
+    EbRegistration oldPlayerRegistration = p_game.getRegistration( getOldPlayerId( p_game ) );
+    if( oldPlayerRegistration == null )
+    {
+      // special case where this action is automatic and no player have to play
+      // this likely to quickly finish the game
+      p_game.setCurrentTimeStep( (short)p_game.getCurrentTimeStep() - 1 );
+      return;
+    }
 
     if( m_oldCurrentPlayersCount > 1 )
     {
