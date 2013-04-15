@@ -40,7 +40,7 @@ public class EbConfigGameTime extends EbBase
 
   private int m_timeStepDurationInSec = 86400; // one day
   private int m_tideChangeFrequency = 1; // every time steps
-  private int m_totalTimeStep = 25;
+  private int m_totalTimeStep = 26;
   /** standard action point increment */
   private int m_actionPtPerTimeStep = 15;
   /** extra action point increment per extra freighter */

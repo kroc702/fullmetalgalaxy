@@ -55,6 +55,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
   private IntegerBox m_intColors = new IntegerBox();
   private Button m_btnBan = new Button( "Bannir ce joueur" );
   private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
+  private Button m_btnCancelMyEvents = new Button( "Cancel his actions" );
 
   /**
    * 
@@ -94,6 +95,16 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     panel.add( m_chkCurrentPlayer );
     m_btnBan.addClickHandler( this );
     panel.add( m_btnBan );
+    m_btnCancelMyEvents.addClickHandler( new ClickHandler()
+    {
+      @Override
+      public void onClick(ClickEvent p_event)
+      {
+        m_registration.clearMyEvents();
+        m_btnCancelMyEvents.setEnabled( false );
+      }
+    } );
+    panel.add( m_btnCancelMyEvents );
     initWidget( panel );
   }
 
@@ -140,6 +151,7 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     m_intColors.setValue( p_reg.getColor() );
     m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
         .contains( p_reg.getId() ) );
+    m_btnCancelMyEvents.setEnabled( !p_reg.getMyEvents().isEmpty() );
   }
 
 

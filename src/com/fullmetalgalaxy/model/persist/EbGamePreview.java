@@ -381,7 +381,8 @@ public class EbGamePreview extends EbBase
     if( isParallel() )
       return false;
     return (p_timeStep > 1 && p_timeStep <= getEbConfigGameTime().getDeploymentTimeStep())
-        || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep ));
+        || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep ) && p_timeStep != getEbConfigGameTime()
+            .getTotalTimeStep());
   }
 
 
