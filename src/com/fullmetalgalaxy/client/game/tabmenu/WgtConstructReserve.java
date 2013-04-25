@@ -25,7 +25,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import java.util.Map.Entry;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.widget.WgtReserveToken;
+import com.fullmetalgalaxy.client.widget.WgtTokenQty;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.TokenType;
 import com.google.gwt.user.client.ui.Composite;
@@ -66,7 +66,8 @@ public class WgtConstructReserve extends Composite
     for( Entry<TokenType, Integer> entry : GameEngine.model().getGame().getConstructReserve()
         .entrySet() )
     {
-      WgtReserveToken wgt = new WgtReserveToken( entry.getKey(), myColor );
+      WgtTokenQty wgt = new WgtTokenQty( entry.getKey(), myColor, GameEngine.model()
+          .getGame().getConstructReserve().get( entry.getKey() ) );
       m_panel.setWidget( iRow, iCol, wgt );
       iCol++;
       if( iCol >= m_panel.getColumnCount() )

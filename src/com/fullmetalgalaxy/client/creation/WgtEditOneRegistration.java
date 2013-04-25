@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class WgtEditOneRegistration extends Composite implements ClickHandler
+public class WgtEditOneRegistration extends Composite
 {
   // model
   private EbRegistration m_registration = null;
@@ -53,7 +53,8 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
   private Label m_lblAccount = new Label( "" );
   private WgtIntBox m_intActionPoints = new WgtIntBox();
   private IntegerBox m_intColors = new IntegerBox();
-  private Button m_btnBan = new Button( "Bannir ce joueur" );
+  // remove ban button from here as there is one on game page that is better
+  // private Button m_btnBan = new Button( "Bannir ce joueur" );
   private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
   private Button m_btnCancelMyEvents = new Button( "Cancel his actions" );
 
@@ -72,6 +73,8 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
       @Override
       public void onValueChange(ValueChangeEvent<Integer> p_event)
       {
+        if( m_registration == null )
+          return;
         m_registration.setPtAction( m_intActionPoints.getValue() );
       }
     } );
@@ -91,15 +94,33 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
         m_registration.setColor( m_intColors.getValue() );
       }
     } );
-    m_chkCurrentPlayer.addClickHandler( this );
+    m_chkCurrentPlayer.addClickHandler( new ClickHandler()
+    {
+      @Override
+      public void onClick(ClickEvent p_event)
+      {
+        if( m_registration == null )
+          return;
+        if( m_chkCurrentPlayer.getValue() )
+        {
+          GameEngine.model().getGame().getCurrentPlayerIds().add( m_registration.getId() );
+        }
+        else
+        {
+          GameEngine.model().getGame().getCurrentPlayerIds().remove( (Long)m_registration.getId() );
+        }
+      }
+    } );
     panel.add( m_chkCurrentPlayer );
-    m_btnBan.addClickHandler( this );
-    panel.add( m_btnBan );
+    // m_btnBan.addClickHandler( this );
+    // panel.add( m_btnBan );
     m_btnCancelMyEvents.addClickHandler( new ClickHandler()
     {
       @Override
       public void onClick(ClickEvent p_event)
       {
+        if( m_registration == null )
+          return;
         m_registration.clearMyEvents();
         m_btnCancelMyEvents.setEnabled( false );
       }
@@ -108,36 +129,6 @@ public class WgtEditOneRegistration extends Composite implements ClickHandler
     initWidget( panel );
   }
 
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.ClickHandler#onClick(com.google.gwt.user.client.ui.Widget)
-   */
-  @Override
-  public void onClick(ClickEvent p_event)
-  {
-    if( m_registration == null )
-    {
-      return;
-    }
-
-    if( p_event.getSource() == m_btnBan )
-    {
-      // TODO ajouter un log admin
-      m_registration.setAccount( null );
-      loadRegistration( m_registration );
-    }
-    else if( p_event.getSource() == m_chkCurrentPlayer )
-    {
-      if( m_chkCurrentPlayer.getValue() )
-      {
-        GameEngine.model().getGame().getCurrentPlayerIds().add( m_registration.getId() );
-      }
-      else
-      {
-        GameEngine.model().getGame().getCurrentPlayerIds().remove( (Long)m_registration.getId() );
-      }
-    }
-
-  }
 
   public void loadRegistration(EbRegistration p_reg)
   {

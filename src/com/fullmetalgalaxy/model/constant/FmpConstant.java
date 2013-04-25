@@ -22,7 +22,12 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.TokenType;
 
 
 
@@ -46,6 +51,44 @@ public class FmpConstant
 
   // public static final int imageHexWidth = 70;
   // public static final int imageHexHeight = 61;
+
+  /**
+   * build a new map that represent the default common construction reserve
+   * @param p_playerCount
+   * @return
+   */
+  public static Map<TokenType, Integer> getDefaultReserve(int p_playerCount)
+  {
+    Map<TokenType, Integer> constructReserve = new HashMap<TokenType, Integer>();
+    // build default construct reserve
+    constructReserve.put( TokenType.Pontoon, 1 );
+    constructReserve.put( TokenType.Crab, 1 );
+    constructReserve.put( TokenType.Tank, 4 );
+    for( Entry<TokenType, Integer> entry : constructReserve.entrySet() )
+    {
+      entry.setValue( entry.getValue() * p_playerCount );
+    }
+    return constructReserve;
+  }
+
+  /**
+   * build a new map that represent the default freighter initial holds during landing
+   * @return
+   */
+  public static Map<TokenType, Integer> getDefaultInitialHolds()
+  {
+    Map<TokenType, Integer> initialHold = new HashMap<TokenType, Integer>();
+    // build default construct reserve
+    initialHold.put( TokenType.Pontoon, 1 );
+    initialHold.put( TokenType.Crab, 1 );
+    initialHold.put( TokenType.Tank, 4 );
+    initialHold.put( TokenType.Heap, 1 );
+    initialHold.put( TokenType.Speedboat, 2 );
+    initialHold.put( TokenType.Barge, 1 );
+    initialHold.put( TokenType.WeatherHen, 1 );
+    initialHold.put( TokenType.Turret, 3 );
+    return initialHold;
+  }
 
   public static String getBaseUrl()
   {

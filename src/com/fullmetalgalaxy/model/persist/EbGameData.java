@@ -33,6 +33,7 @@ import java.util.Set;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Parent;
 import com.googlecode.objectify.annotation.Serialized;
@@ -89,6 +90,8 @@ public class EbGameData extends EbBase
   protected Set<EbPublicAccount> m_accounts = null;
   @Serialized
   protected Map<TokenType, Integer> m_constructReserve = new HashMap<TokenType, Integer>();
+  @Serialized
+  protected Map<TokenType, Integer> m_initialHolds = null;
 
   @Unindexed
   protected long m_nextLocalId = 0L;
@@ -155,6 +158,26 @@ public class EbGameData extends EbBase
   {
     return m_constructReserve;
   }
+
+
+  public Map<TokenType, Integer> getInitialHolds()
+  {
+    if( m_initialHolds == null )
+    {
+      return FmpConstant.getDefaultInitialHolds();
+    }
+    return m_initialHolds;
+  }
+
+  public void setInitialHoldsQty(TokenType p_type, int p_qty)
+  {
+    if( m_initialHolds == null )
+    {
+      m_initialHolds = FmpConstant.getDefaultInitialHolds();
+    }
+    m_initialHolds.put( p_type, p_qty );
+  }
+
 
   /**
    * Don't use this method directly, it's for hibernate and h4gwt use only

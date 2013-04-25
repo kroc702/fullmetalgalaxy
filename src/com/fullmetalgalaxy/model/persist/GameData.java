@@ -24,10 +24,8 @@ package com.fullmetalgalaxy.model.persist;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -40,6 +38,7 @@ import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.triggers.EbTrigger;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -77,12 +76,8 @@ public class GameData implements java.io.Serializable, IsSerializable
     }
     if( m_data.getConstructReserve() == null || m_data.getConstructReserve().isEmpty() )
     {
-      m_data.m_constructReserve = new HashMap<TokenType, Integer>();
-      // build default construct reserve
-      setConstructQty( TokenType.Pontoon, 1 );
-      setConstructQty( TokenType.Crab, 1 );
-      setConstructQty( TokenType.Tank, 4 );
-      multiplyConstructQty( getPreview().getCurrentNumberOfRegiteredPlayer() );
+      m_data.m_constructReserve = FmpConstant.getDefaultReserve( getPreview()
+          .getCurrentNumberOfRegiteredPlayer() );
     }
   }
 
@@ -335,17 +330,7 @@ public class GameData implements java.io.Serializable, IsSerializable
     getConstructReserve().put( p_type, p_qty );
   }
 
-  /**
-   * @see setConstructQty
-   * @param p_playerNumber
-   */
-  public void multiplyConstructQty(int p_playerNumber)
-  {
-    for( Entry<TokenType, Integer> entry : getConstructReserve().entrySet() )
-    {
-      entry.setValue( entry.getValue() * p_playerNumber );
-    }
-  }
+
 
   // common methods
   // ==============
@@ -886,6 +871,33 @@ public class GameData implements java.io.Serializable, IsSerializable
   public Map<TokenType, Integer> getConstructReserve()
   {
     return m_data.getConstructReserve();
+  }
+
+  public void setConstructReserve(Map<TokenType, Integer> p_reserve)
+  {
+    if( p_reserve != null )
+    {
+      m_data.m_constructReserve = p_reserve;
+    }
+    else
+    {
+      m_data.m_constructReserve = FmpConstant.getDefaultReserve( getMaxNumberOfPlayer() );
+    }
+  }
+
+  public Map<TokenType, Integer> getInitialHolds()
+  {
+    return m_data.getInitialHolds();
+  }
+
+  public void setInitialHolds(Map<TokenType, Integer> p_initialHolds)
+  {
+    m_data.m_initialHolds = p_initialHolds;
+  }
+
+  public void setInitialHoldsQty(TokenType p_type, int p_qty)
+  {
+    m_data.setInitialHoldsQty( p_type, p_qty );
   }
   
   

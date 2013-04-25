@@ -22,11 +22,14 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -35,11 +38,15 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Kroc
@@ -77,8 +84,12 @@ public class DlgJoinChooseColor extends DialogBox
     super( false, true );
 
     // Set the dialog box's caption.
-    setText( "Choisissez votre couleur" );
+    setText( MAppBoard.s_messages.unitsTitle() );
 
+    // display common construction reserve
+    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.commonConstructReserve() + "</b>" ) );
+    m_panel.add( createTokenList( GameEngine.model().getGame().getConstructReserve() ) );
+    
     // add color list widget
     Set<EnuColor> freeColors = null;
     EnuColor firstColor = new EnuColor( EnuColor.None );
@@ -115,7 +126,12 @@ public class DlgJoinChooseColor extends DialogBox
     Panel hpanel = new HorizontalPanel();
     hpanel.add( m_colorSelection );
     hpanel.add( m_preview );
+    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.chooseColor() + "</b>" ) );
     m_panel.add( hpanel );
+
+    // display initial hold
+    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.initialHold() + "</b>" ) );
+    m_panel.add( createTokenList( GameEngine.model().getGame().getInitialHolds() ) );
 
     // add buttons
     hpanel = new HorizontalPanel();
@@ -152,6 +168,23 @@ public class DlgJoinChooseColor extends DialogBox
     m_panel.add( hpanel );
 
     setWidget( m_panel );
+  }
+
+
+  private Widget createTokenList(Map<TokenType, Integer> p_tokenList)
+  {
+    FlowPanel panel = new FlowPanel();
+
+    for( Entry<TokenType, Integer> entry : p_tokenList.entrySet() )
+    {
+      if( entry.getValue() > 0 )
+      {
+        panel.add( new Label( " " + Messages.getTokenString( 0, entry.getKey() ) + ": "
+            + entry.getValue() ) );
+      }
+    }
+
+    return panel;
   }
 
 }

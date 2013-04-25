@@ -77,6 +77,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
   private WgtEditLand m_wgtEditLand = new WgtEditLand();
   private WgtEditTokens m_wgtEditTokens = new WgtEditTokens();
   private WgtEditReserve m_wgtEditReserve = new WgtEditReserve();
+  private WgtEditInitialHolds m_wgtEditIntialHolds = new WgtEditInitialHolds();
   private WgtEditAdmin m_wgtEditAdmin = new WgtEditAdmin();
   private Button m_btnCreateGame = new Button( s_messages.createGame() );
   private Button m_btnCancel = new Button( s_messages.cancel() );
@@ -141,7 +142,10 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
         case 3: // réserve
           m_wgtEditReserve.onTabSelected();
           break;
-        case 4: // Extra
+        case 4: // initial holds
+          m_wgtEditIntialHolds.onTabSelected();
+          break;
+        case 5: // Admin
           m_wgtEditAdmin.onTabSelected();
           break;
         default:
@@ -153,6 +157,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
     m_tabPanel.add( m_wgtEditLand, s_messages.map() );
     m_tabPanel.add( m_wgtEditTokens, s_messages.tokens() );
     m_tabPanel.add( m_wgtEditReserve, s_messages.reserve() );
+    m_tabPanel.add( m_wgtEditIntialHolds, s_messages.initialHolds() );
     m_tabPanel.add( m_wgtEditAdmin, "Admin" );
 
     m_panel.setSize( "100%", "100%" );
