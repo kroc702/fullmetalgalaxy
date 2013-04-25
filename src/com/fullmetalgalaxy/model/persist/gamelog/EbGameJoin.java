@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.Map.Entry;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
@@ -181,90 +183,27 @@ public class EbGameJoin extends AnEventUser
     shipToken.setColor( registration.getColor() );
     shipToken.setLocation( Location.Orbit );
     // shipToken.setLastUpdate( currentDate );
-    EbToken token = new EbToken();
-    token.setType( TokenType.Barge );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Speedboat );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Speedboat );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Pontoon );
-    game.addToken( token );
-    token.setColor( EnuColor.None );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.WeatherHen );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Crab );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Heap );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Tank );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Tank );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Tank );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Tank );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Turret );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Turret );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
-    token = new EbToken();
-    token.setType( TokenType.Turret );
-    game.addToken( token );
-    token.setColor( registration.getColor() );
-    token.setBulletCount( token.getType().getMaxBulletCount() );
-    shipToken.loadToken( token );
+
+    // create initial freighter holds
+    for( Entry<TokenType, Integer> entry : p_game.getInitialHolds().entrySet() )
+    {
+      for( int i = 0; i < entry.getValue(); i++ )
+      {
+        EbToken token = new EbToken();
+        token.setType( entry.getKey() );
+        game.addToken( token );
+        if( token.canBeColored() )
+        {
+          token.setColor( registration.getColor() );
+        }
+        else
+        {
+          token.setColor( EnuColor.None );
+        }
+        token.setBulletCount( token.getType().getMaxBulletCount() );
+        shipToken.loadToken( token );
+      }
+    }
 
     return registration;
   }

@@ -23,7 +23,6 @@
 
 package com.fullmetalgalaxy.client.widget;
 
-import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -44,18 +43,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Vincent
  *
  */
-public class WgtReserveToken extends Composite implements HasValueChangeHandlers<Integer>,
+public class WgtTokenQty extends Composite implements HasValueChangeHandlers<Integer>,
     HasValue<Integer>
 {
   private VerticalPanel m_panel = new VerticalPanel();
   WgtIntBox m_tokenReserveCount = new WgtIntBox();
 
-  public WgtReserveToken(TokenType p_tokenType)
+  public WgtTokenQty(TokenType p_tokenType, Integer p_initialValue)
   {
-    this( p_tokenType, new EnuColor( EnuColor.None ) );
+    this( p_tokenType, new EnuColor( EnuColor.None ), p_initialValue );
   }
 
-  public WgtReserveToken(TokenType p_tokenType, EnuColor p_color)
+  public WgtTokenQty(TokenType p_tokenType, EnuColor p_color, Integer p_initialValue)
   {
     m_panel.setHeight( "100%" );
     m_panel.add( new Label( Messages.getTokenString( 0, p_tokenType ) ) );
@@ -73,10 +72,9 @@ public class WgtReserveToken extends Composite implements HasValueChangeHandlers
     m_panel.add( wgtToken );
 
     m_tokenReserveCount.setMinValue( 0 );
-    if( GameEngine.model().getGame().getConstructReserve().get( p_tokenType ) != null )
+    if( p_initialValue != null )
     {
-      m_tokenReserveCount.setValue( GameEngine.model().getGame().getConstructReserve()
-          .get( p_tokenType ) );
+      m_tokenReserveCount.setValue( p_initialValue );
     }
     m_panel.add( m_tokenReserveCount );
     setEnabled( false );
@@ -91,6 +89,16 @@ public class WgtReserveToken extends Composite implements HasValueChangeHandlers
   public void setFocus(boolean p_focused)
   {
     m_tokenReserveCount.setFocus( p_focused );
+  }
+
+  public void setMinValue(int p_minValue)
+  {
+    m_tokenReserveCount.setMinValue( p_minValue );
+  }
+
+  public void setMaxValue(int p_maxValue)
+  {
+    m_tokenReserveCount.setMaxValue( p_maxValue );
   }
 
   @Override

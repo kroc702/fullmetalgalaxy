@@ -35,20 +35,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent
  *
  */
-public class WgtEditReserve extends Composite
+public class WgtEditInitialHolds extends Composite
 {
   private VerticalPanel m_panel = new VerticalPanel();
   private Grid m_grid = new Grid( 3, 5 );
 
-  public WgtEditReserve()
+  public WgtEditInitialHolds()
   {
-    m_panel.add( new Label( MAppGameCreation.s_messages.tipReserve() ) );
+    m_panel.add( new Label( MAppGameCreation.s_messages.tipInitialHolds() ) );
     Button btnReinit = new Button( MAppGameCreation.s_messages.defaultValue() );
     btnReinit.addClickHandler( new ClickHandler()
     {
@@ -56,7 +55,7 @@ public class WgtEditReserve extends Composite
       public void onClick(ClickEvent p_event)
       {
         // reset to default value
-        GameEngine.model().getGame().setConstructReserve( null );
+        GameEngine.model().getGame().setInitialHolds( null );
         onTabSelected();
       }
     } );
@@ -68,10 +67,10 @@ public class WgtEditReserve extends Composite
   }
 
 
-  private Widget createWgt(final TokenType p_tokenType)
+  private WgtTokenQty createWgt(final TokenType p_tokenType)
   {
     WgtTokenQty wgt = new WgtTokenQty( p_tokenType, GameEngine.model().getGame()
-        .getConstructReserve().get( p_tokenType ) );
+        .getInitialHolds().get( p_tokenType ) );
 
     wgt.setEnabled( true );
     wgt.addValueChangeHandler( new ValueChangeHandler<Integer>()
@@ -79,7 +78,7 @@ public class WgtEditReserve extends Composite
       @Override
       public void onValueChange(ValueChangeEvent<Integer> p_event)
       {
-        GameEngine.model().getGame().setConstructQty( p_tokenType, p_event.getValue() );
+        GameEngine.model().getGame().setInitialHoldsQty( p_tokenType, p_event.getValue() );
       }
     } );
     return wgt;
@@ -90,6 +89,9 @@ public class WgtEditReserve extends Composite
     m_grid.clear();
     m_grid.setWidget( 0, 0, createWgt( TokenType.Pontoon ) );
     m_grid.setWidget( 0, 1, createWgt( TokenType.Sluice ) );
+    WgtTokenQty wgtTurret = createWgt( TokenType.Turret );
+    wgtTurret.setMaxValue( 3 );
+    m_grid.setWidget( 0, 2, wgtTurret );
     m_grid.setWidget( 1, 0, createWgt( TokenType.Crab ) );
     m_grid.setWidget( 1, 1, createWgt( TokenType.Crayfish ) );
     m_grid.setWidget( 1, 2, createWgt( TokenType.Barge ) );

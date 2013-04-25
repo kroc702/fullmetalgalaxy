@@ -37,11 +37,12 @@ public interface MessagesAppBoard extends Messages
   
   // dlg join
   String pleaseCheckGamePasword();
-  
   String pasword();
-  
   String joinTitle();
-  
+  String unitsTitle();
+  String chooseColor();
+  String commonConstructReserve();
+  String initialHold();
   String joinWarning();
   
   // player tip on actions

@@ -42,6 +42,14 @@ public interface MessagesAppGameCreation extends Messages
 
   String reserve();
 
+  String tipReserve();
+
+  String initialHolds();
+
+  String tipInitialHolds();
+
+  String defaultValue();
+
   String putOre();
 
     String errorActionPt();
