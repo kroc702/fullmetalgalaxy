@@ -98,7 +98,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
       @Override
       public void onBeforeSelection(BeforeSelectionEvent<Integer> p_event)
       {
-        if( p_event.getItem() == 4 // tab admin
+        if( p_event.getItem() == 5 // tab admin
             && !AppMain.instance().iAmAdmin() )
         {
           Window.alert( "Vous n'avez pas les droits pour cet onglet" );

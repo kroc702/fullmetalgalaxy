@@ -112,7 +112,7 @@ public class EbEvtCancel extends AnEventUser
     int toActionIndex = m_toActionIndex;
     if( getMyRegistration( p_game ) != null )
     {
-      totalEventCount += getMyRegistration( p_game ).getMyEvents().size();
+      totalEventCount += getMyRegistration( p_game ).getTeam().getMyEvents().size();
     }
     if( m_fromActionIndex != totalEventCount - 1 || toActionIndex < 0 )
     {
@@ -123,7 +123,7 @@ public class EbEvtCancel extends AnEventUser
     if( getMyRegistration( p_game ) != null && toActionIndex >= p_game.getLogs().size() )
     {
       toActionIndex -= p_game.getLogs().size();
-      eventLogs = getMyRegistration( p_game ).getMyEvents();
+      eventLogs = getMyRegistration( p_game ).getTeam().getMyEvents();
     }
     while( toActionIndex < eventLogs.size() )
     {

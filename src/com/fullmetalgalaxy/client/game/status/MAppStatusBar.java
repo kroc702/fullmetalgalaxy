@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 
@@ -70,13 +71,15 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
   {
     m_panel.clear();
     m_panel.add( m_gameInfo );
-    for( EbRegistration registration : GameEngine.model().getGame().getRegistrationByPlayerOrder() )
-    {
-      if( registration.getColor() != EnuColor.None )
+    for( EbTeam team : GameEngine.model().getGame().getTeamByPlayOrder() )
+      for( EbRegistration registration : team
+          .getPlayers( GameEngine.model().getGame().getPreview() ) )
       {
-        m_panel.add( new WgtPlayerInfo( registration ) );
+        if( registration.getColor() != EnuColor.None )
+        {
+          m_panel.add( new WgtPlayerInfo( registration ) );
+        }
       }
-    }
   }
 
   @Override

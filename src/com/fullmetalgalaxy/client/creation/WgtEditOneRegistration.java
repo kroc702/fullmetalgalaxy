@@ -121,7 +121,7 @@ public class WgtEditOneRegistration extends Composite
       {
         if( m_registration == null )
           return;
-        m_registration.clearMyEvents();
+        m_registration.getTeam().clearMyEvents();
         m_btnCancelMyEvents.setEnabled( false );
       }
     } );
@@ -142,7 +142,7 @@ public class WgtEditOneRegistration extends Composite
     m_intColors.setValue( p_reg.getColor() );
     m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
         .contains( p_reg.getId() ) );
-    m_btnCancelMyEvents.setEnabled( !p_reg.getMyEvents().isEmpty() );
+    m_btnCancelMyEvents.setEnabled( !p_reg.getTeam().getMyEvents().isEmpty() );
   }
 
 

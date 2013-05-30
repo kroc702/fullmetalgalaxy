@@ -135,11 +135,13 @@ public class WgtPlayerInfo extends Composite
     Game game = GameEngine.model().getGame();
     if( game.isParallel() && game.getCurrentTimeStep() > 1 )
     {
-      if( m_registration.getEndTurnDate() != null
-          && m_registration.getEndTurnDate().getTime() > SharedMethods.currentTimeMillis() )
+      if( m_registration.getTeam().getEndTurnDate() != null
+          && m_registration.getTeam().getEndTurnDate().getTime() > SharedMethods
+              .currentTimeMillis() )
       {
         m_panel.setStylePrimaryName( "fmp-status-currentplayer" );
-        m_clockTimer.schedule( (int)(m_registration.getEndTurnDate().getTime() - SharedMethods
+        m_clockTimer
+            .schedule( (int)(m_registration.getTeam().getEndTurnDate().getTime() - SharedMethods
             .currentTimeMillis()) );
       }
       else

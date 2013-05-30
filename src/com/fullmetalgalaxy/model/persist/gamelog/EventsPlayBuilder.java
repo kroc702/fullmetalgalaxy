@@ -1517,7 +1517,7 @@ public class EventsPlayBuilder implements GameEventStack
     EbEvtMove action = new EbEvtMove();
     if( getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime().getDeploymentTimeStep() )
     {
-      for( EbToken freighter : getGame().getAllFreighter( getMyRegistration() ) )
+      for( EbToken freighter : getGame().getAllFreighter( getMyRegistration().getColor() ) )
       {
         if( freighter.getLocation() == Location.Board
             && freighter.getPosition().getHexDistance( p_position ) <= FmpConstant.deployementRadius )

@@ -50,6 +50,7 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
 
   private TextBox m_password = new TextBox();
   private CheckBox m_training = new CheckBox();
+  private CheckBox m_allowTeam = new CheckBox();
   
   /**
    * 
@@ -86,6 +87,20 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
 
     } );
     hPanel.add( m_training );
+    vpanel.add( hPanel );
+
+    hPanel = new HorizontalPanel();
+    hPanel.add( new Label( "Autoriser les équipes :" ) );
+    m_allowTeam.addValueChangeHandler( new ValueChangeHandler<Boolean>()
+    {
+      @Override
+      public void onValueChange(ValueChangeEvent<Boolean> p_event)
+      {
+        GameEngine.model().getGame().setTeamAllowed( m_allowTeam.getValue() );
+      }
+
+    } );
+    hPanel.add( m_allowTeam );
     vpanel.add( hPanel );
 
     // fill UI

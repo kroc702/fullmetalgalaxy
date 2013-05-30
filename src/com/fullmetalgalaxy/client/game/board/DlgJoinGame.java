@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.board;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.widget.WgtGameTime;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -104,8 +105,21 @@ public class DlgJoinGame extends DialogBox implements ClickHandler
         return;
       }
       this.hide();
-      DlgJoinChooseColor.instance().show();
-      DlgJoinChooseColor.instance().center();
+
+      if( !FmpConstant.getDefaultInitialHolds().equals(
+          GameEngine.model().getGame().getInitialHolds() )
+          || !FmpConstant.getDefaultReserve( GameEngine.model().getGame().getMaxNumberOfPlayer() )
+              .equals( GameEngine.model().getGame().getConstructReserve() ) )
+      {
+        // not default variant... display a little message to player
+        DlgJoinDisplayVariant.instance().show();
+        DlgJoinDisplayVariant.instance().center();
+      }
+      else
+      {
+        DlgJoinChooseColor.instance().show();
+        DlgJoinChooseColor.instance().center();
+      }
       return;
     }
 

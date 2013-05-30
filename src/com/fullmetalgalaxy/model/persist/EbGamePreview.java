@@ -33,6 +33,7 @@ import javax.persistence.Embedded;
 import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
@@ -108,6 +109,10 @@ public class EbGamePreview extends EbBase
    * ie player must know that password to subscribe to it.
    */
   private String m_password = null;
+  /**
+   * if true, several player can jon the game under the same team
+   */
+  private boolean m_isTeamAllowed = false;
 
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
@@ -118,6 +123,12 @@ public class EbGamePreview extends EbBase
 
   @Embedded
   private Set<com.fullmetalgalaxy.model.persist.EbRegistration> m_setRegistration = new HashSet<com.fullmetalgalaxy.model.persist.EbRegistration>();
+
+  @Serialized
+  private Set<EbTeam> m_teams = new HashSet<EbTeam>();
+
+  /** a list of lower case tag to ease research */
+  private List<String> m_tags = new ArrayList<String>();
 
 
   public EbGamePreview()
@@ -169,9 +180,9 @@ public class EbGamePreview extends EbBase
       {
         registration.setAccount( null );
       }
-      if( registration.getMyEvents().isEmpty() )
+      if( registration.m_myEvents == null || registration.m_myEvents.isEmpty() )
       {
-        registration.clearMyEvents();
+        registration.m_myEvents = null;
       }
     }
     if( m_currentPlayerId != 0 && (m_currentPlayerIds == null || m_currentPlayerIds.isEmpty()) )
@@ -199,7 +210,7 @@ public class EbGamePreview extends EbBase
     {
       if( registration.m_myEvents == null )
       {
-        registration.setMyEvents( new ArrayList<AnEvent>() );
+        registration.m_myEvents = new ArrayList<AnEvent>();
       }
       if( registration.getAccount() == null )
       {
@@ -239,6 +250,23 @@ public class EbGamePreview extends EbBase
   }
 
 
+  /**
+   * return null if p_idTeam doesn't exist
+   */
+  public EbTeam getTeam(long p_idTeam)
+  {
+    for( EbTeam team : getTeams() )
+    {
+      if( team.getId() == p_idTeam )
+        return team;
+    }
+    return null;
+  }
+
+  public Set<EbTeam> getTeams()
+  {
+    return m_teams;
+  }
 
   /**
    * @return null if p_idRegistration doesn't exist
@@ -260,14 +288,30 @@ public class EbGamePreview extends EbBase
    * @param start at zero
    * @return null if p_index doesn't exist
    */
-  public EbRegistration getRegistrationByOrderIndex(int p_index)
+  public EbTeam getTeamByOrderIndex(int p_index)
   {
-    for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
+    for( EbTeam team : getTeams() )
     {
-      EbRegistration registration = (EbRegistration)it.next();
-      if( registration.getOrderIndex() == p_index )
+      if( team.getOrderIndex() == p_index )
       {
-        return registration;
+        return team;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * return first team for the given company
+   * @param p_compagny
+   * @return
+   */
+  public EbTeam getTeam(Company p_company)
+  {
+    for( EbTeam team : getTeams() )
+    {
+      if( team.getCompany() == p_company )
+      {
+        return team;
       }
     }
     return null;
@@ -278,9 +322,8 @@ public class EbGamePreview extends EbBase
    */
   public EbRegistration getRegistrationByIdAccount(long p_idAccount)
   {
-    for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
+    for( EbRegistration registration : getSetRegistration() )
     {
-      EbRegistration registration = (EbRegistration)it.next();
       if( registration.haveAccount() && registration.getAccount().getId() == p_idAccount )
       {
         return registration;
@@ -312,25 +355,25 @@ public class EbGamePreview extends EbBase
   }
 
 
-  public List<EbRegistration> getRegistrationByPlayerOrder()
+  public List<EbTeam> getTeamByPlayOrder()
   {
-    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
+    List<EbTeam> sortedTeam = new ArrayList<EbTeam>();
     // sort registration according to their order index.
-    for( EbRegistration registration : getSetRegistration() )
+    for( EbTeam team : getTeams() )
     {
       int index = 0;
-      while( index < sortedRegistration.size() )
+      while( index < sortedTeam.size() )
       {
-        if( registration.getOrderIndex() < sortedRegistration.get( index ).getOrderIndex() )
+        if( team.getOrderIndex() < sortedTeam.get( index ).getOrderIndex() )
         {
           break;
         }
         index++;
       }
-      sortedRegistration.add( index, registration );
+      sortedTeam.add( index, team );
     }
 
-    return sortedRegistration;
+    return sortedTeam;
   }
 
   /**
@@ -410,7 +453,7 @@ public class EbGamePreview extends EbBase
   }
 
   /**
-   * @return a set of free (controled by registration with null account)
+   * @return a set of free (controlled by registration with null account)
    *  single color
    */
   public Set<EnuColor> getFreeRegistrationColors()
@@ -456,29 +499,31 @@ public class EbGamePreview extends EbBase
   public String getPlayersAsString()
   {
     StringBuffer strBuf = new StringBuffer( " " );
-    // get player order
-    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    for( int index = 0; index < getSetRegistration().size(); index++ )
-    {
-      sortedRegistration.add( getRegistrationByOrderIndex( index ) );
-    }
+    List<EbTeam> sortedTeams = getTeamByPlayOrder();
 
-    int playerCount = 0;
-    for( EbRegistration player : sortedRegistration )
+    int teamCount = 0;
+    for( EbTeam team : sortedTeams )
     {
-      playerCount++;
-      if( player != null && player.haveAccount() )
+      teamCount++;
+      int playerCount = 0;
+      for( EbRegistration player : team.getPlayers( this ) )
       {
-        strBuf.append( player.getAccount().getPseudo() );
+        playerCount++;
+        if( player != null && player.haveAccount() )
+        {
+          strBuf.append( player.getAccount().getPseudo() );
+        }
+        if( player != null
+            && (!isParallel() || getCurrentTimeStep() < 1 || isTimeStepParallelHidden( getCurrentTimeStep() ))
+            && (getCurrentPlayerIds().contains( player.getId() )) )
+        {
+          strBuf
+              .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );
+        }
+        if( playerCount < team.getPlayerIds().size() )
+          strBuf.append( " - " );
       }
-      if( player != null
-          && (!isParallel() || getCurrentTimeStep() < 1 || isTimeStepParallelHidden( getCurrentTimeStep() ))
-          && (getCurrentPlayerIds().contains( player.getId() )) )
-      {
-        strBuf
-            .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );
-      }
-      if( playerCount < sortedRegistration.size() )
+      if( teamCount < sortedTeams.size() )
       {
         if( isParallel() )
         {
@@ -1103,6 +1148,20 @@ public class EbGamePreview extends EbBase
   public void setPassword(String p_password)
   {
     m_password = p_password;
+  }
+
+
+
+  public boolean isTeamAllowed()
+  {
+    return m_isTeamAllowed;
+  }
+
+
+
+  public void setTeamAllowed(boolean p_isTeamAllowed)
+  {
+    m_isTeamAllowed = p_isTeamAllowed;
   }
 
 

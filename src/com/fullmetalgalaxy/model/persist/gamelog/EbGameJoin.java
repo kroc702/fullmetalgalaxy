@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Map.Entry;
 
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.Location;
@@ -32,6 +33,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -46,6 +48,7 @@ public class EbGameJoin extends AnEventUser
 
   private int m_color = EnuColor.None;
   private EbPublicAccount m_account = null;
+  private Company m_company = Company.Freelancer;
 
   /**
    * 
@@ -111,6 +114,12 @@ public class EbGameJoin extends AnEventUser
       // no i18n ?
       throw new RpcFmpException( "The maximum number of player is reached for this game." );
     }
+    if( !p_game.isTeamAllowed() && getCompany() != Company.Freelancer
+        && p_game.getTeam( getCompany() ) != null )
+    {
+      // no i18n as HMI shall prevent this error
+      throw new RpcFmpException( "This gaame don't allow team" );
+    }
   }
 
   /* (non-Javadoc)
@@ -152,9 +161,9 @@ public class EbGameJoin extends AnEventUser
   {
     assert p_game != null;
     Game game = p_game;
+    // create registration
     EbRegistration registration = new EbRegistration();
     registration.setColor( getColor() );
-    registration.setSingleColor( registration.getColor() );
     registration.setOriginalColor( registration.getColor() );
     game.addRegistration( registration );
     if( game.getCurrentTimeStep() > 1 )
@@ -171,10 +180,24 @@ public class EbGameJoin extends AnEventUser
     {
       registration.setPtAction( 0 );
     }
-    registration.setOrderIndex( game.getSetRegistration().size() - 1 );
+
+    // find or create team
+    EbTeam team = p_game.getTeam( getCompany() );
+    if( team == null || getCompany() == Company.Freelancer )
+    {
+      team = new EbTeam();
+      team.setCompany( getCompany() );
+      team.setFireColor( registration.getEnuColor().getSingleColor().getValue() );
+      team.setOrderIndex( p_game.getTeams().size() - 1 );
+      p_game.addTeam( team );
+    }
+    registration.setTeamId( team.getId() );
+    team.getPlayerIds().add( registration.getId() );
+    team.clearColorsCache();
+
     // set current player as the first player
     game.getCurrentPlayerIds().clear();
-    game.getCurrentPlayerIds().add( game.getRegistrationByOrderIndex( 0 ).getId() );
+    game.getCurrentPlayerIds().add( game.getTeamByOrderIndex( 0 ).getPlayerIds().get( 0 ) );
 
     // create all tokens
     EbToken shipToken = new EbToken();
@@ -274,6 +297,16 @@ public class EbGameJoin extends AnEventUser
   public void setAccount(EbPublicAccount p_account)
   {
     m_account = p_account;
+  }
+
+  public Company getCompany()
+  {
+    return m_company;
+  }
+
+  public void setCompany(Company p_company)
+  {
+    m_company = p_company;
   }
 
 

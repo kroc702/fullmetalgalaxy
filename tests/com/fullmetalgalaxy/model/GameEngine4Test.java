@@ -79,7 +79,8 @@ public class GameEngine4Test
         getGame().getCurrentPlayerIds().get( 0 ) );
     if( registration == null || registration.getAccount() == null )
     {
-      registration = getGame().getRegistrationByPlayerOrder().get( 0 );
+      registration = getGame().getTeamByPlayOrder().get( 0 )
+          .getPlayers( modelInit.getGame().getPreview() ).get( 0 );
     }
     if( registration != null )
     {

@@ -33,6 +33,7 @@ import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -163,9 +164,9 @@ public class AnEventPlay extends AnEventUser
     if( p_game.isParallel()
         && p_game.getCurrentTimeStep() > p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
-      EbRegistration registration = p_game.getOtherRegistrationBoardLocked( myRegistration,
+      EbTeam team = p_game.getOtherTeamBoardLocked( myRegistration,
           getLockedPosition(), SharedMethods.currentTimeMillis() );
-      if( registration != null )
+      if( team != null )
       {
         throw new RpcFmpException( errMsg().boardLocked() );
       }
@@ -200,8 +201,9 @@ public class AnEventPlay extends AnEventUser
       // registration.setLastUpdate( getLastUpdate() );
       if( p_game.isParallel() )
       {
-        registration.setLockedPosition( getLockedPosition() );
-        registration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
+        registration.getTeam().setLockedPosition( getLockedPosition() );
+        registration.getTeam().setEndTurnDate(
+            new Date( SharedMethods.currentTimeMillis()
             + p_game.getEbConfigGameTime().getLockGameInMillis() ) );
       }
     }

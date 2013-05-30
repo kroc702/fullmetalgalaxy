@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
@@ -79,6 +80,25 @@ public class GameData implements java.io.Serializable, IsSerializable
       m_data.m_constructReserve = FmpConstant.getDefaultReserve( getPreview()
           .getCurrentNumberOfRegiteredPlayer() );
     }
+    for( EbRegistration registration : getSetRegistration() )
+    {
+      if( registration.getTeam( this ) == null )
+      {
+        // this registration have no team (ie old data): build one !
+        EbTeam team = new EbTeam();
+        team.setFireColor( registration.m_singleColor );
+        team.setEndTurnDate( registration.m_endTurnDate );
+        team.setLockedPosition( registration.m_lockedPosition );
+        if( registration.m_myEvents != null )
+        {
+          team.getMyEvents().addAll( registration.m_myEvents );
+        }
+        team.setOrderIndex( registration.m_orderIndex );
+        team.getPlayerIds().add( registration.getId() );
+        addTeam( team );
+        registration.setTeamId( team.getId() );
+      }
+    }
   }
 
   private void init()
@@ -101,6 +121,30 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_data;
   }
   
+  public void addRegistration(EbRegistration p_registration)
+  {
+    if( p_registration.getId() == 0 )
+    {
+      p_registration.setId( getNextLocalId() );
+    }
+    if( !getSetRegistration().contains( p_registration ) )
+    {
+      getSetRegistration().add( p_registration );
+    }
+  }
+
+  public void addTeam(EbTeam p_team)
+  {
+    if( p_team.getId() == 0 )
+    {
+      p_team.setId( getNextLocalId() );
+    }
+    if( !getTeams().contains( p_team ) )
+    {
+      getTeams().add( p_team );
+    }
+  }
+
   /**
    * this method update game status between open and pause
    * according to number of current registered players
@@ -428,9 +472,9 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getRegistration( p_idRegistration );
   }
 
-  public EbRegistration getRegistrationByOrderIndex(int p_index)
+  public EbTeam getTeamByOrderIndex(int p_index)
   {
-    return m_preview.getRegistrationByOrderIndex( p_index );
+    return m_preview.getTeamByOrderIndex( p_index );
   }
 
   public EbRegistration getRegistrationByIdAccount(long p_idAccount)
@@ -443,9 +487,9 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getRegistrationByColor( p_color );
   }
 
-  public List<EbRegistration> getRegistrationByPlayerOrder()
+  public List<EbTeam> getTeamByPlayOrder()
   {
-    return m_preview.getRegistrationByPlayerOrder();
+    return m_preview.getTeamByPlayOrder();
   }
 
   public Set<EnuColor> getFreeColors4Registration()
@@ -899,7 +943,32 @@ public class GameData implements java.io.Serializable, IsSerializable
   {
     m_data.setInitialHoldsQty( p_type, p_qty );
   }
+
+  public EbTeam getTeam(long p_idTeam)
+  {
+    return m_preview.getTeam( p_idTeam );
+  }
   
+  public Set<EbTeam> getTeams()
+  {
+    return m_preview.getTeams();
+  }
+
+  public boolean isTeamAllowed()
+  {
+    return m_preview.isTeamAllowed();
+  }
+
+  public void setTeamAllowed(boolean p_isTeamAllowed)
+  {
+    m_preview.setTeamAllowed( p_isTeamAllowed );
+  }
+
+  public EbTeam getTeam(Company p_company)
+  {
+    return m_preview.getTeam( p_company );
+  }
+
   
   
 }

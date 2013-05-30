@@ -111,26 +111,26 @@ public class Game extends GameData implements PathGraph, GameEventStack
    * @param p_position
    * @return null if no registration lock that hexagon
    */
-  public EbRegistration getOtherRegistrationBoardLocked(EbRegistration p_myRegistration,
+  public EbTeam getOtherTeamBoardLocked(EbRegistration p_myRegistration,
       AnBoardPosition p_position, long p_currentTime)
   {
     if( !isParallel() || p_position == null || p_position.getX() < 0 )
     {
       return null;
     }
-    for( EbRegistration registration : getSetRegistration() )
+    for( EbTeam team : getTeams() )
     {
-      if( p_myRegistration != registration && registration.getEndTurnDate() != null
-          && registration.getLockedPosition() != null )
+      if( p_myRegistration.getTeam() != team && team.getEndTurnDate() != null
+          && team.getLockedPosition() != null )
       {
-        if( registration.getEndTurnDate().getTime() < p_currentTime )
+        if( team.getEndTurnDate().getTime() < p_currentTime )
         {
-          registration.setEndTurnDate( null );
-          registration.setLockedPosition( null );
+          team.setEndTurnDate( null );
+          team.setLockedPosition( null );
         }
-        else if( registration.getLockedPosition().getHexDistance( p_position ) <= FmpConstant.parallelLockRadius )
+        else if( team.getLockedPosition().getHexDistance( p_position ) <= FmpConstant.parallelLockRadius )
         {
-          return registration;
+          return team;
         }
       }
     }
@@ -160,17 +160,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
     updateLastTokenUpdate( null );
   }
 
-  public void addRegistration(EbRegistration p_registration)
-  {
-    if( p_registration.getId() == 0 )
-    {
-      p_registration.setId( getNextLocalId() );
-    }
-    if( !getSetRegistration().contains( p_registration ) )
-    {
-      getSetRegistration().add( p_registration );
-    }
-  }
 
   public boolean haveNewMessage(Date p_since)
   {
@@ -618,26 +607,27 @@ public class Game extends GameData implements PathGraph, GameEventStack
    * @param p_currentIndex
    * @return
    */
-  public EbRegistration getNextPlayerRegistration(int p_currentIndex)
+  public EbTeam getNextTeam2Play(int p_currentIndex)
   {
-    EbRegistration registration = null;
+    EbTeam team = null;
     int index = p_currentIndex;
     do
     {
       index++;
-      registration = getRegistrationByOrderIndex( index );
-      if( registration == null )
+      team = getTeamByOrderIndex( index );
+      if( team == null )
       {
         // next turn !
         index = 0;
-        registration = getRegistrationByOrderIndex( index );
+        team = getTeamByOrderIndex( index );
         // avoid infinite loop
         if( p_currentIndex < 0 )
           break;
       }
-      assert registration != null;
-    } while( (!haveBoardFreighter( registration ) || !registration.haveAccount()) && (index != p_currentIndex) );
-    return registration;
+      assert team != null;
+    } while( (team.getOnBoardFreighterCount( this ) == 0 || !team.haveAccount( getPreview() ))
+        && (index != p_currentIndex) );
+    return team;
   }
 
   /**
@@ -823,14 +813,14 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return null;
   }
 
-  public List<EbToken> getAllFreighter(EbRegistration p_registration)
+  public List<EbToken> getAllFreighter(int p_color)
   {
+    EnuColor color = new EnuColor( p_color );
     List<EbToken> list = new ArrayList<EbToken>();
-    if( p_registration == null )
+    if( color == null || color.getColorIndex() < 0 )
     {
       return list;
     }
-    EnuColor color = p_registration.getEnuColor();
     for( EbToken token : getSetToken() )
     {
       if( token.getType() == TokenType.Freighter && token.getColor() != EnuColor.None
@@ -946,7 +936,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public int getFireCover(int p_x, int p_y, EbRegistration p_registration)
   {
-    EnuColor regColor = new EnuColor( p_registration.getSingleColor() );
+    EnuColor regColor = new EnuColor( p_registration.getTeam().getFireColor() );
     return getBoardFireCover().getFireCover( p_x, p_y, regColor );
   }
 

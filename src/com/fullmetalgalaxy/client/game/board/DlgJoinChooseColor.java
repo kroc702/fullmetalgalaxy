@@ -22,14 +22,15 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.ressources.Messages;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -38,15 +39,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Kroc
@@ -57,8 +55,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class DlgJoinChooseColor extends DialogBox
 {
   // UI
+  private ListBox m_companySelection = new ListBox();
+  private Image m_companyPreview = new Image();
   private ListBox m_colorSelection = new ListBox();
-  private Image m_preview = new Image();
+  private Image m_colorPreview = new Image();
 
   private Button m_btnOk = new Button( MAppBoard.s_messages.ok() );
   private Button m_btnCancel = new Button( MAppBoard.s_messages.cancel() );
@@ -86,11 +86,48 @@ public class DlgJoinChooseColor extends DialogBox
     // Set the dialog box's caption.
     setText( MAppBoard.s_messages.unitsTitle() );
 
-    // display common construction reserve
-    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.commonConstructReserve() + "</b>" ) );
-    m_panel.add( createTokenList( GameEngine.model().getGame().getConstructReserve() ) );
+    // add company list widget
+    List<Company> freeCompany = new ArrayList<Company>();
+    for( Company company : Company.values() )
+    {
+      freeCompany.add( company );
+    }
+    if( !GameEngine.model().getGame().isTeamAllowed() )
+    {
+      for( EbTeam team : GameEngine.model().getGame().getTeams() )
+      {
+        if( team.getCompany() != null && team.getCompany() != Company.Freelancer )
+        {
+          freeCompany.remove( team.getCompany() );
+        }
+      }
+    }
+
     
+    for( Company company : freeCompany )
+    {
+      m_companySelection.addItem( company.getFullName(), company.toString() );
+    }
+    m_companySelection.setSelectedIndex( 0 );
+    m_companyPreview.setUrl( "/images/avatar/" + Company.Freelancer + ".jpg" );
+    m_companySelection.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
+            .getSelectedIndex() ) );
+        m_colorPreview.setUrl( "/images/avatar/" + company + ".jpg" );
+      }
+    } );
+    Panel hpanel = new HorizontalPanel();
+    hpanel.add( m_companySelection );
+    hpanel.add( m_companyPreview );
+    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.chooseColor() + "</b>" ) );
+    m_panel.add( hpanel );
+
     // add color list widget
+    // ////////////////////
     Set<EnuColor> freeColors = null;
     EnuColor firstColor = new EnuColor( EnuColor.None );
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
@@ -111,7 +148,7 @@ public class DlgJoinChooseColor extends DialogBox
       }
     }
     m_colorSelection.setSelectedIndex( 0 );
-    m_preview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
+    m_colorPreview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override
@@ -119,19 +156,15 @@ public class DlgJoinChooseColor extends DialogBox
       {
         int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
         EnuColor color = new EnuColor(colorValue);
-        m_preview.setUrl( "/images/board/" + color.toString() + "/preview.jpg" );
+        m_colorPreview.setUrl( "/images/board/" + color.toString() + "/preview.jpg" );
         m_btnOk.setEnabled( true );
       }
     } );
-    Panel hpanel = new HorizontalPanel();
+    hpanel = new HorizontalPanel();
     hpanel.add( m_colorSelection );
-    hpanel.add( m_preview );
+    hpanel.add( m_colorPreview );
     m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.chooseColor() + "</b>" ) );
     m_panel.add( hpanel );
-
-    // display initial hold
-    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.initialHold() + "</b>" ) );
-    m_panel.add( createTokenList( GameEngine.model().getGame().getInitialHolds() ) );
 
     // add buttons
     hpanel = new HorizontalPanel();
@@ -156,6 +189,9 @@ public class DlgJoinChooseColor extends DialogBox
             .getSelectedIndex() ) );
         EnuColor color = new EnuColor( colorValue );
         EbGameJoin action = new EbGameJoin();
+        Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
+            .getSelectedIndex() ) );
+        action.setCompany( company );
         action.setGame( GameEngine.model().getGame() );
         action.setAccountId( AppMain.instance().getMyAccount().getId() );
         action.setAccount( AppMain.instance().getMyAccount() );
@@ -170,21 +206,5 @@ public class DlgJoinChooseColor extends DialogBox
     setWidget( m_panel );
   }
 
-
-  private Widget createTokenList(Map<TokenType, Integer> p_tokenList)
-  {
-    FlowPanel panel = new FlowPanel();
-
-    for( Entry<TokenType, Integer> entry : p_tokenList.entrySet() )
-    {
-      if( entry.getValue() > 0 )
-      {
-        panel.add( new Label( " " + Messages.getTokenString( 0, entry.getKey() ) + ": "
-            + entry.getValue() ) );
-      }
-    }
-
-    return panel;
-  }
 
 }

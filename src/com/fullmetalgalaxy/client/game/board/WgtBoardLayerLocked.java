@@ -135,19 +135,20 @@ public class WgtBoardLayerLocked extends WgtBoardLayerBase
     EbRegistration myRegistration = GameEngine.model().getMyRegistration();
     for( EbRegistration registration : game.getSetRegistration() )
     {
-      if( registration != myRegistration && registration.getEndTurnDate() != null
-          && registration.getLockedPosition() != null )
+      if( registration != myRegistration && registration.getTeam().getEndTurnDate() != null
+          && registration.getTeam().getLockedPosition() != null )
       {
-        if( registration.getEndTurnDate().getTime() < SharedMethods.currentTimeMillis() )
+        if( registration.getTeam().getEndTurnDate().getTime() < SharedMethods.currentTimeMillis() )
         {
-          registration.setEndTurnDate( null );
-          registration.setLockedPosition( null );
+          registration.getTeam().setEndTurnDate( null );
+          registration.getTeam().setLockedPosition( null );
         }
         else
         {
           // display lock icon on board...
           for( AnBoardPosition position : AnBoardPosition.drawHexagon(
-              registration.getLockedPosition(), FmpConstant.parallelLockRadius ) )
+ registration.getTeam()
+              .getLockedPosition(), FmpConstant.parallelLockRadius ) )
           {
             if( game.getLand( position ) != LandType.None )
             {
@@ -155,7 +156,8 @@ public class WgtBoardLayerLocked extends WgtBoardLayerBase
             }
           }
           // then schedule hmi resfresh
-          m_clockTimer.schedule( (int)(registration.getEndTurnDate().getTime() - SharedMethods
+          m_clockTimer
+              .schedule( (int)(registration.getTeam().getEndTurnDate().getTime() - SharedMethods
               .currentTimeMillis()) );
         }
       }

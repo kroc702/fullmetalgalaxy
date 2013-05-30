@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 
 
@@ -98,14 +99,15 @@ public class EbAdminTimePlay extends EbAdmin
     if( !p_game.isParallel() )
     {
       // every player but me shouldn't have a time constain
-      for( EbRegistration registration : p_game.getSetRegistration() )
+      for( EbTeam team : p_game.getTeams() )
       {
-        registration.setEndTurnDate( null );
+        team.setEndTurnDate( null );
       }
       EbRegistration myRegistration = getMyRegistration(p_game);
       if( myRegistration != null )
       {
-        myRegistration.setEndTurnDate( new Date( SharedMethods.currentTimeMillis()
+        myRegistration.getTeam().setEndTurnDate(
+            new Date( SharedMethods.currentTimeMillis()
             + p_game.getFullTurnDurationInMili() ) );
       }
     }
