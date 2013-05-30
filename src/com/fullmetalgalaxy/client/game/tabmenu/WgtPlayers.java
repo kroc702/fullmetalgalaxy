@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
@@ -38,6 +39,7 @@ import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminBan;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
@@ -112,147 +114,158 @@ public class WgtPlayers extends Composite implements ClickHandler
         + "' >Envoyer un message à tous</a>" ) );
 
     // get player order
-    List<EbRegistration> sortedRegistration = GameEngine.model().getGame()
-        .getRegistrationByPlayerOrder();
+    List<EbTeam> sortedTeam = GameEngine.model().getGame().getTeamByPlayOrder();
 
 
-    Grid m_playerGrid = new Grid( sortedRegistration.size() + 1, 9 );
+    Grid m_playerGrid = new Grid( GameEngine.model().getGame().getSetRegistration().size() + 1, 9 );
     m_playerGrid.setStyleName( "fmp-array" );
 
-    m_playerGrid.setText( 0, 0, "" ); // avatar
-    m_playerGrid.setText( 0, 1, "login" );
-    m_playerGrid.setText( 0, 2, "couleur(s)" );
-    m_playerGrid.setText( 0, 3, "pt d'action" );
-    m_playerGrid.setHTML( 0, 4, "pt de victoire<br/>(estimation)" );
-    m_playerGrid.setText( 0, 5, "" ); // must play before
+    m_playerGrid.setText( 0, 0, "" ); // team avatar
+    m_playerGrid.setText( 0, 1, "" ); // avatar
+    m_playerGrid.setText( 0, 2, "login" );
+    m_playerGrid.setText( 0, 3, "couleur(s)" );
+    m_playerGrid.setText( 0, 4, "pt d'action" );
+    m_playerGrid.setHTML( 0, 5, "pt de victoire<br/>(estimation)" );
+    m_playerGrid.setText( 0, 6, "" ); // must play before
     m_playerGrid.setText( 0, 7, "" ); // ban
     m_playerGrid.setText( 0, 8, "" ); // skip turn
     m_playerGrid.getRowFormatter().addStyleName( 0, "fmp-home-gameline-caption" );
 
     int index = 0;
-    for( EbRegistration registration : sortedRegistration )
-    {
-      index++;
+    for( EbTeam team : sortedTeam )
+      for( EbRegistration registration : team
+          .getPlayers( GameEngine.model().getGame().getPreview() ) )
+      {
+        index++;
 
-      String html = "";
-      if( registration.haveAccount() )
-      {
-        // display avatar
-        m_playerGrid.setHTML( index, 0, "<IMG SRC='" + registration.getAccount().getAvatarUrl()
-            + "' WIDTH=60 HEIGHT=60 BORDER=0 />" );
-        
-        // display login
-        // if player is connected, display in bold font
-        if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
-        {
-          html += "<b>";
-        }
-        String login = registration.getAccount().getPseudo();
-        html += "<a href='" + registration.getAccount().getProfileUrl() + "' target='_blank'>"
-            + login + "</a>";
-        if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
-        {
-          html += "</b>";
-        }
-      }
-      else
-      {
-        // display avatar
-        m_playerGrid.setHTML( index, 0,
-            "<IMG SRC='/images/avatar/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
-        // display login
-        html = "???";
-      }
+        String html = "";
 
-      // display email messages
-      if( registration.getAccount() != null )
-      {
-        html += " <a target='_blank' href='" + registration.getAccount().getEMailUrl(GameEngine.model().getGame().getName())
-            + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
-      }
+        // display team avatar
+        m_playerGrid
+            .setHTML( index, 0, "<IMG SRC='/images/avatar/" + team.getCompany()
+                + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0 title='" + team.getCompany().getFullName()
+                + "'/>" );
 
-      if( GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() ) )
-      {
-        html += AbstractImagePrototype.create( Icons.s_instance.action16() ).getHTML();
-      }
-      if( registration.haveAccount() )
-      {
-        html += "<br/><img src='"+registration.getAccount().getGradUrl()+"' border=0 alt='GRAD'/>";
-      }
-      if( registration.isReplacement() )
-      {
-        EbPublicAccount resigned = registration.getOriginalAccount( GameEngine.model().getGame() );
-        html += "<br/><small>remplace&nbsp;<a href='" + resigned.getProfileUrl()
-            + "' target='_blank'>"
-            + resigned.getPseudo() + "</a></small>";
-      }
-      m_playerGrid.setHTML( index, 1, html );
-
-      // display all colors
-      EnuColor color = registration.getEnuColor();
-      int colorIndex = 0;
-      String htmlColors = "";
-      for( colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
-      {
-        if( color.isColored( EnuColor.getColorFromIndex( colorIndex ) ) )
-        {
-          htmlColors += BoardIcons.icon16( EnuColor.getColorFromIndex( colorIndex ).getValue() )
-              .getHTML();
-        }
-      }
-      if( color.getValue() == EnuColor.None )
-      {
-        htmlColors += " <IMG SRC='images/board/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
-            + Messages.getColorString( 0, color.getValue() ) + "'> ";
-      }
-      m_playerGrid.setHTML( index, 2, htmlColors );
-
-      // display action points
-      m_playerGrid
-          .setText(
-              index,
-              3,
-              ""  + registration.getPtAction()
-                  + "/"
-                  + (GameEngine.model().getGame().getEbConfigGameTime()
-                      .getActionPtMaxReserve() + ((registration.getEnuColor().getNbColor() - 1) * GameEngine
-.model().getGame()
-                      .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
-
-      // display Wining points
-      m_playerGrid.setText( index, 4, "" + registration.estimateWinningScore(GameEngine.model().getGame()) );
-
-      // display admin button
-      if( (GameEngine.model().getGame().getAccountCreator() != null
-          && AppMain.instance().getMyAccount().getId() == GameEngine.model().getGame()
-          .getAccountCreator().getId()) || AppMain.instance().iAmAdmin() ) 
-      {
         if( registration.haveAccount() )
         {
-          // display ban button
-          Image banImage = new Image();
-          banImage.setUrl( "/images/icons/ban.gif" );
-          banImage.setAltText( "BAN" );
-          banImage.setTitle( "Banir un joueur de cette partie" );
-          banImage.addClickHandler( this );
-          m_playerGrid.setWidget( index, 7, banImage );
-          m_banButtons.put( banImage, registration );
+          // display avatar
+          m_playerGrid.setHTML( index, 1, "<IMG SRC='" + registration.getAccount().getAvatarUrl()
+              + "' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+
+          // display login
+          // if player is connected, display in bold font
+          if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
+          {
+            html += "<b>";
+          }
+          String login = registration.getAccount().getPseudo();
+          html += "<a href='" + registration.getAccount().getProfileUrl() + "' target='_blank'>"
+              + login + "</a>";
+          if( AppMain.instance().isUserConnected( registration.getAccount().getPseudo() ) )
+          {
+            html += "</b>";
+          }
         }
-        
-        // display endTurn button
-        if( (GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() )) )
+        else
         {
-          PushButton btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
-          btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
-          btnSkipTurn.setStyleName( "fmp-PushButton32" );
-          btnSkipTurn.addClickHandler( this );
-          m_playerGrid.setWidget( index, 8, btnSkipTurn );
-          m_skipTurnButtons.put( btnSkipTurn, registration );
+          // display avatar
+          m_playerGrid.setHTML( index, 1,
+              "<IMG SRC='/images/avatar/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+          // display login
+          html = "???";
+        }
+
+        // display email messages
+        if( registration.getAccount() != null )
+        {
+          html += " <a target='_blank' href='"
+              + registration.getAccount().getEMailUrl( GameEngine.model().getGame().getName() )
+              + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
+        }
+
+        if( GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() ) )
+        {
+          html += AbstractImagePrototype.create( Icons.s_instance.action16() ).getHTML();
+        }
+        if( registration.haveAccount() )
+        {
+          html += "<br/><img src='" + registration.getAccount().getGradUrl()
+              + "' border=0 alt='GRAD'/>";
+        }
+        if( registration.isReplacement() )
+        {
+          EbPublicAccount resigned = registration.getOriginalAccount( GameEngine.model().getGame() );
+          html += "<br/><small>remplace&nbsp;<a href='" + resigned.getProfileUrl()
+              + "' target='_blank'>" + resigned.getPseudo() + "</a></small>";
+        }
+        m_playerGrid.setHTML( index, 2, html );
+
+        // display all colors
+        EnuColor color = registration.getEnuColor();
+        int colorIndex = 0;
+        String htmlColors = "";
+        for( colorIndex = 0; colorIndex < EnuColor.getTotalNumberOfColor(); colorIndex++ )
+        {
+          if( color.isColored( EnuColor.getColorFromIndex( colorIndex ) ) )
+          {
+            htmlColors += BoardIcons.icon16( EnuColor.getColorFromIndex( colorIndex ).getValue() )
+                .getHTML();
+          }
+        }
+        if( color.getValue() == EnuColor.None )
+        {
+          htmlColors += " <IMG SRC='images/board/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
+              + Messages.getColorString( 0, color.getValue() ) + "'> ";
+        }
+        m_playerGrid.setHTML( index, 3, htmlColors );
+
+        // display action points
+        m_playerGrid
+            .setText(
+                index,
+                4,
+                ""
+                    + registration.getPtAction()
+                    + "/"
+                    + (GameEngine.model().getGame().getEbConfigGameTime().getActionPtMaxReserve() + ((registration
+                        .getEnuColor().getNbColor() - 1) * GameEngine.model().getGame()
+                        .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
+
+        // display Wining points
+        m_playerGrid.setText( index, 5,
+            "" + team.estimateWinningScore( GameEngine.model().getGame() ) );
+
+        // display admin button
+        if( (GameEngine.model().getGame().getAccountCreator() != null && AppMain.instance()
+            .getMyAccount().getId() == GameEngine.model().getGame().getAccountCreator().getId())
+            || AppMain.instance().iAmAdmin() )
+        {
+          if( registration.haveAccount() )
+          {
+            // display ban button
+            Image banImage = new Image();
+            banImage.setUrl( "/images/icons/ban.gif" );
+            banImage.setAltText( "BAN" );
+            banImage.setTitle( "Banir un joueur de cette partie" );
+            banImage.addClickHandler( this );
+            m_playerGrid.setWidget( index, 7, banImage );
+            m_banButtons.put( banImage, registration );
+          }
+
+          // display endTurn button
+          if( (GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() )) )
+          {
+            PushButton btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
+            btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
+            btnSkipTurn.setStyleName( "fmp-PushButton32" );
+            btnSkipTurn.addClickHandler( this );
+            m_playerGrid.setWidget( index, 8, btnSkipTurn );
+            m_skipTurnButtons.put( btnSkipTurn, registration );
+          }
+
         }
         
       }
-      
-    }
 
     m_playerPanel.add( m_playerGrid );
     
@@ -268,7 +281,7 @@ public class WgtPlayers extends Composite implements ClickHandler
       vpanel.add( new Label( "Visiteur(s) :" ) );
       for( Presence user : AppMain.instance().getPresenceRoom() )
       {
-        if( !contain( sortedRegistration, user.getPseudo() ) )
+        if( !contain( GameEngine.model().getGame().getSetRegistration(), user.getPseudo() ) )
         {
           HTML html = new HTML( "<b>" + user.getPseudo() + "</b>" );
           html.setWidth( "100%" );
@@ -284,7 +297,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     }
   }
 
-  private boolean contain(List<EbRegistration> p_players, String p_pseudo)
+  private boolean contain(Set<EbRegistration> p_players, String p_pseudo)
   {
     for( EbRegistration player : p_players )
     {
@@ -315,7 +328,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     else if( m_skipTurnButtons.get( p_event.getSource() ) != null )
     {
       EbRegistration registration = m_skipTurnButtons.get( p_event.getSource() );
-      String playerName = Messages.getColorString( 0, registration.getSingleColor());
+      String playerName = Messages.getColorString( 0, registration.getTeam().getFireColor());
       if( registration.getAccount() != null )
       {
          playerName = registration.getAccount().getPseudo();

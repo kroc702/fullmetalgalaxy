@@ -117,7 +117,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
     int totalEventCount = game.getLogs().size() + game.getAdditionalEventCount();
     if( GameEngine.model().getMyRegistration() != null )
     {
-      totalEventCount += GameEngine.model().getMyRegistration().getMyEvents().size();
+      totalEventCount += GameEngine.model().getMyRegistration().getTeam().getMyEvents().size();
     }
     m_lblTimePosition.setText( (GameEngine.model().getCurrentActionIndex() + game
         .getAdditionalEventCount()) + "/" + totalEventCount );
@@ -242,7 +242,7 @@ public class WgtGameTimeMode extends Composite implements ClickHandler, ModelUpd
       int fromIndex = GameEngine.model().getGame().getLogs().size() - 1;
       if( GameEngine.model().getMyRegistration() != null )
       {
-        fromIndex += GameEngine.model().getMyRegistration().getMyEvents().size();
+        fromIndex += GameEngine.model().getMyRegistration().getTeam().getMyEvents().size();
       }
       evtCancel.setFromActionIndex( fromIndex );
       evtCancel.setToActionIndex( GameEngine.model().getCurrentActionIndex() );

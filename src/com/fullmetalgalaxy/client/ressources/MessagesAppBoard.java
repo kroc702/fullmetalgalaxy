@@ -39,6 +39,8 @@ public interface MessagesAppBoard extends Messages
   String pleaseCheckGamePasword();
   String pasword();
   String joinTitle();
+
+  String variantTitle();
   String unitsTitle();
   String chooseColor();
   String commonConstructReserve();

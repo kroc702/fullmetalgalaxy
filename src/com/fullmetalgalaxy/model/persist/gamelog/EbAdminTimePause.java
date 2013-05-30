@@ -24,7 +24,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 
 
@@ -90,9 +90,9 @@ public class EbAdminTimePause extends EbAdmin
     if( !p_game.isParallel() )
     {
       // game is in pause
-      for( EbRegistration registration : p_game.getSetRegistration() )
+      for( EbTeam team : p_game.getTeams() )
       {
-        registration.setEndTurnDate( null );
+        team.setEndTurnDate( null );
       }
     }
   }

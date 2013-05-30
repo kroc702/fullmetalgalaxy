@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbBase;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -200,7 +201,7 @@ public class EbEvtControlFreighter extends AnEventPlay
         if( color.isColored( getTokenFreighter( p_game ).getColor() ) )
         {
           setOldRegistration( registration );
-          m_oldRegistrationSingleColor = registration.getSingleColor();
+          m_oldRegistrationSingleColor = registration.getTeam().getFireColor();
         }
       }
     }
@@ -210,14 +211,15 @@ public class EbEvtControlFreighter extends AnEventPlay
       getOldRegistration( p_game ).setColor(
           EnuColor.removeColor( getOldRegistration( p_game ).getColor(), getTokenFreighter( p_game )
               .getColor() ) );
-      if( getOldRegistration( p_game ).getColor() != EnuColor.None
-          && !getOldRegistration( p_game ).getEnuColor().isColored(
-              getOldRegistration( p_game ).getSingleColor() ) )
+      EbTeam oldTeam = getOldRegistration( p_game ).getTeam( p_game );
+      if( oldTeam.getColors( p_game.getPreview() ) != EnuColor.None
+          && !new EnuColor( oldTeam.getColors( p_game.getPreview() ) ).isColored( oldTeam
+              .getFireColor() ) )
       {
         // player loose his main freighter but still have another one: change
         // his fire cover color
-        getOldRegistration( p_game ).setSingleColor(
-            getOldRegistration( p_game ).getEnuColor().getSingleColor().getValue() );
+        oldTeam.setFireColor( new EnuColor( oldTeam.getColors( p_game.getPreview() ) )
+            .getSingleColor().getValue() );
       }
     }
 
@@ -250,7 +252,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     {
       getOldRegistration( p_game ).setColor(
           EnuColor.addColor( getOldRegistration( p_game ).getColor(), m_oldFreighterColor ) );
-      getOldRegistration( p_game ).setSingleColor( m_oldRegistrationSingleColor );
+      getOldRegistration( p_game ).getTeam().setFireColor( m_oldRegistrationSingleColor );
     }
     getTokenFreighter( p_game ).setBulletCount( m_oldTurretToRepair );
 

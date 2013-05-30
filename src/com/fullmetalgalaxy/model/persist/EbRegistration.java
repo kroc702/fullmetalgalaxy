@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Embedded;
+import javax.persistence.Transient;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
@@ -77,7 +78,7 @@ public class EbRegistration extends EbBase
   @Override
   public String toString()
   {
-    return new EnuColor( getSingleColor() ) + "(" + getAccount() + ")";
+    return getAccount() + "(" + new EnuColor( getColor() ) + ")";
   }
 
 
@@ -85,18 +86,10 @@ public class EbRegistration extends EbBase
   // ------------------------------------------
   private int m_color = EnuColor.Unknown;
   private int m_OriginalColor = EnuColor.Unknown;
-  private int m_singleColor = EnuColor.Unknown;
-  private int m_ptAction = 0;
-  private int m_orderIndex = 0;
   /** number of weather hen at the last time step change. */
   private int m_workingWeatherHenCount = 0;
+  private int m_ptAction = 0;
 
-  /** in turn by turn mode this is the end turn date.
-   * and in parallel mode, this is the date up to which the board is locked (cf m_lockedPosition) */
-  private Date m_endTurnDate = null;
-  /** in parallel mode, player lock a board area for a small period */
-  @Serialized
-  private AnBoardPosition m_lockedPosition = null;
 
   private Date m_lastConnexion = new Date();
   @Serialized
@@ -106,18 +99,65 @@ public class EbRegistration extends EbBase
   @Embedded
   private EbPublicAccount m_account = null;
 
+  /** the following field is a reference to team ID of this player. */
+  private long m_teamId = 0;
+  /** the teamCache is present to increase some method speed but transient to avoid double persistence.
+   * note that if we serialize EbRegistration in future, we will need to add 'transient' keyword, then
+   * it should be initialized after received by client side. */
+  @Transient
+  private EbTeam m_teamCache = null;
+
   @Serialized
   private StatsPlayer m_stats = null;
 
+  // theses data are moved to EbTeam
+  // ===============================
+  @Deprecated
+  // replaced by EbTeam.fireColor
+  protected int m_singleColor = EnuColor.Unknown;
+  @Deprecated
+  // replaced by EbTeam
+  protected int m_orderIndex = 0;
+  /** in turn by turn mode this is the end turn date.
+   * and in parallel mode, this is the date up to which the board is locked (cf m_lockedPosition) */
+  @Deprecated
+  // replaced by EbTeam
+  protected Date m_endTurnDate = null;
+  /** in parallel mode, player lock a board area for a small period */
+  @Deprecated
+  // replaced by EbTeam
+  @Serialized
+  protected AnBoardPosition m_lockedPosition = null;
   /**
    * action list that player made during a parallel and hidden turn (ie deployement or take off turn)
    * these actions are seen by player but hidden to others. This event list will be merged with main log
    * at the end of current turn.
    */
+  @Deprecated
+  // replaced by EbTeam
   @Serialized
   protected List<AnEvent> m_myEvents = new ArrayList<AnEvent>();
 
 
+  public EbTeam getTeam()
+  {
+    return getTeam( null );
+  }
+
+  public EbTeam getTeam(GameData p_game)
+  {
+    if( m_teamCache == null && p_game != null )
+    {
+      m_teamCache = p_game.getTeam( m_teamId );
+    }
+    return m_teamCache;
+  }
+
+  public void setTeamId(long p_id)
+  {
+    m_teamId = p_id;
+    m_teamCache = null;
+  }
 
   public int getOreCount(Game p_game)
   {
@@ -246,7 +286,7 @@ public class EbRegistration extends EbBase
     if( p_game.getCurrentTimeStep() >= p_game.getEbConfigGameTime().getTakeOffTurns().get( 0 ) )
     {
       freighterCount = 0;
-      for( EbToken freighter : p_game.getAllFreighter( this ) )
+      for( EbToken freighter : p_game.getAllFreighter( getColor() ) )
       {
         if( freighter.getLocation() == Location.Board )
           freighterCount++;
@@ -295,6 +335,7 @@ public class EbRegistration extends EbBase
   public void setEnuColor(EnuColor p_color)
   {
     m_color = p_color.getValue();
+    getTeam().clearColorsCache();
   }
 
   public EnuColor getEnuColor()
@@ -337,43 +378,6 @@ public class EbRegistration extends EbBase
   }
 
 
-  /**
-   * @return the orderIndex
-   */
-  public int getOrderIndex()
-  {
-    return m_orderIndex;
-  }
-
-  /**
-   * @param p_orderIndex the orderIndex to set
-   */
-  public void setOrderIndex(int p_orderIndex)
-  {
-    m_orderIndex = p_orderIndex;
-  }
-
-  /**
-   * @return the color of his fire cover
-   */
-  public int getSingleColor()
-  {
-    // this test is here for backward compatibility
-    if( (m_singleColor == EnuColor.Unknown || m_singleColor == EnuColor.None)
-        && getColor() != EnuColor.None )
-    {
-      m_singleColor = getOriginalColor();
-    }
-    return m_singleColor;
-  }
-
-  /**
-   * @param p_singleColor the originalColor to set
-   */
-  public void setSingleColor(int p_singleColor)
-  {
-    m_singleColor = p_singleColor;
-  }
 
   /**
    * @return the originalColor
@@ -391,24 +395,6 @@ public class EbRegistration extends EbBase
     m_OriginalColor = p_originalColor;
   }
 
-
-
-  /**
-   * @return the endTurnDate
-   */
-  public Date getEndTurnDate()
-  {
-    return m_endTurnDate;
-  }
-
-  /**
-   * Warning, it's recommended to use EbGame.setEndTurnDate instead of this one.
-   * @param p_endTurnDate the endTurnDate to set
-   */
-  public void setEndTurnDate(Date p_endTurnDate)
-  {
-    m_endTurnDate = p_endTurnDate;
-  }
 
 
 
@@ -479,16 +465,6 @@ public class EbRegistration extends EbBase
     m_stats = p_stats;
   }
 
-  public AnBoardPosition getLockedPosition()
-  {
-    return m_lockedPosition;
-  }
-
-  public void setLockedPosition(AnBoardPosition p_lockedPosition)
-  {
-    m_lockedPosition = p_lockedPosition;
-  }
-
   public long getOriginalAccountId()
   {
     return m_originalAccountId;
@@ -504,40 +480,5 @@ public class EbRegistration extends EbBase
     m_originalAccountId = p_originalAccountId;
   }
 
-
-  /**
-   * don't use this method to add event !
-   * @return a read only list
-   */
-  public List<AnEvent> getMyEvents()
-  {
-    if( m_myEvents == null )
-    {
-      return new ArrayList<AnEvent>();
-    }
-    return m_myEvents;
-  }
-
-  public void setMyEvents(List<AnEvent> p_myEvents)
-  {
-    m_myEvents = p_myEvents;
-  }
-
-  public void clearMyEvents()
-  {
-    m_myEvents = null;
-  }
-
-  public void addMyEvent(AnEvent p_action)
-  {
-    if( m_myEvents == null )
-    {
-      m_myEvents = new ArrayList<AnEvent>();
-    }
-    if( !m_myEvents.contains( p_action ) )
-    {
-      m_myEvents.add( p_action );
-    }
-  }
 
 }

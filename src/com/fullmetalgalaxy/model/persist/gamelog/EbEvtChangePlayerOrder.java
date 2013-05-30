@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 
@@ -42,6 +43,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
 {
   static final long serialVersionUID = 1;
 
+  /** registration term is a legacy: it is the team order */
   private ArrayList<Long> m_oldRegistrationOrder = null;
   private ArrayList<Long> m_newRegistrationOrder = null;
   
@@ -78,7 +80,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
   public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
-    if(getNewRegistrationOrder().size() != p_game.getSetRegistration().size())
+    if(getNewTeamOrder().size() != p_game.getSetRegistration().size())
     {
       throw new RpcFmpException( "EbEvtChangePlayerOrder isn't well configured." );
     }
@@ -92,17 +94,17 @@ public class EbEvtChangePlayerOrder extends AnEvent
   {
     super.exec(p_game);
     // backup for unexec
-    List<EbRegistration> sortedRegistration = p_game.getRegistrationByPlayerOrder();
+    List<EbTeam> sortedTeams = p_game.getTeamByPlayOrder();
     m_oldRegistrationOrder = new ArrayList<Long>();
-    for(EbRegistration registration : sortedRegistration)
+    for( EbTeam team : sortedTeams )
     {
-      m_oldRegistrationOrder.add( registration.getId() );
+      m_oldRegistrationOrder.add( team.getId() );
     }
     
     int orderIndex = 0;
-    for(long idRegistration : getNewRegistrationOrder())
+    for(long idTeam : getNewTeamOrder())
     {
-      p_game.getRegistration( idRegistration ).setOrderIndex( orderIndex );
+      p_game.getTeam( idTeam ).setOrderIndex( orderIndex );
       orderIndex++;
     }
 
@@ -111,15 +113,15 @@ public class EbEvtChangePlayerOrder extends AnEvent
     {
       // a change player order occur after landing, next turn is deployment
       // and all player can play simultaneously
-      for( EbRegistration registration : sortedRegistration )
+      for( EbTeam team : sortedTeams )
       {
-        p_game.getCurrentPlayerIds().add( registration.getId() );
+        p_game.getCurrentPlayerIds().addAll( team.getPlayerIds() );
       }
     }
     else
     {
       // only first player can play
-      p_game.getCurrentPlayerIds().add( p_game.getRegistrationByOrderIndex( 0 ).getId() );
+      p_game.getCurrentPlayerIds().addAll( p_game.getTeamByOrderIndex( 0 ).getPlayerIds() );
     }
   }
   
@@ -134,17 +136,17 @@ public class EbEvtChangePlayerOrder extends AnEvent
     
     int orderIndex = 0;
     long lastPlayerId = 0;
-    for(long idRegistration : m_oldRegistrationOrder)
+    for(long idTeam : m_oldRegistrationOrder)
     {
-      p_game.getRegistration( idRegistration ).setOrderIndex( orderIndex );
+      p_game.getTeam( idTeam ).setOrderIndex( orderIndex );
       orderIndex++;
-      lastPlayerId = idRegistration;
+      lastPlayerId = idTeam;
     }
     p_game.getCurrentPlayerIds().clear();
     p_game.getCurrentPlayerIds().add( lastPlayerId );
   }
 
-  public ArrayList<Long> getNewRegistrationOrder()
+  public ArrayList<Long> getNewTeamOrder()
   {
     return m_newRegistrationOrder;
   }
@@ -156,10 +158,10 @@ public class EbEvtChangePlayerOrder extends AnEvent
    */
   public void initRandomOrder(Game p_game)
   {
-    getNewRegistrationOrder().clear();
+    getNewTeamOrder().clear();
     for(EbRegistration registration : p_game.getSetRegistration() )
     {
-      getNewRegistrationOrder().add( RpcUtil.random( getNewRegistrationOrder().size()+1 ), registration.getId() );
+      getNewTeamOrder().add( RpcUtil.random( getNewTeamOrder().size()+1 ), registration.getId() );
     }
   }
   
@@ -171,7 +173,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
    */
   public void initBoardOrder(Game p_game)
   {
-    getNewRegistrationOrder().clear();
+    getNewTeamOrder().clear();
     // compute an angle for each player
     Map<Double,EbRegistration> thetaRegistrationMap = new HashMap<Double,EbRegistration>();
     for( EbRegistration registration : p_game.getSetRegistration() )
@@ -198,7 +200,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
           theta = entry.getKey();
         }
       }
-      getNewRegistrationOrder().add( thetaRegistrationMap.get( theta ).getId() );
+      getNewTeamOrder().add( thetaRegistrationMap.get( theta ).getId() );
       thetaRegistrationMap.remove( theta );
       theta = 999D;
     }

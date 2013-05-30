@@ -314,7 +314,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
           EbEvtCancel evtCancel = new EbEvtCancel();
           evtCancel.setGame( GameEngine.model().getGame() );
           evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
-              + GameEngine.model().getMyRegistration().getMyEvents().size() - 1 );
+              + GameEngine.model().getMyRegistration().getTeam().getMyEvents().size() - 1 );
           evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
           evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
           GameEngine.model().runSingleAction( evtCancel );
@@ -343,7 +343,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         EbEvtCancel evtCancel = new EbEvtCancel();
         evtCancel.setGame( GameEngine.model().getGame() );
         evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
-            + GameEngine.model().getMyRegistration().getMyEvents().size() - 1 );
+            + GameEngine.model().getMyRegistration().getTeam().getMyEvents().size() - 1 );
         evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
         evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
         GameEngine.model().runSingleAction( evtCancel );
@@ -413,7 +413,7 @@ public class WgtContextAction extends WgtView implements ClickHandler
         GameEngine.model().getActionBuilder().clear();
         // search for my freighter to take off
         for( EbToken token : GameEngine.model().getGame()
-            .getAllFreighter( GameEngine.model().getMyRegistration() ) )
+            .getAllFreighter( GameEngine.model().getMyRegistration().getColor() ) )
         {
           if( token.getLocation() == Location.Board )
           {

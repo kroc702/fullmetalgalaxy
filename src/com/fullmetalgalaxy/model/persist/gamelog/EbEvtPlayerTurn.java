@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
@@ -46,7 +47,7 @@ public class EbEvtPlayerTurn extends AnEvent
 {
   static final long serialVersionUID = 1;
 
-  /** player that make this action (may be old player, admin or game creator, or automatic) */
+  /** player that end his turn */
   private long m_accountId = 0L;
   private int m_oldActionPt = 0;
   private Date m_endTurnDate = null;
@@ -210,18 +211,18 @@ public class EbEvtPlayerTurn extends AnEvent
       // assume there is one and only one current player
 
       // next player
-      EbRegistration nextPlayerRegistration = null;
+      EbTeam nextTeam = null;
       if( game.isTimeStepParallelHidden( m_oldTurn ) )
       {
-        nextPlayerRegistration = game.getNextPlayerRegistration( -1 );
+        nextTeam = game.getNextTeam2Play( -1 );
       }
       else
       {
-        nextPlayerRegistration = game.getNextPlayerRegistration( currentPlayerRegistration
+        nextTeam = game.getNextTeam2Play( currentPlayerRegistration.getTeam()
             .getOrderIndex() );
       }
 
-      if( nextPlayerRegistration.getOrderIndex() <= currentPlayerRegistration.getOrderIndex() )
+      if( nextTeam.getOrderIndex() <= currentPlayerRegistration.getTeam().getOrderIndex() )
       {
         // next turn !
         m_newTurn++;
@@ -234,7 +235,7 @@ public class EbEvtPlayerTurn extends AnEvent
           while( game.isTimeStepParallelHidden( m_newTurn ) )
             m_newTurn++;
 
-          nextPlayerRegistration = game.getNextPlayerRegistration( -1 );
+          nextTeam = game.getNextTeam2Play( -1 );
         }
         game.setCurrentTimeStep( m_newTurn );
         if( game.isParallel() )
@@ -247,9 +248,9 @@ public class EbEvtPlayerTurn extends AnEvent
       }
 
       // reset all end turn date
-      for( EbRegistration player : game.getSetRegistration() )
+      for( EbTeam team : game.getTeams() )
       {
-        player.setEndTurnDate( null );
+        team.setEndTurnDate( null );
       }
       game.getCurrentPlayerIds().clear();
 
@@ -269,7 +270,10 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       else
       {
-        addCurrentPlayer( game, nextPlayerRegistration );
+        for( EbRegistration registration : nextTeam.getPlayers( p_game.getPreview() ) )
+        {
+          addCurrentPlayer( game, registration );
+        }
       }
     }
   }
@@ -314,7 +318,7 @@ public class EbEvtPlayerTurn extends AnEvent
         m_endTurnDate = new Date( SharedMethods.currentTimeMillis()
             + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
       }
-      nextPlayerRegistration.setEndTurnDate( m_endTurnDate );
+      nextPlayerRegistration.getTeam().setEndTurnDate( m_endTurnDate );
     }
     p_game.getCurrentPlayerIds().add( nextPlayerRegistration.getId() );
 
@@ -322,22 +326,22 @@ public class EbEvtPlayerTurn extends AnEvent
 
   private void playRegistrationEvents(Game p_game)
   {
-    List<EbRegistration> players = p_game.getRegistrationByPlayerOrder();
-    int eventIndex[] = new int[players.size()];
+    List<EbTeam> teams = p_game.getTeamByPlayOrder();
+    int eventIndex[] = new int[teams.size()];
     boolean morePrivateEvent = true;
     while( morePrivateEvent )
     {
       morePrivateEvent = false;
-      for( int playerIndex = 0; playerIndex < players.size(); playerIndex++ )
+      for( int playerIndex = 0; playerIndex < teams.size(); playerIndex++ )
       {
         boolean eventAdded = false;
         while( !eventAdded
-            && eventIndex[playerIndex] < players.get( playerIndex ).getMyEvents().size() )
+            && eventIndex[playerIndex] < teams.get( playerIndex ).getMyEvents().size() )
         {
           morePrivateEvent = true;
           try
           {
-            AnEvent event = players.get( playerIndex ).getMyEvents().get( eventIndex[playerIndex] );
+            AnEvent event = teams.get( playerIndex ).getMyEvents().get( eventIndex[playerIndex] );
             event.exec( p_game );
             p_game.addEvent( event );
             eventAdded = true;
@@ -349,9 +353,9 @@ public class EbEvtPlayerTurn extends AnEvent
       }
     }
     // remove all private events
-    for( EbRegistration player : players )
+    for( EbTeam team : teams )
     {
-      player.clearMyEvents();
+      team.clearMyEvents();
     }
   }
 

@@ -109,7 +109,7 @@ public class EbAdminBan extends EbAdmin
         registration.setOriginalAccountId( registration.getAccount().getId() );
       }
       registration.setAccount( null );
-      registration.setEndTurnDate( null );
+      registration.getTeam().setEndTurnDate( null );
       
       // update isOpen flag
       p_game.updateOpenPauseStatus();

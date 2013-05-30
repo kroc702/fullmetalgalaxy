@@ -217,7 +217,9 @@ public class GameWorkflow
 
           if( p_game.getCurrentTimeStep() == 1
               && lastEvent.getType() == GameLogType.AdminTimePlay
-              && p_game.getFreighter( p_game.getRegistrationByOrderIndex( 0 ) ).getLocation() == Location.Orbit )
+              && p_game.getFreighter(
+                  p_game.getTeamByPlayOrder().get( 0 ).getPlayers( p_game.getPreview() ).get( 0 ) )
+                  .getLocation() == Location.Orbit )
           {
             // game is starting
             EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
@@ -301,8 +303,8 @@ public class GameWorkflow
           for( EbRegistration registration : p_game.getSetRegistration() )
           {
             if( (p_game.getCurrentPlayerIds().contains( registration.getId() ))
-                && (registration.getEndTurnDate() != null)
-                && (registration.getEndTurnDate().getTime() <= System.currentTimeMillis())
+                && (registration.getTeam().getEndTurnDate() != null)
+                && (registration.getTeam().getEndTurnDate().getTime() <= System.currentTimeMillis())
                 && (p_game.getCurrentTimeStep() > 1) ) // never
                                                        // skip
                                                        // first
@@ -354,7 +356,7 @@ public class GameWorkflow
           {
             if( p_game.getCurrentPlayerIds().contains( registration.getId() ) )
             {
-              for( EbToken freighter : p_game.getAllFreighter( registration ) )
+              for( EbToken freighter : p_game.getAllFreighter( registration.getColor() ) )
               {
                 if( freighter.getLocation() == Location.Board )
                 {
@@ -476,7 +478,7 @@ public class GameWorkflow
       {
         boolean isGameFinish = true;
         for( EbToken freighter : p_game.getAllFreighter( ((EbEvtTakeOff)lastEvent)
-            .getMyRegistration( p_game ) ) )
+            .getMyRegistration( p_game ).getColor() ) )
         {
           if( freighter.getLocation() == Location.Board )
           {

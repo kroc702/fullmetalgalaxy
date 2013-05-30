@@ -47,6 +47,7 @@ import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
@@ -171,11 +172,11 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     // check that registration event log are not corrupted
     if( !model.isTimeStepParallelHidden( model.getCurrentTimeStep() ) )
     {
-      for( EbRegistration registration : model.getSetRegistration() )
+      for( EbTeam team : model.getTeams() )
       {
-        if( !registration.getMyEvents().isEmpty() )
+        if( !team.getMyEvents().isEmpty() )
         {
-          registration.clearMyEvents();
+          team.clearMyEvents();
           isGameUpdated = true;
         }
       }
@@ -406,17 +407,17 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         }
         else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
         {
-          for( AnEvent myevent : registration.getMyEvents() )
+          for( AnEvent myevent : registration.getTeam().getMyEvents() )
           {
             myevent.exec( game );
           }
           event.check( game );
-          for( int i = registration.getMyEvents().size() - 1; i >= 0; i-- )
+          for( int i = registration.getTeam().getMyEvents().size() - 1; i >= 0; i-- )
           {
-            AnEvent myevent = registration.getMyEvents().get( i );
+            AnEvent myevent = registration.getTeam().getMyEvents().get( i );
             myevent.unexec( game );
           }
-          registration.addMyEvent( event );
+          registration.getTeam().addMyEvent( event );
         }
         else
         {
@@ -554,7 +555,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // get events from registration event lists
       for( EbRegistration registration : game.getSetRegistration() )
       {
-        for( AnEvent event : registration.getMyEvents() )
+        for( AnEvent event : registration.getTeam().getMyEvents() )
         {
           if( event.getGameVersion() > p_myVersion )
           {
