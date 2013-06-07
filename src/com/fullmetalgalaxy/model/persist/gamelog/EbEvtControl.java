@@ -135,7 +135,7 @@ public class EbEvtControl extends AnEventPlay
     // check first, second destroyer and target are not under opponents fires
     EnuColor fireCover = p_game.getBoardFireCover()
         .getFireCover( getTokenTarget(p_game).getPosition() );
-    fireCover.removeColor( getMyRegistration(p_game).getTeam().getFireColor() );
+    fireCover.removeColor( getMyRegistration(p_game).getTeam(p_game).getFireColor() );
     if( getTokenDestroyer1(p_game).isFireDisabled() || getTokenDestroyer2(p_game).isFireDisabled()
         || fireCover.getValue() != EnuColor.None )
     {

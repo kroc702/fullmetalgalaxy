@@ -314,7 +314,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
           EbEvtCancel evtCancel = new EbEvtCancel();
           evtCancel.setGame( GameEngine.model().getGame() );
           evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
-              + GameEngine.model().getMyRegistration().getTeam().getMyEvents().size() - 1 );
+              + GameEngine.model().getMyRegistration().getTeam( GameEngine.model().getGame() )
+                  .getMyEvents().size() - 1 );
           evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
           evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
           GameEngine.model().runSingleAction( evtCancel );
@@ -343,7 +344,8 @@ public class WgtContextAction extends WgtView implements ClickHandler
         EbEvtCancel evtCancel = new EbEvtCancel();
         evtCancel.setGame( GameEngine.model().getGame() );
         evtCancel.setFromActionIndex( GameEngine.model().getGame().getLogs().size()
-            + GameEngine.model().getMyRegistration().getTeam().getMyEvents().size() - 1 );
+            + GameEngine.model().getMyRegistration().getTeam( GameEngine.model().getGame() )
+                .getMyEvents().size() - 1 );
         evtCancel.setToActionIndex( m_actionIndexBeforePracticeMode );
         evtCancel.setAccountId( AppMain.instance().getMyAccount().getId() );
         GameEngine.model().runSingleAction( evtCancel );

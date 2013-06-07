@@ -328,7 +328,8 @@ public class WgtPlayers extends Composite implements ClickHandler
     else if( m_skipTurnButtons.get( p_event.getSource() ) != null )
     {
       EbRegistration registration = m_skipTurnButtons.get( p_event.getSource() );
-      String playerName = Messages.getColorString( 0, registration.getTeam().getFireColor());
+      String playerName = Messages.getColorString( 0,
+          registration.getTeam( GameEngine.model().getGame() ).getFireColor() );
       if( registration.getAccount() != null )
       {
          playerName = registration.getAccount().getPseudo();

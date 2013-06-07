@@ -201,7 +201,7 @@ public class EbEvtControlFreighter extends AnEventPlay
         if( color.isColored( getTokenFreighter( p_game ).getColor() ) )
         {
           setOldRegistration( registration );
-          m_oldRegistrationSingleColor = registration.getTeam().getFireColor();
+          m_oldRegistrationSingleColor = registration.getTeam(p_game).getFireColor();
         }
       }
     }
@@ -252,7 +252,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     {
       getOldRegistration( p_game ).setColor(
           EnuColor.addColor( getOldRegistration( p_game ).getColor(), m_oldFreighterColor ) );
-      getOldRegistration( p_game ).getTeam().setFireColor( m_oldRegistrationSingleColor );
+      getOldRegistration( p_game ).getTeam(p_game).setFireColor( m_oldRegistrationSingleColor );
     }
     getTokenFreighter( p_game ).setBulletCount( m_oldTurretToRepair );
 

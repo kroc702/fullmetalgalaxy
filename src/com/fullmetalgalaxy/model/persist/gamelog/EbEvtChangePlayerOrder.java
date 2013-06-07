@@ -80,7 +80,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
   public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
-    if(getNewTeamOrder().size() != p_game.getSetRegistration().size())
+    if( getNewTeamOrder().size() != p_game.getTeams().size() )
     {
       throw new RpcFmpException( "EbEvtChangePlayerOrder isn't well configured." );
     }
@@ -159,9 +159,9 @@ public class EbEvtChangePlayerOrder extends AnEvent
   public void initRandomOrder(Game p_game)
   {
     getNewTeamOrder().clear();
-    for(EbRegistration registration : p_game.getSetRegistration() )
+    for( EbTeam team : p_game.getTeams() )
     {
-      getNewTeamOrder().add( RpcUtil.random( getNewTeamOrder().size()+1 ), registration.getId() );
+      getNewTeamOrder().add( RpcUtil.random( getNewTeamOrder().size()+1 ), team.getId() );
     }
   }
   
@@ -173,35 +173,39 @@ public class EbEvtChangePlayerOrder extends AnEvent
    */
   public void initBoardOrder(Game p_game)
   {
+    int endAngle = 3;
     getNewTeamOrder().clear();
     // compute an angle for each player
-    Map<Double,EbRegistration> thetaRegistrationMap = new HashMap<Double,EbRegistration>();
-    for( EbRegistration registration : p_game.getSetRegistration() )
+    Map<Double, EbTeam> thetaTeamMap = new HashMap<Double, EbTeam>();
+    for( EbTeam team : p_game.getTeams() )
     {
+      EbRegistration registration = p_game.getRegistration( team.getPlayerIds().get( 0 ) );
       EbToken token = p_game.getFreighter( registration );
       if(token != null && token.getLocation() == Location.Board)
       {
-        thetaRegistrationMap.put( Math.atan2( token.getPosition().getY()-p_game.getLandHeight()/2 ,
-            token.getPosition().getX()-p_game.getLandWidth()/2), registration );
+        thetaTeamMap.put(
+            Math.atan2( token.getPosition().getY() - (p_game.getLandHeight() / 2), token
+                .getPosition().getX() - (p_game.getLandWidth() / 2) ), team );
       } else {
         // freighter isn't on board, it will play at the end.
-        thetaRegistrationMap.put( 3*Math.PI, registration );
+        thetaTeamMap.put( endAngle * Math.PI, team );
+        endAngle++;
       }
     }
     
     // determine order according angle
     Double theta = 999D;
-    while(!thetaRegistrationMap.isEmpty())
+    while(!thetaTeamMap.isEmpty())
     {
-      for(Map.Entry<Double,EbRegistration> entry : thetaRegistrationMap.entrySet() )
+      for( Map.Entry<Double, EbTeam> entry : thetaTeamMap.entrySet() )
       {
         if(theta > entry.getKey())
         {
           theta = entry.getKey();
         }
       }
-      getNewTeamOrder().add( thetaRegistrationMap.get( theta ).getId() );
-      thetaRegistrationMap.remove( theta );
+      getNewTeamOrder().add( thetaTeamMap.get( theta ).getId() );
+      thetaTeamMap.remove( theta );
       theta = 999D;
     }
   }

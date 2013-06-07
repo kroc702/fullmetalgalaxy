@@ -303,8 +303,8 @@ public class GameWorkflow
           for( EbRegistration registration : p_game.getSetRegistration() )
           {
             if( (p_game.getCurrentPlayerIds().contains( registration.getId() ))
-                && (registration.getTeam().getEndTurnDate() != null)
-                && (registration.getTeam().getEndTurnDate().getTime() <= System.currentTimeMillis())
+                && (registration.getTeam(p_game).getEndTurnDate() != null)
+                && (registration.getTeam(p_game).getEndTurnDate().getTime() <= System.currentTimeMillis())
                 && (p_game.getCurrentTimeStep() > 1) ) // never
                                                        // skip
                                                        // first

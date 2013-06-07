@@ -91,6 +91,12 @@ public class EbTeam extends EbBase
     return freighterCount;
   }
 
+  @Override
+  public String toString()
+  {
+    return "EbTeam [company=" + m_company + ", fireColor=" + m_fireColor + "]";
+  }
+
   /**
    * 
    */

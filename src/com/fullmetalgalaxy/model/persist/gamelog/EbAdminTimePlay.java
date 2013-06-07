@@ -106,7 +106,7 @@ public class EbAdminTimePlay extends EbAdmin
       EbRegistration myRegistration = getMyRegistration(p_game);
       if( myRegistration != null )
       {
-        myRegistration.getTeam().setEndTurnDate(
+        myRegistration.getTeam( p_game ).setEndTurnDate(
             new Date( SharedMethods.currentTimeMillis()
             + p_game.getFullTurnDurationInMili() ) );
       }

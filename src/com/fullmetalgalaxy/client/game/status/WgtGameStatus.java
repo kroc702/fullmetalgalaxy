@@ -156,7 +156,7 @@ public class WgtGameStatus extends WgtView
       else
       {
         displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) )
-.getTeam()
+.getTeam( game )
             .getEndTurnDate() );
       }
     }

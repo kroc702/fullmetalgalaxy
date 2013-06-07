@@ -139,11 +139,6 @@ public class EbRegistration extends EbBase
   protected List<AnEvent> m_myEvents = new ArrayList<AnEvent>();
 
 
-  public EbTeam getTeam()
-  {
-    return getTeam( null );
-  }
-
   public EbTeam getTeam(GameData p_game)
   {
     if( m_teamCache == null && p_game != null )
@@ -335,7 +330,8 @@ public class EbRegistration extends EbBase
   public void setEnuColor(EnuColor p_color)
   {
     m_color = p_color.getValue();
-    getTeam().clearColorsCache();
+    if( getTeam( null ) != null )
+      getTeam( null ).clearColorsCache();
   }
 
   public EnuColor getEnuColor()

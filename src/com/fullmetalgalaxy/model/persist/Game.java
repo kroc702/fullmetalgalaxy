@@ -120,7 +120,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
     for( EbTeam team : getTeams() )
     {
-      if( p_myRegistration.getTeam() != team && team.getEndTurnDate() != null
+      if( p_myRegistration.getTeam( this ) != team && team.getEndTurnDate() != null
           && team.getLockedPosition() != null )
       {
         if( team.getEndTurnDate().getTime() < p_currentTime )
@@ -936,7 +936,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public int getFireCover(int p_x, int p_y, EbRegistration p_registration)
   {
-    EnuColor regColor = new EnuColor( p_registration.getTeam().getFireColor() );
+    EnuColor regColor = new EnuColor( p_registration.getTeam( this ).getFireColor() );
     return getBoardFireCover().getFireCover( p_x, p_y, regColor );
   }
 

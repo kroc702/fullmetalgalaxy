@@ -218,11 +218,11 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       else
       {
-        nextTeam = game.getNextTeam2Play( currentPlayerRegistration.getTeam()
+        nextTeam = game.getNextTeam2Play( currentPlayerRegistration.getTeam(p_game)
             .getOrderIndex() );
       }
 
-      if( nextTeam.getOrderIndex() <= currentPlayerRegistration.getTeam().getOrderIndex() )
+      if( nextTeam.getOrderIndex() <= currentPlayerRegistration.getTeam(p_game).getOrderIndex() )
       {
         // next turn !
         m_newTurn++;
@@ -262,10 +262,7 @@ public class EbEvtPlayerTurn extends AnEvent
         // except those without any landed freighter
         for( EbRegistration registration : game.getSetRegistration() )
         {
-          if( registration.getOnBoardFreighterCount( game ) > 0 )
-          {
-            addCurrentPlayer( game, registration );
-          }
+          addCurrentPlayer( game, registration );
         }
       }
       else
@@ -282,6 +279,11 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     if( nextPlayerRegistration == null )
       return;
+    if( nextPlayerRegistration.getOnBoardFreighterCount( p_game ) <= 0
+        || !nextPlayerRegistration.haveAccount() )
+    {
+      return;
+    }
 
     // update all his tokens bullets count
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
@@ -318,7 +320,7 @@ public class EbEvtPlayerTurn extends AnEvent
         m_endTurnDate = new Date( SharedMethods.currentTimeMillis()
             + p_game.getEbConfigGameTime().getTimeStepDurationInMili() );
       }
-      nextPlayerRegistration.getTeam().setEndTurnDate( m_endTurnDate );
+      nextPlayerRegistration.getTeam(p_game).setEndTurnDate( m_endTurnDate );
     }
     p_game.getCurrentPlayerIds().add( nextPlayerRegistration.getId() );
 
@@ -388,13 +390,16 @@ public class EbEvtPlayerTurn extends AnEvent
       for( long currentPlayerId : p_game.getCurrentPlayerIds() )
       {
         EbRegistration registration = p_game.getRegistration( currentPlayerId );
-        int actionInc = registration.getActionInc( p_game );
-        int actionPt = registration.getPtAction() - actionInc;
-        if( actionPt < 0 )
+        if( registration != null )
         {
-          actionPt = 0;
+          int actionInc = registration.getActionInc( p_game );
+          int actionPt = registration.getPtAction() - actionInc;
+          if( actionPt < 0 )
+          {
+            actionPt = 0;
+          }
+          registration.setPtAction( actionPt );
         }
-        registration.setPtAction( actionPt );
       }
 
       // previous player
