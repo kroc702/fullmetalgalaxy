@@ -185,6 +185,10 @@ public class EbGamePreview extends EbBase
         registration.m_myEvents = null;
       }
     }
+    for( EbTeam team : getTeams() )
+    {
+      team.clearColorsCache();
+    }
     if( m_currentPlayerId != 0 && (m_currentPlayerIds == null || m_currentPlayerIds.isEmpty()) )
     {
       m_currentPlayerIds = new ArrayList<Long>();

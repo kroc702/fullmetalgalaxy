@@ -407,17 +407,17 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         }
         else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
         {
-          for( AnEvent myevent : registration.getTeam().getMyEvents() )
+          for( AnEvent myevent : registration.getTeam( game ).getMyEvents() )
           {
             myevent.exec( game );
           }
           event.check( game );
-          for( int i = registration.getTeam().getMyEvents().size() - 1; i >= 0; i-- )
+          for( int i = registration.getTeam( game ).getMyEvents().size() - 1; i >= 0; i-- )
           {
-            AnEvent myevent = registration.getTeam().getMyEvents().get( i );
+            AnEvent myevent = registration.getTeam( game ).getMyEvents().get( i );
             myevent.unexec( game );
           }
-          registration.getTeam().addMyEvent( event );
+          registration.getTeam( game ).addMyEvent( event );
         }
         else
         {
@@ -555,7 +555,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // get events from registration event lists
       for( EbRegistration registration : game.getSetRegistration() )
       {
-        for( AnEvent event : registration.getTeam().getMyEvents() )
+        for( AnEvent event : registration.getTeam( game ).getMyEvents() )
         {
           if( event.getGameVersion() > p_myVersion )
           {

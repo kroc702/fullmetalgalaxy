@@ -159,17 +159,19 @@ public class WgtGameInfo extends Composite implements ClickHandler
             registration.getActionInc( game ),
             ClientUtil.s_dateTimeFormat.format( nextActionIncrement ) ) ) );
       }
-      else if( registration.getTeam().getEndTurnDate() != null )
+      else if( registration.getTeam( game ).getEndTurnDate() != null )
       {
         if( game.getCurrentPlayerIds().contains( registration.getId() ) )
         {
           m_generalPanel.add( new Label( "Fin du tour: "
-              + ClientUtil.s_dateTimeFormat.format( registration.getTeam().getEndTurnDate() ) ) );
+                  + ClientUtil.s_dateTimeFormat.format( registration.getTeam( game )
+                      .getEndTurnDate() ) ) );
         }
         else
         {
           m_generalPanel.add( new Label( "Prochain tour avant: "
-              + ClientUtil.s_dateTimeFormat.format( registration.getTeam().getEndTurnDate() ) ) );
+                  + ClientUtil.s_dateTimeFormat.format( registration.getTeam( game )
+                      .getEndTurnDate() ) ) );
         }
       }
     }

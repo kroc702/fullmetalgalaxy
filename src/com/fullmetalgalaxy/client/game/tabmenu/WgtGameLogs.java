@@ -95,11 +95,12 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
   private void addParallelHiddenEvent()
   {
     EbRegistration myRegistration = GameEngine.model().getMyRegistration();
-    if( myRegistration != null && !myRegistration.getTeam().getMyEvents().isEmpty() )
+    if( myRegistration != null
+        && !myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents().isEmpty() )
     {
       TreeItem turnTreeItem = new TreeItem( myRegistration.getAccount().getPseudo() );
       m_tree.addItem( turnTreeItem );
-      for( AnEvent event : myRegistration.getTeam().getMyEvents() )
+      for( AnEvent event : myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents() )
       {
         turnTreeItem.addItem( new TreeItemEvent( event ) );
       }

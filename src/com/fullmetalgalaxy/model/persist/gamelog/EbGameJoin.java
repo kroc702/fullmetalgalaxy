@@ -22,7 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -188,7 +190,7 @@ public class EbGameJoin extends AnEventUser
       team = new EbTeam();
       team.setCompany( getCompany() );
       team.setFireColor( registration.getEnuColor().getSingleColor().getValue() );
-      team.setOrderIndex( p_game.getTeams().size() - 1 );
+      team.setOrderIndex( p_game.getTeams().size() );
       p_game.addTeam( team );
     }
     registration.setTeamId( team.getId() );
@@ -240,6 +242,7 @@ public class EbGameJoin extends AnEventUser
     super.unexec(p_game);
     EbRegistration registration = getMyRegistration(p_game);
     p_game.getSetRegistration().remove( registration );
+    Set<EbToken> tokenToRemove = new HashSet<EbToken>();
     for( EbToken freighter : p_game.getSetToken() )
     {
       if( (freighter.getType() == TokenType.Freighter)
@@ -247,15 +250,15 @@ public class EbGameJoin extends AnEventUser
       {
         if( freighter.containToken() )
         {
-          // TODO this isn't working !!!
-          for( EbToken token : freighter.getCopyContains() )
+          for( EbToken token : freighter.getContains() )
           {
-            p_game.getSetToken().remove( token );
+            tokenToRemove.add( token );
           }
         }
-        p_game.getSetToken().remove( freighter );
+        tokenToRemove.add( freighter );
       }
     }
+    p_game.getSetToken().removeAll( tokenToRemove );
   }
 
 

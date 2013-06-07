@@ -42,6 +42,7 @@ public interface MessagesAppBoard extends Messages
 
   String variantTitle();
   String unitsTitle();
+  String chooseCompany();
   String chooseColor();
   String commonConstructReserve();
   String initialHold();

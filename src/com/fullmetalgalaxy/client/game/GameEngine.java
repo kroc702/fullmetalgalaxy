@@ -161,7 +161,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         {
           if( getMyRegistration() != null )
           {
-            for( AnEvent event : getMyRegistration().getTeam().getMyEvents() )
+            for( AnEvent event : getMyRegistration().getTeam( getGame() ).getMyEvents() )
             {
               event.exec( getGame() );
             }
@@ -434,11 +434,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           isNewPlayerTurn = true;
           if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
               && getMyRegistration() != null
-              && !getMyRegistration().getTeam().getMyEvents().isEmpty() )
+              && !getMyRegistration().getTeam( getGame() ).getMyEvents().isEmpty() )
           {
-            for( int i = getMyRegistration().getTeam().getMyEvents().size() - 1; i >= 0; i-- )
+            for( int i = getMyRegistration().getTeam( getGame() ).getMyEvents().size() - 1; i >= 0; i-- )
             {
-              getMyRegistration().getTeam().getMyEvents().get( i ).unexec( getGame() );
+              getMyRegistration().getTeam( getGame() ).getMyEvents().get( i ).unexec( getGame() );
             }
           }
         }
@@ -452,9 +452,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
             && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
             && ((AnEventUser)event).getMyRegistration( getGame() ) != null )
         {
-          EbTeam myTeam = ((AnEventUser)event).getMyRegistration( getGame() ).getTeam();
+          EbTeam myTeam = ((AnEventUser)event).getMyRegistration( getGame() ).getTeam( getGame() );
           myTeam.addMyEvent( event );
-          if( myTeam == getMyRegistration().getTeam() )
+          if( myTeam == getMyRegistration().getTeam( getGame() ) )
           {
             event.exec( getGame() );
             getGame().updateLastTokenUpdate( null );
@@ -750,7 +750,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     m_currentActionIndex = getGame().getLogs().size();
     if( getMyRegistration() != null )
     {
-      m_currentActionIndex += getMyRegistration().getTeam().getMyEvents().size();
+      m_currentActionIndex += getMyRegistration().getTeam( getGame() ).getMyEvents().size();
     }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
@@ -789,7 +789,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       AnEvent action = null;
       if( m_currentActionIndex >= logs.size() && getMyRegistration() != null )
       {
-        action = getMyRegistration().getTeam().getMyEvents()
+        action = getMyRegistration().getTeam( getGame() ).getMyEvents()
             .get( m_currentActionIndex - logs.size() );
       }
       else
@@ -821,7 +821,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         action = null;
         if( m_currentActionIndex >= logs.size() + 1 && getMyRegistration() != null )
         {
-          action = getMyRegistration().getTeam().getMyEvents()
+          action = getMyRegistration().getTeam( getGame() ).getMyEvents()
               .get( m_currentActionIndex - logs.size() - 1 );
         }
         else if( m_currentActionIndex > 0 )
@@ -848,14 +848,15 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     int totalEventCount = logs.size();
     if( GameEngine.model().getMyRegistration() != null )
     {
-      totalEventCount += GameEngine.model().getMyRegistration().getTeam().getMyEvents().size();
+      totalEventCount += GameEngine.model().getMyRegistration().getTeam( getGame() ).getMyEvents()
+          .size();
     }
     while( (m_currentActionIndex < totalEventCount) && (p_actionCount > 0) )
     {
       AnEvent action = null;
       if( m_currentActionIndex >= logs.size() && getMyRegistration() != null )
       {
-        action = getMyRegistration().getTeam().getMyEvents()
+        action = getMyRegistration().getTeam( getGame() ).getMyEvents()
             .get( m_currentActionIndex - logs.size() );
       }
       else
@@ -1049,9 +1050,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     }
     if( getMyRegistration() != null
         && m_currentActionIndex < getGame().getLogs().size()
-            + getMyRegistration().getTeam().getMyEvents().size() )
+            + getMyRegistration().getTeam( getGame() ).getMyEvents().size() )
     {
-      return getMyRegistration().getTeam().getMyEvents()
+      return getMyRegistration().getTeam( getGame() ).getMyEvents()
           .get(
           m_currentActionIndex - getGame().getLogs().size() );
     }

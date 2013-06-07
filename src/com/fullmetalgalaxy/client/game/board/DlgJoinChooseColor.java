@@ -117,13 +117,13 @@ public class DlgJoinChooseColor extends DialogBox
       {
         Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
             .getSelectedIndex() ) );
-        m_colorPreview.setUrl( "/images/avatar/" + company + ".jpg" );
+        m_companyPreview.setUrl( "/images/avatar/" + company + ".jpg" );
       }
     } );
     Panel hpanel = new HorizontalPanel();
     hpanel.add( m_companySelection );
     hpanel.add( m_companyPreview );
-    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.chooseColor() + "</b>" ) );
+    m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.chooseCompany() + "</b>" ) );
     m_panel.add( hpanel );
 
     // add color list widget

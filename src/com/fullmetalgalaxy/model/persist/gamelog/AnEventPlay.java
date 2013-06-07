@@ -201,8 +201,8 @@ public class AnEventPlay extends AnEventUser
       // registration.setLastUpdate( getLastUpdate() );
       if( p_game.isParallel() )
       {
-        registration.getTeam().setLockedPosition( getLockedPosition() );
-        registration.getTeam().setEndTurnDate(
+        registration.getTeam(p_game).setLockedPosition( getLockedPosition() );
+        registration.getTeam(p_game).setEndTurnDate(
             new Date( SharedMethods.currentTimeMillis()
             + p_game.getEbConfigGameTime().getLockGameInMillis() ) );
       }
