@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This have to be edited depending of your installation configuration.
+You shouldn't commit your change in this file
+ -->
+<project name="FullMetalGalaxy-config">
+	<property environment="env" />
+
+	<property name="adminaccount" value="vincent.legendre@gmail.com" />
+	<property name="passwordfile" value="..\password" />
+	<property name="imagemagickDir" value="C:\Users\v1j\Documents\perso\ImageMagick-6.8.5-10\" />
+	<property name="eclipsedir" value="C:\Users\v1j\Documents\perso\eclipse" />
+	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.8.1\appengine-java-sdk-1.8.1" />
+	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.5.1\gwt-2.5.1" />
+	<property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705" />
+	<property name="javahome" value="C:\Program Files\Java\jdk1.6.0_27"/>
+	
+	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_2.3.2\os\win32" />
+	<property name="javadocDir" value="javadoc" />
+	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
+	
+	<property name="threadCount" value="4" />
+</project>

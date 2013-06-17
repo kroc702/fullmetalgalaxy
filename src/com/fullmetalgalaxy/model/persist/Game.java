@@ -367,12 +367,30 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EnuColor tokenOwnerColor = p_token.getEnuColor();
     if( tokenOwnerColor.getValue() != EnuColor.None )
     {
-      for( Iterator<EbRegistration> it = getSetRegistration().iterator(); it.hasNext(); )
+      for( EbRegistration registration : getSetRegistration() )
       {
-        EbRegistration registration = (EbRegistration)it.next();
         if( registration.getEnuColor().isColored( p_token.getColor() ) )
         {
           tokenOwnerColor.addColor( registration.getColor() );
+          break;
+        }
+      }
+    }
+    return tokenOwnerColor;
+  }
+
+  public EnuColor getTokenTeamColor(EbToken p_token)
+  {
+    // first determine the token owner color
+    EnuColor tokenOwnerColor = p_token.getEnuColor();
+    if( tokenOwnerColor.getValue() != EnuColor.None )
+    {
+      for( EbTeam team : getTeams() )
+      {
+        EnuColor color = new EnuColor(team.getColors( getPreview() ));
+        if( color.isColored( p_token.getColor() ) )
+        {
+          tokenOwnerColor.addColor( color );
           break;
         }
       }
@@ -393,11 +411,11 @@ public class Game extends GameData implements PathGraph, GameEventStack
       return new EnuColor( EnuColor.None );
     }
     // first determine the token owner color
-    EnuColor tokenOwnerColor = getTokenOwnerColor( p_token );
-    EnuColor fireCover = getOpponentFireCover( tokenOwnerColor.getValue(), p_token.getPosition() );
+    EnuColor tokenTeamColor = getTokenTeamColor( p_token );
+    EnuColor fireCover = getOpponentFireCover( tokenTeamColor.getValue(), p_token.getPosition() );
     if( p_token.getHexagonSize() == 2 )
     {
-      fireCover.addColor( getOpponentFireCover( tokenOwnerColor.getValue(),
+      fireCover.addColor( getOpponentFireCover( tokenTeamColor.getValue(),
           (AnBoardPosition)p_token.getExtraPositions().get( 0 ) ) );
     }
     return fireCover;
@@ -423,12 +441,12 @@ public class Game extends GameData implements PathGraph, GameEventStack
     for( int i = 0; i < sectorValues.length; i++ )
     {
       AnBoardPosition neighbourPosition = tokenPosition.getNeighbour( sectorValues[i] );
-      EnuColor tokenOwnerColor = getTokenOwnerColor( p_token );
+      EnuColor tokenTeamColor = getTokenTeamColor( p_token );
       if( getLand( neighbourPosition ) == LandType.Montain )
       {
         EbToken token = getToken( neighbourPosition );
         if( (token != null) && (token.getType() == TokenType.Tank)
-            && (tokenOwnerColor.isColored( token.getColor() )) )
+            && (tokenTeamColor.isColored( token.getColor() )) )
         {
           // this tank is cheating
           return token;
@@ -1052,10 +1070,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public boolean isTokenFireActive(EbToken p_token)
   {
-    EnuColor playerColor = getTokenOwnerColor( p_token );
+    EnuColor teamColor = getTokenTeamColor( p_token );
     return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret)
-        || (playerColor.getValue() == EnuColor.None) || (getOpponentFireCover(
-        playerColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
+        || (teamColor.getValue() == EnuColor.None) || (getOpponentFireCover(
+        teamColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
   }
 
 

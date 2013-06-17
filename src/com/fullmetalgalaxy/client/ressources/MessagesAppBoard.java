@@ -44,6 +44,7 @@ public interface MessagesAppBoard extends Messages
   String unitsTitle();
   String chooseCompany();
   String chooseColor();
+  String warningTeamAllowed();
   String commonConstructReserve();
   String initialHold();
   String joinWarning();

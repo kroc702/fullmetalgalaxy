@@ -180,7 +180,7 @@ public class EbEvtUnLoad extends AnEventPlay
       }
     }
     // check this token is not going to an opponent fire cover
-    EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getColor(),
+    EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyTeam(p_game).getColors(p_game.getPreview()),
         getNewPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {

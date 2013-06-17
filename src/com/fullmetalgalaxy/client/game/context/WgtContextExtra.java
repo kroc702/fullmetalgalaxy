@@ -35,6 +35,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.client.widget.WgtView;
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
@@ -43,6 +44,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
@@ -244,16 +246,23 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     HTML label = new HTML( "" );
     if( p_token.getType() == TokenType.Freighter )
     {
+      String lblStr = "???";
       EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor(
           p_token.getColor() );
-      if( registration != null && registration.haveAccount() )
+      if( registration != null )
       {
-        label.setHTML( registration.getAccount().getPseudo() );
+        if( registration.haveAccount() )
+        {
+          lblStr = registration.getAccount().getPseudo();
+        }
+        EbTeam team = registration.getTeam( GameEngine.model().getGame() );
+        if( team != null && team.getCompany() != Company.Freelancer )
+        {
+          lblStr += "<br/>" + team.getCompany().getFullName();
+        }
       }
-      else
-      {
-        label.setHTML( "???" );
-      }
+      
+      label.setHTML( lblStr );
     }
     else
     {

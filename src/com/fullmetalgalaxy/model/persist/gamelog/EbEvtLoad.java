@@ -193,7 +193,7 @@ public class EbEvtLoad extends AnEventPlay
               p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
     }
     if( getToken( p_game ).getColor() == EnuColor.None
-        && p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
+        && p_game.getOpponentFireCover( getMyTeam( p_game ).getColors(p_game.getPreview()),
             getToken( p_game ).getPosition() ).getValue() != EnuColor.None )
     {
       // the colorless token is loaded from opponent fire cover

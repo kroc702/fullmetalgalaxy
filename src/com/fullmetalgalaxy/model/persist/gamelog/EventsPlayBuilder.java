@@ -253,7 +253,7 @@ public class EventsPlayBuilder implements GameEventStack
       if( getActionList().size() > 1 && getLastAction().getType() == GameLogType.EvtMove )
       {
         EbEvtMove evtMove = ((EbEvtMove)getLastAction());
-        EnuColor tokenOwnerColor = getGame().getTokenOwnerColor( evtMove.getToken( getGame() ) );
+        EnuColor tokenOwnerColor = getGame().getTokenTeamColor( evtMove.getToken( getGame() ) );
         EnuColor fireCoverColor = getGame().getOpponentFireCover( tokenOwnerColor.getValue(),
             evtMove.getOldPosition() );
         if( fireCoverColor.getValue() != EnuColor.None )

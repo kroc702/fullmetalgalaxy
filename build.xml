@@ -4,21 +4,7 @@ compilation file for Full Metal Galaxy
 -->
 
 <project name="FullMetalGalaxy" default="build">
-	<property environment="env" />
-
-	<property name="adminaccount" value="vincent.legendre@gmail.com" />
-	<property name="passwordfile" value="..\password" />
-	<property name="imagemagickDir" value="C:\Program Files (x86)\ImageMagick-6.6.0-Q16\" />
-	<property name="eclipsedir" value="C:\Sun\eclipse-indigo" />
-	<property name="appenginesdkdir" value="C:\Sun\appengine-java-sdk-1.7.6" />
-	<property name="gwtsdkdir" value="C:\Sun\gwt-2.5.1" />
-	<property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705" />
-	
-	<property name="hgdir" value="${eclipsedir}\plugins\com.intland.hgbinary.win32_1.9.3\os\win32" />
-	<property name="path" value="C:\Sun\SDK\jdk\bin" />
-	<property name="javadocDir" value="javadoc" />
-	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->
-
+	<import file="ant-config.xml" />
 	<import file="${appenginesdkdir}/config/user/ant-macros.xml" />
 
 	<path id="classpath">
@@ -63,28 +49,28 @@ compilation file for Full Metal Galaxy
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8">
+		<javac executable="${javahome}/bin/javac" srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes">
 			<exclude name="**/override/**"/>
 			<exclude name="**/client/**"/>
 		</javac>
 		<delete file="war/WEB-INF/classes/com/fullmetalgalaxy/model/ressources/SharedI18n.class" />
 		<delete file="war/WEB-INF/classes/com/fullmetalgalaxy/model/SharedMethods.class" />
-		<javac srcdir="src/com/fullmetalgalaxy/server/override" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" >
+		<javac executable="${javahome}/bin/javac" srcdir="src/com/fullmetalgalaxy/server/override" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes">
 		</javac>
 	</target>
 
 	<target name="compiltests" depends="compilserver" description="Compiles JUnit tests.">
 		<mkdir dir="war/WEB-INF/classes" />
-		<javac srcdir="tests" destdir="war/WEB-INF/classes" classpathref="classpath.tests" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" />
+		<javac executable="${javahome}/bin/javac" srcdir="tests" destdir="war/WEB-INF/classes" classpathref="classpath.tests" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes"/>
 	</target>
 
 	<target name="compilclient" depends="">
 		<echo message="Compiling client java code to javascript" />
-		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
+		<java jvm="${javahome}/bin/java" classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
 			<jvmarg value="-Xmx1024M" />
 			<sysproperty key="ENCODING" value="UTF-8" />
 			<arg value="-localWorkers" />
-			<arg value="8" />
+			<arg value="${threadCount}" />
 			<arg value="-style" />
 			<arg value="${jsstyle}" />
 			<arg value="-strict" />
@@ -102,11 +88,11 @@ compilation file for Full Metal Galaxy
 
 	<target name="compilclientdraft" depends="">
 		<echo message="Compiling client java code to javascript" />
-		<java classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
+		<java jvm="${javahome}/bin/java" classname="com.google.gwt.dev.Compiler" fork="yes" failonerror="true" classpathref="classpath">
 			<jvmarg value="-Xmx512M" />
 			<sysproperty key="ENCODING" value="UTF-8" />
 			<arg value="-localWorkers" />
-			<arg value="8" />
+			<arg value="${threadCount}" />
 			<arg value="-style" />
 			<arg value="PRETTY" />
 			<arg value="-draftCompile" />
@@ -278,7 +264,7 @@ compilation file for Full Metal Galaxy
 		<element name="options" optional="true" description="Options for appcfg (such as --server, --num_days, etc...)" />
 		<element name="args" optional="true" description="Additional arguments for the java task" />
 		<sequential>
-			<java classname="com.google.appengine.tools.admin.AppCfg" classpath="${appengine.tools.classpath}" fork="true" failonerror="true" input="${passwordfile}">
+			<java jvm="${javahome}/bin/java" classname="com.google.appengine.tools.admin.AppCfg" classpath="${appengine.tools.classpath}" fork="true" failonerror="true" input="${passwordfile}">
 				<arg value="--email=${adminaccount}" />
 				<arg value="--passin" />
 				<options />

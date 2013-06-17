@@ -246,7 +246,10 @@ public class AnEventPlay extends AnEventUser
     return super.getMyRegistration( p_game );
   }
 
-
+  public EbTeam getMyTeam(Game p_game)
+  {
+    return getMyRegistration( p_game ).getTeam( p_game );
+  }
 
   // Bean getter / setter
   // ====================
