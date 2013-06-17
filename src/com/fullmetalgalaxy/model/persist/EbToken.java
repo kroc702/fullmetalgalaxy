@@ -321,11 +321,11 @@ public class EbToken extends EbBase
   public boolean haveOponentNeighbor(Game p_game)
   {
     // first determine the token owner color
-    EnuColor tokenOwnerColor = p_game.getTokenOwnerColor( this );
+    EnuColor tokenTeamColor = p_game.getTokenTeamColor( this );
     // TODO it's not optimal... we should look onto the six neighbor hexagons
     for( EbToken token : p_game.getSetToken() )
     {
-      if( (token.canBeColored()) && (!tokenOwnerColor.isColored( token.getColor() ))
+      if( (token.canBeColored()) && (!tokenTeamColor.isColored( token.getColor() ))
           && (token.isNeighbor( this )) )
       {
         return true;
@@ -505,7 +505,7 @@ public class EbToken extends EbBase
     assert p_position != null;
     // check that no token is already on this hexagon
     EbToken newTokenOnWay = p_game.getToken( p_position );
-    EnuColor myColor = p_player.getEnuColor();
+    EnuColor myColor = new EnuColor( p_player.getTeam( p_game ).getColors(p_game.getPreview()));
 
     // if newTokenOnWay == this, this mean that barge head want to move on barge tail: this is allowed
     if( newTokenOnWay != null && newTokenOnWay != this)

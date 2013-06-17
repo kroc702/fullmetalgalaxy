@@ -102,7 +102,10 @@ public class DlgJoinChooseColor extends DialogBox
         }
       }
     }
-
+    else
+    {
+      m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.warningTeamAllowed() + "</b>" ) );
+    }
     
     for( Company company : freeCompany )
     {

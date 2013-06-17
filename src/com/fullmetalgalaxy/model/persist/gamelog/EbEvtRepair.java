@@ -102,7 +102,7 @@ public class EbEvtRepair extends AnEventPlay
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
-    EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyRegistration( p_game ).getColor(),
+    EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyTeam( p_game ).getColors(p_game.getPreview()),
         getPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {

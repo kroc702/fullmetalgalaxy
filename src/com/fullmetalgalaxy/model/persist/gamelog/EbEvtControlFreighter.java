@@ -128,7 +128,7 @@ public class EbEvtControlFreighter extends AnEventPlay
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check that token isn't under opponents fire covers
-    EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getColor(),
+    EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getTeam( p_game ).getColors(p_game.getPreview()),
         getToken(p_game).getPosition() );
     if( fireCoverColor.getValue() != EnuColor.None )
     {

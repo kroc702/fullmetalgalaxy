@@ -323,7 +323,7 @@ public class BoardFireCover implements Serializable
     {
       reComputeFireCover();
     }
-    // TODO allow two neutralisation with 4 tanks. recursive method ?
+    // TODO allow two neutralizations with 4 tanks. recursive method ?
     //
     EnuColor color = m_game.getOpponentFireCover( p_token );
     if( p_token.isFireDisabled() && p_fdChange != FdChange.DISABLE )
@@ -339,8 +339,8 @@ public class BoardFireCover implements Serializable
             || m_game.isTokenFireCoverDisabled( fd.getDestroyer2( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer1( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer2( m_game ) )
-            || m_game.getTokenOwnerColor( fd.getDestroyer1( m_game ) ).equals(
-                m_game.getTokenOwnerColor( p_token ) )
+            || m_game.getTokenTeamColor( fd.getDestroyer1( m_game ) ).equals(
+                m_game.getTokenTeamColor( p_token ) )
             || m_lockedToken.contains( fd.getDestroyer1Id() )
             || m_lockedToken.contains( fd.getDestroyer2Id() ) )
         {
@@ -371,9 +371,9 @@ public class BoardFireCover implements Serializable
           EbToken otherToken = m_game.getToken( new AnBoardPosition( ix, iy ) );
           if( otherToken != null )
           {
-            EnuColor tokenOwnerColor = m_game.getTokenOwnerColor( otherToken );
+            EnuColor tokenTeamColor = m_game.getTokenTeamColor( otherToken );
 
-            if( tokenOwnerColor.isColored( color )
+            if( tokenTeamColor.isColored( color )
               && !m_game.isTokenFireCoverDisabled( otherToken )
                 && m_game.canTokenFireOn( otherToken, p_token )
               && !m_lockedToken.contains( otherToken.getId() ) )
@@ -454,10 +454,10 @@ public class BoardFireCover implements Serializable
     assert m_game != null;
     boolean isFdChanged = false;
     EbToken token = m_game.getToken( p_position );
-    EnuColor ownerColor = new EnuColor( EnuColor.None );
+    EnuColor teamColor = new EnuColor( EnuColor.None );
     if( token != null )
     {
-      ownerColor = m_game.getTokenOwnerColor( token );
+      teamColor = m_game.getTokenTeamColor( token );
     }
     for( int ix = p_position.getX() - p_radius; ix <= p_position.getX() + p_radius; ix++ )
     {
@@ -466,7 +466,7 @@ public class BoardFireCover implements Serializable
         if( ix != p_position.getX() || iy != p_position.getY() )
         {
           token = m_game.getToken( new AnBoardPosition( ix, iy ) );
-          if( token != null && !ownerColor.contain( token.getColor() ) )
+          if( token != null && !teamColor.contain( token.getColor() ) )
           {
             isFdChanged |= recursiveCheckFireDisableFlag( token, p_fdChange, p_fdRemoved, p_fdAdded );
           }

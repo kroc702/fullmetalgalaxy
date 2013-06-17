@@ -270,7 +270,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
       if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Crab)
           || (p_tokenType == TokenType.Heap) || (p_tokenType == TokenType.WeatherHen)
           || (p_tokenType.isOre())
-          || (p_tokenType == TokenType.Sluice) || (p_tokenType == TokenType.Pontoon) )
+          || (p_tokenType == TokenType.Sluice) || (p_tokenType == TokenType.Pontoon)
+          || (p_tokenType == TokenType.Crayfish) )
       {
         return true;
       }

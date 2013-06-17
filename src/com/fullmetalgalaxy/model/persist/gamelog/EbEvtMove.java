@@ -184,7 +184,7 @@ public class EbEvtMove extends AnEventPlay
 
     // check this token is not going from AND to an opponent fire cover
     // Not sure about necessity of the following test.
-    EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getColor(),
+    EnuColor fireCoverColorNew = p_game.getOpponentFireCover( myRegistration.getTeam( p_game ).getColors(p_game.getPreview()),
         getNewPosition() );
     if( getToken( p_game ).isFireDisabled() && fireCoverColorNew.getValue() != EnuColor.None )
     {
