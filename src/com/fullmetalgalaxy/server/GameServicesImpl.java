@@ -280,6 +280,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       {
         // call onLoad callback as Objectify does for backward compatibility
         modelInit.getGame().getPreview().onLoad();
+        modelInit.getGame().onLoad();
       }
     }
     else

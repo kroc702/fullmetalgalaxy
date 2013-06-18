@@ -184,6 +184,10 @@ public class EbGamePreview extends EbBase
       {
         registration.m_myEvents = null;
       }
+      if( registration.m_singleColor == EnuColor.Unknown || !registration.getEnuColor().contain( registration.m_singleColor ) )
+      {
+        registration.m_singleColor = registration.getEnuColor().getSingleColor().getValue();
+      }
     }
     for( EbTeam team : getTeams() )
     {
@@ -269,6 +273,11 @@ public class EbGamePreview extends EbBase
 
   public Set<EbTeam> getTeams()
   {
+    if( m_teams == null )
+    {
+      // for backward compatibility
+      m_teams = new HashSet<EbTeam>();
+    }
     return m_teams;
   }
 

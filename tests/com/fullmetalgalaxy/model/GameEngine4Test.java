@@ -73,7 +73,8 @@ public class GameEngine4Test
     fis.close();
 
     modelInit.getGame().getPreview().onLoad();
-
+    modelInit.getGame().onLoad();
+    
     setGame( modelInit.getGame() );
     EbRegistration registration = getGame().getRegistration(
         getGame().getCurrentPlayerIds().get( 0 ) );
@@ -200,6 +201,10 @@ public class GameEngine4Test
     if( p_tokenA.getFireDisablingList() == null )
     {
       Assert.assertNull( p_tokenB.getFireDisablingList() );
+    }
+    else if( p_tokenB.getFireDisablingList() == null )
+    {
+      Assert.assertNull( p_tokenA.getFireDisablingList() );
     }
     else
     {
