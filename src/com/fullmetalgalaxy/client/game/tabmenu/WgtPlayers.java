@@ -34,6 +34,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
@@ -141,11 +142,14 @@ public class WgtPlayers extends Composite implements ClickHandler
         String html = "";
 
         // display team avatar
-        m_playerGrid
-            .setHTML( index, 0, "<IMG SRC='/images/avatar/" + team.getCompany()
-                + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0 title='" + team.getCompany().getFullName()
-                + "'/>" );
-
+        if( team.getCompany() != Company.Freelancer )
+        {
+          m_playerGrid
+              .setHTML( index, 0, "<IMG SRC='/images/avatar/" + team.getCompany()
+                  + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0 title='" + team.getCompany().getFullName()
+                  + "'/>" );
+        }
+        
         if( registration.haveAccount() )
         {
           // display avatar

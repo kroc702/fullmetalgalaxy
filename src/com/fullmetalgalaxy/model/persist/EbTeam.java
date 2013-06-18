@@ -114,6 +114,7 @@ public class EbTeam extends EbBase
   {
     if( m_colors == EnuColor.Unknown )
     {
+      m_colors = EnuColor.None;
       for( EbRegistration registration : getPlayers( p_game ) )
       {
         m_colors = EnuColor.addColor( m_colors, registration.getColor() );
