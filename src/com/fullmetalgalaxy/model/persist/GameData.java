@@ -70,6 +70,11 @@ public class GameData implements java.io.Serializable, IsSerializable
     m_preview = p_preview;
     m_data = p_data;
 
+    onLoad();
+  }
+  
+  public void onLoad()
+  {
     /* do something after load */
     if( m_data.getConstructReserve() == null || m_data.getConstructReserve().isEmpty() )
     {
@@ -91,7 +96,7 @@ public class GameData implements java.io.Serializable, IsSerializable
         team.setLockedPosition( registration.m_lockedPosition );
         if( registration.m_myEvents != null )
         {
-          team.getMyEvents().addAll( registration.m_myEvents );
+          team.setMyEvents( registration.m_myEvents );
         }
         team.setOrderIndex( registration.m_orderIndex );
         team.getPlayerIds().add( registration.getId() );
