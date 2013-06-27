@@ -110,7 +110,7 @@ public class EbGamePreview extends EbBase
    */
   private String m_password = null;
   /**
-   * if true, several player can jon the game under the same team
+   * if true, several player can join the game under the same team
    */
   private boolean m_isTeamAllowed = false;
 

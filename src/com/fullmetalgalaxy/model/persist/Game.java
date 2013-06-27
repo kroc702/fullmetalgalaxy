@@ -835,7 +835,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   {
     EnuColor color = new EnuColor( p_color );
     List<EbToken> list = new ArrayList<EbToken>();
-    if( color == null || color.getColorIndex() < 0 )
+    if( color == null || color.getNbColor() == 0 )
     {
       return list;
     }
