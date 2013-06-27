@@ -50,7 +50,7 @@ public class EbConfigGameTime extends EbBase
   /** extra maximum number of action points */
   private int m_actionPtMaxPerExtraShip = 5;
 
-  private int m_bulletCountIncrement = 20;
+  public int m_bulletCountIncrement = 20;
   private String m_description = "";
   private ArrayList<Integer> m_takeOffTurns = new ArrayList<Integer>();
   /** if true, players can all play at same time. ie parallel mode
@@ -90,6 +90,7 @@ public class EbConfigGameTime extends EbBase
     m_roundActionPt = p_config.getRoundActionPt();
     m_deploymentTimeStep = p_config.getDeploymentTimeStep();
     m_description = new String( p_config.getDescription() );
+    setBulletCountIncrement( p_config.getBulletCountIncrement() );
   }
   
 
