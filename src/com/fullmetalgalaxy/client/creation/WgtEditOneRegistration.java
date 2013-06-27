@@ -25,7 +25,10 @@ package com.fullmetalgalaxy.client.creation;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
+import com.fullmetalgalaxy.model.Company;
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,6 +40,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -52,12 +56,14 @@ public class WgtEditOneRegistration extends Composite
   // UI
   private Label m_lblAccount = new Label( "" );
   private WgtIntBox m_intActionPoints = new WgtIntBox();
+  private Label m_lblColors = new Label("colors:");
   private IntegerBox m_intColors = new IntegerBox();
   // remove ban button from here as there is one on game page that is better
   // private Button m_btnBan = new Button( "Bannir ce joueur" );
   private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
   private Button m_btnCancelMyEvents = new Button( "Cancel his actions" );
-
+  private ListBox m_lstTeam = new ListBox(false);
+  
   /**
    * 
    */
@@ -78,7 +84,7 @@ public class WgtEditOneRegistration extends Composite
         m_registration.setPtAction( m_intActionPoints.getValue() );
       }
     } );
-    panel.add( new Label( "colors:" ) );
+    panel.add( m_lblColors );
     panel.add( m_intColors );
     m_intColors.addChangeHandler( new ChangeHandler()
     {
@@ -92,6 +98,7 @@ public class WgtEditOneRegistration extends Composite
           m_intColors.setValue( 0 );
         }
         m_registration.setColor( m_intColors.getValue() );
+        m_lblColors.setText( "colors: "+m_registration.getEnuColor() );
       }
     } );
     m_chkCurrentPlayer.addClickHandler( new ClickHandler()
@@ -126,6 +133,61 @@ public class WgtEditOneRegistration extends Composite
       }
     } );
     panel.add( m_btnCancelMyEvents );
+    
+    panel.add( new Label( "Team:" ) );
+    m_lstTeam.setVisibleItemCount( 1 );
+    for( Company company : Company.values() )
+    {
+      m_lstTeam.addItem( company.toString() );
+    }
+    m_lstTeam.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        EbTeam oldTeam = m_registration.getTeam( GameEngine.model().getGame() );
+        // find corresponding team
+        Company company = Company.values()[m_lstTeam.getSelectedIndex()];
+        EbTeam newTeam = null;
+        if( company != Company.Freelancer )
+        {
+          newTeam = GameEngine.model().getGame().getTeam( company );
+        }
+        if( oldTeam == newTeam ) return;
+        if( newTeam == null )
+        {
+          // the chosen company has no team in this game: create a new one
+          newTeam = new EbTeam();
+          newTeam.setFireColor( m_registration.getEnuColor().getSingleColor().getValue() );
+          GameEngine.model().getGame().addTeam( newTeam );
+          if( oldTeam.getPlayerIds().size() <= 1 )
+          {
+            newTeam.setOrderIndex( oldTeam.getOrderIndex() );
+          }
+          else
+          {
+            newTeam.setOrderIndex( GameEngine.model().getGame().getTeams().size() );
+          }
+        }
+        newTeam.clearColorsCache();
+        newTeam.getPlayerIds().add( m_registration.getId() );
+        m_registration.setTeamId( newTeam.getId() );
+        if( oldTeam.getPlayerIds().size() <= 1 )
+        {
+          // delete old team
+          GameEngine.model().getGame().getTeams().remove( oldTeam );
+        } else
+        {
+          oldTeam.getPlayerIds().remove( m_registration.getId() );
+          oldTeam.clearColorsCache();
+          EnuColor teamColors = new EnuColor( oldTeam.getColors( GameEngine.model().getGame().getPreview() ) );
+          oldTeam.setFireColor( teamColors.getSingleColor().getValue() );
+        }
+        
+      }
+    } );
+    panel.add( m_lstTeam );
+    
     initWidget( panel );
   }
 
@@ -140,6 +202,7 @@ public class WgtEditOneRegistration extends Composite
     }
     m_intActionPoints.setValue( p_reg.getPtAction() );
     m_intColors.setValue( p_reg.getColor() );
+    m_lblColors.setText( "colors: "+p_reg.getEnuColor() );
     m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
         .contains( p_reg.getId() ) );
     m_btnCancelMyEvents.setEnabled( !p_reg.getTeam(GameEngine.model().getGame()).getMyEvents().isEmpty() );

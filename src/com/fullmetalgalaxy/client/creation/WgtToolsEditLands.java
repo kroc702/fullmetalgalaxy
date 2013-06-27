@@ -69,7 +69,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   private CheckBox m_chkRoundMap = new CheckBox();
   private Button m_btnLoadMap = new Button( "Charger une carte" );
   private DlgLoadMap m_dlgLoadMap = new DlgLoadMap();
-  private ListBox m_lstPlanet = new ListBox();
+  private ListBox m_lstPlanet = new ListBox(false);
   private List<PlanetType> m_planets = new ArrayList<PlanetType>();
 
   private Image m_leftLand = new Image();
@@ -114,7 +114,6 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     assert p_wgtlayerEditLand != null;
     m_wgtlayerEditLand = p_wgtlayerEditLand;
     m_lstPlanet.addChangeListener( this );
-    m_lstPlanet.setMultipleSelect( false );
     m_lstPlanet.setVisibleItemCount( 1 );
     for( PlanetType planet : PlanetType.values() )
     {

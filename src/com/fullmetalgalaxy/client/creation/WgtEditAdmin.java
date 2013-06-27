@@ -29,6 +29,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -42,6 +43,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -55,8 +57,10 @@ public class WgtEditAdmin extends Composite
 
   // to change current turn
   private WgtIntBox m_intCurrentTurn = new WgtIntBox();
-
-
+  private ListBox m_lstStatus = new ListBox(false);
+  private TextBox m_txtCreatorPseudo = new TextBox();
+  private TextBox m_txtCreatorId = new TextBox();
+  
   // to edit registration
   private Map<String, EbRegistration> m_mapReg = new HashMap<String, EbRegistration>();
   private ListBox m_lstReg = new ListBox( false );
@@ -77,6 +81,44 @@ public class WgtEditAdmin extends Composite
         GameEngine.model().getGame()
             .setLastTideChange( GameEngine.model().getGame().getLastTideChange() + delta );
         GameEngine.model().getGame().setCurrentTimeStep( m_intCurrentTurn.getValue() );
+      }
+    } );
+    
+    m_panel.add( new Label( "game status:" ) );
+    for( GameStatus status : GameStatus.values() )
+    {
+      m_lstStatus.addItem( status.toString() );
+    }
+    m_lstStatus.setVisibleItemCount( 1 );
+    m_lstStatus.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        GameEngine.model().getGame().setStatus( GameStatus.valueOf( 
+        m_lstStatus.getItemText( m_lstStatus.getSelectedIndex() ) ) );
+      }
+    } );
+    m_panel.add( m_lstStatus );
+    
+    m_panel.add( new Label( "creator pseudo:" ) );
+    m_panel.add( m_txtCreatorPseudo );
+    m_txtCreatorPseudo.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        GameEngine.model().getGame().getAccountCreator().setPseudo( m_txtCreatorPseudo.getText() );
+      }
+    } );
+    m_panel.add( new Label( "creator ID:" ) );
+    m_panel.add( m_txtCreatorId );
+    m_txtCreatorId.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        GameEngine.model().getGame().getAccountCreator().setId( Long.parseLong( m_txtCreatorId.getText()) );
       }
     } );
 
@@ -108,7 +150,10 @@ public class WgtEditAdmin extends Composite
   {
     // load current turn
     m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
-
+    m_lstStatus.setItemSelected( GameEngine.model().getGame().getStatus().ordinal(), true );
+    m_txtCreatorPseudo.setText( GameEngine.model().getGame().getAccountCreator().getPseudo() );
+    m_txtCreatorId.setText( ""+GameEngine.model().getGame().getAccountCreator().getId() );
+    
     // reload all registration
     m_mapReg = new HashMap<String, EbRegistration>();
     int selectedIndex = m_lstReg.getSelectedIndex();
