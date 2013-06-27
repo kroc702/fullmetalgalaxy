@@ -29,6 +29,7 @@ import java.util.Map;
 import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
+import com.fullmetalgalaxy.client.widget.WgtConfigGameTime;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -66,7 +67,8 @@ public class WgtEditAdmin extends Composite
   private ListBox m_lstReg = new ListBox( false );
   private WgtEditOneRegistration m_wgtOneReg = new WgtEditOneRegistration();
 
-
+  // to fine tune time config
+  private WgtConfigGameTime m_wgtConfigGameTime = new WgtConfigGameTime();
 
   public WgtEditAdmin()
   {
@@ -141,7 +143,11 @@ public class WgtEditAdmin extends Composite
     hpanel.add( m_wgtOneReg );
     m_panel.add( hpanel );
 
-
+    m_panel.add( new HTML( "<hr>" ) );
+    // ===================
+    m_panel.add( m_wgtConfigGameTime );
+    
+    
     initWidget( m_panel );
   }
 
@@ -164,6 +170,9 @@ public class WgtEditAdmin extends Composite
       m_mapReg.put( Messages.getColorString( 0, registration.getColor() ), registration );
     }
     m_lstReg.setSelectedIndex( selectedIndex );
+    
+    m_wgtConfigGameTime.loadConfigGameTime( GameEngine.model().getGame().getEbConfigGameTime(), 
+                                            GameEngine.model().getGame().getConfigGameTime() );
   }
 
   FmpCallback<Void> m_callback = new FmpCallback<Void>()
