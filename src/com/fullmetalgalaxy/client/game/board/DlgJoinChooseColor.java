@@ -90,10 +90,14 @@ public class DlgJoinChooseColor extends DialogBox
     List<Company> freeCompany = new ArrayList<Company>();
     for( Company company : Company.values() )
     {
-      freeCompany.add( company );
+      if( company != Company.Freelancer )
+      {
+        freeCompany.add( company );
+      }
     }
     if( !GameEngine.model().getGame().isTeamAllowed() )
     {
+      // remove already chosen company
       for( EbTeam team : GameEngine.model().getGame().getTeams() )
       {
         if( team.getCompany() != null && team.getCompany() != Company.Freelancer )
@@ -101,10 +105,20 @@ public class DlgJoinChooseColor extends DialogBox
           freeCompany.remove( team.getCompany() );
         }
       }
+      freeCompany.add( 0, Company.Freelancer );
     }
     else
     {
       m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.warningTeamAllowed() + "</b>" ) );
+      if( GameEngine.model().getGame().getMaxTeamAllowed() >= GameEngine.model().getGame().getTeams().size() )
+      {
+        // player shouldn't choose other team
+        freeCompany.clear();
+        for( EbTeam team : GameEngine.model().getGame().getTeams() )
+        {
+          freeCompany.add( team.getCompany() );
+        }
+      }
     }
     
     for( Company company : freeCompany )

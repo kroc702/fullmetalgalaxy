@@ -277,6 +277,11 @@ public class EbConfigGameTime extends EbBase
     return m_isParallel;
   }
 
+  public boolean isQuick()
+  {
+    return m_timeStepDurationInSec < 60*30; // turn less than 30min  
+  }
+  
   /**
    * @param p_asynchron the asynchron to set
    */
