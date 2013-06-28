@@ -964,9 +964,14 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.isTeamAllowed();
   }
 
-  public void setTeamAllowed(boolean p_isTeamAllowed)
+  public int getMaxTeamAllowed()
   {
-    m_preview.setTeamAllowed( p_isTeamAllowed );
+    return m_preview.getMaxTeamAllowed();
+  }
+
+  public void setMaxTeamAllowed(int p_maxTeamAllowed)
+  {
+    m_preview.setMaxTeamAllowed( p_maxTeamAllowed );
   }
 
   public EbTeam getTeam(Company p_company)

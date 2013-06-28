@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -109,11 +110,17 @@ public class EbGamePreview extends EbBase
    * ie player must know that password to subscribe to it.
    */
   private String m_password = null;
-  /**
-   * if true, several player can join the game under the same team
-   */
-  private boolean m_isTeamAllowed = false;
 
+  /**
+   * if zero, team are not allowed.
+   */
+  
+  private int m_maxTeamAllowed = 0; 
+  public void loadIsTeamAllowed(@AlsoLoad("m_isTeamAllowed") boolean p_isTeamAllowed)
+  {
+    if( p_isTeamAllowed ) m_maxTeamAllowed = 6; 
+  }
+  
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
   @Serialized
@@ -1167,14 +1174,19 @@ public class EbGamePreview extends EbBase
 
   public boolean isTeamAllowed()
   {
-    return m_isTeamAllowed;
+    return getMaxTeamAllowed() > 0;
+  }
+
+  public int getMaxTeamAllowed()
+  {
+    return m_maxTeamAllowed;
   }
 
 
 
-  public void setTeamAllowed(boolean p_isTeamAllowed)
+  public void setMaxTeamAllowed(int p_maxTeamAllowed)
   {
-    m_isTeamAllowed = p_isTeamAllowed;
+    m_maxTeamAllowed = p_maxTeamAllowed;
   }
 
 

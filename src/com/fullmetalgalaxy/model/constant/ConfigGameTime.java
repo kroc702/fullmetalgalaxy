@@ -43,8 +43,11 @@ public enum ConfigGameTime implements IsSerializable
    */
   public String getIconsAsHtml()
   {
+    if( this == Custom ) {
+      return "<img src='/images/icons/custom16.png'/>";
+    }
     StringBuffer strBuf = new StringBuffer( " " );
-    if( !isParallele() ) {
+    if( !isParallel() ) {
       strBuf.append( "<img src='/images/icons/turnbyturn16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
     } else {
       strBuf.append( "<img src='/images/icons/parallele16.png' title='"+getEbConfigGameTime().getDescription()+"' /> " );
@@ -91,7 +94,7 @@ public enum ConfigGameTime implements IsSerializable
     return s_configMap.get( p_config );
   }
 
-  public boolean isParallele()
+  public boolean isParallel()
   {
     return this == QuickAsynch || this == StandardAsynch;
   }

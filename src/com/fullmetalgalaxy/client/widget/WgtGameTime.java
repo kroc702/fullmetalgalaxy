@@ -27,6 +27,7 @@ import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.persist.EbConfigGameTime;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml;
@@ -58,7 +59,8 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
   private RadioButton m_speedQuickButton = new RadioButton( "speed",
       new OnlyToBeUsedInGeneratedCodeStringBlessedAsSafeHtml(
           " <img src='/images/icons/fast16.png'/> : Partie rapide (1h30)" ) );
-
+  private HTML m_lblCustomSpeed = new HTML("<img src='/images/icons/custom16.png'/> custom speed");
+  
   private boolean m_readOnly = false;
   /**
    * 
@@ -79,6 +81,7 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
     m_speedQuickButton.addValueChangeHandler( this );
     m_panel.add( m_speedQuickButton );
 
+    m_panel.add( m_lblCustomSpeed );
     m_panel.add( new HTML(
         "<a href='http://guide.fullmetalgalaxy.com/guide/game-modes'>plus de détail ici</a>" ) );
     // fill UI
@@ -118,9 +121,9 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
   @Override
   public void onModelUpdate(GameEngine p_modelSender)
   {
-    ConfigGameTime config = p_modelSender.getGame().getConfigGameTime();
-    m_modeParallelButton.setValue( config.isParallele(), false );
-    m_modeTbtButton.setValue( !config.isParallele(), false );
+    EbConfigGameTime config = p_modelSender.getGame().getEbConfigGameTime();
+    m_modeParallelButton.setValue( config.isParallel(), false );
+    m_modeTbtButton.setValue( !config.isParallel(), false );
 
     m_speedQuickButton.setValue( config.isQuick(), false );
     m_speedSlowButton.setValue( !config.isQuick(), false );
@@ -131,12 +134,13 @@ public class WgtGameTime extends Composite implements ValueChangeHandler<Boolean
     m_speedSlowButton.setVisible( true );
     if( m_readOnly )
     {
-      m_modeParallelButton.setVisible( config.isParallele() );
-      m_modeTbtButton.setVisible( !config.isParallele() );
+      m_modeParallelButton.setVisible( config.isParallel() );
+      m_modeTbtButton.setVisible( !config.isParallel() );
 
       m_speedQuickButton.setVisible( config.isQuick() );
       m_speedSlowButton.setVisible( !config.isQuick() );
     }
+    m_lblCustomSpeed.setVisible( p_modelSender.getGame().getConfigGameTime() == ConfigGameTime.Custom );
   }
 
 }

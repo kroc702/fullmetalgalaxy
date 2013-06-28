@@ -26,7 +26,10 @@ package com.fullmetalgalaxy.client.widget;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.GameType;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -34,6 +37,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -50,7 +54,7 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
 
   private TextBox m_password = new TextBox();
   private CheckBox m_training = new CheckBox();
-  private CheckBox m_allowTeam = new CheckBox();
+  private ListBox m_maxTeamAllowed = new ListBox();
   
   /**
    * 
@@ -90,17 +94,29 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
     vpanel.add( hPanel );
 
     hPanel = new HorizontalPanel();
-    hPanel.add( new Label( "Autoriser les équipes :" ) );
-    m_allowTeam.addValueChangeHandler( new ValueChangeHandler<Boolean>()
+    hPanel.add( new Label( "équipes :" ) );
+    m_maxTeamAllowed.addItem( "Pas d'équipe", "0" );
+    for(int i=2; i<Company.values().length; i++ )
+    {
+      m_maxTeamAllowed.addItem( ""+i );
+    }
+    m_maxTeamAllowed.addChangeHandler( new ChangeHandler()
     {
       @Override
-      public void onValueChange(ValueChangeEvent<Boolean> p_event)
+      public void onChange(ChangeEvent p_event)
       {
-        GameEngine.model().getGame().setTeamAllowed( m_allowTeam.getValue() );
+        int i=0;
+        try
+        {
+          i=Integer.parseInt( m_maxTeamAllowed.getValue( m_maxTeamAllowed.getSelectedIndex() ) );
+        } catch( NumberFormatException e )
+        {
+        }
+        GameEngine.model().getGame().setMaxTeamAllowed( i );
       }
 
     } );
-    hPanel.add( m_allowTeam );
+    hPanel.add( m_maxTeamAllowed );
     vpanel.add( hPanel );
 
     // fill UI
