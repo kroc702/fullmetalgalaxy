@@ -147,6 +147,13 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     m_maps.put( image, "/puzzles/original/model.bin" );
     m_panel.add( image );
     
+    // add FMC map
+    image = new Image( "/puzzles/fullmetalconquete/icon.jpg" );
+    //image.setPixelSize( 96, 64 );
+    image.addClickHandler( this );
+    m_maps.put( image, "/puzzles/fullmetalconquete/model.bin" );
+    m_panel.add( image );
+    
     
     m_panel.add( new HTML("ou ID de la partie:<br/>") );
     m_panel.add( m_txtCustom );
