@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.google.gwt.user.client.DOM;
@@ -45,7 +46,8 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
   private FocusPanel m_focus = new FocusPanel();
   private LandType m_leftClic = LandType.Montain;
   private LandType m_rightClic = LandType.None;
-
+  private int m_brushSize = 1;
+  
   /**
    * 
    */
@@ -140,14 +142,26 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
     AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair( p_x,
         p_y ), getZoom() );
 
+    LandType land = m_rightClic;
     if( DOM.eventGetButton( DOM.eventGetCurrentEvent() ) == Event.BUTTON_LEFT )
     {
-      GameEngine.model().getGame().setLand( position, m_leftClic );
+      land = m_leftClic;
     }
-    else
+
+    GameEngine.model().getGame().setLand( position, land );
+    if( m_brushSize > 1 )
     {
-      GameEngine.model().getGame().setLand( position, m_rightClic );
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.NorthWest ), land );
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.SouthWest ), land );
     }
+    if( m_brushSize > 3 )
+    {
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.NorthEast ), land );
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.SouthEast ), land );
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.North ), land );
+      GameEngine.model().getGame().setLand( position.getNeighbour( Sector.South ), land );
+    }
+    
     // GameEngine.model().getGame().setMinimapUri( null );
     // GameEngine.model().getGame().setMapUri( null );
     onModelChange( true );
@@ -189,4 +203,15 @@ public class WgtBoardEditLand extends WgtBoardLayerLand implements MouseListener
     return m_rightClic;
   }
 
+/**
+ * 
+ * @param p_brushSize valid value: 1, 3, 7
+ */
+  public void setBrushSize(int p_brushSize)
+  {
+    m_brushSize = p_brushSize;
+  }
+
+  
+  
 }

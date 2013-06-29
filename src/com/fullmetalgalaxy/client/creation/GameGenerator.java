@@ -239,6 +239,7 @@ public class GameGenerator
   private static int s_seaPercent = 40;
   private static int s_landPercent = 60;
   private static boolean s_isHexagonMap = false;
+  private static boolean s_isLakeBoard = true;
 
   /**
    * this method was translated from C++ in Full Metal Program.
@@ -254,27 +255,17 @@ public class GameGenerator
     int nbMarsh;
     int nbPlain;
     int nbMontain;
-    boolean isLakeBoard = getLandPercent() >= 45 ? true : false;
     // (RpcUtil.random( 100 ) < 60);
     int position_Lig = 0;
     int position_Col = 0;
 
 
-    // Initialiser Carte
-    if( isLakeBoard )
-    {
-      clearLand( LandType.Plain );
-    }
-    else
-    {
-      clearLand( LandType.Sea );
-    }
-
 
     // Carte Lacs
-    if( isLakeBoard )
+    if( s_isLakeBoard )
     {
       // Au debut il y avait la Terre ...
+      clearLand( LandType.Plain );
       // Et Dieu crea la Mer ...
       max = (((getGame().getLandHeight() * getGame().getLandWidth()) * s_seaPercent) / 100) / 20;
       for( int i = 0; i < max; i++ )
@@ -330,36 +321,22 @@ public class GameGenerator
     else
     {
       // Au Debut il y avait la Mer ...
+      clearLand( LandType.Sea );
       // Et Dieu crea la Terre ...
       max = (((getGame().getLandHeight() * getGame().getLandWidth()) * s_landPercent) / 100) / 6;
       for( int i = 0; i < max; i++ )
       {
         do
         {
-          position_Lig = (short)(RpcUtil.random( getGame().getLandHeight() ));
-          position_Col = (short)(RpcUtil.random( getGame().getLandWidth() ));
-          position.setX( position_Col );
-          position.setY( position_Lig );
+          position.setY( (RpcUtil.random( getGame().getLandHeight() - 2 ) + 1) );
+          position.setX( (RpcUtil.random( getGame().getLandWidth() - 2 ) + 1) );
         } while( getGame().getLand( position ) == LandType.None );
         getGame().setLand( position, LandType.Plain );
-        if( (int)Math.round( Math.random() * 100 ) < 50 )
+        for( Sector sector : Sector.values() )
         {
-          for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+          if( getGame().getLand( position.getNeighbour( sector ) ) != LandType.None )
           {
-            if( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) != LandType.None )
-            {
-              getGame().setLand( position.getNeighbour( Sector.values()[iSector] ), LandType.Plain );
-            }
-          }
-        }
-        else
-        {
-          for( int iSector = 0; iSector < Sector.values().length; iSector++ )
-          {
-            if( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) != LandType.None )
-            {
-              getGame().setLand( position.getNeighbour( Sector.values()[iSector] ), LandType.Plain );
-            }
+            getGame().setLand( position.getNeighbour( sector ), LandType.Plain );
           }
         }
       }
@@ -670,6 +647,11 @@ public class GameGenerator
     s_seaPercent = 100 - s_landPercent;
   }
 
+  public static void setLakeBoard(boolean p_isLakeBoard)
+  {
+    s_isLakeBoard = p_isLakeBoard;
+  }
+  
   /**
    * @return the isHexagonMap
    */
