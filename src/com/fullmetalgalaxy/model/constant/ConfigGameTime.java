@@ -44,7 +44,7 @@ public enum ConfigGameTime implements IsSerializable
   public String getIconsAsHtml()
   {
     if( this == Custom ) {
-      return "<img src='/images/icons/custom16.png'/>";
+      return " <img src='/images/icons/custom16.png'/> ";
     }
     StringBuffer strBuf = new StringBuffer( " " );
     if( !isParallel() ) {

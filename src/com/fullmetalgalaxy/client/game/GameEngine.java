@@ -37,11 +37,13 @@ import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
+import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.game.board.layertoken.AnimEvent;
 import com.fullmetalgalaxy.client.game.board.layertoken.AnimFactory;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameServices;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
@@ -188,6 +190,17 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           LocalGame.loadGame( GameEngine.model() );
         }
         AppMain.instance().stopLoading();
+        
+        // if current user is the game creator and game need player, ask him with a dialog
+        //
+        if( m_game.getStatus() == GameStatus.Open
+            && AppMain.instance().getMyAccount() != null
+            && AppMain.instance().getMyAccount().getId() == m_game.getAccountCreator().getId() 
+            && getMyRegistration() == null )
+        {
+          DlgJoinGame.instance().show();
+          DlgJoinGame.instance().center();
+        }
       }
     }
   };

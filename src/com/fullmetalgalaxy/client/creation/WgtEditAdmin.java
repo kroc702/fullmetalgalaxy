@@ -157,8 +157,17 @@ public class WgtEditAdmin extends Composite
     // load current turn
     m_intCurrentTurn.setValue( GameEngine.model().getGame().getCurrentTimeStep() );
     m_lstStatus.setItemSelected( GameEngine.model().getGame().getStatus().ordinal(), true );
-    m_txtCreatorPseudo.setText( GameEngine.model().getGame().getAccountCreator().getPseudo() );
-    m_txtCreatorId.setText( ""+GameEngine.model().getGame().getAccountCreator().getId() );
+    
+    // load account creator 
+    if( GameEngine.model().getGame().getAccountCreator() != null )
+    {
+      m_txtCreatorPseudo.setText( GameEngine.model().getGame().getAccountCreator().getPseudo() );
+      m_txtCreatorId.setText( ""+GameEngine.model().getGame().getAccountCreator().getId() );
+    }
+    
+    // load current time config
+    m_wgtConfigGameTime.loadConfigGameTime( GameEngine.model().getGame().getEbConfigGameTime(), 
+        GameEngine.model().getGame().getConfigGameTime() );
     
     // reload all registration
     m_mapReg = new HashMap<String, EbRegistration>();
@@ -169,10 +178,8 @@ public class WgtEditAdmin extends Composite
       m_lstReg.addItem( Messages.getColorString( 0, registration.getColor() ) );
       m_mapReg.put( Messages.getColorString( 0, registration.getColor() ), registration );
     }
-    m_lstReg.setSelectedIndex( selectedIndex );
+    if( selectedIndex >= 0 ) m_lstReg.setSelectedIndex( selectedIndex );
     
-    m_wgtConfigGameTime.loadConfigGameTime( GameEngine.model().getGame().getEbConfigGameTime(), 
-                                            GameEngine.model().getGame().getConfigGameTime() );
   }
 
   FmpCallback<Void> m_callback = new FmpCallback<Void>()
