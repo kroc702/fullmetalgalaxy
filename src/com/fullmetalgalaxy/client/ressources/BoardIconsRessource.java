@@ -171,7 +171,7 @@ public class BoardIconsRessource
     }
   }
 
-
+  /* I keep this here just in case
   public static ImageResource deployment4(int p_zoom)
   {
     switch( p_zoom )
@@ -181,6 +181,18 @@ public class BoardIconsRessource
       return Icons.s_instance.tactic_deployment4();
     case EnuZoom.Small:
       return Icons.s_instance.strategy_deployment4();
+    }
+  }*/
+
+  public static ImageResource deployment3(int p_zoom)
+  {
+    switch( p_zoom )
+    {
+    default:
+    case EnuZoom.Medium:
+      return Icons.s_instance.tactic_deployment3();
+    case EnuZoom.Small:
+      return Icons.s_instance.strategy_deployment3();
     }
   }
 

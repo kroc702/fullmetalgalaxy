@@ -82,7 +82,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
   {
     switch( this )
     {
-    case Freighter:
     case Ore0:
       return 0;
     case Ore:

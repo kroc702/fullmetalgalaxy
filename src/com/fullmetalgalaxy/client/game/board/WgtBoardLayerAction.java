@@ -391,7 +391,7 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
               ((AnEventPlay)action).getPosition() );
           if( action instanceof EbEvtLand )
           {
-            drawTransparentImage( BoardIcons.deployment4( getZoom().getValue() ), ((AnEventPlay)action).getPosition() );
+            drawTransparentImage( BoardIcons.deployment3( getZoom().getValue() ), ((AnEventPlay)action).getPosition() );
           }
         }
       }

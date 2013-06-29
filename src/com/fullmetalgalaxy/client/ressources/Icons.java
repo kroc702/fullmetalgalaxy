@@ -223,12 +223,18 @@ public interface Icons extends ClientBundle
   public ImageResource arrow_w();
 
 
-
+  /* I keep this here just in case
   @Source("icons/board/tactic/deployment4.png")
   public ImageResource tactic_deployment4();
 
   @Source("icons/board/strategy/deployment4.png")
   public ImageResource strategy_deployment4();
+  */
+  @Source("icons/board/tactic/deployment3.png")
+  public ImageResource tactic_deployment3();
+
+  @Source("icons/board/strategy/deployment3.png")
+  public ImageResource strategy_deployment3();
 
   @Source("icons/board/tactic/hightlight_hexagon.png")
   public ImageResource tactic_hightlight_hexagon();

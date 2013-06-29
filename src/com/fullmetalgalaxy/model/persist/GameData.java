@@ -979,6 +979,9 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.getTeam( p_company );
   }
 
-  
+  public int getInitialScore()
+  {
+    return m_data.getInitialScore();
+  }
   
 }
