@@ -34,6 +34,8 @@ import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.ressources.Messages;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -42,6 +44,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -71,7 +75,9 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   private DlgLoadMap m_dlgLoadMap = new DlgLoadMap();
   private ListBox m_lstPlanet = new ListBox(false);
   private List<PlanetType> m_planets = new ArrayList<PlanetType>();
+  private ListBox m_lstAlgo = new ListBox(false);
 
+  private ListBox m_lstBrush = new ListBox(false);  
   private Image m_leftLand = new Image();
   private Image m_rightLand = new Image();
   private Image m_btnPlain = new Image( "images/board/desert/strategy/plain1.png", 0, 0,
@@ -122,13 +128,31 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     }
     m_panel.add( m_lstPlanet );
     m_panel.add( new Label( "taille de carte" ) );
-    m_panel.add( m_txtLandWidth );
-    m_panel.add( m_txtLandHeight );
+    Panel hpanel = new HorizontalPanel();
+    m_txtLandWidth.setWidth( "30px" );
+    m_txtLandHeight.setWidth( "30px" );
+    hpanel.add( m_txtLandWidth );
+    hpanel.add( m_txtLandHeight );
+    m_panel.add( hpanel );
     m_btnClear.addClickHandler( this );
     m_panel.add( m_btnClear );
     m_btnGenerate.addClickHandler( this );
     m_panel.add( m_btnGenerate );
-    HorizontalPanel hpanel = new HorizontalPanel();
+    
+    m_lstAlgo.addItem( "Lakes", ""+Boolean.TRUE );
+    m_lstAlgo.addItem( "Islands", ""+Boolean.FALSE );
+    m_lstAlgo.setSelectedIndex( 0 );
+    m_lstAlgo.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        GameGenerator.setLakeBoard( Boolean.parseBoolean( m_lstAlgo.getValue( m_lstAlgo.getSelectedIndex() ) ) );
+      }
+    } );
+    m_panel.add( m_lstAlgo );
+    
+    hpanel = new HorizontalPanel();
     hpanel.add( new Label( "terre en %" ) );
     m_txtLandPercent.addChangeListener( this );
     hpanel.add( m_txtLandPercent );
@@ -142,6 +166,33 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     m_chkRoundMap.setChecked( GameGenerator.isHexagonMap() );
     m_panel.add( hpanel );
 
+    m_btnLoadMap.addClickHandler( this );
+    m_panel.add( m_btnLoadMap );
+
+    m_panel.add( new HTML("<hr>") );
+    
+    hpanel = new HorizontalPanel();
+    hpanel.add( new Label("Brush ") );
+    m_lstBrush.addItem( "1" );
+    m_lstBrush.addItem( "3" );
+    m_lstBrush.addItem( "7" );
+    m_lstBrush.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        try
+        {
+          m_wgtlayerEditLand.setBrushSize( Integer.parseInt( m_lstBrush.getValue( m_lstBrush.getSelectedIndex() )) );
+        } catch( NumberFormatException e )
+        {
+        }
+      }
+    } );
+    m_lstBrush.setSelectedIndex( 0 );
+    hpanel.add( m_lstBrush );
+    m_panel.add( hpanel );
+    
     hpanel = new HorizontalPanel();
     hpanel.add( m_leftLand );
     hpanel.add( m_rightLand );
@@ -158,9 +209,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     m_panel.add( m_btnPlain );
     m_btnMontain.addMouseListener( this );
     m_panel.add( m_btnMontain );
-    m_btnLoadMap.addClickHandler( this );
-    m_panel.add( m_btnLoadMap );
-
+    
     setClicTool( Event.BUTTON_LEFT, LandType.Sea );
     setClicTool( Event.BUTTON_RIGHT, LandType.Montain );
 
@@ -171,17 +220,19 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   protected void redraw()
   {
     String base = "images/board/" + GameEngine.model().getGame().getPlanetType().getFolderName();
-    m_btnPlain.setUrl( base + "/strategy/plain1.png" );
+    int btnWidth = FmpConstant.getHexWidth( EnuZoom.Small ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small );
+    int btnHeight = FmpConstant.getHexHeight( EnuZoom.Small ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small );
+    m_btnPlain.setUrlAndVisibleRect( base + "/strategy/plain1.png", 0, 0, btnWidth, btnHeight );
     m_btnMontain.setUrl( base + "/strategy/montain1.png" );
-    m_btnReef.setUrl( base + "/strategy/reef_low1.png" );
-    m_btnMarsh.setUrl( base + "/strategy/swamp_low1.png" );
-    m_btnSea.setUrl( base + "/strategy/sea1.png" );
+    m_btnReef.setUrlAndVisibleRect( base + "/strategy/reef_low1.png", 0, 0, btnWidth, btnHeight );
+    m_btnMarsh.setUrlAndVisibleRect( base + "/strategy/swamp_low1.png", 0, 0, btnWidth, btnHeight );
+    m_btnSea.setUrlAndVisibleRect( base + "/strategy/sea1.png", 0, 0, btnWidth, btnHeight );
     m_leftLand.setUrlAndVisibleRect( base + "/tactic/"
-        + m_wgtlayerEditLand.getLeftClic().getImageName(), 0, 0, 
+        + m_wgtlayerEditLand.getLeftClic().getImageName(), 10, 10, 
         FmpConstant.getHexWidth( EnuZoom.Medium ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Medium ), 
         FmpConstant.getHexHeight( EnuZoom.Medium ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Medium ) );
     m_rightLand.setUrlAndVisibleRect( base + "/tactic/"
-        + m_wgtlayerEditLand.getRightClic().getImageName(), 0, 0, 
+        + m_wgtlayerEditLand.getRightClic().getImageName(), 10, 10, 
         FmpConstant.getHexWidth( EnuZoom.Medium ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Medium ), 
         FmpConstant.getHexHeight( EnuZoom.Medium ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Medium ) );
 
@@ -197,13 +248,13 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     if( p_button == Event.BUTTON_LEFT )
     {
       m_wgtlayerEditLand.setLeftClic( p_land );
-      m_leftLand.setUrlAndVisibleRect( imageUrl, 0, 0, FmpConstant.getHexWidth( EnuZoom.Medium ),
+      m_leftLand.setUrlAndVisibleRect( imageUrl, 10, 10, FmpConstant.getHexWidth( EnuZoom.Medium ),
           FmpConstant.getHexHeight( EnuZoom.Medium ) );
     }
     else
     {
       m_wgtlayerEditLand.setRightClic( p_land );
-      m_rightLand.setUrlAndVisibleRect( imageUrl, 0, 0, FmpConstant.getHexWidth( EnuZoom.Medium ),
+      m_rightLand.setUrlAndVisibleRect( imageUrl, 10, 10, FmpConstant.getHexWidth( EnuZoom.Medium ),
           FmpConstant.getHexHeight( EnuZoom.Medium ) );
     }
   }
@@ -239,6 +290,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     else if( p_event.getSource() == m_btnLoadMap )
     {
       m_dlgLoadMap.show();
+      m_dlgLoadMap.center();
     }
   }
 
