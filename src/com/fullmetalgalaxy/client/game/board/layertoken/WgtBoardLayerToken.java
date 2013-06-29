@@ -249,7 +249,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       if( (p_token.getType() == TokenType.Freighter)
           && (game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep()) )
       {
-        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.deployment4( getZoom().getValue() ) , p_token, 0 );
+        addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.deployment3( getZoom().getValue() ) , p_token, 0 );
       }
       else
       {

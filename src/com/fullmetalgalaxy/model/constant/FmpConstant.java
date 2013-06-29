@@ -37,11 +37,8 @@ public class FmpConstant
   public static final int maximumActionPtWithoutLanding = 10;
 
   public static final int parallelLockRadius = 6;
-  public static final int minSpaceBetweenFreighter = 8;
-  public static final int deployementRadius = 4;
-
-  /** TODO move this when configure initial units */
-  public static final int initialScore = 14;
+  public static final int minSpaceBetweenFreighter = 9;
+  public static final int deployementRadius = 3;
 
   // in second
   public static final int clientMessagesLivePeriod = 15;

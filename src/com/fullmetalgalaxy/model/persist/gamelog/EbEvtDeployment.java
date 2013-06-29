@@ -136,14 +136,16 @@ public class EbEvtDeployment extends AnEventPlay
     }
     
     // check token isn't deployed too far from his freighter
-    // AnBoardPosition position = getToken( p_game )
-    if( freighter.getPosition().getHexDistance( getPosition() ) > FmpConstant.deployementRadius )
+    if( getToken( p_game ).getHexagonSize() == 2 )
     {
-      throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
-    }
-    if( getToken( p_game ).getHexagonSize() == 2
-        && freighter.getPosition().getHexDistance(
-            getPosition().getNeighbour( getPosition().getSector() ) ) > FmpConstant.deployementRadius )
+      // barge must have at least one hex inside deployment area
+      if( freighter.getPosition().getHexDistance( getPosition() ) > FmpConstant.deployementRadius
+          && freighter.getPosition().getHexDistance(
+          getPosition().getNeighbour( getPosition().getSector() ) ) > FmpConstant.deployementRadius )
+      {
+        throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
+      }
+    } else if( freighter.getPosition().getHexDistance( getPosition() ) > FmpConstant.deployementRadius )
     {
       throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
     }

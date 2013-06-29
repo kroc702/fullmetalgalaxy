@@ -28,7 +28,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import sun.security.action.GetIntegerAction;
 
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
@@ -178,7 +181,20 @@ public class EbGameData extends EbBase
     m_initialHolds.put( p_type, p_qty );
   }
 
-
+  /**
+   * score sum of all token in initial hold 
+   * @return
+   */
+  public int getInitialScore()
+  {
+    int score = 0;
+    for(Entry<TokenType, Integer> entry: getInitialHolds().entrySet())
+    {
+      score += entry.getKey().getWinningPoint() * entry.getValue();
+    }
+    return score;
+  }
+  
   /**
    * Don't use this method directly, it's for hibernate and h4gwt use only
    * @return the lands

@@ -60,10 +60,15 @@ public class BoardIcons
     return AbstractImagePrototype.create( BoardIconsRessource.icon16( p_colorValue ) );
   }
 
-
+  /* I keep this here just in case
   public static AbstractImagePrototype deployment4(int p_zoom)
   {
     return AbstractImagePrototype.create( BoardIconsRessource.deployment4( p_zoom ) );
+  }*/
+
+  public static AbstractImagePrototype deployment3(int p_zoom)
+  {
+    return AbstractImagePrototype.create( BoardIconsRessource.deployment3( p_zoom ) );
   }
 
   public static AbstractImagePrototype select_hexagon(int p_zoom)
