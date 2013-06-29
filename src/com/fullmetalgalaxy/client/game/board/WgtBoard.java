@@ -311,7 +311,13 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     {
       m_oldZoom = getZoom().getValue();
       m_layerCollection.setZoom( getZoom() );
-      m_panel.setPixelSize( m_layerLand.getOffsetWidth(), m_layerLand.getOffsetHeight() );
+      if( m_layerLand.isVisible() )
+      {
+        m_panel.setPixelSize( m_layerLand.getOffsetWidth(), m_layerLand.getOffsetHeight() );
+      } else if( m_layerMap.isVisible() )
+      {
+        m_panel.setPixelSize( m_layerMap.getOffsetWidth(), m_layerMap.getOffsetHeight() );
+      }
     }
     else
     {
@@ -320,7 +326,13 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
       if( m_game != p_modelSender.getGame() )
       {
         m_game = p_modelSender.getGame();
-        m_panel.setPixelSize( m_layerLand.getOffsetWidth(), m_layerLand.getOffsetHeight() );
+        if( m_layerLand.isVisible() )
+        {
+          m_panel.setPixelSize( m_layerLand.getOffsetWidth(), m_layerLand.getOffsetHeight() );
+        } else if( m_layerMap.isVisible() )
+        {
+          m_panel.setPixelSize( m_layerMap.getOffsetWidth(), m_layerMap.getOffsetHeight() );
+        }
       }
     }
   }

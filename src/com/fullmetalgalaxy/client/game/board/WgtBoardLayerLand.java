@@ -71,7 +71,15 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   public void onModelChange(boolean p_forceRedraw)
   {
     super.onModelChange( p_forceRedraw );
-
+    if( isVisible() == GameEngine.model().isCustomMapDisplayed() )
+    {
+      setVisible( !GameEngine.model().isCustomMapDisplayed() );
+    }
+    if( !isVisible() )
+    {
+      return;
+    }
+    
     if( (m_lastGameId != GameEngine.model().getGame().getId()) || (p_forceRedraw) )
     {
       m_lastGameId = GameEngine.model().getGame().getId();
