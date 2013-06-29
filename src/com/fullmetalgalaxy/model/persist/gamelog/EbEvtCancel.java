@@ -109,7 +109,7 @@ public class EbEvtCancel extends AnEventUser
       timeSinceLastTimeStepChange = 0;
     }
     int totalEventCount = p_game.getLogs().size() + p_game.getAdditionalEventCount();
-    int toActionIndex = m_toActionIndex;
+    int toActionIndex = m_toActionIndex - p_game.getAdditionalEventCount();
     if( getMyRegistration( p_game ) != null )
     {
       totalEventCount += getMyRegistration( p_game ).getTeam(p_game).getMyEvents().size();
@@ -165,17 +165,20 @@ public class EbEvtCancel extends AnEventUser
     m_toActionIndex = p_toActionIndex;
   }
 
-  public void setFromActionIndex(Game p_game)
-  {
-    if( p_game != null && p_game.getLogs().size() > 0 )
-    {
-      setFromActionIndex( p_game.getLogs().size() -1 );
-    }
-  }
 
   public void setFromActionIndex(int p_fromActionIndex)
   {
     m_fromActionIndex = p_fromActionIndex;
+  }
+
+  public int getFromActionIndex()
+  {
+    return m_fromActionIndex;
+  }
+
+  public int getToActionIndex()
+  {
+    return m_toActionIndex;
   }
 
 
