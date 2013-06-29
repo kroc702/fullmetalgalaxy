@@ -30,6 +30,7 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -154,14 +155,19 @@ public class DlgJoinChooseColor extends DialogBox
     }
     else
     {
+      // this is a player replacement: don't allow company selection
+      m_companySelection.setVisible( false );
       freeColors = GameEngine.model().getGame().getFreePlayersColors();
     }
     for( EnuColor color : freeColors )
     {
-      m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
-      if( firstColor.getValue() == EnuColor.None )
+      if( color.getValue() != EnuColor.None )
       {
-        firstColor = color;
+        m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
+        if( firstColor.getValue() == EnuColor.None )
+        {
+          firstColor = color;
+        }
       }
     }
     m_colorSelection.setSelectedIndex( 0 );
@@ -175,6 +181,13 @@ public class DlgJoinChooseColor extends DialogBox
         EnuColor color = new EnuColor(colorValue);
         m_colorPreview.setUrl( "/images/board/" + color.toString() + "/preview.jpg" );
         m_btnOk.setEnabled( true );
+        // for replacement: search corresponding team
+        EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor( colorValue );
+        if( registration != null && registration.getTeam( GameEngine.model().getGame() ) != null )
+        {
+          m_companyPreview.setUrl( "/images/avatar/" +
+              registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
+        }
       }
     } );
     hpanel = new HorizontalPanel();

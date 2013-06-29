@@ -177,7 +177,7 @@ public class EbEvtLand extends AnEventPlay
     super.exec(p_game);
     p_game.moveToken( getToken(p_game), getPosition() );
     getToken(p_game).incVersion();
-    // destroy any colorless token in the deployement area
+    // destroy any colorless token in the deployment area
     m_TokenIds = new ArrayList<Long>();
     for( EbToken currentToken : p_game.getSetToken() )
     {

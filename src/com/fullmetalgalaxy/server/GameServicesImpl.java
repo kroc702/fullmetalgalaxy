@@ -404,6 +404,19 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         if(event.getType() == GameLogType.EvtCancel)
         {
           // cancel action doesn't work in exact same way as other event
+          // if loaded game don't have enough event loaded, load them before cancel
+          if( ((EbEvtCancel)event).getFromActionIndex()-((EbEvtCancel)event).getToActionIndex() > game.getLogs().size() )
+          {
+            // TODO I think we have a database storage leak here.
+            // we remove reference from game, but we don't remove entity from data store
+            // we may also have a bug if we cancel action on very big game (more than 3 additional game log)
+            EbGameLog gameLog = getAdditionalGameLog( game.getId() );
+            game.setAdditionalEventCount( game.getAdditionalEventCount() - gameLog.getLog().size() );
+            game.getAdditionalGameLog().clear();
+            gameLog.getLog().addAll( game.getLogs() );
+            game.setLogs( gameLog.getLog() );
+          }
+          
           ((EbEvtCancel)event).execCancel( game );
         }
         else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )

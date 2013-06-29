@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.ArrayList;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -43,6 +45,12 @@ public class EbEvtTakeOff extends AnEventPlay
 
   private boolean m_backInOrbit = false;
 
+  /**
+   * token list which are colorless after this action
+   */
+  private ArrayList<Long> m_TokenIds = null;
+  
+  
   /**
    * 
    */
@@ -149,10 +157,12 @@ public class EbEvtTakeOff extends AnEventPlay
     getToken(p_game).incVersion();
 
     // all tokens on board become colorless
+    m_TokenIds = new ArrayList<Long>();
     for( EbToken token : p_game.getSetToken() )
     {
       if( (token.getLocation() == Location.Board) && (token.getColor() == getToken(p_game).getColor()) )
       {
+        m_TokenIds.add( token.getId() );
         p_game.changeTokenColor( token, EnuColor.None );
         token.incVersion();
       }
@@ -186,6 +196,21 @@ public class EbEvtTakeOff extends AnEventPlay
           p_game.moveToken( token, getToken( p_game ).getExtraPositions().get( index ) );
           token.decVersion();
           index++;
+        }
+      }
+    }
+    
+    // put back color on token
+    if( m_TokenIds != null )
+    {
+      int freitherColor = getToken( p_game ).getColor();
+      for( Long id : m_TokenIds )
+      {
+        EbToken token = p_game.getToken( id );
+        if( (token != null) )
+        {
+          p_game.changeTokenColor( token, freitherColor );
+          token.decVersion();
         }
       }
     }
