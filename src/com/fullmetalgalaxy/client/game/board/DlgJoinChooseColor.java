@@ -151,12 +151,12 @@ public class DlgJoinChooseColor extends DialogBox
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
         .getMaxNumberOfPlayer() )
     {
+      // this is a player replacement: don't allow company selection
+      m_companySelection.setVisible( false );
       freeColors = GameEngine.model().getGame().getFreeRegistrationColors();
     }
     else
     {
-      // this is a player replacement: don't allow company selection
-      m_companySelection.setVisible( false );
       freeColors = GameEngine.model().getGame().getFreePlayersColors();
     }
     for( EnuColor color : freeColors )

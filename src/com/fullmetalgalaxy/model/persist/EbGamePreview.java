@@ -604,16 +604,14 @@ public class EbGamePreview extends EbBase
     strBuf.append( "<td>" );
     strBuf.append( getIconsAsHtml() );
 
-    if( ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).isParallel() )
+    if( getEbConfigGameTime().isParallel() )
     {
       strBuf.append( ""
-          + (getCurrentTimeStep() * 100 / ConfigGameTime.getEbConfigGameTime( getConfigGameTime() )
-              .getTotalTimeStep()) + "%" );
+          + (getCurrentTimeStep() * 100 / getEbConfigGameTime().getTotalTimeStep()) + "%" );
     }
     else
     {
-      strBuf.append( "" + getCurrentTimeStep() + "/"
-          + ConfigGameTime.getEbConfigGameTime( getConfigGameTime() ).getTotalTimeStep() );
+      strBuf.append( "" + getCurrentTimeStep() + "/" + getEbConfigGameTime().getTotalTimeStep() );
     }
     strBuf.append( "</td>" );
 
@@ -1016,6 +1014,10 @@ public class EbGamePreview extends EbBase
   {
     if( getConfigGameTime() == ConfigGameTime.Custom )
     {
+      if( m_ebConfigGameTime == null )
+      {
+        m_ebConfigGameTime = new EbConfigGameTime();
+      }
       return m_ebConfigGameTime;
     }
     m_ebConfigGameTime = null;

@@ -23,6 +23,8 @@
 
 package com.fullmetalgalaxy.client.widget;
 
+import com.fullmetalgalaxy.client.AppRoot;
+import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.tabmenu.WgtIntBox;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
@@ -249,7 +251,6 @@ public class WgtConfigGameTime extends Composite
     
     
     initWidget( m_panel );
-    loadConfigGameTime(m_config,m_configEnum);
   }
 
   
@@ -290,5 +291,6 @@ public class WgtConfigGameTime extends Composite
     m_lblConfigGameTime.setText( m_configEnum.toString() );
     GameEngine.model().getGame().setConfigGameTime(ConfigGameTime.Custom);
     GameEngine.model().getGame().setEbConfigGameTime( m_config );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 }

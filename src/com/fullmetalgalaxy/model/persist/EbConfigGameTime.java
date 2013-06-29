@@ -98,14 +98,14 @@ public class EbConfigGameTime extends EbBase
   {
     m_timeStepDurationInSec = 86400; // one day
     m_tideChangeFrequency = 1; // every time steps
-    m_totalTimeStep = 25;
+    m_totalTimeStep = 26;
     m_actionPtPerTimeStep = 15;
     m_actionPtPerExtraShip = 5;
     m_actionPtMaxReserve = 25;
     m_actionPtMaxPerExtraShip = 5;
     m_takeOffTurns = new ArrayList<Integer>();
     m_takeOffTurns.add( 21 );
-    m_takeOffTurns.add( 25 );
+    m_takeOffTurns.add( 26 );
     m_isParallel = false;
     m_roundActionPt = 1;
     m_deploymentTimeStep = 1;
@@ -279,7 +279,7 @@ public class EbConfigGameTime extends EbBase
 
   public boolean isQuick()
   {
-    return m_timeStepDurationInSec < 60*30; // turn less than 30min  
+    return m_timeStepDurationInSec > 0 && m_timeStepDurationInSec < 60*30; // turn less than 30min  
   }
   
   /**
