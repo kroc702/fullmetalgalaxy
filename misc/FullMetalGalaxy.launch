@@ -18,8 +18,8 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.suite.appengineClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-startupUrl chat.jsp -war C:\Users\v1j\Documents\perso\workspace\FullMetalGalaxy\war -port 8888 -codeServerPort 9997 -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -server com.google.appengine.tools.development.gwt.AppEngineLauncher com.fullmetalgalaxy.Game"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-startupUrl chat.jsp -war C:\Users\Vincent\workspace\FullMetalGalaxy\war -port 8888 -codeServerPort 9997 -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -server com.google.appengine.tools.development.gwt.AppEngineLauncher com.fullmetalgalaxy.Game"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="FullMetalGalaxy"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\Users\v1j\Documents\perso\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.6.6\appengine-java-sdk-1.6.6\lib\agent\appengine-agent.jar -Xmx512m"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\Sun\appengine-java-sdk-1.7.6\lib\agent\appengine-agent.jar -Xmx512m"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="/FullMetalGalaxy/war"/>
 </launchConfiguration>
