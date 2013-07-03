@@ -140,6 +140,8 @@ public class WgtEditOneRegistration extends Composite
     {
       m_lstTeam.addItem( company.toString() );
     }
+    m_lstTeam.setSelectedIndex( m_registration.getTeam( GameEngine.model().getGame() ).getCompany().ordinal() );
+    
     m_lstTeam.addChangeHandler( new ChangeHandler()
     {
       @Override

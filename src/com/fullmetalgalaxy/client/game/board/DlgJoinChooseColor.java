@@ -171,6 +171,15 @@ public class DlgJoinChooseColor extends DialogBox
       }
     }
     m_colorSelection.setSelectedIndex( 0 );
+    // initialize company icon
+    int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
+    EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor( colorValue );
+    if( registration != null && registration.getTeam( GameEngine.model().getGame() ) != null )
+    {
+      m_companyPreview.setUrl( "/images/avatar/" +
+          registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
+    }
+    // initialize color icon
     m_colorPreview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
