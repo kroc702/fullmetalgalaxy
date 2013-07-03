@@ -92,8 +92,22 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_skipTurnButtons.clear();
     m_playerPanel.clear();
     int playerCount = GameEngine.model().getGame().getSetRegistration().size();
-    int maxPlayerCount = GameEngine.model().getGame().getMaxNumberOfPlayer();
-    m_playerPanel.add( new Label( MAppBoard.s_messages.xPlayers( playerCount, maxPlayerCount ) ) );
+    String strPlayerCount = ""+playerCount;
+    if( playerCount != GameEngine.model().getGame().getMaxNumberOfPlayer() )
+    {
+      strPlayerCount += "/"+GameEngine.model().getGame().getMaxNumberOfPlayer();
+    }
+    String strLabel = MAppBoard.s_messages.xPlayers( strPlayerCount );
+    if( GameEngine.model().getGame().getMaxTeamAllowed() > 0 )
+    {
+      String strTeamCount = ""+GameEngine.model().getGame().getTeams().size();
+      if( GameEngine.model().getGame().getTeams().size() != GameEngine.model().getGame().getMaxTeamAllowed() )
+      {
+        strTeamCount += "/"+GameEngine.model().getGame().getMaxTeamAllowed();
+      }
+      strLabel += " - " + MAppBoard.s_messages.xTeams( strTeamCount );
+    }
+    m_playerPanel.add( new Label( strLabel ) );
 
     // message to all link
     long pseudoList[] = new long[playerCount];

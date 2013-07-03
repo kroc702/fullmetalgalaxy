@@ -31,8 +31,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import sun.security.action.GetIntegerAction;
-
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
@@ -187,7 +185,7 @@ public class EbGameData extends EbBase
    */
   public int getInitialScore()
   {
-    int score = 0;
+    int score = 1; // one for freighter
     for(Entry<TokenType, Integer> entry: getInitialHolds().entrySet())
     {
       score += entry.getKey().getWinningPoint() * entry.getValue();

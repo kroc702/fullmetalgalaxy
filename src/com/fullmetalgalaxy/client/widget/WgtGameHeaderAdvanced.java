@@ -116,6 +116,13 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
       }
 
     } );
+    // init team count selection
+    if( GameEngine.model().getGame().getMaxTeamAllowed() == 0 )
+    {
+      m_maxTeamAllowed.setItemSelected( 0, true );
+    } else {
+      m_maxTeamAllowed.setItemSelected( GameEngine.model().getGame().getMaxTeamAllowed()-1, true );
+    }
     hPanel.add( m_maxTeamAllowed );
     vpanel.add( hPanel );
 
