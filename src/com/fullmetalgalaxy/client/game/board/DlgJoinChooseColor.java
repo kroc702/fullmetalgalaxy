@@ -88,6 +88,7 @@ public class DlgJoinChooseColor extends DialogBox
     setText( MAppBoard.s_messages.unitsTitle() );
 
     // add company list widget
+    // =======================
     List<Company> freeCompany = new ArrayList<Company>();
     for( Company company : Company.values() )
     {
@@ -111,7 +112,8 @@ public class DlgJoinChooseColor extends DialogBox
     else
     {
       m_panel.add( new HTML( "<b>" + MAppBoard.s_messages.warningTeamAllowed() + "</b>" ) );
-      if( GameEngine.model().getGame().getMaxTeamAllowed() >= GameEngine.model().getGame().getTeams().size() )
+      if( GameEngine.model().getGame().getMaxTeamAllowed() <= GameEngine.model().getGame()
+          .getTeams().size() )
       {
         // player shouldn't choose other team
         freeCompany.clear();
@@ -127,7 +129,9 @@ public class DlgJoinChooseColor extends DialogBox
       m_companySelection.addItem( company.getFullName(), company.toString() );
     }
     m_companySelection.setSelectedIndex( 0 );
-    m_companyPreview.setUrl( "/images/avatar/" + Company.Freelancer + ".jpg" );
+    Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
+        .getSelectedIndex() ) );
+    m_companyPreview.setUrl( "/images/avatar/" + company + ".jpg" );
     m_companySelection.addChangeHandler( new ChangeHandler()
     {
       @Override
@@ -145,7 +149,7 @@ public class DlgJoinChooseColor extends DialogBox
     m_panel.add( hpanel );
 
     // add color list widget
-    // ////////////////////
+    // =====================
     Set<EnuColor> freeColors = null;
     EnuColor firstColor = new EnuColor( EnuColor.None );
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
@@ -206,6 +210,7 @@ public class DlgJoinChooseColor extends DialogBox
     m_panel.add( hpanel );
 
     // add buttons
+    // ===========
     hpanel = new HorizontalPanel();
     // add cancel button
     m_btnCancel.addClickHandler( new ClickHandler()
@@ -228,8 +233,14 @@ public class DlgJoinChooseColor extends DialogBox
             .getSelectedIndex() ) );
         EnuColor color = new EnuColor( colorValue );
         EbGameJoin action = new EbGameJoin();
-        Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
-            .getSelectedIndex() ) );
+        Company company = Company.Freelancer;
+        try
+        {
+          company = Company.valueOf( m_companySelection.getValue( m_companySelection
+              .getSelectedIndex() ) );
+        } catch( Exception e )
+        {
+        }
         action.setCompany( company );
         action.setGame( GameEngine.model().getGame() );
         action.setAccountId( AppMain.instance().getMyAccount().getId() );

@@ -1176,7 +1176,7 @@ public class EbGamePreview extends EbBase
 
   public boolean isTeamAllowed()
   {
-    return getMaxTeamAllowed() > 0;
+    return getMaxTeamAllowed() > 1;
   }
 
   public int getMaxTeamAllowed()

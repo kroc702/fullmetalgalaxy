@@ -116,15 +116,9 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
       }
 
     } );
-    // init team count selection
-    if( GameEngine.model().getGame().getMaxTeamAllowed() == 0 )
-    {
-      m_maxTeamAllowed.setItemSelected( 0, true );
-    } else {
-      m_maxTeamAllowed.setItemSelected( GameEngine.model().getGame().getMaxTeamAllowed()-1, true );
-    }
     hPanel.add( m_maxTeamAllowed );
     vpanel.add( hPanel );
+
 
     // fill UI
     onModelUpdate(GameEngine.model());
@@ -141,6 +135,7 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
   {
     m_password.setEnabled( !p_readOnly );
     m_training.setEnabled( !p_readOnly );
+    m_maxTeamAllowed.setEnabled( !p_readOnly );
   }
 
 
@@ -150,6 +145,15 @@ public class WgtGameHeaderAdvanced extends Composite implements ModelUpdateEvent
   public void onModelUpdate(GameEngine p_modelSender)
   {
     m_training.setValue( GameEngine.model().getGame().getGameType() == GameType.Initiation );
+    // init team count selection
+    if( !GameEngine.model().getGame().isTeamAllowed() )
+    {
+      m_maxTeamAllowed.setItemSelected( 0, true );
+    }
+    else
+    {
+      m_maxTeamAllowed.setItemSelected( GameEngine.model().getGame().getMaxTeamAllowed() - 1, true );
+    }
   }
 
 }
