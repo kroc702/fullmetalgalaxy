@@ -627,17 +627,25 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public EbTeam getNextTeam2Play(int p_currentIndex)
   {
-    EbTeam team = null;
     int index = p_currentIndex;
+    List<EbTeam> teams = getTeamByPlayOrder();
+    EbTeam team = null;
+    
     do
     {
       index++;
-      team = getTeamByOrderIndex( index );
+      try
+      {
+        team = teams.get( index );
+      } catch( Exception e )
+      {
+        team = null;
+      }
       if( team == null )
       {
         // next turn !
         index = 0;
-        team = getTeamByOrderIndex( index );
+        team = teams.get( index );
         // avoid infinite loop
         if( p_currentIndex < 0 )
           break;
