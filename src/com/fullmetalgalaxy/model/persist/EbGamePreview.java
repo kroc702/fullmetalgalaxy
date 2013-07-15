@@ -310,12 +310,11 @@ public class EbGamePreview extends EbBase
    */
   public EbTeam getTeamByOrderIndex(int p_index)
   {
-    for( EbTeam team : getTeams() )
+    try
     {
-      if( team.getOrderIndex() == p_index )
-      {
-        return team;
-      }
+      return getTeamByPlayOrder().get( p_index );
+    } catch( Exception e )
+    {
     }
     return null;
   }
@@ -393,6 +392,13 @@ public class EbGamePreview extends EbBase
       sortedTeam.add( index, team );
     }
 
+    // team's order index property may be corrupted
+    // repair them:
+    for(int index=0; index<sortedTeam.size(); index++)
+    {
+      sortedTeam.get( index ).setOrderIndex( index );
+    }
+    
     return sortedTeam;
   }
 
