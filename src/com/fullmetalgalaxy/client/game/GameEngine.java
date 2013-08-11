@@ -36,6 +36,7 @@ import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.MAppMessagesStack;
 import com.fullmetalgalaxy.client.event.ChannelMessageEventHandler;
 import com.fullmetalgalaxy.client.event.GameActionEvent;
+import com.fullmetalgalaxy.client.event.GameLoadEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.board.DlgJoinGame;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
@@ -45,6 +46,7 @@ import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -95,6 +97,16 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     return s_ModelFmpMain;
   }
 
+  public static Game game()
+  {
+    return GameEngine.model().getGame();
+  }
+  
+  public static HexCoordinateSystem coordinateSystem()
+  {
+    return GameEngine.model().getGame().getCoordinateSystem();
+  }
+  
   protected Game m_game = new Game();
 
 
@@ -178,6 +190,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         }
 
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+        AppRoot.getEventBus().fireEvent( new GameLoadEvent( m_game ) );
         if( m_game.getGameType() == GameType.MultiPlayer
             || m_game.getGameType() == GameType.Initiation )
         {
@@ -918,7 +931,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    * in time mode, play events up to the given one
    * @param p_actionCount
    */
-  @SuppressWarnings("null")
   public void timePlay(AnEvent p_event)
   {
     if( !isTimeLineMode() || p_event == null || p_event.getIdGame() != getGame().getId() )

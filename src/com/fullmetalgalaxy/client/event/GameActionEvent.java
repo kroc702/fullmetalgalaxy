@@ -22,7 +22,6 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.event;
 
-import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -30,8 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author vlegendr
  *
- * this event represent any {@link GameEngine} update: this is the legacy event. 
- * (ie the only existing event before the use of eventbus)
+ * 
  */
 public class GameActionEvent extends GwtEvent<GameActionEvent.Handler>
 {

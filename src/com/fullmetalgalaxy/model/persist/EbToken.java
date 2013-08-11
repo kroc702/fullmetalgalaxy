@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Sector;
@@ -280,19 +281,19 @@ public class EbToken extends EbBase
    * @return true if the two token have at least one neighbor position.
    */
   
-  public boolean isNeighbor(EbToken p_token)
+  public boolean isNeighbor(HexCoordinateSystem p_coordinateSystem, EbToken p_token)
   {
     if( (getLocation() != Location.Board) || (p_token.getLocation() != Location.Board) )
     {
       return false;
     }
-    if( isNeighbor( p_token.getPosition() ) )
+    if( isNeighbor( p_coordinateSystem, p_token.getPosition() ) )
     {
       return true;
     }
-    for( AnBoardPosition otherPosition : p_token.getExtraPositions() )
+    for( AnBoardPosition otherPosition : p_token.getExtraPositions(p_coordinateSystem) )
     {
-      if( isNeighbor( otherPosition ) )
+      if( isNeighbor( p_coordinateSystem, otherPosition ) )
       {
         return true;
       }
@@ -306,7 +307,7 @@ public class EbToken extends EbBase
     ArrayList<EbToken> neighbor = new ArrayList<EbToken>();
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.isNeighbor( this ) )
+      if( token.isNeighbor( p_game.getCoordinateSystem(), this ) )
       {
         neighbor.add( token );
       }
@@ -326,7 +327,7 @@ public class EbToken extends EbBase
     for( EbToken token : p_game.getSetToken() )
     {
       if( (token.canBeColored()) && (!tokenTeamColor.isColored( token.getColor() ))
-          && (token.isNeighbor( this )) )
+          && (token.isNeighbor( p_game.getCoordinateSystem(), this )) )
       {
         return true;
       }
@@ -350,13 +351,12 @@ public class EbToken extends EbBase
     }
     // first determine the token color
     EnuColor tokenColor = getEnuColor();
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : p_game.getCoordinateSystem().getAllNeighbors( p_position ) )
     {
-      AnBoardPosition position = p_position.getNeighbour( sector );
-      for( EbToken token : p_game.getAllToken( position ) )
+      for( EbToken token : p_game.getAllToken( neighborPosition ) )
       {
         if( (token.canBeColored()) && (tokenColor.getValue() != token.getColor())
-            && (token.isNeighbor( this ))
+            && (token.isNeighbor( p_game.getCoordinateSystem(), this ))
             && ( isDestroyer || token.getType().isDestroyer() ) )
         {
           return true;
@@ -397,15 +397,15 @@ public class EbToken extends EbBase
    * @return true if the token have at least one neighbor position with p_position.
    */
   
-  public boolean isNeighbor(AnBoardPosition p_position)
+  public boolean isNeighbor(HexCoordinateSystem p_coordinateSystem, AnBoardPosition p_position)
   {
-    if( getPosition().isNeighbor( p_position ) )
+    if( p_coordinateSystem.areNeighbor( getPosition(), p_position ) )
     {
       return true;
     }
-    for( AnBoardPosition myPosition : getExtraPositions() )
+    for( AnBoardPosition myPosition : getExtraPositions(p_coordinateSystem) )
     {
-      if( myPosition.isNeighbor( p_position ) )
+      if( p_coordinateSystem.areNeighbor( myPosition, p_position ) )
       {
         return true;
       }
@@ -625,7 +625,7 @@ public class EbToken extends EbBase
    * @return all board positions of a given token 
    */
   
-  public ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition> getExtraPositions()
+  public ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition> getExtraPositions(HexCoordinateSystem p_coordinateSystem)
   {
     ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition> list = new ArrayList<com.fullmetalgalaxy.model.persist.AnBoardPosition>();
 
@@ -641,23 +641,23 @@ public class EbToken extends EbBase
         case North:
         case SouthEast:
         case SouthWest:
-          list.add( getPosition().getNeighbour( Sector.North ) );
-          list.add( getPosition().getNeighbour( Sector.SouthEast ) );
-          list.add( getPosition().getNeighbour( Sector.SouthWest ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.North ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.SouthEast ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.SouthWest ) );
           break;
         case NorthEast:
         case South:
         case NorthWest:
-          list.add( getPosition().getNeighbour( Sector.NorthEast ) );
-          list.add( getPosition().getNeighbour( Sector.South ) );
-          list.add( getPosition().getNeighbour( Sector.NorthWest ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.NorthEast ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.South ) );
+          list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.NorthWest ) );
         default:
           break;
         }
         break;
 
       case Barge:
-        list.add( getPosition().getNeighbour( getPosition().getSector() ) );
+        list.add( p_coordinateSystem.getNeighbor( getPosition(), getPosition().getSector() ) );
         break;
 
       default:

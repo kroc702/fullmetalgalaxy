@@ -135,7 +135,7 @@ public class EbEvtTakeOff extends AnEventPlay
     setOldPosition( getToken(p_game).getPosition() );
     
     // reload three turrets
-    for( AnBoardPosition position : getToken(p_game).getExtraPositions() )
+    for( AnBoardPosition position : getToken(p_game).getExtraPositions(p_game.getCoordinateSystem()) )
     {
       EbToken token = p_game.getToken( position, TokenType.Turret );
 
@@ -193,7 +193,7 @@ public class EbEvtTakeOff extends AnEventPlay
       {
         if( (token.getType() == TokenType.Turret) && (index < 3) )
         {
-          p_game.moveToken( token, getToken( p_game ).getExtraPositions().get( index ) );
+          p_game.moveToken( token, getToken( p_game ).getExtraPositions(p_game.getCoordinateSystem()).get( index ) );
           token.decVersion();
           index++;
         }

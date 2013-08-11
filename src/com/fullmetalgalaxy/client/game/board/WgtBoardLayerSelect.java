@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author Vincent Legendre
- * display the curently selected token and hight light hexagon
+ * display the currently selected token and highlight hexagon
  */
 public class WgtBoardLayerSelect extends WgtBoardLayerBase
 {
@@ -130,8 +130,8 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
     AnEventPlay evDeploy = GameEngine.model().getActionBuilder().getSelectedAction();
     if( evDeploy != null && evDeploy.getType() == GameLogType.EvtDeployment )
     {
-      int distance = evDeploy.getToken( GameEngine.model().getGame() ).getCarrierToken()
-          .getPosition().getHexDistance( p_anBoardPosition );
+      int distance = GameEngine.coordinateSystem().getDiscreteDistance(
+          evDeploy.getToken( GameEngine.model().getGame() ).getCarrierToken().getPosition(), p_anBoardPosition );
       if( distance > FmpConstant.deployementRadius )
       {
         BoardIcons.hightlight_hexagon( getZoom().getValue() ).applyTo( m_hexagonHightlight );
@@ -149,5 +149,12 @@ public class WgtBoardLayerSelect extends WgtBoardLayerBase
     m_hexagonHightlight.setVisible( p_visible );
   }
 
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    redraw();
+  }
 
 }

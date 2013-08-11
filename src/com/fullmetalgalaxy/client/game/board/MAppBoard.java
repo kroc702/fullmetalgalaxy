@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.client.widget.WgtScroll;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -53,7 +54,7 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
   protected static MAppBoard s_instance = null;
 
   private WgtScroll m_wgtScroll = new WgtScroll();
-  private WgtBoard m_wgtBoard = new WgtBoard();
+  private WgtBoardBase m_wgtBoard = null;
 
 
   /**
@@ -62,8 +63,7 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
   public MAppBoard()
   {
     s_instance = this;
-    m_wgtScroll.addScrollListener( m_wgtBoard );
-    m_wgtScroll.setWidget( m_wgtBoard );
+    initWgtBoard();
     AppRoot.getEventBus().addHandler( ModelUpdateEvent.TYPE, this );
     // Hook the window resize event, so that we can adjust the UI.
     Window.addResizeHandler( this );
@@ -76,6 +76,25 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
     return HISTORY_ID;
   }
 
+  
+  private void initWgtBoard()
+  {
+    if( m_wgtBoard != null )
+    {
+      m_wgtScroll.removeScrollListener( m_wgtBoard );
+    }
+    if( GameEngine.game().getMapShape() == MapShape.Flat )
+    {
+      m_wgtBoard = new WgtBoard();
+    } else
+    {
+      m_wgtBoard = new WgtBoardTorus();
+    }
+    m_wgtScroll.addScrollListener( m_wgtBoard );
+    m_wgtScroll.setWidget( m_wgtBoard );
+  }
+  
+  
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int, int)
    */
@@ -92,7 +111,11 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
   private long m_idGame = -1;
   private int m_oldZoomValue = EnuZoom.Unknown;
 
-
+  /**
+   * TODO this doesn't work with torus map shape
+   * @param p_hexX
+   * @param p_hexY
+   */
   public void setScrollPosition(int p_hexX, int p_hexY)
   {
     int boardWidth = m_wgtBoard.getOffsetWidth();
@@ -163,6 +186,7 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
     }
     if( m_idGame != GameEngine.model().getGame().getId() )
     {
+      //initWgtBoard();
       m_idGame = GameEngine.model().getGame().getId();
       EbToken myFreighter = GameEngine.model().getGame()
           .getFreighter( GameEngine.model().getMyRegistration() );

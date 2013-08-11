@@ -143,7 +143,7 @@ public class EbEvtRepair extends AnEventPlay
     turret.setColor( freighter.getColor() );
     p_game.addToken( turret );
     p_game.moveToken( turret, getPosition() );
-    turret.getPosition().setSector( freighter.getPosition().getNeighbourSector( getPosition() ) );
+    turret.getPosition().setSector( p_game.getCoordinateSystem().getSector( freighter.getPosition(), getPosition() ) );
     turret.incVersion();
     freighter.setBulletCount( freighter.getBulletCount() - 1 );
 

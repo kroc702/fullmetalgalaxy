@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.MapSize;
@@ -121,7 +122,8 @@ public class GameGenerator
       while( iy < height )
       {
         LandType type = getGame().getLand( ix, iy );
-        if( ((type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain) || (type == LandType.Montain))
+        if( (ix >= 0) && (iy >= 0)
+            && ((type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain) || (type == LandType.Montain))
             && (getGame().getToken( new AnBoardPosition( ix, iy ) ) == null) )
         {
           EbToken token = new EbToken( TokenType.Ore );
@@ -134,9 +136,12 @@ public class GameGenerator
 
         iy += 3;
       }
-      AnBoardPosition startPosition = new AnBoardPosition( ix, starty )
-          .getNeighbour( Sector.NorthEast ).getNeighbour( Sector.NorthEast )
-          .getNeighbour( Sector.NorthEast );
+      AnBoardPosition startPosition = new AnBoardPosition( ix, starty );
+      // use a flat coordinate system to avoid infinite loop !
+      HexCoordinateSystem coodinateSystem = new HexCoordinateSystem();
+      startPosition = coodinateSystem.getNeighbor( startPosition, Sector.NorthEast );
+      startPosition = coodinateSystem.getNeighbor( startPosition, Sector.NorthEast );
+      startPosition = coodinateSystem.getNeighbor( startPosition, Sector.NorthEast );
       ix = startPosition.getX();
       starty = startPosition.getY();
     }
@@ -170,11 +175,15 @@ public class GameGenerator
         height = (int)Math.ceil( fheight );
       }
     }
+    // width shall be even for border less map
+    width += width % 2;
     getGame().setLandSize( width, height );
   }
 
   public static void setSize(int p_width, int p_height)
   {
+    // width shall be even for border less map
+    p_width += p_width % 2;
     if( (getGame().getLandWidth() != p_width) || (getGame().getLandHeight() != p_height) )
     {
       m_mapSize = MapSize.Custom;
@@ -223,7 +232,7 @@ public class GameGenerator
         for( int y = 0; y < height; y++ )
         {
           position.setY( y );
-          if( position.getHexDistance( centre ) > rayon )
+          if( getGame().getCoordinateSystem().getDiscreteDistance( position, centre ) > rayon )
           {
             getGame().setLand( x, y, LandType.None );
           }
@@ -276,11 +285,11 @@ public class GameGenerator
           position.setX( (RpcUtil.random( getGame().getLandWidth() - 6 ) + 3) );
         } while( getGame().getLand( position ) == LandType.None );
         getGame().setLand( position, LandType.Sea );
-        for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          if( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) != LandType.None )
+          if( getGame().getLand( neighborPosition ) != LandType.None )
           {
-            getGame().setLand( position.getNeighbour( Sector.values()[iSector] ), LandType.Sea );
+            getGame().setLand( neighborPosition, LandType.Sea );
           }
         }
       }
@@ -295,12 +304,12 @@ public class GameGenerator
             nbSea = 0;
             nbPlain = 0;
             // getGame().setLand( position, LandType.Sea );
-            for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+            for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
             {
-              if( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) == LandType.Sea )
+              if( getGame().getLand( neighborPosition ) == LandType.Sea )
               {
                 nbSea++;
-                if( getGame().getLand( position.getNeighbour( Sector.values()[iSector].getNext() ) ) != LandType.Sea )
+                if( getGame().getLand( neighborPosition ) != LandType.Sea )
                   nbPlain++;
               }
             }
@@ -332,11 +341,11 @@ public class GameGenerator
           position.setX( (RpcUtil.random( getGame().getLandWidth() - 2 ) + 1) );
         } while( getGame().getLand( position ) == LandType.None );
         getGame().setLand( position, LandType.Plain );
-        for( Sector sector : Sector.values() )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          if( getGame().getLand( position.getNeighbour( sector ) ) != LandType.None )
+          if( getGame().getLand( neighborPosition ) != LandType.None )
           {
-            getGame().setLand( position.getNeighbour( sector ), LandType.Plain );
+            getGame().setLand( neighborPosition, LandType.Plain );
           }
         }
       }
@@ -352,9 +361,9 @@ public class GameGenerator
         nbSea = 0;
         nbReef = 0;
         nbPlain = 0;
-        for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          switch( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) )
+          switch( getGame().getLand( neighborPosition ) )
           {
           case Sea:
             nbSea++;
@@ -365,6 +374,8 @@ public class GameGenerator
           case Plain:
             nbPlain++;
             break;
+          default:
+              break;
           }
         }
         switch( getGame().getLand( position ) )
@@ -391,6 +402,8 @@ public class GameGenerator
           if( (nbPlain > 1) && ((int)Math.round( Math.random() * 100 ) < 50) )
             getGame().setLand( position, LandType.Reef );
           break;
+        default:
+          break;
         }
       }
     }
@@ -406,9 +419,9 @@ public class GameGenerator
         nbReef = 0;
         nbMarsh = 0;
         nbPlain = 0;
-        for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          switch( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) )
+          switch( getGame().getLand( neighborPosition ) )
           {
           case Sea:
             nbSea++;
@@ -421,6 +434,8 @@ public class GameGenerator
             break;
           case Plain:
             nbPlain++;
+            break;
+          default:
             break;
           }
         }
@@ -440,6 +455,8 @@ public class GameGenerator
           if( (nbPlain > 1) && ((int)Math.round( Math.random() * 100 ) < 20) )
             getGame().setLand( position, LandType.Marsh );
           break;
+        default:
+          break;
         }
       }
     }
@@ -453,22 +470,18 @@ public class GameGenerator
           position.setY( position_Lig );
           nbSea = 0;
           nbPlain = 0;
-          for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+          for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
           {
-            switch( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) )
+            switch( getGame().getLand( neighborPosition ) )
             {
             case Sea:
             case Reef:
             case Marsh:
               nbSea++;
-              switch( getGame()
-                  .getLand( position.getNeighbour( Sector.values()[iSector].getNext() ) ) )
-              {
-              case Montain:
-              case Plain:
-              case None:
-                nbPlain++;
-              }
+            case Montain:
+            case Plain:
+            case None:
+              nbPlain++;
             }
           }
           if( (nbSea >= 2) && (nbPlain == 2) )
@@ -487,9 +500,9 @@ public class GameGenerator
         nbMarsh = 0;
         nbPlain = 0;
         nbMontain = 0;
-        for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          switch( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) )
+          switch( getGame().getLand( neighborPosition ) )
           {
           case Marsh:
             nbMarsh++;
@@ -500,6 +513,8 @@ public class GameGenerator
           case Montain:
             nbMontain++;
             break;
+          default:
+            break;
           }
         }
         switch( getGame().getLand( position ) )
@@ -508,9 +523,9 @@ public class GameGenerator
         case Plain:
           if( nbMontain > 0 )
           {
-            for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+            for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
             {
-              if( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) == LandType.Montain )
+              if( getGame().getLand( neighborPosition ) == LandType.Montain )
                 nbMontain++;
             }
             if( nbMontain == 1 )
@@ -524,6 +539,8 @@ public class GameGenerator
             max = 1;
           if( (int)Math.round( Math.random() * 100 ) < max )
             getGame().setLand( position, LandType.Montain );
+          break;
+        default:
           break;
         }
       }
@@ -542,9 +559,9 @@ public class GameGenerator
         nbPlain = 0;
         nbMontain = 0;
         nbNull = 0;
-        for( int iSector = 0; iSector < Sector.values().length; iSector++ )
+        for( AnBoardPosition neighborPosition : getGame().getCoordinateSystem().getAllNeighbors( position ) )
         {
-          switch( getGame().getLand( position.getNeighbour( Sector.values()[iSector] ) ) )
+          switch( getGame().getLand( neighborPosition ) )
           {
           case None:
             nbNull++;
@@ -563,6 +580,8 @@ public class GameGenerator
             break;
           case Montain:
             nbMontain++;
+            break;
+          default:
             break;
           }
         }
@@ -623,6 +642,8 @@ public class GameGenerator
                 AppMain.model().getGame().setLand( position, EnuLand.Plain );
             }
           }*/
+          break;
+        default:
           break;
         }
       }

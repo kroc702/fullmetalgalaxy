@@ -37,8 +37,11 @@ import com.fullmetalgalaxy.model.BoardFireCover;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameStatus;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
+import com.fullmetalgalaxy.model.HexTorusCoordinateSystem;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.RpcUtil;
@@ -69,6 +72,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
   transient private TokenIndexSet m_tokenIndexSet = null;
   transient private GameEventStack m_eventStack = this;
   transient private BoardFireCover m_fireCover = null;
+  transient private HexCoordinateSystem m_coordinateSystem = null;
+  
 
   public Game()
   {
@@ -93,6 +98,21 @@ public class Game extends GameData implements PathGraph, GameEventStack
     this.init();
   }
   
+  public HexCoordinateSystem getCoordinateSystem()
+  {
+    if( m_coordinateSystem == null )
+    {
+      if( getMapShape() == MapShape.Flat )
+      {
+        m_coordinateSystem = new HexCoordinateSystem();
+      } else {
+        m_coordinateSystem = new HexTorusCoordinateSystem( getMapShape(), getLandWidth(),
+            getLandHeight() );
+      }
+    }
+    return m_coordinateSystem;
+  }
+  
   /**
    * 
    * @return true if game message start with recording tag
@@ -102,8 +122,6 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return getMessage() != null
         && getMessage().startsWith( EventsPlayBuilder.GAME_MESSAGE_RECORDING_TAG );
   }
-
-
 
 
   /**
@@ -128,7 +146,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
           team.setEndTurnDate( null );
           team.setLockedPosition( null );
         }
-        else if( team.getLockedPosition().getHexDistance( p_position ) <= FmpConstant.parallelLockRadius )
+        else if( getCoordinateSystem().getDiscreteDistance( 
+            team.getLockedPosition(), p_position ) <= FmpConstant.parallelLockRadius )
         {
           return team;
         }
@@ -416,7 +435,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     if( p_token.getHexagonSize() == 2 )
     {
       fireCover.addColor( getOpponentFireCover( tokenTeamColor.getValue(),
-          (AnBoardPosition)p_token.getExtraPositions().get( 0 ) ) );
+          (AnBoardPosition)p_token.getExtraPositions(getCoordinateSystem()).get( 0 ) ) );
     }
     return fireCover;
   }
@@ -440,11 +459,11 @@ public class Game extends GameData implements PathGraph, GameEventStack
     Sector sectorValues[] = Sector.values();
     for( int i = 0; i < sectorValues.length; i++ )
     {
-      AnBoardPosition neighbourPosition = tokenPosition.getNeighbour( sectorValues[i] );
+      AnBoardPosition neighborPosition = getCoordinateSystem().getNeighbor( tokenPosition, sectorValues[i] );
       EnuColor tokenTeamColor = getTokenTeamColor( p_token );
-      if( getLand( neighbourPosition ) == LandType.Montain )
+      if( getLand( neighborPosition ) == LandType.Montain )
       {
-        EbToken token = getToken( neighbourPosition );
+        EbToken token = getToken( neighborPosition );
         if( (token != null) && (token.getType() == TokenType.Tank)
             && (tokenTeamColor.isColored( token.getColor() )) )
         {
@@ -960,10 +979,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
    * @param p_registration
    * @return
    */
-  public int getFireCover(int p_x, int p_y, EbRegistration p_registration)
+  public int getFireCover(int p_x, int p_y, EbTeam p_team)
   {
-    EnuColor regColor = new EnuColor( p_registration.getTeam( this ).getFireColor() );
-    return getBoardFireCover().getFireCover( p_x, p_y, regColor );
+    EnuColor regColor = new EnuColor( p_team.getFireColor() );
+    return getBoardFireCover().getFireCover( new AnBoardPosition( p_x, p_y ), regColor );
   }
 
   public void invalidateFireCover()
@@ -1020,11 +1039,11 @@ public class Game extends GameData implements PathGraph, GameEventStack
     switch( p_token.getType() )
     {
     case Barge:
-      LandType extraLandValue = getLand( p_token.getExtraPositions().get( 0 ) )
+      LandType extraLandValue = getLand( p_token.getExtraPositions(getCoordinateSystem()).get( 0 ) )
           .getLandValue( getCurrentTide() );
       if( extraLandValue != LandType.Sea )
       {
-        if( getToken( p_token.getExtraPositions().get( 0 ), TokenType.Sluice ) != null )
+        if( getToken( p_token.getExtraPositions(getCoordinateSystem()).get( 0 ), TokenType.Sluice ) != null )
         {
           return true;
         }
@@ -1129,7 +1148,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
     if( p_token.getHexagonSize() == 2 )
     {
-      AnBoardPosition position = p_position.getNeighbour( p_position.getSector() );
+      AnBoardPosition position = getCoordinateSystem().getNeighbor( p_position, p_position.getSector() );
       EbToken tokenPontoon = getToken( position, TokenType.Pontoon );
       if( tokenPontoon == null )
         tokenPontoon = getToken( position, TokenType.Sluice );
@@ -1168,7 +1187,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return false;
     }
-    return p_token.getPosition().getHexDistance( p_position ) <= (getTokenFireLength( p_token ));
+    return getCoordinateSystem().getDiscreteDistance( p_token.getPosition(), p_position ) <= (getTokenFireLength( p_token ));
   }
 
   /**
@@ -1184,7 +1203,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return true;
     }
-    for( AnBoardPosition position : p_tokenTarget.getExtraPositions() )
+    for( AnBoardPosition position : p_tokenTarget.getExtraPositions(getCoordinateSystem()) )
     {
       if( canTokenFireOn( p_token, position ) )
       {
@@ -1247,9 +1266,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return true;
     }
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_position ) )
     {
-      land = getLand( p_position.getNeighbour( sector ) ).getLandValue( getCurrentTide() );
+      land = getLand( neighborPosition ).getLandValue( getCurrentTide() );
       if( (land == LandType.Plain) || (land == LandType.Montain) )
       {
         return true;
@@ -1261,9 +1280,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       checkedPontoon.add( otherPontoon );
     }
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_position ) )
     {
-      otherPontoon = getToken( p_position.getNeighbour( sector ), TokenType.Pontoon );
+      otherPontoon = getToken( neighborPosition, TokenType.Pontoon );
       if( otherPontoon != null )
       {
         checkedPontoon.add( otherPontoon );
@@ -1276,9 +1295,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     // check if pontoon is connected to freighter at high tide
     if( getCurrentTide() == Tide.Hight )
     {
-      for( Sector sector : Sector.values() )
+      for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_position ) )
       {
-        if( getToken( p_position.getNeighbour( sector ), TokenType.Freighter ) != null )
+        if( getToken( neighborPosition, TokenType.Freighter ) != null )
           return true;
       }
     }
@@ -1292,9 +1311,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return true;
     }
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_token.getPosition() ) )
     {
-      land = getLand( p_token.getPosition().getNeighbour( sector ) )
+      land = getLand( neighborPosition )
           .getLandValue( getCurrentTide() );
       if( (land == LandType.Plain) || (land == LandType.Montain) )
       {
@@ -1302,9 +1321,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
       }
     }
     EbToken otherPontoon = null;
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_token.getPosition() ) )
     {
-      otherPontoon = getToken( p_token.getPosition().getNeighbour( sector ), TokenType.Pontoon );
+      otherPontoon = getToken( neighborPosition, TokenType.Pontoon );
       if( (otherPontoon != null) && (!p_checkedPontoon.contains( otherPontoon )) )
       {
         p_checkedPontoon.add( otherPontoon );
@@ -1317,9 +1336,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     // check if pontoon is connected to freighter at high tide
     if( getCurrentTide() == Tide.Hight )
     {
-      for( Sector sector : Sector.values() )
+      for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( p_token.getPosition() ) )
       {
-        if( getToken( p_token.getPosition().getNeighbour( sector ), TokenType.Freighter ) != null )
+        if( getToken( neighborPosition, TokenType.Freighter ) != null )
           return true;
       }
     }
@@ -1366,9 +1385,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     p_token.incVersion();
 
     // finally remove other linked pontoons
-    for( Sector sector : Sector.values() )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( position ) )
     {
-      EbToken otherPontoon = getToken( position.getNeighbour( sector ), TokenType.Pontoon );
+      EbToken otherPontoon = getToken( neighborPosition, TokenType.Pontoon );
       if( otherPontoon != null )
       {
         pontoons.addAll( chainRemovePontoon( otherPontoon, p_fdRemoved ) );
@@ -1402,36 +1421,34 @@ public class Game extends GameData implements PathGraph, GameEventStack
     AnBoardPosition position = (AnBoardPosition)p_fromNode;
     Mobile mobile = (Mobile)p_mobile;
     Set<com.fullmetalgalaxy.model.pathfinder.PathNode> nodes = new HashSet<com.fullmetalgalaxy.model.pathfinder.PathNode>();
-    Sector sectorValues[] = Sector.values();
-    for( int i = 0; i < sectorValues.length; i++ )
+    for( AnBoardPosition neighborPosition : getCoordinateSystem().getAllNeighbors( position ) )
     {
-      AnBoardPosition neighbourPosition = position.getNeighbour( sectorValues[i] );
       if( mobile.getToken() == null )
       {
-        nodes.add( neighbourPosition );
+        nodes.add( neighborPosition );
       }
       else
       {
         // looking in cache first
-        if( m_allowedNodeGraphCache.contains( neighbourPosition ) )
+        if( m_allowedNodeGraphCache.contains( neighborPosition ) )
         {
-          nodes.add( neighbourPosition );
+          nodes.add( neighborPosition );
         }
-        else if( m_forbidenNodeGraphCache.contains( neighbourPosition ) )
+        else if( m_forbidenNodeGraphCache.contains( neighborPosition ) )
         {
           // do nothing
         }
         else
         {
           // this position wasn't explored yet
-          if( mobile.getToken().canMoveOn( this, mobile.getRegistration(), neighbourPosition ) )
+          if( mobile.getToken().canMoveOn( this, mobile.getRegistration(), neighborPosition ) )
           {
-            m_allowedNodeGraphCache.add( neighbourPosition );
-            nodes.add( neighbourPosition );
+            m_allowedNodeGraphCache.add( neighborPosition );
+            nodes.add( neighborPosition );
           }
           else
           {
-            m_forbidenNodeGraphCache.add( neighbourPosition );
+            m_forbidenNodeGraphCache.add( neighborPosition );
           }
         }
       }
@@ -1445,7 +1462,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   @Override
   public float heuristic(PathNode p_fromNode, PathNode p_toNode, PathMobile p_mobile)
   {
-    return (float)((AnBoardPosition)p_fromNode).getRealDistance( (AnBoardPosition)p_toNode );
+    return (float)getCoordinateSystem().getDiscreteDistance( ((AnBoardPosition)p_fromNode), (AnBoardPosition)p_toNode );
   }
 
   /**
@@ -1489,7 +1506,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
   {
     if( m_tokenIndexSet == null )
     {
-      m_tokenIndexSet = new TokenIndexSet( getSetToken() );
+      m_tokenIndexSet = new TokenIndexSet( getCoordinateSystem(), getSetToken() );
     }
     return m_tokenIndexSet;
   }

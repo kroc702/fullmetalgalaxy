@@ -247,7 +247,7 @@ public class EbEvtFire extends AnEventPlay
       // check that other pontoon are linked to ground and remove all theses
       for( Sector sector : Sector.values() )
       {
-        EbToken otherPontoon = p_game.getToken( getOldPosition().getNeighbour( sector ),
+        EbToken otherPontoon = p_game.getToken( p_game.getCoordinateSystem().getNeighbor( getOldPosition(), sector ),
             TokenType.Pontoon );
         if( otherPontoon != null && !p_game.isPontoonLinkToGround( otherPontoon ) )
         {

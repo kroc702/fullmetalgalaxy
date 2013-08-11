@@ -126,6 +126,9 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
           break;
         case 2: // tokens
+          m_wgtEditTokens.onTabSelected();
+          // I never understand this bug but... the second call IS needed :(
+          m_wgtEditTokens.onTabSelected();
           m_wgtEditTokens.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
           if( m_isOreGenerated == false )
           {

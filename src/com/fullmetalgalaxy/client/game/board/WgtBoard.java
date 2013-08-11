@@ -23,48 +23,25 @@
 package com.fullmetalgalaxy.client.game.board;
 
 
-import com.fullmetalgalaxy.client.AppMain;
-import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.EnuNavigator;
-import com.fullmetalgalaxy.client.MAppMessagesStack;
-import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.layertoken.WgtBoardLayerToken;
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHandler,
-    MouseUpHandler, MouseOverHandler, MouseMoveHandler, MouseOutHandler
+public class WgtBoard extends WgtBoardBase
 {
-  AbsolutePanel m_panel = new AbsolutePanel();
-
   WgtBoardLayerLand m_layerLand = new WgtBoardLayerLand();
   WgtBoardLayerMap m_layerMap = new WgtBoardLayerMap();
   WgtBoardLayerFireCover m_layerCover = new WgtBoardLayerFireCover();
@@ -82,45 +59,41 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
    */
   public WgtBoard()
   {
-    addLayer( m_layerLand );
-    addLayer( m_layerMap );
-    addLayer( m_layerCover );
-    addLayer( m_layerGrid );
-    addLayer( m_layerSelect );
-    addLayer( m_layerToken );
-    addLayer( m_layerLock );
-    addLayer( m_layerAction );
+    super();
+    m_layerCollection.addLayer( m_layerLand );
+    m_layerCollection.addLayer( m_layerMap );
+    m_layerCollection.addLayer( m_layerCover );
+    m_layerCollection.addLayer( m_layerGrid );
+    m_layerCollection.addLayer( m_layerSelect );
+    m_layerCollection.addLayer( m_layerToken );
+    m_layerCollection.addLayer( m_layerLock );
+    m_layerCollection.addLayer( m_layerAction );
     if( ClientUtil.getNavigator() == EnuNavigator.FF )
     {
-      addLayer( m_layerAtmosphere );
+      m_layerCollection.addLayer( m_layerAtmosphere );
     }
+
+    m_panel.add( m_layerCollection,0,0);
     // m_vPanel.setSize( "100%", "100%" );
     // setSize( "100%", "100%" );
-    setWidget( m_panel );
-    sinkEvents( Event.ONCONTEXTMENU );
-    addMouseDownHandler( this );
-    addMouseMoveHandler( this );
-    addMouseOutHandler( this );
-    addMouseOverHandler( this );
-    addMouseUpHandler( this );
+
+    // in case game already loaded
+    onGameLoad( GameEngine.model().getGame() );
   }
 
-  private void addLayer(BoardLayer p_layer)
+  @Override
+  public void onGameLoad(Game p_game)
   {
-    m_panel.add( p_layer.getTopWidget(), 0, 0 );
-    m_layerCollection.add( p_layer );
+    m_layerCollection.cropDisplay( 0, 0, p_game.getLandWidth(), p_game.getLandHeight() );
   }
 
-  protected boolean m_isVisible = false;
-
+  @Override
   public void show()
   {
+    super.show();
     if( !m_isVisible )
     {
       m_layerCollection.show();
-      m_isVisible = true;
-      ClientUtil.scrollToTop();
-      //Window.enableScrolling( false );
     }
 
     // map or standard land layer ?
@@ -141,43 +114,14 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
     m_layerCover.displayFireCover( GameEngine.model().isFireCoverDisplayed() );
   }
 
+  @Override
   public void hide()
   {
-    m_isVisible = false;
+   super.hide();
     m_layerCollection.hide();
-    Window.enableScrolling( true );
   }
 
   
-  
-  /**
-   * to get rid of browser contextual menu.
-   */
-  @Override
-  public void onBrowserEvent(Event p_event)
-  {
-    switch (DOM.eventGetType(p_event)) 
-    {
-    case Event.ONCONTEXTMENU:
-      //p_event.cancelBubble(true);
-      p_event.stopPropagation();
-      p_event.preventDefault();
-      break;
-    default:
-      super.onBrowserEvent( p_event );
-      break; 
-    }
-  }
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
-   */
-  @Override
-  public void onMouseDown(MouseDownEvent p_event)
-  {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
-  }
-
 
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
@@ -206,8 +150,8 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   @Override
   public void onMouseMove(MouseMoveEvent p_event)
   {
-    AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair(
-        p_event.getX(), p_event.getY() ), getZoom() );
+    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair(
+        p_event.getX(), p_event.getY() ) );
     if( (position.getX() != m_hexagonHightlightPosition.getX())
         || (position.getY() != m_hexagonHightlightPosition.getY()) )
     {
@@ -217,60 +161,9 @@ public class WgtBoard extends FocusPanel implements ScrollListener, MouseDownHan
   }
 
 
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
-   */
-  @Override
-  public void onMouseUp(MouseUpEvent p_event)
-  {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
-    p_event.preventDefault();
-    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_event.getX(), p_event
-        .getY() ) );
-
-    try
-    {
-      EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
-      boolean searchPath = p_event.isControlKeyDown()
-          || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
-      eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );
-      switch( eventBuilderMsg )
-      {
-      case Updated:
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-        break;
-      case MustRun:
-        GameEngine.model().runCurrentAction();
-        break;
-      default:
-      }
-
-    } catch( RpcFmpException ex )
-    {
-      if( ex.getLocalizedMessage() != null )
-      {
-        MAppMessagesStack.s_instance.showWarning( ex.getLocalizedMessage() );
-      }
-      GameEngine.model().getActionBuilder().cancel();
-      try
-      {
-        GameEngine.model().getActionBuilder().userBoardClick( position, false );
-      } catch( Throwable iniore )
-      {
-      }
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
-    } catch( Throwable ex )
-    {
-      Window.alert( "Une erreur est survenu, la page va être rechargée \n" + ex.getMessage() );
-      ClientUtil.sendPM( "" + AppMain.instance().getMyAccount().getId(), "5001", "js error",
-          ex.getMessage() );
-      ClientUtil.reload();
-    }
-  }
-
   protected AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition)
   {
-    return WgtBoardLayerBase.convertPixPositionToHexPosition( p_pixPosition, getZoom() );
+    return BoardConvert.convertPixPositionToHexPosition( p_pixPosition, getZoom(), new AnPair(0,0) );
   }
 
 

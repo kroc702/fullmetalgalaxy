@@ -77,10 +77,6 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
 
   private ScrollListenerCollection m_scrollListenerCollection = new ScrollListenerCollection();
 
-  private int m_mouseScrollingSpaceNorth = 60;
-  private int m_mouseScrollingSpaceEast = 230;
-  private int m_mouseScrollingSpaceSouth = 200;
-  private int m_mouseScrollingSpaceWest = 450;
   private int m_mouseArrowSpaceNorth = 60;
   private int m_mouseArrowSpaceEast = 60;
   private int m_mouseArrowSpaceSouth = 60;
@@ -165,24 +161,24 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   public void ensureWidgetIsVisible()
   {
     if( m_verticalScrollPosition > m_contentWidget.getOffsetHeight() - getOffsetHeight()
-        + m_mouseScrollingSpaceSouth )
+        + getOffsetHeight() / 2 )
     {
       m_verticalScrollPosition = m_contentWidget.getOffsetHeight() - getOffsetHeight()
-          + m_mouseScrollingSpaceSouth;
+          + getOffsetHeight() / 2;
     }
-    if( m_verticalScrollPosition < -1 * m_mouseScrollingSpaceNorth )
+    if( m_verticalScrollPosition < -1 * getOffsetHeight() / 2 )
     {
-      m_verticalScrollPosition = -1 * m_mouseScrollingSpaceNorth;
+      m_verticalScrollPosition = -1 * getOffsetHeight() / 2;
     }
     if( m_horizontalScrollPosition > m_contentWidget.getOffsetWidth() - getOffsetWidth()
-        + m_mouseScrollingSpaceEast )
+        + getOffsetWidth() / 2 )
     {
       m_horizontalScrollPosition = m_contentWidget.getOffsetWidth() - getOffsetWidth()
-          + m_mouseScrollingSpaceEast;
+          + getOffsetWidth() / 2;
     }
-    if( m_horizontalScrollPosition < -1 * m_mouseScrollingSpaceWest )
+    if( m_horizontalScrollPosition < -1 * getOffsetWidth() / 2 )
     {
-      m_horizontalScrollPosition = -1 * m_mouseScrollingSpaceWest;
+      m_horizontalScrollPosition = -1 * getOffsetWidth() / 2;
     }
   }
 
@@ -550,7 +546,7 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
    * @param p_horizontalScrollPosition in pixel
    * @param p_verticalScrollPosition in pixel
    */
-  protected void setScrollPositionSilent(int p_horizontalScrollPosition,
+  public void setScrollPositionSilent(int p_horizontalScrollPosition,
       int p_verticalScrollPosition)
   {
     m_verticalScrollPosition = p_verticalScrollPosition;

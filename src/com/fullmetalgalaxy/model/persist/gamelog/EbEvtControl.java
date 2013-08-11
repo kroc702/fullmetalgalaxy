@@ -144,12 +144,12 @@ public class EbEvtControl extends AnEventPlay
     }
 
 
-    if( !getTokenDestroyer1(p_game).isNeighbor( getTokenTarget(p_game) ) )
+    if( !getTokenDestroyer1(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenTarget(p_game) ) )
     {
       throw new RpcFmpException( getTokenDestroyer1(p_game) + " n'est pas au contact de "
           + getTokenTarget(p_game) );
     }
-    if( !getTokenDestroyer2(p_game).isNeighbor( getTokenTarget(p_game) ) )
+    if( !getTokenDestroyer2(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenTarget(p_game) ) )
     {
       throw new RpcFmpException( getTokenDestroyer2(p_game) + " n'est pas au contact de "
           + getTokenTarget(p_game) );

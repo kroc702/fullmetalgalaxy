@@ -76,13 +76,12 @@ public class WgtContextLand extends Composite
       
       // display firecover
       BoardFireCover firecover = GameEngine.model().getGame().getBoardFireCover();
-      int x = actionBuilder.getSelectedPosition().getX();
-      int y = actionBuilder.getSelectedPosition().getY();
       for( int iColor=0; iColor<EnuColor.getTotalNumberOfColor(); iColor++ )
       {
         EnuColor color = EnuColor.getColorFromIndex( iColor );
-        byte fireCount = firecover.getFireCover( x, y, color );
-        byte disableFireCount = firecover.getDisabledFireCover( x, y, color );
+        byte fireCount = firecover.getFireCover( actionBuilder.getSelectedPosition(), color );
+        byte disableFireCount = firecover.getDisabledFireCover(
+            actionBuilder.getSelectedPosition(), color );
         if( fireCount != 0 || disableFireCount != 0 )
         {
           m_panel.add( new HTML( "couverture de feu "

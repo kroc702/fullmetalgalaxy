@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -75,6 +76,7 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
   private DlgLoadMap m_dlgLoadMap = new DlgLoadMap();
   private ListBox m_lstPlanet = new ListBox(false);
   private List<PlanetType> m_planets = new ArrayList<PlanetType>();
+  private ListBox m_lstMapShape = new ListBox(false);
   private ListBox m_lstAlgo = new ListBox(false);
 
   private ListBox m_lstBrush = new ListBox(false);  
@@ -127,6 +129,22 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       m_planets.add( planet );
     }
     m_panel.add( m_lstPlanet );
+    
+    for( MapShape shape : MapShape.values() )
+    {
+      m_lstMapShape.addItem( shape.toString() );
+    }
+    m_lstMapShape.setVisibleItemCount( 1 );
+    m_lstMapShape.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        GameEngine.model().getGame().setMapShape( MapShape.valueOf( m_lstMapShape.getValue( m_lstMapShape.getSelectedIndex() ) ));
+      }
+    } );
+    m_panel.add(m_lstMapShape);
+    
     m_panel.add( new Label( "taille de carte" ) );
     Panel hpanel = new HorizontalPanel();
     m_txtLandWidth.setWidth( "30px" );
@@ -219,6 +237,8 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
 
   protected void redraw()
   {
+    m_lstMapShape.setSelectedIndex( GameEngine.model().getGame().getMapShape().ordinal() );
+    
     String base = "images/board/" + GameEngine.model().getGame().getPlanetType().getFolderName();
     int btnWidth = FmpConstant.getHexWidth( EnuZoom.Small ) + WgtBoardLayerLand.getHexWidthMargin( EnuZoom.Small );
     int btnHeight = FmpConstant.getHexHeight( EnuZoom.Small ) + WgtBoardLayerLand.getHexHeightMargin( EnuZoom.Small );

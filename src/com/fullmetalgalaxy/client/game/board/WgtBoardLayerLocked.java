@@ -147,8 +147,7 @@ public class WgtBoardLayerLocked extends WgtBoardLayerBase
         else
         {
           // display lock icon on board...
-          for( AnBoardPosition position : AnBoardPosition.drawHexagon(
- registration.getTeam( game )
+          for( AnBoardPosition position : GameEngine.coordinateSystem().drawHexagon( registration.getTeam( game )
               .getLockedPosition(), FmpConstant.parallelLockRadius ) )
           {
             if( game.getLand( position ) != LandType.None )
@@ -164,6 +163,15 @@ public class WgtBoardLayerLocked extends WgtBoardLayerBase
       }
     }
   }
+
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    redraw();
+  }
+
 
   private Timer m_clockTimer = new Timer()
   {

@@ -30,6 +30,7 @@ import java.util.List;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameEventStack;
 import com.fullmetalgalaxy.model.GameType;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Mobile;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -564,18 +565,18 @@ public class EventsPlayBuilder implements GameEventStack
           {
             if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtUnLoad)
                 && (getSelectedToken().getHexagonSize() == 2)
-                && (p_position.isNeighbor( ((EbEvtUnLoad)previousAction).getNewPosition() )) )
+                && ( getCoordinateSystem().areNeighbor( p_position, ((EbEvtUnLoad)previousAction).getNewPosition() )) )
             {
               // in fact user want to turn his unloaded barge.
               EbEvtUnLoad previousUnload = (EbEvtUnLoad)previousAction;
               previousUnload.unexec( m_game );
               previousUnload.getNewPosition().setSector(
-                  previousUnload.getNewPosition().getNeighbourSector( p_position ) );
+                  getCoordinateSystem().getSector( previousUnload.getNewPosition(), p_position ) );
               previousUnload.exec( m_game );
               isUpdated = EventBuilderMsg.Updated;
             }
 
-            if( !p_searchPath && !getSelectedToken().isNeighbor( p_position ) )
+            if( !p_searchPath && !getSelectedToken().isNeighbor( getGame().getCoordinateSystem(), p_position ) )
             {
               // user standard click far away: clear current action
               clear();
@@ -598,8 +599,8 @@ public class EventsPlayBuilder implements GameEventStack
           else if( getSelectedAction() instanceof EbEvtConstruct )
           {
             // construct action...
-            AnBoardPosition closePosition = getSelectedPosition().getNeighbour(
-                getSelectedPosition().getNeighbourSector( p_position ) );
+            AnBoardPosition closePosition = getCoordinateSystem().getNeighbor( getSelectedPosition(),
+                getCoordinateSystem().getSector( getSelectedPosition(), p_position ) );
 
             if( !p_searchPath && !closePosition.equals( p_position ) )
             {
@@ -638,8 +639,8 @@ public class EventsPlayBuilder implements GameEventStack
             EbEvtUnLoad unloadAction = (EbEvtUnLoad)getSelectedAction();
 
             // an unload action...
-            AnBoardPosition closePosition = getSelectedPosition().getNeighbour(
-                getSelectedPosition().getNeighbourSector( p_position ) );
+            AnBoardPosition closePosition = getCoordinateSystem().getNeighbor( getSelectedPosition(),
+                getCoordinateSystem().getSector( getSelectedPosition(), p_position ) );
 
             AnBoardPosition closePosition2 = null;
             if( ((EbEvtUnLoad)getSelectedAction()).getToken( m_game ).getHexagonSize() == 2 )
@@ -650,17 +651,17 @@ public class EventsPlayBuilder implements GameEventStack
               {
                 // the second position we where waiting for
                 closePosition = ((EbEvtUnLoad)getSelectedAction()).getNewPosition();
-                closePosition.setSector( closePosition.getNeighbourSector( p_position ) );
-                closePosition2 = closePosition.getNeighbour( closePosition.getSector() );
+                closePosition.setSector( getCoordinateSystem().getSector( closePosition, p_position ) );
+                closePosition2 = getCoordinateSystem().getNeighbor( closePosition, closePosition.getSector() );
                 actionUnloadSelected( closePosition );
               }
               else
               {
                 if( !closePosition.equals( p_position ) )
                 {
-                  closePosition2 = closePosition.getNeighbour( closePosition
-                      .getNeighbourSector( p_position ) );
-                  closePosition.setSector( closePosition.getNeighbourSector( closePosition2 ) );
+                  closePosition2 = getCoordinateSystem().getNeighbor( closePosition,
+                      getCoordinateSystem().getSector( closePosition, p_position ) );
+                  closePosition.setSector( getCoordinateSystem().getSector( closePosition, closePosition2 ) );
                 }
                 if( getGame().canTokenMoveOn(
                     ((EbEvtUnLoad)getSelectedAction()).getToken( m_game ),
@@ -738,7 +739,7 @@ public class EventsPlayBuilder implements GameEventStack
             // user clic on two token with CTRL or right clic
             // search for an advanced action like fire or control
             if( token.getColor() != getSelectedToken().getColor()
-                && token.isNeighbor( getSelectedToken() ) )
+                && token.isNeighbor( getCoordinateSystem(), getSelectedToken() ) )
             {
               privateAction( GameLogType.EvtControl );
             }
@@ -767,9 +768,9 @@ public class EventsPlayBuilder implements GameEventStack
             else
             {
               boolean isPathFound = true;
-              AnBoardPosition closePosition = p_position.getNeighbour( p_position
-                  .getNeighbourSector( getSelectedPosition() ) );
-              if( !p_searchPath && !token.isNeighbor( getSelectedToken() ) )
+              AnBoardPosition closePosition = getCoordinateSystem().getNeighbor( p_position,
+                  getCoordinateSystem().getSector( p_position, getSelectedPosition() ) );
+              if( !p_searchPath && !token.isNeighbor( getGame().getCoordinateSystem(), getSelectedToken() ) )
               {
                 // user standard click far away: clear current action
                 clear();
@@ -890,7 +891,7 @@ public class EventsPlayBuilder implements GameEventStack
           else if( getSelectedAction() instanceof EbEvtUnLoad )
           {
             // an unload action... which may be a transfer
-            if( token.isNeighbor( ((EbEvtUnLoad)getSelectedAction()).getTokenCarrier( m_game ) ) )
+            if( token.isNeighbor( getGame().getCoordinateSystem(), ((EbEvtUnLoad)getSelectedAction()).getTokenCarrier( m_game ) ) )
             {
               // it is a transfer !
               actionTransferSelected( token, p_position );
@@ -904,10 +905,10 @@ public class EventsPlayBuilder implements GameEventStack
             }
             else
             {
-              AnBoardPosition closeUnloadPosition = getSelectedPosition().getNeighbour(
-                  getSelectedPosition().getNeighbourSector( p_position ) );
-              AnBoardPosition closeLoadPosition = p_position.getNeighbour( p_position
-                  .getNeighbourSector( getSelectedPosition() ) );
+              AnBoardPosition closeUnloadPosition = getCoordinateSystem().getNeighbor( getSelectedPosition(),
+                  getCoordinateSystem().getSector( getSelectedPosition(), p_position ) );
+              AnBoardPosition closeLoadPosition = getCoordinateSystem().getNeighbor( p_position, 
+                  getCoordinateSystem().getSector( p_position, getSelectedPosition() ) );
               actionUnloadSelected( closeUnloadPosition );
               if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtLoad) )
               {
@@ -950,7 +951,7 @@ public class EventsPlayBuilder implements GameEventStack
               assert token != null;
             }
             // then move constructed token
-            if( token.isNeighbor( ((EbEvtUnLoad)getSelectedAction()).getTokenCarrier( m_game ) ) )
+            if( token.isNeighbor( getGame().getCoordinateSystem(), ((EbEvtUnLoad)getSelectedAction()).getTokenCarrier( m_game ) ) )
             {
               // it is a transfer !
               actionTransferSelected( token, p_position );
@@ -962,10 +963,10 @@ public class EventsPlayBuilder implements GameEventStack
             }
             else
             {
-              AnBoardPosition closeUnloadPosition = getSelectedPosition().getNeighbour(
-                  getSelectedPosition().getNeighbourSector( p_position ) );
-              AnBoardPosition closeLoadPosition = p_position.getNeighbour( p_position
-                  .getNeighbourSector( getSelectedPosition() ) );
+              AnBoardPosition closeUnloadPosition = getCoordinateSystem().getNeighbor( getSelectedPosition(),
+                  getCoordinateSystem().getSector( getSelectedPosition(), p_position ) );
+              AnBoardPosition closeLoadPosition = getCoordinateSystem().getNeighbor( p_position,
+                  getCoordinateSystem().getSector( p_position, getSelectedPosition() ) );
               actionUnloadSelected( closeUnloadPosition );
               if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtLoad) )
               {
@@ -998,7 +999,7 @@ public class EventsPlayBuilder implements GameEventStack
             && action.getToken( m_game ).getHexagonSize()==1 )
         {
           EbToken freighter = action.getToken( m_game ).getCarrierToken();
-          action.getPosition().setSector( freighter.getPosition().getNeighbourSector( action.getPosition() ) );
+          action.getPosition().setSector( getCoordinateSystem().getSector( freighter.getPosition(), action.getPosition() ) );
         }
         setLastUpdate( new Date( SharedMethods.currentTimeMillis() ) );
         isUpdated = EventBuilderMsg.Updated;
@@ -1445,8 +1446,8 @@ public class EventsPlayBuilder implements GameEventStack
         actionMove.setGame( getGame() );
         actionMove.setRegistration( getMyRegistration() );
         actionMove.setToken( destroyer1 );
-        actionMove.setNewPosition( destroyer1.getPosition().getNeighbour(
-            destroyer1.getPosition().getNeighbourSector( target.getPosition() ) ) );
+        actionMove.setNewPosition( getCoordinateSystem().getNeighbor( destroyer1.getPosition(),
+            getCoordinateSystem().getSector( destroyer1.getPosition(), target.getPosition() ) ) );
         actionAdd( actionMove );
       }
     }
@@ -1463,10 +1464,10 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user move token " + getSelectedToken() + " to " + p_position );
     assert m_selectedToken != null;
     assert m_selectedToken.getLocation() == Location.Board;
-    assert getSelectedToken().isNeighbor( p_position );
+    assert getSelectedToken().isNeighbor( getCoordinateSystem(), p_position );
 
     if( getSelectedToken().getPosition().equals( p_position )
-        || getSelectedToken().getExtraPositions().contains( p_position ) )
+        || getSelectedToken().getExtraPositions(getCoordinateSystem()).contains( p_position ) )
     {
       return;
     }
@@ -1483,36 +1484,36 @@ public class EventsPlayBuilder implements GameEventStack
       exec();
       if( isSelectedByHead )
       {
-        if( p_position.isNeighbor( getSelectedToken().getPosition() ) )
+        if( getCoordinateSystem().areNeighbor( p_position, getSelectedToken().getPosition() ) )
         {
           // simply turn barge
-          currentPosition.setSector( currentPosition.getNeighbourSector( p_position ) );
+          currentPosition.setSector( getCoordinateSystem().getSector( currentPosition, p_position ) );
           p_position = currentPosition;
         }
         else
         {
-          AnBoardPosition newPosition = currentPosition.getNeighbour( currentPosition.getSector() );
-          newPosition.setSector( newPosition.getNeighbourSector( p_position ) );
+          AnBoardPosition newPosition = getCoordinateSystem().getNeighbor( currentPosition, currentPosition.getSector() );
+          newPosition.setSector( getCoordinateSystem().getSector( newPosition, p_position ) );
           p_position = newPosition;
         }
       }
       else
       {
-        if( p_position.isNeighbor( getSelectedToken().getExtraPositions().get( 0 ) ) )
+        if( getCoordinateSystem().areNeighbor( p_position, getSelectedToken().getExtraPositions(getGame().getCoordinateSystem()).get( 0 ) ) )
         {
           // simply turn barge
-          p_position.setSector( p_position.getNeighbourSector( getSelectedToken()
-              .getExtraPositions().get( 0 ) ) );
+          p_position.setSector( getCoordinateSystem().getSector( p_position, getSelectedToken()
+              .getExtraPositions(getGame().getCoordinateSystem()).get( 0 ) ) );
         }
         else
         {
-          p_position.setSector( p_position.getNeighbourSector( currentPosition ) );
+          p_position.setSector( getCoordinateSystem().getSector( p_position, currentPosition ) );
         }
       }
     }
     else
     {
-      p_position.setSector( getSelectedToken().getPosition().getNeighbourSector( p_position ) );
+      p_position.setSector( getCoordinateSystem().getSector( getSelectedToken().getPosition(), p_position ) );
     }
     EbEvtMove action = new EbEvtMove();
     if( getGame().getCurrentTimeStep() <= getGame().getEbConfigGameTime().getDeploymentTimeStep() )
@@ -1520,7 +1521,7 @@ public class EventsPlayBuilder implements GameEventStack
       for( EbToken freighter : getGame().getAllFreighter( getMyRegistration().getColor() ) )
       {
         if( freighter.getLocation() == Location.Board
-            && freighter.getPosition().getHexDistance( p_position ) <= FmpConstant.deployementRadius )
+            && getCoordinateSystem().getDiscreteDistance( freighter.getPosition(), p_position ) <= FmpConstant.deployementRadius )
         {
           if( getSelectedToken().getHexagonSize() == 1 )
           {
@@ -1528,8 +1529,8 @@ public class EventsPlayBuilder implements GameEventStack
             action.setCost( 0 );
           }
           else if( getSelectedToken().getHexagonSize() == 2
-              && freighter.getPosition().getHexDistance(
-                  p_position.getNeighbour( p_position.getSector() ) ) <= FmpConstant.deployementRadius )
+              && getCoordinateSystem().getDiscreteDistance( freighter.getPosition(),
+                  getCoordinateSystem().getNeighbor( p_position, p_position.getSector() ) ) <= FmpConstant.deployementRadius )
           {
             // allow free move during deployment turn
             action.setCost( 0 );
@@ -1747,7 +1748,7 @@ public class EventsPlayBuilder implements GameEventStack
     assert getGame() != null;
     assert (getAccountId() != 0) || (getGame().getGameType() != GameType.MultiPlayer);
 
-    if( getSelectedToken().isNeighbor( p_position ) )
+    if( getSelectedToken().isNeighbor( getGame().getCoordinateSystem(), p_position ) )
     {
       actionMoveSelected( p_position );
       return true;
@@ -1814,6 +1815,12 @@ public class EventsPlayBuilder implements GameEventStack
     return m_game;
   }
 
+  public HexCoordinateSystem getCoordinateSystem()
+  {
+    assert m_game != null;
+    return getGame().getCoordinateSystem();
+  }
+  
   /**
    * @param m_game the game to set
    */

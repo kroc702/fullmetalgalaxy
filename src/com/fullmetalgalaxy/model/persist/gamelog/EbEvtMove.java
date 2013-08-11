@@ -118,10 +118,10 @@ public class EbEvtMove extends AnEventPlay
     // check no hexagon are skipped
     AnBoardPosition tokenPosition = getToken(p_game).getPosition();
     if( !tokenPosition.equals( getNewPosition() )
-        && !tokenPosition.isNeighbor( getNewPosition() )
-        && ((getToken(p_game).getHexagonSize() == 1) || !tokenPosition.getNeighbour(
+        && !p_game.getCoordinateSystem().areNeighbor( tokenPosition, getNewPosition() )
+        && ((getToken(p_game).getHexagonSize() == 1) || !p_game.getCoordinateSystem().getNeighbor( tokenPosition,
             tokenPosition.getSector() ).equals(
-            getNewPosition().getNeighbour( getNewPosition().getSector() ) )) )
+            p_game.getCoordinateSystem().getNeighbor( getNewPosition(), getNewPosition().getSector() ) )) )
     {
       // unusual error: no i18n
       throw new RpcFmpException( "You must select all moving step without any gap between them." );

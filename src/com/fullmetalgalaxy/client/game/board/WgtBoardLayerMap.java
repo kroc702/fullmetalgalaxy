@@ -93,12 +93,6 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    Game game = GameEngine.model().getGame();
-
-    // compute the size of the widget
-    int pxW = game.getLandPixWidth( new EnuZoom( getZoom().getValue() ) );
-    int pxH = game.getLandPixHeight( new EnuZoom( getZoom().getValue() ) );
-    m_image.setPixelSize( pxW, pxH );
 
     onTideChange();
     show();

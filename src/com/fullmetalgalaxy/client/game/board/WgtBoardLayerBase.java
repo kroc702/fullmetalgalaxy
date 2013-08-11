@@ -39,12 +39,17 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
 {
-  // these variable are here to keep track of the visible area.
-  protected int m_left = 0;
-  protected int m_top = 0;
-  protected int m_botom = 0;
-  protected int m_right = 0;
+  // these variable are here to keep track of the visible area of widget in pixel.
+  protected int m_leftPix = 0;
+  protected int m_topPix = 0;
+  protected int m_botomPix = 0;
+  protected int m_rightPix = 0;
 
+  // cropped area in hexagon
+  protected int m_cropLeftHex = 0;
+  protected int m_cropTopHex = 0;
+  protected int m_cropBotomHex = 10;
+  protected int m_cropRightHex = 10;
 
   /**
    * 
@@ -53,14 +58,6 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   {
   }
 
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.client.board.test.BoardLayer#getTopWidget()
-   */
-  @Override
-  public Widget getTopWidget()
-  {
-    return this;
-  }
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayer#hide()
@@ -77,10 +74,18 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   @Override
   public void redraw(int p_left, int p_top, int p_right, int p_botom)
   {
-    m_top = p_top;
-    m_botom = p_botom;
-    m_left = p_left;
-    m_right = p_right;
+    m_topPix = p_top;
+    m_botomPix = p_botom;
+    if( m_botomPix > getOffsetHeight() )
+    {
+      m_botomPix = getOffsetHeight();
+    }
+    m_leftPix = p_left;
+    m_rightPix = p_right;
+    if( m_rightPix > getOffsetWidth() )
+    {
+      m_rightPix = getOffsetWidth();
+    }
     redraw();
   }
 
@@ -99,9 +104,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
     Game game = GameEngine.model().getGame();
     if( (game.getId() != m_lastGameId) || (p_forceRedraw) )
     {
-      int pxW = game.getLandPixWidth( getZoom() );
-      int pxH = game.getLandPixHeight( getZoom() );
-      setPixelSize( pxW, pxH );
+      resetPixelSize();
       m_lastGameId = game.getId();
     }
   }
@@ -129,12 +132,20 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   @Override
   public void setZoom(EnuZoom p_zoom)
   {
-    Game game = GameEngine.model().getGame();
-    int pxW = game.getLandPixWidth( getZoom() );
-    int pxH = game.getLandPixHeight( getZoom() );
-    setPixelSize( pxW, pxH );
+    resetPixelSize();
   }
 
+  /**
+   * recompute and set widget size in pixel
+   */
+  protected void resetPixelSize()
+  {
+    int width = m_cropRightHex - m_cropLeftHex;
+    int height = m_cropBotomHex - m_cropTopHex;
+    int pxW = BoardConvert.landWidthHex2Pix( width, getZoom() );
+    int pxH = BoardConvert.landHeightHex2Pix( height, getZoom() );
+    setPixelSize( pxW, pxH );
+  }
 
   protected WgtBoard getWgtBoard()
   {
@@ -152,13 +163,19 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    */
   protected boolean isHexVisible(AnPair p_wgtHexPosition)
   {
+    /*if( m_cropLeftHex > p_wgtHexPosition.getX() || m_cropRightHex <= p_wgtHexPosition.getX() )
+      return false;
+    if( m_cropTopHex > p_wgtHexPosition.getY() || m_cropBotomHex <= p_wgtHexPosition.getY() )
+      return false;
+      */
     AnPair wgtPxPosition = convertHexPositionToPixPosition( p_wgtHexPosition );
+    // hex position in pixel
     int hexLeft = wgtPxPosition.getX() - FmpConstant.getHexWidth( getZoom() ) / 2;
     int hexRight = hexLeft + FmpConstant.getHexWidth( getZoom() );
     int hexTop = wgtPxPosition.getY() - FmpConstant.getHexHeight( getZoom() ) / 2;
     int hexBotom = hexTop + FmpConstant.getHexWidth( getZoom() );
 
-    return (hexRight > m_left) && (hexLeft < m_right) && (hexBotom > m_top) && (hexTop < m_botom);
+    return (hexRight > m_leftPix) && (hexLeft < m_rightPix) && (hexBotom > m_topPix) && (hexTop < m_botomPix);
   }
 
   /**
@@ -167,8 +184,8 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    */
   protected boolean isPixVisible(AnPair p_wgtPixPosition)
   {
-    return (p_wgtPixPosition.getX() > m_left) && (p_wgtPixPosition.getX() < m_right)
-        && (p_wgtPixPosition.getY() > m_top) && (p_wgtPixPosition.getY() < m_botom);
+    return (p_wgtPixPosition.getX() > m_leftPix) && (p_wgtPixPosition.getX() < m_rightPix)
+        && (p_wgtPixPosition.getY() > m_topPix) && (p_wgtPixPosition.getY() < m_botomPix);
   }
 
   /**
@@ -199,7 +216,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    * @param p_w
    * @param p_wgtPixPosition position in pixel
    */
-  public void setWidgetPixPosition(Widget p_w, AnPair p_wgtPixPosition)
+  private void setWidgetPixPosition(Widget p_w, AnPair p_wgtPixPosition)
   {
     super.setWidgetPosition( p_w, p_wgtPixPosition.getX() - p_w.getOffsetWidth() / 2,
         p_wgtPixPosition.getY() - p_w.getOffsetHeight() / 2 );
@@ -213,7 +230,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    * @param p_w
    * @param p_wgtPixPosition position in pixel
    */
-  protected void setWidgetPixPosition(Image p_w, AnPair p_wgtPixPosition)
+  public void setWidgetPixPosition(Image p_w, AnPair p_wgtPixPosition)
   {
     super.setWidgetPosition( p_w, p_wgtPixPosition.getX() - p_w.getWidth() / 2, p_wgtPixPosition
         .getY()
@@ -223,63 +240,48 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
 
 
 
-  /**
-   * @param p_boardPosition board position in hexagon
-   * @param p_zoom
-   * @return widget center position in pixel
-   */
-  protected static AnPair convertHexPositionToPixPosition(AnPair p_wgtHexPosition, EnuZoom p_zoom)
-  {
-    AnPair wgtPxPosition = new AnPair();
-
-    wgtPxPosition.setX( p_wgtHexPosition.getX() * (FmpConstant.getHexWidth( p_zoom ) * 3 / 4)
-        + FmpConstant.getHexWidth( p_zoom ) / 2 );
-    if( p_wgtHexPosition.getX() % 2 == 0 )
-    {
-      wgtPxPosition.setY( p_wgtHexPosition.getY() * FmpConstant.getHexHeight( p_zoom )
-          + FmpConstant.getHexHeight( p_zoom ) / 2 );
-    }
-    else
-    {
-      wgtPxPosition.setY( p_wgtHexPosition.getY() * FmpConstant.getHexHeight( p_zoom )
-          + FmpConstant.getHexHeight( p_zoom ) );
-    }
-    return wgtPxPosition;
-  }
-
   public AnPair convertHexPositionToPixPosition(AnPair p_wgtHexPosition)
   {
-    return convertHexPositionToPixPosition( p_wgtHexPosition, getZoom() );
+    AnPair wgtHexPosition = p_wgtHexPosition;
+    if( GameEngine.game().getMapShape().isEWLinked() )
+    {    
+      wgtHexPosition = new AnPair(p_wgtHexPosition);
+      if( wgtHexPosition.getX() < m_cropLeftHex )
+      {
+        wgtHexPosition.setX( p_wgtHexPosition.getX() + GameEngine.game().getLandWidth() );
+      }
+      if( wgtHexPosition.getY() < m_cropTopHex )
+      {
+        wgtHexPosition.setY( p_wgtHexPosition.getY() + GameEngine.game().getLandHeight() );
+      }
+    }
+    return BoardConvert.convertHexPositionToPixPosition( wgtHexPosition, getZoom(), new AnPair(m_cropLeftHex,m_cropTopHex) );
   }
 
-
-  /**
-   * 
-   * @param p_wgtPosition widget position in pixel
-   * @return board position in hexagon
-   */
-  public static AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition, EnuZoom p_zoom)
-  {
-    AnBoardPosition anBoardPosition = new AnBoardPosition( 0, 0 );
-
-    anBoardPosition.setX( (p_pixPosition.getX() - FmpConstant.getHexWidth( p_zoom ) / 8)
-        / (FmpConstant.getHexWidth( p_zoom ) * 3 / 4) );
-
-    if( anBoardPosition.getX() % 2 == 0 )
-    {
-      anBoardPosition.setY( p_pixPosition.getY() / FmpConstant.getHexHeight( p_zoom ) );
-    }
-    else
-    {
-      anBoardPosition.setY( (p_pixPosition.getY() - FmpConstant.getHexHeight( p_zoom ) / 2)
-          / FmpConstant.getHexHeight( p_zoom ) );
-    }
-    return anBoardPosition;
-  }
 
   protected AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition)
   {
-    return convertPixPositionToHexPosition( p_pixPosition, getZoom() );
+    return BoardConvert.convertPixPositionToHexPosition( p_pixPosition, getZoom(), new AnPair(m_cropLeftHex,m_cropTopHex) );
+  }
+
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    m_cropLeftHex = p_cropLeftHex;
+    if( m_cropLeftHex < 0 )
+      m_cropLeftHex = 0;
+    m_cropTopHex = p_cropTopHex;
+    if( m_cropTopHex < 0 )
+      m_cropTopHex = 0;
+    m_cropBotomHex = p_cropBotomHex;
+    m_cropRightHex = p_cropRightHex;
+  }
+
+  @Override
+  public AnPair getCropTopLeft()
+  {
+    return new AnPair(m_cropLeftHex,m_cropTopHex);
   }
 
 

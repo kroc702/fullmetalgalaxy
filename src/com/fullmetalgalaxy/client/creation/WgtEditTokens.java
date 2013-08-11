@@ -92,5 +92,8 @@ public class WgtEditTokens extends WgtView implements WindowResizeListener
     }
   }
 
-
+  public void onTabSelected()
+  {
+    m_wgtBoard.onTabSelected();
+  }
 }

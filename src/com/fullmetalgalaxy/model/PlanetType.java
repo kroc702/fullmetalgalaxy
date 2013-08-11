@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author Vincent Legendre
- * these enum represent different kind of landscape
+ * these enum represent different kind of landscape graphism
  */
 public enum PlanetType implements IsSerializable
 {

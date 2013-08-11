@@ -35,15 +35,14 @@ import javax.persistence.PrePersist;
 
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.MapSize;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Serialized;
@@ -136,8 +135,10 @@ public class EbGamePreview extends EbBase
 
   /** a list of lower case tag to ease research */
   private List<String> m_tags = new ArrayList<String>();
-
-
+ 
+  private MapShape m_mapShape = MapShape.Flat;
+  
+  
   public EbGamePreview()
   {
     super();
@@ -243,17 +244,6 @@ public class EbGamePreview extends EbBase
     getStatus();
   }
 
-
-  public int getLandPixWidth(EnuZoom p_zoom)
-  {
-    return getLandWidth() * ((FmpConstant.getHexWidth( p_zoom ) * 3) / 4)
-        + FmpConstant.getHexWidth( p_zoom ) / 4;
-  }
-
-  public int getLandPixHeight(EnuZoom p_zoom)
-  {
-    return(getLandHeight() * FmpConstant.getHexHeight( p_zoom ) + FmpConstant.getHexHeight( p_zoom ) / 2);
-  }
 
 
   /**
@@ -1197,5 +1187,15 @@ public class EbGamePreview extends EbBase
     m_maxTeamAllowed = p_maxTeamAllowed;
   }
 
+  public MapShape getMapShape()
+  {
+    return m_mapShape;
+  }
 
+  public void setMapShape(MapShape p_mapShape)
+  {
+    m_mapShape = p_mapShape;
+  }
+  
+  
 }

@@ -81,8 +81,10 @@ public enum Tide implements IsSerializable
       return -1;
     case Hight:
       return 1;
+    default:
+      return 0;
     }
-    return 0;
+
   }
 
 }

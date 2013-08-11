@@ -125,7 +125,7 @@ public class EbEvtTransfer extends AnEventPlay
     // check that tokens are neighbor
     if( getTokenCarrier(p_game).getLocation() == Location.Board )
     {
-      if( !getTokenCarrier(p_game).isNeighbor( getNewTokenCarrier(p_game) )
+      if( !getTokenCarrier(p_game).isNeighbor( p_game.getCoordinateSystem(), getNewTokenCarrier(p_game) )
           && getTokenCarrier(p_game).getCarrierToken() != getNewTokenCarrier(p_game) )
       {
         throw new RpcFmpException( "les deux pions " + getTokenCarrier(p_game) + " et "
