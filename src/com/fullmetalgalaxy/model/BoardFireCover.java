@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -82,62 +83,58 @@ public class BoardFireCover implements Serializable
    * @param p_color must be a single color
    * @return
    */
-  public byte getFireCover(int p_x, int p_y, EnuColor p_color)
+  public byte getFireCover(AnBoardPosition p_position, EnuColor p_color)
   {
     if( m_fireCover == null )
     {
       reComputeFireCover();
     }
-    if( (p_x < 0) || (p_y < 0) || (p_x >= m_fireCover.length) || (p_y >= m_fireCover[0].length)
+    p_position = m_game.getCoordinateSystem().normalizePosition( p_position );
+    if( (p_position.getX() < 0) || (p_position.getY() < 0)
+        || (p_position.getX() >= m_fireCover.length)
+        || (p_position.getY() >= m_fireCover[0].length)
         || (!p_color.isSingleColor()) )
     {
       return 0;
     }
-    return m_fireCover[p_x][p_y][p_color.getColorIndex()];
+    return m_fireCover[p_position.getX()][p_position.getY()][p_color.getColorIndex()];
   }
 
 
-  public byte getDisabledFireCover(int p_x, int p_y, EnuColor p_color)
+  public byte getDisabledFireCover(AnBoardPosition p_position, EnuColor p_color)
   {
     if( m_disabledFireCover == null )
     {
       reComputeFireCover();
     }
-    if( (p_x < 0) || (p_y < 0) || (p_x >= m_fireCover.length) || (p_y >= m_fireCover[0].length)
-        || (!p_color.isSingleColor()) )
+    AnBoardPosition position = m_game.getCoordinateSystem().normalizePosition( p_position );
+    if( (position.getX() < 0) || (position.getY() < 0) || (position.getX() >= m_fireCover.length)
+        || (position.getY() >= m_fireCover[0].length) || (!p_color.isSingleColor()) )
     {
       return 0;
     }
-    return m_disabledFireCover[p_x][p_y][p_color.getColorIndex()];
+    return m_disabledFireCover[position.getX()][position.getY()][p_color.getColorIndex()];
+  }
+
+  public byte getDisabledFireCover(int p_x, int p_y, EnuColor p_color)
+  {
+    return getDisabledFireCover( new AnBoardPosition( p_x, p_y ), p_color );
   }
 
 
-  public byte getDisabledFireCover(int p_x, int p_y, EbRegistration p_registration)
+  public byte getDisabledFireCover(int p_x, int p_y, EbTeam p_team)
   {
-    return getDisabledFireCover( p_x, p_y, new EnuColor( p_registration.getTeam( m_game )
-        .getFireColor() ) );
+    return getDisabledFireCover( p_x, p_y, new EnuColor( p_team.getFireColor() ) );
   }
 
 
   public EnuColor getFireCover(AnBoardPosition p_position)
   {
-    return getFireCover( p_position.getX(), p_position.getY() );
-  }
-
-
-  /**
-   * 
-   * @param p_token
-   * @return
-   * @deprecated
-   */
-  private EnuColor getFireCover(int p_x, int p_y)
-  {
     EnuColor cover = new EnuColor( EnuColor.None );
     for( int iColor = 0; iColor < EnuColor.getTotalNumberOfColor(); iColor++ )
     {
       EnuColor currentColor = EnuColor.getColorFromIndex( iColor );
-      if( getFireCover( p_x, p_y, currentColor ) >= 2 )
+      if( getFireCover( p_position, currentColor ) >= 2 )
       {
         cover.addColor( currentColor );
       }
@@ -145,24 +142,19 @@ public class BoardFireCover implements Serializable
     return cover;
   }
 
-  protected byte getFireCover(int p_x, int p_y, int p_colorValue)
-  {
-    if( (p_colorValue < 0) || (p_colorValue >= EnuColor.getTotalNumberOfColor()) )
-    {
-      return 0;
-    }
-    return getFireCover( p_x, p_y, new EnuColor( p_colorValue ) );
-  }
 
 
-  protected void incFireCover(int p_x, int p_y, EnuColor p_color, byte[][][] p_fireCover)
+
+  protected void incFireCover(AnBoardPosition p_position, EnuColor p_color, byte[][][] p_fireCover)
   {
-    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor())
-        || (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
+    p_position = m_game.getCoordinateSystem().normalizePosition( p_position );
+    if( (p_fireCover == null) || (p_position.getX() < 0) || (p_position.getY() < 0)
+        || (!p_color.isSingleColor()) || (p_position.getX() >= p_fireCover.length)
+        || (p_position.getY() >= p_fireCover[0].length) )
     {
       return;
     }
-    p_fireCover[p_x][p_y][p_color.getColorIndex()]++;
+    p_fireCover[p_position.getX()][p_position.getY()][p_color.getColorIndex()]++;
 
   }
 
@@ -228,7 +220,7 @@ public class BoardFireCover implements Serializable
       {
         if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
         {
-          incFireCover( ix, iy, color, fireCover );
+          incFireCover( new AnBoardPosition( ix, iy ), color, fireCover );
         }
       }
     }
@@ -243,14 +235,16 @@ public class BoardFireCover implements Serializable
    * @param p_fireCover
    * @param p_disableFireCover if true, don't search for other destroyer to fire enable
    */
-  protected void decFireCover(int p_x, int p_y, EnuColor p_color, byte[][][] p_fireCover)
+  protected void decFireCover(AnBoardPosition p_position, EnuColor p_color, byte[][][] p_fireCover)
   {
-    if( (p_fireCover == null) || (p_x < 0) || (p_y < 0) || (!p_color.isSingleColor())
-        || (p_x >= p_fireCover.length) || (p_y >= p_fireCover[0].length) )
+    p_position = m_game.getCoordinateSystem().normalizePosition( p_position );
+    if( (p_fireCover == null) || (p_position.getX() < 0) || (p_position.getY() < 0)
+        || (!p_color.isSingleColor()) || (p_position.getX() >= p_fireCover.length)
+        || (p_position.getY() >= p_fireCover[0].length) )
     {
       return;
     }
-    p_fireCover[p_x][p_y][p_color.getColorIndex()]--;
+    p_fireCover[p_position.getX()][p_position.getY()][p_color.getColorIndex()]--;
   }
 
   public void decFireCover(EbToken p_token)
@@ -291,7 +285,7 @@ public class BoardFireCover implements Serializable
       {
         if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
         {
-          decFireCover( ix, iy, color, fireCover );
+          decFireCover( new AnBoardPosition( ix, iy ), color, fireCover );
         }
       }
     }

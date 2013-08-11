@@ -105,7 +105,7 @@ public class EbEvtControlFreighter extends AnEventPlay
       // no i18n
       throw new RpcFmpException( "le pion controlé doit être un astronef" );
     }
-    if( !getToken(p_game).isNeighbor( getTokenCarrier(p_game) ) )
+    if( !getToken(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenCarrier(p_game) ) )
     {
       // no i18n
       throw new RpcFmpException( getToken(p_game) + " doit etre au contact de " + getTokenCarrier(p_game)
@@ -136,7 +136,7 @@ public class EbEvtControlFreighter extends AnEventPlay
           ( Messages.getColorString( getAccountId(),  fireCoverColor.getValue() ))));
     }
     // check presence of turrets
-    for( AnBoardPosition position : getTokenCarrier(p_game).getExtraPositions() )
+    for( AnBoardPosition position : getTokenCarrier(p_game).getExtraPositions(p_game.getCoordinateSystem()) )
     {
       EbToken turret = p_game.getToken( position, TokenType.Turret );
       if( turret != null )

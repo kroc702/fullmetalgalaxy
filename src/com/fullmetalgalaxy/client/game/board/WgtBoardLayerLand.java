@@ -41,6 +41,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   protected HTML m_html = new HTML();
   protected String m_baseUrl = null;
 
+
   /**
    * 
    */
@@ -62,6 +63,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
 
   private Tide m_lastTideValue = Tide.Unknown;
   protected long m_lastGameId = 0;
+
 
   /**
    * 
@@ -128,7 +130,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   }
 
 
-  private static String buildHtmlLand(Game p_game, int p_zoom)
+  private String buildHtmlLand(Game p_game, int p_zoom)
   {
     StringBuffer html = new StringBuffer();
     int[] indexTextures = new int[LandType.values().length];
@@ -138,29 +140,28 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     }
 
     // compute the size of the widget
-    int pxW = p_game.getLandPixWidth( new EnuZoom( p_zoom ) );
-    int pxH = p_game.getLandPixHeight( new EnuZoom( p_zoom ) );
+    resetPixelSize();
 
     int pxHexWidth = FmpConstant.getHexWidth( p_zoom );
     int pxHexHeight = FmpConstant.getHexHeight( p_zoom );
 
-    html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );
-    for( int ix = 0; ix < p_game.getLandWidth(); ix++ )
+    html.append( "<div style=\"overflow: hidden; width: 100%; height: 100%;\">" );
+    for( int ix = m_cropLeftHex; ix < p_game.getLandWidth() && ix < m_cropRightHex; ix++ )
     {
-      int tmppxX = ix * (pxHexWidth * 3 / 4);
+      int tmppxX = (ix - m_cropLeftHex) * (pxHexWidth * 3 / 4);
       int yOffset = 0;
       if( ix % 2 != 0 )
       {
         yOffset = pxHexHeight / 2;
       }
-      int iy = 0;
-      while( iy < p_game.getLandHeight() )
+      int iy = m_cropTopHex;
+      while( iy < p_game.getLandHeight() && iy < m_cropBotomHex )
       {
-        int pxY = iy * pxHexHeight;
+        int pxY = (iy - m_cropTopHex) * pxHexHeight;
         LandType land = p_game.getLand( ix, iy );
         int hexHeight = 1;
         iy++;
-        while( (iy < p_game.getLandHeight()) 
+        while( (iy < p_game.getLandHeight() && iy < m_cropBotomHex)
             && (land == p_game.getLand( ix, iy )) 
             && (hexHeight < getTextureHexCount( land )) )
         {
@@ -213,11 +214,6 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     width = (FmpConstant.getHexWidth( p_zoom ) + (getHexMontainWidthMargin( p_zoom.getValue() ) + getHexWidthMargin( p_zoom
         .getValue() )));
     setLandsWidth( LandType.Montain, width );
-    Game game = GameEngine.model().getGame();
-    int pxW = game.getLandPixWidth( getZoom() );
-    int pxH = game.getLandPixHeight( getZoom() );
-    setPixelSize( pxW, pxH );
-    m_html.setPixelSize( pxW, pxH );
 
     m_html.setHTML( getHtmlLand() );
     onTideChange();

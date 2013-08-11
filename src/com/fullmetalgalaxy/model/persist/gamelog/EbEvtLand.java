@@ -124,16 +124,16 @@ public class EbEvtLand extends AnEventPlay
     case North:
     case SouthEast:
     case SouthWest:
-      landingPosition[1] = landingPosition[0].getNeighbour( Sector.North );
-      landingPosition[2] = landingPosition[0].getNeighbour( Sector.SouthEast );
-      landingPosition[3] = landingPosition[0].getNeighbour( Sector.SouthWest );
+      landingPosition[1] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.North );
+      landingPosition[2] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.SouthEast );
+      landingPosition[3] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.SouthWest );
       break;
     case NorthEast:
     case South:
     case NorthWest:
-      landingPosition[1] = landingPosition[0].getNeighbour( Sector.NorthEast );
-      landingPosition[2] = landingPosition[0].getNeighbour( Sector.South );
-      landingPosition[3] = landingPosition[0].getNeighbour( Sector.NorthWest );
+      landingPosition[1] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.NorthEast );
+      landingPosition[2] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.South );
+      landingPosition[3] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.NorthWest );
     default:
       // impossible error
       break;
@@ -155,14 +155,19 @@ public class EbEvtLand extends AnEventPlay
       if( (currentToken.getType() == TokenType.Freighter)
           && (currentToken.getLocation() == Location.Board)
           && (currentToken.getId() != getToken(p_game).getId())
-          && (landingPosition[0].getHexDistance( currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenFreighter) )
+          && (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenFreighter) )
       {
         throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ) );
       }
     }
     // check that freighter isn't landing too close of map boarder
-    if( getPosition().getX() < 2 || getPosition().getX() > (p_game.getLandWidth() - 3)
-        || getPosition().getY() < 2 || getPosition().getY() > (p_game.getLandHeight() - 3) )
+    if( !p_game.getMapShape().isEWLinked() &&
+        (getPosition().getX() < 2 || getPosition().getX() > (p_game.getLandWidth() - 3))  )
+    {
+      throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+    }
+    if( !p_game.getMapShape().isNSLinked() &&
+        (getPosition().getY() < 2 || getPosition().getY() > (p_game.getLandHeight() - 3)) )
     {
       throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
     }
@@ -183,7 +188,7 @@ public class EbEvtLand extends AnEventPlay
     {
       if( (currentToken.getColor() == EnuColor.None)
           && (currentToken.getLocation() == Location.Board)
-          && (getPosition().getHexDistance( currentToken.getPosition() ) <= FmpConstant.deployementRadius) )
+          && (p_game.getCoordinateSystem().getDiscreteDistance( getPosition(), currentToken.getPosition() ) <= FmpConstant.deployementRadius) )
       {
         // destroy this colorless token
         m_TokenIds.add( currentToken.getId() );
@@ -203,16 +208,16 @@ public class EbEvtLand extends AnEventPlay
     case North:
     case SouthEast:
     case SouthWest:
-      landingPosition[1] = landingPosition[0].getNeighbour( Sector.North );
-      landingPosition[2] = landingPosition[0].getNeighbour( Sector.SouthEast );
-      landingPosition[3] = landingPosition[0].getNeighbour( Sector.SouthWest );
+      landingPosition[1] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.North );
+      landingPosition[2] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.SouthEast );
+      landingPosition[3] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.SouthWest );
       break;
     case NorthEast:
     case South:
     case NorthWest:
-      landingPosition[1] = landingPosition[0].getNeighbour( Sector.NorthEast );
-      landingPosition[2] = landingPosition[0].getNeighbour( Sector.South );
-      landingPosition[3] = landingPosition[0].getNeighbour( Sector.NorthWest );
+      landingPosition[1] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.NorthEast );
+      landingPosition[2] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.South );
+      landingPosition[3] = p_game.getCoordinateSystem().getNeighbor( landingPosition[0], Sector.NorthWest );
     }
 
     // unload three turrets
@@ -240,7 +245,7 @@ public class EbEvtLand extends AnEventPlay
     super.unexec(p_game);
 
     // reload three turrets
-    for( AnBoardPosition position : getToken(p_game).getExtraPositions() )
+    for( AnBoardPosition position : getToken(p_game).getExtraPositions(p_game.getCoordinateSystem()) )
     {
       EbToken token = p_game.getToken( position, TokenType.Turret );
 

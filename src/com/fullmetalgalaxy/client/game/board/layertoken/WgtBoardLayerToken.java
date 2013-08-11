@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board.layertoken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,16 +89,16 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     Game game = GameEngine.model().getGame();
     Set<EbToken> tokenList = game.getSetToken();
 
-    // little optimisation to avoid using isHexVisible for each token...
-    AnPair pixPositionLeftTop = new AnPair( m_left, m_top );
-    AnPair pixPositionRightBotom = new AnPair( m_right, m_botom );
+    // little optimization to avoid using isHexVisible for each token...
+    /*AnPair pixPositionLeftTop = new AnPair( m_leftPix, m_topPix );
+    AnPair pixPositionRightBotom = new AnPair( m_rightPix, m_botomPix );
     hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
-    hexPositionLeftTop.setX( hexPositionLeftTop.getX() - 2 );
-    hexPositionLeftTop.setY( hexPositionLeftTop.getY() - 2 );
+    hexPositionLeftTop.setX( Math.max( m_cropLeftHex -1, hexPositionLeftTop.getX() -2) );
+    hexPositionLeftTop.setY( Math.max( m_cropTopHex -1, hexPositionLeftTop.getY() -2) );
     hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
-    hexPositionRightBotom.setX( hexPositionRightBotom.getX() + 2 );
-    hexPositionRightBotom.setY( hexPositionRightBotom.getY() + 2 );
-
+    hexPositionRightBotom.setX( Math.min( m_cropRightHex +1, hexPositionRightBotom.getX() +2) );
+    hexPositionRightBotom.setY( Math.min( m_cropBotomHex +1, hexPositionRightBotom.getY() +2) );
+*/
     for( EbToken token : tokenList )
     {
       if( token.getLocation() != Location.Board )
@@ -105,10 +106,12 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         // not visible token, but it may still need an update
         updateTokenWidget( token, false );
       }
-      else if( (token.getPosition().getX() > hexPositionLeftTop.getX())
-          && (token.getPosition().getY() > hexPositionLeftTop.getY())
-          && (token.getPosition().getX() < hexPositionRightBotom.getX())
-          && (token.getPosition().getY() < hexPositionRightBotom.getY()) )
+      else
+      /*if( isHexVisible( token.getPosition() ) )
+      /*else if( (token.getPosition().getX() > hexPositionLeftTop.getX())
+      && (token.getPosition().getY() > hexPositionLeftTop.getY())
+      && (token.getPosition().getX() < hexPositionRightBotom.getX())
+      && (token.getPosition().getY() < hexPositionRightBotom.getY()) )*/
       {
         // for each visible token...
         updateTokenWidget( token, false );
@@ -122,6 +125,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
    */
   public void cleanToken()
   {
+    List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : m_tokenMap.keySet() )
     {
       if( GameEngine.model().getGame().getToken( token.getId() ) == null )
@@ -131,8 +135,12 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         tokenWidget.setVisible( false );
         remove( tokenWidget.getTokenImage() );
         remove( tokenWidget.getIconWarningImage() );
-        m_tokenMap.remove( token );
+        token2Remove.add( token );
       }
+    }
+    for( EbToken token : token2Remove )
+    {
+      m_tokenMap.remove( token );
     }
   }
 
@@ -322,10 +330,6 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   public void setZoom(EnuZoom p_zoom)
   {
     super.setZoom( p_zoom );
-    Game game = GameEngine.model().getGame();
-    int pxW = game.getLandPixWidth( getZoom() );
-    int pxH = game.getLandPixHeight( getZoom() );
-    setPixelSize( pxW, pxH );
     invalidateTokenMap();
     redraw();
   }
@@ -347,9 +351,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
       m_lastTideValue = game.getCurrentTide();
       m_lastGameId = game.getId();
-      int pxW = game.getLandPixWidth( getZoom() );
-      int pxH = game.getLandPixHeight( getZoom() );
-      setPixelSize( pxW, pxH );
+      resetPixelSize();
       clearTokenMap();
       redraw();
     }
@@ -460,6 +462,15 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         && (p_position.getY() > hexPositionLeftTop.getY())
         && (p_position.getX() < hexPositionRightBotom.getX())
         && (p_position.getY() < hexPositionRightBotom.getY());
+  }
+
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    invalidateTokenMap();
+    redraw();
   }
 
 }

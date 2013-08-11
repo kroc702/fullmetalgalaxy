@@ -24,13 +24,14 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.google.gwt.user.client.ui.Widget;
+import com.fullmetalgalaxy.model.persist.AnPair;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * @author Vincent Legendre
  *
  */
-public interface BoardLayer
+public interface BoardLayer extends IsWidget
 {
   /**
    * called once, when this board layer is shown.
@@ -42,12 +43,6 @@ public interface BoardLayer
    * called once, when this board layer is hidden.
    */
   public void hide();
-
-  /**
-   * should return the widget representing this board layer on html page. 
-   * @return
-   */
-  public Widget getTopWidget();
 
   /**
    * called when the board zoom is changed.
@@ -70,4 +65,10 @@ public interface BoardLayer
    */
   public void onModelChange();
 
+  /**
+   * we can restrict drawing area 
+   */
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex, int p_cropBotomHex);
+
+  public AnPair getCropTopLeft();
 }

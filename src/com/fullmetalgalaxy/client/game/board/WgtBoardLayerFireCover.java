@@ -32,7 +32,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.HTML;
 
@@ -42,9 +42,9 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 {
-  private HashMap<EbRegistration, HTML> m_fireCoverLayers = new HashMap<EbRegistration, HTML>();
+  private HashMap<EbTeam, HTML> m_fireCoverLayers = new HashMap<EbTeam, HTML>();
 
-  private Set<EbRegistration> m_validLayersSet = new HashSet<EbRegistration>();
+  private Set<EbTeam> m_validLayersSet = new HashSet<EbTeam>();
 
   /**
    * last update of the currently displayed fire cover
@@ -66,34 +66,34 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   public void displayFireCover(boolean p_isVisible)
   {
     Game game = GameEngine.model().getGame();
-    for( EbRegistration registration : game.getSetRegistration() )
+    for( EbTeam team : game.getTeams() )
     {
-      displayFireCover( p_isVisible, registration );
+      displayFireCover( p_isVisible, team );
     }
   }
 
   /**
    * display or hide one fire cover layer of a specific registration.
    * @param p_isVisible
-   * @param p_registration
+   * @param p_team
    */
-  public void displayFireCover(boolean p_isVisible, EbRegistration p_registration)
+  public void displayFireCover(boolean p_isVisible, EbTeam p_team)
   {
-    HTML html = (HTML)m_fireCoverLayers.get( p_registration );
+    HTML html = (HTML)m_fireCoverLayers.get( p_team );
     if( p_isVisible )
     {
       if( html == null )
       {
         html = new HTML();
         add( html, 0, 0 );
-        m_fireCoverLayers.put( p_registration, html );
-        m_validLayersSet.add( p_registration );
-        html.setHTML( getFireCoverHtml( p_registration ) );
+        m_fireCoverLayers.put( p_team, html );
+        m_validLayersSet.add( p_team );
+        html.setHTML( getFireCoverHtml( p_team ) );
       }
-      if( !m_validLayersSet.contains( p_registration ) )
+      if( !m_validLayersSet.contains( p_team ) )
       {
-        m_validLayersSet.add( p_registration );
-        html.setHTML( getFireCoverHtml( p_registration ) );
+        m_validLayersSet.add( p_team );
+        html.setHTML( getFireCoverHtml( p_team ) );
       }
     }
 
@@ -128,29 +128,37 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
       }
       m_fireCoverLayers.clear();
       m_validLayersSet.clear();
+      redraw();
     }
     else if( ((game.getVersion() > m_gameLastVersion))
         || (m_tokenLastUpdate != GameEngine.model().getGame().getLastTokenUpdate().getTime()) )
     {
-      m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
-      m_gameLastVersion = game.getVersion();
-      // same game but somethings changed: redraw all visible layers.
-      m_validLayersSet.clear();
-      for( Map.Entry<EbRegistration, HTML> entry : m_fireCoverLayers.entrySet() )
-      {
-        HTML layer = entry.getValue();
-        if( layer.isVisible() )
-        {
-          layer.setHTML( getFireCoverHtml( (EbRegistration)entry.getKey() ) );
-          m_validLayersSet.add( (EbRegistration)entry.getKey() );
-        }
-      }
+      redraw();
     }
     else if( isAnyCoverVisible() != GameEngine.model().isFireCoverDisplayed() )
     {
       displayFireCover( GameEngine.model().isFireCoverDisplayed() );
     }
   }
+
+  @Override
+  public void redraw()
+  {
+    m_tokenLastUpdate = GameEngine.game().getLastTokenUpdate().getTime();
+    m_gameLastVersion = GameEngine.game().getVersion();
+    // same game but something changed: redraw all visible layers.
+    m_validLayersSet.clear();
+    for( Map.Entry<EbTeam, HTML> entry : m_fireCoverLayers.entrySet() )
+    {
+      HTML layer = entry.getValue();
+      if( layer.isVisible() )
+      {
+        layer.setHTML( getFireCoverHtml( (EbTeam)entry.getKey() ) );
+        m_validLayersSet.add( (EbTeam)entry.getKey() );
+      }
+    }
+  }
+
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.fullmetalgalaxy.model.EnuZoom)
@@ -161,13 +169,13 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     super.setZoom( p_zoom );
     // redraw all visible layers.
     m_validLayersSet.clear();
-    for( Map.Entry<EbRegistration, HTML> entry : m_fireCoverLayers.entrySet() )
+    for( Map.Entry<EbTeam, HTML> entry : m_fireCoverLayers.entrySet() )
     {
       HTML layer = ((HTML)entry.getValue());
       if( layer.isVisible() )
       {
-        layer.setHTML( getFireCoverHtml( (EbRegistration)entry.getKey() ) );
-        m_validLayersSet.add( (EbRegistration)entry.getKey() );
+        layer.setHTML( getFireCoverHtml( (EbTeam)entry.getKey() ) );
+        m_validLayersSet.add( (EbTeam)entry.getKey() );
       }
     }
   }
@@ -191,17 +199,16 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 
   /**
    * redraw a firecover layer in a specific HTML widget.
-   * @param p_registration
+   * @param p_team
    */
-  private String getFireCoverHtml(EbRegistration p_registration)
+  private String getFireCoverHtml(EbTeam p_team)
   {
     StringBuffer html = new StringBuffer();
     Game game = GameEngine.model().getGame();
 
 
     // compute the size of the widget
-    int pxW = game.getLandPixWidth( getZoom() );
-    int pxH = game.getLandPixHeight( getZoom() );
+    resetPixelSize();
 
     int pxHexWidth = FmpConstant.getHexWidth( getZoom() );
     int pxHexHeight = FmpConstant.getHexHeight( getZoom() );
@@ -216,27 +223,28 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     {
       cssClass += "tactic-";
     }
-    assert EnuColor.isSingleColor( p_registration.getTeam( game ).getFireColor() );
-    cssClass += EnuColor.singleColorToString( p_registration.getTeam( game ).getFireColor() );
+    assert EnuColor.isSingleColor( p_team.getFireColor() );
+    cssClass += EnuColor.singleColorToString( p_team.getFireColor() );
     String hCssClass = "h" + cssClass;
 
-    html.append( "<div style=\"overflow: hidden; width: " + pxW + "; height: " + pxH + "px;\">" );
-    for( int ix = 0; ix < game.getLandWidth(); ix++ )
+    html.append( "<div style=\"overflow: hidden; width: 100%; height: 100%;\">" );
+    // for( int ix = 0; ix < game.getLandWidth(); ix++ )
+    for( int ix = m_cropLeftHex; ix < m_cropRightHex; ix++ )
     {
-      int pxX = ix * (pxHexWidth * 3 / 4);
+      int pxX = (ix - m_cropLeftHex) * (pxHexWidth * 3 / 4);
       int yOffset = 0;
       if( ix % 2 != 0 )
       {
         yOffset = pxHexHeight / 2;
       }
-      int iy = 0;
-      while( iy < game.getLandHeight() )
+      int iy = m_cropTopHex;
+      while( iy < m_cropBotomHex )
       {
-        int pxY = iy * pxHexHeight + yOffset;
-        if( game.getFireCover( ix, iy, p_registration ) >= 2 )
+        int pxY = (iy - m_cropTopHex) * pxHexHeight + yOffset;
+        if( game.getFireCover( ix, iy, p_team ) >= 2 )
         {
           int hexHeight = 1;
-          while( game.getFireCover( ix, iy+1, p_registration ) >= 2 )
+          while( iy + 1 < m_cropBotomHex && game.getFireCover( ix, iy + 1, p_team ) >= 2 )
           {
             hexHeight++;
             iy++;
@@ -244,8 +252,8 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + (hexHeight * pxHexHeight) + "px;\" class=\"" + cssClass + "\"></div>" );
         }
-        else if( game.getFireCover( ix, iy, p_registration )
-            + game.getBoardFireCover().getDisabledFireCover( ix, iy, p_registration ) >= 2 )
+        else if( game.getFireCover( ix, iy, p_team )
+            + game.getBoardFireCover().getDisabledFireCover( ix, iy, p_team ) >= 2 )
         {
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + pxHexHeight + "px;\" class=\"" + hCssClass + "\"></div>" );
@@ -258,6 +266,13 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     return html.toString();
   }
 
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    redraw();
+  }
 
   static
   {

@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -44,18 +45,17 @@ public class TokenIndexSet implements IsSerializable
 
   private Map<AnBoardPosition, Set<EbToken>> m_positionIndex = null;
   private Map<Long, EbToken> m_idIndex = null;
-
-
-  public TokenIndexSet()
-  {
-    super();
-  }
+  private HexCoordinateSystem m_coordinateSystem = null;
 
   /**
    * 
    */
-  public TokenIndexSet(Set<EbToken> p_set)
+  public TokenIndexSet(HexCoordinateSystem p_coordinateSystem, Set<EbToken> p_set)
   {
+    assert p_coordinateSystem != null;
+    assert p_set != null;
+    
+    m_coordinateSystem = p_coordinateSystem;
     m_tokenSet = p_set;
     rebuildIndex();
   }
@@ -115,7 +115,7 @@ public class TokenIndexSet implements IsSerializable
       {
         RpcUtil.logError( "token " + p_token + " isn't referenced by position index" );
       }
-      for( AnBoardPosition position : p_token.getExtraPositions() )
+      for( AnBoardPosition position : p_token.getExtraPositions(m_coordinateSystem) )
       {
         index = m_positionIndex.get( position );
         if( index != null )
@@ -136,7 +136,7 @@ public class TokenIndexSet implements IsSerializable
     if( m_positionIndex != null && p_token.getLocation() == Location.Board )
     {
       m_positionIndex.get( p_token.getPosition() ).remove( p_token );
-      for( AnBoardPosition position : p_token.getExtraPositions() )
+      for( AnBoardPosition position : p_token.getExtraPositions(m_coordinateSystem) )
       {
         m_positionIndex.get( position ).remove( p_token );
       }
@@ -146,7 +146,7 @@ public class TokenIndexSet implements IsSerializable
     if( m_positionIndex != null )
     {
       addTokenPosition( p_token, p_token.getPosition() );
-      for( AnBoardPosition position : p_token.getExtraPositions() )
+      for( AnBoardPosition position : p_token.getExtraPositions(m_coordinateSystem) )
       {
         addTokenPosition( p_token, position );
       }
@@ -167,7 +167,7 @@ public class TokenIndexSet implements IsSerializable
       return;
     }
     addTokenPosition( p_token, p_token.getPosition() );
-    for( AnBoardPosition position : p_token.getExtraPositions() )
+    for( AnBoardPosition position : p_token.getExtraPositions(m_coordinateSystem) )
     {
       addTokenPosition( p_token, position );
     }

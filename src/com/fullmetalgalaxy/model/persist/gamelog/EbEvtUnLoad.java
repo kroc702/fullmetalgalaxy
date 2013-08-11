@@ -27,7 +27,6 @@ import java.util.Set;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -125,7 +124,7 @@ public class EbEvtUnLoad extends AnEventPlay
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
     // check no hexagon are skipped
-    if( !getTokenCarrier( p_game ).isNeighbor( getNewPosition() ) )
+    if( !getTokenCarrier( p_game ).isNeighbor( p_game.getCoordinateSystem(), getNewPosition() ) )
     {
       // unusual error: no i18n
       throw new RpcFmpException( "You must select all moving step without any gap between them." );
@@ -206,10 +205,9 @@ public class EbEvtUnLoad extends AnEventPlay
     if( getTokenCarrier(p_game).getType() == TokenType.Freighter )
     {
       boolean turretFound = false;
-      for( Sector sector : Sector.values() )
+      for( AnBoardPosition neighborPosition : p_game.getCoordinateSystem().getAllNeighbors( getNewPosition() ) )
       {
-        EbToken token = p_game.getToken( getNewPosition().getNeighbour( sector ),
-            TokenType.Turret );
+        EbToken token = p_game.getToken( neighborPosition, TokenType.Turret );
         if( token != null )
         {
           turretFound = true;

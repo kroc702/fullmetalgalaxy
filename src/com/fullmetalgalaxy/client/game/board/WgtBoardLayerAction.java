@@ -262,9 +262,8 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           // the loaded token will be strait unloaded
           AnBoardPosition position = ((AnEventPlay)action).getTokenCarrier(
               GameEngine.model().getGame() ).getPosition().newInstance();
-          position.setSector( ((AnEventPlay)action).getToken( GameEngine.model().getGame() )
-              .getPosition()
-              .getNeighbourSector(
+          position.setSector( 
+              GameEngine.coordinateSystem().getSector( ((AnEventPlay)action).getToken( GameEngine.model().getGame() ).getPosition(),
               position ) );
           drawFoot( position );
         }
@@ -292,8 +291,9 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           // the loaded token will be strait unloaded
           AnBoardPosition position = ((AnEventPlay)action).getNewTokenCarrier(
               GameEngine.model().getGame() ).getPosition().newInstance();
-          position.setSector( ((AnEventPlay)action).getTokenCarrier( GameEngine.model().getGame() ).getPosition()
-              .getNeighbourSector( position ) );
+          position.setSector( GameEngine.coordinateSystem().getSector( 
+              ((AnEventPlay)action).getTokenCarrier( GameEngine.model().getGame() ).getPosition(),
+              position ) );
           drawFoot( position );
         }
         else if( (previousAction != null) && (previousAction.getType() == GameLogType.EvtMove || previousAction.getType() == GameLogType.EvtUnLoad)
@@ -362,8 +362,8 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
           AnBoardPosition position = GameEngine.model().getActionBuilder().getSelectedPosition();
           if( ((EbEvtUnLoad)action).getNewPosition() != null )
           {
-            position.setSector( position
-                .getNeighbourSector( ((EbEvtUnLoad)action).getNewPosition() ) );
+            position.setSector( GameEngine.coordinateSystem().getSector( position,
+                ((EbEvtUnLoad)action).getNewPosition() ) );
           }
           TokenType tokenType = action.getToken( GameEngine.model().getGame() ).getType();
           if( firstAction != null && firstAction.getType() == GameLogType.EvtConstruct)
@@ -399,5 +399,12 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
     m_images.hideOtherImage();
   }
 
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    redraw();
+  }
 
 }

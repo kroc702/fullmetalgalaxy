@@ -26,9 +26,8 @@ package com.fullmetalgalaxy.client.creation;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
-import com.fullmetalgalaxy.client.game.board.BoardLayer;
+import com.fullmetalgalaxy.client.game.board.BoardConvert;
 import com.fullmetalgalaxy.client.game.board.BoardLayerCollection;
-import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerLand;
 import com.fullmetalgalaxy.client.game.board.layertoken.WgtBoardLayerToken;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -74,18 +73,16 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
   public WgtBoardEditTokens()
   {
     super();
-    addLayer( m_layerLand );
-    addLayer( m_layerToken );
+    m_layerCollection.addLayer( m_layerLand );
+    m_layerCollection.addLayer( m_layerToken );
+
+    m_panel.add( m_layerCollection, 0, 0 );
+
     m_layerCollection.setZoom( getZoom() );
     addMouseListener( this );
     setWidget( m_panel );
   }
 
-  private void addLayer(BoardLayer p_layer)
-  {
-    m_panel.add( p_layer.getTopWidget(), 0, 0 );
-    m_layerCollection.add( p_layer );
-  }
 
 
   protected EnuZoom getZoom()
@@ -122,6 +119,7 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
     // m_layerSelect.setHexagonHightVisible( false );
   }
 
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.WgtBoard#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
@@ -129,8 +127,8 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
   public void onMouseUp(Widget p_sender, int p_x, int p_y)
   {
     DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
-    AnBoardPosition position = WgtBoardLayerBase.convertPixPositionToHexPosition( new AnPair( p_x,
-        p_y ), getZoom() );
+    AnBoardPosition position = BoardConvert.convertPixPositionToHexPosition( new AnPair( p_x,
+        p_y ), getZoom(), new AnPair(0,0) );
     Game game = GameEngine.model().getGame();
 
     if( DOM.eventGetButton( DOM.eventGetCurrentEvent() ) == Event.BUTTON_LEFT )
@@ -243,8 +241,6 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
       // force redraw
       m_layerLand.onModelChange( true );
       m_layerToken.onModelChange( true );
-      // FF fix.
-      m_panel.setPixelSize( m_layerLand.getOffsetWidth(), m_layerLand.getOffsetHeight() );
     }
     else
     {
@@ -252,6 +248,16 @@ public class WgtBoardEditTokens extends FocusPanel implements MouseListener, Scr
     }
   }
 
+  public void onTabSelected()
+  {
+    m_layerCollection.show();
+    m_layerCollection.cropDisplay( 0, 0, GameEngine.game().getLandWidth(), GameEngine.game()
+        .getLandHeight() );
+    // FF fix.
+    m_panel.setPixelSize( m_layerCollection.asWidget().getOffsetWidth(), 
+        m_layerCollection.asWidget().getOffsetHeight() );
+  }
+  
   /**
    * @return the color
    */

@@ -76,8 +76,9 @@ public enum GameLogType
     case EvtUnLoad:
     case EvtDeployment:
       return true;
+    default:
+      return false;
     }
-    return false;
   }
   
   public boolean isEventAdmin()
@@ -89,8 +90,9 @@ public enum GameLogType
     case AdminBan:
     case AdminAbort:
       return true;
+    default:
+      return false;
     }
-    return false;
   }
 
 

@@ -24,8 +24,11 @@ package com.fullmetalgalaxy.client.game.board;
 
 import java.util.ArrayList;
 
+import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.RpcUtil;
+import com.fullmetalgalaxy.model.persist.AnPair;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -37,6 +40,8 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
 {
   static final long serialVersionUID = 1;
 
+  private AbsolutePanel m_panel = new AbsolutePanel();
+
   /**
    * 
    */
@@ -44,15 +49,10 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   {
   }
 
-
-  /**
-   * shouldn't be called, as it always return null. 
-   * @see com.fullmetalgalaxy.client.game.board.BoardLayer#getTopWidget()
-   */
-  @Override
-  public Widget getTopWidget()
+  public void addLayer(BoardLayer p_layer)
   {
-    return null;
+    m_panel.add( p_layer.asWidget(), 0, 0 );
+    add( p_layer );
   }
 
   /* (non-Javadoc)
@@ -61,11 +61,13 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   @Override
   public void hide()
   {
-    for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
+    for( BoardLayer layer : this )
     {
-      ((BoardLayer)it.next()).hide();
+      layer.hide();
     }
   }
+
+  private long m_gameId = -1;
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#onModelChange()
@@ -73,11 +75,11 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   @Override
   public void onModelChange()
   {
-    for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
+    for( BoardLayer layer : this )
     {
       try
       {
-        ((BoardLayer)it.next()).onModelChange();
+        layer.onModelChange();
       } catch( Exception e )
       {
         // no i18n
@@ -86,15 +88,16 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
     }
   }
 
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.client.board.BoardLayer#redraw(int, int, int, int)
    */
   @Override
   public void redraw(int p_left, int p_top, int p_right, int p_botom)
   {
-    for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
+    for( BoardLayer layer : this )
     {
-      it.next().redraw( p_left, p_top, p_right, p_botom );
+      layer.redraw( p_left, p_top, p_right, p_botom );
     }
   }
 
@@ -104,9 +107,16 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   @Override
   public void setZoom(EnuZoom p_zoom)
   {
-    for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
+    boolean isSizeReset = false;
+    for( BoardLayer layer : this )
     {
-      it.next().setZoom( p_zoom );
+      layer.setZoom( p_zoom );
+      if( !isSizeReset && layer.asWidget().isVisible() )
+      {
+        isSizeReset = true;
+        m_panel
+            .setPixelSize( layer.asWidget().getOffsetWidth(), layer.asWidget().getOffsetHeight() );
+      }
     }
   }
 
@@ -116,10 +126,42 @@ public class BoardLayerCollection extends ArrayList<BoardLayer> implements Board
   @Override
   public void show()
   {
-    for( java.util.Iterator<BoardLayer> it = iterator(); it.hasNext(); )
+    for( BoardLayer layer : this )
     {
-      it.next().show();
+      layer.show();
     }
+
+    // zoom
+    setZoom( GameEngine.model().getZoomDisplayed() );
+
+  }
+
+
+  @Override
+  public Widget asWidget()
+  {
+    return m_panel;
+  }
+
+
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    for( BoardLayer layer : this )
+    {
+      layer.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
+    }
+  }
+
+  @Override
+  public AnPair getCropTopLeft()
+  {
+    if( !isEmpty() )
+    {
+      return get(0).getCropTopLeft();
+    }
+    return new AnPair(0,0);
   }
 
 }

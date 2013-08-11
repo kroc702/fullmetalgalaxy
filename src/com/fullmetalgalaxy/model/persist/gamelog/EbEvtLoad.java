@@ -30,7 +30,6 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
-import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
@@ -142,7 +141,7 @@ public class EbEvtLoad extends AnEventPlay
     }
 
     // check that tokens are neighbor
-    if( !getToken(p_game).isNeighbor( getTokenCarrier(p_game) ) )
+    if( !getToken(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenCarrier(p_game) ) )
     {
       throw new RpcFmpException( "les deux pions ne sont pas cote a cote" );
     }
@@ -227,10 +226,9 @@ public class EbEvtLoad extends AnEventPlay
     m_TokenIds = null ;
     if( getToken(p_game).getType() == TokenType.Pontoon )
     {
-      for( Sector sector : Sector.values() )
+      for( AnBoardPosition neighborPosition : p_game.getCoordinateSystem().getAllNeighbors( getOldPosition()) )
       {
-        EbToken otherPontoon = p_game.getToken( getOldPosition().getNeighbour( sector ),
-            TokenType.Pontoon );
+        EbToken otherPontoon = p_game.getToken( neighborPosition, TokenType.Pontoon );
         if( otherPontoon != null )
         {
           if( !p_game.isPontoonLinkToGround( otherPontoon ) )

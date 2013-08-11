@@ -30,10 +30,10 @@ import java.util.Set;
 
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
-import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.Tide;
@@ -451,15 +451,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     return m_preview.isAborted();
   }
   
-  public int getLandPixWidth(EnuZoom p_zoom)
-  {
-    return m_preview.getLandPixWidth( p_zoom );
-  }
-
-  public int getLandPixHeight(EnuZoom p_zoom)
-  {
-    return m_preview.getLandPixHeight( p_zoom );
-  }
 
   public List<Long> getCurrentPlayerIds()
   {
@@ -982,6 +973,16 @@ public class GameData implements java.io.Serializable, IsSerializable
   public int getInitialScore()
   {
     return m_data.getInitialScore();
+  }
+
+  public MapShape getMapShape()
+  {
+    return m_preview.getMapShape();
+  }
+
+  public void setMapShape(MapShape p_mapShape)
+  {
+    m_preview.setMapShape( p_mapShape );
   }
   
 }
