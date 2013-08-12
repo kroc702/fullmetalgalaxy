@@ -350,7 +350,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
           && (token.getColor() != EnuColor.None)
           && (token.getLocation() == Location.Board)
           && (isTokenTideActive( token ))
-          && (getOpponentFireCover( p_color.getValue(), token.getPosition() ).getValue() == EnuColor.None) )
+          && (isTokenFireActive( token ) ) )
       {
         count++;
       }
