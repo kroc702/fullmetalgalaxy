@@ -140,11 +140,14 @@ public class WgtEditOneRegistration extends Composite
     {
       m_lstTeam.addItem( company.toString() );
     }
+    
     m_lstTeam.addChangeHandler( new ChangeHandler()
     {
       @Override
       public void onChange(ChangeEvent p_event)
       {
+        if( m_registration == null )
+          return;
         EbTeam oldTeam = m_registration.getTeam( GameEngine.model().getGame() );
         // find corresponding team
         Company company = Company.values()[m_lstTeam.getSelectedIndex()];
@@ -159,6 +162,7 @@ public class WgtEditOneRegistration extends Composite
           // the chosen company has no team in this game: create a new one
           newTeam = new EbTeam();
           newTeam.setFireColor( m_registration.getEnuColor().getSingleColor().getValue() );
+          newTeam.setCompany( company );
           GameEngine.model().getGame().addTeam( newTeam );
           if( oldTeam.getPlayerIds().size() <= 1 )
           {
@@ -196,6 +200,8 @@ public class WgtEditOneRegistration extends Composite
   {
     m_registration = p_reg;
     m_lblAccount.setText( "???" );
+    if( m_registration == null )
+      return;
     if( p_reg.haveAccount() )
     {
       m_lblAccount.setText( p_reg.getAccount().getPseudo() );
@@ -206,6 +212,8 @@ public class WgtEditOneRegistration extends Composite
     m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
         .contains( p_reg.getId() ) );
     m_btnCancelMyEvents.setEnabled( !p_reg.getTeam(GameEngine.model().getGame()).getMyEvents().isEmpty() );
+    m_lstTeam.setSelectedIndex( m_registration.getTeam( GameEngine.model().getGame() ).getCompany()
+        .ordinal() );
   }
 
 

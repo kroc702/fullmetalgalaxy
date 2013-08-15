@@ -54,8 +54,8 @@
     </td></tr>
     <tr style="height:100%;"><td>
     	<%
-    	int pixWidth = modelFmpInit.getGame().getLandPixWidth( new EnuZoom(EnuZoom.Medium) ) + 350;
-    	int pixHeight = modelFmpInit.getGame().getLandPixHeight( new EnuZoom(EnuZoom.Medium) );
+    	int pixWidth = modelFmpInit.getGame().getLandWidth()  * ((FmpConstant.getHexWidth( new EnuZoom(EnuZoom.Medium) ) * 3) / 4) + 350;
+    	int pixHeight = modelFmpInit.getGame().getLandHeight() * FmpConstant.getHexHeight( new EnuZoom(EnuZoom.Medium)) + 50;
     	%>
     	<div id="board" style="width:<%=pixWidth%>px; height:<%=pixHeight%>px; background-color:#d09750;"></div>
     </td></tr>

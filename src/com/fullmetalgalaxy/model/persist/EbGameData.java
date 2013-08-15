@@ -185,7 +185,7 @@ public class EbGameData extends EbBase
    */
   public int getInitialScore()
   {
-    int score = 0;
+    int score = 1; // one for freighter
     for(Entry<TokenType, Integer> entry: getInitialHolds().entrySet())
     {
       score += entry.getKey().getWinningPoint() * entry.getValue();
