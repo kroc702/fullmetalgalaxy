@@ -1189,6 +1189,11 @@ public class EbGamePreview extends EbBase
 
   public MapShape getMapShape()
   {
+    // for data backward compatibility
+    if( m_mapShape == null )
+    {
+      m_mapShape = MapShape.Flat;
+    }
     return m_mapShape;
   }
 

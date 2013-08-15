@@ -26,6 +26,7 @@ package com.fullmetalgalaxy.client.game.board;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.Tide;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.user.client.ui.Image;
 
@@ -94,6 +95,11 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   {
     super.setZoom( p_zoom );
 
+    int pxW = BoardConvert.landWidthHex2Pix( GameEngine.game().getLandWidth(), getZoom() );
+    int pxH = BoardConvert.landHeightHex2Pix( GameEngine.game().getLandHeight(), getZoom() );
+    m_image.setPixelSize( pxW, pxH );
+    cropDisplay( m_cropLeftHex, m_cropTopHex, m_cropRightHex, m_cropBotomHex );
+
     onTideChange();
     show();
   }
@@ -105,5 +111,14 @@ public class WgtBoardLayerMap extends WgtBoardLayerBase
   {
   }
 
+  @Override
+  public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,
+      int p_cropBotomHex)
+  {
+    super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
 
+    int pxX = -1 * m_cropLeftHex * (FmpConstant.getHexWidth( getZoom() ) * 3 / 4);
+    int pxY = -1 * m_cropTopHex * FmpConstant.getHexHeight( getZoom() );
+    add( m_image, pxX, pxY );
+  }
 }

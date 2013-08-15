@@ -1,76 +1,70 @@
 <com.fullmetalgalaxy.model.ModelFmpInit>
   <game>
     <m__preview>
-      <m__id>0</m__id>
       <m__version>1</m__version>
       <m__name>upload</m__name>
       <m__description></m__description>
       <m__maxNumberOfPlayer>4</m__maxNumberOfPlayer>
-      <m__history>false</m__history>
       <m__currentTimeStep>0</m__currentTimeStep>
       <m__gameType>MultiPlayer</m__gameType>
       <m__planetType>Desert</m__planetType>
+      <m__history>false</m__history>
       <m__isOpen>true</m__isOpen>
+      <m__started>false</m__started>
       <m__minimapUri>/puzzles/original/minimap.jpg</m__minimapUri>
       <m__currentPlayerId>0</m__currentPlayerId>
       <m__accountCreator>
-        <m__id>0</m__id>
         <m__pseudo></m__pseudo>
-        <m__currentLevel>1</m__currentLevel>
       </m__accountCreator>
-      <m__landWidth>37</m__landWidth>
+      <m__landWidth>36</m__landWidth>
       <m__landHeight>23</m__landHeight>
       <m__creationDate>2010-12-05 13:01:24.333 CET</m__creationDate>
-      <m__started>false</m__started>
       <m__isVip>false</m__isVip>
+      <m__maxTeamAllowed>0</m__maxTeamAllowed>
       <m__configGameTime>Standard</m__configGameTime>
-      <m__configGameVariant>Standard</m__configGameVariant>
       <m__ebConfigGameTime>
-        <m__id>0</m__id>
         <m__timeStepDurationInSec>0</m__timeStepDurationInSec>
         <m__tideChangeFrequency>1</m__tideChangeFrequency>
         <m__totalTimeStep>25</m__totalTimeStep>
         <m__actionPtPerTimeStep>15</m__actionPtPerTimeStep>
         <m__actionPtPerExtraShip>5</m__actionPtPerExtraShip>
+        <m__actionPtMaxReserve>0</m__actionPtMaxReserve>
+        <m__actionPtMaxPerExtraShip>0</m__actionPtMaxPerExtraShip>
         <m__bulletCountIncrement>2</m__bulletCountIncrement>
         <m__description>25 tours (pas de temps limite)</m__description>
         <m__takeOffTurns>
           <int>21</int>
           <int>25</int>
         </m__takeOffTurns>
-        <m__asynchron>false</m__asynchron>
+        <m__isParallel>false</m__isParallel>
+        <m__lockGameInMillis>0</m__lockGameInMillis>
         <m__roundActionPt>5</m__roundActionPt>
         <m__deploymentTimeStep>1</m__deploymentTimeStep>
       </m__ebConfigGameTime>
       <m__ebConfigGameVariant>
-        <m__id>0</m__id>
-        <m__actionPtMaxReserve>25</m__actionPtMaxReserve>
-        <m__minSpaceBetweenFreighter>8</m__minSpaceBetweenFreighter>
-        <m__deployementRadius>4</m__deployementRadius>
-        <m__description>l&apos;unique variante</m__description>
         <m__constructReserve>
           <entry>
-            <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
-            <int>4</int>
+            <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
+            <int>1</int>
           </entry>
           <entry>
             <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
             <int>1</int>
           </entry>
           <entry>
-            <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
-            <int>1</int>
+            <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+            <int>4</int>
           </entry>
         </m__constructReserve>
-        <m__actionPtMaxPerExtraShip>5</m__actionPtMaxPerExtraShip>
       </m__ebConfigGameVariant>
       <m__setRegistration/>
+      <m__teams/>
     </m__preview>
     <m__data>
-      <m__id>0</m__id>
       <m__currentTide>Medium</m__currentTide>
       <m__nextTide>Medium</m__nextTide>
       <m__nextTide2>Hight</m__nextTide2>
+      <m__averageTideLevel>0</m__averageTideLevel>
       <m__lastTideChange>0</m__lastTideChange>
       <m__lastTimeStepChange>2010-12-05 13:01:24.333 CET</m__lastTimeStepChange>
       <m__takeOffTurns>
@@ -78,17 +72,19 @@
         <int>25</int>
       </m__takeOffTurns>
       <m__mapUri>/puzzles/original/map.jpg</m__mapUri>
-      <m__lands>RERFREQ0NFFVEURENERDREREREREREREMzNTRENERDQzM0RERERENDNEFEREM1NDREQ0QzNERERE
-VFU1ERRERFQ1RDQRMUQURUVFVEUTFBERRBQRERERERQVUUVFREQUERIRESQREREREVESEURERERE
-ESFEJCISEREREREiUUNERERENEQiRCMREhISERERVDVERERDREMRQlMVQUIkEhERQUQzRERERDQR
-ETFDQURVFBESEUFEQ0RERDQREREUEURUREMUIRJBRDM0Q0RBERFEERFBRTNEFSERRFQzM1URJBER
-RBERRUMzRRERQRRDUzUTRCQiEREVQzREUSIUQRFEREU0RERCVBFRMkRDETISERREREREQ0RBEhEV
-IRERESFTMVJBREREVFERIhFFIhEREREREURRRERERBVVIRExE0FEEREREUERVEVERFURIUIxM0FE
-REQUEUQxRERFRFQzE0REMzNEREREFENENUREREQ1M0NERENEREREREQzFUNERERERERERDNBRFVF
-REREE0RERERERERERDREUVVVVEQ0Q0NEREQE</m__lands>
+      <m__lands>RERFREQ0NFFVEURENERDREREREREREQ0MzNFNERERDMzQ0REREQ0M0QUREQzU0NERDRDM0RERERV
+VRNBQUREVUNEExFDRFFURVRFExQREUQUEREREREUFVFFREREESEREUESERERERElEUFEREREESFE
+JCISEREREREiUUNEREREQyRCNBIhISERERFBVUNERENEQxFCUxVBQiQSERFBRDNEREREExERMxRE
+VEURIRERRDREREQ0ERERFBFEVERDFCESQUQzM0QUFBFBFBERVDRDVBESQUQ1M1URJBERRBERRUMz
+RRERQRRDVTNBRCISEVExREMUJUIRFEFERTREREJUEVEyREMRMhIRFERERDREFCQRURESERERMhUj
+FURERFRRESIRRSIRERERERFEUURERFRRFRIRMxFEFBEREREUQVVERFURIUIxM0FEREQUEUQxRERF
+RDUzQUQ0M0NEREREMURUQ0RERDUzQ0REQ0RERERERDMVQ0REREREREQ0E0RUVURERDRBRERERERE
+REQ0RFFVVVRENENDREREAA==</m__lands>
       <m__setToken/>
+      <m__additionalEventCount>0</m__additionalEventCount>
       <m__setGameLog/>
       <m__triggers/>
+      <m__constructReserve reference="../../m__preview/m__ebConfigGameVariant/m__constructReserve"/>
       <m__nextLocalId>0</m__nextLocalId>
     </m__data>
     <m__lastTokenUpdate>1970-01-01 01:00:00.0 CET</m__lastTokenUpdate>

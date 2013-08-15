@@ -43,7 +43,10 @@ public class HexTorusCoordinateSystem extends HexCoordinateSystem
   public HexTorusCoordinateSystem(MapShape p_mapShape, int p_width, int p_height )
   {
     super();
-    m_mapShape = p_mapShape;
+    if( p_mapShape != null )
+    {
+      m_mapShape = p_mapShape;
+    }
     m_width = p_width;
     m_height = p_height;
   }
