@@ -192,8 +192,8 @@ public class EbEvtMove extends AnEventPlay
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
           Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ) );
     }
-
     EnuColor fireCoverColorOld = p_game.getOpponentFireCover( getToken( p_game ) );
+
     exec( p_game );
     fireCoverColorNew = p_game.getOpponentFireCover( getToken( p_game ) );
     unexec( p_game );
