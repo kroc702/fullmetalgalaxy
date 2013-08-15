@@ -1,0 +1,80 @@
+<com.fullmetalgalaxy.model.ModelFmpInit>
+  <game>
+    <m__preview>
+      <id>748002</id>
+      <m__version>3</m__version>
+      <m__name>Madhya V</m__name>
+      <m__description></m__description>
+      <m__maxNumberOfPlayer>5</m__maxNumberOfPlayer>
+      <m__currentTimeStep>1</m__currentTimeStep>
+      <m__gameType>MultiPlayer</m__gameType>
+      <m__planetType>Desert</m__planetType>
+      <m__history>false</m__history>
+      <m__isOpen>true</m__isOpen>
+      <m__started>false</m__started>
+      <m__status>Open</m__status>
+      <m__minimapUri>/puzzles/madhya/minimap.png</m__minimapUri>
+      <m__currentPlayerIds>
+        <long>35</long>
+      </m__currentPlayerIds>
+      <m__currentPlayerId>35</m__currentPlayerId>
+      <m__accountCreator>
+        <id>544001</id>
+        <m__pseudo>panhardisium</m__pseudo>
+      </m__accountCreator>
+      <m__landWidth>31</m__landWidth>
+      <m__landHeight>31</m__landHeight>
+      <m__creationDate>2013-06-28 11:29:49.619 CEST</m__creationDate>
+      <m__lastUpdate>2013-06-28 12:34:54.420 CEST</m__lastUpdate>
+      <m__isVip>false</m__isVip>
+      <m__maxTeamAllowed>0</m__maxTeamAllowed>
+      <m__configGameTime>Standard</m__configGameTime>
+      <m__setRegistration/>
+      <m__teams/>
+      <m__tags/>
+    </m__preview>
+    <m__data>
+      <id>748002</id>
+      <m__preview>
+        <raw serialization="custom">
+          <com.google.appengine.api.datastore.Key>
+            <default>
+              <id>748002</id>
+              <appId>fullmetalgalaxy2</appId>
+              <kind>EbGamePreview</kind>
+            </default>
+          </com.google.appengine.api.datastore.Key>
+        </raw>
+      </m__preview>
+      <m__currentTide>Medium</m__currentTide>
+      <m__nextTide>Medium</m__nextTide>
+      <m__nextTide2>Medium</m__nextTide2>
+      <m__averageTideLevel>0</m__averageTideLevel>
+      <m__lastTideChange>0</m__lastTideChange>
+      <m__lastTimeStepChange>2013-06-28 11:29:49.620 CEST</m__lastTimeStepChange>
+      <m__lands>AMIfv94hmNZDEdI9vqGRTG3g_UIgVJFAhlI9Vr3GtBE-fdlZZhvDCmWdvokXTN1gdMoDO6qldQNudLBFKlUCLtxjez5ualNxFbMbTS8m91b7VDO2KRVHqt4ovkuyxMuEHB_bN7pRIat6Bpax130YMf0NvECh74ZD6Mke7OkGW-WlWY26IGPBAfE</m__lands>
+      <m__additionalEventCount>0</m__additionalEventCount>
+      <m__setToken/>
+      <m__setGameLog/>
+      <m__triggers/>
+      <m__constructReserve>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
+          <int>2</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+          <int>8</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
+          <int>2</int>
+        </entry>
+      </m__constructReserve>
+      <m__nextLocalId>52</m__nextLocalId>
+    </m__data>
+    <m__lastTokenUpdate>1970-01-01 01:00:00.0 CET</m__lastTokenUpdate>
+    <m__allowedNodeGraphCache/>
+    <m__forbidenNodeGraphCache/>
+  </game>
+</com.fullmetalgalaxy.model.ModelFmpInit>

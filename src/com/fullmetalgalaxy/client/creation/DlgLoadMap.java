@@ -31,7 +31,6 @@ import com.fullmetalgalaxy.client.FmpCallback;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.ModelFmpInit;
-import com.fullmetalgalaxy.model.GameServices;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -154,6 +153,13 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     m_maps.put( image, "/puzzles/fullmetalconquete/model.bin" );
     m_panel.add( image );
     
+    // add Madhya map
+    image = new Image( "/puzzles/madhya/icon.jpg" );
+    // image.setPixelSize( 96, 64 );
+    image.addClickHandler( this );
+    m_maps.put( image, "/puzzles/madhya/model.bin" );
+    m_panel.add( image );
+
     
     m_panel.add( new HTML("ou ID de la partie:<br/>") );
     m_panel.add( m_txtCustom );
