@@ -73,7 +73,7 @@ public class BoardConvert
   }
 
   /**
-   * 
+   * warning, for borderless map shap returned position may be outside of game board.
    * @param p_wgtPosition widget position in pixel
    * @return board position in hexagon
    */
