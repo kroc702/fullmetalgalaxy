@@ -177,10 +177,7 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
     }
   }
 
-  protected AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition)
-  {
-    return BoardConvert.convertPixPositionToHexPosition( p_pixPosition, getZoom(), new AnPair(0,0) );
-  }
+  protected abstract AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition);
 
 
   protected void setZoom(EnuZoom p_enuZoom)

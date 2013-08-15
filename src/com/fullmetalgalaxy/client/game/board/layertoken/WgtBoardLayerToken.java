@@ -41,8 +41,6 @@ import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
-import com.fullmetalgalaxy.model.persist.AnBoardPosition;
-import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
@@ -67,8 +65,6 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   }
 
   private HashMap<EbToken, TokenWidget> m_tokenMap = new HashMap<EbToken, TokenWidget>();
-  private AnPair hexPositionLeftTop = new AnPair( 0, 0 );
-  private AnPair hexPositionRightBotom = new AnPair( 900, 900 );
 
   /**
    * 
@@ -89,16 +85,6 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     Game game = GameEngine.model().getGame();
     Set<EbToken> tokenList = game.getSetToken();
 
-    // little optimization to avoid using isHexVisible for each token...
-    /*AnPair pixPositionLeftTop = new AnPair( m_leftPix, m_topPix );
-    AnPair pixPositionRightBotom = new AnPair( m_rightPix, m_botomPix );
-    hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
-    hexPositionLeftTop.setX( Math.max( m_cropLeftHex -1, hexPositionLeftTop.getX() -2) );
-    hexPositionLeftTop.setY( Math.max( m_cropTopHex -1, hexPositionLeftTop.getY() -2) );
-    hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
-    hexPositionRightBotom.setX( Math.min( m_cropRightHex +1, hexPositionRightBotom.getX() +2) );
-    hexPositionRightBotom.setY( Math.min( m_cropBotomHex +1, hexPositionRightBotom.getY() +2) );
-*/
     for( EbToken token : tokenList )
     {
       if( token.getLocation() != Location.Board )
@@ -106,12 +92,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         // not visible token, but it may still need an update
         updateTokenWidget( token, false );
       }
-      else
-      /*if( isHexVisible( token.getPosition() ) )
-      /*else if( (token.getPosition().getX() > hexPositionLeftTop.getX())
-      && (token.getPosition().getY() > hexPositionLeftTop.getY())
-      && (token.getPosition().getX() < hexPositionRightBotom.getX())
-      && (token.getPosition().getY() < hexPositionRightBotom.getY()) )*/
+      else if( isHexVisible( token.getPosition() ) )
       {
         // for each visible token...
         updateTokenWidget( token, false );
@@ -453,16 +434,9 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     {
       return false;
     }
-    return isVisible( p_token.getPosition() );
+    return isHexVisible( p_token.getPosition() );
   }
 
-  public boolean isVisible(AnBoardPosition p_position)
-  {
-    return (p_position.getX() > hexPositionLeftTop.getX())
-        && (p_position.getY() > hexPositionLeftTop.getY())
-        && (p_position.getX() < hexPositionRightBotom.getX())
-        && (p_position.getY() < hexPositionRightBotom.getY());
-  }
 
   @Override
   public void cropDisplay(int p_cropLeftHex, int p_cropTopHex, int p_cropRightHex,

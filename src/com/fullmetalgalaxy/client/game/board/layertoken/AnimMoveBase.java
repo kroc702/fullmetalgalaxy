@@ -72,7 +72,7 @@ public abstract class AnimMoveBase extends AnimEvent
   @Override
   protected void onStart()
   {
-    if( !m_layerToken.isVisible( getOldPosition() ) )
+    if( !m_layerToken.isVisible( m_token ) )
     {
       cancel();
       return;

@@ -89,14 +89,6 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
       m_htmlLandTactic = null;
       m_htmlLandStrategy = null;
       setZoom( getZoom() );
-      /*EbGame game = ModelFmpMain.model().getGame();
-      int pxW = game.getLandPixWidth( getZoom() );
-      int pxH = game.getLandPixHeight( getZoom() );
-      setPixelSize( pxW, pxH );
-      m_html.setPixelSize( pxW, pxH );
-
-      m_html.setHTML( getHtmlLand() );
-      onTideChange();*/
     }
     if( m_lastTideValue != GameEngine.model().getGame().getCurrentTide() )
     {
@@ -192,6 +184,31 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
           indexTextures[land.ordinal()] = 2;
         else
           indexTextures[land.ordinal()] = 1;
+      }
+      // also draw montain that are in border of two cadran
+      if( yOffset == 0 )
+      {
+        LandType land = null;
+        if( iy >= p_game.getLandHeight() )
+        {
+          land = p_game.getLand( ix, 0 );
+        }
+        else
+        {
+          land = p_game.getLand( ix, iy );
+        }
+        if( land == LandType.Montain )
+        {
+          int pxY = (iy - m_cropTopHex) * pxHexHeight;
+          int pxX = tmppxX;
+          pxX -= getHexMontainWidthMargin( p_zoom );
+          pxY += yOffset - getHexMontainHeightMargin( p_zoom );
+          html.append( "<div style=\"left: "
+              + pxX + "px; top: " + pxY + "px; height: "
+              + (pxHexHeight + getHexMontainHeightMargin( p_zoom ) + (getHexHeightMargin( p_zoom )))
+              + "px; z-index:" + (iy * 2 + ix % 2 - 1) + ";\" class=\"fmp-" + land
+              + indexTextures[land.ordinal()] + "\"></div>" );
+        }
       }
     }
     html.append( "</div>" );

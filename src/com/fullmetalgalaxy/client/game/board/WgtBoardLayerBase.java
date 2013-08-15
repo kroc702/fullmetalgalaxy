@@ -25,7 +25,6 @@ package com.fullmetalgalaxy.client.game.board;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -44,6 +43,9 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   protected int m_topPix = 0;
   protected int m_botomPix = 0;
   protected int m_rightPix = 0;
+
+  // private AnPair hexPositionLeftTop = new AnPair( 0, 0 );
+  // private AnPair hexPositionRightBotom = new AnPair( 900, 900 );
 
   // cropped area in hexagon
   protected int m_cropLeftHex = 0;
@@ -86,6 +88,18 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
     {
       m_rightPix = getOffsetWidth();
     }
+
+    // save currently visible map area for isHexVisible method
+    /* the following optimization doesn't work since torus map :(
+    AnPair pixPositionLeftTop = new AnPair( m_leftPix, m_topPix );
+    AnPair pixPositionRightBotom = new AnPair( m_rightPix, m_botomPix );
+    hexPositionLeftTop = convertPixPositionToHexPosition( pixPositionLeftTop );
+    hexPositionLeftTop.setX( Math.max( m_cropLeftHex - 1, hexPositionLeftTop.getX() - 2 ) );
+    hexPositionLeftTop.setY( Math.max( m_cropTopHex - 1, hexPositionLeftTop.getY() - 2 ) );
+    hexPositionRightBotom = convertPixPositionToHexPosition( pixPositionRightBotom );
+    hexPositionRightBotom.setX( Math.min( m_cropRightHex + 1, hexPositionRightBotom.getX() + 2 ) );
+    hexPositionRightBotom.setY( Math.min( m_cropBotomHex + 1, hexPositionRightBotom.getY() + 2 ) );
+    */
     redraw();
   }
 
@@ -158,24 +172,32 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   }
 
   /**
+   * the following method doesn't work since torus map shape
    * @param p_wgtHexPosition position in hexagon
    * @return true if a part of the given hexagon is visible.
    */
   protected boolean isHexVisible(AnPair p_wgtHexPosition)
   {
-    /*if( m_cropLeftHex > p_wgtHexPosition.getX() || m_cropRightHex <= p_wgtHexPosition.getX() )
-      return false;
-    if( m_cropTopHex > p_wgtHexPosition.getY() || m_cropBotomHex <= p_wgtHexPosition.getY() )
-      return false;
-      */
-    AnPair wgtPxPosition = convertHexPositionToPixPosition( p_wgtHexPosition );
-    // hex position in pixel
-    int hexLeft = wgtPxPosition.getX() - FmpConstant.getHexWidth( getZoom() ) / 2;
-    int hexRight = hexLeft + FmpConstant.getHexWidth( getZoom() );
-    int hexTop = wgtPxPosition.getY() - FmpConstant.getHexHeight( getZoom() ) / 2;
-    int hexBotom = hexTop + FmpConstant.getHexWidth( getZoom() );
-
-    return (hexRight > m_leftPix) && (hexLeft < m_rightPix) && (hexBotom > m_topPix) && (hexTop < m_botomPix);
+    return true;
+    /*boolean isXVisible = false;    
+    if( hexPositionLeftTop.getX() < hexPositionRightBotom.getX() )
+    {
+      isXVisible = (p_wgtHexPosition.getX() > hexPositionLeftTop.getX()) 
+          && (p_wgtHexPosition.getX() < hexPositionRightBotom.getX());
+    } else {
+      isXVisible = (p_wgtHexPosition.getX() > hexPositionLeftTop.getX()) 
+          || (p_wgtHexPosition.getX() < hexPositionRightBotom.getX());
+    }
+    boolean isYVisible = false;    
+    if( hexPositionLeftTop.getY() < hexPositionRightBotom.getY() )
+    {
+      isYVisible = (p_wgtHexPosition.getY() > hexPositionLeftTop.getY())
+          && (p_wgtHexPosition.getY() < hexPositionRightBotom.getY());
+    } else {
+      isYVisible = (p_wgtHexPosition.getY() > hexPositionLeftTop.getY())
+          || (p_wgtHexPosition.getY() < hexPositionRightBotom.getY());
+    }
+    return isXVisible && isYVisible;*/
   }
 
   /**
@@ -261,7 +283,12 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
 
   protected AnBoardPosition convertPixPositionToHexPosition(AnPair p_pixPosition)
   {
-    return BoardConvert.convertPixPositionToHexPosition( p_pixPosition, getZoom(), new AnPair(m_cropLeftHex,m_cropTopHex) );
+    return GameEngine
+        .game()
+        .getCoordinateSystem()
+        .normalizePosition(
+            BoardConvert.convertPixPositionToHexPosition( p_pixPosition, getZoom(), new AnPair(
+                m_cropLeftHex, m_cropTopHex ) ) );
   }
 
   @Override
