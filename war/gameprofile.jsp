@@ -1,10 +1,10 @@
 <%@page import="com.fullmetalgalaxy.model.ressources.SharedI18n"%>
-<%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
+<%@page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Full Metal Galaxy - Profil du joueur</title>
+<title>Full Metal Galaxy - Partie en cours</title>
         
 </head>
 <body>
@@ -18,13 +18,16 @@ if( account == null )
 }
 %>
 
-<h1>Partie</h1>
+<center>Parties en cours</center>
 <table class="fmp-array" style="width:100%;">
 <!--tr><td>Date</td><td>score</td><td>score</td><td>Locale</td><td>Mail</td><td>Pseudo</td></tr-->
 <%
 Iterable<EbGamePreview> gameList = new ArrayList<EbGamePreview>();
 String pseudo = account.getPseudo();
-gameList = FmgDataStore.dao().query(EbGamePreview.class).filter( "m_setRegistration.m_account.m_pseudo", pseudo ).order("-m_creationDate");
+gameList = FmgDataStore.dao().query(EbGamePreview.class)
+                             .filter( "m_setRegistration.m_account.m_pseudo", pseudo )
+                             .filter( "m_status in", new GameStatus[] {GameStatus.Running, GameStatus.Pause} )
+                             .order("-m_creationDate");
 for( EbGamePreview game : gameList )
 {
   out.println( "<tr>" );

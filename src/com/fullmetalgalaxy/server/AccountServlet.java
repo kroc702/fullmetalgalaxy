@@ -404,6 +404,7 @@ public class AccountServlet extends HttpServlet
         store.rollback();
         return "Ce pseudo est invalide";
       }
+      GlobalVars.incrementAccountCount( 1 );
     }
     else
     {

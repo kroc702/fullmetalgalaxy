@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Full Metal Galaxy - Classement des joueurs</title>
+<title>Full Metal Galaxy - Joueurs</title>
         
 <%@include file="include/meta.jsp"%>
 
@@ -21,11 +21,11 @@ try
 {
 }
 
-String title = "Classement des joueurs";
+String title = "Joueurs";
 String orderby = request.getParameter( "orderby" );
 if( orderby == null )
 {
-  orderby = "-m_currentLevel";
+  orderby = "-m_currentStats.m_averageNormalizedRank";
 }
 if( orderby.equals("-m_lastConnexion") )
 {
@@ -35,18 +35,26 @@ if( orderby.equals("-m_lastConnexion") )
 out.println( "<h2>"+title+"</h2>" );
 
 Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
+if( request.getParameter( "all" ) == null ) {
+  accountQuery.filter( "m_currentStats.m_includedInRanking", true );
+}
 accountQuery.order(orderby);
 DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );
 DecimalFormat df = new DecimalFormat("#.#");
 
 out.println("<table width='100%'>");
 out.println("<tr><td>Avatar</td>" );
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=m_pseudo'>Pseudo</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentLevel'>Niveau</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_totalScoreSum'>Gain total</a></td>");
-out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_victoryCount'>victoire</a>/<a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount'>partie</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_styleRatio'>Agressivité</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion'>Dernière connexion</a></td><td></td></tr>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=m_pseudo&all'>Pseudo</a></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageNormalizedRank'>Niveau</a></td>");
+out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount'>partie</a></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability'>Rentabilité</a></td>");
+out.println("<td></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion'>Dernière connexion</a></td><td></td>");
+out.println("<td></td>");
+if( request.getParameter( "ts" ) != null ) {
+  out.println("<td>TS</td>");
+}
+out.println("</tr>");
 
 for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
 {
@@ -56,14 +64,13 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
   // pseudo
   out.println("<td><a href='"+ account.getProfileUrl() + "'>" + account.getPseudo() + "</a></td>");
   // level
-  out.println("<td>"+df.format(account.getCurrentLevel())+" <img src='"+ account.getLevelUrl() +"'/></td>");
-  // total score sum
-  out.println("<td>"+account.getTotalScoreSum()+"</td>");
+  out.println("<td><img src='"+account.getGradUrl()+"' border=0> " +account.getCurrentStats().getAverageNormalizedRankInPercent()+"</td>");
   // game victory / played count
-  out.println("<td>"+account.getVictoryCount()+"/"+account.getFinshedGameCount()+"<a href='/profile.jsp?id="+account.getId()+"'> <img src='/images/icon_new_window.gif' border=0/></a></td>");
-  // agressivity
-  out.println("<td>"+df.format(account.getStyleRatio())+" <img src='"+ account.getPlayerStyle().getIconUrl() +"'/>");
+  out.println("<td>"+account.getCurrentStats().getVictoryCount()+" / "+account.getCurrentStats().getFinshedGameCount()+"</td>");
+  // total score sum
+  out.println("<td>"+account.getCurrentStats().getScore()+" / "+account.getCurrentStats().getAverageProfitabilityInPercent()+"%</td>");
   // fairplay
+  out.println("<td>");
   if( account.getFairplay() > 0 )
   {
     out.println(" <img src='/images/icons/thumbup.gif' title='"+account.getFairplay()+"'/>");
@@ -83,7 +90,10 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
   } else {
     out.println("<td></td>" );
   }
-
+  // level TS
+  if( request.getParameter( "ts" ) != null ) {
+    out.println("<td>"+df.format( account.getCurrentLevel() )+"</td>" );
+  }
   out.println("</tr>");
 }
 out.println("</table>");

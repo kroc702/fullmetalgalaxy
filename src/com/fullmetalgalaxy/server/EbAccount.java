@@ -22,18 +22,18 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.Embedded;
 import javax.persistence.PrePersist;
 
 import jskills.IPlayer;
 import jskills.Rating;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.model.persist.AccountStatistics;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Serialized;
@@ -59,12 +59,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   @PrePersist
   void onPersist()
   {
-    // this code is only here for debug purpose
-    if( m_styleRatio == 0 )
-    {
-      System.err.println( "arg m_styleRatio == 0 !!!!!" );
-      new Throwable().printStackTrace( System.err );
-    }
   }
 
 
@@ -110,58 +104,25 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   @Unindexed
   private int m_fairplay = 0;
   
-  /**
-   * a list of all fairplay comment
-   */
-  @Serialized
-  private List<FairPlayNote> m_fairplayComments = new ArrayList<FairPlayNote>();
 
-  /**
-   * player can give 'm_remainingScoring' score on other players.
-   * note that they can score the same player only once.
-   */
-  @Unindexed
-  private int m_remainingScoring = 0;
-
-  /**
-   * represent this account activity.
-   * -> finished game count in the last 20 months + finished game in the last 8 months
-   */
-  private int m_activityLevel = 0;
-
-
-  // the following data are computed from m_stats list
-  // =================================================
-  /**
-   * player style to recognize people
-   */
-  private float m_styleRatio = 1;
-  
-  /**
-   * easy: it's the sum of all his scores. We can call this: total profit.
-   */
-  private int m_totalScoreSum = 0;
-
-  /**
-   * the sum of player on all his finished game
-   */
-  @Unindexed
-  private int m_totalPlayerSum = 0;
-
-  private int m_finshedGameCount = 0;
-
-  private int m_victoryCount = 0;
-  
+  // data related to statistics
+  // ==========================
   /** True skill mean level  */
   @Unindexed
   private double m_trueSkillMean = ServerUtil.getGameInfo().getInitialMean();
   /** True skill standard deviation level */
   @Unindexed
   private double m_trueSkillSD = ServerUtil.getGameInfo().getInitialStandardDeviation();
-  /** current true skill conservative level. here to make request and sorting on it. */
-  private double m_currentLevel = 0;
-
-
+  /* current true skill conservative level. here to make request and sorting on it. */
+  @AlsoLoad("m_currentLevel")
+  private double m_trueSkillLevel = 0;
+  /** account game statistic for a limited time period */
+  @Embedded
+  private AccountStatistics m_currentStats = null;
+  /** account game statistic since the beginning */
+  @Embedded
+  private AccountStatistics m_fullStats = null;
+  
   
   // data related to forum
   // =====================
@@ -294,14 +255,9 @@ public class EbAccount extends EbPublicAccount implements IPlayer
    */
   public void clearComputedStats()
   {
-    m_styleRatio = 1;
-    m_activityLevel = 0;
-    m_totalScoreSum = 0;
-    m_totalPlayerSum = 0;
-    m_finshedGameCount = 0;
-    m_victoryCount = 0;
     resetTrueSkill();
-    m_currentLevel = 0;
+    m_currentStats = null;
+    m_fullStats = null;
   }
 
   @Override
@@ -348,9 +304,9 @@ public class EbAccount extends EbPublicAccount implements IPlayer
    */
   public String getLevelUrl()
   {
-
     return "/images/icons/level" + getNormalizedLevel() + ".png";
   }
+  
 
   /**
    * icon url to illustrate player fiability, level and style
@@ -362,50 +318,24 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     {
       return "http://www.fullmetalgalaxy.com/images/icons/unfair.png";
     }
-    if( getFinshedGameCount() == 0 )
+    if( !getCurrentStats().isIncludedInRanking() )
     {
-      // player didn't finshed any game
+      // player didn't finished enough game
       return "http://www.fullmetalgalaxy.com/images/clear.cache.gif";
     }
-    String iconName = "";
-    iconName += getNormalizedLevel();
-
-    if( getPlayerStyle() == PlayerStyle.Pacific )
-    {
-      iconName += "p"; 
-    } else if( getPlayerStyle() == PlayerStyle.Aggressive )
-    {
-      iconName += "a"; 
-    }
-    else
-    {
-      iconName += "b";
-    }
-
+    int level = (int)(getCurrentStats().getAverageNormalizedRank() * 10);
+    if( level > 9 )
+      level = 9;
     // we need to specify full url, as it is used on forum
-    return "http://www.fullmetalgalaxy.com/images/icons/user/"+iconName+".png";
+    return "http://www.fullmetalgalaxy.com/images/icons/level" + level + ".png";
   }
-  
-  /**
-   * @return the playerStyle
-   */
-  public PlayerStyle getPlayerStyle()
-  {
-    if( getFinshedGameCount() <= 0 )
-    {
-      return PlayerStyle.Mysterious;
-    }
-    return PlayerStyle.fromStyleRatio( getStyleRatio() );
-  }
-
-  
 
   public String buildHtmlFragment()
   {
     String newsHtml = "<a href='"+getProfileUrl()+"'><table width='100%'><tr>";
     newsHtml += "<td><img src='" + getAvatarUrl() + "' height='40px' /></td>";
-    newsHtml += "<td>" + getPseudo() + "<br/>" + (int)getCurrentLevel() + " <img src='"
-        + getGradStaticUrl() + "' style='margin:0px'/></td>";
+    newsHtml += "<td>" + getPseudo() + "<br/>" + (int)getCurrentStats().getAverageNormalizedRank()
+        + "</td>";
     // newsHtml += "<td>" + (int)getCurrentLevel() + " Pts</td>";
     newsHtml += "</tr></table></a>";
     return newsHtml;
@@ -582,16 +512,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
 
 
 
-  public List<FairPlayNote> getFairplayComments()
-  {
-    if( m_fairplayComments == null )
-    {
-      // for old account
-      m_fairplayComments = new ArrayList<FairPlayNote>();
-    }
-    return m_fairplayComments;
-  }
-
 
 
   public String getPassword()
@@ -763,56 +683,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_notificationQty = p_notificationQty;
   }
 
-  public int getActivityLevel()
-  {
-    return m_activityLevel;
-  }
-
-  public void setActivityLevel(int p_activityLevel)
-  {
-    m_activityLevel = p_activityLevel;
-  }
-
-  public int getTotalScoreSum()
-  {
-    return m_totalScoreSum;
-  }
-
-  public void setTotalScoreSum(int p_totalScoreSum)
-  {
-    m_totalScoreSum = p_totalScoreSum;
-  }
-
-  public int getTotalPlayerSum()
-  {
-    return m_totalPlayerSum;
-  }
-
-  public void setTotalPlayerSum(int p_totalPlayerSum)
-  {
-    m_totalPlayerSum = p_totalPlayerSum;
-  }
-
-  public int getFinshedGameCount()
-  {
-    return m_finshedGameCount;
-  }
-
-  public void setFinshedGameCount(int p_finshedGameCount)
-  {
-    m_finshedGameCount = p_finshedGameCount;
-  }
-
-  public int getVictoryCount()
-  {
-    return m_victoryCount;
-  }
-
-  public void setVictoryCount(int p_victoryCount)
-  {
-    m_victoryCount = p_victoryCount;
-  }
-
   public double getTrueSkillMean()
   {
     return m_trueSkillMean;
@@ -830,7 +700,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
    */
   public double getCurrentLevel()
   {
-    return m_currentLevel;
+    return m_trueSkillLevel;
   }
 
   public void resetTrueSkill()
@@ -848,7 +718,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   {
     m_trueSkillMean = p_rating.getMean();
     m_trueSkillSD = p_rating.getStandardDeviation();
-    m_currentLevel = p_rating.getConservativeRating();
+    m_trueSkillLevel = p_rating.getConservativeRating();
   }
 
   public int getFairplay()
@@ -861,26 +731,26 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_fairplay = p_fairplay;
   }
 
-  public int getRemainingScoring()
+  public void setCurrentStats(AccountStatistics p_stats)
   {
-    return m_remainingScoring;
+    m_currentStats = p_stats;
   }
 
-  public void setRemainingScoring(int p_remainingScoring)
+  public AccountStatistics getCurrentStats()
   {
-    m_remainingScoring = p_remainingScoring;
+    if( m_currentStats == null )
+    {
+      m_currentStats = new AccountStatistics();
+    }
+    return m_currentStats;
   }
 
-  public float getStyleRatio()
+  public AccountStatistics getFullStats()
   {
-    return m_styleRatio;
+    if( m_fullStats == null )
+    {
+      m_fullStats = new AccountStatistics();
+    }
+    return m_fullStats;
   }
-
-  public void setStyleRatio(float p_styleRatio)
-  {
-    m_styleRatio = p_styleRatio;
-  }
-
-
-
 }

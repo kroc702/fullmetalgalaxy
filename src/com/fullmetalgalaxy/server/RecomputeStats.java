@@ -28,10 +28,9 @@ import java.util.Map.Entry;
 
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.persist.CompanyStatistics;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.model.persist.StatsPlayer;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.googlecode.objectify.Key;
@@ -52,6 +51,7 @@ public class RecomputeStats
   protected static class ResetAllStatsCommand extends LongDBTask<EbAccount>
   {
     private static final long serialVersionUID = 1L;
+    private int m_accountCount = 0;
 
     @Override
     protected Query<EbAccount> getQuery()
@@ -66,10 +66,43 @@ public class RecomputeStats
       EbAccount account = ds.get( p_key );
       if( account != null )
       {
+        m_accountCount++;
         account.clearComputedStats();
         ds.put( account );
         ds.close();
       }
+    }
+
+    @Override
+    protected void finish()
+    {
+      GlobalVars.setFGameFmpScore( 0 );
+      GlobalVars.setAccountCount( m_accountCount );
+
+      // chain other command
+      QueueFactory.getDefaultQueue().add(
+          TaskOptions.Builder.withPayload( new ResetAllCompanyStatistics() ) );
+    }
+
+  }
+
+  // delete all company stats
+  protected static class ResetAllCompanyStatistics extends LongDBTask<CompanyStatistics>
+  {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Query<CompanyStatistics> getQuery()
+    {
+      return FmgDataStore.dao().query( CompanyStatistics.class );
+    }
+
+    @Override
+    protected void processKey(Key<CompanyStatistics> p_key)
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      ds.delete( p_key );
+      ds.close();
     }
 
     @Override
@@ -83,14 +116,13 @@ public class RecomputeStats
   }
 
 
+
   public static class UpdateAllGameStatsCommand extends LongDBTask<EbGamePreview>
   {
     private static final long serialVersionUID = 1L;
 
     public UpdateAllGameStatsCommand()
-    {
-      GlobalVars.resetStyleRatioRepartition();
-    }
+    {}
 
     // for each finished game...
     @Override
@@ -110,7 +142,7 @@ public class RecomputeStats
       // game is in history, but it may have been canceled
       if( game.isFinished() )
       {
-        GameWorkflow.updateAccountStat4FinishedGame( game );
+        GameWorkflow.updateStat4FinishedGame( game );
       }
     }
 
@@ -141,15 +173,6 @@ public class RecomputeStats
     private int m_nbPlayer = 0;
 
     private int m_FGameInitiationCount = 0;
-
-    private int m_ConstructionCount = 0;
-    private int m_FireCount = 0;
-    private int m_FmpScore = 0;
-    private int m_FreighterControlCount = 0;
-    private int m_OreCount = 0;
-    private int m_TokenCount = 0;
-    private int m_UnitControlCount = 0;
-
 
     public StatFGameCommand()
     {
@@ -184,21 +207,6 @@ public class RecomputeStats
               m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
           m_nbOfHexagon += game.getNumberOfHexagon();
           m_nbPlayer += game.getSetRegistration().size();
-
-          for( EbRegistration registration : game.getSetRegistration() )
-          {
-            StatsPlayer stats = registration.getStats();
-            if( stats != null )
-            {
-              m_ConstructionCount += stats.getConstructionCount();
-              m_FireCount += stats.getFireCount();
-              m_FmpScore += stats.getFinalScore();
-              m_FreighterControlCount += stats.getFreighterControlCount();
-              m_OreCount += stats.getOreCount();
-              m_TokenCount += stats.getTokenCount();
-              m_UnitControlCount += stats.getUnitControlCount();
-            }
-          }
         }
       }
     }
@@ -215,14 +223,6 @@ public class RecomputeStats
       GlobalVars.setFGameNbPlayer( m_nbPlayer );
       GlobalVars.setFGameInitiationCount( m_FGameInitiationCount );
 
-      // save process stats into datastore
-      GlobalVars.setFGameConstructionCount( m_ConstructionCount );
-      GlobalVars.setFGameFireCount( m_FireCount );
-      GlobalVars.setFGameFmpScore( m_FmpScore );
-      GlobalVars.setFGameFreighterControlCount( m_FreighterControlCount );
-      GlobalVars.setFGameOreCount( m_OreCount );
-      GlobalVars.setFGameTokenCount( m_TokenCount );
-      GlobalVars.setFGameUnitControlCount( m_UnitControlCount );
     }
   }
 

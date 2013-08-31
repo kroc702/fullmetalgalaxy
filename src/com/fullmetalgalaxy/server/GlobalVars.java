@@ -24,8 +24,6 @@
 package com.fullmetalgalaxy.server;
 
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
-import com.fullmetalgalaxy.model.persist.EbRegistration;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -49,9 +47,9 @@ public class GlobalVars extends GlobalVarBase
     String newsHtml = String.class.cast( getCache().get( CACHE_STATS_KEY ) );
     if( newsHtml == null )
     {
-      newsHtml = "Joueurs: "+getAccountCount() +" ("+getActiveAccount()+" actifs)<br/>";
-      newsHtml += "Parties: " + (getFinishedGameCount() + getCurrentGameCount()) + " ("
-          + getCurrentGameCount() + " en cours)<br/>";
+      newsHtml = "" + getActiveAccount() + " joueurs classés<br/>";
+      newsHtml += "" + getCurrentGameCount() + " parties en cours & " + getFinishedGameCount()
+          + " terminés<br/>";
       // for debug
       /*newsHtml += "<br/>open: "+getOpenGameCount() + " <br/>";
       newsHtml += "running: "+getRunningGameCount() + " <br/>";
@@ -62,7 +60,9 @@ public class GlobalVars extends GlobalVarBase
       // get best player
       newsHtml += "Meilleur joueur:";
       Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
-      accountQuery = accountQuery.order( "-m_currentLevel" ).limit( 1 );
+      accountQuery = accountQuery.order( "-m_currentStats.m_averageNormalizedRank" )
+          .filter( "m_currentStats.m_includedInRanking", true )
+          .limit( 1 );
       for(EbAccount account : accountQuery.fetch() )
       {
         newsHtml += account.buildHtmlFragment();
@@ -89,77 +89,6 @@ public class GlobalVars extends GlobalVarBase
   }
 
   
-  // note: style repartition stuff aren't thread safe...
-  public static final int STYLE_RATIO_COUNT = 30;
-  public static final float STYLE_RATIO_MAX = 10f;
-  public static final float STYLE_RATIO_MIN = 0.2f;
-
-  public static void resetStyleRatioRepartition()
-  {
-    put( "StyleRatioRepartition", new int[STYLE_RATIO_COUNT] );
-  }
-
-  public static int[] getStyleRatioRepartition()
-  {
-    Object obj = get( "StyleRatioRepartition" );
-    if( obj instanceof int[] )
-    {
-      int[] repartition = (int[])obj;
-      return repartition;
-    }
-    return new int[STYLE_RATIO_COUNT];
-  }
-
-  private static int styleRatio2Index(float p_styleRatio)
-  {
-    int index = (int)((p_styleRatio - STYLE_RATIO_MIN) * STYLE_RATIO_COUNT / STYLE_RATIO_MAX);
-    if( index < 0 )
-      index = 0;
-    if( index >= STYLE_RATIO_COUNT )
-      index = STYLE_RATIO_COUNT - 1;
-    return index;
-  }
-  
-  public static void addStyleRatio(Game p_game)
-  {
-    int[] repartition = getStyleRatioRepartition();
-    for( EbRegistration registration : p_game.getSetRegistration() )
-    {
-      if( registration.getStats() != null )
-        repartition[styleRatio2Index( registration.getStats().getStyleRatio() )]++;
-    }
-    put( "StyleRatioRepartition", repartition );
-  }
-  
-  /**
-   * convert a style ratio into one of the three PlayerStyle according to all referenced style ratio
-   * @param p_styleRatio
-   * @return
-   */
-  public static PlayerStyle getPlayerStyle(float p_styleRatio)
-  {
-    int[] repartition = getStyleRatioRepartition();
-    int styleCount = 0;
-    for( int i = 0; i < STYLE_RATIO_COUNT; i++ )
-    {
-      styleCount += repartition[i];
-    }
-    int lowerStyleCount = 0;
-    for( int i = 0; i <= styleRatio2Index( p_styleRatio ); i++ )
-    {
-      lowerStyleCount += repartition[i];
-    }
-    if( lowerStyleCount < styleCount / 3 )
-    {
-      return PlayerStyle.Pacific;
-    }
-    if( lowerStyleCount > 2 * styleCount / 3 )
-    {
-      return PlayerStyle.Aggressive;
-    }
-    return PlayerStyle.Balanced;
-  }
-
   
   public static int getAccountCount()
   {
@@ -169,6 +98,11 @@ public class GlobalVars extends GlobalVarBase
   public static void setAccountCount(int p_accountCount)
   {
     put("AccountCount",p_accountCount);
+  }
+
+  public static int incrementAccountCount(int p_toAdd)
+  {
+    return (int)increment( "AccountCount", p_toAdd );
   }
 
 
@@ -324,96 +258,6 @@ public class GlobalVars extends GlobalVarBase
     return (int)increment( "FGameFmpScore", p_value );
   }
 
-  public static int getFGameFireCount()
-  {
-    return getInt( "FGameFireCount" );
-  }
-
-  public static void setFGameFireCount(int p_value)
-  {
-    put( "FGameFireCount", p_value );
-  }
-
-  public static int incrementFGameFireCount(int p_value)
-  {
-    return (int)increment( "FGameFireCount", p_value );
-  }
-
-  public static int getFGameUnitControlCount()
-  {
-    return getInt( "FGameUnitControlCount" );
-  }
-
-  public static void setFGameUnitControlCount(int p_value)
-  {
-    put( "FGameUnitControlCount", p_value );
-  }
-
-  public static int incrementFGameUnitControlCount(int p_value)
-  {
-    return (int)increment( "FGameUnitControlCount", p_value );
-  }
-
-  public static int getFGameFreighterControlCount()
-  {
-    return getInt( "FGameFreighterControlCount" );
-  }
-
-  public static void setFGameFreighterControlCount(int p_value)
-  {
-    put( "FGameFreighterControlCount", p_value );
-  }
-
-  public static int incrementFGameFreighterControlCount(int p_value)
-  {
-    return (int)increment( "FGameFreighterControlCount", p_value );
-  }
-
-
-  public static int getFGameConstructionCount()
-  {
-    return getInt( "FGameConstructionCount" );
-  }
-
-  public static void setFGameConstructionCount(int p_value)
-  {
-    put( "FGameConstructionCount", p_value );
-  }
-
-  public static int incrementFGameConstructionCount(int p_value)
-  {
-    return (int)increment( "FGameConstructionCount", p_value );
-  }
-
-  public static int getFGameOreCount()
-  {
-    return getInt( "FGameOreCount" );
-  }
-
-  public static void setFGameOreCount(int p_value)
-  {
-    put( "FGameOreCount", p_value );
-  }
-
-  public static int incrementFGameOreCount(int p_value)
-  {
-    return (int)increment( "FGameOreCount", p_value );
-  }
-
-  public static int getFGameTokenCount()
-  {
-    return getInt( "FGameTokenCount" );
-  }
-
-  public static void setFGameTokenCount(int p_value)
-  {
-    put( "FGameTokenCount", p_value );
-  }
-
-  public static int incrementFGameTokenCount(int p_value)
-  {
-    return (int)increment( "FGameTokenCount", p_value );
-  }
 
 
 

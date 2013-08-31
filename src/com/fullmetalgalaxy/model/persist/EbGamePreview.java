@@ -138,6 +138,9 @@ public class EbGamePreview extends EbBase
  
   private MapShape m_mapShape = MapShape.Flat;
   
+  /** game statistics for finished game */
+  @Serialized
+  private GameStatistics m_stats = null;
   
   public EbGamePreview()
   {
@@ -650,7 +653,7 @@ public class EbGamePreview extends EbBase
     /*strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " - <img src=\""
         + PlayerStyle.fromStatsPlayer( registration.getStats() ).getIconUrl() + "\"/></td>" );
     */
-    strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " </td>" );
+    //strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " </td>" );
 
     return strBuf.toString();
   }
@@ -1200,6 +1203,31 @@ public class EbGamePreview extends EbBase
   public void setMapShape(MapShape p_mapShape)
   {
     m_mapShape = p_mapShape;
+  }
+
+
+
+  public List<String> getTags()
+  {
+    if( m_tags == null )
+    {
+      m_tags = new ArrayList<String>();
+    }
+    return m_tags;
+  }
+
+
+
+  public GameStatistics getStats()
+  {
+    return m_stats;
+  }
+
+
+
+  public void setStats(GameStatistics p_stats)
+  {
+    m_stats = p_stats;
   }
   
   

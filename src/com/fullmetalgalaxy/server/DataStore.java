@@ -178,12 +178,15 @@ public class DataStore implements Objectify, Transaction
   @Override
   public <T> T find(Key<? extends T> p_arg0)
   {
-    try
+    if( p_arg0 != null )
     {
-      return get( p_arg0 );
-    } catch( NotFoundException e )
-    {
-      logger.fine( e.getMessage() );
+      try
+      {
+        return get( p_arg0 );
+      } catch( NotFoundException e )
+      {
+        logger.fine( e.getMessage() );
+      }
     }
     return null;
   }

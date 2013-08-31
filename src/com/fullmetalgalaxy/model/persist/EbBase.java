@@ -131,7 +131,8 @@ public class EbBase extends AnPojoBase
     }
     else
     {*/
-    return super.hashCode(); // (int)(getId());
+      return super.hashCode();
+    // return (int)(getId());
     // }
   }
 

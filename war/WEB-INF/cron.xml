@@ -6,16 +6,22 @@
     <description>remove too old presences in chat</description>
     <schedule>every 3 minutes</schedule>
   </cron>
-  <cron>
+  <!-- cron>
     <url>/cron/synchroforum</url>
     <description>Synchronize game and forum</description>
     <schedule>every day 04:00</schedule>
     <timezone>Europe/Paris</timezone>
-  </cron>
+  </cron-->
   <cron>
     <url>/cron/gameupdate</url>
     <description>Check for any game update</description>
     <schedule>every 5 hours</schedule>
+    <timezone>Europe/Paris</timezone>
+  </cron>
+  <cron>
+    <url>/cron/accountupdate</url>
+    <description>Check for any account stat update</description>
+    <schedule>every monday 03:30</schedule>
     <timezone>Europe/Paris</timezone>
   </cron>
   

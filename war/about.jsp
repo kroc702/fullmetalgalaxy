@@ -12,6 +12,16 @@
 <%@include file="/include/header.jsp"%>
 
 
+<h3>Disclaimer</h3>
+<p><fmg:resource key="index_disclaimer"/></p> 
+
+<p>
+Je remercie G.Matthieu pour avoir officieusement autorisé ce site (08/11/07).
+</p>           
+
+<h3>Contact</h3>
+<p>admin@fullmetalgalaxy.com</p>
+
 <h3>Version actuel :</h3>
 <ul>
 <li>Dernière mise à jour : <%@include file="/include/version.htm"%> </li>
@@ -24,11 +34,6 @@
        <%@include file="/include/commitid.html"%></a> </li>
 <li>Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /></li>
 </ul>
-<p><fmg:resource key="index_disclaimer"/></p> 
-
-<p>
-Je remercie G.Matthieu pour avoir officieusement autorisé ce site (08/11/07).
-</p>           
 
 <h3>Précédentes versions :</h3>
 <pre>

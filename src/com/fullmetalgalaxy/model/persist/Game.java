@@ -219,6 +219,18 @@ public class Game extends GameData implements PathGraph, GameEventStack
     }
   }
 
+  public Date getEndDate()
+  {
+    if( getLastLog() != null )
+    {
+      return getLastLog().getLastUpdate();
+    }
+    else
+    {
+      return getLastUpdate();
+    }
+  }
+
   @Override
   public AnEvent getLastGameLog()
   {
@@ -597,42 +609,43 @@ public class Game extends GameData implements PathGraph, GameEventStack
     p_token.incVersion();
   }
 
-  public EbRegistration getWinnerRegistration()
+  public EbTeam getWinnerTeam()
   {
-    EbRegistration winner = null;
+    EbTeam winner = null;
     int point = 0;
-    for( EbRegistration registration : getSetRegistration() )
+    for( EbTeam team : getTeams() )
     {
-      if( registration.estimateWinningScore(this) > point )
+      if( team.estimateWinningScore(this) > point )
       {
-        winner = registration;
-        point = registration.estimateWinningScore( this );
+        winner = team;
+        point = team.estimateWinningScore( this );
       }
     }
     return winner;
   }
 
 
-  public List<EbRegistration> getRegistrationByWinningRank()
+
+  public List<EbTeam> getTeamByWinningRank()
   {
-    List<EbRegistration> sortedRegistration = new ArrayList<EbRegistration>();
-    Map<EbRegistration, Integer> winningPoint = new HashMap<EbRegistration, Integer>();
-    for( EbRegistration registration : getSetRegistration() )
+    List<EbTeam> sortedTeam = new ArrayList<EbTeam>();
+    Map<EbTeam, Integer> winningPoint = new HashMap<EbTeam, Integer>();
+    for( EbTeam team : getTeams() )
     {
-      int wp = registration.estimateWinningScore(this);
+      int wp = team.estimateWinningScore(this);
       int index = 0;
-      while( index < sortedRegistration.size() )
+      while( index < sortedTeam.size() )
       {
-        if( wp > winningPoint.get( sortedRegistration.get( index ) ) )
+        if( wp > winningPoint.get( sortedTeam.get( index ) ) )
         {
           break;
         }
         index++;
       }
-      winningPoint.put( registration, wp );
-      sortedRegistration.add( index, registration );
+      winningPoint.put( team, wp );
+      sortedTeam.add( index, team );
     }
-    return sortedRegistration;
+    return sortedTeam;
   }
 
 

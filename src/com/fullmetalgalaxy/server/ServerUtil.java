@@ -87,12 +87,21 @@ public class ServerUtil
   
 
   /**
-   * this method is here to allow us modifying GameInfo parameters
+   * this method is here to allow us modifying GameInfo True Skill parameters
    * @return
    */
   public static GameInfo getGameInfo()
   {
-    return GameInfo.getDefaultGameInfo();
+    //return GameInfo.getDefaultGameInfo();
+    // default values are:
+    // defaultInitialMean = 25.0;
+    // defaultBeta = defaultInitialMean/6.0;
+    // defaultDrawProbability = 0.10;
+    // defaultDynamicsFactor = defaultInitialMean/300.0;
+    // defaultInitialStandardDeviation = defaultInitialMean/3.0;
+
+    // GameInfo(double initialMean, double initialStandardDeviation, double beta, double dynamicFactor, double drawProbability)
+    return new GameInfo( 50, 50 / 3.0, 50 / 3.0, 50 / 15.0, 0.1 );
   }
 
 

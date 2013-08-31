@@ -1,4 +1,4 @@
-<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
+<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,java.util.GregorianCalendar,java.util.Calendar" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
 
@@ -115,10 +115,33 @@
 		<div id="statCollumn" class="collumn">
 		<h2><a href="/stats.jsp"><fmg:resource key="index_statistiques"/></a></h2>
 		<%= GlobalVars.getStatsHtml() %>
+		<%
+		com.googlecode.objectify.Query<CompanyStatistics> companyList = FmgDataStore.dao().query(CompanyStatistics.class)
+		    .filter( "m_year", GregorianCalendar.getInstance().get( Calendar.YEAR ) )
+		    .order("-m_profit")
+		    .limit( 3 );
+    out.println( "Meilleurs corporations "+GregorianCalendar.getInstance().get( Calendar.YEAR )+" :<table width='100%'>");
+		for( CompanyStatistics companyStat : companyList )
+		{
+		  if( companyStat.getCompany() != Company.Freelancer )
+		  {
+			  out.println( "<tr>");
+			  out.println( "<td><IMG SRC='/images/avatar/" + companyStat.getCompany()
+	              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></td>" );
+			  out.println( "<td><b>"+companyStat.getCompany().getFullName()+"</b><br/>");
+	      out.println( "Bénéfice: "+companyStat.getProfit()+"<br/>");
+	      out.println( "Rentabilité: "+companyStat.getProfitabilityInPercent()+" %<br/>");
+	      out.println( "Nb exploitation: "+companyStat.getMiningCount());
+			  out.println( "</td>" );
+			  out.println( "</tr>");
+		  }
+		}
+    out.println( "</table>");
+		%>
 		</div>		
 		
 
-	<p id="nb"><fmg:resource key="index_disclaimer"/></p>
+	<!-- p id="nb"><fmg:resource key="index_disclaimer"/></p-->
 	
 
 <jsp:include page="include/footer.jsp" />

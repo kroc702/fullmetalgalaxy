@@ -40,6 +40,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 
@@ -364,23 +365,25 @@ public class FmgMessage
       String gameResults = "";
       if( p_game.isFinished() )
       {
-        for(EbRegistration registration : p_game.getRegistrationByWinningRank() )
-        {
-          if( registration.getAccount() != null )
+        for(EbTeam team : p_game.getTeamByWinningRank() )
+          for(EbRegistration registration : team.getPlayers( p_game.getPreview() ) )
           {
-            gameResults += registration.getAccount().getPseudo();
+            gameResults += team.getCompany() + ": ";
+            if( registration.getAccount() != null )
+            {
+              gameResults += registration.getAccount().getPseudo();
+            }
+            else
+            {
+              gameResults += "???";
+            }
+            if( registration.isReplacement() )
+            {
+              EbPublicAccount resigned = registration.getOriginalAccount( p_game );
+              gameResults += " (remplace " + resigned.getPseudo() + ")";
+            }
+            gameResults += " : " + registration.estimateWinningScore( p_game ) + " pts\n";
           }
-          else
-          {
-            gameResults += "???";
-          }
-          if( registration.isReplacement() )
-          {
-            EbPublicAccount resigned = registration.getOriginalAccount( p_game );
-            gameResults += " (remplace " + resigned.getPseudo() + ")";
-          }
-          gameResults += " : " + registration.estimateWinningScore( p_game ) + " pts\n";
-        }
       }
       m_params.put( "game_results", gameResults );
     }

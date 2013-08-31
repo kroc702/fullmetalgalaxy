@@ -69,10 +69,6 @@ public class EbTeam extends EbBase
   @Serialized
   protected List<AnEvent> m_myEvents = null;
 
-  @Serialized
-  private StatsPlayer m_stats = null;
-
-
 
   public int getOnBoardFreighterCount(Game p_game)
   {

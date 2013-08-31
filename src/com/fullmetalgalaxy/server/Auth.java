@@ -176,6 +176,7 @@ public class Auth
       FmgDataStore dataStore = new FmgDataStore(false);
       dataStore.put( account );
       dataStore.close();
+      GlobalVars.incrementAccountCount( 1 );
     }
 
     // if last connexion is older than one day, update it

@@ -28,6 +28,7 @@ import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
@@ -86,10 +87,15 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       m_panel.add( new Image( Icons.s_instance.winner32() ), FmpConstant.miniMapWidth / 2 - 16,
           FmpConstant.miniMapHeight / 2 - 16 );
       String strWinner = "";
-      EbRegistration winner = game.getWinnerRegistration();
-      if( (winner != null) && (winner.haveAccount()) )
+      EbTeam winnerTeam = game.getWinnerTeam();
+      if( (winnerTeam != null) )
       {
-        strWinner = winner.getAccount().getPseudo();
+        strWinner += winnerTeam.getCompany().getFullName() + ":\n";
+        for( EbRegistration registration : winnerTeam.getPlayers( game.getPreview() ))
+          if( registration.haveAccount() )
+          {
+            strWinner += registration.getAccount().getPseudo() + "\n";
+          }
       }
       m_panel.add( new Label( strWinner ), 0, FmpConstant.miniMapHeight / 2 + 30 );
     }

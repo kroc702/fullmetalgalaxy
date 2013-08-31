@@ -33,7 +33,8 @@ import com.fullmetalgalaxy.model.TokenType;
 
 public class FmpConstant
 {
-
+  public static final long currentStatsTimeWindowInMillis = 1000*60*60*24*30*18; // about 18 months  
+  
   public static final int maximumActionPtWithoutLanding = 10;
 
   public static final int parallelLockRadius = 6;

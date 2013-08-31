@@ -178,7 +178,8 @@ public class SynchroForum extends HttpServlet
       GlobalVars.setMaxLevel( m_maxLevel );
 
       // count account number
-      GlobalVars.setAccountCount( FmgDataStore.dao().query( EbAccount.class ).count() );
+      // GlobalVars.setAccountCount( FmgDataStore.dao().query( EbAccount.class
+      // ).count() );
     }
   }
 

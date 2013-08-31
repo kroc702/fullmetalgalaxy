@@ -3,7 +3,7 @@
 	<div id="footer"><footer>
 		<div id="travaux"></div>
 		<div id="copyright">
-		<p><fmg:resource key="menu_footer"/>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;, <img style="position:relative; bottom:-5px;" src="/images/mailWhiteOnBlack.png" /></p> 
+		<fmg:resource key="menu_footer"/>
 		</div>
 	</footer></div>
 	</div>

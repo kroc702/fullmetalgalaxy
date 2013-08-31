@@ -89,6 +89,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
        <url-pattern>/cron/gameupdate</url-pattern>
     </servlet-mapping>
   
+    <servlet>
+       <servlet-name>AccountUpdate</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.cron.AccountUpdate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>AccountUpdate</servlet-name>
+       <url-pattern>/cron/accountupdate</url-pattern>
+    </servlet-mapping>
+  
   
     <servlet>
        <servlet-name>XMPPMessageServlet</servlet-name>

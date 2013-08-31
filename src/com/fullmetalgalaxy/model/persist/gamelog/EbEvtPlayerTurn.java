@@ -59,6 +59,8 @@ public class EbEvtPlayerTurn extends AnEvent
   private long m_oldPlayerId = 0;
   private int m_oldCurrentPlayersCount = 0;
 
+  // private long m_newPlayerId = 0;
+
   /**
    * 
    */
@@ -111,6 +113,13 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     m_oldPlayerId = p_oldPlayerId;
   }
+
+  /* * Warning for old data, this method may return 0 */
+  /*public long getNewPlayerId()
+  {
+    return m_newPlayerId;
+  }*/
+
 
   @Override
   public void check(Game p_game) throws RpcFmpException
