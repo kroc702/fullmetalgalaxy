@@ -63,7 +63,21 @@ public class EbPublicAccount extends EbBase
     m_pseudo = "";
   }
 
-
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode()
+  {
+    if( isTrancient() )
+    {
+      return super.hashCode();
+    }
+    else
+    {
+      return (int)(getId());
+    }
+  }
 
   @Override
   public String toString()

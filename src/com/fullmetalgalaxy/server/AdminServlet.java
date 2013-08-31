@@ -312,11 +312,8 @@ public class AdminServlet extends HttpServlet
     if( strid != null )
     {
       int currentGameCount = FmgDataStore.dao().query( EbGamePreview.class )
-          .filter( "m_status", GameStatus.Open ).count();
-      currentGameCount += FmgDataStore.dao().query( EbGamePreview.class )
-          .filter( "m_status", GameStatus.Pause ).count();
-      currentGameCount += FmgDataStore.dao().query( EbGamePreview.class )
-          .filter( "m_status", GameStatus.Running ).count();
+          .filter( "m_status in",
+              new GameStatus[] { GameStatus.Running, GameStatus.Pause, GameStatus.Open } ).count();
       GlobalVars.setCurrentGameCount( currentGameCount );
 
       RecomputeStats.start();

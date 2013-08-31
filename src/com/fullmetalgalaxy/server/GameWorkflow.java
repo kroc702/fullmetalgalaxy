@@ -24,7 +24,8 @@
 package com.fullmetalgalaxy.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +43,15 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Tide;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.persist.CompanyStatistics;
+import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
-import com.fullmetalgalaxy.model.persist.StatsPlayer;
+import com.fullmetalgalaxy.model.persist.GameStatistics;
+import com.fullmetalgalaxy.model.persist.PlayerGameStatistics;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
@@ -57,6 +63,8 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Query;
 
 /**
  * @author vlegendr
@@ -530,76 +538,50 @@ public class GameWorkflow
 
 
 
-  public static class Team extends HashMap<IPlayer, Rating> implements ITeam
+  public static class TSTeam extends HashMap<IPlayer, Rating> implements ITeam
   {
     private static final long serialVersionUID = 1L;
   }
 
-  private static void getTeams(Game p_game, Collection<ITeam> p_teams, int[] p_teamRanks)
+  private static void getTeams(Game p_game, List<ITeam> p_teams, int[] p_teamRanks)
   {
-    int previousScore = 0;
-    int currentRank = 1;
+    int previousScore = Integer.MAX_VALUE;
+    int currentRank = 0;
     int index = 0;
-    boolean mustSaveGame = false;
-    for( EbRegistration registration : p_game.getRegistrationByWinningRank() )
+    for(EbTeam ebteam : p_game.getTeamByWinningRank() )
     {
-      EbAccount account = null;
-      if( registration.getAccount() != null )
+      ITeam team = new TSTeam();
+      for(EbRegistration registration : ebteam.getPlayers( p_game.getPreview() ) )
       {
-        account = FmgDataStore.dao().get( EbAccount.class, registration.getAccount().getId() );
-      }
-      if( account == null )
-      {
-        log.error( "game " + p_game + " has account that wasn't found and then not updated." );
-      }
-      else
-      {
-        ITeam team = new Team();
-        team.put( account, new Rating( account.getTrueSkillMean(), account.getTrueSkillSD() ) );
-        p_teams.add( team );
-        if( registration.getStats() == null )
+        EbAccount account = null;
+        if( registration.getAccount() != null )
         {
-          // create registration stats
-          registration.setStats( new StatsPlayer( p_game, registration ) );
-          mustSaveGame = true;
+          account = FmgDataStore.dao().get( EbAccount.class, registration.getAccount().getId() );
         }
-        // and then update account stats
-        int oldFinishedGameCount = account.getFinshedGameCount();
-        account.setFinshedGameCount( oldFinishedGameCount + 1 );
-        if( registration.getStats().getGameRank() <= 1 )
+        if( account == null )
         {
-          account.setVictoryCount( account.getVictoryCount() + 1 );
+          log.error( "game " + p_game + " has account that wasn't found and then not updated." );
         }
-        account.setTotalPlayerSum( account.getTotalPlayerSum()
-            + p_game.getCurrentNumberOfRegiteredPlayer() );
-        account.setTotalScoreSum( account.getTotalScoreSum()
-            + registration.getStats().getFinalScore() );
-        account.setStyleRatio( (account.getStyleRatio() * oldFinishedGameCount + registration
-            .getStats().getStyleRatio()) / account.getFinshedGameCount() );
-        if( registration.getStats().getFinalScore() < previousScore )
+        else
         {
-          previousScore = registration.getStats().getFinalScore();
+          team.put( account, new Rating( account.getTrueSkillMean(), account.getTrueSkillSD() ) );
+        }
+      }
+      if( !team.isEmpty() )
+      {
+        if( ebteam.estimateWinningScore( p_game ) < previousScore )
+        {
+          previousScore = ebteam.estimateWinningScore( p_game );
           currentRank++;
         }
         p_teamRanks[index] = currentRank;
+        p_teams.add( team );
         index++;
       }
     }
-
     if( index == 0 )
     {
-      log.error( "game " + p_game + " has not registration found." );
-    }
-
-    // add all style ratio into a global repartition
-    GlobalVars.addStyleRatio( p_game );
-
-    if( mustSaveGame )
-    {
-      // then save game
-      FmgDataStore ds = new FmgDataStore( false );
-      ds.put( p_game );
-      ds.close();
+      log.error( "game " + p_game + " has not players found." );
     }
   }
 
@@ -611,12 +593,6 @@ public class GameWorkflow
    */
   public static void gameOpen(Game p_game)
   {
-    if( p_game.getLastLog() == null )
-    {
-      // if game have some event in his log
-      // its mean that it was running before
-      GlobalVars.incrementCurrentGameCount( 1 );
-    }
     p_game.setStatus( GameStatus.Open );
   }
 
@@ -627,6 +603,7 @@ public class GameWorkflow
   public static void gamePause(Game p_game)
   {
     p_game.setStatus( GameStatus.Pause );
+    GlobalVars.incrementCurrentGameCount( -1 );
   }
 
   /**
@@ -636,34 +613,108 @@ public class GameWorkflow
   public static void gameRun(Game p_game)
   {
     p_game.setStatus( GameStatus.Running );
+    GlobalVars.incrementCurrentGameCount( 1 );
   }
 
+
   /**
-   * this function update true skill level and registration stats
-   * @param p_game
-   */
-  public static void updateAccountStat4FinishedGame(Game p_game)
+     * this function update game and accounts statistics
+     * @param p_game
+     */
+  public static void updateStat4FinishedGame(Game p_game)
   {
+    if( p_game.getStatus() != GameStatus.History )
+    {
+      p_game.setStats( null );
+      return;
+    }
+
+    // update game stats
+    p_game.setStats( new GameStatistics( p_game ) );
+    FmgDataStore ds = new FmgDataStore( false );
+    ds.put( p_game );
+    // ds.close();
+
+    // then players stats
     ArrayList<ITeam> teams = new ArrayList<ITeam>();
     int[] teamRanks = new int[p_game.getCurrentNumberOfRegiteredPlayer()];
     GameWorkflow.getTeams( p_game, teams, teamRanks );
-
     Map<IPlayer, Rating> newRating = TrueSkillCalculator.calculateNewRatings(
         ServerUtil.getGameInfo(), teams, teamRanks );
 
-    // now save accounts
+
+    GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTime( p_game.getEndDate() );
+    int gameEndYear = calendar.get( Calendar.YEAR );
+
+    // save accounts for updated true skill value
     for( Entry<IPlayer, Rating> entry : newRating.entrySet() )
     {
+      PlayerGameStatistics playerStat = null;
       if( entry.getKey() instanceof EbAccount )
       {
         EbAccount account = (EbAccount)entry.getKey();
+        // create or update GamePlayerStatistic
+        // ds = new FmgDataStore( false );
+        Query<PlayerGameStatistics> query = ds.query( PlayerGameStatistics.class );
+        query.ancestor( p_game.getPreview() );
+        // query.filter( "m_gameId", p_game.getId() );
+        query.filter( "m_account.id", account.getId() );
+        playerStat = query.get();
+        if( playerStat == null )
+        {
+          // stat wasn't found: created a new one
+          playerStat = new PlayerGameStatistics();
+        }
+        playerStat.setStatistics( p_game, p_game.getRegistrationByIdAccount( account.getId() ) );
+        playerStat.setKeyGamePreview( new Key<EbGamePreview>( EbGamePreview.class, p_game.getId() ) );
+        playerStat.setTsUpdate( entry.getValue().getConservativeRating()
+            - account.getCurrentLevel() );
+        ds.put( playerStat );
+        // ds.close();
+
+        // and save account
         account.setTrueSkill( entry.getValue() );
-        FmgDataStore ds = new FmgDataStore( false );
-        ds.put( account );
-        ds.close();
+        account.getFullStats().addStatistic( playerStat );
+        if( (System.currentTimeMillis() - FmpConstant.currentStatsTimeWindowInMillis) > playerStat
+            .getGameEndDate().getTime() )
+        {
+          account.getCurrentStats().addStatistic( playerStat );
+        }
+        FmgDataStore dsAccount = new FmgDataStore( false );
+        dsAccount.put( account );
+        dsAccount.close();
+      }
+      if( playerStat != null )
+      {
+        GlobalVars.incrementFGameFmpScore( playerStat.getScore() );
       }
     }
+    ds.close();
+
+
+    // now update company statistics
+    for( EbTeam team : p_game.getTeams() )
+    {
+      Query<CompanyStatistics> query = FmgDataStore.dao().query( CompanyStatistics.class );
+      query.filter( "m_company", team.getCompany() );
+      query.filter( "m_year", gameEndYear );
+      Key<CompanyStatistics> keyCompanyStat = query.getKey();
+      ds = new FmgDataStore( false );
+      CompanyStatistics companyStat = ds.find( keyCompanyStat );
+      if( companyStat == null )
+      {
+        companyStat = new CompanyStatistics( team.getCompany() );
+        companyStat.setYear( gameEndYear );
+      }
+      companyStat.addResult( team.estimateWinningScore( p_game ), p_game.getInitialScore() );
+      ds.put( companyStat );
+      ds.close();
+    }
   }
+
+
+
 
   /**
    * called when a game finished normally
@@ -681,7 +732,7 @@ public class GameWorkflow
       GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
       GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
 
-      updateAccountStat4FinishedGame( p_game );
+      updateStat4FinishedGame( p_game );
     }
     else if( p_game.getGameType() == GameType.Initiation )
     {
@@ -695,7 +746,12 @@ public class GameWorkflow
    */
   public static void gameAbort(Game p_game)
   {
-    if( p_game.getStatus() != GameStatus.Aborted )
+    if( p_game.getStatus() == GameStatus.History )
+    {
+      // TODO for game that are History, we have to remove stat
+      GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), -1 );
+    }
+    else if( p_game.getStatus() == GameStatus.Running )
     {
       GlobalVars.incrementCurrentGameCount( -1 );
     }

@@ -45,7 +45,7 @@ import com.googlecode.objectify.annotation.Unindexed;
  * This class is used only to be stored into data base.
  * As we don't need to query on these data, it is unindexed and serialized.
  * 
- * @author vlegendr
+ * @author Vincent Legendre
  */
 @Unindexed
 public class EbGameData extends EbBase
@@ -83,6 +83,7 @@ public class EbGameData extends EbBase
    */
   @Serialized
   protected List<Long> m_additionalGameLog = null;
+  // TODO convert this AnEvent list to a GameEvent list
   @Serialized
   protected List<com.fullmetalgalaxy.model.persist.gamelog.AnEvent> m_setGameLog = new ArrayList<com.fullmetalgalaxy.model.persist.gamelog.AnEvent>();
   @Serialized

@@ -12,19 +12,13 @@
 				<li><a href="/gamelist.jsp?tab=3" >Autres Parties</a></li>
 			</ul>
 		</li>
-		<li><a href="http://guide.fullmetalgalaxy.com/instructors?language=fr" >Joueurs</a>
+		<li><a href="http://fullmetalplanete.forum2jeux.com/" >Communauté</a>
 			<ul>
-				<li><a href="http://guide.fullmetalgalaxy.com/instructors?language=fr" >Instructeurs</a></li>
-				<li><a href="/halloffames.jsp" >Classement</a></li>
-				<li><a href="/halloffames.jsp?orderby=-m_lastConnexion" >Annuaire</a></li>
-				<li><a href="/stats.jsp" >Stats global</a></li>
-			</ul>
-		</li>																
-		<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >Communauté</a>
-			<ul>
-				<li><a href="http://fullmetalplanete.forum2jeux.com/f33-full-metal-galaxy" >Forum FMG</a></li>
-				<li><a href="http://fullmetalplanete.forum2jeux.com/" >Forum Général</a></li>
-				<li><a href="/chat.jsp" >Chat</a></li>
+				<li><a href="http://fullmetalplanete.forum2jeux.com/" >Forum</a></li>
+        <li><a href="/chat.jsp" >Chat</a></li>
+        <li><a href="http://guide.fullmetalgalaxy.com/instructors?language=fr" >Instructeurs</a></li>
+        <li><a href="/halloffames.jsp" >Joueurs</a></li>
+        <li><a href="/stats.jsp" >Stats global</a></li>
 			</ul>
 		</li>
       <li><a href="http://guide.fullmetalgalaxy.com/?language=fr" >Guide</a>

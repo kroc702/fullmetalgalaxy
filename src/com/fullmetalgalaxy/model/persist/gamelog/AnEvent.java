@@ -42,7 +42,7 @@ import com.fullmetalgalaxy.model.persist.Game;
  * 'exec()' have to be launch at least once before saving this event. @see unexec()
  * 
  */
-public class AnEvent extends EbBase
+public class AnEvent extends EbBase implements GameEvent
 {
   static final long serialVersionUID = 1;
 
@@ -119,6 +119,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
+  @Override
   public void exec(Game p_game) throws RpcFmpException
   {
   }
@@ -131,6 +132,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
+  @Override
   public void unexec(Game p_game) throws RpcFmpException
   {
   }
@@ -153,6 +155,7 @@ public class AnEvent extends EbBase
    * @param p_game game to apply event
    * @throws RpcFmpException
    */
+  @Override
   public void check(Game p_game) throws RpcFmpException
   {
     if( p_game == null )

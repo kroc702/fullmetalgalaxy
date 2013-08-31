@@ -26,10 +26,12 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fullmetalgalaxy.model.persist.CompanyStatistics;
 import com.fullmetalgalaxy.model.persist.EbGameData;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.PlayerGameStatistics;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.server.image.MiniMapProducer;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -59,6 +61,8 @@ public class FmgDataStore extends DataStore
     ObjectifyService.register( EbGameData.class );
     ObjectifyService.register( EbGamePreview.class );
     ObjectifyService.register( EbGameLog.class );
+    ObjectifyService.register( CompanyStatistics.class );
+    ObjectifyService.register( PlayerGameStatistics.class );
   }
 
   /**

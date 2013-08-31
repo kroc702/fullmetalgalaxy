@@ -14,11 +14,34 @@
 <h2>Statistiques globals</h2>
 <p>Cette page est amené a évoluer en fonction des demandes et de mes prioritées...</p>
 
+<h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) %></h3>
+<div>
+<%
+    com.googlecode.objectify.Query<CompanyStatistics> companyList = FmgDataStore.dao().query(CompanyStatistics.class)
+        .filter( "m_year", GregorianCalendar.getInstance().get( Calendar.YEAR ) )
+        .order("-m_profit");
+    out.println( "<table width='100%'>");
+    for( CompanyStatistics companyStat : companyList )
+    {
+      out.println( "<tr>");
+      out.println( "<td><IMG SRC='/images/avatar/" + companyStat.getCompany()
+              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></td>" );
+      out.println( "<td><b>"+companyStat.getCompany().getFullName()+"</b><br/>");
+      out.println( "Capitalisation: "+companyStat.getProfit()+"<br/>");
+      out.println( "Rentabilité: "+companyStat.getProfitabilityInPercent()+" %<br/>");
+      out.println( "Nb exploitation: "+companyStat.getMiningCount());
+      out.println( "</td>" );
+      out.println( "</tr>");
+    }
+    out.println( "</table>");
+%>
+</div>    
+    
 <h3>Les joueurs</h3>
 <pre>
 Nombre d'inscrit : <%= GlobalVars.getAccountCount() %>
 Nombre de compte actif : <%= GlobalVars.getActiveAccount() %>
-Niveau maximum : <%= GlobalVars.getMaxLevel() %>
+Niveau TS maximum : <%= GlobalVars.getMaxLevel() %>
 </pre>
 
 
@@ -39,51 +62,9 @@ Nombre de partie d'initiation : <%= GlobalVars.getFGameInitiationCount() %>
 Nombre d'hexagon  : <%= GlobalVars.getFGameNbOfHexagon() %>
 Nombre de joueurs  : <%= GlobalVars.getFGameNbPlayer() %>
 Somme des scores  : <%= GlobalVars.getFGameFmpScore() %>
-
-Nombre de minerai récupéré : <%= GlobalVars.getFGameOreCount() %>
-Nombre d'unité ramené : <%= GlobalVars.getFGameTokenCount() %>
-Nombre de construction : <%= GlobalVars.getFGameConstructionCount() %>
-Nombre de tir : <%= GlobalVars.getFGameFireCount() %>
-Nombre de control : <%= GlobalVars.getFGameUnitControlCount() %>
-Nombre de control d'astronef : <%= GlobalVars.getFGameFreighterControlCount() %>
 </pre>
 
         
-
-
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Agressivité');
-        data.addColumn('number', 'Nombre de joueur');
-        data.addRows([
-        <%
-        float currentAgressivity = GlobalVars.STYLE_RATIO_MIN;
-        float incrementAgressivity = (GlobalVars.STYLE_RATIO_MAX - GlobalVars.STYLE_RATIO_MIN) / GlobalVars.STYLE_RATIO_COUNT;
-        for(int nbPlayer : GlobalVars.getStyleRatioRepartition())
-        {
-          out.println("['"+currentAgressivity+"', "+nbPlayer+"],");
-          currentAgressivity += incrementAgressivity;
-        }
-        %>
-          ['et plus...', 0]
-        ]);
-
-        var options = {
-          width: 400, height: 240,
-          title: 'répartition de l\'agressivité des joueurs',
-        };
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-    </script>
-  </head>
-  <body>
-    <div id="chart_div"></div>
 
 <%@include file="include/footer.jsp"%>
 </body>

@@ -27,6 +27,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
  * @author Vincent
  *
  */
+@Deprecated
 public enum GameLogType
 {
   None,

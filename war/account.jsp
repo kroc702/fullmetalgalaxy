@@ -69,11 +69,6 @@ if(account == null) {
 	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
 <%} %>
 
-<% if( account.getFinshedGameCount() > 0 ) { %>
-	<p>
-	level: <%= account.getCurrentLevel() %>  <img src='<%= account.getGradUrl() %>'/>
-	</p>
-<%} %>
 
 <form name="myform" action="/AccountServlet" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 

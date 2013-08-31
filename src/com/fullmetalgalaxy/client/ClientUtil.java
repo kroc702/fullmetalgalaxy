@@ -268,6 +268,10 @@ public class ClientUtil
   private static final DateTimeFormat s_timeFormat = DateTimeFormat.getFormat( SharedI18n.getMisc(
       0 ).timeFormat() );
 
+  // public static final long MILLIS_PER_YEAR = new BigInteger( "31536000000"
+  // ).longValue();
+
+
   /**
    * a formated and localized string representing the given date or time if date is between
    * now and 24 hours later.

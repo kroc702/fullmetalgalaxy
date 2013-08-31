@@ -106,9 +106,6 @@ public class EbRegistration extends EbBase
   @Transient
   private EbTeam m_teamCache = null;
 
-  @Serialized
-  private StatsPlayer m_stats = null;
-
   // theses data are moved to EbTeam
   // ===============================
   @Deprecated
@@ -449,16 +446,6 @@ public class EbRegistration extends EbBase
     return m_originalAccountId != 0;
   }
 
-
-  public StatsPlayer getStats()
-  {
-    return m_stats;
-  }
-
-  public void setStats(StatsPlayer p_stats)
-  {
-    m_stats = p_stats;
-  }
 
   public long getOriginalAccountId()
   {

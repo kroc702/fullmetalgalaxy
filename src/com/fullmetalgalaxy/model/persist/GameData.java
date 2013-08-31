@@ -168,6 +168,7 @@ public class GameData implements java.io.Serializable, IsSerializable
     }
   }
 
+
   // data access that need both class
   // ================================
 
@@ -983,6 +984,21 @@ public class GameData implements java.io.Serializable, IsSerializable
   public void setMapShape(MapShape p_mapShape)
   {
     m_preview.setMapShape( p_mapShape );
+  }
+
+  public List<String> getTags()
+  {
+    return m_preview.getTags();
+  }
+
+  public GameStatistics getStats()
+  {
+    return m_preview.getStats();
+  }
+
+  public void setStats(GameStatistics p_stats)
+  {
+    m_preview.setStats( p_stats );
   }
   
 }
