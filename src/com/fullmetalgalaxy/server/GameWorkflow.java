@@ -554,7 +554,7 @@ public class GameWorkflow
       for(EbRegistration registration : ebteam.getPlayers( p_game.getPreview() ) )
       {
         EbAccount account = null;
-        if( registration.getAccount() != null )
+        if( registration.getAccount() != null && !registration.getAccount().isTrancient() )
         {
           account = FmgDataStore.dao().get( EbAccount.class, registration.getAccount().getId() );
         }
@@ -623,7 +623,7 @@ public class GameWorkflow
      */
   public static void updateStat4FinishedGame(Game p_game)
   {
-    if( p_game.getStatus() != GameStatus.History )
+    if( p_game.getStatus() != GameStatus.History || p_game.getGameType() != GameType.MultiPlayer )
     {
       p_game.setStats( null );
       return;
@@ -632,12 +632,11 @@ public class GameWorkflow
     // update game stats
     p_game.setStats( new GameStatistics( p_game ) );
     FmgDataStore ds = new FmgDataStore( false );
-    ds.put( p_game );
-    // ds.close();
+    // ds.put( p_game );
 
     // then players stats
     ArrayList<ITeam> teams = new ArrayList<ITeam>();
-    int[] teamRanks = new int[p_game.getCurrentNumberOfRegiteredPlayer()];
+    int[] teamRanks = new int[p_game.getTeams().size()];
     GameWorkflow.getTeams( p_game, teams, teamRanks );
     Map<IPlayer, Rating> newRating = TrueSkillCalculator.calculateNewRatings(
         ServerUtil.getGameInfo(), teams, teamRanks );
@@ -655,13 +654,16 @@ public class GameWorkflow
       {
         EbAccount account = (EbAccount)entry.getKey();
         // create or update GamePlayerStatistic
-        // ds = new FmgDataStore( false );
         Query<PlayerGameStatistics> query = ds.query( PlayerGameStatistics.class );
         query.ancestor( p_game.getPreview() );
-        // query.filter( "m_gameId", p_game.getId() );
         query.filter( "m_account.id", account.getId() );
         playerStat = query.get();
-        if( playerStat == null )
+        if( playerStat != null )
+        {
+          log.warning( "add existing player stat for account " + account.getPseudo() + " and game "
+              + p_game.getName() );
+        }
+        else
         {
           // stat wasn't found: created a new one
           playerStat = new PlayerGameStatistics();
@@ -671,7 +673,6 @@ public class GameWorkflow
         playerStat.setTsUpdate( entry.getValue().getConservativeRating()
             - account.getCurrentLevel() );
         ds.put( playerStat );
-        // ds.close();
 
         // and save account
         account.setTrueSkill( entry.getValue() );

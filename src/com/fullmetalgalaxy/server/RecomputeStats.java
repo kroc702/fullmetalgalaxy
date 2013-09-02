@@ -44,6 +44,7 @@ public class RecomputeStats
 {
   public static void start()
   {
+    System.err.println( "RecomputeStats.start()" );
     QueueFactory.getDefaultQueue().add(
         TaskOptions.Builder.withPayload( new ResetAllStatsCommand() ) );
   }
@@ -116,13 +117,29 @@ public class RecomputeStats
   }
 
 
-
+  /**
+   * 
+   * @author Vincent
+   * update all player stats as well as global stat related to finished game.
+   */
   public static class UpdateAllGameStatsCommand extends LongDBTask<EbGamePreview>
   {
     private static final long serialVersionUID = 1L;
+    private int m_finishedGameCount = 0;
+
+    private HashMap<ConfigGameTime, Integer> m_nbConfigGameTime = new HashMap<ConfigGameTime, Integer>();
+    private long m_nbOfHexagon = 0;
+    private int m_nbPlayer = 0;
+
+    private int m_FGameInitiationCount = 0;
 
     public UpdateAllGameStatsCommand()
-    {}
+    {
+      for( ConfigGameTime config : ConfigGameTime.values() )
+      {
+        m_nbConfigGameTime.put( config, 0 );
+      }
+    }
 
     // for each finished game...
     @Override
@@ -134,86 +151,32 @@ public class RecomputeStats
       return query;
     }
 
-    // compute true skill ratting
+    // compute true skill rating
     @Override
     protected void processKey(Key<EbGamePreview> p_key)
     {
       Game game = FmgDataStore.dao().getGame( p_key );
-      // game is in history, but it may have been canceled
-      if( game.isFinished() )
+      if( game.getGameType() == GameType.Initiation )
       {
-        GameWorkflow.updateStat4FinishedGame( game );
+        m_FGameInitiationCount++;
       }
+      else
+      {
+        m_finishedGameCount++;
+        m_nbConfigGameTime.put( game.getConfigGameTime(),
+            m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
+        m_nbOfHexagon += game.getNumberOfHexagon();
+        m_nbPlayer += game.getSetRegistration().size();
+      }
+      GameWorkflow.updateStat4FinishedGame( game );
     }
 
     @Override
     protected void finish()
     {
-      // chain other command
-      QueueFactory.getDefaultQueue()
-          .add( TaskOptions.Builder.withPayload( new StatFGameCommand() ) );
-    }
+      log.warning( "entity processed: " + getEntityProcessed() );
+      log.warning( "finished game processed: " + m_finishedGameCount );
 
-  }
-
-
-
-
-  /**
-   * 
-   * @author Vincent
-   * update all global stat related to finished game.
-   * then launch StatFGameAccountCommand
-   */
-  public static class StatFGameCommand extends LongDBTask<EbGamePreview>
-  {
-    private static final long serialVersionUID = 1L;
-    private HashMap<ConfigGameTime, Integer> m_nbConfigGameTime = new HashMap<ConfigGameTime, Integer>();
-    private long m_nbOfHexagon = 0;
-    private int m_nbPlayer = 0;
-
-    private int m_FGameInitiationCount = 0;
-
-    public StatFGameCommand()
-    {
-      for( ConfigGameTime config : ConfigGameTime.values() )
-      {
-        m_nbConfigGameTime.put( config, 0 );
-      }
-    }
-
-    @Override
-    protected Query<EbGamePreview> getQuery()
-    {
-      Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
-      query.filter( "m_history", true );
-      return query;
-    }
-
-    @Override
-    protected void processKey(Key<EbGamePreview> p_key)
-    {
-      Game game = FmgDataStore.dao().getGame( p_key );
-      // game is in history, but it may have been canceled
-      if( game.isFinished() )
-      {
-        if( game.getGameType() == GameType.Initiation )
-        {
-          m_FGameInitiationCount++;
-        }
-        else
-        {
-          m_nbConfigGameTime.put( game.getConfigGameTime(),
-              m_nbConfigGameTime.get( game.getConfigGameTime() ) + 1 );
-          m_nbOfHexagon += game.getNumberOfHexagon();
-          m_nbPlayer += game.getSetRegistration().size();
-        }
-      }
-    }
-
-    @Override
-    protected void finish()
-    {
       // save process stats into datastore
       for( Entry<ConfigGameTime, Integer> entry : m_nbConfigGameTime.entrySet() )
       {
@@ -222,9 +185,10 @@ public class RecomputeStats
       GlobalVars.setFGameNbOfHexagon( m_nbOfHexagon );
       GlobalVars.setFGameNbPlayer( m_nbPlayer );
       GlobalVars.setFGameInitiationCount( m_FGameInitiationCount );
-
     }
+
   }
+
 
 
 

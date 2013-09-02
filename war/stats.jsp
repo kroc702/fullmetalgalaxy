@@ -12,7 +12,7 @@
 <%@include file="include/header.jsp"%>
 
 <h2>Statistiques globals</h2>
-<p>Cette page est amené a évoluer en fonction des demandes et de mes prioritées...</p>
+<p>Cette page est amenée a évoluer en fonction des demandes et de mes prioritées...</p>
 
 <h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) %></h3>
 <div>
@@ -24,10 +24,11 @@
     for( CompanyStatistics companyStat : companyList )
     {
       out.println( "<tr>");
-      out.println( "<td><IMG SRC='/images/avatar/" + companyStat.getCompany()
-              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></td>" );
+      out.println( "<td><a href='/oldgameprofile.jsp?corpo="+companyStat.getCompany()+"'>"
+          +"<IMG SRC='/images/avatar/" + companyStat.getCompany()
+              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td>" );
       out.println( "<td><b>"+companyStat.getCompany().getFullName()+"</b><br/>");
-      out.println( "Capitalisation: "+companyStat.getProfit()+"<br/>");
+      out.println( "Bénéfices: "+companyStat.getProfit()+"<br/>");
       out.println( "Rentabilité: "+companyStat.getProfitabilityInPercent()+" %<br/>");
       out.println( "Nb exploitation: "+companyStat.getMiningCount());
       out.println( "</td>" );
@@ -41,7 +42,7 @@
 <pre>
 Nombre d'inscrit : <%= GlobalVars.getAccountCount() %>
 Nombre de compte actif : <%= GlobalVars.getActiveAccount() %>
-Niveau TS maximum : <%= GlobalVars.getMaxLevel() %>
+<!-- Niveau TS maximum : <%= GlobalVars.getMaxLevel() %>  -->
 </pre>
 
 

@@ -6,6 +6,17 @@
         <property name="m_index" direction="asc"/>
     </datastore-index>
     
+    <!-- to display company stats -->
+    <datastore-index kind="CompanyStatistics" ancestor="false" source="manual">
+        <property name="m_year" direction="asc"/>
+        <property name="m_profit" direction="desc"/>
+    </datastore-index>
+    
+    <datastore-index kind="PlayerGameStatistics" ancestor="false" source="manual">
+        <property name="m_company" direction="asc"/>
+        <property name="m_gameEndDate" direction="desc"/>
+    </datastore-index>
+    
     <!-- for game search request -->
     <!-- without name or pseudo -->
     <datastore-index kind="EbGamePreview" ancestor="false" source="manual">

@@ -126,8 +126,8 @@
 		  if( companyStat.getCompany() != Company.Freelancer )
 		  {
 			  out.println( "<tr>");
-			  out.println( "<td><IMG SRC='/images/avatar/" + companyStat.getCompany()
-	              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></td>" );
+			  out.println( "<td><a href='/oldgameprofile.jsp?corpo="+companyStat.getCompany()+"'><IMG SRC='/images/avatar/" + companyStat.getCompany()
+	              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td>" );
 			  out.println( "<td><b>"+companyStat.getCompany().getFullName()+"</b><br/>");
 	      out.println( "Bénéfice: "+companyStat.getProfit()+"<br/>");
 	      out.println( "Rentabilité: "+companyStat.getProfitabilityInPercent()+" %<br/>");

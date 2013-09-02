@@ -33,18 +33,22 @@ import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
+import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Serialized;
+import com.googlecode.objectify.annotation.Unindexed;
 
 /**
  * @author Vincent
  *
  */
+@Unindexed
 public class EbTeam extends EbBase
 {
   private static final long serialVersionUID = 1L;
 
   private List<Long> m_playerIds = new ArrayList<Long>();
 
+  @Indexed
   private Company m_company = Company.Freelancer;
 
   /** the single color of common fire cover */

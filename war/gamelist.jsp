@@ -130,7 +130,8 @@ if(tab < 0 || tab > 3 )
 		}
 	%>
 	</p>
-	<% if( tab == 0 && Auth.isUserLogged(request, response)) { %>
+	<% if( tab == 0 && Auth.isUserLogged(request, response) 
+	    && !Auth.getUserAccount( request, response ).getLastConnexion().equals( Auth.getUserAccount( request, response ).getSubscriptionDate() )) { %>
 		<center><a href="editgame.jsp"><big>Cr&eacute;er une nouvelle partie</big></a></center>
 	<% } %>
 	<br/><small>
