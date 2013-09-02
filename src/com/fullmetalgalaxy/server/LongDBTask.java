@@ -41,38 +41,70 @@ public abstract class LongDBTask<T> implements DeferredTask
   private static final long serialVersionUID = 1L;
   public static final long LIMIT_MILLIS = 1000 * 20; // provide a little
                                                      // leeway
+  protected final static FmpLogger log = FmpLogger.getLogger( AccountServlet.class.getName() );
+
   private Cursor m_cursor = null;
+  // this offset is used when query can't be resume with cursor
+  protected int m_offset = 0;
 
   @Override
   public void run()
   {
+    long startTime = System.currentTimeMillis();
     Query<T> query = getQuery();
     if( query == null )
     {
       return;
     }
-    long startTime = System.currentTimeMillis();
     if( m_cursor != null )
     {
       query.startCursor( m_cursor );
     }
+    else if( m_offset != 0 )
+    {
+      query.offset( m_offset );
+    }
     QueryResultIterator<Key<T>> iterator = query.fetchKeys().iterator();
     while( iterator.hasNext() )
     {
-      processKey( iterator.next() );
+      try
+      {
+        processKey( iterator.next() );
+      } catch( Exception e )
+      {
+        log.error( e );
+      } catch( Throwable th )
+      {
+        log.error( th.getMessage() );
+      }
+      m_offset++;
 
       if( System.currentTimeMillis() - startTime > LIMIT_MILLIS )
       {
         // synchro isn't finished: add task
         m_cursor = iterator.getCursor();
-        QueueFactory.getQueue( "longDBTask" ).add(
-            TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
-        return;
+        if( iterator.hasNext() )
+        {
+          if( m_cursor == null )
+          {
+            log.warning( "Query isn't finished but can't be resumed with cursor: " + query );
+          }
+          QueueFactory.getQueue( "longDBTask" ).add(
+              TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
+          return;
+        }
+        // ok we finished just in time :)
+        break;
       }
     }
     m_cursor = null;
 
     finish();
+  }
+
+  protected int getEntityProcessed()
+  {
+    return m_offset;
   }
 
   protected abstract Query<T> getQuery();

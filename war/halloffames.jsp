@@ -49,10 +49,10 @@ out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.
 out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount'>partie</a></td>");
 out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability'>Rentabilité</a></td>");
 out.println("<td></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion'>Dernière connexion</a></td><td></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion&all'>Dernière connexion</a></td><td></td>");
 out.println("<td></td>");
 if( request.getParameter( "ts" ) != null ) {
-  out.println("<td>TS</td>");
+  out.println("<td><a href='"+request.getRequestURL()+"?orderby=-m_trueSkillLevel&ts'>TS</a></td>");
 }
 out.println("</tr>");
 

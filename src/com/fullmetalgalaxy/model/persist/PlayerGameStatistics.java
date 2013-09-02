@@ -121,6 +121,7 @@ public class PlayerGameStatistics extends EbBase
    * don't count control if unit doesn't change team  */
   private int m_unitsCapture = 0;
   
+  @Indexed
   private Company m_company = Company.Freelancer;
   /** for turn by turn games only: the average time in second
    * of his turn. between two end turn action */
@@ -129,6 +130,8 @@ public class PlayerGameStatistics extends EbBase
   /** if not null, player is either a replacement of the above account
    * or was replaced by above account.
    * see m_wasBanned */
+  @Embedded
+  @Indexed
   private EbPublicAccount m_replacement = null;
   /** if true, player was banned from this game */
   private boolean m_wasBanned = false;

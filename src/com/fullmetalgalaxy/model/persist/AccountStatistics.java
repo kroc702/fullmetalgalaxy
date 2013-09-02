@@ -167,7 +167,7 @@ public class AccountStatistics implements Serializable, IsSerializable
     }
 
     // is this account included or excluded from ranking ?
-    if( m_opponentPlayerCount > 4 && m_finshedGameCount > 2 )
+    if( m_opponentPlayerCount > 3 && m_finshedGameCount > 2 )
     {
       m_includedInRanking = true;
     }
