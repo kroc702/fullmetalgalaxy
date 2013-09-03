@@ -40,6 +40,7 @@ else // error
 <!--tr><td>Date</td><td>score</td><td>score</td><td>Locale</td><td>Mail</td><td>Pseudo</td></tr-->
 <%
 HashSet<Long> displayedGameIds = new HashSet<Long>();
+DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );
 
 for( PlayerGameStatistics game : gameList )
 {
@@ -51,7 +52,8 @@ for( PlayerGameStatistics game : gameList )
   // game name
   out.print( "<td><a href=\"/game.jsp?id=" + game.getKeyGamePreview().getId()
       + "\"><big>" + game.getGameName()
-      + "</big></a></td>" );
+      + "</big></a><br/>"
+      + dateFormat.format( game.getGameEndDate() ) + "</td>" );
 
   out.print( "<td><pre>");
   
