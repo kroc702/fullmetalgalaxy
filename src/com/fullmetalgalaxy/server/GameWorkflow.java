@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.server;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -646,6 +647,9 @@ public class GameWorkflow
     calendar.setTime( p_game.getEndDate() );
     int gameEndYear = calendar.get( Calendar.YEAR );
 
+    Date gameOldestDate = new Date( System.currentTimeMillis()
+        - FmpConstant.currentStatsTimeWindowInMillis );
+
     // save accounts for updated true skill value
     for( Entry<IPlayer, Rating> entry : newRating.entrySet() )
     {
@@ -677,8 +681,7 @@ public class GameWorkflow
         // and save account
         account.setTrueSkill( entry.getValue() );
         account.getFullStats().addStatistic( playerStat );
-        if( (System.currentTimeMillis() - FmpConstant.currentStatsTimeWindowInMillis) > playerStat
-            .getGameEndDate().getTime() )
+        if( gameOldestDate.before( playerStat.getGameEndDate() ) )
         {
           account.getCurrentStats().addStatistic( playerStat );
         }

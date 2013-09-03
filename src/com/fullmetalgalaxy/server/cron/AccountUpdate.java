@@ -76,7 +76,7 @@ public class AccountUpdate extends HttpServlet
     {
       FmgDataStore ds = new FmgDataStore( false );
       EbAccount account = ds.get( p_key );
-      if( m_gameOldestDate.before( account.getCurrentStats().getFirstGameDate() ) )
+      if( m_gameOldestDate.after( account.getCurrentStats().getFirstGameDate() ) )
       {
         Query<PlayerGameStatistics> query = FmgDataStore.dao().query( PlayerGameStatistics.class )
             .filter( "m_account.id", p_key.getId() ).filter( "m_gameEndDate >=", m_gameOldestDate );
