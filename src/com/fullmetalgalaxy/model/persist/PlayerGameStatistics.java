@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.GameEvent;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Indexed;
@@ -298,7 +299,13 @@ public class PlayerGameStatistics extends EbBase
           }
           else if( (p_event instanceof EbEvtLoad)
               && ((EbEvtLoad)p_event).getToken( p_game ).getType().isOre()
-              && ((EbEvtLoad)p_event).getToken( p_game ).getType() == TokenType.Freighter )
+              && ((EbEvtLoad)p_event).getTokenCarrier( p_game ).getType() == TokenType.Freighter )
+          {
+            m_oreLoad++;
+          }
+          else if( (p_event instanceof EbEvtTransfer)
+              && ((EbEvtTransfer)p_event).getToken( p_game ).getType().isOre()
+              && ((EbEvtTransfer)p_event).getNewTokenCarrier( p_game ).getType() == TokenType.Freighter )
           {
             m_oreLoad++;
           }

@@ -23,11 +23,15 @@
 
 package com.fullmetalgalaxy.server;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
+import com.fullmetalgalaxy.model.persist.CompanyStatistics;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.googlecode.objectify.Query;
 
 /**
  * @author vlegendr
@@ -58,7 +62,7 @@ public class GlobalVars extends GlobalVarBase
       newsHtml += "deletec: "+getDeletedGameCount() + " <br/>";
       */
       // get best player
-      newsHtml += "Meilleur joueur:";
+      /*newsHtml += "Meilleur joueur:";
       Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
       accountQuery = accountQuery.order( "-m_currentStats.m_averageNormalizedRank" )
           .filter( "m_currentStats.m_includedInRanking", true )
@@ -67,6 +71,35 @@ public class GlobalVars extends GlobalVarBase
       {
         newsHtml += account.buildHtmlFragment();
       }
+      */
+      // get best company
+      int year = GregorianCalendar.getInstance().get( Calendar.YEAR );
+      if( GregorianCalendar.getInstance().get( Calendar.MONTH ) == 0 )
+      {
+        year++;
+      }
+      com.googlecode.objectify.Query<CompanyStatistics> companyList = FmgDataStore.dao()
+          .query( CompanyStatistics.class )
+          .filter( "m_year", year )
+          .order( "-m_profit" ).limit( 3 );
+      newsHtml += ("Meilleurs corporations " + year + " :<table width='100%'>");
+      for( CompanyStatistics companyStat : companyList )
+      {
+        if( companyStat.getCompany() != Company.Freelancer )
+        {
+          newsHtml += ("<tr>");
+          newsHtml += ("<td><a href='/oldgameprofile.jsp?corpo=" + companyStat.getCompany()
+              + "'><IMG SRC='/images/avatar/" + companyStat.getCompany() + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td>");
+          newsHtml += ("<td><a href='/oldgameprofile.jsp?corpo=" + companyStat.getCompany()
+              + "'><b>" + companyStat.getCompany().getFullName() + "</b></a><br/>");
+          newsHtml += ("Bénéfice: " + companyStat.getProfit() + "<br/>");
+          newsHtml += ("Rentabilité: " + companyStat.getProfitabilityInPercent() + " %<br/>");
+          newsHtml += ("Nb exploitation: " + companyStat.getMiningCount());
+          newsHtml += ("</td>");
+          newsHtml += ("</tr>");
+        }
+      }
+      newsHtml += ("</table>");
       
       getCache().put( CACHE_STATS_KEY, newsHtml, Expiration.byDeltaSeconds( CACHE_STATS_TTL_SEC ) );
     }
