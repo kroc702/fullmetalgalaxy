@@ -49,21 +49,36 @@
     </datastore-index>
 
     
-	<!-- should be obsolete -->
-    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
-        <property name="m_setRegistration.m_account.m_pseudo" direction="asc"/>
-        <property name="m_creationDate" direction="desc"/>
+    <!-- For account sort -->
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_currentStats.m_averageNormalizedRank" direction="desc"/>
     </datastore-index>
 
-    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
-        <property name="m_history" direction="asc"/>
-        <property name="m_lastUpdate" direction="asc"/>
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_currentStats.m_victoryCount" direction="desc"/>
     </datastore-index>
 
-    <datastore-index kind="EbGamePreview" ancestor="false" source="auto">
-        <property name="m_isOpen" direction="desc"/>
-        <property name="m_creationDate" direction="desc"/>
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_finshedGameCount" direction="desc"/>
     </datastore-index>
 
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_currentStats.m_score" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_currentStats.m_averageProfitability" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="EbAccount" ancestor="false" source="auto">
+        <property name="m_currentStats.m_includedInRanking" direction="asc"/>
+        <property name="m_trueSkillLevel" direction="desc"/>
+    </datastore-index>
+    
 
 </datastore-indexes>

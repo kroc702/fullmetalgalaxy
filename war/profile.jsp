@@ -69,11 +69,11 @@ Stats moyennes:
 Rank: <%= account.getCurrentStats().getAverageNormalizedRank() %>
 Rentabilité: <%= account.getCurrentStats().getAverageProfitabilityInPercent() %> %
 Réactivité: <%= account.getCurrentStats().getAverageReactivityInSec()/(60*60) %> heures
-Capture de minerais: <%= account.getCurrentStats().getOreLoad()/account.getCurrentStats().getFinshedGameCount() %>
-Construction: <%= account.getCurrentStats().getConstruction()/account.getCurrentStats().getFinshedGameCount() %>
-Destruction: <%= account.getCurrentStats().getDestruction()/account.getCurrentStats().getFinshedGameCount() %>
-Capture astronef: <%= account.getCurrentStats().getFreighterCapture()/account.getCurrentStats().getFinshedGameCount() %>
-Capture unité: <%= account.getCurrentStats().getUnitsCapture()/account.getCurrentStats().getFinshedGameCount() %>
+Capture de minerais: <%= df.format( account.getCurrentStats().getOreLoad()*1.0/account.getCurrentStats().getFinshedGameCount() ) %>
+Construction: <%= df.format( account.getCurrentStats().getConstruction()*1.0/account.getCurrentStats().getFinshedGameCount() ) %>
+Destruction: <%= df.format( account.getCurrentStats().getDestruction()*1.0/account.getCurrentStats().getFinshedGameCount() ) %>
+Capture astronef: <%= df.format( account.getCurrentStats().getFreighterCapture()*1.0/account.getCurrentStats().getFinshedGameCount() ) %>
+Capture unité: <%= df.format( account.getCurrentStats().getUnitsCapture()*1.0/account.getCurrentStats().getFinshedGameCount() ) %>
 <% } %></pre>
 
 <h4>Stats complètes</h4>
@@ -89,11 +89,11 @@ Stats moyennes:
 Rank: <%= account.getFullStats().getAverageNormalizedRank() %>
 Rentabilité: <%= account.getFullStats().getAverageProfitabilityInPercent() %> %
 Réactivité: <%= account.getFullStats().getAverageReactivityInSec()/(60*60) %> heures
-Capture de minerais: <%= account.getFullStats().getOreLoad()/account.getFullStats().getFinshedGameCount() %>
-Construction: <%= account.getFullStats().getConstruction()/account.getFullStats().getFinshedGameCount() %>
-Destruction: <%= account.getFullStats().getDestruction()/account.getFullStats().getFinshedGameCount() %>
-Capture astronef: <%= account.getFullStats().getFreighterCapture()/account.getFullStats().getFinshedGameCount() %>
-Capture unité: <%= account.getFullStats().getUnitsCapture()/account.getFullStats().getFinshedGameCount() %>
+Capture de minerais: <%= df.format( account.getFullStats().getOreLoad()*1.0/account.getFullStats().getFinshedGameCount() ) %>
+Construction: <%= df.format( account.getFullStats().getConstruction()*1.0/account.getFullStats().getFinshedGameCount() ) %>
+Destruction: <%= df.format( account.getFullStats().getDestruction()*1.0/account.getFullStats().getFinshedGameCount() ) %>
+Capture astronef: <%= df.format( account.getFullStats().getFreighterCapture()*1.0/account.getFullStats().getFinshedGameCount() ) %>
+Capture unité: <%= df.format( account.getFullStats().getUnitsCapture()*1.0/account.getFullStats().getFinshedGameCount() ) %>
 <% } %></pre>
 
 <%

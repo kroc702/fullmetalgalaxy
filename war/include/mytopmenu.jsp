@@ -7,7 +7,7 @@
 	    <span style="position: relative;top:5px;">
 	    <% if(Auth.isUserAdmin(request, response)) { %>
 		<span id="linkPseudo" >
-	    	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">
+	    	<a href="/account.jsp">
 	    	<img style="border:none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
 	    	</a> |
 		  <div id="menuAdmin" class="bloc" style="position: absolute; text-align:left; top:15px; left:-10px; width:150px; z-index:9999999999;">

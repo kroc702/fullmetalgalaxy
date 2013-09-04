@@ -87,8 +87,6 @@ if(account == null) {
 	<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
 	<fmg:resource key="account_pseudo"/> :
 	<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
-	<fmg:resource key="account_avatarurl"/> :
-	<input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
 	<% if( account.isIsforumIdConfirmed() && account.getForumId() != null )
 	  {
 		out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
@@ -130,6 +128,8 @@ if(account == null) {
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
 <fmg:resource key="account_jabberid"/> :
 <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
+<fmg:resource key="account_avatarurl"/> :
+<input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
 <fmg:resource key="account_allowgamemessages"/> :
 	<SELECT name="NotificationQty">
 	<% for( EbAccount.NotificationQty notif : EbAccount.NotificationQty.values()) { %>
