@@ -237,6 +237,14 @@ public class EbGamePreview extends EbBase
       }
     }
 
+    for( EbTeam team : getTeams() )
+    {
+      if( team.getCompany() == Company.MIY )
+      {
+        team.setCompany( Company.MDA );
+      }
+    }
+
     m_currentPlayerId = 0;
     if( !m_currentPlayerIds.isEmpty() )
     {
