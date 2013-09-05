@@ -37,6 +37,7 @@ public enum Company implements IsSerializable
   TTC, // Tiberium Tuco Company - agressivity +++ exploration ++
   DSM, // Deep Space Mining - exploration +++ Pole juridique ++
   Ranger, // Ranger's Corp - agressivity +++ technologie ++
+  MIY, // Mine It Yourself Syndicate - Pole juridique +++ agressivity ++
   MDA; // Les Mineurs d'Astorg - Pole juridique +++ agressivity ++
 
   public String getFullName()
@@ -53,6 +54,7 @@ public enum Company implements IsSerializable
       return "Deep Space Mining";
     case Ranger:
       return "Ranger's Corp";
+    case MIY:
     case MDA:
       return "Les Mineurs d'Astorg";
     default:
