@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
-import com.fullmetalgalaxy.server.FmgMessage;
 import com.fullmetalgalaxy.server.GlobalVars;
 import com.fullmetalgalaxy.server.ServerUtil;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.taskqueue.DeferredTask;

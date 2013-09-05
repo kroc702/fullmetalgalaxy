@@ -40,6 +40,7 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Query;
@@ -305,7 +306,7 @@ public class AccountServlet extends HttpServlet
     EbAccount account = query.get();
     if( account == null )
     {
-      query = ds.query( EbAccount.class ).filter( "m_compactPseudo", EbAccount.compactPseudo( login ) );
+      query = ds.query( EbAccount.class ).filter( "m_compactPseudo", ServerUtil.compactTag( login ) );
       account = query.get();
     }
     

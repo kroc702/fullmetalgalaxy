@@ -106,7 +106,7 @@ public class FmgDataStore extends DataStore
    */
   public static boolean isPseudoExist( String p_pseudo )
   {
-    String pseudo = EbAccount.compactPseudo( p_pseudo );
+    String pseudo = ServerUtil.compactTag( p_pseudo );
     Query<EbAccount> query = dao().query( EbAccount.class ).filter( "m_compactPseudo", pseudo );
     if( !query.fetchKeys().iterator().hasNext() )
     {
@@ -129,7 +129,7 @@ public class FmgDataStore extends DataStore
     FmgDataStore ds = new FmgDataStore( false );
     EbAccount account = ds.find( EbAccount.class, p_accountId );
     String oldPseudo = account.getPseudo();
-    if( !EbAccount.compactPseudo( oldPseudo ).equals( EbAccount.compactPseudo( p_newPseudo ) )
+    if( !ServerUtil.compactTag( oldPseudo ).equals( ServerUtil.compactTag( p_newPseudo ) )
         && isPseudoExist( p_newPseudo ) )
     {
       ds.rollback();

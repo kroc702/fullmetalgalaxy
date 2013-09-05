@@ -11,7 +11,7 @@
 <body>
 
 <%
-final int COUNT_PER_PAGE = 100;
+  final int COUNT_PER_PAGE = 100;
 int offset = 0;
 try
 {
@@ -26,7 +26,7 @@ Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
 
 if( pseudo != null && !pseudo.isEmpty() )
 {
-  pseudo = EbAccount.compactPseudo(pseudo);
+  pseudo = ServerUtil.compactTag(pseudo);
   accountQuery.filter("m_compactPseudo >=",pseudo).filter("m_compactPseudo <", pseudo + "\uFFFD"); ;
 }
 else
@@ -36,7 +36,6 @@ else
 
 int accountListCount = accountQuery.count();
 out.println("<p>FMG compte actuellement " + accountListCount + " inscrits</p>");
-
 %>
 
 <form name="myform" action="/admin/accounts.jsp" method="get">
