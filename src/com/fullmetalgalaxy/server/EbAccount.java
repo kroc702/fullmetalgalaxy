@@ -177,23 +177,6 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     return matcher.matches();
   }
 
-  /**
-   * compute a compacted pseudo
-   * @param p_pseudo
-   * @return
-   */
-  public static String compactPseudo(String p_pseudo)
-  {
-    // remove accentuated char
-    String compact = ServerUtil.convertNonAscii( p_pseudo );
-    compact = compact.toLowerCase();
-    // remove all non word char
-    compact = compact.replaceAll( "[^\\w]", "" );
-    return compact;
-  }
-  
-
-  
   public EbAccount()
   {
     super();
@@ -407,7 +390,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   public void setPseudo(String p_pseudo)
   {
     super.setPseudo( p_pseudo );
-    m_compactPseudo = compactPseudo( p_pseudo );
+    m_compactPseudo = ServerUtil.compactTag( p_pseudo );
   }
 
 

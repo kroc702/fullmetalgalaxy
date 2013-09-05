@@ -234,4 +234,21 @@ public class ServerUtil
   {
     return s_forumConnector;
   }
+
+  /**
+   * compute a compacted single tag from a given string.
+   * 
+   * was called 'compactPseudo' as its first use is to avoid several pseudo that look similar 
+   * @param p_string
+   * @return
+   */
+  public static String compactTag(String p_string)
+  {
+    // remove accentuated char
+    String compact = convertNonAscii( p_string );
+    compact = compact.toLowerCase();
+    // remove all non word char
+    compact = compact.replaceAll( "[^\\w]", "" );
+    return compact;
+  }
 }

@@ -37,12 +37,21 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     
     <servlet>
        <servlet-name>PMServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.PMServlet</servlet-class>
+       <servlet-class>com.fullmetalgalaxy.server.pm.PMServlet</servlet-class>
     </servlet>
     <servlet-mapping>
        <servlet-name>PMServlet</servlet-name>
        <url-pattern>/PMServlet</url-pattern>
     </servlet-mapping>
+
+		<servlet>
+		  <servlet-name>mailhandler</servlet-name>
+		  <servlet-class>com.fullmetalgalaxy.server.pm.MailHandlerServlet</servlet-class>
+		</servlet>
+		<servlet-mapping>
+		  <servlet-name>mailhandler</servlet-name>
+		  <url-pattern>/_ah/mail/*</url-pattern>
+		</servlet-mapping>
 
     <servlet>
        <servlet-name>AdminServlet</servlet-name>
@@ -82,7 +91,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   
     <servlet>
        <servlet-name>GameUpdate</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.GameUpdate</servlet-class>
+       <servlet-class>com.fullmetalgalaxy.server.cron.GameUpdate</servlet-class>
     </servlet>
     <servlet-mapping>
        <servlet-name>GameUpdate</servlet-name>
@@ -171,6 +180,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	   <web-resource-collection>
 	       <url-pattern>/admin/accounts.jsp</url-pattern>
 	       <url-pattern>/admin/index.jsp</url-pattern>
+         <url-pattern>/_ah/mail/*</url-pattern>
 	       <!-- url-pattern>/cron/*</url-pattern-->
 	   </web-resource-collection>
 	   <auth-constraint>

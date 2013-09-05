@@ -51,6 +51,7 @@ import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.server.forum.ConectorImpl;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 
 /**
  * @author Vincent
@@ -385,7 +386,7 @@ public class AdminServlet extends HttpServlet
               // try to find corresponding pseudo
               account = FmgDataStore.dao().query( EbAccount.class )
                   .filter( "m_compactPseudo ==",
-                      EbAccount.compactPseudo( registration.getAccount().getPseudo() ) ).get();
+                      ServerUtil.compactTag( registration.getAccount().getPseudo() ) ).get();
             } catch( Exception e )
             {
             }

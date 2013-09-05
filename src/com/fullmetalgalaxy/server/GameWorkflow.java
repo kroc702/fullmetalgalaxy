@@ -64,6 +64,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Query;
 
@@ -633,7 +634,7 @@ public class GameWorkflow
     // update game stats
     p_game.setStats( new GameStatistics( p_game ) );
     FmgDataStore ds = new FmgDataStore( false );
-    // ds.put( p_game );
+    ds.put( p_game );
 
     // then players stats
     ArrayList<ITeam> teams = new ArrayList<ITeam>();

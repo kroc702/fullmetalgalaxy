@@ -38,6 +38,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 
 /**
  * @author Vincent
