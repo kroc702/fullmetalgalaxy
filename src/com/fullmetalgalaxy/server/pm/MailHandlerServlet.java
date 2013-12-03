@@ -79,7 +79,8 @@ public class MailHandlerServlet extends HttpServlet
       MimeMessage message = new MimeMessage( session, req.getInputStream() );
 
       // new recipients
-      ArrayList<InternetAddress> newToAddresses = new ArrayList<InternetAddress>();
+      ArrayList<InternetAddress> newPrivateToAddresses = new ArrayList<InternetAddress>();
+      ArrayList<InternetAddress> newPublicToAddresses = new ArrayList<InternetAddress>();
       ArrayList<InternetAddress> newBccAddresses = new ArrayList<InternetAddress>();
       ArrayList<Address> informCCAddresses = new ArrayList<Address>();
       // get original recipients and convert them to real/private email address
@@ -87,13 +88,18 @@ public class MailHandlerServlet extends HttpServlet
       if( oldAddresses != null )
         for( Address address : oldAddresses )
         {
-          InternetAddress addr = public2private( address );
-          if( addr != null )
+          InternetAddress privateAddr = new InternetAddress();
+          boolean hideEmailToPlayer = public2private( address, privateAddr );
+          if( privateAddr.getAddress() != null )
           {
-            newToAddresses.add( addr );
+            if( hideEmailToPlayer )
+              newPrivateToAddresses.add( privateAddr );
+            else
+              newPublicToAddresses.add( privateAddr );
           }
           else if( !isFmgPublicAddress( address ) )
           {
+            // consider as external address: recipient already received it
             informCCAddresses.add( address );
           }
         }
@@ -101,13 +107,18 @@ public class MailHandlerServlet extends HttpServlet
       if( oldAddresses != null )
         for( Address address : oldAddresses )
         {
-          InternetAddress addr = public2private( address );
-          if( addr != null )
+          InternetAddress privateAddr = new InternetAddress();
+          boolean hideEmailToPlayer = public2private( address, privateAddr );
+          if( privateAddr.getAddress() != null )
           {
-            newToAddresses.add( addr );
+            if( hideEmailToPlayer )
+              newPrivateToAddresses.add( privateAddr );
+            else
+              newPublicToAddresses.add( privateAddr );
           }
           else if( !isFmgPublicAddress( address ) )
           {
+            // consider as external address: recipient already received it
             informCCAddresses.add( address );
           }
         }
@@ -115,41 +126,63 @@ public class MailHandlerServlet extends HttpServlet
       if( oldAddresses != null )
         for( Address address : oldAddresses )
         {
-          InternetAddress addr = public2private( address );
-          if( addr != null )
+          InternetAddress privateAddr = new InternetAddress();
+          public2private( address, privateAddr );
+          if( privateAddr.getAddress() != null )
           {
-            newBccAddresses.add( addr );
+            newBccAddresses.add( privateAddr );
           }
         }
 
       // get original sender and convert them to real email address
       for( Address address : message.getFrom() )
       {
-        InternetAddress newAddress = private2public( address );
-        if( newAddress != null )
+        InternetAddress newFmgAddress = new InternetAddress();
+        private2public( address, newFmgAddress );
+        // FMG can't sent email for arbitrary address
+        if( newFmgAddress.getAddress() != null )
         {
-          message.setFrom( newAddress );
+          message.setFrom( newFmgAddress );
           message.setReplyTo( null );
         }
       }
       
-      if( newToAddresses.isEmpty() )
+      if( newPrivateToAddresses.isEmpty() && newPublicToAddresses.isEmpty() )
       {
         log.warning( "email can't be forwarded: "+message );
       }
-      else if( newToAddresses.size() == 1 )
+      else if( newPrivateToAddresses.size() == 1 )
       {
-        message.setRecipients( Message.RecipientType.TO, newToAddresses.toArray(new Address[0]) );
+        message.setRecipients( Message.RecipientType.TO,
+            newPrivateToAddresses.toArray( new Address[0] ) );
+        message.addRecipients( Message.RecipientType.TO,
+            newPublicToAddresses.toArray( new Address[0] ) );
         message.setRecipients( Message.RecipientType.CC, new Address[0] );
         message.setRecipients( Message.RecipientType.BCC, newBccAddresses.toArray(new Address[0]) );
-        addTextPrefix( message, buildTextPrefix( informCCAddresses ) );
+        addPrefix( message, informCCAddresses );
+        
+
+        Object contentObject = message.getContent();
+        if( contentObject instanceof Multipart )
+        {
+          Multipart content = (Multipart)contentObject;
+          int count = content.getCount();
+          for( int i = 0; i < count; i++ )
+          {
+            BodyPart part = content.getBodyPart( i );
+            System.out.println( "ContentType = " + part.getContentType() );
+            System.out.println( "Content = " + part.getContent() );
+          }
+        }
+          
         Transport.send( message );
       }
       else
       {
         // hard case as we don't want to send private addresses
-        informCCAddresses.addAll( newToAddresses );
-        addTextPrefix( message, buildTextPrefix( informCCAddresses ) );
+        informCCAddresses.addAll( newPrivateToAddresses );
+        informCCAddresses.addAll( newPublicToAddresses );
+        addPrefix( message, informCCAddresses );
         message.setRecipients( Message.RecipientType.TO, new Address[0] );
         message.setRecipients( Message.RecipientType.CC, new Address[0] );
         if( !newBccAddresses.isEmpty() )
@@ -159,10 +192,14 @@ public class MailHandlerServlet extends HttpServlet
           Transport.send( message );
         }
         message.setRecipients( Message.RecipientType.BCC, new Address[0] );
-        for( InternetAddress address : newToAddresses )
+        for( InternetAddress address : newPrivateToAddresses )
         {
           message.setRecipients( Message.RecipientType.TO, new Address[]{address} );
+          message.addRecipients( Message.RecipientType.TO,
+              newPublicToAddresses.toArray( new Address[0] ) );
           Transport.send( message );
+          // only the first email sent will contain real player email
+          newPublicToAddresses.clear();
         }
       }
       
@@ -175,9 +212,9 @@ public class MailHandlerServlet extends HttpServlet
   
   private String buildTextPrefix(List<Address> p_addresses)
   {
-    String prefix = "Forwarded by FullMetalGalaxy.com\n";
+    String prefix = "";
     if( p_addresses.isEmpty() )
-      return prefix + "\n";
+      return prefix + "";
     prefix += "CC: ";
     for( Address address : p_addresses )
     {
@@ -187,10 +224,25 @@ public class MailHandlerServlet extends HttpServlet
     return prefix;
   }
 
-  private void addTextPrefix(MimeMessage p_message, String p_prefix)
+  private String buildHtmlPrefix(List<Address> p_addresses)
+  {
+    String prefix = "";
+    if( p_addresses.isEmpty() )
+      return prefix;
+    prefix += "<b>CC:</b> ";
+    for( Address address : p_addresses )
+    {
+      prefix += address + "; ";
+    }
+    prefix += "<br/><br/>";
+    return prefix;
+  }
+
+  private void addPrefix(MimeMessage p_message, List<Address> p_addresses)
   {
     try
     {
+      // add CC information in body
       Object contentObject = p_message.getContent();
       if( contentObject instanceof Multipart )
       {
@@ -201,19 +253,28 @@ public class MailHandlerServlet extends HttpServlet
           BodyPart part = content.getBodyPart( i );
           if( part.isMimeType( "text/plain" ) )
           {
-            part.setText( p_prefix + (String)part.getContent() );
+            part.setText( buildTextPrefix(p_addresses) + (String)part.getContent() );
           }
           else if( part.isMimeType( "text/html" ) )
           {
-            part.setContent( p_prefix + (String)part.getContent(), "text/html" );
+            part.setContent( buildHtmlPrefix(p_addresses) + (String)part.getContent(), "text/html" );
             // result = Jsoup.parse(html).text();
           }
         }
+        p_message.setContent( content );
       }
       else if( contentObject instanceof String ) // a simple text message
       {
-        p_message.setText( p_prefix + (String)contentObject );
+        p_message.setText( buildTextPrefix( p_addresses ) + (String)contentObject );
       }
+
+      // now update subject
+      String subject = p_message.getSubject(); 
+      if( subject == null ) subject = "[FMG]";
+      else if( !subject.contains( "[FMG]" )) subject = "[FMG] " + subject;
+      p_message.setSubject( subject );
+      
+      p_message.saveChanges();
     } catch( MessagingException | IOException e )
     {
       log.error( e );
@@ -231,61 +292,85 @@ public class MailHandlerServlet extends HttpServlet
     return false;
   }
 
-
-  private InternetAddress public2private(Address p_address)
+  /**
+   * 
+   * @param p_publicAddress email alias provided by FMG
+   * @param p_privateAddress real player email
+   * @return account.isHideEmailToPlayer(); or false if account wasn't found
+   */
+  private boolean public2private(Address p_publicAddress, InternetAddress p_privateAddress)
   {
-    if( p_address instanceof InternetAddress )
+    EbAccount account = null;
+    p_privateAddress.setAddress( null );
+    if( p_publicAddress instanceof InternetAddress )
     {
-      InternetAddress iAddress = (InternetAddress)p_address;
+      InternetAddress iAddress = (InternetAddress)p_publicAddress;
       Matcher mailMatcher = s_mailPattern.matcher( iAddress.getAddress() );
       if( mailMatcher.matches() )
       {
         String accountStr = ServerUtil.compactTag( mailMatcher.group( 1 ) );
         Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class )
             .filter( "m_compactPseudo", accountStr );
-        EbAccount account = query.get();
+        account = query.get();
         if( account == null )
         {
           log.error( "no account found for compact pseudo " + accountStr );
         }
         else
         {
+          p_privateAddress.setAddress( account.getEmail() );
           try
           {
-            return new InternetAddress( account.getEmail(), account.getPseudo() );
+            p_privateAddress.setPersonal( account.getPseudo() );
           } catch( UnsupportedEncodingException e )
           {
-            e.printStackTrace();
+            log.error( e );
           }
         }
       }
     }
-    log.error( "no account found for public email " + p_address );
-    return null;
+    log.error( "no account found for public email " + p_publicAddress );
+    if( account != null )
+    {
+      return account.isHideEmailToPlayer();
+    }
+    return false;
   }
 
-  private InternetAddress private2public(Address p_address)
+  /**
+   * 
+   * @param p_publicAddress email alias provided by FMG
+   * @param p_privateAddress real player email
+   * @return account.isHideEmailToPlayer(); or false if account wasn't found
+   */
+  private boolean private2public(Address p_privateAddress, InternetAddress p_publicAddress)
   {
-    if( p_address instanceof InternetAddress )
+    p_publicAddress.setAddress( null );
+    EbAccount account = null;
+    if( p_privateAddress instanceof InternetAddress )
     {
-      InternetAddress iAddress = (InternetAddress)p_address;
+      InternetAddress iAddress = (InternetAddress)p_privateAddress;
       Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class )
           .filter( "m_email", iAddress.getAddress() );
-      EbAccount account = query.get();
+      account = query.get();
       if( account != null )
       {
+        p_publicAddress.setAddress( account.getFmgEmail() );
         try
         {
-          return new InternetAddress( account.getCompactPseudo() + "@"
-              + SystemProperty.applicationId.get() + ".appspotmail.com", account.getPseudo() );
+          p_publicAddress.setPersonal( account.getPseudo() );
         } catch( UnsupportedEncodingException e )
         {
-          e.printStackTrace();
+          log.error( e );
         }
       }
     }
-    log.error( "no account found for private email " + p_address );
-    return null;
+    log.error( "no account found for private email " + p_privateAddress );
+    if( account != null )
+    {
+      return account.isHideEmailToPlayer();
+    }
+    return false;
   }
 
 

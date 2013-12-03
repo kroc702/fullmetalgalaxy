@@ -35,6 +35,7 @@ import jskills.Rating;
 import com.fullmetalgalaxy.model.AuthProvider;
 import com.fullmetalgalaxy.model.persist.AccountStatistics;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Serialized;
 import com.googlecode.objectify.annotation.Unindexed;
@@ -79,6 +80,8 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   /** to allow message from other players */
   @Unindexed
   private boolean m_isAllowMsgFromPlayer = true;
+  @Unindexed
+  private boolean m_hideEmailToPlayer = true;
   /** to allow message like 'it your turn on game xxx' */
   @Unindexed
   private NotificationQty m_notificationQty = NotificationQty.Std;
@@ -193,6 +196,7 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     m_lastConnexion = new Date( System.currentTimeMillis() );
     m_authProvider = AuthProvider.Fmg;
     m_isAllowMsgFromPlayer = true;
+    m_hideEmailToPlayer = true;
     m_notificationQty = NotificationQty.Std;
     clearComputedStats();
   }
@@ -427,7 +431,16 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   }
 
   /**
-   * @return the email
+   * @return the public FMG email alias
+   */
+  public String getFmgEmail()
+  {
+    return getCompactPseudo() + "@" + SystemProperty.applicationId.get() + ".appspotmail.com";
+  }
+
+
+  /**
+   * @return the private email
    */
   public String getEmail()
   {
@@ -736,4 +749,16 @@ public class EbAccount extends EbPublicAccount implements IPlayer
     }
     return m_fullStats;
   }
+
+  public boolean isHideEmailToPlayer()
+  {
+    return m_hideEmailToPlayer;
+  }
+
+  public void setHideEmailToPlayer(boolean p_hideEmailToPlayer)
+  {
+    m_hideEmailToPlayer = p_hideEmailToPlayer;
+  }
+
+
 }

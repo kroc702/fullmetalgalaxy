@@ -126,6 +126,7 @@ if(account == null) {
 <br/>
 <fmg:resource key="account_email"/> :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
+email alias FMG : <%= account.getFmgEmail() %><br/>
 <fmg:resource key="account_jabberid"/> :
 <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
 <fmg:resource key="account_avatarurl"/> :
@@ -137,6 +138,7 @@ if(account == null) {
 	<% } %>
 	</SELECT><br/>
 <fmg:resource key="account_allowplayermessages"/> : <input type="checkbox" name="AllowMsgFromPlayer"  value="1" <%= account.allowMsgFromPlayer() ? "checked" : "" %> ><br/>
+Cacher mon email aux autres joueurs : <input type="checkbox" name="HideEmailToPlayer"  value="1" <%= account.isHideEmailToPlayer() ? "checked" : "" %> ><br/>
 <% if( id == 0 ) { %>
 <fmg:resource key="account_createforumaccount"/> <input type="checkbox" name="createforumaccount" value="1" checked /> 
 <br/>

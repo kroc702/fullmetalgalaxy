@@ -21,6 +21,7 @@
 
   <inherits name="com.google.gwt.resources.Resources" />
   <set-property name="ClientBundle.enableInlining" value="false" /> 
+  <set-property-fallback name="locale" value="en"/> 
 
   <!-- Specify the client translatable source               -->
   <source path="client"/> 

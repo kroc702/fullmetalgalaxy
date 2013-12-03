@@ -322,7 +322,7 @@ public class EbToken extends EbBase
   public boolean haveOponentNeighbor(Game p_game)
   {
     // first determine the token owner color
-    EnuColor tokenTeamColor = p_game.getTokenTeamColor( this );
+    EnuColor tokenTeamColor = p_game.getTokenTeamColors( this );
     // TODO it's not optimal... we should look onto the six neighbor hexagons
     for( EbToken token : p_game.getSetToken() )
     {

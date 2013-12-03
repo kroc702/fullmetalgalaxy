@@ -195,7 +195,8 @@ public class WgtGameStatus extends WgtView
         // display next tide (or no forecast)
         // ==================================
 
-        if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() <= 0 )
+        if( GameEngine.model().getMyRegistration().getTeam( game )
+            .getTideForeCast( game.getPreview() ) <= 0 )
         {
           image = BoardIcons.iconTide( Tide.Unknown ).createImage();
           image.setTitle( MAppBoard.s_messages.noForecast() );
@@ -218,7 +219,8 @@ public class WgtGameStatus extends WgtView
           m_panelTide.setCellWidth( image, "20px" );
         }
 
-        if( GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() >= 2
+        if( GameEngine.model().getMyRegistration().getTeam( game )
+            .getTideForeCast( game.getPreview() ) >= 2
             && (game.getNextTideChangeTimeStep()
                 + game.getEbConfigGameTime().getTideChangeFrequency() <= game.getEbConfigGameTime()
                 .getTotalTimeStep()) )

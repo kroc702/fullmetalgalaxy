@@ -333,8 +333,8 @@ public class BoardFireCover implements Serializable
             || m_game.isTokenFireCoverDisabled( fd.getDestroyer2( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer1( m_game ) )
             || !m_game.isTokenTideActive( fd.getDestroyer2( m_game ) )
-            || m_game.getTokenTeamColor( fd.getDestroyer1( m_game ) ).equals(
-                m_game.getTokenTeamColor( p_token ) )
+            || m_game.getTokenTeamColors( fd.getDestroyer1( m_game ) ).equals(
+                m_game.getTokenTeamColors( p_token ) )
             || m_lockedToken.contains( fd.getDestroyer1Id() )
             || m_lockedToken.contains( fd.getDestroyer2Id() ) )
         {
@@ -365,7 +365,7 @@ public class BoardFireCover implements Serializable
           EbToken otherToken = m_game.getToken( new AnBoardPosition( ix, iy ) );
           if( otherToken != null )
           {
-            EnuColor tokenTeamColor = m_game.getTokenTeamColor( otherToken );
+            EnuColor tokenTeamColor = m_game.getTokenTeamColors( otherToken );
 
             if( tokenTeamColor.isColored( color )
               && !m_game.isTokenFireCoverDisabled( otherToken )
@@ -451,7 +451,7 @@ public class BoardFireCover implements Serializable
     EnuColor teamColor = new EnuColor( EnuColor.None );
     if( token != null )
     {
-      teamColor = m_game.getTokenTeamColor( token );
+      teamColor = m_game.getTokenTeamColors( token );
     }
     for( int ix = p_position.getX() - p_radius; ix <= p_position.getX() + p_radius; ix++ )
     {

@@ -130,25 +130,25 @@ public class PMServlet extends HttpServlet
             try {
               fromAccount = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
             } catch(NumberFormatException e) {}
-            if( fromAccount != null && fromAccount.getAuthProvider() == AuthProvider.Google )
+            if( fromAccount != null )
             {
-              msg.setFrom( new InternetAddress( fromAccount.getEmail(), fromAccount.getPseudo() ) );
+              if( fromAccount.getAuthProvider() == AuthProvider.Google
+                  && !fromAccount.isHideEmailToPlayer() )
+              {
+                msg.setFrom( new InternetAddress( fromAccount.getEmail(), fromAccount.getPseudo() ) );
+              }
+              else
+              {
+                msg.setFrom( new InternetAddress( fromAccount.getFmgEmail(), fromAccount
+                    .getPseudo() ) );
+              }
             }
           }
         }
       }
 
-      // add identity of sender
-      // TODO we should create mail like pseudo@fullmetalgalaxy2.appspot.com
-      // instead of this trick
-      if( fromAccount != null )
-      {
-        msg.setContent( "This message is sended by " + fromAccount.getPseudo()
-            + ", answer here: http://www.fullmetalgalaxy.com/email.jsp?id=" + fromAccount.getId()
-            + "\n\n" + (String)msg.getContent(), "text/plain" );
-      }
-
-      msg.addRecipients( Message.RecipientType.BCC, InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
+      // msg.addRecipients( Message.RecipientType.BCC, InternetAddress.parse(
+      // "archive@fullmetalgalaxy.com" ) );
       Transport.send( msg );
 
     } catch( Exception e )

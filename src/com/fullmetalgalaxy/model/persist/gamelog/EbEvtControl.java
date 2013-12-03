@@ -182,7 +182,13 @@ public class EbEvtControl extends AnEventPlay
     setOldColor( getTokenTarget( p_game).getColor() );
     m_oldBulletCount = getTokenTarget( p_game ).getBulletCount();
     
-    getTokenTarget( p_game ).setBulletCount( getTokenTarget( p_game ).getType().getMaxBulletCount() );
+    if( !p_game.getTokenTeamColors( getTokenTarget( p_game ) ).isColored(
+        getTokenDestroyer1( p_game ).getColor() ) )
+    {
+      // if unit change of team: reset bullet count
+      getTokenTarget( p_game ).setBulletCount(
+          getTokenTarget( p_game ).getType().getMaxBulletCount() );
+    }
     p_game.changeTokenColor( getTokenTarget(p_game), getTokenDestroyer1(p_game).getColor() );
     if( !isFdComputed() )
     {

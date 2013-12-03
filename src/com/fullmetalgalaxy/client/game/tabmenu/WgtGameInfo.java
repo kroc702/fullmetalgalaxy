@@ -116,7 +116,8 @@ public class WgtGameInfo extends Composite implements ClickHandler
         + " ";
     // + Messages.getTideString( game.getCurrentTide() ) + "'> ";
     if( (GameEngine.model().getMyRegistration() != null)
-        && (GameEngine.model().getMyRegistration().getWorkingWeatherHenCount() > 0) )
+        && (GameEngine.model().getMyRegistration().getTeam( game )
+            .getTideForeCast( game.getPreview() ) > 0) )
     {
       htmlTide += BoardIcons.iconTide( game.getNextTide() ).getHTML() + " ";
       // + Messages.getTideString( game.getNextTide() ) + "'>";
