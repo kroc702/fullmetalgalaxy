@@ -214,6 +214,10 @@ public class EbEvtDeployment extends AnEventPlay
   @Override
   public void unexec(Game p_game) throws RpcFmpException
   {
+    if( getTokenCarrier( p_game ) == null )
+    {
+      throw new RpcFmpException( "can't cancel deployement: old carrier isn't known" );
+    }
     super.unexec(p_game);
 
     if( getToken( p_game ).getCarrierToken() != null )

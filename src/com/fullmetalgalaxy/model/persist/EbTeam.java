@@ -152,6 +152,21 @@ public class EbTeam extends EbBase
   }
 
 
+  /**
+   * correspond to working weather hen divided by player count
+   * @return number of forecast turn
+   */
+  public int getTideForeCast(EbGamePreview p_game)
+  {
+    float forecast = 0;
+    for( EbRegistration registration : getPlayers( p_game ) )
+    {
+      forecast += registration.getWorkingWeatherHenCount();
+    }
+    forecast /= getPlayerIds().size();
+    return (int)Math.ceil( forecast );
+  }
+
   public Company getCompany()
   {
     return m_company;

@@ -449,6 +449,7 @@ public class AccountServlet extends HttpServlet
       account.setForumAvatarUrl( params.get( "avatarurl" ) );
     }
     account.setAllowMsgFromPlayer( params.get( "AllowMsgFromPlayer" ) != null );
+    account.setHideEmailToPlayer( params.get( "HideEmailToPlayer" ) != null );
     account.setNotificationQty( NotificationQty.valueOf( params.get( "NotificationQty" ) ) );
 
     account.setEmail( params.get( "email" ) );

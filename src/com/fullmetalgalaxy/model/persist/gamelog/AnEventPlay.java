@@ -447,7 +447,14 @@ public class AnEventPlay extends AnEventUser
    */
   public void setToken(EbToken p_token)
   {
-    m_packedToken = p_token.createEbBase();
+    if( p_token != null )
+    {
+      m_packedToken = p_token.createEbBase();
+    }
+    else
+    {
+      m_packedToken = null;
+    }
     m_token = p_token;
   }
 
@@ -456,7 +463,14 @@ public class AnEventPlay extends AnEventUser
    */
   public void setTokenCarrier(EbToken p_tokenCarrier)
   {
-    m_packedTokenCarrier = p_tokenCarrier.createEbBase();
+    if( p_tokenCarrier != null )
+    {
+      m_packedTokenCarrier = p_tokenCarrier.createEbBase();
+    }
+    else
+    {
+      m_packedTokenCarrier = null;
+    }
     m_tokenCarrier = p_tokenCarrier;
   }
 
@@ -465,7 +479,12 @@ public class AnEventPlay extends AnEventUser
    */
   public void setTokenDestroyer1(EbToken p_tokenDestroyer1)
   {
-    m_packedTokenDestroyer1 = p_tokenDestroyer1.createEbBase();
+    if( p_tokenDestroyer1 != null )
+    {
+      m_packedTokenDestroyer1 = p_tokenDestroyer1.createEbBase();
+    } else {
+      m_packedTokenDestroyer1 = null;
+    }
     m_tokenDestroyer1 = p_tokenDestroyer1;
   }
 
@@ -474,7 +493,12 @@ public class AnEventPlay extends AnEventUser
    */
   public void setTokenDestroyer2(EbToken p_tokenDestroyer2)
   {
-    m_packedTokenDestroyer2 = p_tokenDestroyer2.createEbBase();
+    if( p_tokenDestroyer2 != null )
+    {
+      m_packedTokenDestroyer2 = p_tokenDestroyer2.createEbBase();
+    } else {
+      m_packedTokenDestroyer2 = null;
+    }
     m_tokenDestroyer2 = p_tokenDestroyer2;
   }
 
@@ -483,7 +507,12 @@ public class AnEventPlay extends AnEventUser
    */
   public void setNewTokenCarrier(EbToken p_newTokenCarrier)
   {
-    m_packedNewTokenCarrier = p_newTokenCarrier.createEbBase();
+    if( p_newTokenCarrier != null )
+    {
+      m_packedNewTokenCarrier = p_newTokenCarrier.createEbBase();
+    } else {
+      m_packedNewTokenCarrier = null;
+    }
     m_newTokenCarrier = p_newTokenCarrier;
   }
 

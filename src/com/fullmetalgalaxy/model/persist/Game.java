@@ -410,7 +410,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return tokenOwnerColor;
   }
 
-  public EnuColor getTokenTeamColor(EbToken p_token)
+  public EnuColor getTokenTeamColors(EbToken p_token)
   {
     // first determine the token owner color
     EnuColor tokenOwnerColor = p_token.getEnuColor();
@@ -442,7 +442,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
       return new EnuColor( EnuColor.None );
     }
     // first determine the token owner color
-    EnuColor tokenTeamColor = getTokenTeamColor( p_token );
+    EnuColor tokenTeamColor = getTokenTeamColors( p_token );
     EnuColor fireCover = getOpponentFireCover( tokenTeamColor.getValue(), p_token.getPosition() );
     if( p_token.getHexagonSize() == 2 )
     {
@@ -472,7 +472,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     for( int i = 0; i < sectorValues.length; i++ )
     {
       AnBoardPosition neighborPosition = getCoordinateSystem().getNeighbor( tokenPosition, sectorValues[i] );
-      EnuColor tokenTeamColor = getTokenTeamColor( p_token );
+      EnuColor tokenTeamColor = getTokenTeamColors( p_token );
       if( getLand( neighborPosition ) == LandType.Montain )
       {
         EbToken token = getToken( neighborPosition );
@@ -1110,7 +1110,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public boolean isTokenFireActive(EbToken p_token)
   {
-    EnuColor teamColor = getTokenTeamColor( p_token );
+    EnuColor teamColor = getTokenTeamColors( p_token );
     return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret)
         || (teamColor.getValue() == EnuColor.None) || (getOpponentFireCover(
         teamColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
