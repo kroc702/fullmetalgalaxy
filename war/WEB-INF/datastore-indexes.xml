@@ -33,6 +33,12 @@
         <property name="m_creationDate" direction="desc"/>
     </datastore-index>
 
+    <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_setRegistration.m_account.m_pseudo" direction="asc"/>
+        <property name="m_status" direction="asc"/>
+        <property name="m_creationDate" direction="desc"/>
+    </datastore-index>
+    
     <!-- with name only -->
     <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
         <property name="m_configGameTime" direction="asc"/>

@@ -17,7 +17,7 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010, 2011, 2012, 2013 Vincent Legendre
+ *  Copyright 2010 to 2014 Vincent Legendre
  *
  * *********************************************************************/
 
@@ -74,9 +74,9 @@ public class GlobalVars extends GlobalVarBase
       */
       // get best company
       int year = GregorianCalendar.getInstance().get( Calendar.YEAR );
-      if( GregorianCalendar.getInstance().get( Calendar.MONTH ) == 0 )
+      if( GregorianCalendar.getInstance().get( Calendar.MONTH ) <= 1 )
       {
-        year++;
+        year--;
       }
       com.googlecode.objectify.Query<CompanyStatistics> companyList = FmgDataStore.dao()
           .query( CompanyStatistics.class )

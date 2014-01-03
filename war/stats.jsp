@@ -14,10 +14,34 @@
 <h2>Statistiques globals</h2>
 <p>Cette page est amenée a évoluer en fonction des demandes et de mes prioritées...</p>
 
-<h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) %></h3>
+<h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) -1 %></h3>
 <div>
 <%
     com.googlecode.objectify.Query<CompanyStatistics> companyList = FmgDataStore.dao().query(CompanyStatistics.class)
+        .filter( "m_year", GregorianCalendar.getInstance().get( Calendar.YEAR ) -1 )
+        .order("-m_profit");
+    out.println( "<table width='100%'>");
+    for( CompanyStatistics companyStat : companyList )
+    {
+      out.println( "<tr>");
+      out.println( "<td><a href='/oldgameprofile.jsp?corpo="+companyStat.getCompany()+"'>"
+          +"<IMG SRC='/images/avatar/" + companyStat.getCompany()
+              + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td>" );
+      out.println( "<td><b>"+companyStat.getCompany().getFullName()+"</b><br/>");
+      out.println( "Bénéfices: "+companyStat.getProfit()+"<br/>");
+      out.println( "Rentabilité: "+companyStat.getProfitabilityInPercent()+" %<br/>");
+      out.println( "Nb exploitation: "+companyStat.getMiningCount());
+      out.println( "</td>" );
+      out.println( "</tr>");
+    }
+    out.println( "</table>");
+%>
+</div>    
+    
+<h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) %></h3>
+<div>
+<%
+    companyList = FmgDataStore.dao().query(CompanyStatistics.class)
         .filter( "m_year", GregorianCalendar.getInstance().get( Calendar.YEAR ) )
         .order("-m_profit");
     out.println( "<table width='100%'>");
@@ -40,8 +64,8 @@
     
 <h3>Les joueurs</h3>
 <pre>
+Nombre de compte classé : <%= GlobalVars.getActiveAccount() %>
 Nombre d'inscrit : <%= GlobalVars.getAccountCount() %>
-Nombre de compte actif : <%= GlobalVars.getActiveAccount() %>
 <!-- Niveau TS maximum : <%= GlobalVars.getMaxLevel() %>  -->
 </pre>
 
