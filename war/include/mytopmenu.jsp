@@ -11,7 +11,7 @@
 	    	<img style="border:none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
 	    	</a> |
 		  <div id="menuAdmin" class="bloc" style="position: absolute; text-align:left; top:15px; left:-10px; width:150px; z-index:9999999999;">
-			<a target="_blank" href="https://appengine.google.com/dashboard?&app_id=fullmetalgalaxy2">App Engine</a><br/>
+			<a target="_blank" href="https://appengine.google.com/dashboard?&app_id=fmgwar">App Engine</a><br/>
 		    <a target="_blank" href="https://www.google.com/analytics/reporting/?reset=1&id=13711373">Analytics</a><br/>
 			<a target="_blank" href="http://code.google.com/p/fullmetalgalaxy/issues/list">Google code</a><br/>
 			<hr/>
