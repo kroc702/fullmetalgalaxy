@@ -948,7 +948,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
    */
   public Set<EbToken> getAllToken(AnBoardPosition p_position)
   {
-    Set<EbToken> allTokens = getTokenIndexSet().getAllToken( p_position );
+    Set<EbToken> allTokens = getTokenIndexSet().getAllToken(
+        getCoordinateSystem().normalizePosition( p_position ) );
     if( allTokens != null )
     {
       return new HashSet<EbToken>(allTokens);
