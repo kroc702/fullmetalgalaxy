@@ -79,6 +79,11 @@ public class EbEvtLand extends AnEventPlay
     return GameLogType.EvtLand;
   }
 
+  @Override
+  public boolean canBeParallelHidden()
+  {
+    return false;
+  }
 
   @Override
   public AnBoardPosition getSelectedPosition(Game p_game)

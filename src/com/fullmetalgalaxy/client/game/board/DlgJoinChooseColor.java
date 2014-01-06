@@ -38,6 +38,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -128,7 +129,7 @@ public class DlgJoinChooseColor extends DialogBox
     {
       m_companySelection.addItem( company.getFullName(), company.toString() );
     }
-    m_companySelection.setSelectedIndex( 0 );
+    m_companySelection.setSelectedIndex( Random.nextInt( m_companySelection.getItemCount() ) );
     Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
         .getSelectedIndex() ) );
     m_companyPreview.setUrl( "/images/avatar/" + company + ".jpg" );
@@ -151,7 +152,6 @@ public class DlgJoinChooseColor extends DialogBox
     // add color list widget
     // =====================
     Set<EnuColor> freeColors = null;
-    EnuColor firstColor = new EnuColor( EnuColor.None );
     if( GameEngine.model().getGame().getSetRegistration().size() >= GameEngine.model().getGame()
         .getMaxNumberOfPlayer() )
     {
@@ -168,13 +168,9 @@ public class DlgJoinChooseColor extends DialogBox
       if( color.getValue() != EnuColor.None )
       {
         m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
-        if( firstColor.getValue() == EnuColor.None )
-        {
-          firstColor = color;
-        }
       }
     }
-    m_colorSelection.setSelectedIndex( 0 );
+    m_colorSelection.setSelectedIndex( Random.nextInt( m_colorSelection.getItemCount() ) );
     // initialize company icon
     int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
     EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor( colorValue );
@@ -184,7 +180,8 @@ public class DlgJoinChooseColor extends DialogBox
           registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
     }
     // initialize color icon
-    m_colorPreview.setUrl( "/images/board/" + firstColor.toString() + "/preview.jpg" );
+    m_colorPreview.setUrl( "/images/board/" + (new EnuColor( colorValue )).toString()
+        + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override

@@ -96,6 +96,12 @@ public class AnEventPlay extends AnEventUser
     m_packedTokenDestroyer2 = null;
   }
 
+  @Override
+  public boolean canBeParallelHidden()
+  {
+    return true;
+  }
+
   /**
    * @param p_game 
    * @return a board position where action is done or null if not relevant.

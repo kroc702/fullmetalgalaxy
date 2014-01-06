@@ -59,12 +59,12 @@ public class HexTorusCoordinateSystem extends HexCoordinateSystem
   @Override
   public AnBoardPosition normalizePosition(AnBoardPosition p_position)
   {
-    if( m_mapShape.isEWLinked() )
+    if( p_position != null && m_mapShape.isEWLinked() )
     {
       if( p_position.getX() >= m_width ) p_position.setX( p_position.getX() - m_width );
       if( p_position.getX() < 0 ) p_position.setX( p_position.getX() + m_width );
     }
-    if( m_mapShape.isNSLinked() )
+    if( p_position != null && m_mapShape.isNSLinked() )
     {
       if( p_position.getY() >= m_height ) p_position.setY( p_position.getY() - m_height );
       if( p_position.getY() < 0 ) p_position.setY( p_position.getY() + m_height );
