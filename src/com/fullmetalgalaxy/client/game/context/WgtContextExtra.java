@@ -37,8 +37,6 @@ import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.client.widget.WgtView;
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuZoom;
-import com.fullmetalgalaxy.model.GameStatus;
-import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.Sector;
@@ -142,29 +140,28 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     {
       // so, no token is selected: find ship in orbit !
       Game game = model.getGame();
-      if( model.getGame().getGameType() == GameType.Puzzle
-          || game.getCurrentTimeStep() <= game.getEbConfigGameTime()
-              .getDeploymentTimeStep() || game.getStatus() == GameStatus.Open
-          || game.getStatus() == GameStatus.Pause )
+      Set<EbToken> list = GameEngine.model().getGame().getSetToken();
+      boolean isTitleDisplayed = false;
+      for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
       {
-        Set<EbToken> list = GameEngine.model().getGame().getSetToken();
-        boolean isTitleDisplayed = false;
-        for( Iterator<com.fullmetalgalaxy.model.persist.EbToken> it = list.iterator(); it.hasNext(); )
+        EbToken token = (EbToken)it.next();
+
+        if( token.getLocation() == Location.Orbit
+            && GameEngine.model().getGame().getRegistrationByColor( token.getColor() )
+                .haveAccount()
+            && (game.getCurrentTimeStep() <= game.getEbConfigGameTime().getDeploymentTimeStep() || game
+                .getCurrentPlayerIds()
+                .contains(
+                    GameEngine.model().getGame().getRegistrationByColor( token.getColor() ).getId() )) )
         {
-          EbToken token = (EbToken)it.next();
-  
-          if( token.getLocation() == Location.Orbit
-              && GameEngine.model().getGame().getRegistrationByColor( token.getColor() ).haveAccount() )
+          if( !isTitleDisplayed )
           {
-            if( !isTitleDisplayed )
-            {
-              isTitleDisplayed = true;
-              m_lblTitle.setText( MAppBoard.s_messages.inOrbit() );
-            }
-            // this token is in orbit !
-            // and an account is associated with it
-            addToken( token );
+            isTitleDisplayed = true;
+            m_lblTitle.setText( MAppBoard.s_messages.inOrbit() );
           }
+          // this token is in orbit !
+          // and an account is associated with it
+          addToken( token );
         }
       }
     }

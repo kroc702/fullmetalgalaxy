@@ -112,7 +112,13 @@ public class AnEvent extends EbBase implements GameEvent
     return GameLogType.None;
   }
 
-
+  /**
+   * Whether this even can be store in parallel event list local to a team.
+   */
+  public boolean canBeParallelHidden()
+  {
+    return false;
+  }
 
   /**
    * execute this action

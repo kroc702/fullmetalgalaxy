@@ -477,6 +477,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           ((EbEvtCancel)event).execCancel( getGame() );
         }
         else if( event instanceof AnEventUser
+            && event.canBeParallelHidden()
             && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
             && ((AnEventUser)event).getMyRegistration( getGame() ) != null )
         {

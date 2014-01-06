@@ -419,7 +419,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
           
           ((EbEvtCancel)event).execCancel( game );
         }
-        else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
+        else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() )
+            && event.canBeParallelHidden() )
         {
           for( AnEvent myevent : registration.getTeam( game ).getMyEvents() )
           {

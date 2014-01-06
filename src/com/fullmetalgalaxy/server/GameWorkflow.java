@@ -192,7 +192,8 @@ public class GameWorkflow
         // search update according to the last action
         //
 
-        if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand )
+        if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand
+            && p_game.getCurrentTimeStep() == 1 )
         {
           // a player is just landed and game is parallel: next player
           EbEvtPlayerTurn action = new EbEvtPlayerTurn();
@@ -207,12 +208,11 @@ public class GameWorkflow
 
         if( lastEvent.getType() == GameLogType.GameJoin )
         {
-          if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer() )
+          if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer()
+              && !p_game.getEbConfigGameTime().isQuick() )
           {
-            // TODO we may prefer starting game not in live mode only (slow game
-            // only)
-            // if the last player is just connected, automatically launch the
-            // game.
+            // if the last player is just connected (and slow game),
+            // automatically launch the game.
             EbAdminTimePlay action = new EbAdminTimePlay();
             action.setAuto( true );
             action.setLastUpdate( ServerUtil.currentDate() );

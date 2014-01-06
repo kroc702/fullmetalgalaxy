@@ -137,7 +137,16 @@ public class EbGameJoin extends AnEventUser
     {
       registration = createRegistration(p_game);
     }
+    if( registration.isReplacement() && registration.getOriginalAccountId() == getAccount().getId() )
+    {
+      // player replace himself
+      registration.setOriginalAccountId( 0 );
+    }
     registration.setAccount( getAccount() );
+    if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
+    {
+      p_game.getCurrentPlayerIds().add( registration.getId() );
+    }
 
     // update isOpen flag
     p_game.updateOpenPauseStatus();
