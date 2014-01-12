@@ -30,13 +30,6 @@ DecimalFormat df = new DecimalFormat("#.#");
 <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 
 <h2> <%= account.getPseudo() %> </h2>
-<% if( account.isIsforumIdConfirmed() && account.getForumId() != null ) { %>
-<a href="<%=account.getProfileUrl()%>">Ce compte est lié a un compte du forum.</a>
-<% } else if(account.getForumId() != null) { %>
-Un compte similaire existe sur le forum, mais n'est pas lié à FMG.<br/>
-<% } else { %>
-Ce compte FMG n'est pas lié a un compte du forum.<br/>
-<% } %>
 <% if(account.allowMsgFromPlayer() ) { %>
 <a href="<%= account.getEMailUrl() %>">Ecrire un message</a><br/>
 <% } %>

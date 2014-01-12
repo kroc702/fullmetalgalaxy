@@ -202,8 +202,9 @@ public class WgtGameInfo extends Composite implements ClickHandler
           .format( game.estimateEndingDate() ) ) ) );
     }
 
-    if( (game.getAccountCreator() != null &&
-        AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId() )
+    if( (game.getAccountCreator() != null 
+        && AppMain.instance().getMyAccount().getId() == game.getAccountCreator().getId()
+        && game.getStatus() != GameStatus.History )
         || AppMain.instance().iAmAdmin() )
     {
       // display password if present

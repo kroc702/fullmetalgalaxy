@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import jskills.IPlayer;
 import jskills.ITeam;
@@ -55,6 +56,8 @@ import com.fullmetalgalaxy.model.persist.GameStatistics;
 import com.fullmetalgalaxy.model.persist.PlayerGameStatistics;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdminAbort;
+import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePause;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdminTimePlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtChangePlayerOrder;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
@@ -63,8 +66,10 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
-import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
+import com.google.appengine.api.taskqueue.DeferredTask;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Query;
 
@@ -103,7 +108,7 @@ public class GameWorkflow
 
     try
     {
-      if( (nextEvent.getType() == GameLogType.EvtPlayerTurn)
+      if( nextEvent instanceof EbEvtPlayerTurn
           && (p_game.getCurrentTimeStep() == p_game.getEbConfigGameTime().getTotalTimeStep()) )
       {
         // end turn action in the last turn...
@@ -137,7 +142,7 @@ public class GameWorkflow
       log.error( e );
     }
 
-    if( (nextEvent.getType() == GameLogType.AdminTimePause)
+    if( nextEvent instanceof EbAdminTimePause
         && ((p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer())) )
     {
       if( p_game.getCurrentNumberOfRegiteredPlayer() < p_game.getMaxNumberOfPlayer() )
@@ -150,10 +155,15 @@ public class GameWorkflow
         gamePause( p_game );
       }
     }
-    if( (nextEvent.getType() == GameLogType.AdminTimePlay) )
+    if( nextEvent instanceof EbAdminTimePlay )
     {
       // game was paused, but it is now running
       gameRun( p_game );
+    }
+    if( nextEvent instanceof EbAdminAbort )
+    {
+      // game was aborted
+      gameAbort( p_game );
     }
 
     return eventAdded;
@@ -192,7 +202,7 @@ public class GameWorkflow
         // search update according to the last action
         //
 
-        if( p_game.isParallel() && lastEvent != null && lastEvent.getType() == GameLogType.EvtLand
+        if( p_game.isParallel() && lastEvent != null && lastEvent instanceof EbEvtLand
             && p_game.getCurrentTimeStep() == 1 )
         {
           // a player is just landed and game is parallel: next player
@@ -206,7 +216,7 @@ public class GameWorkflow
           lastEvent = action;
         }
 
-        if( lastEvent.getType() == GameLogType.GameJoin )
+        if( lastEvent instanceof EbGameJoin )
         {
           if( p_game.getCurrentNumberOfRegiteredPlayer() == p_game.getMaxNumberOfPlayer()
               && !p_game.getEbConfigGameTime().isQuick() )
@@ -226,7 +236,7 @@ public class GameWorkflow
           }
 
           if( p_game.getCurrentTimeStep() == 1
-              && lastEvent.getType() == GameLogType.AdminTimePlay
+              && lastEvent instanceof EbAdminTimePlay
               && p_game.getFreighter(
                   p_game.getTeamByPlayOrder().get( 0 ).getPlayers( p_game.getPreview() ).get( 0 ) )
                   .getLocation() == Location.Orbit )
@@ -243,7 +253,7 @@ public class GameWorkflow
           }
         }
         if( p_game.getCurrentTimeStep() == 2 && !p_game.isParallel()
-            && p_game.getLastGameLog().getType() == GameLogType.EvtTide )
+            && p_game.getLastGameLog() instanceof EbEvtTide )
         {
           // second turn: everybody should be landed
           EbEvtChangePlayerOrder action = new EbEvtChangePlayerOrder();
@@ -623,7 +633,7 @@ public class GameWorkflow
      * this function update game and accounts statistics
      * @param p_game
      */
-  public static void updateStat4FinishedGame(Game p_game)
+  public static void updateStat4FinishedGame(Game p_game, boolean p_updateCompanyStat)
   {
     if( p_game.getStatus() != GameStatus.History || p_game.getGameType() != GameType.MultiPlayer )
     {
@@ -675,8 +685,9 @@ public class GameWorkflow
         }
         playerStat.setStatistics( p_game, p_game.getRegistrationByIdAccount( account.getId() ) );
         playerStat.setKeyGamePreview( new Key<EbGamePreview>( EbGamePreview.class, p_game.getId() ) );
-        playerStat.setTsUpdate( entry.getValue().getConservativeRating()
-            - account.getCurrentLevel() );
+        playerStat.setTsMeanUpdate( entry.getValue().getMean() - account.getTrueSkillMean() );
+        playerStat.setTsSDUpdate( entry.getValue().getStandardDeviation() - account.getTrueSkillSD() );
+        playerStat.setGameStatus( p_game.getStatus() );
         ds.put( playerStat );
 
         // and save account
@@ -699,26 +710,147 @@ public class GameWorkflow
 
 
     // now update company statistics
-    for( EbTeam team : p_game.getTeams() )
+    if( p_updateCompanyStat )
     {
-      Query<CompanyStatistics> query = FmgDataStore.dao().query( CompanyStatistics.class );
-      query.filter( "m_company", team.getCompany() );
-      query.filter( "m_year", gameEndYear );
-      Key<CompanyStatistics> keyCompanyStat = query.getKey();
-      ds = new FmgDataStore( false );
-      CompanyStatistics companyStat = ds.find( keyCompanyStat );
-      if( companyStat == null )
+      for( EbTeam team : p_game.getTeams() )
       {
-        companyStat = new CompanyStatistics( team.getCompany() );
-        companyStat.setYear( gameEndYear );
+        Query<CompanyStatistics> query = FmgDataStore.dao().query( CompanyStatistics.class );
+        query.filter( "m_company", team.getCompany() );
+        query.filter( "m_year", gameEndYear );
+        Key<CompanyStatistics> keyCompanyStat = query.getKey();
+        ds = new FmgDataStore( false );
+        CompanyStatistics companyStat = ds.find( keyCompanyStat );
+        if( companyStat == null )
+        {
+          companyStat = new CompanyStatistics( team.getCompany() );
+          companyStat.setYear( gameEndYear );
+        }
+        companyStat.addResult( team.estimateWinningScore( p_game ), p_game.getInitialScore() );
+        ds.put( companyStat );
+        ds.close();
       }
-      companyStat.addResult( team.estimateWinningScore( p_game ), p_game.getInitialScore() );
-      ds.put( companyStat );
-      ds.close();
     }
   }
 
 
+
+  private static class RemovePlayerGameStatistics extends LongDBTask<PlayerGameStatistics>
+  {
+    private static final long serialVersionUID = 1L;
+    private Game m_game = null;
+    // this record will be used to keep track of game that we remove stats
+    // the tree map is to keep game id in date order
+    Map<Date, Long> gameId2Recompute = new TreeMap<Date, Long>();
+
+    public RemovePlayerGameStatistics(Game p_game)
+    {
+      m_game = p_game;
+    }
+
+    @Override
+    protected Query<PlayerGameStatistics> getQuery()
+    {
+      Query<PlayerGameStatistics> query = FmgDataStore.dao().query( PlayerGameStatistics.class );
+      query.filter( "m_gameEndDate >=", m_game.getEndDate() );
+      return query;
+    }
+
+    @Override
+    protected void processKey(Key<PlayerGameStatistics> p_key)
+    {
+      PlayerGameStatistics playerStat = FmgDataStore.dao().get( p_key );
+      if( playerStat.getGameStatus() != GameStatus.History )
+      {
+        return;
+      }
+      // set aborted flag on stat that correspond to aborted game
+      if( playerStat.getGameId() == m_game.getId() )
+      {
+        FmgDataStore ds = new FmgDataStore( false );
+        PlayerGameStatistics stat = ds.find( p_key );
+        if( stat != null )
+        {
+          stat.setGameStatus( GameStatus.Aborted );
+          ds.put( stat );
+        }
+        ds.close();
+      }
+      else
+      {
+        gameId2Recompute.put( playerStat.getGameEndDate(), playerStat.getGameId() );
+      }
+      FmgDataStore ds = new FmgDataStore( false );
+      EbAccount account = ds.find( EbAccount.class, playerStat.getAccount().getId() );
+      if( account != null )
+      {
+        account.getFullStats().removeStatistic( playerStat );
+        account.getCurrentStats().removeStatistic( playerStat );
+        account.setTrueSkill( account.getTrueSkillMean() - playerStat.getTsMeanUpdate(),
+            account.getTrueSkillSD() - playerStat.getTsSDUpdate() );
+        ds.put( account );
+      }
+      ds.close();
+    }
+
+    @Override
+    protected void finish()
+    {
+      // then, remove company statistics
+      GregorianCalendar calendar = new GregorianCalendar();
+      calendar.setTime( m_game.getEndDate() );
+      int gameEndYear = calendar.get( Calendar.YEAR );
+      for( EbTeam team : m_game.getTeams() )
+      {
+        Query<CompanyStatistics> queryCS = FmgDataStore.dao().query( CompanyStatistics.class );
+        queryCS.filter( "m_company", team.getCompany() );
+        queryCS.filter( "m_year", gameEndYear );
+        Key<CompanyStatistics> keyCompanyStat = queryCS.getKey();
+        FmgDataStore ds = new FmgDataStore( false );
+        CompanyStatistics companyStat = ds.find( keyCompanyStat );
+        if( companyStat == null )
+        {
+          companyStat = new CompanyStatistics( team.getCompany() );
+          companyStat.setYear( gameEndYear );
+        }
+        companyStat.removeResult( team.estimateWinningScore( m_game ), m_game.getInitialScore() );
+        ds.put( companyStat );
+        ds.close();
+      }
+
+      // finally recompute stats for valid games
+      for( Map.Entry<Date, Long> entry : gameId2Recompute.entrySet() )
+      {
+        QueueFactory.getDefaultQueue().add(
+            TaskOptions.Builder.withPayload( new UpdateStat4FinishedGame( entry.getValue(), false ) ) );
+      }
+    }
+
+  }
+
+
+  private static class UpdateStat4FinishedGame implements DeferredTask
+  {
+    private static final long serialVersionUID = 1L;
+    private long m_gameId = 0;
+    boolean m_updateCompanyStat = true;
+
+    public UpdateStat4FinishedGame(long p_gameId, boolean p_updateCompanyStat)
+    {
+      m_gameId = p_gameId;
+      m_updateCompanyStat = p_updateCompanyStat;
+    }
+    @Override
+    public void run()
+    {
+      Game game = FmgDataStore.dao().find( Game.class, m_gameId );
+      if( game != null )
+      {
+        updateStat4FinishedGame( game, m_updateCompanyStat );
+      }
+
+    }
+
+  }
 
 
   /**
@@ -737,7 +869,7 @@ public class GameWorkflow
       GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
       GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
 
-      updateStat4FinishedGame( p_game );
+      updateStat4FinishedGame( p_game, true );
     }
     else if( p_game.getGameType() == GameType.Initiation )
     {
@@ -751,10 +883,17 @@ public class GameWorkflow
    */
   public static void gameAbort(Game p_game)
   {
-    if( p_game.getStatus() == GameStatus.History )
+    if( p_game.getStatus() == GameStatus.History && p_game.getGameType() == GameType.MultiPlayer )
     {
-      // TODO for game that are History, we have to remove stat
+      // for game that are History, we have to remove stat
       GlobalVars.incrementFGameNbConfigGameTime( p_game.getConfigGameTime(), -1 );
+      GlobalVars.incrementFGameNbOfHexagon( -1 * p_game.getNumberOfHexagon() );
+      GlobalVars.incrementFGameNbPlayer( -1 * p_game.getSetRegistration().size() );
+
+      // almost the reverse of updateStat4FinishedGame.
+      // must be call for game that will be cancelled after finished
+      QueueFactory.getDefaultQueue().add(
+          TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game ) ) );
     }
     else if( p_game.getStatus() == GameStatus.Running )
     {

@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -113,9 +114,18 @@ public class AccountStatistics implements Serializable, IsSerializable
     }
   }
   
+  /**
+   * Do nothing if game isn't multiplayer or not status history
+   * 
+   * add statistic of this player about a single game to his overall statistics.
+   * Note that details are lost as AccountStatistics only hold averages.
+   * @param p_statistic
+   */
   public void addStatistic(PlayerGameStatistics p_statistic)
   {
-    if( p_statistic.getGameType() != GameType.MultiPlayer ) return;
+    if( p_statistic.getGameType() != GameType.MultiPlayer
+        || p_statistic.getGameStatus() != GameStatus.History )
+      return;
 
     if( m_firstGameDate == null || m_firstGameDate.after( p_statistic.getGameEndDate() ) )
     {
@@ -177,8 +187,62 @@ public class AccountStatistics implements Serializable, IsSerializable
     }
   }
   
+  /**
+   * almost the reverse operation of "addStatistic".
+   * Note that some informations like date and opponents players can't be removed 
+   * @param p_statistic
+   */
+  public void removeStatistic(PlayerGameStatistics p_statistic)
+  {
+    if( p_statistic.getGameType() != GameType.MultiPlayer )
+      return;
+
+    m_averageProfitability *= m_finshedGameCount;
+    m_averageNormalizedRank *= m_finshedGameCount;
+
+    m_score -= p_statistic.getScore();
+    m_averageProfitability -= p_statistic.getProfitability();
+    m_averageNormalizedRank -= p_statistic.getNormalizedRank();
+    if( p_statistic.getConfigGameTime() == ConfigGameTime.Standard
+        && p_statistic.getReplacement() == null )
+    {
+      m_averageReactivityInSec *= m_finshedGameCount;
+      m_averageReactivityInSec -= p_statistic.getAverageReactivityInSec();
+    }
+    m_oreLoad -= p_statistic.getOreLoad();
+    m_construction -= p_statistic.getConstruction();
+    m_destruction -= p_statistic.getDestruction();
+    m_freighterCapture -= p_statistic.getFreighterCapture();
+    m_unitsCapture -= p_statistic.getUnitsCapture();
+    m_finshedGameCount--;
+    if( p_statistic.isWinner() )
+      m_victoryCount--;
+    if( p_statistic.isLooser() )
+      m_losedCount--;
+
+    if( m_finshedGameCount > 0 )
+    {
+      m_averageProfitability /= m_finshedGameCount;
+      m_averageNormalizedRank /= m_finshedGameCount;
+      if( p_statistic.getConfigGameTime() == ConfigGameTime.Standard
+          && p_statistic.getReplacement() == null )
+      {
+        m_averageReactivityInSec /= m_finshedGameCount;
+      }
+    }
+
+    // is this account included or excluded from ranking ?
+    if( m_opponentPlayerCount > 3 && m_finshedGameCount > 2 )
+    {
+      m_includedInRanking = true;
+    }
+    else
+    {
+      m_includedInRanking = false;
+    }
+  }
   
-  
+
   
   /**
    * proposed by ludomaniak.
