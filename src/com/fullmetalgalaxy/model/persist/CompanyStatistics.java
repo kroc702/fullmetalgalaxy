@@ -80,6 +80,15 @@ public class CompanyStatistics extends EbBase
     m_profit += p_score;
   }
 
+  public void removeResult(int p_score, int p_investement)
+  {
+    p_score *= -1;
+    m_profitability = ((m_profitability * m_miningCount) + ((float)p_score / p_investement));
+    m_miningCount--;
+    m_profitability /= m_miningCount;
+    m_profit += p_score;
+  }
+
   public int getProfitabilityInPercent()
   {
     return Math.round( getProfitability() * 100 );

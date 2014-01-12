@@ -53,9 +53,19 @@ for( PlayerGameStatistics game : gameList )
   out.print( "<td><a href=\"/game.jsp?id=" + game.getKeyGamePreview().getId()
       + "\"><big>" + game.getGameName()
       + "</big></a><br/>"
-      + dateFormat.format( game.getGameEndDate() ) + "</td>" );
-
+      + dateFormat.format( game.getGameEndDate() ) );
+  if( game.getGameStatus() != GameStatus.History )
+  {
+    out.println("<br/>Annulée" );
+  }
+  out.println( "</td>" );
+  
   out.print( "<td><pre>");
+  
+  if( request.getParameter( "corpo" ) != null )
+  {
+    out.println("Joueur: "+game.getAccount().getPseudo() );
+  }
   
   if( game.isWasBanned() )
   {

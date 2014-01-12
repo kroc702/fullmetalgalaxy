@@ -33,6 +33,7 @@ import javax.persistence.Transient;
 
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
@@ -48,6 +49,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.GameEvent;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.AlsoLoad;
 import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Parent;
 import com.googlecode.objectify.annotation.Unindexed;
@@ -82,6 +84,9 @@ public class PlayerGameStatistics extends EbBase
    * Investment for the whole team. */
   private int m_investment = 0;
   private GameType m_gameType = GameType.Initiation;
+  /** Although this status is likely to be history (ie game is finished) */
+  private GameStatus m_gameStatus = GameStatus.History;
+
   private ConfigGameTime m_gameConfigTime = ConfigGameTime.Standard;
   
   @Embedded
@@ -137,7 +142,10 @@ public class PlayerGameStatistics extends EbBase
   /** if true, player was banned from this game */
   private boolean m_wasBanned = false;
   /** indication on true skill variation with this game */
-  private double m_tsUpdate = 0;
+  @AlsoLoad("m_tsUpdate")
+  private double m_tsMeanUpdate = 0;
+  private double m_tsSDUpdate = 0;
+
   
   /**
    * used for serialization policy
@@ -173,7 +181,13 @@ public class PlayerGameStatistics extends EbBase
     m_playerTurnCount = 0;
     m_replacement = null;
     m_wasBanned = false;
-    m_tsUpdate = 0;
+    m_tsMeanUpdate = 0;
+    m_tsSDUpdate = 0;
+  }
+
+  public long getGameId()
+  {
+    return m_keyGamePreview.getId();
   }
 
   /**
@@ -357,12 +371,23 @@ public class PlayerGameStatistics extends EbBase
   }
   
   /**
+   * 
+   * @return the conservative true skill update (ie Mean - 3 * SD)
+   */
+  public double getTsUpdate()
+  {
+    return getTsMeanUpdate() - 3 * getTsSDUpdate();
+  }
+
+
+
+  /**
    * 1 for winner and 0 for looser.
    * @return [1;0] that represent player rank regardless the number of players.
    */
   public float getNormalizedRank()
   {
-    return (getGameTeamCount() - getRank()) / (getGameTeamCount() -1);
+    return (getGameTeamCount() - getRank()) * 1f / (getGameTeamCount() - 1);
   }
 
   /**
@@ -552,14 +577,24 @@ public class PlayerGameStatistics extends EbBase
     return m_gameConfigTime;
   }
 
-  public double getTsUpdate()
+  public double getTsMeanUpdate()
   {
-    return m_tsUpdate;
+    return m_tsMeanUpdate;
   }
 
-  public void setTsUpdate(double p_tsUpdate)
+  public void setTsMeanUpdate(double p_tsMeanUpdate)
   {
-    m_tsUpdate = p_tsUpdate;
+    m_tsMeanUpdate = p_tsMeanUpdate;
+  }
+
+  public double getTsSDUpdate()
+  {
+    return m_tsSDUpdate;
+  }
+
+  public void setTsSDUpdate(double p_tsSDUpdate)
+  {
+    m_tsSDUpdate = p_tsSDUpdate;
   }
 
   public int getMyTeamSize()
@@ -572,5 +607,17 @@ public class PlayerGameStatistics extends EbBase
     return m_playerTurnCount;
   }
 
+  public GameStatus getGameStatus()
+  {
+    if( m_gameStatus == null )
+    {
+      m_gameStatus = GameStatus.History;
+    }
+    return m_gameStatus;
+  }
 
+  public void setGameStatus(GameStatus p_gameStatus)
+  {
+    m_gameStatus = p_gameStatus;
+  }
 }

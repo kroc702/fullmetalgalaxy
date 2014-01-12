@@ -21,7 +21,12 @@ try
 {
 }
 
-String title = "Joueurs";
+String otherParams = "";
+String title = "Joueurs classés dans les 18 derniers mois";
+if( request.getParameter( "all" ) != null ) {
+  title = "Tous les joueurs";
+  otherParams += "&all";
+}
 String orderby = request.getParameter( "orderby" );
 if( orderby == null )
 {
@@ -32,8 +37,6 @@ if( orderby.equals("-m_lastConnexion") )
   title = "Les derniers joueurs connectés";
 }
 
-out.println( "<h2>"+title+"</h2>" );
-
 Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
 if( request.getParameter( "all" ) == null ) {
   accountQuery.filter( "m_currentStats.m_includedInRanking", true );
@@ -42,18 +45,22 @@ accountQuery.order(orderby);
 DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId(request,response) ).dateFormat() );
 DecimalFormat df = new DecimalFormat("#.#");
 
+out.println( "<h2>"+title+"</h2>" );
+if( request.getParameter( "all" ) != null ) {
+  out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"'>Joueurs classés dans les 18 derniers mois</a> <br/><br/>" );
+} else {
+  out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"&all'>Tous les joueurs</a> <br/><br/>" );
+}
 out.println("<table width='100%'>");
 out.println("<tr><td>Avatar</td>" );
 out.println("<td><a href='"+ request.getRequestURL() +"?orderby=m_pseudo&all'>Pseudo</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageNormalizedRank'>Niveau</a></td>");
-out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount'>partie</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability'>Rentabilité</a></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageNormalizedRank"+otherParams+"'>Niveau</a></td>");
+out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount"+otherParams+"'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount"+otherParams+"'>partie</a></td>");
+out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score"+otherParams+"'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability"+otherParams+"'>Rentabilité</a></td>");
 out.println("<td></td>");
 out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion&all'>Dernière connexion</a></td><td></td>");
 out.println("<td></td>");
-if( request.getParameter( "ts" ) != null ) {
-  out.println("<td><a href='"+request.getRequestURL()+"?orderby=-m_trueSkillLevel&ts'>TS</a></td>");
-}
+out.println("<td><a href='"+request.getRequestURL()+"?orderby=-m_trueSkillLevel&ts"+otherParams+"'>TS</a></td>");
 out.println("</tr>");
 
 for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
@@ -91,9 +98,7 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
     out.println("<td></td>" );
   }
   // level TS
-  if( request.getParameter( "ts" ) != null ) {
-    out.println("<td>"+df.format( account.getCurrentLevel() )+"</td>" );
-  }
+  out.println("<td>"+df.format( account.getCurrentLevel() )+"</td>" );
   out.println("</tr>");
 }
 out.println("</table>");
@@ -105,7 +110,7 @@ out.println("</table>");
 		int accountListCount = GlobalVars.getAccountCount();
 		while(accountListCount > 0)
 		{
-		  out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"&offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
+		  out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+otherParams+"&offset="+(p*COUNT_PER_PAGE)+"'>"+(p+1)+"</a> " );
 		  accountListCount -= COUNT_PER_PAGE;
 		  p++;
 		}

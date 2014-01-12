@@ -168,7 +168,7 @@ public class RecomputeStats
         m_nbOfHexagon += game.getNumberOfHexagon();
         m_nbPlayer += game.getSetRegistration().size();
       }
-      GameWorkflow.updateStat4FinishedGame( game );
+      GameWorkflow.updateStat4FinishedGame( game, true );
     }
 
     @Override

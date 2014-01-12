@@ -47,25 +47,14 @@ if(account == null) {
 	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
 	<fmg:resource key="account_canusegoogleaccount"/></a>
 <%} else if(account.isIsforumIdConfirmed() && account.getForumId() != null){ %>
-	<img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
+  <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
 	Voir mon profil public sur: 
 	<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
 	ou sur le 
 	<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
-<%} else if( account.getForumId() != null ){ 
-		if( account.getForumKey() == null ) {%>
-	Un message privé vous sera envoyé prochainement pour lier les comptes Forum et FMG<br/>
-		<%} else {%>
-	Un message privé vous a été envoyé pour lier les comptes Forum et FMG<br/>
-		<% } %>	
-	Si ce n'est pas le cas, merci de contacter l'administrateur.<br/>
-	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
 <%} else {%>
-	<a href="http://fullmetalplanete.forum2jeux.com/register">
-	<img src="/images/icons/canceled32.png" border=0 />
-	Nous vous conseillons de créer un compte sur le forum
-	pour avoir un avatar et quelques autres options.</a><br/>
+  <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
 <%} %>
 
