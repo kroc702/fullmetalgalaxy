@@ -742,9 +742,9 @@ public class GameWorkflow
     // the tree map is to keep game id in date order
     Map<Date, Long> gameId2Recompute = new TreeMap<Date, Long>();
 
-    public RemovePlayerGameStatistics(Game p_game)
+    public RemovePlayerGameStatistics(long p_gameId)
     {
-      m_game = p_game;
+      m_game = FmgDataStore.dao().get( Game.class, p_gameId );
     }
 
     @Override
@@ -893,7 +893,7 @@ public class GameWorkflow
       // almost the reverse of updateStat4FinishedGame.
       // must be call for game that will be cancelled after finished
       QueueFactory.getDefaultQueue().add(
-          TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game ) ) );
+          TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game.getId() ) ) );
     }
     else if( p_game.getStatus() == GameStatus.Running )
     {

@@ -59,6 +59,7 @@ public class GameNotification
   public static boolean sendMail(Game p_game, ModelFmpUpdate p_update)
   {
     boolean mailSended = false;
+    int evtTimeStepCount = 0;
     for( AnEvent action : p_update.getGameEvents() )
     {
       if( ((action instanceof EbAdminTimePlay) || (action instanceof EbEvtPlayerTurn))
@@ -106,6 +107,16 @@ public class GameNotification
             mailSended = true;
           }
         }
+        // it hard to be sure we send only one time this message...
+        // it is the reason to count time step.
+        if( p_game.isParallel()
+            && !p_game.getEbConfigGameTime().isQuick()
+            && p_game.getEbConfigGameTime().getTakeOffTurns().get( evtTimeStepCount ) == p_game.getCurrentTimeStep() )
+        {
+          send2CurrentPlayers( new FmgMessage( "paralleleCanTakeOff", p_game ), p_game, NotificationQty.Std, true );
+          mailSended = true;
+        }
+        evtTimeStepCount++;
       }
 
       if( action instanceof EbEvtControlFreighter )

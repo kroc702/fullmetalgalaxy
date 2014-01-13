@@ -1,0 +1,8 @@
+{game_name} - Notification de tour de jeux
+Bonjour {pseudo},
+Une fenêtre de décollage est ouverte sur la partie {game_name} {game_url}
+Vous avez 29h pour choisir de décoller et terminer la partie,
+ou continuer jusqu'à la prochaine fenêtre de décollage.
+
+Cordialement
+Full Metal Galaxy
