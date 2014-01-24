@@ -155,6 +155,13 @@ public class EbEvtControl extends AnEventPlay
           + getTokenTarget(p_game) );
     }
 
+    // check that two destroyer are different
+    if( getTokenDestroyer1( p_game ).getId() == getTokenDestroyer2( p_game ).getId() )
+    {
+      // no i18n as unusual
+      throw new RpcFmpException( "the two destroyer must be different" );
+    }
+
     // check that target isn't freighter
     if( getTokenTarget( p_game ).getType() == TokenType.Freighter
         || getTokenTarget( p_game ).getType() == TokenType.Turret )
