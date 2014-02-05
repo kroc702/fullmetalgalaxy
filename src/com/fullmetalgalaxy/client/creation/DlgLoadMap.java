@@ -160,6 +160,13 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
     m_maps.put( image, "/puzzles/madhya/model.bin" );
     m_panel.add( image );
 
+    // add TF22 map
+    image = new Image( "/puzzles/tf22/icon.jpg" );
+    // image.setPixelSize( 96, 64 );
+    image.addClickHandler( this );
+    m_maps.put( image, "/puzzles/tf22/model.bin" );
+    m_panel.add( image );
+
     
     m_panel.add( new HTML("ou ID de la partie:<br/>") );
     m_panel.add( m_txtCustom );

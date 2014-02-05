@@ -737,21 +737,24 @@ public class GameWorkflow
   private static class RemovePlayerGameStatistics extends LongDBTask<PlayerGameStatistics>
   {
     private static final long serialVersionUID = 1L;
-    private Game m_game = null;
+    private Date m_gameEndDate = null;
+    private long m_gameId = 0;
+
     // this record will be used to keep track of game that we remove stats
     // the tree map is to keep game id in date order
     Map<Date, Long> gameId2Recompute = new TreeMap<Date, Long>();
 
-    public RemovePlayerGameStatistics(long p_gameId)
+    public RemovePlayerGameStatistics(long p_gameId, Date p_gameEndDate)
     {
-      m_game = FmgDataStore.dao().get( Game.class, p_gameId );
+      m_gameId = p_gameId;
+      m_gameEndDate = p_gameEndDate;
     }
 
     @Override
     protected Query<PlayerGameStatistics> getQuery()
     {
       Query<PlayerGameStatistics> query = FmgDataStore.dao().query( PlayerGameStatistics.class );
-      query.filter( "m_gameEndDate >=", m_game.getEndDate() );
+      query.filter( "m_gameEndDate >=", m_gameEndDate );
       return query;
     }
 
@@ -764,7 +767,7 @@ public class GameWorkflow
         return;
       }
       // set aborted flag on stat that correspond to aborted game
-      if( playerStat.getGameId() == m_game.getId() )
+      if( playerStat.getGameId() == m_gameId )
       {
         FmgDataStore ds = new FmgDataStore( false );
         PlayerGameStatistics stat = ds.find( p_key );
@@ -795,11 +798,12 @@ public class GameWorkflow
     @Override
     protected void finish()
     {
+      Game game = FmgDataStore.dao().get( Game.class, m_gameId );
       // then, remove company statistics
       GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime( m_game.getEndDate() );
+      calendar.setTime( m_gameEndDate );
       int gameEndYear = calendar.get( Calendar.YEAR );
-      for( EbTeam team : m_game.getTeams() )
+      for( EbTeam team : game.getTeams() )
       {
         Query<CompanyStatistics> queryCS = FmgDataStore.dao().query( CompanyStatistics.class );
         queryCS.filter( "m_company", team.getCompany() );
@@ -812,7 +816,7 @@ public class GameWorkflow
           companyStat = new CompanyStatistics( team.getCompany() );
           companyStat.setYear( gameEndYear );
         }
-        companyStat.removeResult( team.estimateWinningScore( m_game ), m_game.getInitialScore() );
+        companyStat.removeResult( team.estimateWinningScore( game ), game.getInitialScore() );
         ds.put( companyStat );
         ds.close();
       }
@@ -893,7 +897,8 @@ public class GameWorkflow
       // almost the reverse of updateStat4FinishedGame.
       // must be call for game that will be cancelled after finished
       QueueFactory.getDefaultQueue().add(
-          TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game.getId() ) ) );
+          TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game.getId(), p_game
+              .getEndDate() ) ) );
     }
     else if( p_game.getStatus() == GameStatus.Running )
     {

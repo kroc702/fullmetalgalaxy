@@ -73,6 +73,7 @@ import com.google.gwt.i18n.client.Messages.DefaultMessage;
 public class GWTi18nServer
 {
   public final static Map<String, Object> cache = new HashMap<String, Object>();
+  private final static FmpLogger log = FmpLogger.getLogger( GWTi18nServer.class.getName() );
 
   public static <T> T create(Class<T> itf) throws ClassNotFoundException, IOException
   {
@@ -138,22 +139,40 @@ public class GWTi18nServer
     private InputStream load(String s)
     {
       InputStream in = null;
-      ClassLoader cl;
-      cl = Thread.currentThread().getContextClassLoader();
+      ClassLoader cl = null;
+      try
+      {
+        cl = Thread.currentThread().getContextClassLoader();
+      } catch( Exception e )
+      {
+        log.warning( e.getMessage() );
+      }
       if( cl != null )
       {
         in = cl.getResourceAsStream( s );
       }
       if( in == null )
       {
-        cl = getClass().getClassLoader();
+        try
+        {
+          cl = getClass().getClassLoader();
+        } catch( Exception e )
+        {
+          log.warning( e.getMessage() );
+        }
         if( cl != null )
         {
-          in = getClass().getClassLoader().getResourceAsStream( s );
+          in = cl.getResourceAsStream( s );
         }
         if( in == null )
         {
-          cl = ClassLoader.getSystemClassLoader();
+          try
+          {
+            cl = ClassLoader.getSystemClassLoader();
+          } catch( Exception e )
+          {
+            log.warning( e.getMessage() );
+          }
           if( cl != null )
           {
             in = cl.getResourceAsStream( s );
