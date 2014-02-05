@@ -28,7 +28,9 @@ import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
 import com.fullmetalgalaxy.model.ressources.Misc;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.GWTi18nServer;
+import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -39,6 +41,8 @@ import com.google.gwt.core.client.GWT;
  */
 public class SharedI18n
 {
+  private final static FmpLogger log = FmpLogger.getLogger( SharedI18n.class.getName() );
+  
   public static MessagesRpcException getMessagesError(long p_accountId)
   {
     if( GWT.isClient() )
@@ -53,6 +57,7 @@ public class SharedI18n
       {
         return GWTi18nServer.create( MessagesRpcException.class, getLocale(p_accountId) );
       }catch (Exception e) {
+        log.error( e );
       }
     }
     return null;
@@ -72,6 +77,7 @@ public class SharedI18n
       {
         return GWTi18nServer.create( MessagesRpc.class, getLocale(p_accountId) );
       }catch (Exception e) {
+        log.error( e );
       }
     }
     return null;
@@ -91,6 +97,7 @@ public class SharedI18n
       {
         return GWTi18nServer.create( Misc.class, getLocale(p_accountId) );
       }catch (Exception e) {
+        log.error( e );
       }
     }
     return null;
