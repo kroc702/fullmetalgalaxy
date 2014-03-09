@@ -75,7 +75,7 @@ public class MAppStatusBar extends GuiEntryPoint implements ModelUpdateEvent.Han
       for( EbRegistration registration : team
           .getPlayers( GameEngine.model().getGame().getPreview() ) )
       {
-        if( registration.getColor() != EnuColor.None )
+        if( registration != null && registration.getColor() != EnuColor.None )
         {
           m_panel.add( new WgtPlayerInfo( registration ) );
         }
