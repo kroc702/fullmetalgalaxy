@@ -24,6 +24,7 @@
   <set-property-fallback name="locale" value="en"/> 
 
   <!-- Specify the client translatable source               -->
+  <super-source path="gwt" />
   <source path="client"/> 
   <source path="model"/>
 

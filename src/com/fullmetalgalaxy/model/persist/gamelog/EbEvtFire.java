@@ -235,15 +235,18 @@ public class EbEvtFire extends AnEventPlay
         execFireDisabling( p_game, position );
       }
     }
-    EbToken pontoon = p_game.getToken( position, TokenType.Pontoon );
-    if( pontoon != null )
+    EbToken pontoon = p_game.getToken( position );
+    if( pontoon != null && pontoon.getType() != TokenType.Freighter )
     {
-      // these is still a pontoon here, remove it from board
+      // these is still a token here, remove it from board
       m_TokenIds = new ArrayList<Long>();
       m_TokenIds.add( pontoon.getId() );
       p_game.moveToken( pontoon, Location.Graveyard );
       pontoon.incVersion();
-
+    }
+    if( pontoon != null && pontoon.getType() == TokenType.Pontoon )
+    {
+      // for pontoon only:
       // check that other pontoon are linked to ground and remove all theses
       for( Sector sector : Sector.values() )
       {

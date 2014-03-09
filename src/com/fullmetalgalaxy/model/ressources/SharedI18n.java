@@ -23,50 +23,98 @@
 
 package com.fullmetalgalaxy.model.ressources;
 
+import com.fullmetalgalaxy.model.ressources.MessagesRpc;
+import com.fullmetalgalaxy.model.ressources.MessagesRpcException;
+import com.fullmetalgalaxy.model.ressources.Misc;
+import com.fullmetalgalaxy.server.EbAccount;
+import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.FmpLogger;
+import com.fullmetalgalaxy.server.GWTi18nServer;
+import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.google.gwt.core.client.GWT;
 
 /**
- * This version is only used by client side.
+ * This version is used by server side and client in debug mode.
  * 
  * @author Vincent
  *
  */
 public class SharedI18n
 {
-  private static MessagesRpcException s_msgError = null;
-  private static MessagesRpc s_msg = null;
-  private static Misc s_misc = null;
-
-  /**
-   * account id is used to decide which language to chose on server side (unused on client side)
-   * @param p_accountId id of the account that should receive this message.
-   * @return
-   */
+  private final static FmpLogger log = FmpLogger.getLogger( SharedI18n.class.getName() );
+  
   public static MessagesRpcException getMessagesError(long p_accountId)
   {
-    if( s_msgError == null )
+    if( GWT.isClient() )
     {
-      s_msgError = GWT.create( MessagesRpcException.class );
+      // this is for debug only.
+      // in production, the other class is compiled by gwt
+      return GWT.create( MessagesRpcException.class );
     }
-    return s_msgError;
+    else
+    {
+      try
+      {
+        return GWTi18nServer.create( MessagesRpcException.class, getLocale(p_accountId) );
+      }catch (Exception e) {
+        log.error( e );
+      }
+    }
+    return null;
   }
-
+  
   public static MessagesRpc getMessages(long p_accountId)
   {
-    if( s_msg == null )
+    if( GWT.isClient() )
     {
-      s_msg = GWT.create( MessagesRpc.class );
+      // this is for debug only.
+      // in production, the other class is compiled by gwt
+      return GWT.create( MessagesRpc.class );
     }
-    return s_msg;
+    else
+    {
+      try
+      {
+        return GWTi18nServer.create( MessagesRpc.class, getLocale(p_accountId) );
+      }catch (Exception e) {
+        log.error( e );
+      }
+    }
+    return null;
   }
-
+  
   public static Misc getMisc(long p_accountId)
   {
-    if( s_misc == null )
+    if( GWT.isClient() )
     {
-      s_misc = GWT.create( Misc.class );
+      // this is for debug only.
+      // in production, the other class is compiled by gwt
+      return GWT.create( Misc.class );
     }
-    return s_misc;
+    else
+    {
+      try
+      {
+        return GWTi18nServer.create( Misc.class, getLocale(p_accountId) );
+      }catch (Exception e) {
+        log.error( e );
+      }
+    }
+    return null;
   }
-
+  
+  private static String getLocale(long p_accountId)
+  {
+    EbAccount account = null;
+    if(p_accountId != 0)
+    {
+      account = FmgDataStore.dao().find( EbAccount.class, p_accountId );
+    }
+    String locale = null;
+    if( account != null )
+    {
+      locale = account.getLocale().toString();
+    }
+    return locale;
+  }
 }

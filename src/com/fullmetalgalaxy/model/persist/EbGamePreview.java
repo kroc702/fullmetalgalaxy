@@ -185,6 +185,7 @@ public class EbGamePreview extends EbBase
     /* do something after load */
     // This is a workarround because we can't store an @Embedded collection with
     // a null field
+    getSetRegistration().remove( null );
     for( EbRegistration registration : getSetRegistration() )
     {
       if( registration.getAccount() != null && registration.getAccount().isTrancient() )

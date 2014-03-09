@@ -22,10 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.google.gwt.http.client.URL;
 
 /**
  * Method collection used in shared packaged but have different implementation 
@@ -75,17 +73,9 @@ public class SharedMethods
     {
       return null;
     }
-    try
-    {
-      decodedURLComponent = URLEncoder.encode( decodedURLComponent, "UTF-8" );
-      decodedURLComponent = decodedURLComponent.replace( "+", "%20" );
-    } catch( UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-    }
-    return decodedURLComponent;
+    return URL.encodePathSegment( decodedURLComponent );
   }
-  
+
   /**
    * on server, same as original method (ie System.currentTimeMillis())
    * on client, this method return current time as seen by server ! (ie it remove an offset given at page loading) 
@@ -93,7 +83,7 @@ public class SharedMethods
    */
   public static long currentTimeMillis()
   {
-    return System.currentTimeMillis();
+    return ClientUtil.serverTimeMillis();
   }
-  
+
 }
