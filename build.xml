@@ -49,19 +49,15 @@ compilation file for Full Metal Galaxy
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac executable="${javahome}/bin/javac" srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes">
-			<exclude name="**/override/**"/>
-			<exclude name="**/client/**"/>
-		</javac>
-		<delete file="war/WEB-INF/classes/com/fullmetalgalaxy/model/ressources/SharedI18n.class" />
-		<delete file="war/WEB-INF/classes/com/fullmetalgalaxy/model/SharedMethods.class" />
-		<javac executable="${javahome}/bin/javac" srcdir="src/com/fullmetalgalaxy/server/override" destdir="war/WEB-INF/classes" classpathref="classpath" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes">
+		<javac executable="${javahome}/bin/javac" srcdir="src" destdir="war/WEB-INF/classes" classpathref="classpath" includeantruntime="false" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes">
+      <exclude name="**/client/**"/>
+      <exclude name="**/gwt/**"/>
 		</javac>
 	</target>
 
 	<target name="compiltests" depends="compilserver" description="Compiles JUnit tests.">
 		<mkdir dir="war/WEB-INF/classes" />
-		<javac executable="${javahome}/bin/javac" srcdir="tests" destdir="war/WEB-INF/classes" classpathref="classpath.tests" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes"/>
+		<javac executable="${javahome}/bin/javac" srcdir="tests" destdir="war/WEB-INF/classes" classpathref="classpath.tests" includeantruntime="false" debug="on" debuglevel="lines,vars,source" encoding="UTF-8" fork="yes"/>
 	</target>
 
 	<target name="compilclient" depends="">
