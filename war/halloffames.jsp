@@ -23,14 +23,19 @@ try
 
 String otherParams = "";
 String title = "Joueurs classés dans les 18 derniers mois";
+boolean allPlayers = false;
 if( request.getParameter( "all" ) != null ) {
   title = "Tous les joueurs";
   otherParams += "&all";
+  allPlayers = true;
 }
 String orderby = request.getParameter( "orderby" );
 if( orderby == null )
 {
-  orderby = "-m_currentStats.m_averageNormalizedRank";
+  if( allPlayers )
+    orderby = "-m_fullStats.m_averageNormalizedRank";
+  else
+    orderby = "-m_currentStats.m_averageNormalizedRank";
 }
 if( orderby.equals("-m_lastConnexion") )
 {
@@ -38,7 +43,7 @@ if( orderby.equals("-m_lastConnexion") )
 }
 
 Query<EbAccount> accountQuery = FmgDataStore.dao().query(EbAccount.class);
-if( request.getParameter( "all" ) == null ) {
+if( !allPlayers ) {
   accountQuery.filter( "m_currentStats.m_includedInRanking", true );
 }
 accountQuery.order(orderby);
@@ -46,7 +51,7 @@ DateFormat dateFormat = new SimpleDateFormat( SharedI18n.getMisc( Auth.getUserId
 DecimalFormat df = new DecimalFormat("#.#");
 
 out.println( "<h2>"+title+"</h2>" );
-if( request.getParameter( "all" ) != null ) {
+if( allPlayers ) {
   out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"'>Joueurs classés dans les 18 derniers mois</a> <br/><br/>" );
 } else {
   out.println( "<a href='"+ request.getRequestURL() +"?orderby="+orderby+"&all'>Tous les joueurs</a> <br/><br/>" );
@@ -54,9 +59,15 @@ if( request.getParameter( "all" ) != null ) {
 out.println("<table width='100%'>");
 out.println("<tr><td>Avatar</td>" );
 out.println("<td><a href='"+ request.getRequestURL() +"?orderby=m_pseudo&all'>Pseudo</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageNormalizedRank"+otherParams+"'>Niveau</a></td>");
-out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount"+otherParams+"'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_finshedGameCount"+otherParams+"'>partie</a></td>");
-out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score"+otherParams+"'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability"+otherParams+"'>Rentabilité</a></td>");
+if( allPlayers ) {
+  out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_fullStats.m_averageNormalizedRank"+otherParams+"'>Niveau</a></td>");
+  out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_fullStats.m_victoryCount"+otherParams+"'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_fullStats.m_finshedGameCount"+otherParams+"'>partie</a></td>");
+  out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_fullStats.m_score"+otherParams+"'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_fullStats.m_averageProfitability"+otherParams+"'>Rentabilité</a></td>");
+} else {
+	out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageNormalizedRank"+otherParams+"'>Niveau</a></td>");
+	out.println("<td>Nb <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_victoryCount"+otherParams+"'>victoire</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_finshedGameCount"+otherParams+"'>partie</a></td>");
+	out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_score"+otherParams+"'>Gains</a> / <a href='"+ request.getRequestURL() +"?orderby=-m_currentStats.m_averageProfitability"+otherParams+"'>Rentabilité</a></td>");
+}
 out.println("<td></td>");
 out.println("<td><a href='"+ request.getRequestURL() +"?orderby=-m_lastConnexion&all'>Dernière connexion</a></td><td></td>");
 out.println("<td></td>");
@@ -70,12 +81,21 @@ for( EbAccount account : accountQuery.offset(offset).limit(COUNT_PER_PAGE) )
   out.println("<td><a href='"+ account.getProfileUrl() + "'><img src='" + account.getAvatarUrl() + "' height='40px' /></a></td>");
   // pseudo
   out.println("<td><a href='"+ account.getProfileUrl() + "'>" + account.getPseudo() + "</a></td>");
-  // level
-  out.println("<td><img src='"+account.getGradUrl()+"' border=0> " +account.getCurrentStats().getAverageNormalizedRankInPercent()+"</td>");
-  // game victory / played count
-  out.println("<td>"+account.getCurrentStats().getVictoryCount()+" / "+account.getCurrentStats().getFinshedGameCount()+"</td>");
-  // total score sum
-  out.println("<td>"+account.getCurrentStats().getScore()+" / "+account.getCurrentStats().getAverageProfitabilityInPercent()+"%</td>");
+  if( allPlayers ) {
+    // level
+    out.println("<td><img src='"+account.getGradUrl()+"' border=0> " +account.getFullStats().getAverageNormalizedRankInPercent()+"</td>");
+    // game victory / played count
+    out.println("<td>"+account.getFullStats().getVictoryCount()+" / "+account.getFullStats().getFinshedGameCount()+"</td>");
+    // total score sum
+    out.println("<td>"+account.getFullStats().getScore()+" / "+account.getFullStats().getAverageProfitabilityInPercent()+"%</td>");
+  } else {
+	  // level
+	  out.println("<td><img src='"+account.getGradUrl()+"' border=0> " +account.getCurrentStats().getAverageNormalizedRankInPercent()+"</td>");
+	  // game victory / played count
+	  out.println("<td>"+account.getCurrentStats().getVictoryCount()+" / "+account.getCurrentStats().getFinshedGameCount()+"</td>");
+	  // total score sum
+	  out.println("<td>"+account.getCurrentStats().getScore()+" / "+account.getCurrentStats().getAverageProfitabilityInPercent()+"%</td>");
+  }
   // fairplay
   out.println("<td>");
   if( account.getFairplay() > 0 )
