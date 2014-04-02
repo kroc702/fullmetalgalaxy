@@ -25,6 +25,11 @@
         <property name="m_creationDate" direction="desc"/>
     </datastore-index>
 
+    <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
+        <property name="m_history" direction="asc"/>
+        <property name="m_lastUpdate" direction="asc"/>
+    </datastore-index>
+    
     <!-- with pseudo only -->
     <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
         <property name="m_configGameTime" direction="asc"/>

@@ -12,7 +12,6 @@
 <%@include file="include/header.jsp"%>
 
 <h2>Statistiques globals</h2>
-<p>Cette page est amenée a évoluer en fonction des demandes et de mes prioritées...</p>
 
 <h3>Les corporations en <%= GregorianCalendar.getInstance().get( Calendar.YEAR ) -1 %></h3>
 <div>
