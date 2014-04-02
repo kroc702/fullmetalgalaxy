@@ -1112,9 +1112,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
   public boolean isTokenFireActive(EbToken p_token)
   {
     EnuColor teamColor = getTokenTeamColors( p_token );
-    return((p_token.getType() == TokenType.Freighter) || (p_token.getType() == TokenType.Turret)
-        || (teamColor.getValue() == EnuColor.None) || (getOpponentFireCover(
-        teamColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
+    return((p_token.getLocation() != Location.Board) || (p_token.getType() == TokenType.Freighter)
+        || (p_token.getType() == TokenType.Turret) || (teamColor.getValue() == EnuColor.None) || (getOpponentFireCover(
+          teamColor.getValue(), p_token.getPosition() ).getValue() == EnuColor.None));
   }
 
 
