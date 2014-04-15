@@ -663,9 +663,15 @@ public class EventsPlayBuilder implements GameEventStack
                       getCoordinateSystem().getSector( closePosition, p_position ) );
                   closePosition.setSector( getCoordinateSystem().getSector( closePosition, closePosition2 ) );
                 }
+                EbToken tokenOnWay = getGame().getToken(
+                    getCoordinateSystem().getNeighbor( closePosition, closePosition.getSector() ) );
+                if( tokenOnWay != null && tokenOnWay.getType() == TokenType.Sluice )
+                {
+                  tokenOnWay = null;
+                }
                 if( getGame().canTokenMoveOn(
-                    ((EbEvtUnLoad)getSelectedAction()).getToken( m_game ),
-                    closePosition ) )
+                    ((EbEvtUnLoad)getSelectedAction()).getToken( m_game ), closePosition )
+                    && tokenOnWay == null )
                 {
                   actionUnloadSelected( closePosition );
                 }

@@ -45,7 +45,7 @@ public class RecomputeStats
   public static void start()
   {
     System.err.println( "RecomputeStats.start()" );
-    QueueFactory.getDefaultQueue().add(
+    QueueFactory.getQueue( "longDBTask" ).add(
         TaskOptions.Builder.withPayload( new ResetAllStatsCommand() ) );
   }
 
@@ -81,7 +81,7 @@ public class RecomputeStats
       GlobalVars.setAccountCount( m_accountCount );
 
       // chain other command
-      QueueFactory.getDefaultQueue().add(
+      QueueFactory.getQueue( "longDBTask" ).add(
           TaskOptions.Builder.withPayload( new ResetAllCompanyStatistics() ) );
     }
 
@@ -110,7 +110,7 @@ public class RecomputeStats
     protected void finish()
     {
       // chain other command
-      QueueFactory.getDefaultQueue().add(
+      QueueFactory.getQueue( "longDBTask" ).add(
           TaskOptions.Builder.withPayload( new UpdateAllGameStatsCommand() ) );
     }
 
@@ -145,9 +145,8 @@ public class RecomputeStats
     @Override
     protected Query<EbGamePreview> getQuery()
     {
-      // TODO update to m_status variable
       Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
-      query.filter( "m_history", true ).order( "m_lastUpdate" );
+      query.filter( "m_status", "History" ).order( "m_lastUpdate" );
       return query;
     }
 
@@ -190,6 +189,42 @@ public class RecomputeStats
   }
 
 
+  /**
+   * load and save all EbGamePreview to rebuild index
+   */
+  public static void startRebuildGameIndex()
+  {
+    System.err.println( "RecomputeStats.startRebuildGameIndex()" );
+    QueueFactory.getQueue( "longDBTask" ).add(
+        TaskOptions.Builder.withPayload( new rebuildGameIndexCommand() ) );
+  }
+
+  public static class rebuildGameIndexCommand extends LongDBTask<EbGamePreview>
+  {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Query<EbGamePreview> getQuery()
+    {
+      Query<EbGamePreview> query = FmgDataStore.dao().query( EbGamePreview.class );
+      return query;
+    }
+
+    @Override
+    protected void processKey(Key<EbGamePreview> p_key)
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      EbGamePreview game = ds.get( p_key );
+      ds.put( game );
+      ds.close();
+    }
+
+    @Override
+    protected void finish()
+    {
+    }
+
+  }
 
 
 }

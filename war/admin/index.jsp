@@ -32,6 +32,8 @@ upload game file: <input type="file" name="gamefile"><br/>
 <br/>
 <a href="/admin/Servlet?recomputestats=1" >recompute games statistics</a><br/>
 <br/>
+<a href="/admin/Servlet?rebuildstats=1" >rebuild games index</a><br/>
+<br/>
 <a href="/admin/Servlet?forumpostgame=1" >post a new game on forum (test)</a><br/>
 <br/>
 <a href="/admin/accounts.jsp" >accounts list</a><br/>

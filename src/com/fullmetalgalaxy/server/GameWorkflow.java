@@ -896,7 +896,7 @@ public class GameWorkflow
 
       // almost the reverse of updateStat4FinishedGame.
       // must be call for game that will be cancelled after finished
-      QueueFactory.getDefaultQueue().add(
+      QueueFactory.getQueue( "LongDBTask" ).add(
           TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game.getId(), p_game
               .getEndDate() ) ) );
     }
