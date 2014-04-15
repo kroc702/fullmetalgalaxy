@@ -10,8 +10,8 @@
   <queue>
     <!-- multi purpose queue for task that need to be processed quite quickly but only one after another -->
     <name>longDBTask</name>
-    <rate>2/s</rate>
-    <bucket-size>20</bucket-size>
+    <rate>1/s</rate>
+    <bucket-size>1</bucket-size>
     <max-concurrent-requests>1</max-concurrent-requests>
   </queue>
   

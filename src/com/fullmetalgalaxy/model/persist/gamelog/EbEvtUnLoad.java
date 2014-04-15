@@ -146,6 +146,11 @@ public class EbEvtUnLoad extends AnEventPlay
     // check token move to a 'clear' hexagon
     boolean moveToPontoon = false;
     Set<EbToken> tokensOnWay = p_game.getAllToken( getNewPosition() );
+    if( getToken( p_game ).getHexagonSize() == 2 )
+    {
+      tokensOnWay.addAll( p_game.getAllToken( p_game.getCoordinateSystem().getNeighbor(
+          getNewPosition(), getNewPosition().getSector() ) ) );
+    }
     for( EbToken token : tokensOnWay )
     {
       if( (token != getToken( p_game )) )

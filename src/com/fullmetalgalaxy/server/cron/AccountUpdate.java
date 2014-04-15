@@ -107,7 +107,7 @@ public class AccountUpdate extends HttpServlet
   protected void doGet(HttpServletRequest p_req, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
-    QueueFactory.getDefaultQueue().add(
+    QueueFactory.getQueue( "LongDBTask" ).add(
         TaskOptions.Builder.withPayload( new AccountUpdateCommand() ).header(
             "X-AppEngine-FailFast", "true" ) );
   }

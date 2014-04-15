@@ -26,7 +26,7 @@
     </datastore-index>
 
     <datastore-index kind="EbGamePreview" ancestor="false" source="manual">
-        <property name="m_history" direction="asc"/>
+        <property name="m_status" direction="asc"/>
         <property name="m_lastUpdate" direction="asc"/>
     </datastore-index>
     

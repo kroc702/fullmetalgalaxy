@@ -321,6 +321,17 @@ public class AdminServlet extends HttpServlet
       p_resp.getOutputStream().println( "aborted & deleted game count can't be recomputed <br/>" );
       p_resp.getOutputStream().println( "recompute stats task launched..." );
     }
+
+    // rebuild game index
+    // ==================
+    strid = p_req.getParameter( "rebuildstats" );
+    if( strid != null )
+    {
+      RecomputeStats.startRebuildGameIndex();
+      p_resp.getOutputStream().println( "rebuild index stats task launched..." );
+    }
+
+
   }
 
   /* (non-Javadoc)

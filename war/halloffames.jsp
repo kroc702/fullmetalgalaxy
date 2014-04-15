@@ -33,7 +33,7 @@ String orderby = request.getParameter( "orderby" );
 if( orderby == null )
 {
   if( allPlayers )
-    orderby = "-m_fullStats.m_averageNormalizedRank";
+    orderby = "-m_trueSkillLevel";
   else
     orderby = "-m_currentStats.m_averageNormalizedRank";
 }
