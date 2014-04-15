@@ -318,7 +318,8 @@ public class GameWorkflow
             }
           }
         }
-        else if( p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
+        else if( !p_game.isParallel()
+            && p_game.getEbConfigGameTime().getTimeStepDurationInSec() != 0 )
         {
           for( EbRegistration registration : p_game.getSetRegistration() )
           {
