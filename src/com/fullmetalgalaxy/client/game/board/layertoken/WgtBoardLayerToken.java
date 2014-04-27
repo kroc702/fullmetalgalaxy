@@ -170,8 +170,20 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       tokenWidget.setTokenImage( TokenImages.getTokenImage( p_token, getZoom().getValue() ) );
 
       setWidgetHexPosition( tokenWidget.getTokenImage(), p_token.getPosition(), landPixOffset );
-      DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex", Integer
-          .toString( p_token.getZIndex() ) );
+
+      // this trick is too handle case where a token on hex y = 0 have to be
+      // displayed
+      // under token on hex y = map height due to toric map
+      if( p_token.getPosition().getY() < m_cropTopHex )
+      {
+        DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex",
+            Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight() ) ) );
+      }
+      else
+      {
+        DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex",
+            Integer.toString( p_token.getZIndex() ) );
+      }
 
       // this is to handle the loading status
       /*if( !m_loadedColor.contains( p_token.getEnuColor() ) )
@@ -266,7 +278,18 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     add( p_image );
     p_image.setVisible( true );
     p_absImage.applyTo( p_image );
-    DOM.setStyleAttribute( p_image.getElement(), "zIndex", Integer.toString( p_token.getZIndex() ) );
+
+    if( p_token.getPosition().getY() < m_cropTopHex )
+    {
+      DOM.setStyleAttribute( p_image.getElement(), "zIndex",
+          Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight() ) ) );
+    }
+    else
+    {
+      DOM.setStyleAttribute( p_image.getElement(), "zIndex", Integer.toString( p_token.getZIndex() ) );
+    }
+
+
     setWidgetHexPosition( p_image, p_token.getPosition(), p_landPixOffset );
   }
 

@@ -177,11 +177,22 @@ public class EbToken extends EbBase
    */
   public int getZIndex()
   {
+    return getZIndex( 0 );
+  }
+
+  /**
+   * like getZIndex() but we can shift token by an y offset
+   * @param p_yOffset
+   * @return
+   */
+  public int getZIndex(int p_yOffset)
+  {
     if( getLocation() == Location.Graveyard )
     {
       return 0;
     }
-    return getType().getZIndex( getPosition().getSector() ) + getPosition().getY() * 2
+    return getType().getZIndex( getPosition().getSector() ) + (getPosition().getY() + p_yOffset)
+        * 2
         + getPosition().getX() % 2;
   }
 
