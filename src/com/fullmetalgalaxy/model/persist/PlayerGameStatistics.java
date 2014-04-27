@@ -403,17 +403,26 @@ public class PlayerGameStatistics extends EbBase
    */
   public boolean isLooser()
   {
-    return getScore() == -1 * getInvestment();
+    return getTeamScore() == -1 * getInvestment();
   }
 
   /**
    * @return benefit divided by investment [-1;1]
    */
-  public float getProfitability()
+  public float getTeamProfitability()
   {
-    return (1f*getScore()) / getInvestment();
+    return (1f * getTeamScore()) / getInvestment();
   }
   
+  /**
+   * 
+   * @return team profitability divided by team size
+   */
+  public float getPlayerProfitability()
+  {
+    return getTeamProfitability() / getMyTeamSize();
+  }
+
   // Getters
   // =======
  
@@ -499,9 +508,17 @@ public class PlayerGameStatistics extends EbBase
 
 
 
-  public int getScore()
+  public int getTeamScore()
   {
     return m_score;
+  }
+
+  /**
+   * @return team score divided by team size
+   */
+  public int getPlayerScore()
+  {
+    return getTeamScore() / getMyTeamSize();
   }
 
 

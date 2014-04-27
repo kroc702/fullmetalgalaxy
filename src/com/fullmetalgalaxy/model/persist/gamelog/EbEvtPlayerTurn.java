@@ -95,7 +95,7 @@ public class EbEvtPlayerTurn extends AnEvent
    */
   public long getOldPlayerId(Game p_game)
   {
-    if( m_oldPlayerId <= 0 )
+    if( p_game != null && m_oldPlayerId <= 0 )
     {
       for( EbRegistration registration : p_game.getSetRegistration() )
       {
@@ -119,6 +119,17 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     return m_newPlayerId;
   }*/
+
+  @Override
+  public String toString()
+  {
+    String str = "End turn [" + getAccountId() + "]: " + getOldTurn();
+    if( getOldTurn() != getNewTurn() )
+    {
+      str += "->" + getNewTurn();
+    }
+    return str;
+  }
 
 
   @Override
