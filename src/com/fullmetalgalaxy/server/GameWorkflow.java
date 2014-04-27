@@ -676,8 +676,15 @@ public class GameWorkflow
         playerStat = query.get();
         if( playerStat != null )
         {
-          log.warning( "add existing player stat for account " + account.getPseudo() + " and game "
+          log.error( "add existing player stat for account " + account.getPseudo() + " and game "
               + p_game.getName() );
+          account.setTrueSkill( account.getTrueSkillMean() - playerStat.getTsMeanUpdate(),
+              account.getTrueSkillSD() - playerStat.getTsSDUpdate() );
+          account.getFullStats().removeStatistic( playerStat );
+          if( gameOldestDate.before( playerStat.getGameEndDate() ) )
+          {
+            account.getCurrentStats().removeStatistic( playerStat );
+          }
         }
         else
         {
@@ -704,7 +711,7 @@ public class GameWorkflow
       }
       if( playerStat != null )
       {
-        GlobalVars.incrementFGameFmpScore( playerStat.getScore() );
+        GlobalVars.incrementFGameFmpScore( playerStat.getPlayerScore() );
       }
     }
     ds.close();

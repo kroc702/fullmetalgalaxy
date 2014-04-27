@@ -93,7 +93,11 @@ for( PlayerGameStatistics game : gameList )
   }
   out.println("");
   out.println("rang: "+game.getRank()+" / "+game.getGameTeamCount());
-  out.println("score: "+game.getScore());
+  out.println("team score: "+game.getTeamScore());
+  if(game.getPartnerPlayers().size() > 0 )
+  {
+    out.println("player score: "+game.getPlayerScore());
+  }
   out.println("Corpo: "+game.getCompany());
   out.println("investissement: "+game.getInvestment());
   out.println("config time: "+game.getConfigGameTime());

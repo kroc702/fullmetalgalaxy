@@ -53,9 +53,9 @@ public class AccountStatistics implements Serializable, IsSerializable
 
   /** used to make request on database */
   private boolean m_includedInRanking = false;
-
+  /** [0;1] */
   private float m_averageProfitability = 0;
-  
+  /** [0;1] */
   private float m_averageNormalizedRank = 0;
   /** only for ConfigGameTime.Standard (slow turn by turn) */
   private long m_averageReactivityInSec = 0;
@@ -139,8 +139,8 @@ public class AccountStatistics implements Serializable, IsSerializable
     m_averageProfitability *= m_finshedGameCount;
     m_averageNormalizedRank *= m_finshedGameCount;
 
-    m_score += p_statistic.getScore();
-    m_averageProfitability += p_statistic.getProfitability();
+    m_score += p_statistic.getPlayerScore();
+    m_averageProfitability += p_statistic.getPlayerProfitability();
     m_averageNormalizedRank += p_statistic.getNormalizedRank();
     if( p_statistic.getConfigGameTime() == ConfigGameTime.Standard
         && p_statistic.getReplacement() == null )
@@ -200,8 +200,8 @@ public class AccountStatistics implements Serializable, IsSerializable
     m_averageProfitability *= m_finshedGameCount;
     m_averageNormalizedRank *= m_finshedGameCount;
 
-    m_score -= p_statistic.getScore();
-    m_averageProfitability -= p_statistic.getProfitability();
+    m_score -= p_statistic.getPlayerScore();
+    m_averageProfitability -= p_statistic.getPlayerProfitability();
     m_averageNormalizedRank -= p_statistic.getNormalizedRank();
     if( p_statistic.getConfigGameTime() == ConfigGameTime.Standard
         && p_statistic.getReplacement() == null )
