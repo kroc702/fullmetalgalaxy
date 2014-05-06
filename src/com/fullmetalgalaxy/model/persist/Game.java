@@ -912,7 +912,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     for( Iterator<EbToken> it = list.iterator(); it.hasNext(); )
     {
       EbToken nextToken = (EbToken)it.next();
-      if( (token == null) || (token.getZIndex() < nextToken.getZIndex()) )
+      if( (token == null)
+          || (token.getType().getZIndex( token.getPosition().getSector() ) < nextToken.getType()
+              .getZIndex( nextToken.getPosition().getSector() )) )
       {
         token = nextToken;
       }
