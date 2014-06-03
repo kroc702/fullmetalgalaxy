@@ -31,6 +31,7 @@ import com.fullmetalgalaxy.model.constant.ConfigGameTime;
 import com.fullmetalgalaxy.model.persist.CompanyStatistics;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.model.persist.PlayerGameStatistics;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.googlecode.objectify.Key;
@@ -100,6 +101,35 @@ public class RecomputeStats
 
     @Override
     protected void processKey(Key<CompanyStatistics> p_key)
+    {
+      FmgDataStore ds = new FmgDataStore( false );
+      ds.delete( p_key );
+      ds.close();
+    }
+
+    @Override
+    protected void finish()
+    {
+      // chain other command
+      QueueFactory.getQueue( "longDBTask" ).add(
+          TaskOptions.Builder.withPayload( new ResetAllPlayerGameStatistics() ) );
+    }
+
+  }
+
+  // delete all ResetAllPlayerGameStatistics
+  protected static class ResetAllPlayerGameStatistics extends LongDBTask<PlayerGameStatistics>
+  {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected Query<PlayerGameStatistics> getQuery()
+    {
+      return FmgDataStore.dao().query( PlayerGameStatistics.class );
+    }
+
+    @Override
+    protected void processKey(Key<PlayerGameStatistics> p_key)
     {
       FmgDataStore ds = new FmgDataStore( false );
       ds.delete( p_key );

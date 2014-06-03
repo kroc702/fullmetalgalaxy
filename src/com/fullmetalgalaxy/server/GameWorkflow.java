@@ -210,6 +210,7 @@ public class GameWorkflow
           action.setLastUpdate( ServerUtil.currentDate() );
           action.setAccountId( ((EbEvtLand)lastEvent).getAccountId() );
           action.setGame( p_game );
+          action.setAuto( true );
           action.checkedExec( p_game );
           p_game.addEvent( action );
           eventAdded.add( action );
@@ -511,6 +512,9 @@ public class GameWorkflow
           EbEvtPlayerTurn event = new EbEvtPlayerTurn();
           event.setAuto( true );
           event.setGame( p_game );
+          event.setAccountId( ((EbEvtTakeOff)lastEvent).getMyRegistration( p_game ).getAccount()
+              .getId() );
+          event.setOldPlayerId( ((EbEvtTakeOff)lastEvent).getMyRegistration( p_game ).getId() );
           event.checkedExec( p_game );
           p_game.addEvent( event );
           eventAdded.add( event );
@@ -904,7 +908,7 @@ public class GameWorkflow
 
       // almost the reverse of updateStat4FinishedGame.
       // must be call for game that will be cancelled after finished
-      QueueFactory.getQueue( "LongDBTask" ).add(
+      QueueFactory.getQueue( "longDBTask" ).add(
           TaskOptions.Builder.withPayload( new RemovePlayerGameStatistics( p_game.getId(), p_game
               .getEndDate() ) ) );
     }
