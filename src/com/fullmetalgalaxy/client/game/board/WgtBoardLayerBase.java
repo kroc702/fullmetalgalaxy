@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.MapShape;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -265,13 +266,19 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
   public AnPair convertHexPositionToPixPosition(AnPair p_wgtHexPosition)
   {
     AnPair wgtHexPosition = p_wgtHexPosition;
+    if( GameEngine.game().getMapShape() != MapShape.Flat )
+    {
+      wgtHexPosition = new AnPair( p_wgtHexPosition );
+    }
     if( GameEngine.game().getMapShape().isEWLinked() )
     {    
-      wgtHexPosition = new AnPair(p_wgtHexPosition);
       if( wgtHexPosition.getX() < m_cropLeftHex )
       {
         wgtHexPosition.setX( p_wgtHexPosition.getX() + GameEngine.game().getLandWidth() );
       }
+    }
+    if( GameEngine.game().getMapShape().isNSLinked() )
+    {
       if( wgtHexPosition.getY() < m_cropTopHex )
       {
         wgtHexPosition.setY( p_wgtHexPosition.getY() + GameEngine.game().getLandHeight() );
