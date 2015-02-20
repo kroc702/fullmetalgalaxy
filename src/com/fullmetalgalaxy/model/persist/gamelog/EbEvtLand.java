@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.model.persist.gamelog;
 import java.util.ArrayList;
 
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
@@ -122,7 +123,7 @@ public class EbEvtLand extends AnEventPlay
     }
     // check freighter isn't landing on sea neither montain
     // get the 4 landing hexagon
-    AnBoardPosition landingPosition[] = new AnBoardPosition[4];
+    AnBoardPosition landingPosition[] = new AnBoardPosition[6];
     landingPosition[0] = getPosition();
     switch( landingPosition[0].getSector() )
     {
@@ -175,6 +176,21 @@ public class EbEvtLand extends AnEventPlay
         (getPosition().getY() < 2 || getPosition().getY() > (p_game.getLandHeight() - 3)) )
     {
       throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+    }
+    // check empty hex near landing position
+    HexCoordinateSystem coordinateSystem = p_game.getCoordinateSystem();
+    for( int i = 0; i < 6; i++ )
+    {
+      landingPosition[i] = coordinateSystem.getNeighbor( getPosition(), Sector.getFromOrdinal( i ) );
+      landingPosition[i] = coordinateSystem.getNeighbor( landingPosition[i],
+          Sector.getFromOrdinal( i ) );
+    }
+    for( int i = 0; i < 6; i++ )
+    {
+      if( p_game.getLand( landingPosition[i] ) == LandType.None )
+      {
+        throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+      }
     }
   }
 
