@@ -152,6 +152,13 @@ public class EbEvtControlFreighter extends AnEventPlay
       throw new RpcFmpException( errMsg().OnlyDestroyerCanControl() );
     }
 
+    // check that controlled freither isn't in same team
+    if( p_game.getTokenTeamColors( getTokenCarrier( p_game ) ).isColored(
+        getToken( p_game ).getColor() ) )
+    {
+      throw new RpcFmpException( "You can't control freither in your team" );
+    }
+
     // check that player have at least one action point to control freighter
     if( myRegistration.getPtAction() <= 0 )
     {
