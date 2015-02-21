@@ -17,7 +17,7 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010 to 2014 Vincent Legendre
+ *  Copyright 2010 to 2015 Vincent Legendre
  *
  * *********************************************************************/
 

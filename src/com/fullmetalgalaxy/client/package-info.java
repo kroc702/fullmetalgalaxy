@@ -17,7 +17,14 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010 to 2014 Vincent Legendre
+ *  Copyright 2010 to 2015 Vincent Legendre
  *
  * *********************************************************************/
+
+/**
+ * This package regroup all code that run only on client side and compiled as javascript with GWT.
+ * 
+ * Root contain bootstrapping code that know about all mini applications and can eventually 
+ * load more javascript code.
+ */
 package com.fullmetalgalaxy.client;
