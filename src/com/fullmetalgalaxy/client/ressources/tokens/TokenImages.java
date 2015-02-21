@@ -385,6 +385,8 @@ public class TokenImages
       return getTokenImageTacticHovertank( s_bundleExtra.get( p_color ), p_sector );
     case Tarask:
       return getTokenImageTacticTarask( s_bundleExtra.get( p_color ), p_sector );
+    case Destroyer:
+      return getTokenImageTacticDestroyer( s_bundleExtra.get( p_color ), p_sector );
     }
   }
 
@@ -416,6 +418,8 @@ public class TokenImages
       return getTokenImageStrategyHovertank( s_bundleExtra.get( p_color ), p_sector );
     case Tarask:
       return getTokenImageStrategyTarask( s_bundleExtra.get( p_color ), p_sector );
+    case Destroyer:
+      return getTokenImageStrategyDestroyer( s_bundleExtra.get( p_color ), p_sector );
     }
   }
 
@@ -657,6 +661,27 @@ public class TokenImages
     }
   }
 
+  protected static ImageResource getTokenImageStrategyDestroyer(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.strategy_destroyer_n();
+    case NorthEast:
+      return p_bundle.strategy_destroyer_ne();
+    case NorthWest:
+      return p_bundle.strategy_destroyer_nw();
+    case South:
+      return p_bundle.strategy_destroyer_s();
+    case SouthEast:
+      return p_bundle.strategy_destroyer_se();
+    case SouthWest:
+      return p_bundle.strategy_destroyer_sw();
+    }
+  }
+
 
 
   protected static ImageResource getTokenImageTacticBarge(TokenImageBundle p_bundle,
@@ -894,6 +919,27 @@ public class TokenImages
       return p_bundle.tactic_tarask_se();
     case SouthWest:
       return p_bundle.tactic_tarask_sw();
+    }
+  }
+
+  protected static ImageResource getTokenImageTacticDestroyer(TokenExtraImageBundle p_bundle,
+      Sector p_sector)
+  {
+    switch( p_sector )
+    {
+    default:
+    case North:
+      return p_bundle.tactic_destroyer_n();
+    case NorthEast:
+      return p_bundle.tactic_destroyer_ne();
+    case NorthWest:
+      return p_bundle.tactic_destroyer_nw();
+    case South:
+      return p_bundle.tactic_destroyer_s();
+    case SouthEast:
+      return p_bundle.tactic_destroyer_se();
+    case SouthWest:
+      return p_bundle.tactic_destroyer_sw();
     }
   }
 

@@ -213,17 +213,36 @@ public class BoardFireCover implements Serializable
       fireCover = m_disabledFireCover;
     }
 
-    AnBoardPosition position = p_token.getPosition();
-    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+    AnBoardPosition tokenPosition = p_token.getPosition();
+    for( int ix = tokenPosition.getX() - fireRange; ix < tokenPosition.getX() + fireRange + 1; ix++ )
     {
-      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      for( int iy = tokenPosition.getY() - fireRange; iy < tokenPosition.getY() + fireRange + 1; iy++ )
       {
-        if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
+        AnBoardPosition targetPosition = new AnBoardPosition( ix, iy );
+        if( m_game.canTokenFireOn( p_token, tokenPosition, targetPosition ) )
         {
-          incFireCover( new AnBoardPosition( ix, iy ), color, fireCover );
+          incFireCover( targetPosition, color, fireCover );
         }
       }
     }
+    // for specific token
+    if( p_token.getHexagonSize() > 1 )
+    {
+      tokenPosition = p_token.getExtraPositions( m_game.getCoordinateSystem() ).get( 0 );
+      for( int ix = tokenPosition.getX() - fireRange; ix < tokenPosition.getX() + fireRange + 1; ix++ )
+      {
+        for( int iy = tokenPosition.getY() - fireRange; iy < tokenPosition.getY() + fireRange + 1; iy++ )
+        {
+          AnBoardPosition targetPosition = new AnBoardPosition( ix, iy );
+          if( m_game.canTokenFireOn( p_token, tokenPosition, targetPosition ) )
+          {
+            incFireCover( targetPosition, color, fireCover );
+          }
+        }
+      }
+    }
+
+
   }
 
 
@@ -278,14 +297,29 @@ public class BoardFireCover implements Serializable
       fireCover = m_disabledFireCover;
     }
 
-    AnBoardPosition position = p_token.getPosition();
-    for( int ix = position.getX() - fireRange; ix < position.getX() + fireRange + 1; ix++ )
+    AnBoardPosition tokenPosition = p_token.getPosition();
+    for( int ix = tokenPosition.getX() - fireRange; ix < tokenPosition.getX() + fireRange + 1; ix++ )
     {
-      for( int iy = position.getY() - fireRange; iy < position.getY() + fireRange + 1; iy++ )
+      for( int iy = tokenPosition.getY() - fireRange; iy < tokenPosition.getY() + fireRange + 1; iy++ )
       {
-        if( m_game.canTokenFireOn( p_token, new AnBoardPosition( ix, iy ) ) )
+        if( m_game.canTokenFireOn( p_token, tokenPosition, new AnBoardPosition( ix, iy ) ) )
         {
           decFireCover( new AnBoardPosition( ix, iy ), color, fireCover );
+        }
+      }
+    }
+    // for specific token
+    if( p_token.getHexagonSize() > 1 )
+    {
+      tokenPosition = p_token.getExtraPositions( m_game.getCoordinateSystem() ).get( 0 );
+      for( int ix = tokenPosition.getX() - fireRange; ix < tokenPosition.getX() + fireRange + 1; ix++ )
+      {
+        for( int iy = tokenPosition.getY() - fireRange; iy < tokenPosition.getY() + fireRange + 1; iy++ )
+        {
+          if( m_game.canTokenFireOn( p_token, tokenPosition, new AnBoardPosition( ix, iy ) ) )
+          {
+            decFireCover( new AnBoardPosition( ix, iy ), color, fireCover );
+          }
         }
       }
     }

@@ -111,6 +111,32 @@ public interface TokenExtraImageBundle
   public ImageResource strategy_tarask_se();
 
 
+
+  public ImageResource tactic_destroyer_n();
+
+  public ImageResource tactic_destroyer_ne();
+
+  public ImageResource tactic_destroyer_nw();
+
+  public ImageResource tactic_destroyer_s();
+
+  public ImageResource tactic_destroyer_sw();
+
+  public ImageResource tactic_destroyer_se();
+
+
+  public ImageResource strategy_destroyer_n();
+
+  public ImageResource strategy_destroyer_ne();
+
+  public ImageResource strategy_destroyer_nw();
+
+  public ImageResource strategy_destroyer_s();
+
+  public ImageResource strategy_destroyer_sw();
+
+  public ImageResource strategy_destroyer_se();
+
   /* futur unit: destroyer range 2, can be transported, can't go on montain
    * walk on marsh and reef at medium tide 
     public ImageResource tactic_wadertank_n();

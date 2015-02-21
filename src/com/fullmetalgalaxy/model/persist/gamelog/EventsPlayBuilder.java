@@ -827,20 +827,24 @@ public class EventsPlayBuilder implements GameEventStack
                 setSelectedToken( token );
                 // select first destroyer
                 ((EbEvtFire)getSelectedAction()).setTokenDestroyer1( token );
+                ((EbEvtFire)getSelectedAction()).setDestroyer1Position( p_position );
               }
-              else if( token.getId() != ((EbEvtFire)getSelectedAction()).getTokenDestroyer1(
-                  getGame() ).getId() )
+              else if( token.getId() != ((EbEvtFire)getSelectedAction()).getTokenDestroyer1( getGame() ).getId()
+                  || token.getHexagonSize() == 2 )
               {
                 // select second destroyer
                 // if destroyer is already selected, we may send an error
                 // message...
                 // but its not a bug after all !
                 ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( token );
+                ((EbEvtFire)getSelectedAction()).setDestroyer2Position( p_position );
               }
               else if( previousAction != null && previousAction.getType() == GameLogType.EvtFire )
               {
                 ((EbEvtFire)getSelectedAction()).setTokenDestroyer2( ((EbEvtFire)previousAction)
                     .getTokenDestroyer2( getGame() ) );
+                ((EbEvtFire)getSelectedAction()).setDestroyer2Position( ((EbEvtFire)previousAction)
+                    .getDestroyer2Position() );
               }
               isUpdated = EventBuilderMsg.Updated;
             }
@@ -1265,6 +1269,7 @@ public class EventsPlayBuilder implements GameEventStack
       if( getMyRegistration().getEnuColor().contain( token.getColor() ) )
       {
         action.setTokenDestroyer1( token );
+        action.setDestroyer1Position( m_selectedPosition );
       }
       else
       {
@@ -1437,7 +1442,8 @@ public class EventsPlayBuilder implements GameEventStack
       // as only destroyer1 can move forward (destroyer2 can too but rule are
       // not check in this case)
       // swap 1 and 2
-      if( !getGame().canTokenFireOn( destroyer2, target ) )
+      if( !getGame().canTokenFireOn( destroyer2, target )
+          && destroyer1 != destroyer2 )
       {
         action.setTokenDestroyer1( destroyer2 );
         action.setTokenDestroyer2( destroyer1 );
