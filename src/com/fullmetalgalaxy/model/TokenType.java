@@ -35,7 +35,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
    * Theses values are store as is in data base.
    */
   Freighter, Turret, Barge, Speedboat, Tank, Heap, Crab, WeatherHen, Pontoon, Ore, None,
-  Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask;
+ Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask, Destroyer;
 
   public boolean canBeColored()
   {
@@ -52,6 +52,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
     case Hovertank:
     case Tarask:
+    case Destroyer:
       return true;
     case Pontoon:
     case Ore0:
@@ -105,6 +106,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Heap:
     case Hovertank:
     case Tarask:
+    case Destroyer:
       return true;
     case Freighter:
     case Barge:
@@ -133,7 +135,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Freighter:
       return 10;
     case Barge:
-      return 4;
+    case Destroyer:
+      return 6;
     case WeatherHen:
     case Crab:
     case Crayfish:
@@ -179,6 +182,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Heap:
     case Hovertank:
     case Tarask:
+    case Destroyer:
     case Ore0:
     case Ore:
     case Ore3:
@@ -199,6 +203,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     {
     case Turret:
       return 10;
+    case Destroyer:
+      return 6;
     case Freighter:
       return 3;
     case Speedboat:
@@ -245,6 +251,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
     case Hovertank:
     case Tarask:
+    case Destroyer:
       return 3;
     case Turret:
       return 6;
@@ -301,7 +308,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
       return false;
     case Sluice:
       if( (p_tokenType == TokenType.Speedboat) || (p_tokenType == TokenType.Barge)
-          || (p_tokenType == TokenType.Crayfish) || (p_tokenType == TokenType.Tarask) )
+          || (p_tokenType == TokenType.Crayfish) || (p_tokenType == TokenType.Tarask)
+          || (p_tokenType == TokenType.Destroyer) )
       {
         return true;
       }

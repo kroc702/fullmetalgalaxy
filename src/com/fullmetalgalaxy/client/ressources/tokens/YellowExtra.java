@@ -184,4 +184,54 @@ public interface YellowExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_tarask_se();
 
 
+  @Override
+  @Source("render/yellow/tactic/destroyer0-0001.png")
+  public ImageResource tactic_destroyer_n();
+
+  @Override
+  @Source("render/yellow/tactic/destroyer300-0001.png")
+  public ImageResource tactic_destroyer_ne();
+
+  @Override
+  @Source("render/yellow/tactic/destroyer60-0001.png")
+  public ImageResource tactic_destroyer_nw();
+
+  @Override
+  @Source("render/yellow/tactic/destroyer180-0001.png")
+  public ImageResource tactic_destroyer_s();
+
+  @Override
+  @Source("render/yellow/tactic/destroyer120-0001.png")
+  public ImageResource tactic_destroyer_sw();
+
+  @Override
+  @Source("render/yellow/tactic/destroyer240-0001.png")
+  public ImageResource tactic_destroyer_se();
+
+
+  @Override
+  @Source("render/yellow/strategy/destroyer0-0001.png")
+  public ImageResource strategy_destroyer_n();
+
+  @Override
+  @Source("render/yellow/strategy/destroyer300-0001.png")
+  public ImageResource strategy_destroyer_ne();
+
+  @Override
+  @Source("render/yellow/strategy/destroyer60-0001.png")
+  public ImageResource strategy_destroyer_nw();
+
+  @Override
+  @Source("render/yellow/strategy/destroyer180-0001.png")
+  public ImageResource strategy_destroyer_s();
+
+  @Override
+  @Source("render/yellow/strategy/destroyer120-0001.png")
+  public ImageResource strategy_destroyer_sw();
+
+  @Override
+  @Source("render/yellow/strategy/destroyer240-0001.png")
+  public ImageResource strategy_destroyer_se();
+
+
 }

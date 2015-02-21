@@ -184,4 +184,54 @@ public interface CamouflageExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_tarask_se();
 
 
+  @Override
+  @Source("render/camouflage/tactic/destroyer0-0001.png")
+  public ImageResource tactic_destroyer_n();
+
+  @Override
+  @Source("render/camouflage/tactic/destroyer300-0001.png")
+  public ImageResource tactic_destroyer_ne();
+
+  @Override
+  @Source("render/camouflage/tactic/destroyer60-0001.png")
+  public ImageResource tactic_destroyer_nw();
+
+  @Override
+  @Source("render/camouflage/tactic/destroyer180-0001.png")
+  public ImageResource tactic_destroyer_s();
+
+  @Override
+  @Source("render/camouflage/tactic/destroyer120-0001.png")
+  public ImageResource tactic_destroyer_sw();
+
+  @Override
+  @Source("render/camouflage/tactic/destroyer240-0001.png")
+  public ImageResource tactic_destroyer_se();
+
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer0-0001.png")
+  public ImageResource strategy_destroyer_n();
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer300-0001.png")
+  public ImageResource strategy_destroyer_ne();
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer60-0001.png")
+  public ImageResource strategy_destroyer_nw();
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer180-0001.png")
+  public ImageResource strategy_destroyer_s();
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer120-0001.png")
+  public ImageResource strategy_destroyer_sw();
+
+  @Override
+  @Source("render/camouflage/strategy/destroyer240-0001.png")
+  public ImageResource strategy_destroyer_se();
+
+
 }

@@ -184,4 +184,54 @@ public interface OrangeExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_tarask_se();
 
 
+  @Override
+  @Source("render/orange/tactic/destroyer0-0001.png")
+  public ImageResource tactic_destroyer_n();
+
+  @Override
+  @Source("render/orange/tactic/destroyer300-0001.png")
+  public ImageResource tactic_destroyer_ne();
+
+  @Override
+  @Source("render/orange/tactic/destroyer60-0001.png")
+  public ImageResource tactic_destroyer_nw();
+
+  @Override
+  @Source("render/orange/tactic/destroyer180-0001.png")
+  public ImageResource tactic_destroyer_s();
+
+  @Override
+  @Source("render/orange/tactic/destroyer120-0001.png")
+  public ImageResource tactic_destroyer_sw();
+
+  @Override
+  @Source("render/orange/tactic/destroyer240-0001.png")
+  public ImageResource tactic_destroyer_se();
+
+
+  @Override
+  @Source("render/orange/strategy/destroyer0-0001.png")
+  public ImageResource strategy_destroyer_n();
+
+  @Override
+  @Source("render/orange/strategy/destroyer300-0001.png")
+  public ImageResource strategy_destroyer_ne();
+
+  @Override
+  @Source("render/orange/strategy/destroyer60-0001.png")
+  public ImageResource strategy_destroyer_nw();
+
+  @Override
+  @Source("render/orange/strategy/destroyer180-0001.png")
+  public ImageResource strategy_destroyer_s();
+
+  @Override
+  @Source("render/orange/strategy/destroyer120-0001.png")
+  public ImageResource strategy_destroyer_sw();
+
+  @Override
+  @Source("render/orange/strategy/destroyer240-0001.png")
+  public ImageResource strategy_destroyer_se();
+
+
 }

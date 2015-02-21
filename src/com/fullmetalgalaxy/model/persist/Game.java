@@ -1055,6 +1055,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     switch( p_token.getType() )
     {
     case Barge:
+    case Destroyer:
       LandType extraLandValue = getLand( p_token.getExtraPositions(getCoordinateSystem()).get( 0 ) )
           .getLandValue( getCurrentTide() );
       if( extraLandValue != LandType.Sea )
@@ -1197,13 +1198,29 @@ public class Game extends GameData implements PathGraph, GameEventStack
    * @param p_position
    * @return
    */
-  public boolean canTokenFireOn(EbToken p_token, AnBoardPosition p_position)
+  public boolean canTokenFireOn(EbToken p_token, AnBoardPosition p_targetPosition)
+  {
+    if( p_token.getHexagonSize() > 1 )
+    {
+      boolean canTokenFire = false;
+      for( AnBoardPosition position : p_token.getExtraPositions( getCoordinateSystem() ) )
+      {
+        canTokenFire |= canTokenFireOn( p_token, position, p_targetPosition );
+      }
+      if( canTokenFire )
+        return true;
+    }
+    return canTokenFireOn( p_token, p_token.getPosition(), p_targetPosition );
+  }
+
+  public boolean canTokenFireOn(EbToken p_token, AnBoardPosition p_fromPosition,
+      AnBoardPosition p_targetPosition)
   {
     if( (p_token.getLocation() != Location.Board) || (!p_token.getType().isDestroyer()) )
     {
       return false;
     }
-    return getCoordinateSystem().getDiscreteDistance( p_token.getPosition(), p_position ) <= (getTokenFireLength( p_token ));
+    return getCoordinateSystem().getDiscreteDistance( p_fromPosition, p_targetPosition ) <= (getTokenFireLength( p_token ));
   }
 
   /**
@@ -1229,6 +1246,23 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return false;
   }
 
+  public boolean canTokenFireOn(EbToken p_token, AnBoardPosition p_fromPosition,
+      EbToken p_tokenTarget)
+  {
+    if( canTokenFireOn( p_token, p_fromPosition, p_tokenTarget.getPosition() ) )
+    {
+      return true;
+    }
+    for( AnBoardPosition position : p_tokenTarget.getExtraPositions( getCoordinateSystem() ) )
+    {
+      if( canTokenFireOn( p_token, p_fromPosition, position ) )
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * 
    * @return the fire length of this token.
@@ -1244,6 +1278,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Turret:
     case Speedboat:
     case Hovertank:
+    case Destroyer:
       return 2;
     case Tank:
       if( getLand( p_token.getPosition() ) == LandType.Montain )

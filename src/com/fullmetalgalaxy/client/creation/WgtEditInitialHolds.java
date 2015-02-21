@@ -96,6 +96,7 @@ public class WgtEditInitialHolds extends Composite
     m_grid.setWidget( 1, 1, createWgt( TokenType.Crayfish ) );
     m_grid.setWidget( 1, 2, createWgt( TokenType.Barge ) );
     m_grid.setWidget( 1, 3, createWgt( TokenType.WeatherHen ) );
+    m_grid.setWidget( 1, 4, createWgt( TokenType.Destroyer ) );
     m_grid.setWidget( 2, 0, createWgt( TokenType.Tank ) );
     m_grid.setWidget( 2, 1, createWgt( TokenType.Hovertank ) );
     m_grid.setWidget( 2, 2, createWgt( TokenType.Speedboat ) );

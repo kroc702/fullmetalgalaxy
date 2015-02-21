@@ -140,8 +140,13 @@ public class EbEvtTimeStep extends AnEvent
       if( token.getType() != TokenType.Freighter
           && token.getBulletCount() < token.getType().getMaxBulletCount() )
       {
+        int multipleBulletIncrement = 1;
+        if( token.getType().getMaxBulletCount() > 2 )
+        {
+          multipleBulletIncrement = (token.getType().getMaxBulletCount() / 2);
+        }
         token.setBulletCount( token.getBulletCount()
-            + game.getEbConfigGameTime().getBulletCountIncrement() );
+            + multipleBulletIncrement * game.getEbConfigGameTime().getBulletCountIncrement() );
         if( token.getBulletCount() > token.getType().getMaxBulletCount() )
         {
           token.setBulletCount( token.getType().getMaxBulletCount() );

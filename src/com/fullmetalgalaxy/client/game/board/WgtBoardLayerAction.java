@@ -148,8 +148,13 @@ public class WgtBoardLayerAction extends WgtBoardLayerBase
       Image image = m_images.getNextImage();
       BoardIcons.select_hexagon( getZoom().getValue() ).applyTo( image );
       DOM.setStyleAttribute( image.getElement(), "zIndex", "1" );
-      setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() )
-          .getPosition() );
+      if( p_fireAction.getDestroyer2Position() != null )
+      {
+        setWidgetHexPosition( image, p_fireAction.getDestroyer2Position() );
+      } else {
+        setWidgetHexPosition( image, p_fireAction.getTokenDestroyer2( GameEngine.model().getGame() )
+            .getPosition() );
+      }
     }
     if( p_fireAction.getTokenTarget( GameEngine.model().getGame() ) != null )
     {

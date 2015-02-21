@@ -184,4 +184,53 @@ public interface BlueExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_tarask_se();
 
 
+  @Override
+  @Source("render/blue/tactic/destroyer0-0001.png")
+  public ImageResource tactic_destroyer_n();
+
+  @Override
+  @Source("render/blue/tactic/destroyer300-0001.png")
+  public ImageResource tactic_destroyer_ne();
+
+  @Override
+  @Source("render/blue/tactic/destroyer60-0001.png")
+  public ImageResource tactic_destroyer_nw();
+
+  @Override
+  @Source("render/blue/tactic/destroyer180-0001.png")
+  public ImageResource tactic_destroyer_s();
+
+  @Override
+  @Source("render/blue/tactic/destroyer120-0001.png")
+  public ImageResource tactic_destroyer_sw();
+
+  @Override
+  @Source("render/blue/tactic/destroyer240-0001.png")
+  public ImageResource tactic_destroyer_se();
+
+
+  @Override
+  @Source("render/blue/strategy/destroyer0-0001.png")
+  public ImageResource strategy_destroyer_n();
+
+  @Override
+  @Source("render/blue/strategy/destroyer300-0001.png")
+  public ImageResource strategy_destroyer_ne();
+
+  @Override
+  @Source("render/blue/strategy/destroyer60-0001.png")
+  public ImageResource strategy_destroyer_nw();
+
+  @Override
+  @Source("render/blue/strategy/destroyer180-0001.png")
+  public ImageResource strategy_destroyer_s();
+
+  @Override
+  @Source("render/blue/strategy/destroyer120-0001.png")
+  public ImageResource strategy_destroyer_sw();
+
+  @Override
+  @Source("render/blue/strategy/destroyer240-0001.png")
+  public ImageResource strategy_destroyer_se();
+
 }

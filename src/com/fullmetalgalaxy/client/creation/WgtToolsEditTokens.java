@@ -139,6 +139,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     addTokenBtn( TokenType.Speedboat );
     addTokenBtn( TokenType.Crayfish );
     addTokenBtn( TokenType.Barge );
+    addTokenBtn( TokenType.Destroyer );
     addTokenBtn( TokenType.WeatherHen );
     addTokenBtn( TokenType.Freighter );
     addTokenBtn( TokenType.Turret );

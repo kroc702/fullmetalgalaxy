@@ -454,6 +454,7 @@ public class EbToken extends EbBase
     case Speedboat:
     case Crayfish:
     case Tarask:
+    case Destroyer:
       if( p_land == LandType.Montain || p_land == LandType.Plain )
       {
         return false;
@@ -624,6 +625,7 @@ public class EbToken extends EbBase
     case Freighter:
       return 4;
     case Barge:
+    case Destroyer:
       return 2;
     default:
       return 1;
@@ -668,6 +670,7 @@ public class EbToken extends EbBase
         break;
 
       case Barge:
+      case Destroyer:
         list.add( p_coordinateSystem.getNeighbor( getPosition(), getPosition().getSector() ) );
         break;
 
