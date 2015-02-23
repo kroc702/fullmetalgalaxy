@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
+import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder.UserAction;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 
 /**
@@ -87,9 +88,16 @@ public class ScriptInterpretor
       //
       AnBoardPosition position = new AnBoardPosition( Integer.parseInt( line[1] ),
           Integer.parseInt( line[2] ) );
-      boolean searchPath = Boolean.parseBoolean( line[3] );
-      EventBuilderMsg eventBuilderMsg = m_gameEngine.getActionBuilder().userBoardClick( position,
-          searchPath );
+      String action = line[3];
+      UserAction userAction;
+      if (action.equals( "false" ) || action.equals( "Primary" )) {
+    	  userAction = UserAction.Primary;
+      } else if (action.equals( "true" ) || action.equals( "Secondary" )) {
+    	  userAction = UserAction.Secondary;
+      } else {
+    	  userAction = UserAction.Touch;
+      }
+      EventBuilderMsg eventBuilderMsg = m_gameEngine.getActionBuilder().userBoardClick( position, userAction );
       if( eventBuilderMsg == EventBuilderMsg.MustRun )
       {
         m_gameEngine.runCurrentAction();
