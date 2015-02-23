@@ -26,11 +26,35 @@ package com.fullmetalgalaxy.client.widget;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.ClientUtil;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Touch;
+import com.google.gwt.event.dom.client.HumanInputEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
@@ -47,8 +71,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Vincent Legendre
  *
  */
-public class WgtScroll extends Composite implements MouseListener, SourcesScrollEvents,
-
+public class WgtScroll extends Composite implements SourcesScrollEvents,
+    MouseDownHandler, MouseMoveHandler, MouseUpHandler, MouseOutHandler,
+	TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler,
     NativePreviewHandler
 {
   private Widget m_contentWidget = new AbsolutePanel();
@@ -83,6 +108,8 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   private int m_mouseArrowSpaceWest = 60;
   private Image m_mouseScrollingImage = new Image();
   private int m_mouseScrollingKey = 0;
+  
+  private int m_currentTouchEventId = -1;
 
   /**
    * 
@@ -93,10 +120,20 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     m_absPanel.setSize( "100%", "100%" );
     m_absPanel.add( m_mouseScrollingImage );
     m_mouseScrollingImage.setVisible( false );
-    m_mouseScrollingImage.addMouseListener( this );
+    m_mouseScrollingImage.addMouseDownHandler( this );
+    m_mouseScrollingImage.addMouseMoveHandler( this );
+    m_mouseScrollingImage.addMouseUpHandler( this );
+    m_mouseScrollingImage.addMouseOutHandler( this );
     m_focusPanel.setSize( "100%", "100%" );
     m_focusPanel.setWidget( m_absPanel );
-    m_focusPanel.addMouseListener( this );
+    m_focusPanel.addMouseDownHandler( this );
+    m_focusPanel.addMouseMoveHandler( this );
+    m_focusPanel.addMouseUpHandler( this );
+    m_focusPanel.addMouseOutHandler( this );
+    m_focusPanel.addTouchStartHandler( this );
+    m_focusPanel.addTouchMoveHandler( this );
+    m_focusPanel.addTouchEndHandler( this );
+    m_focusPanel.addTouchCancelHandler( this );
     initWidget( m_focusPanel );
 
     m_maskPanel = m_contentWidget;
@@ -332,11 +369,9 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseDown(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  @Override
-  public void onMouseDown(Widget p_sender, int p_x, int p_y)
+  public void onDown(Element p_sender, int p_x, int p_y)
   {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
-    if( p_sender == m_mouseScrollingImage )
+    if( p_sender == m_mouseScrollingImage.getElement() )
     {
       onKeyDown( m_mouseScrollingKey );
     }
@@ -349,21 +384,11 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   }
 
   /* (non-Javadoc)
-   * @see com.google.gwt.user.client.ui.MouseListener#onMouseEnter(com.google.gwt.user.client.ui.Widget)
-   */
-  @Override
-  public void onMouseEnter(Widget p_sender)
-  {
-    // nothing to do
-  }
-
-  /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseLeave(com.google.gwt.user.client.ui.Widget)
    */
-  @Override
-  public void onMouseLeave(Widget p_sender)
+  public void onOut(Element p_sender)
   {
-    if( p_sender == m_mouseScrollingImage )
+	  if( p_sender == m_mouseScrollingImage.getElement() )
     {
       if( (m_keyDragingX != 0) || (m_keyDragingY != 0) )
       {
@@ -384,18 +409,12 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     }
   }
 
-  // this is to test scrollBy function
-  private int m_scrollXCorrection = 0;
-  private int m_scrollYCorrection = 0;
-
 
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseMove(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  @Override
-  public void onMouseMove(Widget p_sender, int p_x, int p_y)
+  public void onMove(Element p_sender, int p_x, int p_y)
   {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
     int scrollX = m_lastMouseX - p_x;
     int scrollY = m_lastMouseY - p_y;
     if( (m_isMouseDown) && (!m_isMouseDraging) )
@@ -412,15 +431,6 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
     {
       setScrollPositionSilent( getHorizontalScrollPosition() + scrollX, getVerticalScrollPosition()
           + scrollY );
-
-      // scroll correction are here to remove mouse dragging event raised by
-      // scrollBy function
-      scrollX += m_scrollXCorrection;
-      m_scrollXCorrection = scrollX;
-      scrollY += m_scrollYCorrection;
-      m_scrollYCorrection = scrollY;
-      ClientUtil.scrollBy( scrollX, scrollY );
-
       m_lastMouseX = p_x;
       m_lastMouseY = p_y;
     }
@@ -475,10 +485,9 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
    */
-  @Override
-  public void onMouseUp(Widget p_sender, int p_x, int p_y)
+  public void onUp(Element p_sender)
   {
-    if( p_sender == m_mouseScrollingImage )
+	if( p_sender == m_mouseScrollingImage.getElement() )
     {
       onKeyUp( m_mouseScrollingKey );
     }
@@ -495,8 +504,6 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
       m_maskPanel.setVisible( false );
     }
   }
-
-
 
   /**
    * @return the horizontalScrollPosition
@@ -566,5 +573,100 @@ public class WgtScroll extends Composite implements MouseListener, SourcesScroll
         m_verticalScrollPosition );
   }
 
+  public static native boolean isZoomed()
+  /*-{
+  	// If the document width is larger than the window's innerwidth
+  	// we consider that the user has zoomed on the website.
+  	// The 30px threshold is arbitraily chosen. Some devices have a few
+  	// pixels difference between window.innerWidth and document.clientWidth
+  	// even when the user hasn't zoomed
+  	return Math.abs($wnd.innerWidth - $doc.documentElement.clientWidth) > 30;
+  }-*/;
 
+  private Touch getTouch(JsArray<Touch> touches, int identifier)
+  {
+    if (touches != null && !isZoomed()) {
+      if (identifier == -1) {
+        if (touches.length() > 0) {
+          return touches.get(0);
+        }
+      } else if (touches.length() == 1) {
+        Touch touch = touches.get(0);
+        if (touch.getIdentifier() == identifier) {
+          return touch;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public void onTouchStart(TouchStartEvent p_event)
+  {
+    Touch touch = getTouch(p_event.getChangedTouches(), -1);
+    if (touch != null) {
+      m_currentTouchEventId = touch.getIdentifier();
+      onDown(Element.as(touch.getTarget()), touch.getClientX(), touch.getClientY());
+    }
+  }
+
+  @Override
+  public void onTouchMove(TouchMoveEvent p_event)
+  {
+    Touch touch = getTouch(p_event.getChangedTouches(), m_currentTouchEventId);
+    if (touch != null) {
+      if (p_event.getTouches().length() < 2) {
+    	  // A single finger touch shouldn't be propagated upwards.
+    	  // This prevents iOS 'bounce-scroll' to happen
+    	  p_event.preventDefault();
+      }
+      onMove(Element.as(touch.getTarget()), touch.getClientX(), touch.getClientY());
+    }
+  }
+
+  @Override
+  public void onTouchEnd(TouchEndEvent p_event)
+  {
+    Touch touch = getTouch(p_event.getChangedTouches(), m_currentTouchEventId);
+    if (touch != null) {
+      m_currentTouchEventId = -1;
+      onUp(Element.as(touch.getTarget()));
+    }
+  }
+
+  @Override
+  public void onTouchCancel(TouchCancelEvent p_event)
+  {
+    Touch touch = getTouch(p_event.getChangedTouches(), m_currentTouchEventId);
+    if (touch != null) {
+      m_currentTouchEventId = -1;
+      onOut(Element.as(touch.getTarget()));
+    }
+  }
+
+  @Override
+  public void onMouseDown(MouseDownEvent p_event)
+  {
+    p_event.preventDefault();
+    onDown(Element.as(p_event.getNativeEvent().getEventTarget()), p_event.getClientX(), p_event.getClientY());
+  }
+
+  @Override
+  public void onMouseMove(MouseMoveEvent p_event)
+  {
+    p_event.preventDefault();
+    onMove(Element.as(p_event.getNativeEvent().getEventTarget()), p_event.getClientX(), p_event.getClientY());
+  }
+
+  @Override
+  public void onMouseUp(MouseUpEvent p_event)
+  {
+    onUp(Element.as(p_event.getNativeEvent().getEventTarget()));
+  }
+
+  @Override
+  public void onMouseOut(MouseOutEvent p_event)
+  {
+    onOut(Element.as(p_event.getNativeEvent().getEventTarget()));
+  }
 }

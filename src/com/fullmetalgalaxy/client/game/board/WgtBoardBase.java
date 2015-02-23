@@ -35,7 +35,10 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.AnPair;
 import com.fullmetalgalaxy.model.persist.gamelog.EventBuilderMsg;
+import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder.UserAction;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
@@ -43,6 +46,12 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -55,9 +64,12 @@ import com.google.gwt.user.client.ui.ScrollListener;
  *
  */
 public abstract class WgtBoardBase extends FocusPanel implements ScrollListener, MouseDownHandler,
-    MouseUpHandler, MouseOverHandler, MouseMoveHandler, MouseOutHandler, GameLoadEvent.Handler
+    MouseUpHandler, MouseOverHandler, MouseMoveHandler, MouseOutHandler,
+    TouchStartHandler, TouchMoveHandler, TouchEndHandler,
+    GameLoadEvent.Handler
 {
   AbsolutePanel m_panel = new AbsolutePanel();
+  boolean m_hasTouchMoved = false;
 
   /**
    * 
@@ -72,9 +84,11 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
     addMouseOutHandler( this );
     addMouseOverHandler( this );
     addMouseUpHandler( this );
+    addTouchStartHandler( this );
+    addTouchMoveHandler( this );
+    addTouchEndHandler( this );
     AppRoot.getEventBus().addHandler( GameLoadEvent.TYPE, this );
   }
-
 
   protected boolean m_isVisible = false;
 
@@ -93,8 +107,6 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
     m_isVisible = false;
     Window.enableScrolling( true );
   }
-
-  
   
   /**
    * to get rid of browser contextual menu.
@@ -121,10 +133,8 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
   @Override
   public void onMouseDown(MouseDownEvent p_event)
   {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
+    p_event.preventDefault();
   }
-
-
 
   /* (non-Javadoc)
    * @see com.google.gwt.user.client.ui.MouseListener#onMouseUp(com.google.gwt.user.client.ui.Widget, int, int)
@@ -132,17 +142,45 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
   @Override
   public void onMouseUp(MouseUpEvent p_event)
   {
-    DOM.eventPreventDefault( DOM.eventGetCurrentEvent() );
     p_event.preventDefault();
-    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_event.getX(), p_event
-        .getY() ) );
+    UserAction userAction = UserAction.Primary;
+    if (p_event.isControlKeyDown() || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
+      userAction = UserAction.Secondary;
+    }
+    onUp(userAction, p_event.getX(), p_event.getY());
+  }
+
+  @Override
+  public void onTouchStart(TouchStartEvent p_event) {
+    m_hasTouchMoved = false;
+  }
+
+  @Override
+  public void onTouchMove(TouchMoveEvent p_event) {
+    m_hasTouchMoved = true;
+  }
+
+  @Override
+  public void onTouchEnd(TouchEndEvent p_event)
+  {
+    if (!m_hasTouchMoved) {
+      p_event.preventDefault();
+      Touch touch = p_event.getChangedTouches().get(0);
+      Element current = getElement();
+      Element parent = current.getParentElement();
+      int x = touch.getPageX() - current.getOffsetLeft() - parent.getOffsetLeft();
+      int y = touch.getPageY() - current.getOffsetTop() - parent.getOffsetTop();
+      onUp(UserAction.Touch, x, y);
+    }
+  }
+
+  private void onUp(UserAction userAction, int p_x, int p_y) {
+    AnBoardPosition position = convertPixPositionToHexPosition( new AnPair( p_x, p_y ) );
 
     try
     {
       EventBuilderMsg eventBuilderMsg = EventBuilderMsg.None;
-      boolean searchPath = p_event.isControlKeyDown()
-          || p_event.getNativeButton() == NativeEvent.BUTTON_RIGHT;
-      eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, searchPath );
+      eventBuilderMsg = GameEngine.model().getActionBuilder().userBoardClick( position, userAction );
       switch( eventBuilderMsg )
       {
       case Updated:
@@ -163,7 +201,7 @@ public abstract class WgtBoardBase extends FocusPanel implements ScrollListener,
       GameEngine.model().getActionBuilder().cancel();
       try
       {
-        GameEngine.model().getActionBuilder().userBoardClick( position, false );
+        GameEngine.model().getActionBuilder().userBoardClick( position, UserAction.Primary );
       } catch( Throwable iniore )
       {
       }

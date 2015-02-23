@@ -59,6 +59,12 @@ import com.fullmetalgalaxy.model.ressources.SharedI18n;
  */
 public class EventsPlayBuilder implements GameEventStack
 {
+  public enum UserAction {
+    Primary,
+    Secondary,
+    Touch,
+  }
+
   public static final String GAME_MESSAGE_RECORDING_TAG = "#recording";
 
   private ArrayList<AnEventPlay> m_actionList = new ArrayList<AnEventPlay>();
@@ -471,15 +477,15 @@ public class EventsPlayBuilder implements GameEventStack
    * This method is part of the user building action API.
    * if user click on board.
    * @param p_position
-   * @param p_searchPath if true, EventPlayBuilder will try to find a long path to achieve actions.
+   * @param searchPath if true, EventPlayBuilder will try to find a long path to achieve actions.
    * @return true if action has changed
    */
-  public EventBuilderMsg userBoardClick(AnBoardPosition p_position, boolean p_searchPath) throws RpcFmpException
+  public EventBuilderMsg userBoardClick(AnBoardPosition p_position, UserAction userAction) throws RpcFmpException
   {
     if( m_isRecording )
     {
       m_game.setMessage( m_game.getMessage() + "board " + p_position.getX() + " "
-          + p_position.getY() + " " + p_searchPath + "\n" );
+          + p_position.getY() + " " + userAction.toString() + "\n" );
     }
     EventBuilderMsg isUpdated = EventBuilderMsg.None;
     RpcUtil.logDebug( "user click board " + p_position );
@@ -488,6 +494,13 @@ public class EventsPlayBuilder implements GameEventStack
 
     // get token under user board clic
     EbToken token = getGame().getToken( p_position );
+    boolean searchPath;
+    if (userAction == UserAction.Touch) {
+      searchPath = token == null && getSelectedAction() == null;
+    } else {
+      searchPath = userAction == UserAction.Secondary;
+    }
+
     if( p_position.equals( getLastUserClick() ) || !m_isRunnable )
     {
       if( isRunnable() )
@@ -576,7 +589,7 @@ public class EventsPlayBuilder implements GameEventStack
               isUpdated = EventBuilderMsg.Updated;
             }
 
-            if( !p_searchPath && !getSelectedToken().isNeighbor( getGame().getCoordinateSystem(), p_position ) )
+            if( !searchPath && !getSelectedToken().isNeighbor( getGame().getCoordinateSystem(), p_position ) )
             {
               // user standard click far away: clear current action
               clear();
@@ -602,7 +615,7 @@ public class EventsPlayBuilder implements GameEventStack
             AnBoardPosition closePosition = getCoordinateSystem().getNeighbor( getSelectedPosition(),
                 getCoordinateSystem().getSector( getSelectedPosition(), p_position ) );
 
-            if( !p_searchPath && !closePosition.equals( p_position ) )
+            if( !searchPath && !closePosition.equals( p_position ) )
             {
               // user standard click far away: clear current action
               clear();
@@ -700,7 +713,7 @@ public class EventsPlayBuilder implements GameEventStack
             {
               if( !closePosition2.equals( p_position ) )
               {
-                if(!p_searchPath || getLastAction()==null)
+                if(!searchPath || getLastAction()==null)
                 {
                   // user standard click far away: clear current action
                   clear();
@@ -715,7 +728,7 @@ public class EventsPlayBuilder implements GameEventStack
             }
             else if( !closePosition.equals( p_position ) )
             {
-              if(!p_searchPath || getLastAction()==null)
+              if(!searchPath || getLastAction()==null)
               {
                 // user standard click far away: clear current action
                 clear();
@@ -740,7 +753,7 @@ public class EventsPlayBuilder implements GameEventStack
         {
           // user click on another token
           //
-          if( getSelectedAction() == null && p_searchPath )
+          if( getSelectedAction() == null && searchPath )
           {
             // user clic on two token with CTRL or right clic
             // search for an advanced action like fire or control
@@ -776,7 +789,7 @@ public class EventsPlayBuilder implements GameEventStack
               boolean isPathFound = true;
               AnBoardPosition closePosition = getCoordinateSystem().getNeighbor( p_position,
                   getCoordinateSystem().getSector( p_position, getSelectedPosition() ) );
-              if( !p_searchPath && !token.isNeighbor( getGame().getCoordinateSystem(), getSelectedToken() ) )
+              if( !searchPath && !token.isNeighbor( getGame().getCoordinateSystem(), getSelectedToken() ) )
               {
                 // user standard click far away: clear current action
                 clear();
@@ -905,13 +918,11 @@ public class EventsPlayBuilder implements GameEventStack
             {
               // it is a transfer !
               actionTransferSelected( token, p_position );
-              isUpdated = EventBuilderMsg.Updated;
             }
-            else if( !p_searchPath )
+            else if( !searchPath )
             {
               // user standard click far away: clear current action
               clear();
-              isUpdated = EventBuilderMsg.Updated;
             }
             else
             {
@@ -941,8 +952,8 @@ public class EventsPlayBuilder implements GameEventStack
                 assert token != null;
               }
               actionLoadSelected( token, p_position );
-              isUpdated = EventBuilderMsg.Updated;
             }
+            isUpdated = EventBuilderMsg.Updated;
           }
           else if( getSelectedAction() instanceof EbEvtConstruct )
           {
@@ -966,7 +977,7 @@ public class EventsPlayBuilder implements GameEventStack
               // it is a transfer !
               actionTransferSelected( token, p_position );
             }
-            else if( !p_searchPath )
+            else if( !searchPath )
             {
               // user standard click far away: clear current action
               clear();
@@ -1112,7 +1123,7 @@ public class EventsPlayBuilder implements GameEventStack
         {
           AnBoardPosition selectedPosition = getSelectedPosition();
           clear();
-          userBoardClick( selectedPosition, false );
+          userBoardClick( selectedPosition, UserAction.Primary );
         }
         // a token inside another token: prepare to unload !
         // unload action is already build and user select another unit
