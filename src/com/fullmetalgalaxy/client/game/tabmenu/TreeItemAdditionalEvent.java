@@ -23,6 +23,7 @@
 
 package com.fullmetalgalaxy.client.game.tabmenu;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.TreeItem;
 
 /**
@@ -38,7 +39,7 @@ public class TreeItemAdditionalEvent extends TreeItem
    */
   public TreeItemAdditionalEvent(int p_eventCount)
   {
-    super( "" + p_eventCount + " events" );
+    super( SafeHtmlUtils.fromString( "" + p_eventCount + " events" ) );
     m_additionalEventCount = p_eventCount;
   }
 
