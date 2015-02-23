@@ -37,6 +37,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -98,7 +99,7 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     if( myRegistration != null
         && !myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents().isEmpty() )
     {
-      TreeItem turnTreeItem = new TreeItem( myRegistration.getAccount().getPseudo() );
+      TreeItem turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( myRegistration.getAccount().getPseudo() ) );
       m_tree.addItem( turnTreeItem );
       for( AnEvent event : myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents() )
       {
@@ -115,11 +116,11 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     TreeItem turnTreeItem = null;
     if( GameEngine.model().getGame().getAdditionalEventCount() > 0 )
     {
-      turnTreeItem = new TreeItem( "tour ?" );
+      turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( "tour ?" ) );
     }
     else
     {
-      turnTreeItem = new TreeItem( "inscriptions" );
+      turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( "inscriptions" ) );
       m_tree.addItem( turnTreeItem );
 
       // game starting
@@ -130,7 +131,7 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
         if( event instanceof EbEvtChangePlayerOrder )
         {
           currentTurn++;
-          turnTreeItem = new TreeItem( "tour " + currentTurn );
+          turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( "tour " + currentTurn ) );
           m_tree.addItem( turnTreeItem );
           break;
         }
@@ -207,7 +208,7 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     Iterator<AnEvent> iterator = GameEngine.model().getGame().getLogs().iterator();
     if( GameEngine.model().getGame().getAdditionalEventCount() == 0 )
     {
-      TreeItem turnTreeItem = new TreeItem( "inscriptions" );
+      TreeItem turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( "inscriptions" ) );
       m_tree.addItem( turnTreeItem );
 
       // game starting
