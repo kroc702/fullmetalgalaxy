@@ -25,7 +25,6 @@ package com.fullmetalgalaxy.client.game.tabmenu;
 
 import com.fullmetalgalaxy.client.widget.EventPresenter;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.TreeItem;
 
 /**
@@ -41,7 +40,8 @@ public class TreeItemEvent extends TreeItem
    */
   public TreeItemEvent(AnEvent p_event)
   {
-    super( SafeHtmlUtils.fromString( EventPresenter.getIcon( p_event ) + " " + p_event.toString() ) );
+    super();
+    this.setHTML( EventPresenter.getIcon( p_event ) + " " + p_event.toString() );
     m_event = p_event;
   }
 
