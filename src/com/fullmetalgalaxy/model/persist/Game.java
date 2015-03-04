@@ -744,7 +744,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
         index--;
         AnEvent event = getLogs().get( index );
         if( event instanceof EbEvtMove
-            && ((EbEvtMove)event).getMyRegistration( this ).getId() == p_registration.getId() )
+            && ((EbEvtMove)event).getMyRegistration( this ).getId() == p_registration.getId()
+            && ((EbEvtMove)event).getCost() > 0 )
         {
           return false;
         }
