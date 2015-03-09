@@ -216,10 +216,22 @@ public class EbEvtLoad extends AnEventPlay
     setOldColor( getToken(p_game).getColor() );
     setOldPosition( getToken(p_game).getPosition() );
     
-    p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );
+    if( getTokenCarrier( p_game ).getType() == TokenType.Teleporter )
+    {
+      List<EbToken> freighters = p_game.getAllFreighter( getTokenCarrier( p_game ).getColor() );
+      if( freighters.size() > 0 )
+      {
+        p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
+        freighters.get( 0 ).incVersion();
+      }
+    }
+    else
+    {
+      p_game.moveToken( getToken( p_game ), getTokenCarrier( p_game ) );
+    }
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
-      
+
     checkFireDisabling( p_game );
 
     // if token is a pontoon, check that other pontoon are linked to ground

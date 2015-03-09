@@ -128,6 +128,8 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
       addTokenBtn( TokenType.Ore );
       addTokenBtn( TokenType.Ore3 );
       addTokenBtn( TokenType.Ore5 );
+      addTokenBtn( TokenType.Ore2Generator );
+      addTokenBtn( TokenType.Ore3Generator );
       addTokenBtn( TokenType.Pontoon );
       addTokenBtn( TokenType.Sluice );
     }
@@ -141,6 +143,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     addTokenBtn( TokenType.Barge );
     addTokenBtn( TokenType.Destroyer );
     addTokenBtn( TokenType.WeatherHen );
+    addTokenBtn( TokenType.Teleporter );
     addTokenBtn( TokenType.Freighter );
     addTokenBtn( TokenType.Turret );
 

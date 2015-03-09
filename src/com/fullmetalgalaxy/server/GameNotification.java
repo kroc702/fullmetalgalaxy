@@ -110,8 +110,10 @@ public class GameNotification
         // it hard to be sure we send only one time this message...
         // it is the reason to count time step.
         if( p_game.isParallel()
+            && mailSended == false
             && !p_game.getEbConfigGameTime().isQuick()
-            && p_game.getEbConfigGameTime().getTakeOffTurns().get( evtTimeStepCount ) == p_game.getCurrentTimeStep() )
+            && p_game.getEbConfigGameTime().getTakeOffTurns()
+                .contains( p_game.getCurrentTimeStep() ) )
         {
           send2CurrentPlayers( new FmgMessage( "paralleleCanTakeOff", p_game ), p_game, NotificationQty.Std, true );
           mailSended = true;

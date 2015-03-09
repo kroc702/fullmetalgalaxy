@@ -22,6 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.List;
+
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Location;
@@ -29,6 +31,7 @@ import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
+import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.ressources.Messages;
 
@@ -134,7 +137,8 @@ public class EbEvtTransfer extends AnEventPlay
     }
     else
     {
-      if( getTokenCarrier(p_game).getCarrierToken() != getNewTokenCarrier(p_game) )
+      if( getTokenCarrier( p_game ).getCarrierToken() != getNewTokenCarrier( p_game )
+          && getNewTokenCarrier( p_game ).getType() != TokenType.Teleporter )
       {
         throw new RpcFmpException( "les deux pions " + getTokenCarrier(p_game) + " et "
             + getNewTokenCarrier(p_game) + " ne sont pas voisins: le transfert est impossible." );
@@ -189,7 +193,19 @@ public class EbEvtTransfer extends AnEventPlay
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    p_game.moveToken( getToken(p_game), getNewTokenCarrier(p_game) );
+    if( getNewTokenCarrier( p_game ).getType() == TokenType.Teleporter )
+    {
+      List<EbToken> freighters = p_game.getAllFreighter( getNewTokenCarrier( p_game ).getColor() );
+      if( freighters.size() > 0 )
+      {
+        p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
+        freighters.get( 0 ).incVersion();
+      }
+    }
+    else
+    {
+      p_game.moveToken( getToken( p_game ), getNewTokenCarrier( p_game ) );
+    }
     getToken(p_game).incVersion();
     getTokenCarrier(p_game).incVersion();
     getNewTokenCarrier(p_game).incVersion();
@@ -202,7 +218,19 @@ public class EbEvtTransfer extends AnEventPlay
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );
+    if( getTokenCarrier( p_game ).getType() == TokenType.Teleporter )
+    {
+      List<EbToken> freighters = p_game.getAllFreighter( getTokenCarrier( p_game ).getColor() );
+      if( freighters.size() > 0 )
+      {
+        p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
+        freighters.get( 0 ).incVersion();
+      }
+    }
+    else
+    {
+      p_game.moveToken( getToken( p_game ), getTokenCarrier( p_game ) );
+    }
     getToken(p_game).decVersion();
     getTokenCarrier(p_game).decVersion();
     getNewTokenCarrier(p_game).decVersion();

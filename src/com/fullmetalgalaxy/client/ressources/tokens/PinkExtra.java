@@ -234,4 +234,14 @@ public interface PinkExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_destroyer_se();
 
 
+  @Override
+  @Source("render/pink/tactic/teleporter0-0001.png")
+  public ImageResource tactic_teleporter();
+
+  @Override
+  @Source("render/pink/strategy/teleporter0-0001.png")
+  public ImageResource strategy_teleporter();
+
+
+
 }

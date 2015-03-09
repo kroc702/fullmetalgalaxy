@@ -68,9 +68,8 @@ public class BoardIconsRessource
       case 3:
         return Icons.s_instance.tactic_icon_load3();
       case 4:
-        return Icons.s_instance.tactic_icon_load4();
       default:
-        return null;
+        return Icons.s_instance.tactic_icon_load4();
       }
     case EnuZoom.Small:
       switch( p_loadSize )
@@ -82,9 +81,8 @@ public class BoardIconsRessource
       case 3:
         return Icons.s_instance.strategy_icon_load3();
       case 4:
-        return Icons.s_instance.strategy_icon_load4();
       default:
-        return null;
+        return Icons.s_instance.strategy_icon_load4();
       }
     }
 }

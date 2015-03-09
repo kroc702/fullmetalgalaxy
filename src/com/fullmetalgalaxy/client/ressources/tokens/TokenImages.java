@@ -274,6 +274,10 @@ public class TokenImages
       }
     case Ore5:
       return Icons.s_instance.tactic_ore5_01();
+    case Ore2Generator:
+      return Icons.s_instance.tactic_ore2generator();
+    case Ore3Generator:
+      return Icons.s_instance.tactic_ore3generator();
     default:
       return getTokenImageTactic( EnuColor.None, p_token, p_sector );
     }
@@ -349,6 +353,10 @@ public class TokenImages
       }
     case Ore5:
       return Icons.s_instance.strategy_ore5_01();
+    case Ore2Generator:
+      return Icons.s_instance.strategy_ore2generator();
+    case Ore3Generator:
+      return Icons.s_instance.strategy_ore3generator();
     default:
       return getTokenImageStrategy( EnuColor.None, p_token, p_sector );
     }
@@ -387,6 +395,8 @@ public class TokenImages
       return getTokenImageTacticTarask( s_bundleExtra.get( p_color ), p_sector );
     case Destroyer:
       return getTokenImageTacticDestroyer( s_bundleExtra.get( p_color ), p_sector );
+    case Teleporter:
+      return s_bundleExtra.get( p_color ).tactic_teleporter();
     }
   }
 
@@ -420,6 +430,8 @@ public class TokenImages
       return getTokenImageStrategyTarask( s_bundleExtra.get( p_color ), p_sector );
     case Destroyer:
       return getTokenImageStrategyDestroyer( s_bundleExtra.get( p_color ), p_sector );
+    case Teleporter:
+      return s_bundleExtra.get( p_color ).strategy_teleporter();
     }
   }
 

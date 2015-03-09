@@ -17,6 +17,7 @@ blender -b tarask.blend -P script.py
 blender -b hovertank.blend -P script.py
 blender -b crayfish.blend -P script.py
 blender -b destroyer.blend -P script.py
+blender -b teleporter.blend -P script.py
 
 rem find . -path ./render/*.png -exec convert \{\} -sharpen 0x.7 \{\} \;
 

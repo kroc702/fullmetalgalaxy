@@ -420,6 +420,20 @@ public interface Icons extends ClientBundle
   public ImageResource strategy_ore5_01();
 
 
+  @Source("tokens/render/colorless/tactic/ore2generator0-0001.png")
+  public ImageResource tactic_ore2generator();
+
+  @Source("tokens/render/colorless/strategy/ore2generator0-0001.png")
+  public ImageResource strategy_ore2generator();
+
+
+  @Source("tokens/render/colorless/tactic/ore3generator180-0001.png")
+  public ImageResource tactic_ore3generator();
+
+  @Source("tokens/render/colorless/strategy/ore3generator180-0001.png")
+  public ImageResource strategy_ore3generator();
+
+
 
   @Source("tokens/render/colorless/tactic/pontoon0-0001.png")
   public ImageResource tactic_pontoon_n();
