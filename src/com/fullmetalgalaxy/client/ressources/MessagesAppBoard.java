@@ -87,6 +87,8 @@ public interface MessagesAppBoard extends Messages
   
   String contain();
 
+  String teleport();
+
   String construct();
 
   String bullet();

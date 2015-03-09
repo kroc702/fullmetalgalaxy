@@ -214,6 +214,7 @@ public class EbToken extends EbBase
     case Ore3:
     case Ore5:
     case Crayfish:
+    case Teleporter:
       return Game.getLandPixOffset( p_game.getLand( getPosition() ) );
     case Barge:
     case Crab:
@@ -496,6 +497,7 @@ public class EbToken extends EbBase
     case Ore:
     case Ore3:
     case Ore5:
+    case Teleporter:
       return true;
     case Freighter:
     case Turret:

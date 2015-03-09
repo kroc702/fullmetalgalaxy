@@ -234,4 +234,13 @@ public interface RedExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_destroyer_se();
 
 
+  @Override
+  @Source("render/red/tactic/teleporter0-0001.png")
+  public ImageResource tactic_teleporter();
+
+  @Override
+  @Source("render/red/strategy/teleporter0-0001.png")
+  public ImageResource strategy_teleporter();
+
+
 }

@@ -1116,7 +1116,6 @@ public class EventsPlayBuilder implements GameEventStack
       else if( p_token.getLocation() == Location.Token )
       {
         assert isBoardTokenSelected();
-        assert getSelectedToken() == p_token.getCarrierToken();
         if( getLastAction() != null
             && (getLastAction().getType() == GameLogType.EvtLoad || getLastAction().getType() == GameLogType.EvtTransfer)
             && ((AnEventPlay)getLastAction()).getToken( getGame() ).canBeColored() )

@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
@@ -247,9 +248,21 @@ public class EbEvtUnLoad extends AnEventPlay
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    p_game.moveToken( getToken(p_game), getTokenCarrier(p_game) );
+    if( getTokenCarrier( p_game ).getType() == TokenType.Teleporter )
+    {
+      List<EbToken> freighters = p_game.getAllFreighter( getTokenCarrier( p_game ).getColor() );
+      if( freighters.size() > 0 )
+      {
+        p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
+        freighters.get( 0 ).decVersion();
+      }
+    }
+    else
+    {
+      p_game.moveToken( getToken( p_game ), getTokenCarrier( p_game ) );
+    }
     getToken(p_game).decVersion();
-    getTokenCarrier(p_game).decVersion();
+    getTokenCarrier( p_game ).decVersion();
 
     unexecFireDisabling( p_game );
   }

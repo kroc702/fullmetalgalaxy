@@ -233,4 +233,13 @@ public interface BlueExtra extends TokenExtraImageBundle, ClientBundle
   @Source("render/blue/strategy/destroyer240-0001.png")
   public ImageResource strategy_destroyer_se();
 
+
+  @Override
+  @Source("render/blue/tactic/teleporter0-0001.png")
+  public ImageResource tactic_teleporter();
+
+  @Override
+  @Source("render/blue/strategy/teleporter0-0001.png")
+  public ImageResource strategy_teleporter();
+
 }

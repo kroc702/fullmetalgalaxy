@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.client.game.context;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -120,6 +121,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
 
   protected void redraw()
   {
+    boolean isTeleporter = false;
     m_hPanel.clear();
     m_focusPanel.clear();
     m_wgtTokenLink.clear();
@@ -134,6 +136,17 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     }
     EventsPlayBuilder action = model.getActionBuilder();
     EbToken mainToken = action.getSelectedToken();
+
+    // for teleporter, display freighter content
+    if( mainToken != null && mainToken.getType() == TokenType.Teleporter )
+    {
+      List<EbToken> freighters = model.getGame().getAllFreighter( mainToken.getColor() );
+      if( freighters.size() > 0 )
+      {
+        mainToken = freighters.get( 0 );
+        isTeleporter = true;
+      }
+    }
 
     if( (!action.isBoardTokenSelected()) && (!action.isActionsPending())
         && (action.getSelectedAction() == null) )
@@ -184,7 +197,12 @@ public class WgtContextExtra extends WgtView implements ClickHandler
     }
     else if( action.isBoardTokenSelected() && mainToken.containToken() )
     {
-      m_lblTitle.setText( MAppBoard.s_messages.contain() );
+      if( isTeleporter )
+      {
+        m_lblTitle.setText( MAppBoard.s_messages.teleport() );
+      } else {
+        m_lblTitle.setText( MAppBoard.s_messages.contain() );
+      }
       TokenType lastTokenType = TokenType.None;
 
       // Add list of token contained by the selected token

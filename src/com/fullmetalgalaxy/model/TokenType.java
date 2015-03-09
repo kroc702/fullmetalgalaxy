@@ -35,7 +35,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
    * Theses values are store as is in data base.
    */
   Freighter, Turret, Barge, Speedboat, Tank, Heap, Crab, WeatherHen, Pontoon, Ore, None,
- Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask, Destroyer;
+ Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask, Destroyer, Ore2Generator, Ore3Generator, Teleporter;
 
   public boolean canBeColored()
   {
@@ -53,6 +53,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Hovertank:
     case Tarask:
     case Destroyer:
+    case Teleporter:
       return true;
     case Pontoon:
     case Ore0:
@@ -60,6 +61,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore3:
     case Ore5:
     case Sluice:
+    case Ore2Generator:
+    case Ore3Generator:
     default:
       return false;
     }
@@ -83,6 +86,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
   {
     switch( this )
     {
+    case Ore2Generator:
+    case Ore3Generator:
     case Ore0:
       return 0;
     case Ore:
@@ -119,6 +124,9 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore:
     case Ore3:
     case Ore5:
+    case Ore2Generator:
+    case Ore3Generator:
+    case Teleporter:
     default:
       return false;
     }
@@ -132,6 +140,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
   {
     switch( this )
     {
+    case Ore2Generator:
+    case Ore3Generator:
     case Freighter:
       return 10;
     case Barge:
@@ -141,6 +151,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crab:
     case Crayfish:
     case Tarask:
+    case Teleporter:
       return 2;
     case Pontoon:
     case Speedboat:
@@ -166,6 +177,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     switch( this )
     {
     case Freighter:
+    case Teleporter:
       return 1000;
     case Barge:
       return 4;
@@ -188,6 +200,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore3:
     case Ore5:
     case Turret:
+    case Ore2Generator:
+    case Ore3Generator:
     default:
       return 0;
     }
@@ -201,6 +215,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
   {
     switch( this )
     {
+    case Ore2Generator:
+    case Ore3Generator:
     case Turret:
       return 10;
     case Destroyer:
@@ -218,6 +234,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crab:
     case Pontoon:
     case Ore:
+    case Teleporter:
     default:
       return 0;
     }
@@ -238,6 +255,9 @@ public enum TokenType implements java.io.Serializable, IsSerializable
         return 3;
       else
         return 2;
+    case Ore2Generator:
+    case Ore3Generator:
+      return 2;
     case Ore0:
     case Ore:
     case Ore3:
@@ -252,6 +272,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Hovertank:
     case Tarask:
     case Destroyer:
+    case Teleporter:
       return 3;
     case Turret:
       return 6;
@@ -271,13 +292,15 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     switch( this )
     {
     case Freighter:
+    case Teleporter:
       return true;
     case Barge:
       if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Crab)
           || (p_tokenType == TokenType.Heap) || (p_tokenType == TokenType.WeatherHen)
           || (p_tokenType.isOre())
           || (p_tokenType == TokenType.Sluice) || (p_tokenType == TokenType.Pontoon)
-          || (p_tokenType == TokenType.Crayfish) )
+          || (p_tokenType == TokenType.Crayfish)
+          || (p_tokenType == TokenType.Teleporter) )
       {
         return true;
       }
@@ -286,7 +309,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
       if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Heap)
           || (p_tokenType.isOre()) 
-          || (p_tokenType == TokenType.Sluice) || (p_tokenType == TokenType.Pontoon) )
+          || (p_tokenType == TokenType.Sluice) || (p_tokenType == TokenType.Pontoon)
+          || (p_tokenType == TokenType.Teleporter) )
       {
         return true;
       }
@@ -319,6 +343,11 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Heap:
     case Ore:
     case Turret:
+    case Ore0:
+    case Ore3:
+    case Ore5:
+    case Ore2Generator:
+    case Ore3Generator:
     default:
       return false;
     }

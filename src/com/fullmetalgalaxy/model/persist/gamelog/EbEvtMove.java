@@ -115,6 +115,10 @@ public class EbEvtMove extends AnEventPlay
     {
       throw new RpcFmpException( "vous ne pouvez pas déplacer votre astronef" );
     }
+    if( getToken( p_game ).getType() == TokenType.Teleporter )
+    {
+      throw new RpcFmpException( "Le teleporter ne se deplace pas seul" );
+    }
     // check no hexagon are skipped
     AnBoardPosition tokenPosition = getToken(p_game).getPosition();
     if( !tokenPosition.equals( getNewPosition() )

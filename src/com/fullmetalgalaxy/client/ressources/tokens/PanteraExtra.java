@@ -234,4 +234,13 @@ public interface PanteraExtra extends TokenExtraImageBundle, ClientBundle
   public ImageResource strategy_destroyer_se();
 
 
+  @Override
+  @Source("render/pantera/tactic/teleporter0-0001.png")
+  public ImageResource tactic_teleporter();
+
+  @Override
+  @Source("render/pantera/strategy/teleporter0-0001.png")
+  public ImageResource strategy_teleporter();
+
+
 }
