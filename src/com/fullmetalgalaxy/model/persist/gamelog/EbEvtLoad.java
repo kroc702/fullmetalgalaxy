@@ -412,4 +412,16 @@ public class EbEvtLoad extends AnEventPlay
     m_oldColor = p_oldColor;
   }
 
+  @Override
+  public void setToken(EbToken p_token)
+  {
+    super.setToken( p_token );
+    setCost( 1 );
+    if( p_token.getType() == TokenType.Teleporter )
+    {
+      setCost( 4 );
+    }
+
+  }
+
 }

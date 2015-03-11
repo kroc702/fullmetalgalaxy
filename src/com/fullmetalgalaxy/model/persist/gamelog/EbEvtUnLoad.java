@@ -156,7 +156,8 @@ public class EbEvtUnLoad extends AnEventPlay
     {
       if( (token != getToken( p_game )) )
       {
-        if( (token.getType() != TokenType.Pontoon) && (token.getType() != TokenType.Sluice) )
+        if( (token.getType() != TokenType.Pontoon) && (token.getType() != TokenType.Sluice)
+            && (token.getType() != TokenType.Ore2Generator) && (token.getType() != TokenType.Ore3Generator) )
         {
           throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
         }
@@ -278,6 +279,11 @@ public class EbEvtUnLoad extends AnEventPlay
     {
       setCost( 0 );
     }
+    if( p_token.getType() == TokenType.Teleporter )
+    {
+      setCost( 4 );
+    }
+
   }
 
 }

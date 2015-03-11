@@ -188,6 +188,8 @@ public enum TokenType implements java.io.Serializable, IsSerializable
       return 2;
     case Pontoon:
     case Sluice:
+    case Ore2Generator:
+    case Ore3Generator:
       return 10;
     case Speedboat:
     case Tank:
@@ -200,8 +202,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore3:
     case Ore5:
     case Turret:
-    case Ore2Generator:
-    case Ore3Generator:
     default:
       return 0;
     }
@@ -255,13 +255,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
         return 3;
       else
         return 2;
-    case Ore2Generator:
-    case Ore3Generator:
-      return 2;
-    case Ore0:
-    case Ore:
-    case Ore3:
-    case Ore5:
     case Barge:
     case Crab:
     case WeatherHen:
@@ -271,9 +264,16 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
     case Hovertank:
     case Tarask:
+    case Ore2Generator:
+    case Ore3Generator:
     case Destroyer:
     case Teleporter:
       return 3;
+    case Ore0:
+    case Ore:
+    case Ore3:
+    case Ore5:
+      return 4;
     case Turret:
       return 6;
     default:
@@ -338,6 +338,9 @@ public enum TokenType implements java.io.Serializable, IsSerializable
         return true;
       }
       return false;
+    case Ore2Generator:
+    case Ore3Generator:
+      return p_tokenType.isOre();
     case Speedboat:
     case Tank:
     case Heap:
@@ -346,8 +349,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore0:
     case Ore3:
     case Ore5:
-    case Ore2Generator:
-    case Ore3Generator:
     default:
       return false;
     }

@@ -23,7 +23,9 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
@@ -58,6 +60,7 @@ public class EbEvtPlayerTurn extends AnEvent
   /** ie EbRegistration ID */
   private long m_oldPlayerId = 0;
   private int m_oldCurrentPlayersCount = 0;
+  private Set<EbToken> oreToRemoveWhileUnexec = null;
 
   // private long m_newPlayerId = 0;
 
@@ -274,7 +277,7 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       game.getCurrentPlayerIds().clear();
 
-
+      // set current player
       if( game.isTimeStepParallelHidden( game.getCurrentTimeStep() )
           || (game.isParallel() && game.getCurrentTimeStep() > 1) )
       {
@@ -292,7 +295,49 @@ public class EbEvtPlayerTurn extends AnEvent
           addCurrentPlayer( game, registration );
         }
       }
+      
+      // update ore generator
+      for( EbToken token : p_game.getSetToken() )
+      {
+        if( (token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator)
+            && token.getLocation() == Location.Board )
+        {
+          if( game.getAllToken( token.getPosition() ).size() >= 2 )
+          {
+            token.setBulletCount( 0 );
+          } else if( token.getBulletCount() >= game.getTeams().size() ) {
+            // create new ore token !
+            token.setBulletCount( 0 );
+            EbToken oreToken = new EbToken( TokenType.Ore );
+            if( token.getType() == TokenType.Ore3Generator )
+            {
+              oreToken.setType( TokenType.Ore3 );
+            }
+            game.moveToken( oreToken, token.getPosition() );
+            addOreToRemoveWhileUnexec( oreToken );
+          } else {
+            token.setBulletCount( token.getBulletCount()+1 );
+          }
+        }
+      }
+      if( oreToRemoveWhileUnexec != null )
+      {
+        for( EbToken ore : oreToRemoveWhileUnexec )
+        {
+          game.addToken( ore );
+        }
+      }
+      
     }
+  }
+
+  private void addOreToRemoveWhileUnexec(EbToken ore)
+  {
+    if( oreToRemoveWhileUnexec == null )
+    {
+      oreToRemoveWhileUnexec = new HashSet<EbToken>();
+    }
+    oreToRemoveWhileUnexec.add( ore );
   }
 
   private void addCurrentPlayer(Game p_game, EbRegistration nextPlayerRegistration)
@@ -432,6 +477,24 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       p_game.setCurrentTimeStep( m_oldTurn );
     }
+
+    // eventually remove ore from generator
+    if( oreToRemoveWhileUnexec != null )
+    {
+      for( EbToken ore : oreToRemoveWhileUnexec )
+      {
+        for( EbToken token : p_game.getAllToken( ore.getPosition() ) )
+        {
+          if( token.getType() == TokenType.Ore2Generator
+              || token.getType() == TokenType.Ore3Generator )
+          {
+            token.setBulletCount( 2 );
+          }
+        }
+      }
+      p_game.getSetToken().removeAll( oreToRemoveWhileUnexec );
+    }
+
   }
 
   protected MessagesRpcException errMsg()
