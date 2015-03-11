@@ -1101,6 +1101,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Pontoon:
     case Sluice:
     case Hovertank:
+    case Ore2Generator:
+    case Ore3Generator:
     default:
       return true;
     }
@@ -1184,6 +1186,10 @@ public class Game extends GameData implements PathGraph, GameEventStack
     EbToken tokenPontoon = getToken( p_position, TokenType.Pontoon );
     if( tokenPontoon == null )
       tokenPontoon = getToken( p_position, TokenType.Sluice );
+    if( tokenPontoon == null )
+      tokenPontoon = getToken( p_position, TokenType.Ore2Generator );
+    if( tokenPontoon == null )
+      tokenPontoon = getToken( p_position, TokenType.Ore3Generator );
     if( tokenPontoon != null )
     {
       return tokenPontoon.canLoad( p_token.getType() );

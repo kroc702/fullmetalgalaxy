@@ -240,6 +240,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // display a bullet count image ?
       if( (p_token.getType().getMaxBulletCount() > 0)
           && (p_token.getType() != TokenType.Turret) && (p_token.getType() != TokenType.Freighter) 
+          && (p_token.getType() != TokenType.Ore2Generator) && (p_token.getType() != TokenType.Ore3Generator) 
           && (p_token.getBulletCount() != p_token.getType().getMaxBulletCount()) )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconBullet( getZoom().getValue(),
