@@ -218,7 +218,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore2Generator:
     case Ore3Generator:
     case Turret:
-      return 10;
+      return 100;
     case Destroyer:
       return 6;
     case Freighter:
