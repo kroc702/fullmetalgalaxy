@@ -22,10 +22,9 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
@@ -33,6 +32,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -60,7 +60,7 @@ public class EbEvtPlayerTurn extends AnEvent
   /** ie EbRegistration ID */
   private long m_oldPlayerId = 0;
   private int m_oldCurrentPlayersCount = 0;
-  private Set<EbToken> oreToRemoveWhileUnexec = null;
+  private List<EbToken> oreToRemoveWhileUnexec = null;
 
   // private long m_newPlayerId = 0;
 
@@ -297,6 +297,7 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       
       // update ore generator
+      ArrayList<AnBoardPosition> oreToRemovePosition = new ArrayList<AnBoardPosition>();
       for( EbToken token : p_game.getSetToken() )
       {
         if( (token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator)
@@ -305,15 +306,15 @@ public class EbEvtPlayerTurn extends AnEvent
           if( game.getAllToken( token.getPosition() ).size() >= 2 )
           {
             token.setBulletCount( 0 );
-          } else if( token.getBulletCount() >= game.getTeams().size() ) {
-            // create new ore token !
+          } else if( token.getBulletCount() >= game.getTeams().size()*2 ) {
+            // create new ore token every two turns + one player
             token.setBulletCount( 0 );
             EbToken oreToken = new EbToken( TokenType.Ore );
             if( token.getType() == TokenType.Ore3Generator )
             {
               oreToken.setType( TokenType.Ore3 );
             }
-            game.moveToken( oreToken, token.getPosition() );
+            oreToRemovePosition.add( token.getPosition() );
             addOreToRemoveWhileUnexec( oreToken );
           } else {
             token.setBulletCount( token.getBulletCount()+1 );
@@ -322,9 +323,10 @@ public class EbEvtPlayerTurn extends AnEvent
       }
       if( oreToRemoveWhileUnexec != null )
       {
-        for( EbToken ore : oreToRemoveWhileUnexec )
+        for( int i = 0; i < oreToRemoveWhileUnexec.size() && i < oreToRemovePosition.size(); i++ )
         {
-          game.addToken( ore );
+          game.addToken( oreToRemoveWhileUnexec.get( i ) );
+          game.moveToken( oreToRemoveWhileUnexec.get( i ), oreToRemovePosition.get( i ) );
         }
       }
       
@@ -335,7 +337,7 @@ public class EbEvtPlayerTurn extends AnEvent
   {
     if( oreToRemoveWhileUnexec == null )
     {
-      oreToRemoveWhileUnexec = new HashSet<EbToken>();
+      oreToRemoveWhileUnexec = new ArrayList<EbToken>();
     }
     oreToRemoveWhileUnexec.add( ore );
   }
@@ -354,7 +356,8 @@ public class EbEvtPlayerTurn extends AnEvent
     EnuColor nextPlayerColor = nextPlayerRegistration.getEnuColor();
     for( EbToken token : p_game.getSetToken() )
     {
-      if( token.getType() != TokenType.Freighter
+      if( token.getColor() != EnuColor.None
+          && token.getType() != TokenType.Freighter
           && token.getBulletCount() < token.getType().getMaxBulletCount()
           && nextPlayerColor.isColored( token.getColor() ) )
       {
