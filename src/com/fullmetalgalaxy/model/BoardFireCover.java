@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
@@ -179,6 +180,61 @@ public class BoardFireCover implements Serializable
       }
     }
     return color;
+  }
+
+
+  public void incFireCover(AnBoardPosition p_position, int p_radius, EnuColor p_color,
+      boolean p_disabled)
+  {
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
+      return;
+    }
+    // compute fire cover to use
+    byte[][][] fireCover = m_fireCover;
+    if( p_disabled )
+    {
+      fireCover = m_disabledFireCover;
+    }
+    for( int ix = p_position.getX() - p_radius; ix < p_position.getX() + p_radius + 1; ix++ )
+    {
+      for( int iy = p_position.getY() - p_radius; iy < p_position.getY() + p_radius + 1; iy++ )
+      {
+        AnBoardPosition targetPosition = new AnBoardPosition( ix, iy );
+        if( m_game.getCoordinateSystem().getDiscreteDistance( p_position, targetPosition ) < p_radius )
+        {
+          incFireCover( targetPosition, p_color, fireCover );
+        }
+      }
+    }
+  }
+
+  public void decFireCover(AnBoardPosition p_position, int p_radius, EnuColor p_color,
+      boolean p_disabled)
+  {
+    if( m_fireCover == null )
+    {
+      reComputeFireCover();
+      return;
+    }
+    // compute fire cover to use
+    byte[][][] fireCover = m_fireCover;
+    if( p_disabled )
+    {
+      fireCover = m_disabledFireCover;
+    }
+    for( int ix = p_position.getX() - p_radius; ix < p_position.getX() + p_radius + 1; ix++ )
+    {
+      for( int iy = p_position.getY() - p_radius; iy < p_position.getY() + p_radius + 1; iy++ )
+      {
+        AnBoardPosition targetPosition = new AnBoardPosition( ix, iy );
+        if( m_game.getCoordinateSystem().getDiscreteDistance( p_position, targetPosition ) < p_radius )
+        {
+          decFireCover( targetPosition, p_color, fireCover );
+        }
+      }
+    }
   }
 
   public void incFireCover(EbToken p_token)
@@ -661,6 +717,21 @@ public class BoardFireCover implements Serializable
       checkFireDisableFlag( token, FdChange.ALL, p_fdRemoved, p_fdAdded );
     }
     cleanFireDisableCollection( p_fdRemoved, p_fdAdded );
+
+    // display forbiden landing zone
+    if( m_game.getCurrentTimeStep() == 1 )
+    {
+      for( EbToken freighter : m_game.getAllFreighter( EnuColor.getMaxColorValue() ) )
+      {
+        if( freighter.getLocation() == Location.Board )
+        {
+          incFireCover( freighter.getPosition(), FmpConstant.minSpaceBetweenFreighter,
+              freighter.getEnuColor(), true );
+          incFireCover( freighter.getPosition(), FmpConstant.minSpaceBetweenFreighter,
+              freighter.getEnuColor(), true );
+        }
+      }
+    }
   }
 
 

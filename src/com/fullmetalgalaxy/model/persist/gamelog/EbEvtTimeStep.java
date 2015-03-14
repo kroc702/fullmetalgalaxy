@@ -164,7 +164,7 @@ public class EbEvtTimeStep extends AnEvent
         if( game.getAllToken( token.getPosition() ).size() >= 2 )
         {
           token.setBulletCount( 0 );
-        } else if( token.getBulletCount() >= 4 ) {
+        } else if( token.getBulletCount() >= 2*FmpConstant.oreGenerationInTurn ) {
           // create new ore token every ~30AP
           token.setBulletCount( 0 );
           EbToken oreToken = new EbToken( TokenType.Ore );

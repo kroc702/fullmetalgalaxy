@@ -255,6 +255,12 @@ public class EbEvtLand extends AnEventPlay
         }
       }
     }
+
+    // display forbiden landing zone
+    p_game.getBoardFireCover().incFireCover( getToken( p_game ).getPosition(),
+        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+    p_game.getBoardFireCover().incFireCover( getToken( p_game ).getPosition(),
+        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
   }
 
   /* (non-Javadoc)
@@ -295,6 +301,12 @@ public class EbEvtLand extends AnEventPlay
         }
       }
     }
+
+    // display forbiden landing zone
+    p_game.getBoardFireCover().decFireCover( getToken( p_game ).getPosition(),
+        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+    p_game.getBoardFireCover().decFireCover( getToken( p_game ).getPosition(),
+        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
   }
 
 

@@ -40,6 +40,7 @@ public class FmpConstant
   public static final int parallelLockRadius = 6;
   public static final int minSpaceBetweenFreighter = 9;
   public static final int deployementRadius = 3;
+  public static final int oreGenerationInTurn = 2;
 
   // in second
   public static final int clientMessagesLivePeriod = 15;
