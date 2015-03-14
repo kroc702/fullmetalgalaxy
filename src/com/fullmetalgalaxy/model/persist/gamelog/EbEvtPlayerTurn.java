@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
@@ -306,7 +307,7 @@ public class EbEvtPlayerTurn extends AnEvent
           if( game.getAllToken( token.getPosition() ).size() >= 2 )
           {
             token.setBulletCount( 0 );
-          } else if( token.getBulletCount() >= game.getTeams().size()*2 ) {
+          } else if( token.getBulletCount() >= game.getTeams().size()*FmpConstant.oreGenerationInTurn ) {
             // create new ore token every two turns + one player
             token.setBulletCount( 0 );
             EbToken oreToken = new EbToken( TokenType.Ore );
