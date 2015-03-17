@@ -188,9 +188,9 @@ public class BoardIconsRessource
     {
     default:
     case EnuZoom.Medium:
-      return Icons.s_instance.tactic_deployment3();
+      return Icons.s_instance.tactic_deployment34();
     case EnuZoom.Small:
-      return Icons.s_instance.strategy_deployment3();
+      return Icons.s_instance.strategy_deployment34();
     }
   }
 

@@ -163,7 +163,23 @@ public class EbEvtLand extends AnEventPlay
           && (currentToken.getId() != getToken(p_game).getId())
           && (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenFreighter) )
       {
-        throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ) );
+        if( (getMyTeam( p_game ).getColors( p_game.getPreview() ) & currentToken.getColor()) != 0)
+        {
+          if( (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenTeamFreighter) )
+          {
+            throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenTeamFreighter ) );
+          }
+        } else {
+          throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ) );
+        }
+      }
+      if( (currentToken.getType() == TokenType.Ore2Generator || currentToken.getType() == TokenType.Ore3Generator)
+          && (currentToken.getLocation() == Location.Board)
+          && (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) <= FmpConstant.minSpace2OreGenerator)
+          && (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) > FmpConstant.landingDestructionRadius) )
+      {
+        throw new RpcFmpException( "Sauf à le détruire, l'astronef ne peut atterrir à moins de "
+            + FmpConstant.minSpace2OreGenerator + " hexagones de tout générateur de minerais." );
       }
     }
     // check that freighter isn't landing too close of map boarder
@@ -209,7 +225,8 @@ public class EbEvtLand extends AnEventPlay
     {
       if( (currentToken.getColor() == EnuColor.None)
           && (currentToken.getLocation() == Location.Board)
-          && (p_game.getCoordinateSystem().getDiscreteDistance( getPosition(), currentToken.getPosition() ) <= FmpConstant.deployementRadius) )
+          && (p_game.getCoordinateSystem().getDiscreteDistance( getPosition(),
+              currentToken.getPosition() ) <= FmpConstant.landingDestructionRadius) )
       {
         // destroy this colorless token
         m_TokenIds.add( currentToken.getId() );
@@ -257,10 +274,11 @@ public class EbEvtLand extends AnEventPlay
     }
 
     // display forbiden landing zone
+    EnuColor forbidenColor = p_game.getBoardFireCover().getFireCoverColor( getToken( p_game ) );
     p_game.getBoardFireCover().incFireCover( getToken( p_game ).getPosition(),
-        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+        FmpConstant.minSpaceBetweenFreighter, forbidenColor, true );
     p_game.getBoardFireCover().incFireCover( getToken( p_game ).getPosition(),
-        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+        FmpConstant.minSpaceBetweenFreighter, forbidenColor, true );
   }
 
   /* (non-Javadoc)
@@ -303,10 +321,11 @@ public class EbEvtLand extends AnEventPlay
     }
 
     // display forbiden landing zone
+    EnuColor forbidenColor = p_game.getBoardFireCover().getFireCoverColor( getToken( p_game ) );
     p_game.getBoardFireCover().decFireCover( getToken( p_game ).getPosition(),
-        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+        FmpConstant.minSpaceBetweenFreighter, forbidenColor, true );
     p_game.getBoardFireCover().decFireCover( getToken( p_game ).getPosition(),
-        FmpConstant.minSpaceBetweenFreighter, getToken( p_game ).getEnuColor(), true );
+        FmpConstant.minSpaceBetweenFreighter, forbidenColor, true );
   }
 
 

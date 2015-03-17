@@ -23,7 +23,9 @@
 package com.fullmetalgalaxy.client.creation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.HexCoordinateSystem;
@@ -85,7 +87,8 @@ public class GameGenerator
     List<EbToken> token2Remove = new ArrayList<EbToken>();
     for( EbToken token : game.getSetToken() )
     {
-      if( token.getType().isOre() && token.getLocation() == Location.Board )
+      if( (token.getType().isOre() || token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator)
+          && token.getLocation() == Location.Board )
       {
         token2Remove.add( token );
       }
@@ -105,6 +108,18 @@ public class GameGenerator
     }
   }
 
+
+  static protected Set<LandType> s_oreAllowedOnLands = new HashSet<LandType>();
+  static
+  {
+    s_oreAllowedOnLands.add( LandType.Montain );
+    s_oreAllowedOnLands.add( LandType.Plain );
+    s_oreAllowedOnLands.add( LandType.Marsh );
+    s_oreAllowedOnLands.add( LandType.Reef );
+  }
+  static protected boolean s_useAllOre = false;
+  static protected boolean s_useOreGenerator = false;
+
   /**
    * populate game with minerais token
    */
@@ -123,10 +138,41 @@ public class GameGenerator
       {
         LandType type = getGame().getLand( ix, iy );
         if( (ix >= 0) && (iy >= 0)
-            && ((type == LandType.Reef) || (type == LandType.Marsh) || (type == LandType.Plain) || (type == LandType.Montain))
+            && (s_oreAllowedOnLands.contains( type ))
             && (getGame().getToken( new AnBoardPosition( ix, iy ) ) == null) )
         {
           EbToken token = new EbToken( TokenType.Ore );
+          if( s_useAllOre == true )
+          {
+            // an arbitrary ore distribution that keep the same overall ore value
+            switch(Random.nextInt( 9 )){
+            case 0:
+            case 1:
+              token.setType( TokenType.Ore0 );
+              break;
+            case 6:
+            case 7:
+              token.setType( TokenType.Ore3 );
+              break;
+            case 8:
+              token.setType( TokenType.Ore5 );
+              break;
+            default:
+              break;
+            }
+          }
+          if( s_useOreGenerator == true 
+              && Math.floor( ix * 3 / width ) == 1
+              && Math.floor( iy * 3 / height ) == 1
+              && Random.nextInt( 3 ) == 0 )
+          {
+            // ore generator shall only appear in map center...
+            token.setType( TokenType.Ore2Generator );
+            if( s_useAllOre == true && Random.nextInt( 3 ) == 0 )
+            {
+              token.setType( TokenType.Ore3Generator );
+            }
+          }
           token.getPosition().setX( ix );
           token.getPosition().setY( iy );
           token.getPosition().setSector( Sector.getRandom() );
