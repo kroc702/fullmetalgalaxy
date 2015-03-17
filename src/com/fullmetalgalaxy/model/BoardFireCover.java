@@ -164,7 +164,7 @@ public class BoardFireCover implements Serializable
    * @param p_token
    * @return
    */
-  private EnuColor getFireCoverColor(EbToken p_token)
+  public EnuColor getFireCoverColor(EbToken p_token)
   {
     EnuColor color = new EnuColor( EnuColor.None );
     if( p_token.getColor() != EnuColor.None )
@@ -721,14 +721,28 @@ public class BoardFireCover implements Serializable
     // display forbiden landing zone
     if( m_game.getCurrentTimeStep() == 1 )
     {
-      for( EbToken freighter : m_game.getAllFreighter( EnuColor.getMaxColorValue() ) )
+      EnuColor colorLessFire = new EnuColor(m_game.getTeamByOrderIndex( 0 ).getFireColor());
+      for( EbToken token : m_game.getSetToken() )
       {
-        if( freighter.getLocation() == Location.Board )
+        if( (token.getType() == TokenType.Freighter)
+            && (token.getLocation() == Location.Board) )
         {
-          incFireCover( freighter.getPosition(), FmpConstant.minSpaceBetweenFreighter,
-              freighter.getEnuColor(), true );
-          incFireCover( freighter.getPosition(), FmpConstant.minSpaceBetweenFreighter,
-              freighter.getEnuColor(), true );
+          incFireCover( token.getPosition(), FmpConstant.minSpaceBetweenFreighter,
+              getFireCoverColor( token ), true );
+          incFireCover( token.getPosition(), FmpConstant.minSpaceBetweenFreighter,
+              getFireCoverColor( token ), true );
+        } else if( (token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator)
+            && (token.getLocation() == Location.Board) )
+        {
+          incFireCover( token.getPosition(), FmpConstant.minSpace2OreGenerator,
+              colorLessFire, true );
+          incFireCover( token.getPosition(), FmpConstant.minSpace2OreGenerator,
+              colorLessFire, true );
+          decFireCover( token.getPosition(), FmpConstant.landingDestructionRadius + 1,
+              colorLessFire, true );
+          decFireCover( token.getPosition(), FmpConstant.landingDestructionRadius + 1,
+              colorLessFire,
+              true );
         }
       }
     }

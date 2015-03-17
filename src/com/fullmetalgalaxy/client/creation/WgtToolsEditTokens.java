@@ -34,6 +34,7 @@ import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.Sector;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.ressources.Messages;
@@ -42,7 +43,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -57,6 +60,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class WgtToolsEditTokens extends Composite implements ClickHandler, ChangeListener
 {
   private Panel m_panel = new VerticalPanel();
+  private CheckBox m_chkOreInSea = new CheckBox();
+  private CheckBox m_chkUseAllOre = new CheckBox();
+  private CheckBox m_chkUseOreGenerator = new CheckBox();
   private Button m_btnOre = new Button( MAppGameCreation.s_messages.putOre() );
   private ListBox m_lstColor = new ListBox();
   private List<EnuColor> m_colors = new ArrayList<EnuColor>();
@@ -111,6 +117,19 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
   {
     m_tools.clear();
     m_panel.clear();
+
+    HorizontalPanel hpanel = new HorizontalPanel();
+    hpanel.add( new Label( "Minerai en mer" ) );
+    hpanel.add( m_chkOreInSea );
+    m_panel.add( hpanel );
+    hpanel = new HorizontalPanel();
+    hpanel.add( new Label( "Tous les minerais" ) );
+    hpanel.add( m_chkUseAllOre );
+    m_panel.add( hpanel );
+    hpanel = new HorizontalPanel();
+    hpanel.add( new Label( "Generateurs" ) );
+    hpanel.add( m_chkUseOreGenerator );
+    m_panel.add( hpanel );
 
     m_panel.add( m_btnOre );
     m_panel.add( m_currentTool );
@@ -178,8 +197,17 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
             m_wgtBoardEditTokens.getTokenType(), m_wgtBoardEditTokens.getSector() ) ).applyTo(
         m_currentTool );
     m_lblUnit.setText( Messages.getTokenString( 0, m_wgtBoardEditTokens.getTokenType() ) );
+
     if( p_event.getSource() == m_btnOre )
     {
+      if( m_chkOreInSea.getValue() ) {
+        GameGenerator.s_oreAllowedOnLands.add( LandType.Sea );
+      } else {
+        GameGenerator.s_oreAllowedOnLands.remove( LandType.Sea );
+      }
+      GameGenerator.s_useAllOre = m_chkUseAllOre.getValue();
+      GameGenerator.s_useOreGenerator = m_chkUseOreGenerator.getValue();
+
       GameGenerator.populateOres();
       m_wgtBoardEditTokens.m_layerToken.cleanToken();
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );

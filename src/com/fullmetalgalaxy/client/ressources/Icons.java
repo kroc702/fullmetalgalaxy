@@ -230,11 +230,11 @@ public interface Icons extends ClientBundle
   @Source("icons/board/strategy/deployment4.png")
   public ImageResource strategy_deployment4();
   */
-  @Source("icons/board/tactic/deployment3.png")
-  public ImageResource tactic_deployment3();
+  @Source("icons/board/tactic/deployment34.png")
+  public ImageResource tactic_deployment34();
 
-  @Source("icons/board/strategy/deployment3.png")
-  public ImageResource strategy_deployment3();
+  @Source("icons/board/strategy/deployment34.png")
+  public ImageResource strategy_deployment34();
 
   @Source("icons/board/tactic/hightlight_hexagon.png")
   public ImageResource tactic_hightlight_hexagon();

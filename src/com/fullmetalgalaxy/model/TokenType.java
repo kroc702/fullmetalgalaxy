@@ -152,6 +152,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crayfish:
     case Tarask:
     case Teleporter:
+    case Ore5:
       return 2;
     case Pontoon:
     case Speedboat:
@@ -160,7 +161,6 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore0:
     case Ore:
     case Ore3:
-    case Ore5:
     case Sluice:
     case Hovertank:
     case Turret:
