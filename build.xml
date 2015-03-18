@@ -125,6 +125,7 @@ compilation file for Full Metal Galaxy
 			<reducecolor filename="war/game/065E9E4E6932B97C629099466DF14608.cache.png" />
 			<reducecolor filename="war/game/065F18638FA691E49FB51EA43C3E5051.cache.png" />
 			<reducecolor filename="war/game/0784B201128320441A63C019FB13517F.cache.png" />
+			<reducecolor filename="war/game/07C5E5BED7B4257BDAE8C72EC13DF08E.cache.png" />
 			<reducecolor filename="war/game/0959215DA78E3CE1BC7B25FBD09B844C.cache.png" />
 			<reducecolor filename="war/game/0A9476898799A150D840F0B1C3672921.cache.png" />
 			<reducecolor filename="war/game/0AC4C1F9FA544BFA4AAA5B18ABEFD995.cache.png" />
@@ -239,7 +240,6 @@ compilation file for Full Metal Galaxy
 			<reducecolor filename="war/game/A3AF611F64B40FB9F90B32FF3630FBFD.cache.png" />
 			<reducecolor filename="war/game/A7FCA7A638BCB78DCE9A3295341EEB16.cache.png" />
 			<reducecolor filename="war/game/A8A45DB0F2F0F947B043AC35C33D9B44.cache.png" />
-			<reducecolor filename="war/game/A8DBFA238BB9FA5D727F2152EC4C4EAE.cache.png" />
 			<reducecolor filename="war/game/ABBF80042827D74E4D6AF8DDBACBDA3E.cache.png" />
 			<reducecolor filename="war/game/B0836A9A45BA4C07472362C6B0795E18.cache.png" />
 			<reducecolor filename="war/game/B15A197FE4D16FDC50EFD172218FE358.cache.png" />
@@ -310,6 +310,7 @@ compilation file for Full Metal Galaxy
 			<reducecolor filename="war/game/FBB5022D2B15CF83ADB50F3357C2B85C.cache.png" />
 			<reducecolor filename="war/game/FD68C488FAA5687E64533A7FCCAE481B.cache.png" />
 			<reducecolor filename="war/game/FE2E2B09FF07EB8C4DA101552D57402C.cache.png" />
+			<reducecolor filename="war/game/FF920983D0F4D4AC0B28789CEFF68C10.cache.png" />
 		</parallel>
 	</target>
 

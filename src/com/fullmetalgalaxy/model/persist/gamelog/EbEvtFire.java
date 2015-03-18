@@ -148,7 +148,8 @@ public class EbEvtFire extends AnEventPlay
                 p_game.getOpponentFireCover( getTokenDestroyer1( p_game ) ).getValue() ) ) );
       }
     }
-    if( getTokenDestroyer2( p_game ).isFireDisabled() )
+    if( getTokenDestroyer2( p_game ).isFireDisabled()
+        && getTokenDestroyer2( p_game ) != getTokenDestroyer1( p_game ) )
     {
       throw new RpcFmpException( errMsg().CantFireDisableFire(
           Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ),
