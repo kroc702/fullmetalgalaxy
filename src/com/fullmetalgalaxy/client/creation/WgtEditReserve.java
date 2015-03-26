@@ -90,6 +90,7 @@ public class WgtEditReserve extends Composite
     m_grid.clear();
     m_grid.setWidget( 0, 0, createWgt( TokenType.Pontoon ) );
     m_grid.setWidget( 0, 1, createWgt( TokenType.Sluice ) );
+    m_grid.setWidget( 0, 2, createWgt( TokenType.Teleporter ) );
     m_grid.setWidget( 1, 0, createWgt( TokenType.Crab ) );
     m_grid.setWidget( 1, 1, createWgt( TokenType.Crayfish ) );
     m_grid.setWidget( 1, 2, createWgt( TokenType.Barge ) );
