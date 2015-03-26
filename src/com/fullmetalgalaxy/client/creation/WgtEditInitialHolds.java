@@ -92,6 +92,7 @@ public class WgtEditInitialHolds extends Composite
     WgtTokenQty wgtTurret = createWgt( TokenType.Turret );
     wgtTurret.setMaxValue( 3 );
     m_grid.setWidget( 0, 2, wgtTurret );
+    m_grid.setWidget( 0, 3, createWgt( TokenType.Teleporter ) );
     m_grid.setWidget( 1, 0, createWgt( TokenType.Crab ) );
     m_grid.setWidget( 1, 1, createWgt( TokenType.Crayfish ) );
     m_grid.setWidget( 1, 2, createWgt( TokenType.Barge ) );
