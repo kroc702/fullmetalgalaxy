@@ -35,7 +35,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
    * Theses values are store as is in data base.
    */
   Freighter, Turret, Barge, Speedboat, Tank, Heap, Crab, WeatherHen, Pontoon, Ore, None,
- Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask, Destroyer, Ore2Generator, Ore3Generator, Teleporter;
+ Ore0, Ore3, Ore5, Crayfish, Sluice, Hovertank, Tarask, Destroyer, Ore2Generator, Ore3Generator, Teleporter, Warp;
 
   public boolean canBeColored()
   {
@@ -63,6 +63,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Sluice:
     case Ore2Generator:
     case Ore3Generator:
+    case Warp:
     default:
       return false;
     }
@@ -89,6 +90,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore2Generator:
     case Ore3Generator:
     case Ore0:
+    case Warp:
       return 0;
     case Ore:
       return 2;
@@ -127,6 +129,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore2Generator:
     case Ore3Generator:
     case Teleporter:
+    case Warp:
     default:
       return false;
     }
@@ -143,6 +146,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Ore2Generator:
     case Ore3Generator:
     case Freighter:
+    case Warp:
       return 10;
     case Barge:
     case Destroyer:
@@ -178,6 +182,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     {
     case Freighter:
     case Teleporter:
+    case Warp:
       return 1000;
     case Barge:
       return 4;
@@ -234,7 +239,11 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     case Crab:
     case Pontoon:
     case Ore:
+    case Ore0:
+    case Ore3:
+    case Ore5:
     case Teleporter:
+    case Warp:
     default:
       return 0;
     }
@@ -248,6 +257,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     {
     case Pontoon:
     case Sluice:
+    case Warp:
       return 0;
     case Freighter:
       if( (p_sector == Sector.North) || (p_sector == Sector.SouthEast)
@@ -293,6 +303,7 @@ public enum TokenType implements java.io.Serializable, IsSerializable
     {
     case Freighter:
     case Teleporter:
+    case Warp:
       return true;
     case Barge:
       if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Crab)

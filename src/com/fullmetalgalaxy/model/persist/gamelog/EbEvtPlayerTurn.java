@@ -178,10 +178,10 @@ public class EbEvtPlayerTurn extends AnEvent
         throw new RpcFmpException( errMsg().mustLandFreighter() );
       }
     }
-    // check that current player have no cheating tank (ie two tank on same
-    // montain)
     if( !isAuto() )
     {
+      // check that current player have no cheating tank (ie two tank on same
+      // montain)
       EnuColor playerColor = myRegistration.getEnuColor();
       for( EbToken token : p_game.getSetToken() )
       {
@@ -190,6 +190,13 @@ public class EbEvtPlayerTurn extends AnEvent
         {
           throw new RpcFmpException( errMsg().cantEndTurnTwoTankMontain() );
         }
+      }
+      // check that no token are left in warp
+      if( p_game.getMainWarp().containToken() )
+      {
+        // TODO i18n
+        throw new RpcFmpException(
+            "Vous ne pouvez pas terminer votre tour en laissant des unités dans le warp" );
       }
     }
   }

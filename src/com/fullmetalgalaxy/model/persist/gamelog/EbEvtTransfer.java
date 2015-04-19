@@ -111,15 +111,19 @@ public class EbEvtTransfer extends AnEventPlay
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
-    if( !myRegistration.getEnuColor().isColored( getTokenCarrier(p_game).getColor() )
-        || getTokenCarrier(p_game).getColor() == EnuColor.None )
+    if( (!myRegistration.getEnuColor().isColored( getTokenCarrier(p_game).getColor() )
+        || getTokenCarrier(p_game).getColor() == EnuColor.None)
+        && getTokenCarrier( p_game ).getType() != TokenType.Freighter
+        && getTokenCarrier( p_game ).getType() != TokenType.Warp )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
-    if( !myRegistration.getEnuColor().isColored( getNewTokenCarrier(p_game).getColor() )
-        || getNewTokenCarrier(p_game).getColor() == EnuColor.None )
+    if( (!myRegistration.getEnuColor().isColored( getNewTokenCarrier(p_game).getColor() )
+        || getNewTokenCarrier(p_game).getColor() == EnuColor.None)
+        && getNewTokenCarrier( p_game ).getType() != TokenType.Freighter
+        && getNewTokenCarrier( p_game ).getType() != TokenType.Warp )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getNewTokenCarrier( p_game ).getColor() ),
@@ -138,7 +142,8 @@ public class EbEvtTransfer extends AnEventPlay
     else
     {
       if( getTokenCarrier( p_game ).getCarrierToken() != getNewTokenCarrier( p_game )
-          && getNewTokenCarrier( p_game ).getType() != TokenType.Teleporter )
+          && getNewTokenCarrier( p_game ).getType() != TokenType.Teleporter
+          && getNewTokenCarrier( p_game ).getType() != TokenType.Warp )
       {
         throw new RpcFmpException( "les deux pions " + getTokenCarrier(p_game) + " et "
             + getNewTokenCarrier(p_game) + " ne sont pas voisins: le transfert est impossible." );
@@ -202,6 +207,10 @@ public class EbEvtTransfer extends AnEventPlay
         freighters.get( 0 ).incVersion();
       }
     }
+    else if( getNewTokenCarrier( p_game ).getType() == TokenType.Warp )
+    {
+      p_game.moveToken( getToken( p_game ), p_game.getMainWarp() );
+    }
     else
     {
       p_game.moveToken( getToken( p_game ), getNewTokenCarrier( p_game ) );
@@ -226,6 +235,10 @@ public class EbEvtTransfer extends AnEventPlay
         p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
         freighters.get( 0 ).incVersion();
       }
+    }
+    else if( getTokenCarrier( p_game ).getType() == TokenType.Warp )
+    {
+      p_game.moveToken( getToken( p_game ), p_game.getMainWarp() );
     }
     else
     {

@@ -151,8 +151,24 @@ public class EbEvtTimeStep extends AnEvent
         {
           multipleBulletIncrement = (token.getType().getMaxBulletCount() / 2);
         }
-        token.setBulletCount( token.getBulletCount()
-            + multipleBulletIncrement * game.getEbConfigGameTime().getBulletCountIncrement() );
+
+        if( token.getLocation() == Location.Token
+            && token.getCarrierToken().getType() == TokenType.Warp )
+        {
+          // token in warp have no bullet !!!
+          token.setBulletCount( token.getBulletCount() - multipleBulletIncrement
+              * game.getEbConfigGameTime().getBulletCountIncrement() );
+        }
+        else
+        {
+          token.setBulletCount( token.getBulletCount() + multipleBulletIncrement
+              * game.getEbConfigGameTime().getBulletCountIncrement() );
+        }
+
+        if( token.getBulletCount() < 0 )
+        {
+          token.setBulletCount( 0 );
+        }
         if( token.getBulletCount() > token.getType().getMaxBulletCount() )
         {
           token.setBulletCount( token.getType().getMaxBulletCount() );

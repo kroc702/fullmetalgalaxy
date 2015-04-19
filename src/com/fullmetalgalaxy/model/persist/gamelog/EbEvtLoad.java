@@ -133,10 +133,18 @@ public class EbEvtLoad extends AnEventPlay
     }
     if( (!myRegistration.getEnuColor().isColored( getTokenCarrier( p_game ).getColor() )
         || getTokenCarrier( p_game ).getColor() == EnuColor.None )
-        && getTokenCarrier( p_game ).getType() != TokenType.Freighter )
+        && getTokenCarrier( p_game ).getType() != TokenType.Freighter
+        && getTokenCarrier( p_game ).getType() != TokenType.Warp )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+    }
+    if( getTokenCarrier( p_game ).getColor() == EnuColor.None
+        && getToken( p_game ).getColor() == EnuColor.None )
+    {
+      throw new RpcFmpException( errMsg().CantMoveDontControl(
+          Messages.getColorString( getAccountId(), EnuColor.None ),
           Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
     }
 
@@ -224,6 +232,10 @@ public class EbEvtLoad extends AnEventPlay
         p_game.moveToken( getToken( p_game ), freighters.get( 0 ) );
         freighters.get( 0 ).incVersion();
       }
+    }
+    else if( getTokenCarrier( p_game ).getType() == TokenType.Warp )
+    {
+      p_game.moveToken( getToken( p_game ), p_game.getMainWarp() );
     }
     else
     {

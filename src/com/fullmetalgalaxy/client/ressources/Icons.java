@@ -434,6 +434,13 @@ public interface Icons extends ClientBundle
   public ImageResource strategy_ore3generator();
 
 
+  @Source("tokens/tactic_warp3.png")
+  public ImageResource tactic_warp();
+
+  @Source("tokens/strategy_warp3.png")
+  public ImageResource strategy_warp();
+
+
 
   @Source("tokens/render/colorless/tactic/pontoon0-0001.png")
   public ImageResource tactic_pontoon_n();
