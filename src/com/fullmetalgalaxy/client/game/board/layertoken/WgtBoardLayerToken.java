@@ -231,7 +231,8 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       // display a load count image ?
       if( (!p_token.getType().isOre())
           && (p_token.getType() != TokenType.Freighter) && (p_token.getType() != TokenType.Turret)
-          && (p_token.getType() != TokenType.Pontoon) && (p_token.containToken()) )
+          && (p_token.getType() != TokenType.Pontoon) && (p_token.getType() != TokenType.Warp) 
+          && (p_token.containToken()) )
       {
         addWarningImage( tokenWidget.getIconWarningImage(), BoardIcons.iconLoad( getZoom().getValue(),
             p_token.getContainSize() ), p_token, landPixOffset );

@@ -519,7 +519,7 @@ public class Game extends GameData implements PathGraph, GameEventStack
       p_tokenToMove.getCarrierToken().unloadToken( p_tokenToMove );
     }
     p_tokenCarrier.loadToken( p_tokenToMove );
-    if( p_tokenToMove.canBeColored() )
+    if( p_tokenToMove.canBeColored() && p_tokenCarrier.getColor() != EnuColor.None )
     {
       // if a token enter inside another token, it take his color
       p_tokenToMove.setColor( p_tokenCarrier.getColor() );
@@ -891,6 +891,19 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return list;
   }
 
+  public EbToken getMainWarp()
+  {
+    EbToken warp = null;
+    for( EbToken token : getSetToken() )
+    {
+      if( token.getType() == TokenType.Warp && (warp == null || warp.getId() > token.getId()) )
+      {
+        warp = token;
+      }
+    }
+    return warp;
+  }
+
   /**
    * search over m_token for a token
    * @param p_id
@@ -1103,6 +1116,8 @@ public class Game extends GameData implements PathGraph, GameEventStack
     case Hovertank:
     case Ore2Generator:
     case Ore3Generator:
+    case Teleporter:
+    case Warp:
     default:
       return true;
     }

@@ -208,6 +208,7 @@ public class EbToken extends EbBase
     default:
     case Freighter:
     case Turret:
+    case Warp:
       return 0;
     case Ore0:
     case Ore:
@@ -501,6 +502,7 @@ public class EbToken extends EbBase
       return true;
     case Freighter:
     case Turret:
+    case Warp:
     default:
       return false;
     }
@@ -626,6 +628,8 @@ public class EbToken extends EbBase
     {
     case Freighter:
       return 4;
+    case Warp:
+      return 3;
     case Barge:
     case Destroyer:
       return 2;
@@ -674,6 +678,11 @@ public class EbToken extends EbBase
       case Barge:
       case Destroyer:
         list.add( p_coordinateSystem.getNeighbor( getPosition(), getPosition().getSector() ) );
+        break;
+
+      case Warp:
+        list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.NorthEast ) );
+        list.add( p_coordinateSystem.getNeighbor( getPosition(), Sector.SouthEast ) );
         break;
 
       default:

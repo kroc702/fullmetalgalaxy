@@ -149,6 +149,7 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
       addTokenBtn( TokenType.Ore5 );
       addTokenBtn( TokenType.Ore2Generator );
       addTokenBtn( TokenType.Ore3Generator );
+      addTokenBtn( TokenType.Warp );
       addTokenBtn( TokenType.Pontoon );
       addTokenBtn( TokenType.Sluice );
     }

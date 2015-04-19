@@ -147,6 +147,11 @@ public class WgtContextExtra extends WgtView implements ClickHandler
         isTeleporter = true;
       }
     }
+    if( mainToken != null && mainToken.getType() == TokenType.Warp )
+    {
+      mainToken = model.getGame().getMainWarp();
+      isTeleporter = true;
+    }
 
     if( (!action.isBoardTokenSelected()) && (!action.isActionsPending())
         && (action.getSelectedAction() == null) )

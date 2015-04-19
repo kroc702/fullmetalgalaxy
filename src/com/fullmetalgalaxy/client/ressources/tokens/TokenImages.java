@@ -278,6 +278,8 @@ public class TokenImages
       return Icons.s_instance.tactic_ore2generator();
     case Ore3Generator:
       return Icons.s_instance.tactic_ore3generator();
+    case Warp:
+      return Icons.s_instance.tactic_warp();
     default:
       return getTokenImageTactic( EnuColor.None, p_token, p_sector );
     }
@@ -357,6 +359,8 @@ public class TokenImages
       return Icons.s_instance.strategy_ore2generator();
     case Ore3Generator:
       return Icons.s_instance.strategy_ore3generator();
+    case Warp:
+      return Icons.s_instance.strategy_warp();
     default:
       return getTokenImageStrategy( EnuColor.None, p_token, p_sector );
     }

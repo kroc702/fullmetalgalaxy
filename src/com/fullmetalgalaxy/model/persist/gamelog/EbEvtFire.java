@@ -223,11 +223,13 @@ public class EbEvtFire extends AnEventPlay
       throw new RpcFmpException( errMsg().CantDestroyFreighter() );
     }
 
-    // check that target isn't ore3generator
-    if( getTokenTarget( p_game ).getType() == TokenType.Ore3Generator )
+    // check that target isn't ore3generator nor Warp
+    if( getTokenTarget( p_game ).getType() == TokenType.Ore3Generator
+        || getTokenTarget( p_game ).getType() == TokenType.Warp )
     {
       // TODO i18n
-      throw new RpcFmpException( "Vous ne pouvez pas detruire ces generateurs de minerais." );
+      throw new RpcFmpException( "Vous ne pouvez pas detruire les "
+          + getTokenTarget( p_game ).getType() );
     }
 
     // check that game isn't in parallel hidden phase
