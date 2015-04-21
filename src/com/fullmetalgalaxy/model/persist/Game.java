@@ -891,6 +891,42 @@ public class Game extends GameData implements PathGraph, GameEventStack
     return list;
   }
 
+  /**
+   * 
+   * @return number of team that have at least one freighter on board
+   */
+  public int countTeamOnBoard()
+  {
+    int teamCount = 0;
+    if( getCurrentTimeStep() < getEbConfigGameTime().getTakeOffTurns().get( 0 ) )
+    {
+      // before turn 21: assume every color is used
+      for( EbTeam team : getTeams() )
+      {
+        if( team.getColors( getPreview() ) != EnuColor.None ) {
+          teamCount++;
+        }
+      } 
+    } else {
+      // after turn 21: we need to count freighter on board
+      EnuColor allFreighterColors = new EnuColor();
+      for( EbToken token : getSetToken() )
+      {
+        if( token.getType() == TokenType.Freighter && token.getLocation() == Location.Board )
+        {
+          allFreighterColors.addColor( token.getColor() );
+        }
+      }
+      for( EbTeam team : getTeams() )
+      {
+        if( allFreighterColors.contain( team.getColors( getPreview() ) ) ) {
+          teamCount++;
+        }
+      }      
+    }
+    return teamCount;
+  }
+
   public EbToken getMainWarp()
   {
     EbToken warp = null;

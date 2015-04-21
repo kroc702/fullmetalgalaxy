@@ -306,6 +306,7 @@ public class EbEvtPlayerTurn extends AnEvent
       
       // update ore generator
       ArrayList<AnBoardPosition> oreToRemovePosition = new ArrayList<AnBoardPosition>();
+      int teamOnBoard = game.countTeamOnBoard();
       for( EbToken token : p_game.getSetToken() )
       {
         if( (token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator)
@@ -314,7 +315,10 @@ public class EbEvtPlayerTurn extends AnEvent
           if( game.getAllToken( token.getPosition() ).size() >= 2 )
           {
             token.setBulletCount( 0 );
-          } else if( token.getBulletCount() >= game.getTeams().size()*FmpConstant.oreGenerationInTurn ) {
+          }
+          else if( token.getBulletCount() >= teamOnBoard
+              * FmpConstant.oreGenerationInTurn )
+          {
             // create new ore token every two turns + one player
             token.setBulletCount( 0 );
             EbToken oreToken = new EbToken( TokenType.Ore );
