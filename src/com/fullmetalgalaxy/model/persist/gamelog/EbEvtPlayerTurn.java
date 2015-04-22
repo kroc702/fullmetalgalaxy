@@ -192,7 +192,8 @@ public class EbEvtPlayerTurn extends AnEvent
         }
       }
       // check that no token are left in warp
-      if( p_game.getMainWarp().containToken() )
+      EbToken warp = p_game.getMainWarp();
+      if( warp != null && warp.containToken() )
       {
         // TODO i18n
         throw new RpcFmpException(
