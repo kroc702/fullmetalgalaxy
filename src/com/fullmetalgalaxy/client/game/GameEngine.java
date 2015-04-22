@@ -396,6 +396,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 .showWarning( ((RpcFmpException)p_caught)
               .getLocalizedMessage() );
         }
+        else if( ClientUtil.getUrlParameter( "debug" ) != null )
+        {
+          MAppMessagesStack.s_instance.showWarning( p_caught.getMessage() );
+        }
       }
       else
       {
