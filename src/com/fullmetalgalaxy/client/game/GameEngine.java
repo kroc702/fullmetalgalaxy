@@ -1098,7 +1098,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
    */
   public boolean canCancelAction()
   {
-    if( getGame().getGameType()==GameType.Puzzle )
+    if( getGame().getGameType() == GameType.Puzzle )
     {
       return true;
     }
@@ -1122,6 +1122,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     }
     if( getGame().getConfigGameTime() == ConfigGameTime.StandardAsynch )
     {
+      // for slow parallel game, check that user is allowed to cancel events
       AnEvent event = null;
       for( int i = m_currentActionIndex; i < getGame().getLogs().size(); i++ )
       {
@@ -1134,8 +1135,26 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
       return true;
     }
-    if( getGame().getCurrentPlayerIds().contains( getMyRegistration().getId() ) )
+    if( !getGame().getConfigGameTime().isParallel() )
     {
+      // for turn by turn game, check that user is allowed to cancel events
+      AnEvent event = null;
+      for( int i = m_currentActionIndex; i < getGame().getLogs().size(); i++ )
+      {
+        event = getGame().getLogs().get( i );
+        if( event == null || !(event instanceof AnEventUser) )
+        {
+          return false;
+        }
+        if( event instanceof EbAdmin )
+        {
+          return false;
+        }
+        if( ((AnEventUser)event).getAccountId() != AppMain.instance().getMyAccount().getId() )
+        {
+          return false;
+        }
+      }
       return true;
     }
     return false;
