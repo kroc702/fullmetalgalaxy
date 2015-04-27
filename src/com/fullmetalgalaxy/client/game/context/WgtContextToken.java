@@ -106,6 +106,10 @@ public class WgtContextToken extends Composite
         {
           landStr += " & " + Messages.getTokenString( 0, TokenType.Pontoon );
         }
+        if( GameEngine.model().getGame().getToken( position, TokenType.Sluice ) != null )
+        {
+          landStr += " & " + Messages.getTokenString( 0, TokenType.Sluice );
+        }
         absPanel.add( new HTML( landStr ), 0, 40 );
         
       }
