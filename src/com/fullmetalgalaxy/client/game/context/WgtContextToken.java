@@ -29,6 +29,7 @@ import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.TokenType;
+import com.fullmetalgalaxy.model.constant.FmpConstant;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
@@ -131,6 +132,16 @@ public class WgtContextToken extends Composite
       {
         absPanel.add(
             new HTML( MAppBoard.s_messages.construct() + " : " + token.getBulletCount() ), 150, 0 );
+      }
+      else if( token != null && (token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator ) )
+      {
+        float percentage = 0;
+        if( GameEngine.model().getGame().getEbConfigGameTime().isParallel() ) {
+          percentage = token.getBulletCount() / (2 * FmpConstant.oreGenerationInTurn + 1);
+        } else {
+          percentage = token.getBulletCount() / (GameEngine.model().getGame().countTeamOnBoard()*FmpConstant.oreGenerationInTurn +1);
+        }
+        absPanel.add( new HTML( (int)(percentage*100) + "%" ), 200, 0 );
       }
       // m_vPanel.add( new HTML( "</center>" ) );
     }
