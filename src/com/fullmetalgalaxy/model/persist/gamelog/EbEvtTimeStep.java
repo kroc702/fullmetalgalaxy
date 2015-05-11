@@ -31,7 +31,6 @@ import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
-import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
@@ -139,7 +138,11 @@ public class EbEvtTimeStep extends AnEvent
       }
     }
     // update all tokens bullets count
-    ArrayList<AnBoardPosition> oreToRemovePosition = new ArrayList<AnBoardPosition>();
+    boolean isFirstExec = (oreToRemoveWhileUnexec == null);
+    if( isFirstExec )
+    {
+      oreToRemoveWhileUnexec = new ArrayList<EbToken>();
+    }
     for( EbToken token : p_game.getSetToken() )
     {
       if( token.getType() != TokenType.Freighter
@@ -183,30 +186,35 @@ public class EbEvtTimeStep extends AnEvent
         } else if( token.getBulletCount() >= 2*FmpConstant.oreGenerationInTurn ) {
           // create new ore token every ~30AP
           token.setBulletCount( 0 );
-          EbToken oreToken = new EbToken( TokenType.Ore );
-          if( token.getType() == TokenType.Ore3Generator )
+          if( isFirstExec )
           {
-            oreToken.setType( TokenType.Ore3 );
+            EbToken oreToken = new EbToken( TokenType.Ore );
+            if( token.getType() == TokenType.Ore3Generator )
+            {
+              oreToken.setType( TokenType.Ore3 );
+            }
+            oreToken.setPosition( token.getPosition() );
+            oreToRemoveWhileUnexec.add( oreToken );
           }
-          oreToRemovePosition.add( token.getPosition() );
-          addOreToRemoveWhileUnexec( oreToken );
         } else {
           token.setBulletCount( token.getBulletCount()+game.getEbConfigGameTime().getBulletCountIncrement() );
         }
 
       }
     }
-
-    if( oreToRemoveWhileUnexec != null )
+    for( EbToken token : oreToRemoveWhileUnexec )
     {
-      if( oreToRemoveWhileUnexec != null )
+      if( token.isTrancient() || game.getToken( token.getId() ) == null )
       {
-        for( int i = 0; i < oreToRemoveWhileUnexec.size() && i < oreToRemovePosition.size(); i++ )
-        {
-          game.addToken( oreToRemoveWhileUnexec.get( i ) );
-          game.moveToken( oreToRemoveWhileUnexec.get( i ), oreToRemovePosition.get( i ) );
-        }
+        game.addToken( token );
       }
+      else
+      {
+        // warning: ore stored in action are not the same instance as in game
+        token = game.getToken( token.getId() );
+      }
+      p_game.moveToken( token, Location.Board );
+      token.incVersion();
     }
   }
 
@@ -241,32 +249,35 @@ public class EbEvtTimeStep extends AnEvent
       }
     }
 
-    if( oreToRemoveWhileUnexec != null )
+    // decrease oregenerator count
+    for( EbToken token : p_game.getSetToken() )
     {
-      for( EbToken ore : oreToRemoveWhileUnexec )
+      if( token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator )
       {
-        for( EbToken token : game.getAllToken( ore.getPosition() ) )
+        token.setBulletCount( token.getBulletCount() - 1 );
+      }
+    }
+    // eventually remove ore from generator
+    int newOreGeneratorCount = 2 * FmpConstant.oreGenerationInTurn - 1;
+    for( EbToken ore : oreToRemoveWhileUnexec )
+    {
+      // warning: ore stored in action are not the same instance as in game
+      ore = p_game.getToken( ore.getId() );
+
+      // and set bullet count to real number...
+      for( EbToken token : p_game.getAllToken( ore.getPosition() ) )
+      {
+        if( token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator )
         {
-          if( token.getType() == TokenType.Ore2Generator
-              || token.getType() == TokenType.Ore3Generator )
-          {
-            token.setBulletCount( 2 );
-          }
+          token.setBulletCount( newOreGeneratorCount );
         }
       }
-      p_game.getSetToken().removeAll( oreToRemoveWhileUnexec );
+      p_game.moveToken( ore, Location.Graveyard );
+      ore.decVersion();
     }
   }
 
 
-  private void addOreToRemoveWhileUnexec(EbToken ore)
-  {
-    if( oreToRemoveWhileUnexec == null )
-    {
-      oreToRemoveWhileUnexec = new ArrayList<EbToken>();
-    }
-    oreToRemoveWhileUnexec.add( ore );
-  }
 
   // Bean getter / setter
   // ====================

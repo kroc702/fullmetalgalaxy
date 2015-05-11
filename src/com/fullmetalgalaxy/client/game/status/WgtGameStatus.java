@@ -120,7 +120,11 @@ public class WgtGameStatus extends WgtView
     {
       return;
     }
-    m_gameLastVersion = game.getVersion();
+    if( m_gameLastVersion == game.getCurrentTimeStep() )
+    {
+      return;
+    }
+    m_gameLastVersion = game.getCurrentTimeStep();
 
     m_lblGameName.setText( game.getName() );
 
