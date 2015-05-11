@@ -862,9 +862,11 @@ public class EbToken extends EbBase
   }
 
   /**
+   * WARNING: unless you exactly understand why you want to use this method,
+   * you should use game.moveToken() method instead.
    * @param p_position the position to set
    */
-  protected void setPosition(AnBoardPosition p_position)
+  public void setPosition(AnBoardPosition p_position)
   {
     m_position = p_position;
   }
