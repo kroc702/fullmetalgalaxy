@@ -1,0 +1,502 @@
+from PSPApp import *
+
+def ScriptProperties():
+    return {
+        'Author': u'',
+        'Copyright': u'',
+        'Description': u'',
+        'Host': u'Paint Shop Pro Photo',
+        'Host Version': u'12.00'
+        }
+
+def Do(Environment):
+    # EnableOptimizedScriptUndo
+    App.Do( Environment, 'EnableOptimizedScriptUndo', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerDuplicate
+    App.Do( Environment, 'LayerDuplicate', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerDuplicate
+    App.Do( Environment, 'LayerDuplicate', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerDuplicate
+    App.Do( Environment, 'LayerDuplicate', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerDuplicate
+    App.Do( Environment, 'LayerDuplicate', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # New Raster Layer
+    App.Do( Environment, 'NewRasterLayer', {
+            'General': {
+                'Opacity': 100, 
+                'Name': u'Raster 2', 
+                'IsVisible': True, 
+                'IsTransparencyLocked': False, 
+                'LinkSet': 0, 
+                'UseHighlight': False, 
+                'PaletteHighlightColor': (255,255,64), 
+                'GroupLink': True, 
+                'BlendMode': App.Constants.BlendMode.Normal
+                }, 
+            'BlendRanges': {
+                'BlendRangeGreen': (0,0,255,255,0,0,255,255), 
+                'BlendRangeRed': (0,0,255,255,0,0,255,255), 
+                'BlendRangeBlue': (0,0,255,255,0,0,255,255), 
+                'BlendRangeGrey': (0,0,255,255,0,0,255,255)
+                }, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Fill
+    App.Do( Environment, 'Fill', {
+            'BlendMode': App.Constants.BlendMode.Normal, 
+            'MatchMode': App.Constants.MatchMode.None, 
+            'Material': {
+                'Color': (255,255,255), 
+                'Pattern': None, 
+                'Gradient': None, 
+                'Texture': None, 
+                'Art': None
+                }, 
+            'UseForeground': False, 
+            'Opacity': 100, 
+            'Point': (59.625,91.125), 
+            'SampleMerged': False, 
+            'Tolerance': 54, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerArrange
+    App.Do( Environment, 'LayerArrange', {
+            'Path': (0,-3,[],False), 
+            'MoveAboveSibling': True, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerMergeDown
+    App.Do( Environment, 'LayerMergeDown', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # New Raster Layer
+    App.Do( Environment, 'NewRasterLayer', {
+            'General': {
+                'Opacity': 100, 
+                'Name': u'Raster 3', 
+                'IsVisible': True, 
+                'IsTransparencyLocked': False, 
+                'LinkSet': 0, 
+                'UseHighlight': False, 
+                'PaletteHighlightColor': (255,255,64), 
+                'GroupLink': True, 
+                'BlendMode': App.Constants.BlendMode.Normal
+                }, 
+            'BlendRanges': {
+                'BlendRangeGreen': (0,0,255,255,0,0,255,255), 
+                'BlendRangeRed': (0,0,255,255,0,0,255,255), 
+                'BlendRangeBlue': (0,0,255,255,0,0,255,255), 
+                'BlendRangeGrey': (0,0,255,255,0,0,255,255)
+                }, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Fill
+    App.Do( Environment, 'Fill', {
+            'BlendMode': App.Constants.BlendMode.Normal, 
+            'MatchMode': App.Constants.MatchMode.None, 
+            'Material': {
+                'Color': (255,255,255), 
+                'Pattern': None, 
+                'Gradient': None, 
+                'Texture': None, 
+                'Art': None
+                }, 
+            'UseForeground': False, 
+            'Opacity': 100, 
+            'Point': (76.625,121.125), 
+            'SampleMerged': False, 
+            'Tolerance': 54, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerArrange
+    App.Do( Environment, 'LayerArrange', {
+            'Path': (0,-3,[],False), 
+            'MoveAboveSibling': True, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerMergeDown
+    App.Do( Environment, 'LayerMergeDown', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Gaussian Blur
+    App.Do( Environment, 'GaussianBlur', {
+            'Radius': 4, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Color Adjust Brightness Contrast
+    App.Do( Environment, 'ColorAdjustBrightnessContrast', {
+            'BrightnessContrast': {
+                'Brightness': -50, 
+                'Contrast': 33
+                }, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerMergeDown
+    App.Do( Environment, 'LayerMergeDown', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Fill
+    App.Do( Environment, 'Fill', {
+            'BlendMode': App.Constants.BlendMode.Normal, 
+            'MatchMode': App.Constants.MatchMode.Brightness, 
+            'Material': {
+                'Color': (255,255,255), 
+                'Pattern': None, 
+                'Gradient': None, 
+                'Texture': None, 
+                'Art': None
+                }, 
+            'UseForeground': False, 
+            'Opacity': 100, 
+            'Point': (3.375,3.375), 
+            'SampleMerged': False, 
+            'Tolerance': 12, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,-1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # BlurMore
+    App.Do( Environment, 'BlurMore', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,-1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Color Adjust Brightness Contrast
+    App.Do( Environment, 'ColorAdjustBrightnessContrast', {
+            'BrightnessContrast': {
+                'Brightness': 150, 
+                'Contrast': 0
+                }, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Inner Bevel
+    App.Do( Environment, 'InnerBevel', {
+            'Ambience': 0, 
+            'Angle': 141, 
+            'Bevel': 1, 
+            'Color': (255,255,255), 
+            'Depth': 7, 
+            'Elevation': 30, 
+            'Intensity': 50, 
+            'Shininess': 22, 
+            'Smoothness': 7, 
+            'Width': 3, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # HidePalettes
+    App.Do( Environment, 'HidePalettes', {
+            'Command': App.Constants.EnterCommands.Toggle, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Default, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Layer Properties
+    App.Do( Environment, 'LayerProperties', {
+            'General': {
+                'Opacity': None, 
+                'Name': u'shadow', 
+                'IsVisible': None, 
+                'IsTransparencyLocked': None, 
+                'LinkSet': None, 
+                'UseHighlight': None, 
+                'PaletteHighlightColor': None, 
+                'GroupLink': None, 
+                'BlendMode': None
+                }, 
+            'BlendRanges': None, 
+            'Path': (0,0,[],False), 
+            'ArtMediaTexture': None, 
+            'Effects': None, 
+            'BrightnessContrast': None, 
+            'ChannelMixer': None, 
+            'ColorBalance': None, 
+            'CurveParams': None, 
+            'HSL': None, 
+            'Threshold': None, 
+            'Levels': None, 
+            'Posterize': None, 
+            'Overlay': None, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Layer Properties
+    App.Do( Environment, 'LayerProperties', {
+            'General': {
+                'Opacity': None, 
+                'Name': u'high', 
+                'IsVisible': None, 
+                'IsTransparencyLocked': None, 
+                'LinkSet': None, 
+                'UseHighlight': None, 
+                'PaletteHighlightColor': None, 
+                'GroupLink': None, 
+                'BlendMode': None
+                }, 
+            'BlendRanges': None, 
+            'Path': (0,0,[],False), 
+            'ArtMediaTexture': None, 
+            'Effects': None, 
+            'BrightnessContrast': None, 
+            'ChannelMixer': None, 
+            'ColorBalance': None, 
+            'CurveParams': None, 
+            'HSL': None, 
+            'Threshold': None, 
+            'Levels': None, 
+            'Posterize': None, 
+            'Overlay': None, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # Layer Properties
+    App.Do( Environment, 'LayerProperties', {
+            'General': {
+                'Opacity': None, 
+                'Name': u'low', 
+                'IsVisible': None, 
+                'IsTransparencyLocked': None, 
+                'LinkSet': None, 
+                'UseHighlight': None, 
+                'PaletteHighlightColor': None, 
+                'GroupLink': None, 
+                'BlendMode': None
+                }, 
+            'BlendRanges': None, 
+            'Path': (0,0,[],False), 
+            'ArtMediaTexture': None, 
+            'Effects': None, 
+            'BrightnessContrast': None, 
+            'ChannelMixer': None, 
+            'ColorBalance': None, 
+            'CurveParams': None, 
+            'HSL': None, 
+            'Threshold': None, 
+            'Levels': None, 
+            'Posterize': None, 
+            'Overlay': None, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+

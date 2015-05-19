@@ -1,0 +1,790 @@
+from PSPApp import *
+
+def ScriptProperties():
+    return {
+        'Author': u'',
+        'Copyright': u'',
+        'Description': u'',
+        'Host': u'Paint Shop Pro Photo',
+        'Host Version': u'12.00'
+        }
+
+
+def Do(Environment):
+    # EnableOptimizedScriptUndo
+    App.Do( Environment, 'EnableOptimizedScriptUndo', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerViewNone
+    App.Do( Environment, 'LayerViewNone', {
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (10,10,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,-2,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-3,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency
+                , 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\sea2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            }) 
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-2,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency
+                , 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\sea1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            }) 
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[1],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\plain2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[2],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[4],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\swamp_low2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[3],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[2],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\swamp_hight2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[3],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[4],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[5],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[7],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\reef_low2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[5],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[6],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,-1,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\reef_hight2.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[6],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[7],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,-1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[1],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\plain1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[2],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[4],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\swamp_low1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[2],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[3],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\swamp_hight1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[3],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[4],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[8],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[5],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[7],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\reef_low1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[5],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # SelectLayer
+    App.Do( Environment, 'SelectLayer', {
+            'Path': (0,0,[6],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Show, 
+            'Path': (0,2,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # PNG Optimizer
+    App.Do( Environment, 'PNGOptimizer', {
+            'TypeOfTransparency': App.Constants.TransparencyType.AlphaTransparency, 
+            'Tolerance': 1, 
+            'BoostAmount': 1, 
+            'IncludeWindowsColors': False, 
+            'TypeOfImage': App.Constants.ImageType.TrueColor, 
+            'NumberOfColors': 256, 
+            'DitherPercent': 0, 
+            'PaletteType': App.Constants.ColorSelection.OptimizedOctreePalette, 
+            'FileSubFormat': App.Constants.SubFormat.NonInterlaced, 
+            'BoostSelectedColors': False, 
+            'TransparentArea': App.Constants.Transparency.None, 
+            'TransparentColor': (0,0,0), 
+            'FileName': u'C:\\fmg_export\\reef_hight1.png', 
+            'Gamma': 45455, 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Match, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,1,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (0,2,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
+    # LayerSetVisibility
+    App.Do( Environment, 'LayerSetVisibility', {
+            'Command': App.Constants.ShowCommands.Hide, 
+            'Path': (1,0,[],False), 
+            'GeneralSettings': {
+                'ExecutionMode': App.Constants.ExecutionMode.Silent, 
+                'AutoActionMode': App.Constants.AutoActionMode.Default, 
+                'Version': ((12,0,0),1)
+                }
+            })
+
