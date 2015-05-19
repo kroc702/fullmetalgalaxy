@@ -7,6 +7,12 @@ find . -name "*.java" -exec ../misc/rh/replace_header.sh {} \;
 # don't commit package info
 
 
+# to crop land from 4 hex to 2 hex
+# ================================
+find */tactic/ -name "reef*.png" -exec convert -crop 89x91+0+0 {} {} \;
+find */tactic/ -name "swamp*.png" -exec convert -crop 89x91+0+0 {} {} \;
+
+
 # to reduce color from several images
 # ===================================
 cd war/images/board
