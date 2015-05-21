@@ -222,6 +222,12 @@ public class Messages
       return SharedI18n.getMessages( p_accountId ).ice();
     case Lava:
       return SharedI18n.getMessages( p_accountId ).lava();
+    case Lagoon:
+      return SharedI18n.getMessages( p_accountId ).lagoon();
+    case Moon:
+      return SharedI18n.getMessages( p_accountId ).moon();
+    case Dirt:
+      return SharedI18n.getMessages( p_accountId ).dirt();
     }
   }
 
