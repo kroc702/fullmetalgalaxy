@@ -109,6 +109,12 @@ public interface MessagesRpc extends Messages
 
   String lava();
 
+  String lagoon();
+
+  String moon();
+
+  String dirt();
+
   // GameStatus
   String unknown();
 

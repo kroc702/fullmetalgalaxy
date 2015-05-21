@@ -30,7 +30,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public enum PlanetType implements IsSerializable
 {
-  Desert, Grass, Ice, Lava;
+  Desert, Grass, Ice, Lava, Lagoon, Moon, Dirt;
 
   public String getFolderName()
   {
@@ -45,6 +45,12 @@ public enum PlanetType implements IsSerializable
       return "ice";
     case Lava:
       return "lava";
+    case Lagoon:
+      return "lagoon";
+    case Moon:
+      return "moon";
+    case Dirt:
+      return "dirt";
     }
   }
 }
