@@ -223,7 +223,6 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       }
 
       if( (mainToken.getType() == TokenType.WeatherHen)
-          && (lastTokenType == TokenType.Ore || lastTokenType == TokenType.Ore3)
           && !(action.getSelectedAction() instanceof EbEvtConstruct) )
       {
         // Add list of token that can be constructed
@@ -233,7 +232,7 @@ public class WgtContextExtra extends WgtView implements ClickHandler
 
         for( Entry<TokenType, Integer> entry : model.getGame().getConstructReserve().entrySet() )
         {
-          if( model.getGame().canConstruct( entry.getKey() ) )
+          if( model.getGame().canConstruct( lastTokenType, entry.getKey() ) )
           {
             EbToken fakeToken = new EbToken( entry.getKey() );
             fakeToken.setId( ore.getId() );

@@ -99,12 +99,6 @@ public class EbEvtConstruct extends AnEventPlay
       throw new RpcFmpException( "token " + getTokenCarrier(p_game)
           + " must be on board to construct a token" );
     }
-    // check that token is an ore
-    if( getToken(p_game).getType() != TokenType.Ore && getToken(p_game).getType() != TokenType.Ore3 )
-    {
-      // no i18n
-      throw new RpcFmpException( "you need an ore to construct" );
-    }
     // check that tokencarrier is a weather hen
     if( getTokenCarrier(p_game).getType() != TokenType.WeatherHen )
     {
@@ -128,7 +122,7 @@ public class EbEvtConstruct extends AnEventPlay
       throw new RpcFmpException( "player must have one more action point to unload that token" );
     }
     // check token construct reserve
-    if( !p_game.canConstruct( getConstructType() ) )
+    if( !p_game.canConstruct( getToken( p_game ).getType(), getConstructType() ) )
     {
       // no i18n
       throw new RpcFmpException( getConstructType().toString() + " construct reserve is empty" );
