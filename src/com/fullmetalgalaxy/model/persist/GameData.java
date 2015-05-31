@@ -342,10 +342,18 @@ public class GameData implements java.io.Serializable, IsSerializable
   }
 
 
-  public boolean canConstruct(TokenType p_type)
+  public boolean canConstruct(TokenType p_oreType, TokenType p_unitType)
   {
-    Integer qty = getConstructReserve().get( p_type );
-    return qty != null && qty != 0;
+    Integer qty = getConstructReserve().get( p_unitType );
+    if( p_oreType == TokenType.Ore || p_oreType == TokenType.Ore3 )
+    {
+      return qty != null && qty != 0;
+    }
+    if( p_oreType == TokenType.Ore0 && p_unitType == TokenType.Sluice || p_unitType == TokenType.Pontoon )
+    {
+      return qty != null && qty != 0;
+    }
+    return false;
   }
 
   public void incConstructQty(TokenType p_type)
