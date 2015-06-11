@@ -1622,6 +1622,8 @@ public class EventsPlayBuilder implements GameEventStack
     RpcUtil.logDebug( "user transfert token " + action.getToken( m_game ) + " from "
         + action.getTokenCarrier( m_game ) + " to " + action.getTokenCarrier( m_game ) );
     actionAdd( action );
+    actionTransferExtraSelected();
+
     // keep the first token selected to be ready to unload it
     selectBoardToken( p_newTokenCarrier, p_position );
     EbEvtUnLoad actionUnload = new EbEvtUnLoad();
@@ -1634,9 +1636,9 @@ public class EventsPlayBuilder implements GameEventStack
   protected void actionTransferExtraSelected()
   {
     AnEvent lastEvent = getLastAction();
-    if( lastEvent != null && lastEvent instanceof EbEvtUnLoad )
+    if( lastEvent != null && (lastEvent instanceof EbEvtUnLoad || lastEvent instanceof EbEvtTransfer) )
     {
-      EbEvtUnLoad unload = (EbEvtUnLoad)lastEvent;
+      AnEventPlay unload = (AnEventPlay)lastEvent;
       for( EbToken extraSelectedToken : getExtraSelectedToken() )
       {
         EbEvtTransfer evtTransfer = new EbEvtTransfer();
@@ -1644,7 +1646,14 @@ public class EventsPlayBuilder implements GameEventStack
         evtTransfer.setRegistration( getMyRegistration() );
         evtTransfer.setToken( extraSelectedToken );
         evtTransfer.setTokenCarrier( unload.getTokenCarrier( m_game ) );
-        evtTransfer.setNewTokenCarrier( unload.getToken( m_game ) );
+        if( lastEvent instanceof EbEvtUnLoad )
+        {
+          evtTransfer.setNewTokenCarrier( unload.getToken( m_game ) );
+        }
+        else
+        {
+          evtTransfer.setNewTokenCarrier( unload.getNewTokenCarrier( m_game ) );
+        }
         evtTransfer.setAuto( true );
         evtTransfer.setCost( 0 );
         try
