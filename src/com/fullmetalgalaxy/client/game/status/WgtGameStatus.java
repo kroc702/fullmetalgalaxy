@@ -112,6 +112,12 @@ public class WgtGameStatus extends WgtView
 
   private long m_gameLastVersion = -1;
 
+  private long computeGameHash(Game game)
+  {
+    return game.getCurrentTimeStep() + game.getCurrentTide().ordinal() * 10 + game.getNextTide().ordinal() * 100
+        + game.getNextTide2().ordinal() * 200;
+  }
+
 
   protected void redraw()
   {
@@ -120,11 +126,11 @@ public class WgtGameStatus extends WgtView
     {
       return;
     }
-    if( m_gameLastVersion == game.getCurrentTimeStep() )
+    if( m_gameLastVersion == computeGameHash( game ) )
     {
       return;
     }
-    m_gameLastVersion = game.getCurrentTimeStep();
+    m_gameLastVersion = computeGameHash( game );
 
     m_lblGameName.setText( game.getName() );
 
