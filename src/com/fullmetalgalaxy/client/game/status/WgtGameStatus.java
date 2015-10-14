@@ -115,7 +115,7 @@ public class WgtGameStatus extends WgtView
   private long computeGameHash(Game game)
   {
     return game.getCurrentTimeStep() + game.getCurrentTide().ordinal() * 10 + game.getNextTide().ordinal() * 100
-        + game.getNextTide2().ordinal() * 200;
+        + game.getNextTide2().ordinal() * 200 + game.getCurrentPlayerIds().hashCode();
   }
 
 
@@ -326,13 +326,13 @@ public class WgtGameStatus extends WgtView
 
   private void displayEndTurn(Date p_endTurn)
   {
+    m_clockTimer.cancel();
     if( p_endTurn == null )
     {
       m_lblDate.setHTML( "" );
       return;
     }
     m_endTurn = p_endTurn;
-    m_clockTimer.cancel();
     long sec = (m_endTurn.getTime() - ClientUtil.serverTimeMillis()) / 1000;
     if( sec >= 60 * 60 )
     {
