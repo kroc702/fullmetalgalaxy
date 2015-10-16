@@ -135,15 +135,17 @@ public class EbEvtUnLoad extends AnEventPlay
     // check that carrier isn't tide deactivate
     if( !p_game.isTokenTideActive( getToken( p_game ).getCarrierToken() ) )
     {
-      throw new RpcFmpException( getToken( p_game ).getCarrierToken()
-          + " est déactivé a cause de la marré" );
+      throw new RpcFmpException( errMsg().CantUnloadDisableTide(
+          Messages.getTokenString( getAccountId(), getToken( p_game ).getCarrierToken() ) ) );
     }
     // check that carrier isn't fire deactivate
     if( !p_game.isTokenFireActive( getToken( p_game )
         .getCarrierToken() ) )
     {
-      throw new RpcFmpException( getToken( p_game ).getCarrierToken()
-          + " est déactivé a cause d'une zone de feu" );
+      throw new RpcFmpException( errMsg().CantUnloadDisableFire(
+          Messages.getTokenString( getAccountId(), getToken( p_game ).getCarrierToken() ),
+          Messages.getColorString( getAccountId(), p_game.getOpponentFireCover( getToken( p_game ).getCarrierToken() )
+              .getValue() ) ) );
     }
 
     // check token move to a 'clear' hexagon

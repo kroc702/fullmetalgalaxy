@@ -1086,12 +1086,9 @@ public class Game extends GameData implements PathGraph, GameEventStack
     {
       return isTokenTideActive( (EbToken)p_token.getCarrierToken() );
     }
-    if( (p_token.getLocation() == Location.Graveyard) )
+    if( p_token.getLocation() == Location.Orbit || p_token.getLocation() == Location.Graveyard )
     {
-      return false;
-    }
-    if( p_token.getLocation() == Location.Orbit )
-    {
+      // in case the first warp was put in graveyard, this value is important
       return true;
     }
     // ok so token if on board.
