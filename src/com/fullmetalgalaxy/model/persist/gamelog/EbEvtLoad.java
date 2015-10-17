@@ -172,7 +172,9 @@ public class EbEvtLoad extends AnEventPlay
           Messages.getTokenString( getAccountId(), getToken( p_game ) ) ) );
     }
     // check that heap don't goes on mountain
-    if(getToken(p_game).getType() == TokenType.Heap && p_game.getLand( getTokenCarrier( p_game ).getPosition() ) == LandType.Montain )
+    if( getToken( p_game ).getType() == TokenType.Heap && getTokenCarrier( p_game ).getType() != TokenType.Teleporter
+        && getTokenCarrier( p_game ).getType() != TokenType.Warp
+        && p_game.getLand( getTokenCarrier( p_game ).getPosition() ) == LandType.Montain )
     {
       throw new RpcFmpException( errMsg().CantMoveOn(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
