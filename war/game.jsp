@@ -1,8 +1,8 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<!-- DOCTYPE html -->
-
-<html>
+<!DOCTYPE html>
+   
+<html style="width:100%; height:100%;">
     <head>
         <title>Full Metal Galaxy - Planetes</title>
 
@@ -39,23 +39,16 @@
 		
     </head>
 
-    <body style="width:100%; height:100%; background:url(images/css/bloc-bkg.png) repeat;" scroll=no>
+    <body style="width:100%; height:100%; top: 0px; position: fixed; background:url(images/css/bloc-bkg.png) repeat;" scroll=no>
     
-    <div style="position:fixed; left:0px; width:100%; min-height:50px; background-image:url('images/css/navbar-bkg.png');">
+    <div style="position:fixed; left:0px; top:0px; width:100%; height:60px; background-image:url('images/css/navbar-bkg.png');">
 	    <div id="status" style="width:100%;"></div>
 		<div id="mymenu" style="width: 100%; margin:5px; float:right; color:white;">
 		<%@include file="/include/mytopmenu.jsp"%>
 		</div>
     </div>
 
-    <table width="100%" height="100%" border="0" rules="none" cellspacing="0" cellpadding="0">
-    <tr><td>
-    	<div style="min-height:50px;"></div>
-    </td></tr>
-    <tr style="height:100%;"><td>
-    	<div id="board" style="width:100%; height:100%; background-color:hsl(32, 12%, 44%);"></div>
-    </td></tr>
-    </table>
+<div id="board" style="width:100%; height:100%; height:calc(100% - 60px); margin-top: 60px; background-color:hsl(32, 12%, 44%);"></div>
     
     <%-- _position:... and expression(... are for IE only --%>
     <div id="tabmenu" class="bloc" style="height:376px; position:fixed; top:10%; left:0px; _position: absolute; top:expression(body.scrollTop + 100 +'px'); left:expression(body.scrollLeft +'px'); z-index:9999999999;" ></div>
