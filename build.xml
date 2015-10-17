@@ -354,24 +354,7 @@ compilation file for Full Metal Galaxy
 
 	<target name="all" depends="clean, build, javadoc" />
 
-
-	<macrodef name="appcfg2" description="Manages an application">
-		<attribute name="war" description="The exploded war directory containing the application" />
-		<attribute name="action" description="One of (update, rollback, update_indexes, request_logs)" />
-		<element name="options" optional="true" description="Options for appcfg (such as --server, --num_days, etc...)" />
-		<element name="args" optional="true" description="Additional arguments for the java task" />
-		<sequential>
-			<java jvm="${javahome}/bin/java" classname="com.google.appengine.tools.admin.AppCfg" classpath="${appengine.tools.classpath}" fork="true" failonerror="true" input="${passwordfile}">
-				<arg value="--email=${adminaccount}" />
-				<arg value="--passin" />
-				<options />
-				<arg value="@{action}" />
-				<arg value="@{war}" />
-				<args />
-			</java>
-		</sequential>
-	</macrodef>
-
+	
 	
 	<target name="uploadonly" depends="" description="Uploads the application to App Engine.">
 		<property file="update.properties"/>
@@ -380,9 +363,9 @@ compilation file for Full Metal Galaxy
 		</tstamp>
 		<echo message="${TODAY} - update: ${build.number}" file="war/include/version.htm" encoding="UTF-8" />
 
-		<exec executable="${hgdir}/hg" outputproperty="hgid">
-		    <arg value="id"/>
-		    <arg value="-i"/>
+		<exec executable="${git}" outputproperty="hgid">
+		    <arg value="rev-parse"/>
+		    <arg value="HEAD"/>
 		</exec>
 		<echo message="${hgid}" file="war/include/commitid.html" />
 
@@ -392,7 +375,12 @@ compilation file for Full Metal Galaxy
 				<filter token="UPDATE_COUNT" value="${build.number}" />
 			</filterset>
 		</copy>
-		<appcfg2 action="update" war="war" />
+		<!-- if it fail due to oauth credentials, try this command manually: appcfg update war -->
+		<appcfg action="update" war="war" >
+      <options>
+		    <arg value="--email=${adminaccount}"/>
+		  </options>
+		</appcfg>
 		<!-- build history -->
 		<move file="war/include/history.html" tofile="war/include/oldhistory.html"/>
 		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}${line.separator}" file="war/include/newhistory.html" encoding="UTF-8" />
@@ -404,14 +392,6 @@ compilation file for Full Metal Galaxy
 		<delete file="war/include/oldhistory.html"/>
 		
 		<echo message="${TODAY} - update: ${build.number} - commit ${hgid}" level="warning" />
-		<echo message="display changes since last upload on ${oldupload.date}" level="info" />
-		<exec executable="${hgdir}/hg" >
-		    <arg value="log"/>
-		    <arg value="--date"/>
-		    <arg value=">${oldupload.date}"/>
-		    <arg value="--template"/>
-		    <arg value="{desc}\n"/>
-		</exec>
 		<propertyfile file="update.properties" >
 			<entry key="build.number" type="int" operation="+" value="1" />
 			<entry key="oldupload.date" type="string" operation="=" value="${TODAY}" />
