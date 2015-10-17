@@ -301,10 +301,12 @@ public enum TokenType implements java.io.Serializable, IsSerializable
   {
     switch( this )
     {
+    case Warp:
+      return p_tokenType != TokenType.Ore2Generator && p_tokenType != TokenType.Ore3Generator;
     case Freighter:
     case Teleporter:
-    case Warp:
-      return true;
+      return p_tokenType != TokenType.Warp && p_tokenType != TokenType.Ore2Generator
+          && p_tokenType != TokenType.Ore3Generator;
     case Barge:
       if( (p_tokenType == TokenType.Tank) || (p_tokenType == TokenType.Crab)
           || (p_tokenType == TokenType.Heap) || (p_tokenType == TokenType.WeatherHen)
