@@ -1,6 +1,6 @@
 ## A New Post
 prose:
-  rooturl: '_posts'
+  rooturl: ''
   siteurl: 'http://kroc702.github.io/fullmetalgalaxy/'
   relativeLinks: 'http://prose.github.io/starter/links.jsonp'
   media: 'media'
