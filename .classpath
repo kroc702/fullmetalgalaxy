@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry excluding="com/fullmetalgalaxy/client/ressources/tokens/textures/|com/fullmetalgalaxy/gwt/" kind="src" path="src"/>
+	<classpathentry kind="src" path="tools"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.1.jar"/>
@@ -13,5 +14,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/JSkills_0.9.0.jar" sourcepath="C:/Sun/nsp-JSkills-c6a9d9a/src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="tools/xstream-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
