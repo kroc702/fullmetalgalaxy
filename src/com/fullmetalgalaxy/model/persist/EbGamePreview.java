@@ -77,12 +77,6 @@ public class EbGamePreview extends EbBase
   private boolean m_started = false;
   private GameStatus m_status = GameStatus.Unknown;
 
-  /** minimap stored here to save some ImageService's CPU time */
-  @Unindexed
-  private String m_minimapBlobKey = null;
-  @Unindexed
-  private String m_minimapUri = null;
-
   /** registration ID */
   @Serialized
   private List<Long> m_currentPlayerIds = new ArrayList<Long>();
@@ -595,7 +589,8 @@ public class EbGamePreview extends EbBase
     StringBuffer strBuf = new StringBuffer( "" );
     // minimap
     strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
-        + "\"><img src=\"" + getMinimapUri() + "\" height=\"50\"></a></td>" );
+ + "\"><img src=\"/images/board/"
+        + getPlanetType().getFolderName() + "/preview.jpg\" height=\"50\"></a></td>" );
     // game name
     strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
         + "</big><br/><small>" );
@@ -641,7 +636,8 @@ public class EbGamePreview extends EbBase
     StringBuffer strBuf = new StringBuffer( "" );
     // minimap
     strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
-        + "\"><img src=\"" + getMinimapUri() + "\" height=\"50\"></a></td>" );
+ + "\"><img src=\"/images/board/"
+        + getPlanetType().getFolderName() + "/preview.jpg\" height=\"50\"></a></td>" );
     // game name
     strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
         + "</big><br/><small>" );
@@ -972,37 +968,6 @@ public class EbGamePreview extends EbBase
     m_planetType = p_planetType;
   }
 
-  /**
-   * @return the minimapUri
-   */
-  public String getMinimapUri()
-  {
-    return m_minimapUri;
-  }
-
-  /**
-   * @param p_minimapUri the minimapUri to set
-   */
-  public void setMinimapUri(String p_minimapUri)
-  {
-    m_minimapUri = p_minimapUri;
-  }
-
-  /**
-   * @return the minimapBlobKey
-   */
-  public String getMinimapBlobKey()
-  {
-    return m_minimapBlobKey;
-  }
-
-  /**
-   * @param p_minimapBlobKey the minimapBlobKey to set
-   */
-  public void setMinimapBlobKey(String p_minimapBlobKey)
-  {
-    m_minimapBlobKey = p_minimapBlobKey;
-  }
 
   /**
    * Don't forget to reset to null m_configGameTimeDefault if you change any value of this config

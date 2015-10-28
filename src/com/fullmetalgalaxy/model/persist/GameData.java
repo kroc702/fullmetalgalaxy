@@ -638,26 +638,6 @@ public class GameData implements java.io.Serializable, IsSerializable
     m_preview.setPlanetType( p_planetType );
   }
 
-  public String getMinimapUri()
-  {
-    return m_preview.getMinimapUri();
-  }
-
-  public void setMinimapUri(String p_minimapUri)
-  {
-    m_preview.setMinimapUri( p_minimapUri );
-  }
-
-  public String getMinimapBlobKey()
-  {
-    return m_preview.getMinimapBlobKey();
-  }
-
-  public void setMinimapBlobKey(String p_minimapBlobKey)
-  {
-    m_preview.setMinimapBlobKey( p_minimapBlobKey );
-  }
-
   public void setEbConfigGameTime(EbConfigGameTime p_config)
   {
     m_preview.setEbConfigGameTime( p_config );

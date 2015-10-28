@@ -108,12 +108,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     FmgDataStore dataStore = new FmgDataStore(false);
     EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
 
-    // should we construct minimap image ?
-    if( p_game.getMinimapUri() == null )
-    {
-      FmgDataStore.storeMinimap( p_game );
-    }
-
     boolean isNewlyCreated = true;
     if( !p_game.isTrancient() )
     {
@@ -133,7 +127,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       {
         // TODO i18n
         throw new RpcFmpException(
-            "seul l'admin peut modifier la partie après l'atterissage des joueurs" );
+ "seul l'admin peut modifier la partie après l'atterissage des joueurs" );
       }
       adminEvent.setAccountId( account.getId() );
       p_game.addEvent( adminEvent );

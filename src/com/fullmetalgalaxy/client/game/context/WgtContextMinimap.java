@@ -24,12 +24,23 @@ package com.fullmetalgalaxy.client.game.context;
 
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.Icons;
+import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
+import com.fullmetalgalaxy.model.LandType;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
+import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
+import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -45,10 +56,21 @@ import com.google.gwt.user.client.ui.Label;
 public class WgtContextMinimap extends Composite implements MouseUpHandler
 {
   private AbsolutePanel m_panel = new AbsolutePanel();
-  private Image m_miniMapImage = new Image();
+  private Canvas canvas = Canvas.createIfSupported();
+  private int m_lastResfreshTurn = -1;
+  private long m_lastResfreshGameId = -1;
 
-  String m_lastMiniMapUri = null;
 
+  private static ImageElement[] tokenImages = new ImageElement[EnuColor.getAllSingleColor().length + 1];
+  static
+  {
+    for( int iColor : EnuColor.getAllSingleColor() )
+    {
+      Image img = new Image( "/images/board/" + EnuColor.singleColorToString( iColor ) + "/minimap/token.png" );
+      tokenImages[iColor] = ImageElement.as( img.getElement() );
+      Image.prefetch( img.getUrl() );
+    }
+  }
 
   /**
    * 
@@ -57,7 +79,14 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   {
     super();
     initWidget( m_panel );
-    m_miniMapImage.addMouseUpHandler( this );
+
+
+    m_panel.add( canvas );
+
+    canvas.setWidth( FmpConstant.miniMapWidth + "px" );
+    canvas.setHeight( FmpConstant.miniMapHeight + "px" );
+
+    canvas.addMouseUpHandler( this );
   }
 
   public void redraw()
@@ -65,16 +94,71 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
     assert GameEngine.model() != null;
     Game game = GameEngine.model().getGame();
 
-    m_panel.clear();
 
-    if( game.getMinimapUri() != null
-        && (m_lastMiniMapUri == null || !m_lastMiniMapUri.equals( game.getMinimapUri() )) )
+    // if( m_lastResfreshTurn != game.getCurrentTimeStep() ||
+    // m_lastResfreshGameId != game.getId() )
     {
-      m_lastMiniMapUri = game.getMinimapUri();
-      m_miniMapImage.setUrl( game.getMinimapUri() );
-      m_miniMapImage.setPixelSize( FmpConstant.miniMapWidth, FmpConstant.miniMapHeight );
+      m_lastResfreshTurn = game.getCurrentTimeStep();
+      m_lastResfreshGameId = game.getId();
+
+      canvas.setCoordinateSpaceWidth( game.getLandWidth() * 8 );
+      canvas.setCoordinateSpaceHeight( game.getLandHeight() * 8 + 4 );
+
+
+      Context2d gc = canvas.getContext2d();
+      gc.clearRect( 0, 0, game.getLandWidth(), game.getLandHeight() );
+
+      // draw lands
+      ImageElement[] images = new ImageElement[LandType.values().length];
+      for( int iLand = 0; iLand < LandType.values().length; iLand++ )
+      {
+        LandType land = LandType.values()[iLand];
+        Image img = new Image( "/images/board/" + game.getPlanetType().getFolderName() + "/minimap/"
+            + land.getImageName( game.getCurrentTide() ) );
+        img.addLoadHandler( new LoadHandler()
+        {
+          @Override
+          public void onLoad(LoadEvent event)
+          {
+            m_lastResfreshTurn = -1;
+            m_lastResfreshGameId = -1;
+          }
+        } );
+        images[iLand] = ImageElement.as( img.getElement() );
+        Image.prefetch( img.getUrl() );
+      }
+      for( int ix = 0; ix < game.getLandWidth(); ix++ )
+      {
+        for( int iy = 0; iy < game.getLandHeight(); iy++ )
+        {
+          if( game.getLand( ix, iy ) == LandType.Montain )
+          {
+            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4, 8, 8 );
+          }
+          else
+          {
+            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4, 8, 8 );
+          }
+        }
+      }
+
+      // draw units
+      for( EbToken token : game.getSetToken() )
+      {
+        if( token.getLocation() == Location.Board && token.getColor() != EnuColor.None )
+        {
+          gc.drawImage( tokenImages[token.getColor()], token.getPosition().getX() * 8, token
+              .getPosition()
+              .getY() * 8 + (token.getPosition().getX() % 2) * 4, 8, 8 );
+          for( AnBoardPosition position : token.getExtraPositions( game.getCoordinateSystem() ) )
+          {
+            gc.drawImage( tokenImages[token.getColor()], position.getX() * 8, position.getY() * 8
+                + (position.getX() % 2) * 4, 8, 8 );
+          }
+        }
+      }
     }
-    m_panel.add( m_miniMapImage );
+
     if( game.getStatus() == GameStatus.Open || game.getStatus() == GameStatus.Pause )
     {
       m_panel.add( new Image( Icons.s_instance.pause32() ), FmpConstant.miniMapWidth / 2 - 16,
@@ -108,19 +192,11 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   @Override
   public void onMouseUp(MouseUpEvent p_event)
   {
-    if( p_event.getSource() == m_miniMapImage )
+    if( p_event.getSource() == canvas )
     {
-      // TODO recreate this function
-      /*
-      if( AppMain.instance().getMApp( MAppBoard.HISTORY_ID ) != null )
-      {
-        int hexPositionX = (int)(((float)p_event.getX() * ModelFmpMain.model().getGame()
-            .getLandWidth()) / FmpConstant.miniMapWidth);
-        int hexPositionY = (int)(((float)p_event.getY() * ModelFmpMain.model().getGame()
-            .getLandHeight()) / FmpConstant.miniMapHeight);
-        MAppBoard boardApp = (MAppBoard)AppMain.instance().getMApp( MAppBoard.HISTORY_ID );
-        boardApp.setScrollPosition( hexPositionX, hexPositionY );
-      }*/
+      int hexPositionX = (int)(((float)p_event.getX() * GameEngine.model().getGame().getLandWidth()) / FmpConstant.miniMapWidth);
+      int hexPositionY = (int)(((float)p_event.getY() * GameEngine.model().getGame().getLandHeight()) / FmpConstant.miniMapHeight);
+      MAppBoard.s_instance.setScrollPosition( hexPositionX, hexPositionY );
     }
   }
 

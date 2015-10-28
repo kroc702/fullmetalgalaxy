@@ -51,7 +51,7 @@ public class MAppBoard extends GuiEntryPoint implements ResizeHandler, ModelUpda
 
   public static final int s_DefaultZoom = EnuZoom.Medium;
 
-  protected static MAppBoard s_instance = null;
+  public static MAppBoard s_instance = null;
 
   private WgtScroll m_wgtScroll = new WgtScroll();
   private WgtBoardBase m_wgtBoard = null;

@@ -71,7 +71,6 @@ public class DlgLoadMap extends DialogBox implements ClickHandler
             p_result.getGame().getLandHeight() );
         GameEngine.model().getGame().setLands( p_result.getGame().getLands() );
         GameEngine.model().getGame().setPlanetType( p_result.getGame().getPlanetType() );
-        GameEngine.model().getGame().setMinimapUri( p_result.getGame().getMinimapUri() );
         GameEngine.model().getGame().setMapUri( p_result.getGame().getMapUri() );
         GameEngine.model().getGame().getSetToken().clear();
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );

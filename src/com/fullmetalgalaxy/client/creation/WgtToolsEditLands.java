@@ -45,7 +45,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -295,7 +294,6 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       GameGenerator.setLandPercent( percent );
       GameGenerator.setHexagonMap( m_chkRoundMap.getValue() );
       GameGenerator.generLands();
-      GameEngine.model().getGame().setMinimapUri( null );
       GameEngine.model().getGame().setMapUri( null );
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
@@ -303,7 +301,6 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     {
       GameGenerator.setSize( landWidth, landHeight );
       GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
-      GameEngine.model().getGame().setMinimapUri( null );
       GameEngine.model().getGame().setMapUri( null );
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }

@@ -36,7 +36,6 @@
         <include path="/**" expiration="1h" />
         <exclude path="/include/**" />
         <exclude path="/**.pspimage" />
-        <exclude path="/images/**/minimap/*" />
     </static-files>
     
     <resource-files>
@@ -46,7 +45,6 @@
         <include path="/include/*" />
         <include path="/**txt" />
         <include path="/**rpc" />
-        <include path="/images/**/minimap/*" />
     </resource-files>
     
     <static-error-handlers>

@@ -22,7 +22,6 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.server;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,15 +32,7 @@ import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.PlayerGameStatistics;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
-import com.fullmetalgalaxy.server.image.MiniMapProducer;
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
-import com.google.appengine.api.images.ImagesServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
@@ -141,48 +132,6 @@ public class FmgDataStore extends DataStore
 
     // TODO change all pseudo in all games...
 
-    return true;
-  }
-
-
-  public static boolean storeMinimap(Game p_game)
-  {
-    if( p_game.getMinimapBlobKey() != null )
-    {
-      deleteMinimap( p_game.getMinimapBlobKey() );
-      p_game.setMinimapUri( null );
-      p_game.setMinimapBlobKey( null );
-    }
-
-    MiniMapProducer miniMapProducer = new MiniMapProducer( ServerUtil.getBasePath(), p_game );
-    byte[] data = miniMapProducer.getImage();
-
-    // Get a file service
-    FileService fileService = FileServiceFactory.getFileService();
-
-    try
-    {
-      // Create a new Blob file with mime-type "text/plain"
-      AppEngineFile file = fileService.createNewBlobFile( "image/png" );
-
-      // Open a channel to write to it
-      FileWriteChannel writeChannel = fileService.openWriteChannel( file, true );
-      writeChannel.write( ByteBuffer.wrap( data ) );
-      // Now finalize
-      writeChannel.closeFinally();
-
-      // Now read from the file using the Blobstore API
-      BlobKey blobKey = fileService.getBlobKey( file );
-
-      // update game
-      p_game.setMinimapUri( ImagesServiceFactory.getImagesService().getServingUrl( blobKey ) );
-      p_game.setMinimapBlobKey( blobKey.getKeyString() );
-
-    } catch( Exception e )
-    {
-      ServerUtil.logger.severe( e.getMessage() );
-      return false;
-    }
     return true;
   }
 
@@ -348,33 +297,14 @@ public class FmgDataStore extends DataStore
   }
   
 
-  private static void deleteMinimap(String p_minimapBlobKey)
-  {
-    BlobKey blobKey = new BlobKey( p_minimapBlobKey );
-    try
-    {
-      BlobstoreServiceFactory.getBlobstoreService().delete( blobKey );
-    } catch( Exception e )
-    {
-      // This try/catch section is because of some blobstore internal error !
-      e.printStackTrace();
-    }
-  }
-
-
-
   /**
-   * delete the minimap blob and both preview and data entity
+   * delete both preview and data entity
    */
   protected void deleteGame(EbGamePreview p_gamePreview)
   {
     if( p_gamePreview != null )
     {
       Long id = p_gamePreview.getId();
-      if( p_gamePreview.getMinimapBlobKey() != null )
-      {
-        deleteMinimap( p_gamePreview.getMinimapBlobKey() );
-      }
       Key<EbGamePreview> keyPreview = new Key<EbGamePreview>(EbGamePreview.class, id );
 
       // delete all additional logs

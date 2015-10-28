@@ -145,7 +145,7 @@ public enum LandType implements IsSerializable
       return "montain1.png";
     case None:
     default:
-      return "grid.gif";
+      return "grid.png";
     }
   }
 

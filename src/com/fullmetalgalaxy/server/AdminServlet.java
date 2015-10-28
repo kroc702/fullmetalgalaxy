@@ -376,11 +376,6 @@ public class AdminServlet extends HttpServlet
     {
       // set transient to avoid override data
       modelInit.getGame().setTrancient();
-      modelInit.getGame().setMinimapBlobKey( null );
-      modelInit.getGame().setMinimapUri( null );
-
-      // construct minimap image
-      FmgDataStore.storeMinimap( modelInit.getGame() );
 
       // search all accounts in database to correct ID
       for( EbRegistration registration : modelInit.getGame().getSetRegistration() )

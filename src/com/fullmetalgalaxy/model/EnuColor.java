@@ -80,6 +80,13 @@ public class EnuColor extends MyEnum
     return 16;
   }
 
+  public static int[] getAllSingleColor()
+  {
+    return new int[] { Blue, Cyan, Olive, Orange, Red, Green, Purple, Yellow, Grey, Brown, White, Pink, Camouflage,
+        Zebra, Pantera, Lightning };
+  }
+
+
   /**
    * Warning: no i18n !
    * 
