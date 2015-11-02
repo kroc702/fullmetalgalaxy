@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>{{ page.title }} - {{ site.title }}</title>
+
+	<script src="/js/jquery-2.1.4.min.js"></script>
+	
+	<script src="/js/uikit.min.js"></script>
+	<link rel="stylesheet" href="/css/uikit.almost-flat.min.css" />
+
+	<script src="/js/components/sticky.min.js"></script>
+	<link rel="stylesheet" href="/css/components/sticky.almost-flat.min.css" />
+
+    <script src="/js/components/slideshow.min.js"></script>
+	<link rel="stylesheet" href="/css/components/slideshow.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/dotnav.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/slidenav.almost-flat.min.css" />
+
+
+    <script src="/js/all.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
+</head>
+<body>
+    <div class="page">
+	
+{% include header.html %}	
+{% include navbar.html %}
+
+	<div class="uk-container uk-container-center">
+	      <span class="uk-icon-button uk-icon-pencil" onclick="goToProse('{{ site.github.repo }}', '{{ page.path }}')"></span>
+          <span class="uk-icon-button uk-icon-github" onclick="goToGitHub('{{ site.github.repo }}', '{{ page.path }}')"></span>
+
+	<article class="uk-article">
+
+        {{ content }}
+</article>	 
+</div>
+
+
+	  </div><!-- /.container -->
+
+{% include footer.html %}	
+{% include analytics.html %}
+
+</body>
+</html>
