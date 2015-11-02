@@ -29,6 +29,8 @@ exclude:
 safe: true
 lsi: false
 
+github:
+  repo:              https://github.com/kroc702/fullmetalgalaxy
 
 prose:
   rooturl: ''
