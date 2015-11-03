@@ -34,9 +34,9 @@ github:
 
 prose:
   rooturl: ''
-  siteurl: 'http://kroc702.github.io/fullmetalgalaxy/'
+  siteurl: 'http://wiki.fullmetalgalaxy.com/'
   relativeLinks: 'http://prose.github.io/starter/links.jsonp'
-  media: 'media'
+  media: 'images'
   ignore:
     - _config.yml
     - /_layouts
