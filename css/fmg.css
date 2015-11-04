@@ -84,8 +84,22 @@ nav .uk-navbar-nav>li>a:hover {
   color : #e7ac20;
 }
 
+nav svg {
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  background: none;
+  fill:#fff;
+}
+nav li.uk-open>a svg,
+nav a:hover  svg{
+  fill:#e7ac20;
+}
+
 .page>.uk-container{
   background-color: #fff;
-    color: black;
-    box-shadow: 0px 0px 10px #000;
+  color: black;
+  box-shadow: 0px 0px 10px #000;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }

@@ -1,15 +1,12 @@
 ###########
 # site.url, site.title
 
-title: 'Jekyll Bootstrap Theme'
-
-## note: 
-#  use site.path in your templates to make it work for both protocols e.g. http and https
-#  use site.url only inside the web feed template (e.g. requires full url incl. protocol)
-path: ''
-url:  'http://drjekyllthemes.github.io/jekyll-bootstrap-theme'
+title: 'Full Metal Galaxy'
 
 
+gems:
+- jekyll-sitemap
+  
 ########
 # more settings
 
@@ -19,8 +16,6 @@ sass:
   sass_dir: css
   style:    expanded
 
-
-
 exclude:
 - README.md
 - preview.bat
@@ -29,9 +24,7 @@ exclude:
 safe: true
 lsi: false
 
-github:
-  repo:              https://github.com/kroc702/fullmetalgalaxy
-
+###################
 prose:
   rooturl: ''
   siteurl: 'http://wiki.fullmetalgalaxy.com/'

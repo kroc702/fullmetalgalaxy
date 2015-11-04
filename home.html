@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>{{ page.title }} - {{ site.title }}</title>
+
+	<script src="/js/jquery-2.1.4.min.js"></script>
+	
+	<script src="/js/uikit.min.js"></script>
+	<link rel="stylesheet" href="/css/uikit.almost-flat.min.css" />
+
+	<script src="/js/components/sticky.min.js"></script>
+	<link rel="stylesheet" href="/css/components/sticky.almost-flat.min.css" />
+
+    <script src="/js/components/slideshow.min.js"></script>
+	<link rel="stylesheet" href="/css/components/slideshow.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/dotnav.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/slidenav.almost-flat.min.css" />
+
+
+	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
+
+</head>
+<body>
+    <div class="page">
+
+	<div id="header" style="height:80px;">
+	<div class="uk-container uk-container-center" >
+	<img src="/images/logoTitle.png" />
+	</div>
+	</div>	
+
+	
+	<nav class="uk-navbar" data-uk-sticky>
+	<div class="uk-container uk-container-center">
+    <ul class="uk-navbar-nav">
+        <li class="uk-active"><a href=""><img src="/images/home.png" /> ACCUEIL</a></li>
+        <li><a href=""><img src="/images/games.png" /> PARTIES</a></li>
+        <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href=""><img src="/images/community.png" /> COMMUNAUT&Eacute;</a>
+		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
+			<ul class="uk-nav uk-nav-navbar" >
+				<li class="uk-active"><a href="">...</a></li>
+				<li><a href="">...</a></li>
+				<li class="uk-parent"><a href="">...</a></li>
+				<li class="uk-parent"><a href="">...</a></li>
+			</ul>
+		</div>
+		</li>
+        <li><a href=""><img src="/images/help.png" /> WIKI</a></li>
+    </ul>
+	</div>
+	</nav>
+	
+
+
+
+
+	<div class="uk-slidenav-position" data-uk-slideshow="{autoplay:true}">
+    <ul class="uk-slideshow" >
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen1.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px; position:absolute; top:150px; right:50px;">
+		<b>Avez-vous l'étoffe d'un full metal pilote ?</b><br/><br/>
+						Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser votre astronef et ramasser un maximum de minerai...
+		</div></div></li>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/gt.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;position: absolute;top:150px;left:50px;">
+								... ou désintégrer le coûteux matériel des compagnies adverses et vous emparer de leurs navettes, aux soutes pleines à craquer.
+							  </div></div></li>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen2.jpg);">
+		          <div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;position: absolute;top:290px;left:50px;">
+<ul>
+<li>La carte interactive est l'unique interface</li>
+<li>Partie lente sur un mois ou en temps réel (1h30)</li>
+<li>Mode tour par tour ou parallèle pour ne jamais être bloqué</li>
+</ul>          </div>
+          </div>
+</li>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen3.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;position: absolute;top:300px;right:200px;">
+<ul>
+<li>Un mécanisme qui a fait ses preuves</li>
+<li>Aucun hasard, seul votre tactique fera la différence</li>
+<li>Le terrain change en fonction des marées</li>
+</ul>          </div>
+          </div></li>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen4.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;position: absolute;top:300px;left:200px;">
+<ul>
+<li>Entre 2 et 12 joueurs par partie</li>
+<li>Jeu en équipe possible</li>
+</ul>          </div>
+          </div></li>
+    </ul>
+    <a href="" class="uk-slidenav uk-slidenav-contrast uk-slidenav-previous" data-uk-slideshow-item="previous"></a>
+    <a href="" class="uk-slidenav uk-slidenav-contrast uk-slidenav-next" data-uk-slideshow-item="next"></a>
+    <ul class="uk-dotnav uk-dotnav-contrast uk-position-bottom uk-flex-center" style="bottom:100px;">
+        <li data-uk-slideshow-item="0"><a href=""></a></li>
+        <li data-uk-slideshow-item="1"><a href=""></a></li>
+        <li data-uk-slideshow-item="2"><a href=""></a></li>
+        <li data-uk-slideshow-item="3"><a href=""></a></li>
+        <li data-uk-slideshow-item="4"><a href=""></a></li>
+    </ul>
+	</div>
+
+	<div class="uk-container uk-container-center" style="margin-top: -100px; position: relative;">
+<article class="uk-article">
+
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+   
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+        {{ content }}<br/>
+	  
+</article>	 
+</div>
+
+	  </div><!-- /.page -->
+
+	<footer>
+      <div id="travaux"></div>
+      <a id="copyright" href="http://www.fullmetalgalaxy.com/about.jsp">Copyright
+        2010-2015 <img src="/images/icon_opensource.png" border="0/" alt=""> FMG est
+        inspiré de Full Metal Planète, un jeu de G.Mathieu, G.Delfanti et
+        P.Trigaux
+      </a>
+    </footer>
+
+
+</body>
+</html>
+
+
