@@ -32,7 +32,7 @@
 	    <a href="<%= Auth.getLogoutURL(request,response) %>" >
 	        <img style="border=none" border=0 src="/images/css/icon_power.cache.png" alt="" />&nbsp;D&eacute;connexion
 	    </a><br/>
-	    <a target="_blank" href="http://code.google.com/p/fullmetalgalaxy/issues/entry?template=Defect%20report%20from%20user" style="position:relative; top:-10px;">
+	    <a target="_blank" href="https://github.com/kroc702/fullmetalgalaxy/issues/new" style="position:relative; top:-10px;">
 	        <img style="border=none;position:relative; bottom:-10px;" border=0 src="/images/icon_bugbusters.png" alt="" />&nbsp;Signaler un bug
 	    </a>
 	    </span>
