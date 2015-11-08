@@ -2,7 +2,8 @@
 layout: default
 title: Highlights
 published: true
-categories: [help]
+lang: fr
+categories: [starting]
 ---
 #les prévisions des marées
 

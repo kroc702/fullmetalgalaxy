@@ -1,0 +1,29 @@
+help:
+  fr: Aide
+  en: Help
+starting: 
+  fr: D&eacute;buter
+  en: Starting
+manual:
+  fr: Manuel
+  en: Manual
+rules:
+  fr: Règles
+  en: Rules
+misc:
+  fr: Misc
+  en: Misc
+  
+dev:
+  fr: Développement
+  en: Development
+  
+comunity:
+  fr: Comunauté
+  en: Comunity
+games:
+  fr: Parties
+  en: Games
+home:
+  fr: Accueil
+  en: Home  

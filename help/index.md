@@ -2,8 +2,11 @@
 layout: default
 title: Présentation
 published: true
-categories: [help]
+lang: fr
+categories: [starting]
 ---
+* TOC
+{:toc}
 
 #Mécanismes
 

@@ -1,0 +1,34 @@
+msc {
+  IHM,Model,Server,BDD;
+
+  IHM note Model [label="Client side"],
+  Server note BDD [label="Server side"];
+
+  IHM => Server [ label = "http get" ];
+  Server :> BDD [ label = "Load game"];
+  Server => Server [ label = "update"];
+  Server => BDD [ label = "Save game"];
+  Server => Server [ label = "inject data in page"];
+  IHM << Server [ label = "game page"];
+  
+  
+  --- [label="html page is loaded"];
+  
+  Model => Model [ label = "Load game"];
+  IHM <- Model [ label = "broadcast update event"];
+  IHM => IHM [ label = "redraw"];
+  
+  ...;
+  
+  IHM => Model [ label = "User event"];
+  Model => Model [ label = "construct game event"];
+  Model => Server [ label = "Send game event (RCP)"];
+  Server :> BDD [ label = "Load game"];
+  Server => Server [ label = "Apply game event"];
+  Server => BDD [ label = "Save game"];
+  Model << Server [ label = "no error (RCP)"];
+  Model <- Server [ label = "Broadcast update (Channel)" ];
+  Model => Model [ label = "Apply game event"];
+  IHM <- Model [ label = "broadcast update event"];
+  IHM => IHM [ label = "redraw"];
+}

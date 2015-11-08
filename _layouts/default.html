@@ -31,20 +31,20 @@
 	
 	<div class="uk-grid" data-uk-grid-margin="">
 	<aside>
+{% assign current_folders = page.url | replace_first:'/','' | split:"/" %}
+{% assign current_folder = current_folders[0] %}
     <div class="tm-sidebar uk-width-medium-1-4 uk-hidden-small">
 		<ul class="uk-nav">
-			<li class="uk-nav-header">Help</li>
-{% for page in site.pages %}
-{% if page.categories contains 'help' %}
-			<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+{% for tag in site.data.categories[current_folder] %}
+			<li class="uk-nav-header">{{ site.data.i18n[tag][page.lang] }}</li>
+{% for document in site.pages %}
+{% if document.url contains current_folder | prepend:'/' | append:'/' %}
+{% if document.categories contains tag %}
+			<li><a href="{{ document.url }}">{{ document.title }}</a></li>
+{% endif %}
 {% endif %}
 {% endfor %}
 			<li class="uk-nav-divider"></li>
-			<li class="uk-nav-header">racine</li>
-{% for page in site.pages %}
-{% if page.categories contains 'racine' %}
-			<li><a href="{{ page.url }}">{{ page.title }}</a></li>
-{% endif %}
 {% endfor %}
 		</ul>
 	</div>
@@ -53,7 +53,7 @@
 	<div class="tm-main uk-width-medium-3-4">
 		<article class="uk-article">
 		<h1 class="uk-article-title">{{ page.title }}</h1>
-		<p class="uk-article-meta">{{ page.last_modified_at }}</p>
+		<p class="uk-article-meta">{{ page.last_modified_at }} </p>
 			{{ content }}
 		</article>	 
 	</div>
