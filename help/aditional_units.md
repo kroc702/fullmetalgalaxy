@@ -32,9 +32,9 @@ categories:
 - Engin marin.
 - Destructeur avec une portée de 3 cases.
 - Non transportable.
-Autre
 
-## Autres
+## Autre
+
 ### écluse
 - Sans propriétaire.
 - Sert de pont aux engins marin pour aller sur les cases terrestres.
@@ -48,6 +48,7 @@ Autre
 
 ### minerai précieux	
 - minerai d'une valeur de 3 points
+
 ### minerai rare	
 - minerai d'une valeur de 5 points
 - prend 2 places pour le transport
