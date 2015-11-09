@@ -6,10 +6,24 @@ html, body {
   font: 400 16px / 24px 'Lato';
   height: 100%; 
 }
-body > .page { 
+body .page { 
  min-height: 100%; 
  margin-bottom: -35px; 
- background: #232F3C;
+ /*background: #232F3C;*/
+ 
+ /*background-image: url('/css/bg5.png');*/
+}
+.background{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#424242+0,232f3c+24,10141c+50,232f3c+100 */
+background: #424242; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #424242 0%, #232f3c 24%, #10141c 50%, #232f3c 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#424242), color-stop(24%,#232f3c), color-stop(50%,#10141c), color-stop(100%,#232f3c)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg,  #424242 0%,#232f3c 24%,#10141c 50%,#232f3c 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg,  #424242 0%,#232f3c 24%,#10141c 50%,#232f3c 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg,  #424242 0%,#232f3c 24%,#10141c 50%,#232f3c 100%); /* IE10+ */
+background: linear-gradient(135deg,  #424242 0%,#232f3c 24%,#10141c 50%,#232f3c 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#232f3c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
 }
 .page:after {
   content: "";
@@ -24,6 +38,25 @@ body > .page {
   background-repeat: no-repeat;
   height: 500px;
 }
+
+header #char {
+	background-image: url('/css/char.png');
+	width: 79px;
+	height: 29px;
+	position: absolute;
+	left: 100px;
+	top:  53px;
+}
+
+header #sousMarin {
+	background-image: url('/css/sousMarin.png');
+	height: 28px;
+	width: 56px;
+	position: absolute;
+	right: 30px;
+	top: 65px;
+}
+
 
 footer, .page:after {
   height: 35px; 
@@ -62,6 +95,7 @@ footer #copyright {
 .uk-navbar .uk-container,
 footer  {
   background: #364555;
+  background-image: url('/css/bg-noise.png');
 }
 
 nav .uk-navbar-nav>li>a {
@@ -96,6 +130,9 @@ nav li.uk-open>a svg,
 nav a:hover  svg{
   fill:#e7ac20;
 }
+nav.uk-active {
+box-shadow: rgb(0,0,0) 0px 0px 10px;
+}
 
 .page>.uk-container{
   background-color: #fff;
@@ -103,4 +140,12 @@ nav a:hover  svg{
   box-shadow: 0px 0px 10px #000;
   padding-top: 50px;
   padding-bottom: 50px;
+}
+
+aside {
+  max-width: calc(25% - 35px);
+}
+
+article li {
+  list-style-image: url('/css/li.png');
 }
