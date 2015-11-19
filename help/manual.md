@@ -8,8 +8,6 @@ categories: [manual]
 * TOC
 {:toc}
 
-Dans les descriptions suivantes, [OK] indique un clic sur le bouton ok. En général, un second clic sur une même case valide le mouvement comme le bouton ok.
-
 ## raccourcis claviers
 <pre>
 [ESC] annuler l'action en cours
@@ -21,6 +19,10 @@ Dans les descriptions suivantes, [OK] indique un clic sur le bouton ok. En gén�
 [ENTER] envoyer un message instantané
 [CTRL]+[M] afficher le menu
 </pre>
+
+Dans les descriptions suivantes, [OK] indique un clic sur le bouton ok. En général, un second clic sur une même case valide le mouvement comme le bouton ok.
+
+[CTRL]+[Clic] ou [Clic droit] permet souvent, quand il n'y a pas d'ambiguité, d'omettre certain clic. (par ex [Clic] icon cible ou l'avance du destructeur 1 avant un tir).
 
 ## Les tirs
 
