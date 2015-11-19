@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
    <meta charset="utf-8">
-   <title>{{ page.title }} - {{ site.title }}</title>
+   <title>Full Metal Galaxy - root</title>
 
 	<script src="/js/jquery-2.1.4.min.js"></script>
 	
@@ -19,76 +20,167 @@
 
 
 	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
+    
+    <style>
+div#login {
+  float: right;
+  color: #999;
+  font: 80%/22px "Helvetica";
+  margin: 10px;
+}
+.uk-slideshow .uk-overlay-panel {
+    position: relative;
+    margin: auto;
+    opacity: 1;
+}
+    </style>
 
 </head>
 <body>
-    <div class="page">
+    <div class="background"><div class="page">
 
-	<div id="header" style="height:80px;">
-	<div class="uk-container uk-container-center" >
-	<img src="/images/logoTitle.png" />
-	</div>
-	</div>	
 
 	
+	<header id="header" style="height:80px;">
+	<div class="uk-container uk-container-center" >
+	<img src="/images/logoTitle.png" />
+
+        <div id="login">
+	
+	<form id="login" method="POST" action="/AccountServlet" enctype="multipart/form-data">
+		<div>
+			<span><label>Username</label><input type="text" name="login" size="15" /></span>
+            <span><label>Password</label><input type="password" name="password" size="15" /></span>
+			<input type="hidden" name="connexion" value="1"/>
+			<input type="hidden" name="continue" value="/"/>
+			<span><input id="login-submit" type="submit" name="Submit" value="Go!" /></span>
+		</div>
+	</form>
+	<div id="loginlinks">
+	<a href="https://www.google.com/accounts/ServiceLogin?service=ah&passive=true&continue=https://appengine.google.com/_ah/conflogin%3Fcontinue%3Dhttp://www.fullmetalgalaxy.com/index.jsp%253Flocale%253Dfr&ltmpl=gm&shdf=Ch0LEgZhaG5hbWUaEUZ1bGwgTWV0YWwgR2FsYXh5DBICYWgiFBFJIZXZtPrwL1iBiWLahT0JiPhoKAEyFKHAInNpRCXxfnV9Cj_hlzv2n_vx" >
+        <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;Connexion avec google 
+    </a>
+    <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;Inscription</a>
+    <a href="/password.jsp"><img style="border=none" border=0 src="/images/ask16.png" alt="Ask" />&nbsp;Identifiants oubliés</a>
+    </div>
+    </div>
+
+	</div>
+  	<div id="char" class="uk-hidden-small"></div>
+  	<div id="sousMarin" class="uk-hidden-small"></div>
+    
+    </header>
+	
+
+
+
+
+
 	<nav class="uk-navbar" data-uk-sticky>
 	<div class="uk-container uk-container-center">
     <ul class="uk-navbar-nav">
-        <li class="uk-active"><a href=""><img src="/images/home.png" /> ACCUEIL</a></li>
-        <li><a href=""><img src="/images/games.png" /> PARTIES</a></li>
-        <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href=""><img src="/images/community.png" /> COMMUNAUT&Eacute;</a>
+
+
+        <li class=""><a href="/">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 20 492 492" ><path d="M 234.875 18.779297 C 208.788 21.146297 183.318 27.3405 160 37.5625 C 175.37 70.3255 174.2213 104.26775 153.2793 119.96875 C 132.4443 135.58575 99.22525 127.9343 72.15625 104.2793 C 55.91025 123.7313 42.82025 145.6383 33.28125 169.9043 C 67.11125 182.2373 89.915703 207.5693 86.220703 233.4043 C 82.522703 259.2393 53.524703 277.14405 17.595703 279.49805 C 19.933703 305.29405 26.50425 330.27605 36.53125 353.37305 C 54.34125 345.19105 72.324953 342.28355 87.626953 344.43555 C 100.65895 346.30555 111.5542 351.45175 118.7832 361.09375 C 134.6002 382.19075 126.38691 415.8055 102.00391 443.0625 C 121.51991 459.4125 144.21966 472.50775 168.59766 482.09375 C 180.92766 448.26575 206.25266 425.4583 232.09766 429.1543 C 257.94166 432.8513 275.83741 461.8503 278.19141 497.7793 C 304.27841 495.4143 329.74841 489.225 353.06641 479 C 337.30041 446.003 338.8052 411.41175 359.9082 395.59375 C 369.5482 388.36375 382.47791 386.57175 395.50391 388.46875 C 410.61591 390.62875 426.69341 398.71805 441.06641 411.24805 C 457.15441 391.90305 470.46641 369.7383 479.94141 345.6543 C 446.11141 333.3223 423.30691 308.0013 427.00391 282.1543 C 430.70091 256.3083 459.66866 238.3823 495.59766 236.0293 C 493.23766 210.0853 486.82341 185.36725 476.69141 162.15625 C 444.07941 177.27325 410.0302 175.30075 394.4082 154.46875 C 378.7122 133.52475 387.15766 100.60875 411.09766 73.46875 C 391.57766 57.11675 368.84966 44.0225 344.47266 34.4375 C 332.14066 68.2655 306.81566 91.096297 280.97266 87.404297 C 255.12666 83.711297 237.22795 54.708297 234.87695 18.779297 L 234.875 18.779297 z M 207.5 104.23047 L 226.99219 153.20508 C 232.7515 153.60441 238.57 154.24141 244.42773 155.06641 L 280.55273 119.64648 L 285.80273 164.33203 C 293.93612 166.84463 301.93979 169.74109 309.72461 172.99219 L 333.64453 149.54102 L 338.05078 187.01953 C 344.03703 190.50822 349.76126 194.23035 355.17578 198.16602 L 381.01367 191.50586 L 372.10156 212.19336 C 380.02053 219.72115 386.82093 227.81468 392.16211 236.4082 C 403.31087 254.35191 408.36944 274.26278 404.89453 296.33398 C 401.88228 315.47256 392.2952 336.40056 373.96094 358.76953 C 370.38887 323.26955 361.68809 300.94217 347.68945 287.6582 C 331.92422 272.69539 310.57276 270.7427 287.29102 273.25781 C 241.42089 278.21344 184.42456 299.3942 126.02148 285.05078 C 111.88054 254.95591 107.8956 230.84215 110.89844 212.27344 C 113.9878 193.1775 124.10299 179.51042 139.42188 169.72266 C 149.81396 163.08255 162.68398 158.44363 177.11328 155.69531 L 207.5 104.23047 z M 236.55273 294.16211 C 260.16611 324.93717 256.48061 377.24353 319.91016 356.0293 C 286.6413 441.96575 186.55473 372.61238 156.83789 301.48828 C 185.03137 303.13451 212.01219 298.87952 236.55273 294.16211 z "/></svg>
+<span class="uk-hidden-small"> Accueil</span></a></li>
+
+
+        <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="http://www.fullmetalgalaxy.com/gamelist.jsp">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M253.47 17.406C123.76 17.406 18.437 122.76 18.437 252.47c0 129.707 105.324 235.06 235.03 235.06 129.707 0 235.063-105.353 235.063-235.06 0-129.71-105.355-235.064-235.06-235.064zM367.874 68.75c61.246 38.19 101.97 106.14 101.97 183.72 0 17.143-1.993 33.823-5.75 49.81l-34.25-18.06 22 54.874c-9.454 21.647-22.362 41.432-38 58.687l-43.158-30.936-64.625 47.72-61.656 6.967-13.906-41.78-49.72 26.844-68.093-18.938 9.157 36.594c-28.41-21.793-51.23-50.466-66-83.563L81.25 304.47l32.25 17.124 59.22-9.875 2.843-40.908-37.344-1.718 4.905-17.844 30.78-25.313-25.093-15.625 67.22-38.593-45.345-29.657-66.625 40.187-49.437-15.28c13.812-32.14 35.21-60.22 61.906-82.064l-3.75 44.375 43.376-34.124 72 22.22-22.5-27.407L233 75.562l26.813 28.468 71 9.845-3.5-34.47 41.468 12.657-.905-23.312zm1.156 120.03L278 199.47l28.906 43.218 3.156 64.468L339.25 321l11.438-28.375 62.656 48.656L395.78 294l6.408-48.344-43.75-22.72 10.593-34.155zM221 192.438l-31.594 21.188 36.47 14.78 16.686-14.78L221 192.437zm22.188 144.688l18.687 52.594 19.78-42.564-38.467-10.03z"></path></svg>
+<span class="uk-hidden-small"> Parties</span></a>
+			<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
+			<ul class="uk-nav uk-nav-navbar" >
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=0" >Nouvelles Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=1" >Mes Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=2" >Jeux Solo</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=3" >Autres Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/stats.jsp" >Stats globales</a></li>
+			</ul>
+			</div>
+		</li>
+
+
+        <li class="uk-parent " data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M164.594 21.625c-.537.012-1.068.028-1.563.094-29.656 3.852-52.56 35.847-52.56 74.75 0 21.55 7.307 41.193 18.686 54.905-61.678 11.594-66.563 115.158-66.562 188.063h43.218l11.094 152.437h63.063L168.905 340.03h21.47l11.343 152.158h108.686l10.03-152.157h21.627l-9.907 151.845h63.063l10.53-152.438h40.28c0-73.107 1.407-178.78-65.967-189.218 10.89-13.646 18.093-32.734 18.093-53.75 0-41.496-26.52-74.75-59-74.75-2.03 0-4.43-.263-6.406 0-9.4 1.22-17.562 5.455-25.125 11.686 16.388 13.303 27.468 36.433 27.47 63.063 0 21.016-7.236 40.104-18.126 53.75 67.373 10.438 66 116.11 66 189.218h-21.94c.008-73.086 1.29-178.215-65.905-188.625 10.89-13.647 17.906-32.61 17.906-53.625 0-41.497-26.457-75-58.936-75-2.03 0-4.117-.262-6.094 0-29.657 3.85-52.813 36.095-52.813 75 0 21.547 7.373 40.788 18.75 54.5-61.514 11.563-66.318 114.874-66.343 187.75H126.25c-.002-72.905 4.322-176.47 66-188.063-11.38-13.712-18.687-33.356-18.688-54.906 0-26.575 11.138-49.632 27.438-63.064-9.148-7.425-19.896-11.687-31.53-11.687-1.525 0-3.267-.132-4.876-.095z" fill-rule="evenodd"></path></svg>		
+<span class="uk-hidden-small"> Comunauté</span></a>
 		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
 			<ul class="uk-nav uk-nav-navbar" >
-				<li class="uk-active"><a href="">...</a></li>
-				<li><a href="">...</a></li>
-				<li class="uk-parent"><a href="">...</a></li>
-				<li class="uk-parent"><a href="">...</a></li>
+				<li><a href="http://fullmetalplanete.forum2jeux.com/">Forum</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/chat.jsp">Chat</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/halloffames.jsp">Joueurs</a></li>
+				<li><a href="/links.html">Liens</a></li>
 			</ul>
 		</div>
 		</li>
-        <li><a href=""><img src="/images/help.png" /> WIKI</a></li>
+
+
+        <li class="uk-parent " data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/help">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M256 16C123.45 16 16 123.45 16 256s107.45 240 240 240 240-107.45 240-240S388.55 16 256 16zm0 60c99.41 0 180 80.59 180 180s-80.59 180-180 180S76 355.41 76 256 156.59 76 256 76zm0 30c-66.274 0-120 40.294-120 90 0 30 60 30 60 0 0-16.57 26.862-30 60-30 33.138 0 60 13.43 60 30s-30 15-60 30c-1.875.938-3.478 2.126-4.688 3.28C226.53 244.986 226 271.926 226 286v15c0 16.62 13.38 30 30 30 16.62 0 30-13.38 30-30v-15c0-45 90-40.294 90-90s-53.726-90-120-90zm0 240a30 30 0 0 0-30 30 30 30 0 0 0 30 30 30 30 0 0 0 30-30 30 30 0 0 0-30-30z"></path></svg>
+<span class="uk-hidden-small"> Aide</span></a>
+		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
+			<ul class="uk-nav uk-nav-navbar" >
+                 <li><a href="/help">Pour d&eacute;buter</a></li>
+                 <li><a href="/help">Manuel d'utilisation</a></li>
+                 <li><a href="/help">Les règles</a></li>
+                 <li><a href="/help">FAQ</a></li>
+                 <li><a href="/help">Misc</a></li>
+			</ul>
+		</div>
+		</li>
+
+
+        <li class="uk-parent " data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/dev">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M409.28 19.313c-20.507.34-40.836 8.245-56.53 23.937-20.558 20.558-27.823 49.56-22.188 76.156l1.032 4.938-3.594 3.594-43.406 43.406c3.86 2.906 7.167 6.498 9.72 10.625 7.166 11.59 6.305 28.69-6.22 41.218l-11.97 11.968 30.438 30.47 79.563-79.563 3.563-3.594 4.968 1.06c26.44 5.525 55.136-1.98 75.75-22.593 23.596-23.595 29.518-57.696 18.688-87.093l-49.22 49.25c-13.71 13.708-36.3 15.01-50.093 1.22-13.79-13.793-13.07-36.618.814-50.5l49.22-49.25c-8.545-3.15-17.475-4.93-26.44-5.22-1.367-.045-2.726-.054-4.093-.032zM72.157 21.53c-13.533.162-25.857 6.134-34.937 15.69-18.163 19.108-23.575 51.08 4.56 79.218l86.126 86.124c30.25 2.733 53.004 26.662 53.906 57.532L182 266c.883 5.654 4.31 10.126 8.844 12.47 5.734 2.963 12.387 3.145 19.625-4.095l64.405-64.406c7.718-7.72 6.896-12.716 3.53-18.157-3.364-5.442-11.272-10.063-18.81-10.063h-.19l-.186-.03c-30.125-1.298-53.427-23.487-56.5-53l-86.595-86.595C100.84 26.84 85.69 21.37 72.155 21.53zm191.188 227.314l-14.03 14.03 136.5 136.532 3.31 3.313-.655 4.655-4.595 31.813 77.188 49.375L489 460.625l-49.375-77.22-31.78 4.595-4.658.688-3.312-3.313-136.53-136.53zm-27.72 26.812l-11.936 11.938c-12.238 12.24-29.134 13.86-41.438 7.5-4.515-2.334-8.513-5.66-11.656-9.72l-41.78 41.782-3.595 3.594-4.97-1.063c-26.596-5.632-55.6 1.632-76.156 22.188-23.598 23.596-29.52 57.697-18.688 87.094l49.25-49.25c13.883-13.877 36.71-14.605 50.5-.814 13.792 13.792 12.494 36.384-1.22 50.094l-49.25 49.25c29.398 10.83 63.498 4.906 87.095-18.688 20.613-20.615 28.114-49.342 22.595-75.78l-1.03-4.938 3.56-3.563 79.19-79.186-30.47-30.438z"></path></svg>
+<span class="uk-hidden-small"> Développement</span></a>
+		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
+			<ul class="uk-nav uk-nav-navbar" >
+				<li><a href="/dev"><span class="uk-icon-code"/> Contribuer</a></li>
+				<li><a href="/edit/gh-pages/index.html"><span class="uk-icon-github"/> View on github</a></li>
+				<li><a href="/edit/gh-pages/index.html"><span class="uk-icon-pencil"/> Edit on prose</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/about.jsp"><span class="uk-icon-newspaper-o"/> A propos</a></li>
+			</ul>
+		</div>
+	</li>
     </ul>
 	</div>
 	</nav>
-	
-
 
 
 
 	<div class="uk-slidenav-position" data-uk-slideshow="{autoplay:true}">
     <ul class="uk-slideshow" >
-        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen1.jpg);">
-		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px; position:absolute; top:150px; right:50px;">
-		<b>Avez-vous l'étoffe d'un full metal pilote ?</b><br/><br/>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/home1.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:450px; top: 150px; left: -80px;">
+		<h2>Avez-vous l'étoffe d'un full metal pilote ?</h2>
 						Une grande compagnie minière vous a recruté à prix d'or. Votre mission: poser votre astronef et ramasser un maximum de minerai...
 		</div></div></li>
-        <li><div class="tm-image uk-text-center" style="background-image: url(/images/gt.jpg);">
-		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;position: absolute;top:150px;left:50px;">
+        <li><div class="tm-image uk-text-center uk-container-center" style="background-image: url(/images/home2.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;top:150px;left: -250px;">
 								... ou désintégrer le coûteux matériel des compagnies adverses et vous emparer de leurs navettes, aux soutes pleines à craquer.
 							  </div></div></li>
-        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen2.jpg);">
-		          <div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;position: absolute;top:290px;left:50px;">
-<ul>
-<li>La carte interactive est l'unique interface</li>
-<li>Partie lente sur un mois ou en temps réel (1h30)</li>
-<li>Mode tour par tour ou parallèle pour ne jamais être bloqué</li>
-</ul>          </div>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/home3.jpg);">
+		          <div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;top: 200px;left: -150px;">
+<div>La carte interactive est l'unique interface</div>
+<div>Partie lente sur un mois ou en temps réel (1h30)</div>
+<div>Mode tour par tour ou parallèle pour ne jamais être bloqué</div>
+      </div>
           </div>
 </li>
-        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen3.jpg);">
-		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;position: absolute;top:300px;right:200px;">
-<ul>
-<li>Un mécanisme qui a fait ses preuves</li>
-<li>Aucun hasard, seul votre tactique fera la différence</li>
-<li>Le terrain change en fonction des marées</li>
-</ul>          </div>
-          </div></li>
-        <li><div class="tm-image uk-text-center" style="background-image: url(/images/screen4.jpg);">
-		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;position: absolute;top:300px;left:200px;">
-<ul>
-<li>Entre 2 et 12 joueurs par partie</li>
-<li>Jeu en équipe possible</li>
-</ul>          </div>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/home5.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:500px;top: 100px;left: 250px;">
+
+<div>Un mécanisme qui a fait ses preuves</div>
+<div>Aucun hasard, seul votre tactique fera la différence</div>
+<div>Le terrain change en fonction des marées</div>
+         </div>
+          </div>
+        </li>
+        <li><div class="tm-image uk-text-center" style="background-image: url(/images/home6.jpg);">
+		<div class="uk-overlay-panel uk-overlay-background uk-overlay-fade" style="width:400px;top: 250px;left: -200px;">
+<div>Entre 2 et 12 joueurs par partie</div>
+<div>Jeu en équipe possible</div>
+        </div>
           </div></li>
     </ul>
     <a href="" class="uk-slidenav uk-slidenav-contrast uk-slidenav-previous" data-uk-slideshow-item="previous"></a>
@@ -103,53 +195,68 @@
 	</div>
 
 	<div class="uk-container uk-container-center" style="margin-top: -100px; position: relative;">
-<article class="uk-article">
 
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-   
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-        {{ content }}<br/>
-	  
-</article>	 
+	
+		
+<div class="uk-grid">
+    <div class="uk-width-1-2">
+<p class="lead">
+FMG est un wargame entièrement gratuit, jouable dans un navigateur où chaque partie est indépendante.<br/>
+<a href="http://www.fullmetalgalaxy.com/account.jsp" class="uk-icon-sign-in">Inscription</a>
+<a href="http://www.fullmetalgalaxy.com/game.jsp?id=/puzzles/tutorial/model.bin" class="uk-icon-github">Démo</a>
+<a href="/help/" class="uk-icon-github">En savoir plus</a>
+</p>
+    </div>
+    
+    <div class="uk-width-1-2">
+			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news">Dernières nouvelles</a>
+				<a class="iconrss" href="http://fullmetalplanete.forum2jeux.com/feed?f=40" target="_blank"></a>
+			</h2>
+				<div id="newsrss">
+					<a href='http://fullmetalplanete.forum2jeux.com/t693-quelques-nouvelles'><div class='article'><article><span class='date'>13/11/15</span><div class='h4'>Quelques nouvelles</div><p>Il y a 15 jours j’ai publié quelques corrections, notamment :
+
+- le chronos qui restait bloqué à 0:00
+
+- les warps qui ne fonctionne pas si l’un d’eux est détruit
+
+- le GT qui ne peut aller  ...</p></article></div></a>
+<a href='http://fullmetalplanete.forum2jeux.com/t681-le-retour-de-dante'><div class='article'><article><span class='date'>16/06/15</span><div class='h4'>Le retour de Dante</div></article></div></a>
+<a href='http://fullmetalplanete.forum2jeux.com/t686-900-parties-terminees'><div class='article'><article><span class='date'>11/06/15</span><div class='h4'>900 parties terminées</div></article></div></a>
+
+				</div>
+    </div>
 </div>
+        
+<div class="uk-grid">
+    <div class="uk-width-1-2">
+			<h2><a href="/gamelist.jsp">Dernières parties</a>
+			</h2>
+				<div id="gamesrss">
+					<a href='/game.jsp?id=5200857771540480'><div class='article'><article><span class='date'>18/11/15</span><div class='h4'> <image src='/images/icons/running16.png' /> <img src='/images/icons/turnbyturn16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/slow16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/normal16.png' title='medium' /> juste pour jouer</div></article></div></a><a href='/game.jsp?id=5067087793881088'><div class='article'><article><span class='date'>13/11/15</span><div class='h4'> <image src='/images/icons/running16.png' /> <img src='/images/icons/turnbyturn16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/slow16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/small16.png' title='small' /> pilote</div></article></div></a><a href='/game.jsp?id=5089173052588032'><div class='article'><article><span class='date'>30/10/15</span><div class='h4'> <image src='/images/icons/running16.png' /> <img src='/images/icons/turnbyturn16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/slow16.png' title='26 tours (pas de temps limite)' /> <img src='/images/icons/small16.png' title='small' /> Tarima</div></article></div></a>
+				</div>
+    </div>
+    
+    <div class="uk-width-1-2">
+        		<div id="statCollumn" class="collumn">
+		<h2><a href="/stats.jsp">Statistiques</a></h2>
+		10 joueurs classés<br/>51 parties en cours & 937 terminés<br/>Meilleurs corporations 2015 :<table width='100%'><tr><td><a href='/oldgameprofile.jsp?corpo=Stargate'><IMG SRC='/images/avatar/Stargate.jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td><td><a href='/oldgameprofile.jsp?corpo=Stargate'><b>Stargate Corp</b></a><br/>Bénéfice: 1335<br/>Rentabilité: 184 %<br/>Nb exploitation: 44</td></tr><tr><td><a href='/oldgameprofile.jsp?corpo=DSM'><IMG SRC='/images/avatar/DSM.jpg' WIDTH=60 HEIGHT=60 BORDER=0/></a></td><td><a href='/oldgameprofile.jsp?corpo=DSM'><b>Deep Space Mining</b></a><br/>Bénéfice: 913<br/>Rentabilité: 339 %<br/>Nb exploitation: 17</td></tr></table>
+		</div>		
+    </div>
+</div>
+        
+        
 
-	  </div><!-- /.page -->
+
+
+
+        
+        
+
+        
+	
+	</div>
+
+	</div></div>
 
 	<footer>
       <div id="travaux"></div>
@@ -159,9 +266,18 @@
         P.Trigaux
       </a>
     </footer>
-
+	
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+  var pageTracker = _gat._getTracker("UA-6780889-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
 
 </body>
 </html>
-
 

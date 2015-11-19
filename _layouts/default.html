@@ -53,6 +53,11 @@
 		<article class="uk-article">
 		<h1 class="uk-article-title">{{ page.title }}</h1>
 		<p class="uk-article-meta">{{ page.last_modified_at }} </p>
+        <pre>
+        {% for article in site.montest %}
+        {{ article.title }}
+        {% endfor %}
+        </pre>
 			{{ content }}
 		</article>	 
 	</div>

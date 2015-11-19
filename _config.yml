@@ -3,6 +3,9 @@
 
 title: 'Full Metal Galaxy'
 
+collections:
+  montest:
+    output: true
 
 gems:
 - jekyll-sitemap
