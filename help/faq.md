@@ -5,6 +5,9 @@ published: true
 lang: fr
 categories: [misc]
 ---
+* TOC
+{:toc}
+
 ### J'ai créé une partie, mais aucun joueur ne souhaite s'inscrire...
 R:Essayez de vous présenter sur le forum, de vous inscrire sur une partie existante ou de contacter un instructeur.
 
