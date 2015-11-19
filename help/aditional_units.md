@@ -6,7 +6,8 @@ lang: fr
 categories: 
   - rules
 ---
-
+* TOC
+{:toc}
 
 
 ##Les transporteurs
