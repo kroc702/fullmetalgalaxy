@@ -8,6 +8,8 @@ categories: [manual]
 * TOC
 {:toc}
 
+Dans les descriptions suivantes, [OK] indique un clic sur le bouton ok. En général, un second clic sur une même case valide le mouvement comme le bouton ok.
+
 ## raccourcis claviers
 <pre>
 [ESC] annuler l'action en cours
@@ -108,6 +110,16 @@ Décharger un véhicule coûte un point d'action. Mais décharger un véhicule l
 [Clic] crabe
 [OK] (-> 0pt d'action)
 </pre>
+Cette même action peut être réalisé plus rapidement:
+<pre>
+[Clic] barge
+[Clic] crabe
+[Clic] char 1
+[Clic] char 2
+[Clic] case où positionner le crabe
+[OK] (-> 1pt d'action)
+</pre>
+
 Pour positionner la barge comme on le souhaite, il est possible de sélectioner les deux cases qu'elle doit occuper:
 <pre>
 [Clic] pod de l'astronef
