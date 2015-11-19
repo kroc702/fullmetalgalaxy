@@ -5,6 +5,9 @@ published: true
 lang: fr
 categories: [starting]
 ---
+* TOC
+{:toc}
+
 ##les prévisions des marées
 
 Les marées modifient complètement le visage d’une planète, il est donc important de savoir en tenir compte. Pour connaitre la prochaine marée, il faut avoir au début du tour (de l’incrément de temps en mode parallèle) une pondeuse météo en état de fonctionnement sur la carte.
