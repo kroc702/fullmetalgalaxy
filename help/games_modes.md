@@ -5,6 +5,9 @@ published: true
 lang: fr
 categories: [manual]
 ---
+* TOC
+{:toc}
+
 ##Mode "tour par tour" & "parallèle"
 
 Full Metal Planete, le jeu de plateau qui inspire FMG, se joue chacun à tour de rôle. Afin de profiter de certaine spécificité des jeux par navigateur, FMG propose deux modes :
