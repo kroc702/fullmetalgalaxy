@@ -6,6 +6,8 @@ lang: fr
 categories: 
   - starting
 ---
+* TOC
+{:toc}
 
 ##Initier une nouvelle partie
 
