@@ -19,6 +19,7 @@ categories: [manual]
 [ENTER] envoyer un message instantané
 [CTRL]+[M] afficher le menu
 </pre>
+
 ## Les tirs
 
 la cible doit être a porté des deux destructeurs.
@@ -29,6 +30,7 @@ la cible doit être a porté des deux destructeurs.
 [Clic] Cible
 [OK]
 </pre>
+
 ### Les tirs avancés
 
 Si l'un des destructeurs est trop éloigné de la cible, il est possible de déplacer le destructeur 1 dans la zone de feu adverse juste avant le tir:
@@ -40,6 +42,7 @@ Si l'un des destructeurs est trop éloigné de la cible, il est possible de dép
 [Clic] Cible
 [OK]
 </pre>
+
 ### Les tirs très avancés
 
 Il est même possible de faire deux tirs après le déplacement:
@@ -76,6 +79,7 @@ Les deux destructeurs doivent être au contact de la cible.
 [Clic] Cible
 [OK]
 </pre>
+
 ## Les contrôles d'astronefs
 
 Détruisez les trois tourelles puis entrez dedans avec un destructeur, comme s'il s'agissait du votre.
@@ -112,6 +116,7 @@ Pour positionner la barge comme on le souhaite, il est possible de sélectioner 
 [Clic] 2nd case (& vérifier que ça nous convient)
 [OK] (-> 1pt d'action)
 </pre>
+
 ## Chat / joueurs connecté
 
 Les avatars des joueurs connectés s'affichent en bas à droite de l'écran. Dans l'onglet "joueurs", les noms des joueurs connectés apparaissent en gras.
