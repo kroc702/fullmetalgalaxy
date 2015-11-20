@@ -1,17 +1,15 @@
 ---
 layout: default
-title: debug tips
+title: Debug tips
 published: true
-lang: fr
+lang: en
 categories: [dev]
 ---
-#summary highlight tools and functions
 
-<wiki:toc max_depth="1" />
 
 Highlight some tools or functions to help you debuging
 
-=Download game=
+# Download game
 You can download a game in binaries format from information tab (you need admin right) or this url :
 http://www.fullmetalgalaxy.com/admin/Servlet?downloadgame=[gameid]
 

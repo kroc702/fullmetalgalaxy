@@ -1,13 +1,12 @@
 ---
 layout: default
-title: Square2Hex
+title: Square textures to hex
 published: true
 lang: fr
 categories: [dev]
 ---
-#summary transformer une texture carré/rectangulaire en hexagone:
-
-=Methode 1=
+# Methode 1
+```
                            _
 - texture de 1*1 de coté: |_|
 
@@ -27,9 +26,10 @@ categories: [dev]
         -> soit pour un hexagone de 77*40 (zoom tactique) 77*80    [le motif ce répette 3 fois]
 
 - découpez la forme hexagonal
+```
 
-=Methode 2=
-
+# Methode 2
+```
                            _
 - texture de 1*1 de coté: |_|
 
@@ -41,3 +41,4 @@ categories: [dev]
         -> soit pour un hexagone de 77*40 (zoom tactique) 115*40
 
 - découpez la forme hexagonal
+```
