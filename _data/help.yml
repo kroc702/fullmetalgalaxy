@@ -1,0 +1,29 @@
+- title:
+    fr: D&eacute;buter
+    en: Starting
+  docs:
+  - index
+  - highlights
+  - create_game
+- title:
+    fr: Manuel
+    en: Manual
+  docs:
+  - manual
+  - games_modes
+- title:
+    fr: Règles
+    en: Rules
+  docs:
+  - original_rules
+  - rules_deviations
+  - standard_units
+  - aditional_units
+  - ranking
+- title:
+    fr: Misc
+    en: Misc
+  docs:
+  - banners
+  - faq
+  

@@ -1,3 +1,8 @@
+default_lang: fr
+lang: 
+  en: English
+  fr: Français
+  
 home:
   fr: Accueil
   en: Home  
@@ -14,17 +19,15 @@ dev:
   fr: Développement
   en: Development
 
-starting: 
-  fr: D&eacute;buter
-  en: Starting
-manual:
-  fr: Manuel
-  en: Manual
+tostart:
+  fr: Pour d&eacute;buter
+  en: To start
+manual:  
+  fr: Manuel d'utilisation
+  en: User manual
 rules:
-  fr: Règles
+  fr: Les règles
   en: Rules
-misc:
-  fr: Misc
-  en: Misc
-  
-  
+faq:
+  fr: FAQ
+  en: FAQ

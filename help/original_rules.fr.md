@@ -2,12 +2,7 @@
 layout: default
 title: Règles original
 published: true
-lang: fr
-categories: [rules]
 ---
-
-* TOC
-{:toc}
 
 La règle suivante correspond au jeu de plateau original.
 Dans FMG, la notion de tour de jeu est facultative (voir mode parallèle). Dans ce cas, tous les joueurs peuvent jouer en même temps. Ceci entraine la modification des règles suivantes :
@@ -16,6 +11,9 @@ Neutralisation : les neutralisations sont automatiques et n'empèche pas de dép
 La règle "entre deux tours, deux chars ne peuvent pas stationner côte à côte sur des montagnes." a été adaptée à "si deux chars, du même propriétaire, sont côte à côte sur des montagnes, l'un des deux ne produit pas de zone de feu".
 Avec cette règle, il n'est pas possible de neutraliser avec 2 char cote à cote sur une même montagne (mais il est parfaitement possible de tirer).
 Si certaines de ces variations ne vous plaisent pas, je vous invite à me le faire savoir.
+
+* TOC
+{:toc}
 
 ##LA PLANETE
 

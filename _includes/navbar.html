@@ -1,86 +1,120 @@
 
 
-{% assign nav_root = include.nav_root %}
-{% if page.nav_root != null %}
-  {% assign nav_root = page.nav_root %}
+{% assign folder = include.folder %}
+{% if page.folder != null %}
+  {% assign folder = page.folder %}
 {% endif %}
 
 	<nav class="uk-navbar" data-uk-sticky>
 	<div class="uk-container uk-container-center">
     <ul class="uk-navbar-nav">
 {% assign li_class = '' %}
-{% if nav_root == 'home' %}
+{% if folder == 'home' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
-        <li class="{{li_class}}"><a href="/">
+        <li class="{{li_class}}"><a href="http://www.fullmetalgalaxy.com/?locale={{include.lang}}">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="20 20 492 492" ><path d="M 234.875 18.779297 C 208.788 21.146297 183.318 27.3405 160 37.5625 C 175.37 70.3255 174.2213 104.26775 153.2793 119.96875 C 132.4443 135.58575 99.22525 127.9343 72.15625 104.2793 C 55.91025 123.7313 42.82025 145.6383 33.28125 169.9043 C 67.11125 182.2373 89.915703 207.5693 86.220703 233.4043 C 82.522703 259.2393 53.524703 277.14405 17.595703 279.49805 C 19.933703 305.29405 26.50425 330.27605 36.53125 353.37305 C 54.34125 345.19105 72.324953 342.28355 87.626953 344.43555 C 100.65895 346.30555 111.5542 351.45175 118.7832 361.09375 C 134.6002 382.19075 126.38691 415.8055 102.00391 443.0625 C 121.51991 459.4125 144.21966 472.50775 168.59766 482.09375 C 180.92766 448.26575 206.25266 425.4583 232.09766 429.1543 C 257.94166 432.8513 275.83741 461.8503 278.19141 497.7793 C 304.27841 495.4143 329.74841 489.225 353.06641 479 C 337.30041 446.003 338.8052 411.41175 359.9082 395.59375 C 369.5482 388.36375 382.47791 386.57175 395.50391 388.46875 C 410.61591 390.62875 426.69341 398.71805 441.06641 411.24805 C 457.15441 391.90305 470.46641 369.7383 479.94141 345.6543 C 446.11141 333.3223 423.30691 308.0013 427.00391 282.1543 C 430.70091 256.3083 459.66866 238.3823 495.59766 236.0293 C 493.23766 210.0853 486.82341 185.36725 476.69141 162.15625 C 444.07941 177.27325 410.0302 175.30075 394.4082 154.46875 C 378.7122 133.52475 387.15766 100.60875 411.09766 73.46875 C 391.57766 57.11675 368.84966 44.0225 344.47266 34.4375 C 332.14066 68.2655 306.81566 91.096297 280.97266 87.404297 C 255.12666 83.711297 237.22795 54.708297 234.87695 18.779297 L 234.875 18.779297 z M 207.5 104.23047 L 226.99219 153.20508 C 232.7515 153.60441 238.57 154.24141 244.42773 155.06641 L 280.55273 119.64648 L 285.80273 164.33203 C 293.93612 166.84463 301.93979 169.74109 309.72461 172.99219 L 333.64453 149.54102 L 338.05078 187.01953 C 344.03703 190.50822 349.76126 194.23035 355.17578 198.16602 L 381.01367 191.50586 L 372.10156 212.19336 C 380.02053 219.72115 386.82093 227.81468 392.16211 236.4082 C 403.31087 254.35191 408.36944 274.26278 404.89453 296.33398 C 401.88228 315.47256 392.2952 336.40056 373.96094 358.76953 C 370.38887 323.26955 361.68809 300.94217 347.68945 287.6582 C 331.92422 272.69539 310.57276 270.7427 287.29102 273.25781 C 241.42089 278.21344 184.42456 299.3942 126.02148 285.05078 C 111.88054 254.95591 107.8956 230.84215 110.89844 212.27344 C 113.9878 193.1775 124.10299 179.51042 139.42188 169.72266 C 149.81396 163.08255 162.68398 158.44363 177.11328 155.69531 L 207.5 104.23047 z M 236.55273 294.16211 C 260.16611 324.93717 256.48061 377.24353 319.91016 356.0293 C 286.6413 441.96575 186.55473 372.61238 156.83789 301.48828 C 185.03137 303.13451 212.01219 298.87952 236.55273 294.16211 z "/></svg>
-<span class="uk-hidden-small"> {{site.data.i18n.home[page.lang]}}</span></a></li>
+<span class="uk-hidden-small"> {{site.data.i18n.home[include.lang]}}</span></a></li>
 {% assign li_class = '' %}
-{% if include.nav_root == 'games' %}
+{% if include.folder == 'games' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="http://www.fullmetalgalaxy.com/gamelist.jsp">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M253.47 17.406C123.76 17.406 18.437 122.76 18.437 252.47c0 129.707 105.324 235.06 235.03 235.06 129.707 0 235.063-105.353 235.063-235.06 0-129.71-105.355-235.064-235.06-235.064zM367.874 68.75c61.246 38.19 101.97 106.14 101.97 183.72 0 17.143-1.993 33.823-5.75 49.81l-34.25-18.06 22 54.874c-9.454 21.647-22.362 41.432-38 58.687l-43.158-30.936-64.625 47.72-61.656 6.967-13.906-41.78-49.72 26.844-68.093-18.938 9.157 36.594c-28.41-21.793-51.23-50.466-66-83.563L81.25 304.47l32.25 17.124 59.22-9.875 2.843-40.908-37.344-1.718 4.905-17.844 30.78-25.313-25.093-15.625 67.22-38.593-45.345-29.657-66.625 40.187-49.437-15.28c13.812-32.14 35.21-60.22 61.906-82.064l-3.75 44.375 43.376-34.124 72 22.22-22.5-27.407L233 75.562l26.813 28.468 71 9.845-3.5-34.47 41.468 12.657-.905-23.312zm1.156 120.03L278 199.47l28.906 43.218 3.156 64.468L339.25 321l11.438-28.375 62.656 48.656L395.78 294l6.408-48.344-43.75-22.72 10.593-34.155zM221 192.438l-31.594 21.188 36.47 14.78 16.686-14.78L221 192.437zm22.188 144.688l18.687 52.594 19.78-42.564-38.467-10.03z"></path></svg>
-<span class="uk-hidden-small"> {{site.data.i18n.games[page.lang]}}</span></a>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M253.47 17.406C123.76 17.406 18.437 122.76 18.437 252.47c0 129.707 105.324 235.06 235.03 235.06 129.707 0 235.063-105.353 235.063-235.06 0-129.71-105.355-235.064-235.06-235.064zM367.874 68.75c61.246 38.19 101.97 106.14 101.97 183.72 0 17.143-1.993 33.823-5.75 49.81l-34.25-18.06 22 54.874c-9.454 21.647-22.362 41.432-38 58.687l-43.158-30.936-64.625 47.72-61.656 6.967-13.906-41.78-49.72 26.844-68.093-18.938 9.157 36.594c-28.41-21.793-51.23-50.466-66-83.563L81.25 304.47l32.25 17.124 59.22-9.875 2.843-40.908-37.344-1.718 4.905-17.844 30.78-25.313-25.093-15.625 67.22-38.593-45.345-29.657-66.625 40.187-49.437-15.28c13.812-32.14 35.21-60.22 61.906-82.064l-3.75 44.375 43.376-34.124 72 22.22-22.5-27.407L233 75.562l26.813 28.468 71 9.845-3.5-34.47 41.468 12.657-.905-23.312zm1.156 120.03L278 199.47l28.906 43.218 3.156 64.468L339.25 321l11.438-28.375 62.656 48.656L395.78 294l6.408-48.344-43.75-22.72 10.593-34.155zM221 192.438l-31.594 21.188 36.47 14.78 16.686-14.78L221 192.437zm22.188 144.688l18.687 52.594 19.78-42.564-38.467-10.03z"></path></svg>
+<span class="uk-hidden-small"> {{site.data.i18n.games[include.lang]}}</span></a>
 			<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
 			<ul class="uk-nav uk-nav-navbar" >
-				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=0" >Nouvelles Parties</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=1" >Mes Parties</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=2" >Jeux Solo</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=3" >Autres Parties</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/stats.jsp" >Stats globales</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=0&locale={{include.lang}}" >Nouvelles Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=1&locale={{include.lang}}" >Mes Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=2&locale={{include.lang}}" >Jeux Solo</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/gamelist.jsp?tab=3&locale={{include.lang}}" >Autres Parties</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/stats.jsp?locale={{include.lang}}" >Stats globales</a></li>
 			</ul>
 			</div>
 		</li>
 {% assign li_class = '' %}
-{% if nav_root == 'comunity' %}
+{% if folder == 'comunity' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M164.594 21.625c-.537.012-1.068.028-1.563.094-29.656 3.852-52.56 35.847-52.56 74.75 0 21.55 7.307 41.193 18.686 54.905-61.678 11.594-66.563 115.158-66.562 188.063h43.218l11.094 152.437h63.063L168.905 340.03h21.47l11.343 152.158h108.686l10.03-152.157h21.627l-9.907 151.845h63.063l10.53-152.438h40.28c0-73.107 1.407-178.78-65.967-189.218 10.89-13.646 18.093-32.734 18.093-53.75 0-41.496-26.52-74.75-59-74.75-2.03 0-4.43-.263-6.406 0-9.4 1.22-17.562 5.455-25.125 11.686 16.388 13.303 27.468 36.433 27.47 63.063 0 21.016-7.236 40.104-18.126 53.75 67.373 10.438 66 116.11 66 189.218h-21.94c.008-73.086 1.29-178.215-65.905-188.625 10.89-13.647 17.906-32.61 17.906-53.625 0-41.497-26.457-75-58.936-75-2.03 0-4.117-.262-6.094 0-29.657 3.85-52.813 36.095-52.813 75 0 21.547 7.373 40.788 18.75 54.5-61.514 11.563-66.318 114.874-66.343 187.75H126.25c-.002-72.905 4.322-176.47 66-188.063-11.38-13.712-18.687-33.356-18.688-54.906 0-26.575 11.138-49.632 27.438-63.064-9.148-7.425-19.896-11.687-31.53-11.687-1.525 0-3.267-.132-4.876-.095z" fill-rule="evenodd"></path></svg>		
-<span class="uk-hidden-small"> {{site.data.i18n.comunity[page.lang]}}</span></a>
+<span class="uk-hidden-small"> {{site.data.i18n.comunity[include.lang]}}</span></a>
 		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
 			<ul class="uk-nav uk-nav-navbar" >
 				<li><a href="http://fullmetalplanete.forum2jeux.com/">Forum</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/chat.jsp">Chat</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/halloffames.jsp">Joueurs</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/chat.jsp?locale={{include.lang}}">Chat</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/halloffames.jsp?locale={{include.lang}}">Joueurs</a></li>
 				<li><a href="/links.html">Liens</a></li>
 			</ul>
 		</div>
 		</li>
 {% assign li_class = '' %}
-{% if nav_root == 'help' %}
+{% if folder == 'help' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/help">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M256 16C123.45 16 16 123.45 16 256s107.45 240 240 240 240-107.45 240-240S388.55 16 256 16zm0 60c99.41 0 180 80.59 180 180s-80.59 180-180 180S76 355.41 76 256 156.59 76 256 76zm0 30c-66.274 0-120 40.294-120 90 0 30 60 30 60 0 0-16.57 26.862-30 60-30 33.138 0 60 13.43 60 30s-30 15-60 30c-1.875.938-3.478 2.126-4.688 3.28C226.53 244.986 226 271.926 226 286v15c0 16.62 13.38 30 30 30 16.62 0 30-13.38 30-30v-15c0-45 90-40.294 90-90s-53.726-90-120-90zm0 240a30 30 0 0 0-30 30 30 30 0 0 0 30 30 30 30 0 0 0 30-30 30 30 0 0 0-30-30z"></path></svg>
-<span class="uk-hidden-small"> {{site.data.i18n.help[page.lang]}}</span></a>
+<span class="uk-hidden-small"> {{site.data.i18n.help[include.lang]}}</span></a>
 		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
 			<ul class="uk-nav uk-nav-navbar" >
-                 <li><a href="/help">Pour d&eacute;buter</a></li>
-                 <li><a href="/help">Manuel d'utilisation</a></li>
-                 <li><a href="/help">Les règles</a></li>
-                 <li><a href="/help">FAQ</a></li>
-                 <li><a href="/help">Misc</a></li>
+                 <li><a href="/help">{{site.data.i18n.tostart[include.lang]}}</a></li>
+                 <li><a href="/help/manual.{{include.lang}}.html">{{site.data.i18n.manual[include.lang]}}</a></li>
+                 <li><a href="/help/original_rules.{{include.lang}}.html">{{site.data.i18n.rules[include.lang]}}</a></li>
+                 <li><a href="/help/faq.{{include.lang}}.html">{{site.data.i18n.faq[include.lang]}}</a></li>
 			</ul>
 		</div>
 		</li>
 {% assign li_class = '' %}
-{% if nav_root == 'dev' %}
+{% if folder == 'dev' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/dev">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M409.28 19.313c-20.507.34-40.836 8.245-56.53 23.937-20.558 20.558-27.823 49.56-22.188 76.156l1.032 4.938-3.594 3.594-43.406 43.406c3.86 2.906 7.167 6.498 9.72 10.625 7.166 11.59 6.305 28.69-6.22 41.218l-11.97 11.968 30.438 30.47 79.563-79.563 3.563-3.594 4.968 1.06c26.44 5.525 55.136-1.98 75.75-22.593 23.596-23.595 29.518-57.696 18.688-87.093l-49.22 49.25c-13.71 13.708-36.3 15.01-50.093 1.22-13.79-13.793-13.07-36.618.814-50.5l49.22-49.25c-8.545-3.15-17.475-4.93-26.44-5.22-1.367-.045-2.726-.054-4.093-.032zM72.157 21.53c-13.533.162-25.857 6.134-34.937 15.69-18.163 19.108-23.575 51.08 4.56 79.218l86.126 86.124c30.25 2.733 53.004 26.662 53.906 57.532L182 266c.883 5.654 4.31 10.126 8.844 12.47 5.734 2.963 12.387 3.145 19.625-4.095l64.405-64.406c7.718-7.72 6.896-12.716 3.53-18.157-3.364-5.442-11.272-10.063-18.81-10.063h-.19l-.186-.03c-30.125-1.298-53.427-23.487-56.5-53l-86.595-86.595C100.84 26.84 85.69 21.37 72.155 21.53zm191.188 227.314l-14.03 14.03 136.5 136.532 3.31 3.313-.655 4.655-4.595 31.813 77.188 49.375L489 460.625l-49.375-77.22-31.78 4.595-4.658.688-3.312-3.313-136.53-136.53zm-27.72 26.812l-11.936 11.938c-12.238 12.24-29.134 13.86-41.438 7.5-4.515-2.334-8.513-5.66-11.656-9.72l-41.78 41.782-3.595 3.594-4.97-1.063c-26.596-5.632-55.6 1.632-76.156 22.188-23.598 23.596-29.52 57.697-18.688 87.094l49.25-49.25c13.883-13.877 36.71-14.605 50.5-.814 13.792 13.792 12.494 36.384-1.22 50.094l-49.25 49.25c29.398 10.83 63.498 4.906 87.095-18.688 20.613-20.615 28.114-49.342 22.595-75.78l-1.03-4.938 3.56-3.563 79.19-79.186-30.47-30.438z"></path></svg>
-<span class="uk-hidden-small"> {{site.data.i18n.dev[page.lang]}}</span></a>
+<span class="uk-hidden-small"> {{site.data.i18n.dev[include.lang]}}</span></a>
 		<div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
 			<ul class="uk-nav uk-nav-navbar" >
 				<li><a href="/dev"><span class="uk-icon-code"/> Contribuer</a></li>
 				<li><a href="{{ site.github.repository_url }}/edit/gh-pages/{{ page.path }}"><span class="uk-icon-github"/> View on github</a></li>
 				<li><a href="{{ site.github.repository_url | replace_first: 'https://github.com/', 'http://prose.io/#' | replace_first: 'http://github.com/', 'http://prose.io/#' }}/edit/gh-pages/{{ page.path }}"><span class="uk-icon-pencil"/> Edit on prose</a></li>
-				<li><a href="http://www.fullmetalgalaxy.com/about.jsp"><span class="uk-icon-newspaper-o"/> A propos</a></li>
+				<li><a href="http://www.fullmetalgalaxy.com/about.jsp?locale={{include.lang}}"><span class="uk-icon-newspaper-o"/> A propos</a></li>
 			</ul>
 		</div>
 	</li>
     </ul>
+    <div class="uk-navbar-flip">
+        <ul class="uk-navbar-nav">
+            <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href=""><span class="uk-hidden-small"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ><path d="M322.02 20.184l-17.13 42.273c7.053 2.776 13.857 6.04 20.372 9.758l8.62-13.274 15.675 10.18-8.637 13.296c.85.628 1.692 1.266 2.53 1.91l-19.745 22.735c4.994 3.747 9.706 7.85 14.1 12.268l19.754-22.746c.187.184.38.366.567.55l11.795-10.618 12.504 13.89-11.79 10.614c4.71 5.887 9.005 12.117 12.846 18.648l14.114-7.19 8.482 16.653-14.092 7.177c3.015 6.877 5.555 14.007 7.578 21.353l15.452-3.283 3.884 18.28-15.445 3.282c1.114 7.374 1.71 14.918 1.77 22.59l15.777.827-.98 18.664-15.74-.825c-.835 7.61-2.214 15.056-4.09 22.303l14.947 4.857-5.777 17.774-14.922-4.85c-2.767 7.09-6.03 13.934-9.75 20.486l13.142 8.537-10.18 15.674-13.13-8.528c-4.493 6.108-9.418 11.877-14.725 17.273l10.46 11.617-13.89 12.506-10.437-11.594c-5.9 4.734-12.14 9.062-18.69 12.924l7.05 13.838-16.65 8.484-7.033-13.803c-6.898 3.034-14.055 5.585-21.427 7.62l3.213 15.123-18.28 3.884-3.21-15.107c-7.405 1.125-14.978 1.735-22.682 1.797l-.808 15.41-18.662-.98.807-15.368c-7.645-.834-15.127-2.208-22.405-4.092l-4.738 14.58-17.773-5.777 4.73-14.55c-7.124-2.78-13.997-6.063-20.575-9.803l-8.328 12.822-15.672-10.18 8.33-12.824c-.93-.685-1.848-1.384-2.762-2.088l19.848-22.853c-4.997-3.743-9.71-7.842-14.108-12.257l-19.848 22.853c-.156-.152-.314-.302-.47-.455l-11.356 10.226-12.504-13.89 11.347-10.216c-4.563-5.7-8.737-11.725-12.49-18.03l-38.9 23.71c9.515 15.894 21.132 30.386 34.472 43.088l-20.575 23.69 14.112 12.255 20.575-23.693c34.76 27.522 78.7 43.96 126.482 43.96 1.365 0 2.726-.023 4.084-.05v19.473c-34.134 15.356-59.115 36.682-79.753 59.906h197.54c-19.674-24.32-44.835-43.993-80.784-59.712V409.41c92.908-19.004 162.8-101.184 162.8-199.68 0-58.094-24.315-110.51-63.323-147.636l20.58-23.698-14.11-12.253-20.584 23.7c-15.464-12.24-32.75-22.278-51.376-29.66zm-75.108 82.664c-59.132 0-106.838 47.692-106.838 106.8 0 59.11 47.706 106.8 106.838 106.8 59.132 0 106.838-47.69 106.838-106.8 0-9.375-1.203-18.462-3.46-27.12-10.244 25.087-23.08 45.15-45.905 66.95-16.887-1.487-29.712-8.08-40.643-19.966 6.048-8.86 13.09-17.22 27.096-22.102-12.564-28.283-18.19-56.568-21.393-84.85 12.464 4.59 20.16 11.93 29.235 24.954 7.712 1.697 16.863-6.856 23.27-13.975-19.274-18.99-45.752-30.692-75.038-30.692zm-32.48 65.03c17.62 12.56 32.407 31.486 38.03 52.517-11.065 9.256-16.907 21.124-19.92 34.406 16.957 8.23 30.048 21.297 41.65 36.22v.007c-34.438-3.405-68.245-9.135-98.696-27.164-12.172-20.824-19.107-41.65-19.92-62.474 16.6-7.525 33.2-4.936 49.8.895 9.222-11.47 9.186-20.922 9.056-34.408z"></path></svg> </span>{{include.lang}}</a>
+                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom" style="top: 40px; left: 0px;">
+                <ul class="uk-nav uk-nav-navbar" >
+        {% for language in site.data.i18n.lang %}
+            {% if language[0] != include.lang %}
+                {% assign document_found = false %}
+                {% for document in site.pages %}
+                    {% assign document_names = document.name | replace_first:'/','' | split:"." %}
+                    {% assign document_name = document_names[0] %}
+                    {% assign document_lang = document_names[1] %}
+                    {% unless site.data.i18n.lang contains document_lang %}
+                        {% assign document_lang = document.lang %}
+                    {% endunless %}
+                    {% assign document_folder = document.dir | replace_first:'/','' %}
+                    {% if document_folder == include.folder %}
+                        {% if document_name == include.name %}
+                            {% if document_lang == language[0] %}
+                                <li><a href="{{document.url}}">{{language[1]}}</a></li>
+                                {% assign document_found = true %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if document_found == false %}
+                    <li><a href="{{page.dir}}/{{include.name}}.{{language[0]}}.html">{{language[1]}}</a></li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+                </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
 	</div>
 	</nav>

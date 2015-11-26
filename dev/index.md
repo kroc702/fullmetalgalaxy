@@ -1,21 +1,50 @@
 ---
 layout: default
-title: welcome
+title: Contribuer
 published: true
 lang: fr
-categories: [dev]
 ---
 
-# FR
-Ce wiki a pour vocation de réunir toute la documentation utile aux développeurs. En tant que projet open source, le code et une bonne partie de la documentation seront écrits en anglais. Une présentation générale de l'architecture sera tout de même traduite dans les deux langues.
+Comparé à certains MMO, FMG est certes un projet modeste... Mais il est déjà trop gros pour être porté par une seule ame.
 
-**Si vous avez une question sur le jeu en lui même, vous devriez regardez ici http://www.fullmetalgalaxy.com/help/ ou bien m'envoyer un mail admin at fullmetalgalaxy dot com**
+En effet, pour s'établir dans la durée, un jeu en ligne doit bien sûr fédérer une communauté de joueur, mais aussi de contributeur. Comme beaucoup de projet amateur et non-commercial, Full Metal Galaxy a choisi une licence open source (AGPL) pour permettre à qui le souhaite, de contribuer sans risquer de voir son travail anéanti par une mésentente au sein de l'équipe.
+FMG a donc besoin de vous pour continuez à progresser !
 
-[Une présentation générale du code](Overview_fr.md)
+##Comment contribuer ?
 
-# EN
-Main objective of this wiki is to amass all documentation needed by developper. As an open source project, most of the code and documentation are written in english. Nevertheless, some article of this wiki are still in french.
+Il n'y a pas que le code dans la vie (d'un logiciel). Quelles que soient vos compétences, vous pouvez sans doute aider au développement du jeu. Voici quelques exemples:
 
-**If you have a question on game itself, you should take a look here http://www.fullmetalgalaxy.com/help/  or send me a mail at admin at fullmetalgalaxy.com**
+###Trouver des bugs et améliorations possibles
 
-[A general presentation of code](Overview.md)
+C'est tout bête, mais les développeurs ne voient pas tout et n'ont pas forcément les meilleures idées.
+
+###Écrire de la documentation
+
+Il y a déjà quelques articles expliquant les bases du jeu et l'utilisation du logiciel. Ces textes peuvent être obsolètes ou à clarifier. Vous pouvez aussi participer à l'écriture d'un background ou traduire FMG dans une autre langue.
+
+###Gérer la communauté
+
+C'est peut être un bien grand mot vu la taille actuelle de la communauté, il n'empêche que vous pouvez répondre a certaines questions des joueurs et montrer que l'équipe est active. Vous pouvez aussi promouvoir FMG sur d'autres forums et initier des débutants.
+
+###Améliorer les graphismes
+
+Si vous savez manier les logiciels de dessin et/ou de 3D, vous pourrez sans doute rendre certaines images plus agréables et lisibles.
+
+###Coder les améliorations possibles
+
+On a bien sûr besoin de développeur informatique :)
+Pour info le code est écrit en java et utilise GWT & GAE. Il n'est vraiment pas indispensable d'avoir des connaissances web particulières. Allez voir la doc et le code pour vous faire une idée.
+
+##Les raisons qui vous pousseraient à participer au projet ?
+
+Hum, pas l'argent en tout cas : c'est un loisir de passionné. Vous apprendrez sans doute plein de choses et cela donnera une petite visibilité à votre travail : Full Metal Planete étant connu, il attire toujours un peu de monde. Initier une communauté autour d'un jeu qui perdure sera aussi une source de satisfaction...
+
+
+Si le projet vous intéresse ou êtes simplement curieux, n'hésitez pas à visiter le site dédié au developpement (http://dev.fullmetalgalaxy.com) et me contacter (admin@fullmetalgalaxy.com) pour obtenir des infos concrètes. Et de toute façon, le moral est la clef de voute de tout projet amateur.
+
+##Les atouts du projet :
+ - Les mécanismes du jeu sont éprouvés et ont déjà remporté un certain succès au travers de Full Metal Planete.
+ - Pour la même raison, une petite communauté d'ancien joueur se créer, assurant le démarrage du projet.
+ - Il n'existe que très peu (pas ?) de jeu similaire : wargame asynchrone jouable à plus de 2 au travers d'un navigateur.
+ - Le jeu est jouable et joué.
+ - La licence open source devrait assurer une certaine pérennité.

@@ -2,8 +2,8 @@
 layout: default
 title: Présentation
 published: true
+name: index
 lang: fr
-categories: [starting]
 ---
 * TOC
 {:toc}

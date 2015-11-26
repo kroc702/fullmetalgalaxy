@@ -2,7 +2,7 @@
 layout: default
 title: Highlights
 published: true
-lang: fr
+lang: en
 categories: [starting]
 ---
 * TOC

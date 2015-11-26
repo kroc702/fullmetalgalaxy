@@ -22,42 +22,81 @@
 </head>
 <body>
     <div class="background"><div class="page">
-{% assign current_folders = page.url | replace_first:'/','' | split:"/" %}
-{% assign current_folder = current_folders[0] %}
-	
+
+{% assign page_names = page.name | replace_first:'/','' | split:"." %}
+{% assign page_name = page_names[0] %}
+{% assign page_lang = page_names[1] %}
+{% unless site.data.i18n.lang contains page_lang %}
+    {% assign page_lang = page.lang %}
+{% endunless %}
+{% assign page_folder = page.dir | replace_first:'/','' %}
+<!-- folder: {{page_folder}} - name: {{page_name}} - lang: {{page_lang}} - time: {{ site.time }} -->
+
 {% include header.html %}	
-{% include navbar.html nav_root=current_folder %}
+{% include navbar.html lang=page_lang folder=page_folder name=page_name %}
 
 	<div class="uk-container uk-container-center">
-	
 	<div class="uk-grid" data-uk-grid-margin="">
 	<aside>
     <div class="tm-sidebar uk-hidden-small">
 		<ul class="uk-nav">
-{% for tag in site.data.categories[current_folder] %}
-			<li class="uk-nav-header">{{ site.data.i18n[tag][page.lang] }}</li>
-{% for document in site.pages %}
-{% if document.url contains current_folder | prepend:'/' | append:'/' %}
-{% if document.categories contains tag %}
-			<li><a href="{{ document.url }}">{{ document.title }}</a></li>
-{% endif %}
-{% endif %}
-{% endfor %}
-			<li class="uk-nav-divider"></li>
-{% endfor %}
+        {% for categorie in site.data[page_folder] %}
+            <li class="uk-nav-header">{{ categorie.title[page_lang] }}</li>
+            {% for article in categorie.docs %}
+                <!--{{ article }}-->
+                {% assign document_found = false %}
+                {% for document in site.pages %}
+                    {% assign document_names = document.name | replace_first:'/','' | split:"." %}
+                    {% assign document_name = document_names[0] %}
+                    {% assign document_lang = document_names[1] %}
+                    {% unless site.data.i18n.lang contains document_lang %}
+                        {% assign document_lang = document.lang %}
+                    {% endunless %}
+                    {% assign document_folder = document.dir | replace_first:'/','' %}
+                    {% if document_folder == page_folder %}
+                        {% if document_name == article %}
+                            {% if document_lang == page_lang %}
+                                <li><a href="{{ document.url }}">{{ document.title }}</a></li>
+                                {% assign document_found = true %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if document_found == false %}
+                    <li><a class="uk-text-warning" href="{{page.dir}}/{{article}}.{{page_lang}}.html">{{article}}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li class="uk-nav-divider"></li>
+        {% endfor %}        
 		</ul>
 	</div>
+{% comment %}
+    <div class="uk-visible-small uk-dropdown">
+        <button class="uk-button">Pages... <i class="uk-icon-caret-down"></i></button>
+        <ul class="uk-nav uk-nav-dropdown">
+        {% for document in site.pages %}
+            {% assign document_names = document.name | replace_first:'/','' | split:"." %}
+            {% assign document_name = document_names[0] %}
+            {% assign document_lang = document_names[1] %}
+            {% unless site.data.i18n.lang contains document_lang %}
+                {% assign document_lang = document.lang %}
+            {% endunless %}
+            {% assign document_folder = document.dir | replace_first:'/','' %}
+            {% if document_folder == page_folder %}
+                {% if document_lang == page_lang %}
+                    <li><a href="{{ document.url }}">{{ document.title }}</a></li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endcomment %}
 	</aside>
 	
 	<div class="tm-main uk-width-medium-3-4">
 		<article class="uk-article">
 		<h1 class="uk-article-title">{{ page.title }}</h1>
 		<p class="uk-article-meta">{{ page.last_modified_at }} </p>
-        <pre>
-        {% for article in site.montest %}
-        {{ article.title }}
-        {% endfor %}
-        </pre>
 			{{ content }}
 		</article>	 
 	</div>
