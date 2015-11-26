@@ -3,7 +3,8 @@ layout: default
 title: Règles original
 published: true
 lang: fr
-categories: [rules]
+categories: 
+  - rules
 ---
 
 * TOC
