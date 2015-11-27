@@ -3,8 +3,10 @@ layout: default
 title: écarts de règles
 published: true
 lang: fr
-categories: [rules]
+categories: 
+  - rules
 ---
+
 * TOC
 {:toc}
 
@@ -25,12 +27,12 @@ Il n’est pas possible de prédire la marée à plus de deux tours, même avec 
 Les marées ne sont pas tirées avec des cartes ce qui peut changer les probabilités d'aparitions.
 
 Voici l'algorithme utilisé:
-```
+<pre>
 A chaque nouvelle marée, on ajoute -1, 0 ou +1 au niveau moyen de la marée.
 La proba de la marée suivante est 1/3 haute, 1/3 normal et 1/3 basse.
 Si ce niveau dépasse 2 (ou -2) la proba passe a 1/2 normal et 1/2 basse (ou 1/2 haute et 1/2 normal).
--> au pire on peu donc avoir 6 marées hautes !
-```
+au pire on peu donc avoir 6 marées hautes !
+</pre>
 
 ##Le déploiement
 
