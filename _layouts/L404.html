@@ -19,8 +19,17 @@
 
 
 	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
+    
+    <script>
+    function onLoad(){
+        if( window.location.pathname.toString().endsWith('index.fr.html') ) {
+            var index = window.location.href.lastIndexOf('/');
+            window.location = window.location.href.substring(0,index);
+        }
+    }
+    </script>
 </head>
-<body>
+<body onload="onLoad()">
     <div class="background"><div class="page">
 
 {% assign page_names = page.name | replace_first:'/','' | split:"." %}
@@ -36,9 +45,6 @@
 
 	<div class="uk-container uk-container-center">
 	<div class="uk-grid" data-uk-grid-margin="">
-    
-{% include navaside.html lang=page_lang name=page_name %}	
-
 	<div class="tm-main uk-width-medium-3-4">
 		<article class="uk-article">
 		<h1 class="uk-article-title">{{ page.title }}</h1>

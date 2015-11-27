@@ -1,4 +1,6 @@
-default_lang: fr
+default_lang: 
+  fr: 0
+  en: 1
 lang: 
   en: English
   fr: Français

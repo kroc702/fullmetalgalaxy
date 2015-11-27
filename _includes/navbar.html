@@ -1,10 +1,5 @@
 
 
-{% assign folder = include.folder %}
-{% if page.folder != null %}
-  {% assign folder = page.folder %}
-{% endif %}
-
 	<nav class="uk-navbar" data-uk-sticky>
 	<div class="uk-container uk-container-center">
     <ul class="uk-navbar-nav">
@@ -16,7 +11,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="20 20 492 492" ><path d="M 234.875 18.779297 C 208.788 21.146297 183.318 27.3405 160 37.5625 C 175.37 70.3255 174.2213 104.26775 153.2793 119.96875 C 132.4443 135.58575 99.22525 127.9343 72.15625 104.2793 C 55.91025 123.7313 42.82025 145.6383 33.28125 169.9043 C 67.11125 182.2373 89.915703 207.5693 86.220703 233.4043 C 82.522703 259.2393 53.524703 277.14405 17.595703 279.49805 C 19.933703 305.29405 26.50425 330.27605 36.53125 353.37305 C 54.34125 345.19105 72.324953 342.28355 87.626953 344.43555 C 100.65895 346.30555 111.5542 351.45175 118.7832 361.09375 C 134.6002 382.19075 126.38691 415.8055 102.00391 443.0625 C 121.51991 459.4125 144.21966 472.50775 168.59766 482.09375 C 180.92766 448.26575 206.25266 425.4583 232.09766 429.1543 C 257.94166 432.8513 275.83741 461.8503 278.19141 497.7793 C 304.27841 495.4143 329.74841 489.225 353.06641 479 C 337.30041 446.003 338.8052 411.41175 359.9082 395.59375 C 369.5482 388.36375 382.47791 386.57175 395.50391 388.46875 C 410.61591 390.62875 426.69341 398.71805 441.06641 411.24805 C 457.15441 391.90305 470.46641 369.7383 479.94141 345.6543 C 446.11141 333.3223 423.30691 308.0013 427.00391 282.1543 C 430.70091 256.3083 459.66866 238.3823 495.59766 236.0293 C 493.23766 210.0853 486.82341 185.36725 476.69141 162.15625 C 444.07941 177.27325 410.0302 175.30075 394.4082 154.46875 C 378.7122 133.52475 387.15766 100.60875 411.09766 73.46875 C 391.57766 57.11675 368.84966 44.0225 344.47266 34.4375 C 332.14066 68.2655 306.81566 91.096297 280.97266 87.404297 C 255.12666 83.711297 237.22795 54.708297 234.87695 18.779297 L 234.875 18.779297 z M 207.5 104.23047 L 226.99219 153.20508 C 232.7515 153.60441 238.57 154.24141 244.42773 155.06641 L 280.55273 119.64648 L 285.80273 164.33203 C 293.93612 166.84463 301.93979 169.74109 309.72461 172.99219 L 333.64453 149.54102 L 338.05078 187.01953 C 344.03703 190.50822 349.76126 194.23035 355.17578 198.16602 L 381.01367 191.50586 L 372.10156 212.19336 C 380.02053 219.72115 386.82093 227.81468 392.16211 236.4082 C 403.31087 254.35191 408.36944 274.26278 404.89453 296.33398 C 401.88228 315.47256 392.2952 336.40056 373.96094 358.76953 C 370.38887 323.26955 361.68809 300.94217 347.68945 287.6582 C 331.92422 272.69539 310.57276 270.7427 287.29102 273.25781 C 241.42089 278.21344 184.42456 299.3942 126.02148 285.05078 C 111.88054 254.95591 107.8956 230.84215 110.89844 212.27344 C 113.9878 193.1775 124.10299 179.51042 139.42188 169.72266 C 149.81396 163.08255 162.68398 158.44363 177.11328 155.69531 L 207.5 104.23047 z M 236.55273 294.16211 C 260.16611 324.93717 256.48061 377.24353 319.91016 356.0293 C 286.6413 441.96575 186.55473 372.61238 156.83789 301.48828 C 185.03137 303.13451 212.01219 298.87952 236.55273 294.16211 z "/></svg>
 <span class="uk-hidden-small"> {{site.data.i18n.home[include.lang]}}</span></a></li>
 {% assign li_class = '' %}
-{% if include.folder == 'games' %}
+{% if page.dir == '/games' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="http://www.fullmetalgalaxy.com/gamelist.jsp">
@@ -33,7 +28,7 @@
 			</div>
 		</li>
 {% assign li_class = '' %}
-{% if folder == 'comunity' %}
+{% if page.dir == '/comunity' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="">
@@ -49,7 +44,7 @@
 		</div>
 		</li>
 {% assign li_class = '' %}
-{% if folder == 'help' %}
+{% if page.dir == '/help' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/help">
@@ -65,7 +60,7 @@
 		</div>
 		</li>
 {% assign li_class = '' %}
-{% if folder == 'dev' %}
+{% if page.dir == '/dev' %}
   {% assign li_class = 'uk-active' %}
 {% endif %}
         <li class="uk-parent {{li_class}}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false"><a href="/dev">
@@ -89,6 +84,7 @@
         {% for language in site.data.i18n.lang %}
             {% if language[0] != include.lang %}
                 {% assign document_found = false %}
+
                 {% for document in site.pages %}
                     {% assign document_names = document.name | replace_first:'/','' | split:"." %}
                     {% assign document_name = document_names[0] %}
@@ -97,15 +93,17 @@
                         {% assign document_lang = document.lang %}
                     {% endunless %}
                     {% assign document_folder = document.dir | replace_first:'/','' %}
-                    {% if document_folder == include.folder %}
+                    {% if document_folder == page.dir %}
                         {% if document_name == include.name %}
                             {% if document_lang == language[0] %}
                                 <li><a href="{{document.url}}">{{language[1]}}</a></li>
                                 {% assign document_found = true %}
+                                {% break %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
+
                 {% if document_found == false %}
                     <li><a href="{{page.dir}}/{{include.name}}.{{language[0]}}.html">{{language[1]}}</a></li>
                 {% endif %}
