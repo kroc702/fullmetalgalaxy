@@ -122,6 +122,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
           {
             m_lastResfreshTurn = -1;
             m_lastResfreshGameId = -1;
+            redraw();
           }
         } );
         images[iLand] = ImageElement.as( img.getElement() );
