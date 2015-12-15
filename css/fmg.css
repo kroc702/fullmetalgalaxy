@@ -148,7 +148,7 @@ width: 130%;
 height : 130%;
 top: -15%;
 left: -15%;
-z-index: -1;
+/*z-index: -1;*/
 transition: 0.5s;
 }
 
@@ -156,6 +156,7 @@ transition: 0.5s;
 width: 32px;
 height : 32px;
 cursor: pointer;
+position: absolute;
 }
 
 .fmg-button:hover::before {
