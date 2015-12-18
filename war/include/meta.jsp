@@ -6,6 +6,24 @@
 <meta name="description" content="Full Metal Galaxy est un jeu de strategie online par navigateur bas&eacute; sur le jeu de plateau Full Metal Planete" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- Tile color for Win8 -->
+<meta name="msapplication-TileColor" content="#ffffff">
+
+<!-- Add to homescreen for Chrome on Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Full Metal Galaxy">
+<link rel="icon" sizes="192x192" href="images/logo_192.png">
+
+<!-- Add to homescreen for Safari on iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="white">
+<meta name="apple-mobile-web-app-title" content="Full Metal Galaxy">
+<link rel="apple-touch-icon" href="images/logo_192.png">
+
+<!-- Tile icon for Win8 (144x144) -->
+<meta name="msapplication-TileImage" content="images/logo_144.png">
+
 <link rel="stylesheet" href="/style.css" type="text/css" media="screen" />
 <!--[if lte IE 7]>
 <link rel="stylesheet" href="/style_ie7.css" type="text/css" media="screen" />
