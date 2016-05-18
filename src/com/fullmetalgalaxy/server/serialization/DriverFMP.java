@@ -20,7 +20,7 @@
  *  Copyright 2010 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.tools;
+package com.fullmetalgalaxy.server.serialization;
 
 import java.io.IOException;
 import java.io.InputStream;

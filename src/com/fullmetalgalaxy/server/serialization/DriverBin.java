@@ -20,28 +20,27 @@
  *  Copyright 2010 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.tools;
+package com.fullmetalgalaxy.server.serialization;
 
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.FmpLogger;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * @author vlegendr
  *
  */
-public class DriverXML extends DriverFileFormat
+public class DriverBin extends DriverFileFormat
 {
   /**
    * The log channel
    */
-  private final static FmpLogger LOG = FmpLogger.getLogger( DriverXML.class.getName() );
-  
+  private final static FmpLogger LOG = FmpLogger.getLogger( DriverBin.class.getName() );
   
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.tools.DriverFileFormat#loadGame(java.io.InputStream)
@@ -49,11 +48,13 @@ public class DriverXML extends DriverFileFormat
   @Override
   public ModelFmpInit loadGame(InputStream p_input)
   {
+    ObjectInputStream in = null;
     ModelFmpInit model = null;
     try
     {
-      XStream xstream = new XStream( new DomDriver() );
-      model = game2Model( xstream.fromXML( p_input ) );
+      in = new ObjectInputStream( p_input );
+      model = game2Model( in.readObject() );
+      in.close();
     } catch( Exception ex )
     {
       ex.printStackTrace();
@@ -67,7 +68,6 @@ public class DriverXML extends DriverFileFormat
       // call the post load method to fix old data
       model.getGame().getPreview().onLoad();
       model.setGame( new Game( model.getGame().getPreview(), model.getGame().getData() ) );
-
     }
     return model;
   }
@@ -76,10 +76,18 @@ public class DriverXML extends DriverFileFormat
    * @see com.fullmetalgalaxy.tools.DriverFileFormat#saveGame(com.fullmetalgalaxy.model.persist.EbGame, java.io.OutputStream)
    */
   @Override
-  public void saveGame(ModelFmpInit p_game, OutputStream p_output)
+  public void saveGame(ModelFmpInit p_model, OutputStream p_output)
   {
-    XStream xstream = new XStream( new DomDriver() );
-    xstream.toXML( p_game, p_output );
+    ObjectOutputStream out = null;
+    try
+    {
+      out = new ObjectOutputStream( p_output );
+      out.writeObject( p_model );
+      out.close();
+    } catch( Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
 }

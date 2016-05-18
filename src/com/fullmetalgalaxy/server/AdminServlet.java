@@ -55,7 +55,8 @@ import com.fullmetalgalaxy.server.pm.FmgMessage;
 
 /**
  * @author Vincent
- *
+ * 
+ * this servlet can perform various action over http interface.
  */
 public class AdminServlet extends HttpServlet
 {
