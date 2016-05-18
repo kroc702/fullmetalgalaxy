@@ -14,7 +14,7 @@ categories:
 La création d'une partie est relativement simple. Cependant, cette partie du site étant la moins aboutie, certain bug ou problème de mise en page peuvent surprendrent...
 
 ##Création rapide
-![title.png]({{site.baseurl}}/images/title.png)
+
 Sur la page "Tableau des missions" cliquez sur "Nouvelle exploitation".
 
 Ici, seul quelques champs sont indispenssables:
