@@ -139,7 +139,7 @@ public class AccountStatistics implements Serializable, IsSerializable
     m_averageProfitability *= m_finshedGameCount;
     m_averageNormalizedRank *= m_finshedGameCount;
 
-    m_score += p_statistic.getPlayerScore();
+    m_score += Math.round( p_statistic.getPlayerScore() / p_statistic.getMyTeamSize() );
     m_averageProfitability += p_statistic.getPlayerProfitability();
     m_averageNormalizedRank += p_statistic.getNormalizedRank();
     if( p_statistic.getConfigGameTime() == ConfigGameTime.Standard
@@ -148,11 +148,11 @@ public class AccountStatistics implements Serializable, IsSerializable
       m_averageReactivityInSec *= m_finshedGameCount;
       m_averageReactivityInSec += p_statistic.getAverageReactivityInSec();
     }
-    m_oreLoad += p_statistic.getOreLoad();
-    m_construction += p_statistic.getConstruction();
-    m_destruction += p_statistic.getDestruction();
-    m_freighterCapture += p_statistic.getFreighterCapture();
-    m_unitsCapture += p_statistic.getUnitsCapture();
+    m_oreLoad += Math.round( p_statistic.getOreLoad() / p_statistic.getMyTeamSize() );
+    m_construction += Math.round( p_statistic.getConstruction() / p_statistic.getMyTeamSize() );
+    m_destruction += Math.round( p_statistic.getDestruction() / p_statistic.getMyTeamSize() );
+    m_freighterCapture += Math.round( p_statistic.getFreighterCapture() / p_statistic.getMyTeamSize() );
+    m_unitsCapture += Math.round( p_statistic.getUnitsCapture() / p_statistic.getMyTeamSize() );
     for( EbPublicAccount account : p_statistic.getOpponentPlayers() )
     {
       if( !m_opponentPlayers.contains( account ) )

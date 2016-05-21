@@ -370,9 +370,10 @@ public class FmgMessage
       if( p_game.isFinished() )
       {
         for(EbTeam team : p_game.getTeamByWinningRank() )
+        {
+          gameResults += team.getCompany() + ": ";
           for(EbRegistration registration : team.getPlayers( p_game.getPreview() ) )
           {
-            gameResults += team.getCompany() + ": ";
             if( registration.getAccount() != null )
             {
               gameResults += registration.getAccount().getPseudo();
@@ -386,8 +387,10 @@ public class FmgMessage
               EbPublicAccount resigned = registration.getOriginalAccount( p_game );
               gameResults += " (remplace " + resigned.getPseudo() + ")";
             }
-            gameResults += " : " + registration.estimateWinningScore( p_game ) + " pts\n";
+            gameResults += ", ";
           }
+          gameResults += " : " + team.estimateWinningScore( p_game ) + " pts\n";
+        }
       }
       m_params.put( "game_results", gameResults );
     }

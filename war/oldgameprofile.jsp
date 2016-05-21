@@ -96,8 +96,9 @@ for( PlayerGameStatistics game : gameList )
   if(game.getPartnerPlayers().size() > 0 )
   {
     out.println("team score: "+game.getTeamScore());
+  } else {
+    out.println("player score: "+game.getPlayerScore());
   }
-  out.println("player score: "+game.getPlayerScore());
   out.println("Corpo: "+game.getCompany());
   out.println("investissement: "+game.getInvestment());
   out.println("config time: "+game.getConfigGameTime());
@@ -114,8 +115,6 @@ for( PlayerGameStatistics game : gameList )
     } else {
       out.println("réactivité moyenne: "+(game.getAverageReactivityInSec()/(60*60))+" heures");
     }
-  } else {
-    out.println("partie parallèle");
   }
   out.println("nb tour: "+game.getPlayerTurnCount());
   out.println("TS update: "+game.getTsUpdate());

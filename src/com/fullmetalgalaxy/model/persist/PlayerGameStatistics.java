@@ -297,7 +297,7 @@ public class PlayerGameStatistics extends EbBase
       if( p_event instanceof AnEventPlay )
       {
 
-        if( ((AnEventPlay)p_event).getRegistrationId() == p_registration.getId() )
+        if( ((AnEventPlay)p_event).getMyTeam( p_game ) == p_registration.getTeam( p_game ) )
         {
           if( p_event instanceof EbEvtControl )
           {
@@ -343,14 +343,17 @@ public class PlayerGameStatistics extends EbBase
       }
       else if( p_event instanceof EbEvtPlayerTurn )
       {
-        if( ((EbEvtPlayerTurn)p_event).getOldPlayerId( p_game ) == p_registration.getId()
-            && m_lastOponentTurnDate != null )
+        if( ((EbEvtPlayerTurn)p_event).getOldPlayerId( p_game ) == p_registration.getId() )
         {
-          // end turn by given player: compute reactivity
-          m_averageReactivityInSec += (((EbEvtPlayerTurn)p_event).getLastUpdate().getTime() - m_lastOponentTurnDate
-              .getTime()) / 1000;
+          // end turn by given player
           m_playerTurnCount++;
-          m_lastOponentTurnDate = null;
+          if( m_lastOponentTurnDate != null )
+          {
+            // compute reactivity
+            m_averageReactivityInSec += (((EbEvtPlayerTurn)p_event).getLastUpdate().getTime() - m_lastOponentTurnDate
+                .getTime()) / 1000;
+            m_lastOponentTurnDate = null;
+          }
         }
         else
         {
