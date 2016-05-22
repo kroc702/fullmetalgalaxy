@@ -216,6 +216,11 @@ public class AnEvent extends EbBase implements GameEvent
     m_gameVersion = p_gameVersion;
   }
 
+  public void setGameId(long p_gameId)
+  {
+    m_idGame = p_gameId;
+  }
+
 
   /**
    * @return the auto

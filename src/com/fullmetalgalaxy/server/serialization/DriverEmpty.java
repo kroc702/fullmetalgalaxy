@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.server.FmpLogger;
 
 /**
@@ -56,6 +57,13 @@ public class DriverEmpty extends DriverFileFormat
   public void saveGame(ModelFmpInit p_game, OutputStream p_output)
   {
     LOG.error( "unimplemented" );
+  }
+
+  @Override
+  public ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId)
+  {
+    LOG.error( "unimplemented" );
+    return null;
   }
 
 }

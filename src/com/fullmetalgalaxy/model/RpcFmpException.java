@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model;
 
+import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -33,6 +34,7 @@ public class RpcFmpException extends Exception implements IsSerializable
   static final long serialVersionUID = 0;
 
   private String m_message;
+  private AnEvent cause;
 
   public RpcFmpException()
   {
@@ -43,6 +45,18 @@ public class RpcFmpException extends Exception implements IsSerializable
   {
     super( p_message );
     m_message = p_message;
+  }
+
+  public RpcFmpException(String p_message, AnEvent p_cause)
+  {
+    super( p_message );
+    m_message = p_message;
+    cause = p_cause;
+  }
+
+  public AnEvent getCauseEvent()
+  {
+    return cause;
   }
 
   @Override

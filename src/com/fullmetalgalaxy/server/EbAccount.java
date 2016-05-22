@@ -91,6 +91,9 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   @Unindexed
   private LocaleFmg m_locale = LocaleFmg.getDefault();
   
+  @Unindexed
+  private String m_webHook = null;
+
   /** because of this data, EbAccount shoudln't be send on client side ! 
    * We may have to encrypt this data.
    * */
@@ -758,6 +761,16 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   public void setHideEmailToPlayer(boolean p_hideEmailToPlayer)
   {
     m_hideEmailToPlayer = p_hideEmailToPlayer;
+  }
+
+  public String getWebHook()
+  {
+    return m_webHook;
+  }
+
+  public void setWebHook(String p_webHook)
+  {
+    m_webHook = p_webHook;
   }
 
 

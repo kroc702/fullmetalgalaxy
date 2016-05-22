@@ -145,7 +145,7 @@ public class EbEvtMove extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveOn(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-          Messages.getLandString( getAccountId(), p_game.getLand( tokenPosition ) ) ) );
+          Messages.getLandString( getAccountId(), p_game.getLand( tokenPosition ) ) ), this );
     }
     // check token move to a 'clear' hexagon
     boolean moveToPontoon = false;

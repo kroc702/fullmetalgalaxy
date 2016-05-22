@@ -23,6 +23,7 @@
 
 package com.fullmetalgalaxy.server;
 
+import java.net.URL;
 import java.util.logging.Logger;
 
 import com.fullmetalgalaxy.model.GameStatus;
@@ -39,6 +40,11 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
+import com.google.appengine.api.urlfetch.FetchOptions;
+import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
 /**
  * @author Vincent
@@ -84,8 +90,10 @@ public class GameNotification
           // new turn in begin game => email to current player
           NotificationQty notif = NotificationQty.Std;
           if( p_game.getCurrentTimeStep() <= 2 ) notif = NotificationQty.Min;
-          send2CurrentPlayers( new FmgMessage( "newTurn", p_game ), p_game, notif, false );
+          send2CurrentPlayers( new FmgMessage( "newTurn", p_game ), p_game, notif, true );
           mailSended = true;
+          
+          
         }
       }
 
@@ -214,6 +222,29 @@ public class GameNotification
           + " couldn't be send because account wasn't found" );
       return;
     }
+
+    // web hook
+    // ========
+    if( account.getWebHook() != null && "newTurn".equals( p_msg.getName() ) )
+    {
+      try
+      {
+        URL url = new URL( account.getWebHook() );
+        String payload = "id," + p_game.getId() + "\nplayer," + p_registration.getId() + "," + account.getId() + "\n";
+        HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
+            .doNotFollowRedirects() );
+        request.setPayload( payload.getBytes( "UTF-8" ) );
+
+        HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+
+      } catch( Throwable th )
+      {
+        logger.severe( "webhook fail : account= " + account.getPseudo() + " url=" + account.getWebHook() + "\n"
+            + th.getMessage() );
+      }
+    }
+
+
     if( account.getNotificationQty().ordinal() < p_level.ordinal() )
     {
       logger.fine( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "

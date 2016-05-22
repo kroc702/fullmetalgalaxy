@@ -133,6 +133,11 @@ public class AnEventPlay extends AnEventUser
     }
   }
 
+  public void setRegistrationId(long registrationId)
+  {
+    m_registrationId = registrationId;
+  }
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
@@ -464,6 +469,12 @@ public class AnEventPlay extends AnEventUser
     m_token = p_token;
   }
 
+  public void setToken(Long p_id)
+  {
+    m_packedToken = new EbBase( p_id );
+    m_token = null;
+  }
+
   /**
    * @param p_tokenCarrier the tokenCarrier to set
    */
@@ -480,6 +491,12 @@ public class AnEventPlay extends AnEventUser
     m_tokenCarrier = p_tokenCarrier;
   }
 
+  public void setTokenCarrier(Long p_id)
+  {
+    m_packedTokenCarrier = new EbBase( p_id );
+    m_tokenCarrier = null;
+  }
+
   /**
    * @param p_tokenDestroyer1 the tokenDestroyer1 to set
    */
@@ -492,6 +509,12 @@ public class AnEventPlay extends AnEventUser
       m_packedTokenDestroyer1 = null;
     }
     m_tokenDestroyer1 = p_tokenDestroyer1;
+  }
+
+  public void setTokenDestroyer1(Long p_id)
+  {
+    m_packedTokenDestroyer1 = new EbBase( p_id );
+    m_tokenDestroyer1 = null;
   }
 
   /**
@@ -508,6 +531,12 @@ public class AnEventPlay extends AnEventUser
     m_tokenDestroyer2 = p_tokenDestroyer2;
   }
 
+  public void setTokenDestroyer2(Long p_id)
+  {
+    m_packedTokenDestroyer2 = new EbBase( p_id );
+    m_tokenDestroyer2 = null;
+  }
+
   /**
    * @param p_tokenDestroyer2 the tokenDestroyer2 to set
    */
@@ -520,6 +549,12 @@ public class AnEventPlay extends AnEventUser
       m_packedNewTokenCarrier = null;
     }
     m_newTokenCarrier = p_newTokenCarrier;
+  }
+
+  public void setNewTokenCarrier(Long p_id)
+  {
+    m_packedNewTokenCarrier = new EbBase( p_id );
+    m_newTokenCarrier = null;
   }
 
 

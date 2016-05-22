@@ -454,6 +454,7 @@ public class AccountServlet extends HttpServlet
 
     account.setEmail( params.get( "email" ) );
     account.setJabberId( params.get( "jabberId" ) );
+    account.setWebHook( params.get( "webhook" ) );
 
     if( account.isTrancient() )
     {

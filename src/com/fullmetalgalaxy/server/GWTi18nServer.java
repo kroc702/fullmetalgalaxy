@@ -281,7 +281,7 @@ public class GWTi18nServer
         {
           String value = args[i].toString();
           // TODO manage plural text
-          s.replaceAll( "{" + i + "}", value == null ? "" : value );
+          s = s.replaceAll( "\\{" + i + "\\}", value == null ? "" : value );
         }
       }
       return s;

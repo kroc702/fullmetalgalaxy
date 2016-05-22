@@ -28,6 +28,7 @@ import java.io.OutputStream;
 
 import com.fullmetalgalaxy.model.LandType;
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.PlanetType;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.constant.ConfigGameTime;
@@ -168,6 +169,12 @@ public class DriverFMP extends DriverFileFormat
     return game2Model( game );
   }
 
+  @Override
+  public ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId)
+  {
+    LOG.error( "unimplemented" );
+    return null;
+  }
 
   @Override
   public void saveGame(ModelFmpInit p_game, OutputStream p_output)

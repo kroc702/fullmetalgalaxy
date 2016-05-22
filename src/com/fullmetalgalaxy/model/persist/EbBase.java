@@ -46,6 +46,18 @@ public class EbBase extends AnPojoBase
     init();
   }
 
+  public EbBase(Long p_id)
+  {
+    this();
+    setId( p_id );
+  }
+
+  public EbBase(String p_id)
+  {
+    this();
+    setId( Long.parseLong( p_id ) );
+  }
+
   public EbBase(EbBase p_base)
   {
     super();

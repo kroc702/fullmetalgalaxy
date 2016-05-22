@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.server;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,14 +31,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
+import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.server.serialization.DriverFactory;
 import com.fullmetalgalaxy.server.serialization.DriverFileFormat;
+import com.fullmetalgalaxy.server.serialization.DriverXML;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * @author Vincent
  * 
  * this servlet allow other programs to read game and act as a human player over an http interface.
+ * 
+ * url mapping: /api/game/*
  */
 public class PublicGameApiServlet extends HttpServlet
 {
@@ -58,8 +66,8 @@ public class PublicGameApiServlet extends HttpServlet
   protected void doGet(HttpServletRequest p_req, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
-    String strid = p_req.getParameter( "id" );
-    DriverFileFormat fileDriver = DriverFactory.get( p_req.getParameter( "format" ) );
+    String strid = readURIParam( p_req, 0 );
+    DriverFileFormat fileDriver = DriverFactory.get( readURIParam( p_req, 1 ) );
 
     if( strid != null )
     {
@@ -81,8 +89,17 @@ public class PublicGameApiServlet extends HttpServlet
       }
     }
 
+  }
 
+  private static GameServicesImpl s_service = null;
 
+  protected static GameServicesImpl getGameServices()
+  {
+    if( s_service == null )
+    {
+      s_service = new GameServicesImpl();
+    }
+    return s_service;
   }
 
   /* (non-Javadoc)
@@ -92,9 +109,42 @@ public class PublicGameApiServlet extends HttpServlet
   protected void doPost(HttpServletRequest p_request, HttpServletResponse p_resp)
       throws ServletException, IOException
   {
+    String strid = readURIParam( p_request, 0 );
+    DriverFileFormat fileDriver = DriverFactory.get( readURIParam( p_request, 1 ) );
+
+    ModelFmpUpdate requestUpdate = fileDriver.loadGameUpdate( p_request.getInputStream(), strid );
+    ModelFmpUpdate responseUpdate = null;
+    try
+    {
+      responseUpdate = getGameServices().runModelUpdate( requestUpdate );
+    } catch( RpcFmpException e )
+    {
+      p_resp.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+      if( e.getCauseEvent() != null )
+      {
+        p_resp.getOutputStream().print( e.getCauseEvent().toString() + "\n" );
+      }
+      e.printStackTrace( new PrintStream( p_resp.getOutputStream() ) );
+      return;
+    }
+    // a quick and dirty answer
+    if( responseUpdate != null )
+    {
+      XStream xstream = new XStream( new DomDriver() );
+      xstream.registerConverter( new DriverXML.MyKeyConverter() );
+      xstream.toXML( responseUpdate, p_resp.getOutputStream() );
+    }
   }
 
-
+  private String readURIParam(HttpServletRequest p_request, int index)
+  {
+    String[] params = p_request.getRequestURI().substring( 10 ).split( "/" );
+    if( index >= 0 && index < params.length )
+    {
+      return params[index];
+    }
+    return null;
+  }
 
 
 }

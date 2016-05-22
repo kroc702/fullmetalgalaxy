@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.FmpLogger;
 import com.thoughtworks.xstream.XStream;
@@ -78,6 +79,29 @@ public class DriverXML extends DriverFileFormat
     return model;
   }
 
+
+
+  @Override
+  public ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId)
+  {
+    ModelFmpUpdate model = null;
+    try
+    {
+      XStream xstream = new XStream( new DomDriver() );
+      xstream.registerConverter( new MyKeyConverter() );
+      model = ModelFmpUpdate.class.cast( xstream.fromXML( p_input ) );
+    } catch( Exception ex )
+    {
+      ex.printStackTrace();
+    }
+    if( model == null )
+    {
+      LOG.error( "no game loaded" );
+    }
+    return model;
+  }
+
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.tools.DriverFileFormat#saveGame(com.fullmetalgalaxy.model.persist.EbGame, java.io.OutputStream)
    */
@@ -95,7 +119,7 @@ public class DriverXML extends DriverFileFormat
    * @author Vincent
    *
    */
-  public class MyKeyConverter implements Converter
+  public static class MyKeyConverter implements Converter
   {
 
     @Override

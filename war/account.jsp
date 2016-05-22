@@ -120,6 +120,8 @@ email alias FMG : <%= account.getFmgEmail() %><br/>
 <input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
 <fmg:resource key="account_avatarurl"/> :
 <input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
+webhook :
+<input type="text" name="webhook" value="<%= account.getWebHook()!=null ? account.getWebHook() : "" %>"/><br/>  
 <fmg:resource key="account_allowgamemessages"/> :
 	<SELECT name="NotificationQty">
 	<% for( EbAccount.NotificationQty notif : EbAccount.NotificationQty.values()) { %>

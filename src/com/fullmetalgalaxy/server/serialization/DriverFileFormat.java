@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.persist.Game;
 
 /**
@@ -36,6 +37,7 @@ public abstract class DriverFileFormat
 {
   public abstract ModelFmpInit loadGame(InputStream p_input);
   
+  public abstract ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId);
   
   public abstract void saveGame(ModelFmpInit p_game, OutputStream p_output);
   
