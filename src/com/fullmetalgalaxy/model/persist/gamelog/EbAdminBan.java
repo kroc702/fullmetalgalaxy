@@ -81,11 +81,11 @@ public class EbAdminBan extends EbAdmin
     if( registration == null )
     {
       // no i18n
-      throw new RpcFmpException( "No registration to ban was selected" );
+      throw new RpcFmpException( "No registration to ban was selected", this );
     }
     if( registration.getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( errMsg().cantBanPlayerNoFreighter() );
+      throw new RpcFmpException( errMsg().cantBanPlayerNoFreighter(), this );
     }
   }
 

@@ -103,7 +103,7 @@ public class EbEvtDeployment extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
 
     // check token is contained by a landed freighter
@@ -113,26 +113,26 @@ public class EbEvtDeployment extends AnEventPlay
     {
       // no i18n
       throw new RpcFmpException( "Your " + getToken( p_game )
-          + " should be located in a landed freighter" );
+          + " should be located in a landed freighter", this );
     }
 
     // check that, in turn by turn, player don't wan't to deploy too early
     if( !p_game.isParallel() && p_game.getEbConfigGameTime().getDeploymentTimeStep() != p_game.getCurrentTimeStep() )
     {
-      throw new RpcFmpException( errMsg().mustWaitToDeploy( p_game.getEbConfigGameTime().getDeploymentTimeStep()) );
+      throw new RpcFmpException( errMsg().mustWaitToDeploy( p_game.getEbConfigGameTime().getDeploymentTimeStep()), this );
     }
     
     // check that, player don't wan't to deploy too late
     if( p_game.getEbConfigGameTime().getDeploymentTimeStep() < p_game.getCurrentTimeStep() )
     {
       // no i18n
-      throw new RpcFmpException( "Too late to deploy your units" );
+      throw new RpcFmpException( "Too late to deploy your units", this );
     }
 
     if( !p_game.canDeployUnit( getMyRegistration( p_game ) ) )
     {
       // no i18n
-      throw new RpcFmpException( "You can't deploy your units after your first move" );
+      throw new RpcFmpException( "You can't deploy your units after your first move", this );
     }
     
     // check token isn't deployed too far from his freighter
@@ -143,11 +143,11 @@ public class EbEvtDeployment extends AnEventPlay
           && p_game.getCoordinateSystem().getDiscreteDistance( freighter.getPosition(),
               p_game.getCoordinateSystem().getNeighbor( getPosition(), getPosition().getSector() ) ) > FmpConstant.deployementRadius )
       {
-        throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
+        throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ), this );
       }
     } else if( p_game.getCoordinateSystem().getDiscreteDistance( freighter.getPosition(), getPosition() ) > FmpConstant.deployementRadius )
     {
-      throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ) );
+      throw new RpcFmpException( errMsg().cantDeployTooFar( FmpConstant.deployementRadius ), this );
     }
 
     // check token move to a 'clear' hexagon
@@ -159,7 +159,7 @@ public class EbEvtDeployment extends AnEventPlay
       {
         throw new RpcFmpException( errMsg().CantLoad(
             Messages.getTokenString( getAccountId(), tokensOnWay ),
-            Messages.getTokenString( getAccountId(), getToken( p_game ) ) ) );
+            Messages.getTokenString( getAccountId(), getToken( p_game ) ) ), this );
       }
     }
     else
@@ -169,14 +169,14 @@ public class EbEvtDeployment extends AnEventPlay
       {
         throw new RpcFmpException( errMsg().CantMoveOn(
             Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-            Messages.getLandString( getAccountId(), p_game.getLand( getPosition() ) ) ) );
+            Messages.getLandString( getAccountId(), p_game.getLand( getPosition() ) ) ), this );
       }
 
       // for pontoon, check they are linked to the ground
       if( getToken( p_game ).getType() == TokenType.Pontoon
           && !p_game.isPontoonLinkToGround( getPosition() ) )
       {
-        throw new RpcFmpException( errMsg().cantDeployPotoonInSea() );
+        throw new RpcFmpException( errMsg().cantDeployPotoonInSea(), this );
       }
     }
 
@@ -216,7 +216,7 @@ public class EbEvtDeployment extends AnEventPlay
   {
     if( getTokenCarrier( p_game ) == null )
     {
-      throw new RpcFmpException( "can't cancel deployement: old carrier isn't known" );
+      throw new RpcFmpException( "can't cancel deployement: old carrier isn't known", this );
     }
     super.unexec(p_game);
 

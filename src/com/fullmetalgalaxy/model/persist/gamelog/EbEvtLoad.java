@@ -108,13 +108,13 @@ public class EbEvtLoad extends AnEventPlay
     {
       // not probable error (no i18n)
       throw new RpcFmpException( "token " + getToken(p_game) + " can't be moved from location "
-          + getToken(p_game).getLocation() );
+          + getToken(p_game).getLocation(), this );
     }
     // check old position is egal to token position
     if( !getToken(p_game).getPosition().equals( getToken(p_game).getPosition() ) )
     {
       // not probable error (no i18n)
-      throw new RpcFmpException( "bad action" );
+      throw new RpcFmpException( "bad action", this );
     }
     // check that player control both token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -123,13 +123,13 @@ public class EbEvtLoad extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     if( getToken( p_game ).canBeColored() && getToken( p_game ).getColor() == EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     if( (!myRegistration.getEnuColor().isColored( getTokenCarrier( p_game ).getColor() )
         || getTokenCarrier( p_game ).getColor() == EnuColor.None )
@@ -138,20 +138,20 @@ public class EbEvtLoad extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     if( getTokenCarrier( p_game ).getColor() == EnuColor.None
         && getToken( p_game ).getColor() == EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), EnuColor.None ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
 
     // check that tokens are neighbor
     if( !getToken(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenCarrier(p_game) ) )
     {
-      throw new RpcFmpException( "les deux pions ne sont pas cote a cote" );
+      throw new RpcFmpException( "les deux pions ne sont pas cote a cote", this );
     }
 
     // check this token is allowed to move from this hexagon
@@ -162,14 +162,14 @@ public class EbEvtLoad extends AnEventPlay
           .CantMoveOn(
               Messages.getTokenString( getAccountId(), getToken( p_game ) ),
               Messages.getLandString( getAccountId(),
-                  p_game.getLand( getToken( p_game ).getPosition() ) ) ) );
+                  p_game.getLand( getToken( p_game ).getPosition() ) ) ), this );
     }
     // check that new token carrier can load this token
     if( !p_game.canTokenLoad( getTokenCarrier(p_game), getToken(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantLoad(
           Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
-          Messages.getTokenString( getAccountId(), getToken( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getToken( p_game ) ) ), this );
     }
     // check that heap don't goes on mountain
     if( getToken( p_game ).getType() == TokenType.Heap && getTokenCarrier( p_game ).getType() != TokenType.Teleporter
@@ -179,27 +179,27 @@ public class EbEvtLoad extends AnEventPlay
       throw new RpcFmpException( errMsg().CantMoveOn(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
           Messages.getLandString( getAccountId(),
-              p_game.getLand( getTokenCarrier( p_game ).getPosition() ) ) ) );
+              p_game.getLand( getTokenCarrier( p_game ).getPosition() ) ) ), this );
     }
     // check tide/fire disable
     if( !p_game.isTokenTideActive( getTokenCarrier(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantUnloadDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ) ), this );
     }
     if( !p_game.isTokenFireActive( getTokenCarrier( p_game ) ) )
     {
       throw new RpcFmpException( errMsg().CantUnloadDisableFire(
           Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
           Messages.getColorString( getAccountId(),
-              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
+              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ), this );
     }
     if( !p_game.isTokenFireActive( getToken( p_game ) ) )
     {
       throw new RpcFmpException( errMsg().CantUnloadDisableFire(
           Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
           Messages.getColorString( getAccountId(),
-              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
+              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ), this );
     }
     if( getToken( p_game ).getColor() == EnuColor.None
         && p_game.getOpponentFireCover( getMyTeam( p_game ).getColors(p_game.getPreview()),
@@ -209,7 +209,7 @@ public class EbEvtLoad extends AnEventPlay
       throw new RpcFmpException( errMsg().CantUnloadDisableFire(
           Messages.getTokenString( getAccountId(), getTokenCarrier( p_game ) ),
           Messages.getColorString( getAccountId(),
-              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ) );
+              p_game.getOpponentFireCover( getTokenCarrier( p_game ) ).getValue() ) ), this );
     }
   }
 

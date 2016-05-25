@@ -64,7 +64,7 @@ public class EbAdmin extends AnEventUser
   @Override
   public void unexec(Game p_game) throws RpcFmpException
   {
-    throw new RpcFmpException( "les actions d'administrations ne peuvent être défaite" );
+    throw new RpcFmpException( "les actions d'administrations ne peuvent être défaite", this );
   }
 
   // Bean getter / setter

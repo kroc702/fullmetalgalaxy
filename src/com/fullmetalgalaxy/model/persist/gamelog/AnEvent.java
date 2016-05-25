@@ -67,6 +67,8 @@ public class AnEvent extends EbBase implements GameEvent
 
   transient private boolean m_isPersistent = false;
 
+  transient private String m_transientComment = null;
+
 
 
   /**
@@ -166,12 +168,12 @@ public class AnEvent extends EbBase implements GameEvent
   {
     if( p_game == null )
     {
-      throw new RpcFmpException( "game [" + getIdGame() + "] was null" );
+      throw new RpcFmpException( "game [" + getIdGame() + "] was null", this );
     }
     if( getIdGame() != p_game.getId() )
     {
       throw new RpcFmpException( "try to apply event from game [" + getIdGame() + "] on game ["
-          + p_game.getId() + "]" );
+          + p_game.getId() + "]", this );
     }
   }
 
@@ -261,6 +263,17 @@ public class AnEvent extends EbBase implements GameEvent
   protected List<FireDisabling> getFdRemoved()
   {
     return m_fdRemoved;
+  }
+
+  public String getTransientComment()
+  {
+    return m_transientComment;
+  }
+
+
+  public void setTransientComment(String p_transientComment)
+  {
+    m_transientComment = p_transientComment;
   }
 
 

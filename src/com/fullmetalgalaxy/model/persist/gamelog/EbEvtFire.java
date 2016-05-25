@@ -105,33 +105,33 @@ public class EbEvtFire extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenDestroyer1( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ), this );
     }
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer2(p_game).getColor() )
         || getTokenDestroyer2(p_game).getColor() == EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenDestroyer2( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ), this );
     }
     // check that player control destroyers
     if( (getTokenTarget( p_game ).getColor() != EnuColor.None)
         && (getMyRegistration(p_game).getEnuColor().isColored( getTokenTarget(p_game).getColor() )) )
     {
-      throw new RpcFmpException( errMsg().cantDestroyYourUnits() );
+      throw new RpcFmpException( errMsg().cantDestroyYourUnits(), this );
     }
 
     // check the first destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer1(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantFireDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ), this );
     }
     // check the second destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer2(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantFireDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ), this );
     }
 
     if( ((!(p_game.getLastLog() instanceof EbEvtMove)) || (((EbEvtMove)p_game.getLastLog())
@@ -145,7 +145,7 @@ public class EbEvtFire extends AnEventPlay
         throw new RpcFmpException( errMsg().CantFireDisableFire(
             Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ),
             Messages.getColorString( getAccountId(),
-                p_game.getOpponentFireCover( getTokenDestroyer1( p_game ) ).getValue() ) ) );
+                p_game.getOpponentFireCover( getTokenDestroyer1( p_game ) ).getValue() ) ), this );
       }
     }
     if( getTokenDestroyer2( p_game ).isFireDisabled()
@@ -154,7 +154,7 @@ public class EbEvtFire extends AnEventPlay
       throw new RpcFmpException( errMsg().CantFireDisableFire(
           Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ),
           Messages.getColorString( getAccountId(),
-              p_game.getOpponentFireCover( getTokenDestroyer2( p_game ) ).getValue() ) ) );
+              p_game.getOpponentFireCover( getTokenDestroyer2( p_game ) ).getValue() ) ), this );
     }
 
     
@@ -165,27 +165,27 @@ public class EbEvtFire extends AnEventPlay
       if( getTokenDestroyer1( p_game ).getHexagonSize() == 1 )
       {
         // no i18n as unusual
-        throw new RpcFmpException( "the two destroyer must be different" );
+        throw new RpcFmpException( "the two destroyer must be different", this );
       }
       
       if( !p_game.canTokenFireOn( getTokenDestroyer1(p_game), getTokenDestroyer1(p_game).getPosition(), getTokenTarget(p_game) ) )
       {
         throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game )),
-            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
+            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ), this);
       }
       if( !p_game.canTokenFireOn( getTokenDestroyer2(p_game), 
           getTokenDestroyer1(p_game).getExtraPositions( p_game.getCoordinateSystem() ).get( 0 ), 
           getTokenTarget(p_game) ) )
       {
         throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game )),
-            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
+            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ), this);
       }
       
       // check bullet count
       if( getTokenDestroyer1( p_game ).getBulletCount() < 2 )
       {
         throw new RpcFmpException( errMsg().noMoreAmo(
-            Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
+            Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ), this );
       }
     }
     else
@@ -194,12 +194,12 @@ public class EbEvtFire extends AnEventPlay
       if( !p_game.canTokenFireOn( getTokenDestroyer1(p_game), getTokenTarget(p_game) ) )
       {
         throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game )),
-            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
+            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ), this);
       }
       if( !p_game.canTokenFireOn( getTokenDestroyer2(p_game), getTokenTarget(p_game) ) )
       {
         throw new RpcFmpException( errMsg().cantFireOn( Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game )),
-            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ));
+            Messages.getTokenString( getAccountId(), getTokenTarget( p_game )) ), this);
       }
   
       // check bullet count
@@ -207,20 +207,20 @@ public class EbEvtFire extends AnEventPlay
           && getTokenDestroyer1( p_game ).getType() != TokenType.Turret )
       {
         throw new RpcFmpException( errMsg().noMoreAmo(
-            Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
+            Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ), this );
       }
       if( getTokenDestroyer2( p_game ).getBulletCount() < 1
           && getTokenDestroyer2( p_game ).getType() != TokenType.Turret )
       {
         throw new RpcFmpException( errMsg().noMoreAmo(
-            Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
+            Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ), this );
       }
     }
 
     // check that target isn't freighter
     if( getTokenTarget(p_game).getType() == TokenType.Freighter )
     {
-      throw new RpcFmpException( errMsg().CantDestroyFreighter() );
+      throw new RpcFmpException( errMsg().CantDestroyFreighter(), this );
     }
 
     // check that target isn't ore3generator nor Warp
@@ -229,13 +229,13 @@ public class EbEvtFire extends AnEventPlay
     {
       // TODO i18n
       throw new RpcFmpException( "Vous ne pouvez pas detruire les "
-          + getTokenTarget( p_game ).getType() );
+          + getTokenTarget( p_game ).getType(), this );
     }
 
     // check that game isn't in parallel hidden phase
     if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
     {
-      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase(), this );
     }
 
   }

@@ -35,9 +35,9 @@ import com.fullmetalgalaxy.model.persist.Game;
  */
 public abstract class DriverFileFormat
 {
-  public abstract ModelFmpInit loadGame(InputStream p_input);
+  public abstract ModelFmpInit loadGame(InputStream p_input) throws ParseException;
   
-  public abstract ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId);
+  public abstract ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId) throws ParseException;
   
   public abstract void saveGame(ModelFmpInit p_game, OutputStream p_output);
   
@@ -65,4 +65,18 @@ public abstract class DriverFileFormat
     return model;
   }
 
+  public static class ParseException extends Exception
+  {
+
+    public ParseException(String p_message, Throwable p_cause)
+    {
+      super( p_message, p_cause );
+    }
+
+    public ParseException(String p_message)
+    {
+      super( p_message );
+    }
+
+  }
 }

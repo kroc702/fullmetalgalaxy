@@ -89,24 +89,24 @@ public class EbEvtRepair extends AnEventPlay
     if( (freighter == null) || (turret != null) )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "you can repair only destroyed turret" );
+      throw new RpcFmpException( "you can repair only destroyed turret", this );
     }
     // check he don't repair center freighter
     if( freighter.getPosition().equals( getPosition( p_game ) ) )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "you can repair only destroyed turret" );
+      throw new RpcFmpException( "you can repair only destroyed turret", this );
     }
     if( freighter.getBulletCount() <= 0 )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "you can't repair any more turrets" );
+      throw new RpcFmpException( "you can't repair any more turrets", this );
     }
     EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyTeam( p_game ).getColors(p_game.getPreview()),
         getPosition( p_game ) );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
-      throw new RpcFmpException( errMsg().cantRepairTurretFireCover() );
+      throw new RpcFmpException( errMsg().cantRepairTurretFireCover(), this );
     }
     // check that no other turret construction occur on this hex since last
     // control
@@ -123,7 +123,7 @@ public class EbEvtRepair extends AnEventPlay
       }
       if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition( p_game ).equals( getPosition( p_game ) ) )
       {
-        throw new RpcFmpException( errMsg().cantRepairTurretTwice() );
+        throw new RpcFmpException( errMsg().cantRepairTurretTwice(), this );
       }
       iback++;
       event = p_game.getLastLog( iback );

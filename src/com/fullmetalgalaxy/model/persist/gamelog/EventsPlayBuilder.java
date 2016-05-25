@@ -302,10 +302,10 @@ public class EventsPlayBuilder implements GameEventStack
           if( getLastAction().getType() == GameLogType.EvtMove)
           {
             throw new RpcFmpException(
-              "un mouvement ne peut se terminer dans une zone de feu adverse. Vous pouvez quand meme effectuer un tir" );
+                "un mouvement ne peut se terminer dans une zone de feu adverse. Vous pouvez quand meme effectuer un tir" );
           } else {
             throw new RpcFmpException(
-              "apres ce tir le destructeur est toujours dans une zone de feu adverse. Vous pouvez selectioner une autre cible" );
+                "apres ce tir le destructeur est toujours dans une zone de feu adverse. Vous pouvez selectioner une autre cible" );
           }
         }
       }

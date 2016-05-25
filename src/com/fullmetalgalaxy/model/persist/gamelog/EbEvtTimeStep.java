@@ -84,18 +84,18 @@ public class EbEvtTimeStep extends AnEvent
     if( p_game.getStatus() != GameStatus.Running )
     {
       // no i18n
-      throw new RpcFmpException( "game not started" );
+      throw new RpcFmpException( "game not started", this );
     }
     if( p_game.isFinished() )
     {
       // no i18n
-      throw new RpcFmpException( "game is finished" );
+      throw new RpcFmpException( "game is finished", this );
     }
     if( getOldTimeStepChange() != null
         && !getOldTimeStepChange().equals( p_game.getLastTimeStepChange() ) )
     {
       // no i18n as it shoudln't occur
-      throw new RpcFmpException( "EvtTimeStep have incoherant old time step change" );
+      throw new RpcFmpException( "EvtTimeStep have incoherant old time step change", this );
     }
   }
 

@@ -112,17 +112,18 @@ public class PublicGameApiServlet extends HttpServlet
     String strid = readURIParam( p_request, 0 );
     DriverFileFormat fileDriver = DriverFactory.get( readURIParam( p_request, 1 ) );
 
-    ModelFmpUpdate requestUpdate = fileDriver.loadGameUpdate( p_request.getInputStream(), strid );
     ModelFmpUpdate responseUpdate = null;
     try
     {
+      ModelFmpUpdate requestUpdate = fileDriver.loadGameUpdate( p_request.getInputStream(), strid );
       responseUpdate = getGameServices().runModelUpdate( requestUpdate );
     } catch( Throwable e )
     {
       p_resp.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
       if( e instanceof RpcFmpException && ((RpcFmpException)e).getCauseEvent() != null )
       {
-        p_resp.getOutputStream().print( ((RpcFmpException)e).getCauseEvent().toString() + "\n" );
+        p_resp.getOutputStream().println( ((RpcFmpException)e).getCauseEvent().toString() );
+        p_resp.getOutputStream().println( ((RpcFmpException)e).getCauseEvent().getTransientComment() );
       }
       e.printStackTrace( new PrintStream( p_resp.getOutputStream() ) );
       return;

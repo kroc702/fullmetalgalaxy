@@ -103,14 +103,14 @@ public class EbEvtLand extends AnEventPlay
     if( getPosition().getX() == -1 )
     {
       // landing position isn't choose yet...
-      throw new RpcFmpException("");
+      throw new RpcFmpException("", this);
     }
     
     if( getToken( p_game ).getType() != TokenType.Freighter
         || getToken( p_game ).getLocation() != Location.Orbit )
     {
       // not probable error
-      throw new RpcFmpException( "Only Freighter in orbit can be landed." );
+      throw new RpcFmpException( "Only Freighter in orbit can be landed.", this );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -119,7 +119,7 @@ public class EbEvtLand extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     // check freighter isn't landing on sea neither montain
     // get the 4 landing hexagon
@@ -152,7 +152,7 @@ public class EbEvtLand extends AnEventPlay
           || (land == LandType.Montain) )
       {
         throw new RpcFmpException( errMsg().CantLandOn(
-            Messages.getLandString( getAccountId(), land ) ) );
+            Messages.getLandString( getAccountId(), land ) ), this );
       }
     }
     // check that freighter isn't landing close to another freighter
@@ -167,10 +167,10 @@ public class EbEvtLand extends AnEventPlay
         {
           if( (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) <= FmpConstant.minSpaceBetweenTeamFreighter) )
           {
-            throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenTeamFreighter ) );
+            throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenTeamFreighter ), this );
           }
         } else {
-          throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ) );
+          throw new RpcFmpException( errMsg().CantLandCloser( FmpConstant.minSpaceBetweenFreighter ), this );
         }
       }
       if( (currentToken.getType() == TokenType.Ore2Generator || currentToken.getType() == TokenType.Ore3Generator)
@@ -179,19 +179,19 @@ public class EbEvtLand extends AnEventPlay
           && (p_game.getCoordinateSystem().getDiscreteDistance( landingPosition[0], currentToken.getPosition() ) > FmpConstant.landingDestructionRadius) )
       {
         throw new RpcFmpException( "Sauf à le détruire, l'astronef ne peut atterrir à moins de "
-            + FmpConstant.minSpace2OreGenerator + " hexagones de tout générateur de minerais." );
+            + FmpConstant.minSpace2OreGenerator + " hexagones de tout générateur de minerais.", this );
       }
     }
     // check that freighter isn't landing too close of map boarder
     if( !p_game.getMapShape().isEWLinked() &&
         (getPosition().getX() < 2 || getPosition().getX() > (p_game.getLandWidth() - 3))  )
     {
-      throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+      throw new RpcFmpException( errMsg().CantLandTooCloseBorder(), this );
     }
     if( !p_game.getMapShape().isNSLinked() &&
         (getPosition().getY() < 2 || getPosition().getY() > (p_game.getLandHeight() - 3)) )
     {
-      throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+      throw new RpcFmpException( errMsg().CantLandTooCloseBorder(), this );
     }
     // check empty hex near landing position
     HexCoordinateSystem coordinateSystem = p_game.getCoordinateSystem();
@@ -205,7 +205,7 @@ public class EbEvtLand extends AnEventPlay
     {
       if( p_game.getLand( landingPosition[i] ) == LandType.None )
       {
-        throw new RpcFmpException( errMsg().CantLandTooCloseBorder() );
+        throw new RpcFmpException( errMsg().CantLandTooCloseBorder(), this );
       }
     }
   }

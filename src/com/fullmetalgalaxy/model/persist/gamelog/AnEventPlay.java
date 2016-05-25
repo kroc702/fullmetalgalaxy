@@ -154,22 +154,22 @@ public class AnEventPlay extends AnEventUser
     if( myRegistration == null )
     {
       // no i18n ?
-      throw new RpcFmpException( "you didn't join this game." );
+      throw new RpcFmpException( "you didn't join this game.", this );
     }
     if( myRegistration.getPtAction() < getCost() && p_game.getGameType() != GameType.Practice )
     {
-      throw new RpcFmpException( errMsg().NotEnouthActionPt() );
+      throw new RpcFmpException( errMsg().NotEnouthActionPt(), this );
     }
     if( (!p_game.isParallel() || (p_game.getCurrentTimeStep() <= 1))
         && (!p_game.getCurrentPlayerIds().contains( myRegistration.getId() ))
         && p_game.getGameType() != GameType.Practice )
     {
-      throw new RpcFmpException( errMsg().NotYourTurn() );
+      throw new RpcFmpException( errMsg().NotYourTurn(), this );
     }
     if( (p_game.getStatus() == GameStatus.Open || p_game.getStatus() == GameStatus.Pause)
         && p_game.getGameType() != GameType.Practice )
     {
-      throw new RpcFmpException( errMsg().gameNotStarted() );
+      throw new RpcFmpException( errMsg().gameNotStarted(), this );
     }
 
     if( p_game.isParallel()
@@ -179,7 +179,7 @@ public class AnEventPlay extends AnEventUser
           getLockedPosition(), SharedMethods.currentTimeMillis() );
       if( team != null )
       {
-        throw new RpcFmpException( errMsg().boardLocked() );
+        throw new RpcFmpException( errMsg().boardLocked(), this );
       }
     }
   }

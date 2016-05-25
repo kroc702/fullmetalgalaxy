@@ -146,6 +146,7 @@ etc.
  */
 public class DriverSTAI extends DriverFileFormat
 {
+  public static final String VERSION = "2";
   /**
    * The log channel
    */
@@ -162,9 +163,11 @@ public class DriverSTAI extends DriverFileFormat
   }
   
   @Override
-  public ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId)
+  public ModelFmpUpdate loadGameUpdate(InputStream p_input, String gameId) throws ParseException
   {
     BufferedReader reader = new BufferedReader( new InputStreamReader( p_input ) );
+    currentLineIndex = 0;
+    currentLine = null;
 
     // FmgDataStore dataStore = new FmgDataStore( true );
     // Game game = dataStore.getGame( getLong( gameId ) );
@@ -177,208 +180,221 @@ public class DriverSTAI extends DriverFileFormat
     model.setGameId( Long.parseLong( gameId ) );
     model.setGameEvents( new ArrayList<AnEvent>() );
 
-
-    String[] line = readLine( reader );
-    long gameVersion = 0;
-    long playerId = 0;
-    long accountId = 0;
-    HexCoordinateSystem hexCoordinateSystem = new HexCoordinateSystem();
-    
-    while( line != null )
+    try
     {
-      AnEventPlay evt = null;
-      switch( line[0] )
+      String[] line = readLine( reader );
+      long gameVersion = 0;
+      long playerId = 0;
+      long accountId = 0;
+      HexCoordinateSystem hexCoordinateSystem = new HexCoordinateSystem();
+
+      while( line != null )
       {
-      case "stai":
-        // nothing to do yet
-        break;
-      case "id":
-        model.setGameId( Long.parseLong( line[1] ) );
-        break;
-      case "version":
-        model.setFromVersion( Long.parseLong( line[1] ) );
-        gameVersion = model.getFromVersion();
-        break;
-      // 'player'. currentPlayer playerNumber
-      case "player":
-        playerId = getLong( line[1] );
-        accountId = getLong( line[2] );
-        break;
-      // 'turn'. currentTurn. application tideAtTurn: currentTurn
-      case "turn":
-        break;
-      // 'create'. newUnit idNumber. newUnit className
-      case "create":
-        break;
-      // 'land'. currentFreighter idNumber. aPoint x. aPoint y. orientation
-      case "land":
-        evt = new EbEvtLand();
-        evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ), getSector( line[4] ) ) );
-        evt.setToken( getLong( line[1] ) );
-        break;
-      // 'move'. unit idNumber. x1. y1. x2. y2
-      case "move":
-        evt = new EbEvtMove();
-        evt.setToken( getLong( line[1] ) );
-        evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
-        evt.setNewPosition( new AnBoardPosition( getInt( line[5] ), getInt( line[4] ) ) );
-        evt.getNewPosition().setSector( hexCoordinateSystem.getSector( evt.getPosition(), evt.getNewPosition() ) );
-        break;
-      // 'shoot'. eachEnemy idNumber. unit1 idNumber. unit2 idNumber
-      case "shoot":
-        evt = new EbEvtFire();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenDestroyer1( getLong( line[2] ) );
-        evt.setTokenDestroyer2( getLong( line[3] ) );
-        break;
-      // 'liftoff'. freighter idNumber
-      case "liftoff":
-        evt = new EbEvtTakeOff();
-        evt.setToken( getLong( line[1] ) );
-        break;
-      // 'repair'. turret idNumber
-      case "repair":
-        evt = new EbEvtRepair();
-        evt.setToken( getLong( line[1] ) );
-        break;
-      // 'captureTurret'. turret idNumber. unit1 idNumber
-      case "captureTurret":
-        evt = new EbEvtControlFreighter();
-        evt.setToken( getLong( line[2] ) );
-        evt.setTokenCarrier( getLong( line[1] ) );
-        break;
-      // 'capture'. enemy idNumber. unit1 idNumber. unit2 idNumber
-      case "capture":
-        evt = new EbEvtControl();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenDestroyer1( getLong( line[2] ) );
-        evt.setTokenDestroyer2( getLong( line[3] ) );
-        break;
-      // 'build'. newUnit idNumber. x1. y1. weatherHen idNumber. type
-      case "build":
-        // newUnit idNumber shall be oreId for fmg
-        evt = new EbEvtConstruct();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenCarrier( getLong( line[4] ) );
-        ((EbEvtConstruct)evt).setConstructType( getTokenType( line[5] ) );
-        evt.setRegistrationId( playerId );
-        evt.setAccountId( accountId );
-        evt.setGameId( model.getGameId() );
-        evt.setGameVersion( gameVersion );
-        model.getGameEvents().add( evt );
+        AnEventPlay evt = null;
+        switch( line[0] )
+        {
+        case "stai":
+          // nothing to do yet
+          break;
+        case "id":
+          model.setGameId( Long.parseLong( line[1] ) );
+          break;
+        case "version":
+          model.setFromVersion( Long.parseLong( line[1] ) );
+          gameVersion = model.getFromVersion();
+          break;
+        // 'player'. currentPlayer playerNumber
+        case "player":
+          playerId = getLong( line[1] );
+          accountId = getLong( line[2] );
+          break;
+        // 'turn'. currentTurn. application tideAtTurn: currentTurn
+        case "turn":
+          break;
+        // 'create'. newUnit idNumber. newUnit className
+        case "create":
+          break;
+        // 'land'. currentFreighter idNumber. aPoint x. aPoint y. orientation
+        case "land":
+          evt = new EbEvtLand();
+          evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ), getSector( line[4] ) ) );
+          evt.setToken( getLong( line[1] ) );
+          break;
+        // 'move'. unit idNumber. x1. y1. x2. y2
+        case "move":
+          evt = new EbEvtMove();
+          evt.setToken( getLong( line[1] ) );
+          evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
+          evt.setNewPosition( new AnBoardPosition( getInt( line[5] ), getInt( line[4] ) ) );
+          evt.getNewPosition().setSector( hexCoordinateSystem.getSector( evt.getPosition(), evt.getNewPosition() ) );
+          break;
+        // 'shoot'. eachEnemy idNumber. unit1 idNumber. unit2 idNumber
+        case "shoot":
+          evt = new EbEvtFire();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenDestroyer1( getLong( line[2] ) );
+          evt.setTokenDestroyer2( getLong( line[3] ) );
+          break;
+        // 'liftoff'. freighter idNumber
+        case "liftoff":
+          evt = new EbEvtTakeOff();
+          evt.setToken( getLong( line[1] ) );
+          break;
+        // 'repair'. turret idNumber
+        case "repair":
+          evt = new EbEvtRepair();
+          evt.setToken( getLong( line[1] ) );
+          break;
+        // 'captureTurret'. turret idNumber. unit1 idNumber
+        case "captureTurret":
+          evt = new EbEvtControlFreighter();
+          evt.setToken( getLong( line[2] ) );
+          evt.setTokenCarrier( getLong( line[1] ) );
+          break;
+        // 'capture'. enemy idNumber. unit1 idNumber. unit2 idNumber
+        case "capture":
+          evt = new EbEvtControl();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenDestroyer1( getLong( line[2] ) );
+          evt.setTokenDestroyer2( getLong( line[3] ) );
+          break;
+        // 'build'. newUnit idNumber. x1. y1. weatherHen idNumber. type
+        case "build":
+          // newUnit idNumber shall be oreId for fmg
+          evt = new EbEvtConstruct();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenCarrier( getLong( line[4] ) );
+          ((EbEvtConstruct)evt).setConstructType( getTokenType( line[5] ) );
+          evt.setRegistrationId( playerId );
+          evt.setAccountId( accountId );
+          evt.setGameId( model.getGameId() );
+          evt.setGameVersion( gameVersion );
+          evt.setTransientComment( "line " + currentLineIndex + ": " + currentLine );
+          model.getGameEvents().add( evt );
 
-        evt = new EbEvtUnLoad();
-        evt.setToken( getLong( line[1] ) );
-        evt.setNewPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
-        evt.setTokenCarrier( getLong( line[4] ) );
-        break;
-      // 'loadOre'. ore idNumber. freighter idNumber
-      case "loadOre":
-      // 'load'. unit idNumber. receiver idNumber
-        // load,unitId,carrierId,unitContentId,...
-      case "load":
-        evt = new EbEvtLoad();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenCarrier( getLong( line[2] ) );
+          evt = new EbEvtUnLoad();
+          evt.setToken( getLong( line[1] ) );
+          evt.setNewPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
+          evt.setTokenCarrier( getLong( line[4] ) );
+          break;
+        // 'loadOre'. ore idNumber. freighter idNumber
+        case "loadOre":
+          // 'load'. unit idNumber. receiver idNumber
+          // load,unitId,carrierId,unitContentId,...
+        case "load":
+          evt = new EbEvtLoad();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenCarrier( getLong( line[2] ) );
 
-        for( int i = 3; i < line.length; i++ )
+          for( int i = 3; i < line.length; i++ )
+          {
+            evt.setRegistrationId( playerId );
+            evt.setAccountId( accountId );
+            evt.setGameId( model.getGameId() );
+            evt.setGameVersion( gameVersion );
+            evt.setTransientComment( "line " + currentLineIndex + ": " + currentLine );
+            model.getGameEvents().add( evt );
+
+            evt = new EbEvtTransfer();
+            evt.setToken( getLong( line[i] ) );
+            evt.setTokenCarrier( getLong( line[1] ) );
+            evt.setNewTokenCarrier( getLong( line[2] ) );
+            evt.setCost( 0 );
+          }
+          break;
+        // 'unload'. unit idNumber. x1. y1. fromWhom idNumber
+        // unload,unitId,carrierId,x1,y1
+        // unload,unitId,carrierId,x1,y1,sector
+        // unload,unitId,carrierId,x1,y1,x2,y2
+        case "unload":
+          evt = new EbEvtUnLoad();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenCarrier( getLong( line[2] ) );
+          evt.setNewPosition( new AnBoardPosition( getInt( line[4] ), getInt( line[3] ) ) );
+          if( line.length == 6 )
+          {
+            evt.getNewPosition().setSector( getSector( line[5] ) );
+          }
+          else if( line.length >= 7 )
+          {
+            evt.getNewPosition().setSector(
+                hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[6] ),
+                    getInt( line[5] ) ) ) );
+          }
+          break;
+        // 'transfer'. anItem idNumber. fromUnit idNumber. toUnit idNumber
+        case "transfer":
+          evt = new EbEvtTransfer();
+          evt.setToken( getLong( line[1] ) );
+          evt.setTokenCarrier( getLong( line[2] ) );
+          evt.setNewTokenCarrier( getLong( line[3] ) );
+          break;
+        // deploy,id,x1,y1
+        // deploy,id,x1,y1,sector
+        // deploy,id,x1,y1,x2,y2
+        case "deploy":
+          evt = new EbEvtDeployment();
+          evt.setToken( getLong( line[1] ) );
+          evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
+          if( line.length == 5 )
+          {
+            evt.getPosition().setSector( getSector( line[4] ) );
+          }
+          else if( line.length >= 6 )
+          {
+            evt.getPosition().setSector(
+                hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[5] ),
+                    getInt( line[4] ) ) ) );
+          }
+        case "endPlayer":
+          EbEvtPlayerTurn endTurn = new EbEvtPlayerTurn();
+          endTurn.setAccountId( accountId );
+          endTurn.setGameId( model.getGameId() );
+          endTurn.setGameVersion( gameVersion );
+          model.getGameEvents().add( endTurn );
+          break;
+        default:
+          throw new Exception( "unknown statement: " + line[0] );
+        }
+
+        if( evt != null )
         {
           evt.setRegistrationId( playerId );
           evt.setAccountId( accountId );
           evt.setGameId( model.getGameId() );
           evt.setGameVersion( gameVersion );
+          evt.setTransientComment( "line " + currentLineIndex + ": " + currentLine );
           model.getGameEvents().add( evt );
+          // gameVersion++;
+        }
 
-          evt = new EbEvtTransfer();
-          evt.setToken( getLong( line[i] ) );
-          evt.setTokenCarrier( getLong( line[1] ) );
-          evt.setNewTokenCarrier( getLong( line[2] ) );
-          evt.setCost( 0 );
-        }
-        break;
-      // 'unload'. unit idNumber. x1. y1. fromWhom idNumber
-      // unload,unitId,carrierId,x1,y1
-      // unload,unitId,carrierId,x1,y1,sector
-      // unload,unitId,carrierId,x1,y1,x2,y2
-      case "unload":
-        evt = new EbEvtUnLoad();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenCarrier( getLong( line[2] ) );
-        evt.setNewPosition( new AnBoardPosition( getInt( line[4] ), getInt( line[3] ) ) );
-        if( line.length == 6 )
-        {
-          evt.getNewPosition().setSector( getSector( line[5] ) );
-        }
-        else if( line.length >= 7 )
-        {
-          evt.getNewPosition().setSector(
-              hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[6] ),
-                  getInt( line[5] ) ) ) );
-        }
-        break;
-      // 'transfer'. anItem idNumber. fromUnit idNumber. toUnit idNumber
-      case "transfer":
-        evt = new EbEvtTransfer();
-        evt.setToken( getLong( line[1] ) );
-        evt.setTokenCarrier( getLong( line[2] ) );
-        evt.setNewTokenCarrier( getLong( line[3] ) );
-        break;
-      // deploy,id,x1,y1
-      // deploy,id,x1,y1,sector
-      // deploy,id,x1,y1,x2,y2
-      case "deploy":
-        evt = new EbEvtDeployment();
-        evt.setToken( getLong( line[1] ) );
-        evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
-        if( line.length == 5){
-          evt.getPosition().setSector( getSector(line[4]) );
-        } else if(line.length >= 6){
-          evt.getPosition().setSector(
-              hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[5] ),
-                  getInt( line[4] ) ) ) );
-        }
-      case "endPlayer":
-        EbEvtPlayerTurn endTurn = new EbEvtPlayerTurn();
-        endTurn.setAccountId( accountId );
-        endTurn.setGameId( model.getGameId() );
-        endTurn.setGameVersion( gameVersion );
-        model.getGameEvents().add( endTurn );
-        break;
-      default:
-        break;
+        line = readLine( reader );
       }
-
-      if( evt != null )
-      {
-        evt.setRegistrationId( playerId );
-        evt.setAccountId( accountId );
-        evt.setGameId( model.getGameId() );
-        evt.setGameVersion( gameVersion );
-        model.getGameEvents().add( evt );
-        // gameVersion++;
-      }
-
-      line = readLine( reader );
+    } catch( Throwable th )
+    {
+      throw new ParseException( "parse error: '" + currentLine + "' at line " + currentLineIndex, th );
     }
-
     // dataStore.close();
 
     return model;
   }
 
+  private int currentLineIndex = 0;
+  private String currentLine = null;
+
   private String[] readLine(BufferedReader reader)
   {
     String[] result = null;
-    String line = null;
     try
     {
-      line = reader.readLine();
+      currentLineIndex++;
+      currentLine = reader.readLine();
     } catch( IOException e )
     {
     }
-    if( line != null )
+    if( currentLine != null )
     {
-      result = line.split( "[, ]+" );
+      result = currentLine.split( "[, ]+" );
     }
     return result;
   }
@@ -392,7 +408,7 @@ public class DriverSTAI extends DriverFileFormat
     PrintStream printStream = new PrintStream( p_output );
 
     // print general information
-    printStream.println( "stai,1" );
+    printStream.println( "stai," + VERSION );
     printStream.println( "id," + p_game.getGame().getId() );
     printStream.println( "version," + p_game.getGame().getVersion() );
     printStream.println( "size," + p_game.getGame().getLandHeight() + "," + p_game.getGame().getLandWidth() );

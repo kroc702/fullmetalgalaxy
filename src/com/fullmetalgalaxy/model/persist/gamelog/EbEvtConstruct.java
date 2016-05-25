@@ -97,13 +97,13 @@ public class EbEvtConstruct extends AnEventPlay
     {
       // not probable error (no i18n)
       throw new RpcFmpException( "token " + getTokenCarrier(p_game)
-          + " must be on board to construct a token" );
+          + " must be on board to construct a token", this );
     }
     // check that tokencarrier is a weather hen
     if( getTokenCarrier(p_game).getType() != TokenType.WeatherHen )
     {
       // no i18n
-      throw new RpcFmpException( "only weather hen can construct units" );
+      throw new RpcFmpException( "only weather hen can construct units", this );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -113,25 +113,25 @@ public class EbEvtConstruct extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenCarrier( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     // check that player have one more action point to unload that token
     if( myRegistration.getPtAction() <= 0 )
     {
       // no i18n
-      throw new RpcFmpException( "player must have one more action point to unload that token" );
+      throw new RpcFmpException( "player must have one more action point to unload that token", this );
     }
     // check token construct reserve
     if( !p_game.canConstruct( getToken( p_game ).getType(), getConstructType() ) )
     {
       // no i18n
-      throw new RpcFmpException( getConstructType().toString() + " construct reserve is empty" );
+      throw new RpcFmpException( getConstructType().toString() + " construct reserve is empty", this );
     }
     // Check bullet count: wheather hen can't construct more than 2 unit per
     // turn
     if( getTokenCarrier( p_game ).getBulletCount() < 1 )
     {
-      throw new RpcFmpException( errMsg().tooManyConstruction() );
+      throw new RpcFmpException( errMsg().tooManyConstruction(), this );
     }
     // Check wheather hen do not construct two similar unit during same turn
     int reverseIndex = p_game.getLogs().size() - 1;
@@ -149,7 +149,7 @@ public class EbEvtConstruct extends AnEventPlay
           && ((EbEvtConstruct)event).getPackedTokenCarrier().getId() == getPackedTokenCarrier()
               .getId() )
       {
-        throw new RpcFmpException( errMsg().tooManyConstruction() );
+        throw new RpcFmpException( errMsg().tooManyConstruction(), this );
       }
       reverseIndex--;
     }

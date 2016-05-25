@@ -90,7 +90,7 @@ public class EbEvtTide extends AnEvent
     if( p_game.getStatus() != GameStatus.Running )
     {
       // no i18n
-      throw new RpcFmpException( "game not started" );
+      throw new RpcFmpException( "game not started", this );
     }
   }
 

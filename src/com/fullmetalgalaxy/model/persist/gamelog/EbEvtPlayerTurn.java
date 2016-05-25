@@ -146,35 +146,35 @@ public class EbEvtPlayerTurn extends AnEvent
     }
     if( p_game.getStatus() != GameStatus.Running )
     {
-      throw new RpcFmpException( errMsg().gameNotStarted() );
+      throw new RpcFmpException( errMsg().gameNotStarted(), this );
     }
     if( p_game.isFinished() )
     {
       // no i18n
-      throw new RpcFmpException( "This game is finished" );
+      throw new RpcFmpException( "This game is finished", this );
     }
     if( p_game.isParallel() && p_game.getCurrentTimeStep() > 1 )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "You can't end your turn in parallele mode" );
+      throw new RpcFmpException( "You can't end your turn in parallele mode", this );
     }
     if( p_game.getCurrentPlayerIds().isEmpty() )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "You can't end your turn: no current player" );
+      throw new RpcFmpException( "You can't end your turn: no current player", this );
     }
     EbRegistration myRegistration = p_game.getRegistration( getOldPlayerId( p_game ) );
     if( myRegistration == null )
     {
       // no i18n as HMI won't allow this action
-      throw new RpcFmpException( "Not your turn" );
+      throw new RpcFmpException( "Not your turn", this );
     }
     if( p_game.getCurrentTimeStep() <= p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       EbToken freighter = p_game.getFreighter( myRegistration );
       if( freighter != null && freighter.getLocation() == Location.Orbit )
       {
-        throw new RpcFmpException( errMsg().mustLandFreighter() );
+        throw new RpcFmpException( errMsg().mustLandFreighter(), this );
       }
     }
     if( !isAuto() )
@@ -187,7 +187,7 @@ public class EbEvtPlayerTurn extends AnEvent
         if( token.getColor() != EnuColor.None && playerColor.isColored( token.getColor() )
             && p_game.getTankCheating( token ) != null )
         {
-          throw new RpcFmpException( errMsg().cantEndTurnTwoTankMontain() );
+          throw new RpcFmpException( errMsg().cantEndTurnTwoTankMontain(), this );
         }
       }
       // check that no token are left in warp
@@ -196,7 +196,7 @@ public class EbEvtPlayerTurn extends AnEvent
       {
         // TODO i18n
         throw new RpcFmpException(
- "Vous ne pouvez pas terminer votre tour en laissant des unités dans le warp" );
+ "Vous ne pouvez pas terminer votre tour en laissant des unités dans le warp", this );
       }
     }
   }

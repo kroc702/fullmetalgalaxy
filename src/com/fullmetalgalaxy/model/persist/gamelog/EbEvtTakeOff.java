@@ -97,13 +97,13 @@ public class EbEvtTakeOff extends AnEventPlay
     if( getToken(p_game).getType() != TokenType.Freighter )
     {
       // no i18n
-      throw new RpcFmpException( "only freighter can take off" );
+      throw new RpcFmpException( "only freighter can take off", this );
     }
     // check that take off is allowed this turn
     if( !p_game.getAllowedTakeOffTurns().contains( p_game.getCurrentTimeStep() ) )
     {
       // no i18n
-      throw new RpcFmpException( "Take off isn't allowed this turn" );
+      throw new RpcFmpException( "Take off isn't allowed this turn", this );
     }
     // check token is on board
     if( (getToken(p_game).getLocation() != Location.Board)
@@ -111,7 +111,7 @@ public class EbEvtTakeOff extends AnEventPlay
     {
       // not probable error (no i18n)
       throw new RpcFmpException( "token " + getToken(p_game) + " can't be moved from location "
-          + getToken(p_game).getLocation() );
+          + getToken(p_game).getLocation(), this );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -120,7 +120,7 @@ public class EbEvtTakeOff extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
   }
 

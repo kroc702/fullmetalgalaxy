@@ -116,7 +116,7 @@ public class EbEvtCancel extends AnEventUser
     }
     if( m_fromActionIndex != totalEventCount - 1 || toActionIndex < 0 )
     {
-      throw new RpcFmpException( "this cancel action isn't for this game state" );
+      throw new RpcFmpException( "this cancel action isn't for this game state", this );
     }
 
     List<AnEvent> eventLogs = p_game.getLogs();

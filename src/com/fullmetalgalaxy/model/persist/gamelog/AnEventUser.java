@@ -103,7 +103,7 @@ public class AnEventUser extends AnEvent
     if( ((getAccountId() == 0)) && (!isAuto())
         && (p_game.getGameType() == GameType.MultiPlayer || p_game.getGameType() == GameType.Initiation) )
     {
-      throw new RpcFmpException( errMsg().MustBeLogged() );
+      throw new RpcFmpException( errMsg().MustBeLogged(), this );
     }
   }
 

@@ -82,7 +82,7 @@ public class EbEvtChangePlayerOrder extends AnEvent
     super.check(p_game);
     if( getNewTeamOrder().size() != p_game.getTeams().size() )
     {
-      throw new RpcFmpException( "EbEvtChangePlayerOrder isn't well configured." );
+      throw new RpcFmpException( "EbEvtChangePlayerOrder isn't well configured.", this );
     }
   }
   

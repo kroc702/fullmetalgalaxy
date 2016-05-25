@@ -90,17 +90,17 @@ public class EbGameJoin extends AnEventUser
     super.check(p_game);
     if( getMyRegistration(p_game) != null )
     {
-      throw new RpcFmpException( "You can't join a game several times" );
+      throw new RpcFmpException( "You can't join a game several times", this );
     }
     if( getColor() == EnuColor.None )
     {
       // not probable error
-      throw new RpcFmpException( "You have to select a color before joining a game" );
+      throw new RpcFmpException( "You have to select a color before joining a game", this );
     }
     if( p_game.getStatus() != GameStatus.Open )
     {
       // not probable error
-      throw new RpcFmpException( "You can't join a game wich is started" );
+      throw new RpcFmpException( "You can't join a game wich is started", this );
     }
     // check this color isn't already selected in this game
     EbRegistration registration = p_game.getRegistrationByColor( getColor() );
@@ -108,19 +108,19 @@ public class EbGameJoin extends AnEventUser
     {
       if( registration.haveAccount() )
       {
-        throw new RpcFmpException( "Color " + getEnuColor() + " was already selected in this game" );
+        throw new RpcFmpException( "Color " + getEnuColor() + " was already selected in this game", this );
       }
     }
     else if( p_game.getMaxNumberOfPlayer() <= p_game.getSetRegistration().size() )
     {
       // no i18n ?
-      throw new RpcFmpException( "The maximum number of player is reached for this game." );
+      throw new RpcFmpException( "The maximum number of player is reached for this game.", this );
     }
     if( !p_game.isTeamAllowed() && getCompany() != Company.Freelancer
         && p_game.getTeam( getCompany() ) != null )
     {
       // no i18n as HMI shall prevent this error
-      throw new RpcFmpException( "This gaame don't allow team" );
+      throw new RpcFmpException( "This gaame don't allow team", this );
     }
   }
 

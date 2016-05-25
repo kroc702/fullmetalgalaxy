@@ -103,19 +103,19 @@ public class EbEvtControlFreighter extends AnEventPlay
     if( getTokenCarrier(p_game).getType() != TokenType.Freighter )
     {
       // no i18n
-      throw new RpcFmpException( "le pion controlé doit être un astronef" );
+      throw new RpcFmpException( "le pion controlé doit être un astronef", this );
     }
     if( !getToken(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenCarrier(p_game) ) )
     {
       // no i18n
       throw new RpcFmpException( getToken(p_game) + " doit etre au contact de " + getTokenCarrier(p_game)
-          + " pour le controler" );
+          + " pour le controler", this );
     }
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
       // no i18n
-      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
+      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores", this );
     }
 
     // check that player control the token color
@@ -125,7 +125,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
     // check that token isn't under opponents fire covers
     EnuColor fireCoverColor = p_game.getOpponentFireCover( myRegistration.getTeam( p_game ).getColors(p_game.getPreview()),
@@ -133,7 +133,7 @@ public class EbEvtControlFreighter extends AnEventPlay
     if( fireCoverColor.getValue() != EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDisableFire( Messages.getTokenString( getAccountId(), getToken(p_game).getType()),
-          ( Messages.getColorString( getAccountId(),  fireCoverColor.getValue() ))));
+          ( Messages.getColorString( getAccountId(),  fireCoverColor.getValue() ))), this);
     }
     // check presence of turrets
     for( AnBoardPosition position : getTokenCarrier(p_game).getExtraPositions(p_game.getCoordinateSystem()) )
@@ -142,33 +142,33 @@ public class EbEvtControlFreighter extends AnEventPlay
       if( turret != null )
       {
         // no i18n ?
-        throw new RpcFmpException( "You must destroy all turrets of an opponents freighter before taking control of it." );
+        throw new RpcFmpException( "You must destroy all turrets of an opponents freighter before taking control of it.", this );
       }
     }
 
     // check that controlling token is a destroyer
     if( !getToken( p_game ).getType().isDestroyer() )
     {
-      throw new RpcFmpException( errMsg().OnlyDestroyerCanControl() );
+      throw new RpcFmpException( errMsg().OnlyDestroyerCanControl(), this );
     }
 
     // check that controlled freither isn't in same team
     if( p_game.getTokenTeamColors( getTokenCarrier( p_game ) ).isColored(
         getToken( p_game ).getColor() ) )
     {
-      throw new RpcFmpException( "You can't control freither in your team" );
+      throw new RpcFmpException( "You can't control freither in your team", this );
     }
 
     // check that player have at least one action point to control freighter
     if( myRegistration.getPtAction() <= 0 )
     {
-      throw new RpcFmpException( errMsg().NotEnouthActionPt() );
+      throw new RpcFmpException( errMsg().NotEnouthActionPt(), this );
     }
 
     // check that game isn't in parallel hidden phase
     if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
     {
-      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase(), this );
     }
 
     // player have extra action points.
@@ -195,7 +195,7 @@ public class EbEvtControlFreighter extends AnEventPlay
       }
       if( m_newFreighterColor == EnuColor.None )
       {
-        throw new RpcFmpException( "No more color available to control freighter" );
+        throw new RpcFmpException( "No more color available to control freighter", this );
       }
     }
     else

@@ -93,7 +93,7 @@ public class EbEvtControl extends AnEventPlay
     if( !getTokenTarget( p_game ).canBeColored() )
     {
       // no i18n
-      throw new RpcFmpException( "Ore can't be controled" );
+      throw new RpcFmpException( "Ore can't be controled", this );
     }
 
     // check that player control destroyers
@@ -102,34 +102,34 @@ public class EbEvtControl extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenDestroyer1( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ), this );
     }
     if( !getMyRegistration(p_game).getEnuColor().isColored( getTokenDestroyer2(p_game).getColor() )
         || getTokenDestroyer2(p_game).getColor() == EnuColor.None )
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getTokenDestroyer2( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ) );
+          Messages.getColorString( getAccountId(), getMyRegistration( p_game ).getColor() ) ), this );
     }
 
     // check that two token are destroyer
     if( !getTokenDestroyer1( p_game ).getType().isDestroyer() || !getTokenDestroyer2( p_game ).getType().isDestroyer() )
     {
       throw new RpcFmpException(
-          "Il vous faut deux destructeurs pour controler un vehicule adverse" );
+          "Il vous faut deux destructeurs pour controler un vehicule adverse", this );
     }
 
     // check the first destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer1(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantFireDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getTokenDestroyer1( p_game ) ) ), this );
     }
     // check the second destroyer is not tide deactivated
     if( !p_game.isTokenTideActive( getTokenDestroyer2(p_game) ) )
     {
       throw new RpcFmpException( errMsg().CantFireDisableTide(
-          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ) );
+          Messages.getTokenString( getAccountId(), getTokenDestroyer2( p_game ) ) ), this );
     }
 
     // check first, second destroyer and target are not under opponents fires
@@ -140,26 +140,26 @@ public class EbEvtControl extends AnEventPlay
         || fireCover.getValue() != EnuColor.None )
     {
       throw new RpcFmpException(
-          "Pour qu'un control soit possible, il faut qu'aucun des trois pions ne soit sous zone de feu adverse" );
+          "Pour qu'un control soit possible, il faut qu'aucun des trois pions ne soit sous zone de feu adverse", this );
     }
 
 
     if( !getTokenDestroyer1(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenTarget(p_game) ) )
     {
       throw new RpcFmpException( getTokenDestroyer1(p_game) + " n'est pas au contact de "
-          + getTokenTarget(p_game) );
+          + getTokenTarget(p_game), this );
     }
     if( !getTokenDestroyer2(p_game).isNeighbor( p_game.getCoordinateSystem(), getTokenTarget(p_game) ) )
     {
       throw new RpcFmpException( getTokenDestroyer2(p_game) + " n'est pas au contact de "
-          + getTokenTarget(p_game) );
+          + getTokenTarget(p_game), this );
     }
 
     // check that two destroyer are different
     if( getTokenDestroyer1( p_game ).getId() == getTokenDestroyer2( p_game ).getId() )
     {
       // no i18n as unusual
-      throw new RpcFmpException( "the two destroyer must be different" );
+      throw new RpcFmpException( "the two destroyer must be different", this );
     }
 
     // check that target isn't freighter
@@ -167,13 +167,13 @@ public class EbEvtControl extends AnEventPlay
         || getTokenTarget( p_game ).getType() == TokenType.Turret )
     {
       throw new RpcFmpException(
-          "les astronefs ne peuvent etres controlé de cette façon. Vous devez détruire toute les tourelles puis entrer dedans" );
+          "les astronefs ne peuvent etres controlé de cette façon. Vous devez détruire toute les tourelles puis entrer dedans", this );
     }
 
     // check that game isn't in parallel hidden phase
     if( p_game.isTimeStepParallelHidden( p_game.getCurrentTimeStep() ) )
     {
-      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase() );
+      throw new RpcFmpException( errMsg().CantAttackInParallelHiddenPhase(), this );
     }
 
   }

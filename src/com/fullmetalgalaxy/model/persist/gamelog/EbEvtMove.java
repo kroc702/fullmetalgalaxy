@@ -149,21 +149,21 @@ public class EbEvtMove extends AnEventPlay
     {
       // not probable error (no i18n)
       throw new RpcFmpException( "token " + getToken(p_game) + " can't be moved from location "
-          + getToken(p_game).getLocation() );
+          + getToken(p_game).getLocation(), this );
     }
     // check that token is colored
     if( getToken(p_game).getColor() == EnuColor.None )
     {
-      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores" );
+      throw new RpcFmpException( "vous ne pouvez pas déplacer des pions incolores", this );
     }
     // check that token is colored
     if( getToken(p_game).getType() == TokenType.Freighter )
     {
-      throw new RpcFmpException( "vous ne pouvez pas déplacer votre astronef" );
+      throw new RpcFmpException( "vous ne pouvez pas déplacer votre astronef", this );
     }
     if( getToken( p_game ).getType() == TokenType.Teleporter )
     {
-      throw new RpcFmpException( "Le teleporter ne se deplace pas seul" );
+      throw new RpcFmpException( "Le teleporter ne se deplace pas seul", this );
     }
     // check no hexagon are skipped
     AnBoardPosition tokenPosition = getToken(p_game).getPosition();
@@ -174,7 +174,7 @@ public class EbEvtMove extends AnEventPlay
             p_game.getCoordinateSystem().getNeighbor( getNewPosition(), getNewPosition().getSector() ) )) )
     {
       // unusual error: no i18n
-      throw new RpcFmpException( "You must select all moving step without any gap between them." );
+      throw new RpcFmpException( "You must select all moving step without any gap between them.", this );
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
@@ -183,7 +183,7 @@ public class EbEvtMove extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDontControl(
           Messages.getColorString( getAccountId(), getToken( p_game ).getColor() ),
-          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ) );
+          Messages.getColorString( getAccountId(), myRegistration.getColor() ) ), this );
     }
 
     // check this token is allowed to move from this hexagon
@@ -202,7 +202,7 @@ public class EbEvtMove extends AnEventPlay
           && (token.getType() != TokenType.Sluice) )
       {
         // TODO i18n
-        throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre" );
+        throw new RpcFmpException( "Vous devez déplacer votre pions sur une case libre", this );
       }
       if( token.getType() == TokenType.Pontoon || token.getType() == TokenType.Sluice )
       {
@@ -215,7 +215,7 @@ public class EbEvtMove extends AnEventPlay
           // TODO i18n
           throw new RpcFmpException( Messages.getTokenString( 0, getToken( p_game ) )
               + " ne peut pas se deplacer sur le "
-              + Messages.getTokenString( 0, token ) );
+              + Messages.getTokenString( 0, token ), this );
         }
       }
     }
@@ -227,7 +227,7 @@ public class EbEvtMove extends AnEventPlay
       {
         throw new RpcFmpException( errMsg().CantMoveOn(
             Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-            Messages.getLandString( getAccountId(), p_game.getLand( getNewPosition() ) ) ) );
+            Messages.getLandString( getAccountId(), p_game.getLand( getNewPosition() ) ) ), this );
       }
       
     }
@@ -240,7 +240,7 @@ public class EbEvtMove extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDisableFire(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ) );
+          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ), this );
     }
     EnuColor fireCoverColorOld = p_game.getOpponentFireCover( getToken( p_game ) );
 
@@ -254,14 +254,14 @@ public class EbEvtMove extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().CantMoveDisableFire(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-          Messages.getColorString( getAccountId(), fireCoverColorOld.getValue() ) ) );
+          Messages.getColorString( getAccountId(), fireCoverColorOld.getValue() ) ), this );
     }
     if( (fireCoverColorOld.getValue() != EnuColor.None)
         && (fireCoverColorNew.getValue() != EnuColor.None) )
     {
       throw new RpcFmpException( errMsg().CantMoveDisableFire(
           Messages.getTokenString( getAccountId(), getToken( p_game ) ),
-          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ) );
+          Messages.getColorString( getAccountId(), fireCoverColorNew.getValue() ) ), this );
     }
   }
 
