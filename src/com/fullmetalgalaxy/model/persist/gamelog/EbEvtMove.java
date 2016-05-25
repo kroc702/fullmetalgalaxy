@@ -29,6 +29,7 @@ import java.util.Set;
 
 import com.fullmetalgalaxy.model.BoardFireCover.FdChange;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.HexCoordinateSystem;
 import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.TokenType;
@@ -96,6 +97,51 @@ public class EbEvtMove extends AnEventPlay
   public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
+
+    // little fix to allow moving barge by giving one of the two position (head
+    // or tail) and the new position.
+    if( getToken( p_game ).getHexagonSize() == 2 && getPosition() != null
+        && !getPosition().equals( new AnBoardPosition() )
+        && p_game.getCoordinateSystem().areNeighbor( getPosition(), getNewPosition() ) )
+    {
+      // FMPBarge has a headLocation and a tailLocation. When I move the head to an adjacent hex then one of three cases happens:
+      // - the new head = the current tail: I just flip the barge 180 degrees
+      // - the new head is still adjacent to the current tail: the barge effectively just rotates 60 degrees around the tail
+      // - the new head is no longer adjacent to the current tail: the new tail is set to the old head location
+      // --> this is simple movement from a to b with tail following along after head
+      HexCoordinateSystem coord = p_game.getCoordinateSystem();
+      AnBoardPosition tailPosition = getToken( p_game ).getExtraPositions( coord ).get( 0 );
+      AnBoardPosition headPosition = getToken( p_game ).getPosition();
+      if( headPosition.equals( getPosition() ) )
+      {
+        // given initial position is head
+        if( coord.areNeighbor( getNewPosition(), tailPosition ) )
+        {
+          getNewPosition().setSector( coord.getSector( getNewPosition(), tailPosition ) );
+        }
+        else
+        {
+          getNewPosition().setSector( coord.getSector( getNewPosition(), headPosition ) );
+        }
+      }
+      else
+      {
+        // given initial position is tail
+        if( coord.areNeighbor( getNewPosition(), headPosition ) )
+        {
+          headPosition.setSector( coord.getSector( headPosition, getNewPosition() ) );
+          setNewPosition( headPosition );
+        }
+        else
+        {
+          tailPosition.setSector( coord.getSector( tailPosition, getNewPosition() ) );
+          setNewPosition( tailPosition );
+        }
+      }
+      // then to avoid running the above code several time
+      setPosition( null );
+    }
+    // -------------------------------------------------------------------------
 
     // check token is on board
     if( (getToken(p_game).getLocation() != Location.Board)

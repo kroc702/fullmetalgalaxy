@@ -44,11 +44,16 @@ import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControl;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtControlFreighter;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtDeployment;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtRepair;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtUnLoad;
@@ -161,6 +166,13 @@ public class DriverSTAI extends DriverFileFormat
   {
     BufferedReader reader = new BufferedReader( new InputStreamReader( p_input ) );
 
+    // FmgDataStore dataStore = new FmgDataStore( true );
+    // Game game = dataStore.getGame( getLong( gameId ) );
+    // if( game == null )
+    // {
+    // throw new RuntimeException( "run action on unknown game: " + gameId );
+    // }
+
     ModelFmpUpdate model = new ModelFmpUpdate();
     model.setGameId( Long.parseLong( gameId ) );
     model.setGameEvents( new ArrayList<AnEvent>() );
@@ -177,6 +189,9 @@ public class DriverSTAI extends DriverFileFormat
       AnEventPlay evt = null;
       switch( line[0] )
       {
+      case "stai":
+        // nothing to do yet
+        break;
       case "id":
         model.setGameId( Long.parseLong( line[1] ) );
         break;
@@ -223,11 +238,14 @@ public class DriverSTAI extends DriverFileFormat
         break;
       // 'repair'. turret idNumber
       case "repair":
-        // evt = new EbEvtRepair();
-
+        evt = new EbEvtRepair();
+        evt.setToken( getLong( line[1] ) );
         break;
       // 'captureTurret'. turret idNumber. unit1 idNumber
       case "captureTurret":
+        evt = new EbEvtControlFreighter();
+        evt.setToken( getLong( line[2] ) );
+        evt.setTokenCarrier( getLong( line[1] ) );
         break;
       // 'capture'. enemy idNumber. unit1 idNumber. unit2 idNumber
       case "capture":
@@ -236,26 +254,67 @@ public class DriverSTAI extends DriverFileFormat
         evt.setTokenDestroyer1( getLong( line[2] ) );
         evt.setTokenDestroyer2( getLong( line[3] ) );
         break;
-      // 'build'. newUnit idNumber. x1. y1. weatherHen idNumber.
+      // 'build'. newUnit idNumber. x1. y1. weatherHen idNumber. type
       case "build":
-        // evt = new EbEvtConstruct();
-
-        break;
-      // 'load'. unit idNumber. receiver idNumber
-      case "load":
-        evt = new EbEvtLoad();
+        // newUnit idNumber shall be oreId for fmg
+        evt = new EbEvtConstruct();
         evt.setToken( getLong( line[1] ) );
-        evt.setTokenCarrier( getLong( line[2] ) );
-        break;
-      // 'loadOre'. ore idNumber. freighter idNumber
-      case "loadOre":
-        break;
-      // 'unload'. unit idNumber. x1. y1. fromWhom idNumber
-      case "unload":
+        evt.setTokenCarrier( getLong( line[4] ) );
+        ((EbEvtConstruct)evt).setConstructType( getTokenType( line[5] ) );
+        evt.setRegistrationId( playerId );
+        evt.setAccountId( accountId );
+        evt.setGameId( model.getGameId() );
+        evt.setGameVersion( gameVersion );
+        model.getGameEvents().add( evt );
+
         evt = new EbEvtUnLoad();
         evt.setToken( getLong( line[1] ) );
         evt.setNewPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
         evt.setTokenCarrier( getLong( line[4] ) );
+        break;
+      // 'loadOre'. ore idNumber. freighter idNumber
+      case "loadOre":
+      // 'load'. unit idNumber. receiver idNumber
+        // load,unitId,carrierId,unitContentId,...
+      case "load":
+        evt = new EbEvtLoad();
+        evt.setToken( getLong( line[1] ) );
+        evt.setTokenCarrier( getLong( line[2] ) );
+
+        for( int i = 3; i < line.length; i++ )
+        {
+          evt.setRegistrationId( playerId );
+          evt.setAccountId( accountId );
+          evt.setGameId( model.getGameId() );
+          evt.setGameVersion( gameVersion );
+          model.getGameEvents().add( evt );
+
+          evt = new EbEvtTransfer();
+          evt.setToken( getLong( line[i] ) );
+          evt.setTokenCarrier( getLong( line[1] ) );
+          evt.setNewTokenCarrier( getLong( line[2] ) );
+          evt.setCost( 0 );
+        }
+        break;
+      // 'unload'. unit idNumber. x1. y1. fromWhom idNumber
+      // unload,unitId,carrierId,x1,y1
+      // unload,unitId,carrierId,x1,y1,sector
+      // unload,unitId,carrierId,x1,y1,x2,y2
+      case "unload":
+        evt = new EbEvtUnLoad();
+        evt.setToken( getLong( line[1] ) );
+        evt.setTokenCarrier( getLong( line[2] ) );
+        evt.setNewPosition( new AnBoardPosition( getInt( line[4] ), getInt( line[3] ) ) );
+        if( line.length == 6 )
+        {
+          evt.getNewPosition().setSector( getSector( line[5] ) );
+        }
+        else if( line.length >= 7 )
+        {
+          evt.getNewPosition().setSector(
+              hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[6] ),
+                  getInt( line[5] ) ) ) );
+        }
         break;
       // 'transfer'. anItem idNumber. fromUnit idNumber. toUnit idNumber
       case "transfer":
@@ -263,6 +322,27 @@ public class DriverSTAI extends DriverFileFormat
         evt.setToken( getLong( line[1] ) );
         evt.setTokenCarrier( getLong( line[2] ) );
         evt.setNewTokenCarrier( getLong( line[3] ) );
+        break;
+      // deploy,id,x1,y1
+      // deploy,id,x1,y1,sector
+      // deploy,id,x1,y1,x2,y2
+      case "deploy":
+        evt = new EbEvtDeployment();
+        evt.setToken( getLong( line[1] ) );
+        evt.setPosition( new AnBoardPosition( getInt( line[3] ), getInt( line[2] ) ) );
+        if( line.length == 5){
+          evt.getPosition().setSector( getSector(line[4]) );
+        } else if(line.length >= 6){
+          evt.getPosition().setSector(
+              hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[5] ),
+                  getInt( line[4] ) ) ) );
+        }
+      case "endPlayer":
+        EbEvtPlayerTurn endTurn = new EbEvtPlayerTurn();
+        endTurn.setAccountId( accountId );
+        endTurn.setGameId( model.getGameId() );
+        endTurn.setGameVersion( gameVersion );
+        model.getGameEvents().add( endTurn );
         break;
       default:
         break;
@@ -280,6 +360,8 @@ public class DriverSTAI extends DriverFileFormat
 
       line = readLine( reader );
     }
+
+    // dataStore.close();
 
     return model;
   }
@@ -310,12 +392,20 @@ public class DriverSTAI extends DriverFileFormat
     PrintStream printStream = new PrintStream( p_output );
 
     // print general information
+    printStream.println( "stai,1" );
     printStream.println( "id," + p_game.getGame().getId() );
     printStream.println( "version," + p_game.getGame().getVersion() );
     printStream.println( "size," + p_game.getGame().getLandHeight() + "," + p_game.getGame().getLandWidth() );
     printStream.println( "turn," + p_game.getGame().getCurrentTimeStep() );
     printStream.println( "tides," + p_game.getGame().getCurrentTide() + "," + p_game.getGame().getNextTide() + ","
         + p_game.getGame().getNextTide2() );
+    printStream.print( "currentPlayer" );
+    for( long playerId : p_game.getGame().getCurrentPlayerIds() )
+    {
+      printStream.println( "," + p_game.getGame().getRegistration( playerId ).getId() );
+    }
+    printStream.println( "" );
+
     printStream.println( "" );
 
     // print terrain
@@ -339,11 +429,10 @@ public class DriverSTAI extends DriverFileFormat
 
     printStream.println( "" );
 
-    // FIXME what about, multiple freither for a single player ?
-    // does not comply with given file format
     // print players units
     for( EbTeam team : p_game.getGame().getTeamByPlayOrder() )
     {
+      printStream.println( "team," + team.getId() );
       for( EbRegistration player : team.getPlayers( p_game.getGame().getPreview() ) )
       {
         printStream.print( "player," + player.getId() );
@@ -351,16 +440,42 @@ public class DriverSTAI extends DriverFileFormat
         {
           printStream.print( "," + player.getAccount().getId() );
         }
-        printStream.println( "" );
+        else
+        {
+          printStream.print( ",0" );
+        }
+        printStream.println( "," + player.getPtAction() );
+        for( EbToken token : p_game.getGame().getSetToken() )
+        {
+          if( token.getLocation() == Location.Orbit )
+          {
+            if( player.getEnuColor().contain( token.getCarrierToken().getColor() ) )
+            {
+              printStream.println( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
+                  + token.getColor() );
+            }
+          }
+        }
         for( EbToken token : p_game.getGame().getSetToken() )
         {
           if( token.getColor() != EnuColor.None && player.getEnuColor().contain( token.getColor() ) )
           {
             if( token.getLocation() == Location.Board )
             {
-              printStream.println( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
-                  + token.getPosition().getY() + "," + token.getPosition().getX() + ","
-                  + getConstant( token.getPosition().getSector() ) );
+              printStream.print( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
+                  + token.getColor() + "," + token.getPosition().getY() + "," + token.getPosition().getX() );
+              if( token.getHexagonSize() == 2 )
+              {
+                for( AnBoardPosition position : token.getExtraPositions( p_game.getGame().getCoordinateSystem() ) )
+                {
+                  printStream.print( "," + position.getY() + "," + position.getX() );
+                }
+                printStream.println( "" );
+              }
+              else
+              {
+                printStream.println( "," + getConstant( token.getPosition().getSector() ) );
+              }
             }
           }
         }
@@ -371,6 +486,7 @@ public class DriverSTAI extends DriverFileFormat
             if( player.getEnuColor().contain( token.getCarrierToken().getColor() ) )
             {
               printStream.println( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
+                  + token.getColor() + ","
                   + token.getCarrierToken().getId() );
             }
           }
@@ -392,14 +508,53 @@ public class DriverSTAI extends DriverFileFormat
     return Long.parseLong( str );
   }
 
+  /**
+   * 0 = west, 1 = NW, 2 = NE, 3 = east, 4 = SE, 5 = SW -- this is in STAI's normal coordinate system
+   * @param sector
+   * @return
+   */
   private int getConstant(Sector sector)
   {
-    return sector.ordinal();
+    switch( sector )
+    {
+    default:
+    case North:
+      // west
+      return 0;
+    case NorthEast:
+      // SW
+      return 5;
+    case NorthWest:
+      // NW
+      return 1;
+    case South:
+      // east
+      return 3;
+    case SouthEast:
+      // SE
+      return 4;
+    case SouthWest:
+      // NE
+      return 2;
+    }
   }
 
   private Sector getSector(String str)
   {
-    return Sector.getFromOrdinal( Integer.parseInt( str ) );
+    switch( getInt( str ) )
+    {
+    default:
+    case 0:
+      return Sector.North;
+    case 1:
+      return Sector.NorthWest;
+    case 3:
+      return Sector.South;
+    case 4:
+      return Sector.SouthEast;
+    case 5:
+      return Sector.NorthEast;
+    }
   }
 
   private int getConstant(LandType land){
@@ -421,11 +576,7 @@ public class DriverSTAI extends DriverFileFormat
   }
 
   /**
-   * TODO other unit type ?
-   * @param type
-   * @return
-   * 
-   * create,1,FMPFreighter
+  create,1,FMPFreighter
   create,2,FMPTurret
   create,3,FMPTurret
   create,4,FMPTurret
@@ -473,6 +624,20 @@ public class DriverSTAI extends DriverFileFormat
     case None:
     default:
       return "None";
+    }
+  }
+
+  private TokenType getTokenType(String str)
+  {
+    switch( str )
+    {
+    case "ORE":
+      return TokenType.Ore;
+    case "FMPAttackBoat":
+      return TokenType.Speedboat;
+    default:
+      str = str.substring( 3 );
+      return TokenType.valueOf( str );
     }
   }
 }

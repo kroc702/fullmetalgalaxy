@@ -267,6 +267,25 @@ public class EbEvtControlFreighter extends AnEventPlay
     unexecFireDisabling( p_game );
   }
 
+
+  /**
+   * This overloaded method allow event control to be build with a turret id instead of freighter id.
+   * @param p_game game to apply event
+   * @return the tokenCarrier
+   */
+  @Override
+  public EbToken getTokenCarrier(Game p_game)
+  {
+    EbToken token = super.getTokenCarrier( p_game );
+    if( token.getType() == TokenType.Turret )
+    {
+      token = p_game.getToken( token.getPosition(), TokenType.Freighter );
+      setTokenCarrier( token );
+    }
+    return token;
+  }
+
+
   /**
    * @return the packedOldRegistration
    */

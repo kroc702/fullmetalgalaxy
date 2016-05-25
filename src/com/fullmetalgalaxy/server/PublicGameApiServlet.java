@@ -117,12 +117,12 @@ public class PublicGameApiServlet extends HttpServlet
     try
     {
       responseUpdate = getGameServices().runModelUpdate( requestUpdate );
-    } catch( RpcFmpException e )
+    } catch( Throwable e )
     {
       p_resp.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
-      if( e.getCauseEvent() != null )
+      if( e instanceof RpcFmpException && ((RpcFmpException)e).getCauseEvent() != null )
       {
-        p_resp.getOutputStream().print( e.getCauseEvent().toString() + "\n" );
+        p_resp.getOutputStream().print( ((RpcFmpException)e).getCauseEvent().toString() + "\n" );
       }
       e.printStackTrace( new PrintStream( p_resp.getOutputStream() ) );
       return;

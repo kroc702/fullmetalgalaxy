@@ -74,7 +74,7 @@ public class EbEvtRepair extends AnEventPlay
   @Override
   public AnBoardPosition getSelectedPosition(Game p_game)
   {
-    return getPosition();
+    return getPosition( p_game );
   }
 
   /* (non-Javadoc)
@@ -84,15 +84,15 @@ public class EbEvtRepair extends AnEventPlay
   public void check(Game p_game) throws RpcFmpException
   {
     super.check(p_game);
-    EbToken freighter = p_game.getToken( getPosition(), TokenType.Freighter );
-    EbToken turret = p_game.getToken( getPosition(), TokenType.Turret );
+    EbToken freighter = p_game.getToken( getPosition( p_game ), TokenType.Freighter );
+    EbToken turret = p_game.getToken( getPosition( p_game ), TokenType.Turret );
     if( (freighter == null) || (turret != null) )
     {
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can repair only destroyed turret" );
     }
     // check he don't repair center freighter
-    if( freighter.getPosition().equals( getPosition() ) )
+    if( freighter.getPosition().equals( getPosition( p_game ) ) )
     {
       // no i18n as HMI won't allow this action
       throw new RpcFmpException( "you can repair only destroyed turret" );
@@ -103,7 +103,7 @@ public class EbEvtRepair extends AnEventPlay
       throw new RpcFmpException( "you can't repair any more turrets" );
     }
     EnuColor fireCoverColor = p_game.getOpponentFireCover( getMyTeam( p_game ).getColors(p_game.getPreview()),
-        getPosition() );
+        getPosition( p_game ) );
     if( fireCoverColor.getValue() != EnuColor.None )
     {
       throw new RpcFmpException( errMsg().cantRepairTurretFireCover() );
@@ -121,7 +121,7 @@ public class EbEvtRepair extends AnEventPlay
       {
         break;
       }
-      if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition().equals( getPosition() ) )
+      if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition( p_game ).equals( getPosition( p_game ) ) )
       {
         throw new RpcFmpException( errMsg().cantRepairTurretTwice() );
       }
@@ -137,17 +137,18 @@ public class EbEvtRepair extends AnEventPlay
   public void exec(Game p_game) throws RpcFmpException
   {
     super.exec(p_game);
-    EbToken freighter = p_game.getToken( getPosition(), TokenType.Freighter );
+    EbToken freighter = p_game.getToken( getPosition( p_game ), TokenType.Freighter );
     EbToken turret = new EbToken();
     turret.setType( TokenType.Turret );
     turret.setColor( freighter.getColor() );
     p_game.addToken( turret );
-    p_game.moveToken( turret, getPosition() );
-    turret.getPosition().setSector( p_game.getCoordinateSystem().getSector( freighter.getPosition(), getPosition() ) );
+    p_game.moveToken( turret, getPosition( p_game ) );
+    turret.getPosition().setSector(
+        p_game.getCoordinateSystem().getSector( freighter.getPosition(), getPosition( p_game ) ) );
     turret.incVersion();
     freighter.setBulletCount( freighter.getBulletCount() - 1 );
 
-    execFireDisabling( p_game, getPosition() );
+    execFireDisabling( p_game, getPosition( p_game ) );
   }
 
   /* (non-Javadoc)
@@ -157,13 +158,32 @@ public class EbEvtRepair extends AnEventPlay
   public void unexec(Game p_game) throws RpcFmpException
   {
     super.unexec(p_game);
-    EbToken freighter = p_game.getToken( getPosition(), TokenType.Freighter );
-    EbToken turret = p_game.getToken( getPosition(), TokenType.Turret );
+    EbToken freighter = p_game.getToken( getPosition( p_game ), TokenType.Freighter );
+    EbToken turret = p_game.getToken( getPosition( p_game ), TokenType.Turret );
     turret.setLocation( Location.Graveyard );
     turret.decVersion();
     freighter.setBulletCount( freighter.getBulletCount() + 1 );
 
     unexecFireDisabling( p_game );
+  }
+
+  /**
+   * This method allow event repair to be build with a turret id instead of turret position
+   * @param p_game game to apply event
+   */
+  public AnBoardPosition getPosition(Game p_game)
+  {
+    AnBoardPosition position = getPosition();
+    if( position == null || position.equals( new AnBoardPosition() ) )
+    {
+      EbToken token = getToken( p_game );
+      if( token != null )
+      {
+        position = token.getPosition();
+        setPosition( position );
+      }
+    }
+    return position;
   }
 
 
