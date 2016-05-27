@@ -23,7 +23,6 @@
 
 package com.fullmetalgalaxy.server;
 
-import java.net.URL;
 import java.util.logging.Logger;
 
 import com.fullmetalgalaxy.model.GameStatus;
@@ -40,11 +39,6 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
-import com.google.appengine.api.urlfetch.FetchOptions;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
 /**
  * @author Vincent
@@ -204,13 +198,6 @@ public class GameNotification
   private static void send2Player(FmgMessage p_msg, Game p_game, EbRegistration p_registration,
       NotificationQty p_level, boolean p_checkDoubleSend)
   {
-    if( p_registration == null
-        || (p_registration.isNotifSended( p_msg.getName() ) && p_checkDoubleSend) )
-    {
-      logger.finest( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
-          + " already receive his notif" );
-      return;
-    }
     EbAccount account = null;
     if( p_registration != null && p_registration.getAccount() != null )
     {
@@ -223,28 +210,21 @@ public class GameNotification
       return;
     }
 
-    // web hook
-    // ========
+
+    // web hook is always used instead email
     if( account.getWebHook() != null && "newTurn".equals( p_msg.getName() ) )
     {
-      try
-      {
-        URL url = new URL( account.getWebHook() );
-        String payload = "id," + p_game.getId() + "\nplayer," + p_registration.getId() + "," + account.getId() + "\n";
-        HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
-            .doNotFollowRedirects() );
-        request.setPayload( payload.getBytes( "UTF-8" ) );
-
-        HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
-
-      } catch( Throwable th )
-      {
-        logger.severe( "webhook fail : account= " + account.getPseudo() + " url=" + account.getWebHook() + "\n"
-            + th.getMessage() );
-      }
+      new WebHook( p_game, account ).start();
+      return;
     }
 
 
+    if( p_registration == null || (p_registration.isNotifSended( p_msg.getName() ) && p_checkDoubleSend) )
+    {
+      logger.finest( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
+          + " already receive his notif" );
+      return;
+    }
     if( account.getNotificationQty().ordinal() < p_level.ordinal() )
     {
       logger.fine( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "

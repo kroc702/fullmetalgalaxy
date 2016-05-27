@@ -77,6 +77,32 @@ public class EbEvtRepair extends AnEventPlay
     return getPosition( p_game );
   }
 
+
+  public static boolean isRepairable(Game p_game, long p_freighterId, AnBoardPosition position)
+  {
+    // check that no other turret construction occur on this hex since last
+    // control
+    int iback = 0;
+    AnEvent event = p_game.getLastLog( iback );
+    int maxIBack = p_game.getLogs().size() - 10;
+    while( event != null && iback < maxIBack )
+    {
+      if( event instanceof EbEvtControlFreighter
+          && ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getId() == p_freighterId )
+      {
+        break;
+      }
+      if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition( p_game ).equals( position ) )
+      {
+        return false;
+      }
+      iback++;
+      event = p_game.getLastLog( iback );
+    }
+    return true;
+  }
+
+
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.AnAction#check()
    */
@@ -108,25 +134,9 @@ public class EbEvtRepair extends AnEventPlay
     {
       throw new RpcFmpException( errMsg().cantRepairTurretFireCover(), this );
     }
-    // check that no other turret construction occur on this hex since last
-    // control
-    int iback = 0;
-    AnEvent event = p_game.getLastLog( iback );
-    int maxIBack = p_game.getLogs().size() - 10;
-    while( event != null && iback < maxIBack )
+    if( !isRepairable( p_game, freighter.getId(), getPosition( p_game ) ) )
     {
-      if( event instanceof EbEvtControlFreighter
-          && ((EbEvtControlFreighter)event).getTokenFreighter( p_game ).getId() == freighter
-              .getId() )
-      {
-        break;
-      }
-      if( event instanceof EbEvtRepair && ((EbEvtRepair)event).getPosition( p_game ).equals( getPosition( p_game ) ) )
-      {
-        throw new RpcFmpException( errMsg().cantRepairTurretTwice(), this );
-      }
-      iback++;
-      event = p_game.getLastLog( iback );
+      throw new RpcFmpException( errMsg().cantRepairTurretTwice(), this );
     }
   }
 

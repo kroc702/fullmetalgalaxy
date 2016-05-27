@@ -51,6 +51,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtDeployment;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtFire;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLand;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtLoad;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtRepair;
@@ -208,6 +209,8 @@ public class DriverSTAI extends DriverFileFormat
           playerId = getLong( line[1] );
           accountId = getLong( line[2] );
           break;
+        case "password":
+          break;
         // 'turn'. currentTurn. application tideAtTurn: currentTurn
         case "turn":
           break;
@@ -318,7 +321,7 @@ public class DriverSTAI extends DriverFileFormat
           else if( line.length >= 7 )
           {
             evt.getNewPosition().setSector(
-                hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[6] ),
+                hexCoordinateSystem.getSector( evt.getNewPosition(), new AnBoardPosition( getInt( line[6] ),
                     getInt( line[5] ) ) ) );
           }
           break;
@@ -346,12 +349,28 @@ public class DriverSTAI extends DriverFileFormat
                 hexCoordinateSystem.getSector( evt.getPosition(), new AnBoardPosition( getInt( line[5] ),
                     getInt( line[4] ) ) ) );
           }
+          break;
         case "endPlayer":
           EbEvtPlayerTurn endTurn = new EbEvtPlayerTurn();
           endTurn.setAccountId( accountId );
           endTurn.setGameId( model.getGameId() );
           endTurn.setGameVersion( gameVersion );
           model.getGameEvents().add( endTurn );
+          break;
+        case "message":
+          EbEvtMessage evtmsg = new EbEvtMessage();
+          evtmsg.setMessage( currentLine.substring( 8 ) );
+          evtmsg.setAccountId( accountId );
+          evtmsg.setGameId( model.getGameId() );
+          evtmsg.setGameVersion( gameVersion );
+          evtmsg.setTransientComment( "line " + currentLineIndex + ": " + currentLine );
+          model.getGameEvents().add( evtmsg );
+          break;
+        case "remember":
+          // TODO
+          break;
+        // comment
+        case "":
           break;
         default:
           throw new Exception( "unknown statement: " + line[0] );
@@ -418,7 +437,7 @@ public class DriverSTAI extends DriverFileFormat
     printStream.print( "currentPlayer" );
     for( long playerId : p_game.getGame().getCurrentPlayerIds() )
     {
-      printStream.println( "," + p_game.getGame().getRegistration( playerId ).getId() );
+      printStream.print( "," + p_game.getGame().getRegistration( playerId ).getId() );
     }
     printStream.println( "" );
 
@@ -465,7 +484,7 @@ public class DriverSTAI extends DriverFileFormat
         {
           if( token.getLocation() == Location.Orbit )
           {
-            if( player.getEnuColor().contain( token.getCarrierToken().getColor() ) )
+            if( player.getEnuColor().contain( token.getColor() ) )
             {
               printStream.println( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
                   + token.getColor() );
@@ -491,6 +510,26 @@ public class DriverSTAI extends DriverFileFormat
               else
               {
                 printStream.println( "," + getConstant( token.getPosition().getSector() ) );
+              }
+            }
+            else if( token.getLocation() == Location.Graveyard && token.getType() == TokenType.Turret )
+            {
+              EbToken freighter = p_game.getGame().getToken( token.getPosition(), TokenType.Freighter );
+              if( freighter != null )
+              {
+                if( freighter.getBulletCount() > 0
+                    && EbEvtRepair.isRepairable( p_game.getGame(), freighter.getId(), token.getPosition() ) )
+                {
+                  printStream.println( "create," + token.getId() + ",FMPDamagedTurret," + token.getColor() + ","
+                      + token.getPosition().getY() + "," + token.getPosition().getX() + ","
+                      + getConstant( token.getPosition().getSector() ) );
+                }
+                else
+                {
+                  printStream.println( "create," + token.getId() + ",FMPIrreparableTurret," + token.getColor() + ","
+                      + token.getPosition().getY() + "," + token.getPosition().getX() + ","
+                      + getConstant( token.getPosition().getSector() ) );
+                }
               }
             }
           }

@@ -101,8 +101,9 @@ public class EbEvtMove extends AnEventPlay
     // little fix to allow moving barge by giving one of the two position (head
     // or tail) and the new position.
     if( getToken( p_game ).getHexagonSize() == 2 && getPosition() != null
-        && !getPosition().equals( new AnBoardPosition() )
-        && p_game.getCoordinateSystem().areNeighbor( getPosition(), getNewPosition() ) )
+        && getToken( p_game ).isNeighbor( p_game.getCoordinateSystem(), getNewPosition() )
+        && (getPosition().equals( getToken( p_game ).getPosition() ) || getPosition().equals(
+            getToken( p_game ).getExtraPositions( p_game.getCoordinateSystem() ).get( 0 ) )) )
     {
       // FMPBarge has a headLocation and a tailLocation. When I move the head to an adjacent hex then one of three cases happens:
       // - the new head = the current tail: I just flip the barge 180 degrees
@@ -129,11 +130,13 @@ public class EbEvtMove extends AnEventPlay
         // given initial position is tail
         if( coord.areNeighbor( getNewPosition(), headPosition ) )
         {
+          headPosition = new AnBoardPosition( headPosition );
           headPosition.setSector( coord.getSector( headPosition, getNewPosition() ) );
           setNewPosition( headPosition );
         }
         else
         {
+          tailPosition = new AnBoardPosition( tailPosition );
           tailPosition.setSector( coord.getSector( tailPosition, getNewPosition() ) );
           setNewPosition( tailPosition );
         }
