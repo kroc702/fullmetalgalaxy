@@ -53,7 +53,7 @@ public enum GameLogType
   EvtChangePlayerOrder, 
   EvtDeployment, 
   AdminBan,
-  AdminAbort;
+ AdminAbort, EbRememeber;
 
   public boolean isEventUser()
   {
@@ -76,6 +76,7 @@ public enum GameLogType
     case EvtTransfer:
     case EvtUnLoad:
     case EvtDeployment:
+    case EbRememeber:
       return true;
     default:
       return false;

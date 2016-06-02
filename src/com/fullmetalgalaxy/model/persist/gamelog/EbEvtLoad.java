@@ -102,6 +102,18 @@ public class EbEvtLoad extends AnEventPlay
   {
     super.check(p_game);
 
+    // allow creation of of load event by giving turret id
+    if( getTokenCarrier( p_game ).getType() == TokenType.Turret )
+    {
+      EbToken freighter = p_game.getToken( getTokenCarrier( p_game ).getPosition(), TokenType.Freighter );
+      if( freighter != null )
+      {
+        setTokenCarrier( freighter );
+      }
+    }
+    // ====================================================
+
+
     // check both token is on board
     if( (getToken(p_game).getLocation() != Location.Board)
         || (getTokenCarrier(p_game).getLocation() != Location.Board) )

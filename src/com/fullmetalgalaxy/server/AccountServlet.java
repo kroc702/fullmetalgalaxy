@@ -39,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
+import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -144,6 +145,23 @@ public class AccountServlet extends HttpServlet
       p_response.sendRedirect( "/genericmsg.jsp?title=les comptes '" + account.getPseudo()
           + "' de FMG et du Forum sont liés" );
       return;
+    }
+    else if( p_request.getParameter( "retrywebhook" ) != null )
+    {
+      // retry a webhook
+      // ===============
+      try{
+        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
+            Long.parseLong( p_request.getParameter( "account" ) ) );
+        Game game = FmgDataStore.dao().getGame( Long.parseLong( p_request.getParameter( "retrywebhook" ) ) );
+        new WebHook( game, account ).start();
+      } catch( Exception e )
+      {
+        p_response.sendRedirect( "/genericmsg.jsp?title=Unkown error " + Auth.getUserPseudo( p_request, p_response ) );
+        return;
+      }
+      p_response.sendRedirect( "/genericmsg.jsp?title=Webhook retry is launched"
+          + Auth.getUserPseudo( p_request, p_response ) );
     }
     else
     {

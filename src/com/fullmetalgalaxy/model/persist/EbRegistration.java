@@ -35,6 +35,7 @@ import com.fullmetalgalaxy.model.SharedMethods;
 import com.fullmetalgalaxy.model.TokenType;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.googlecode.objectify.annotation.Serialized;
+import com.googlecode.objectify.annotation.Unindexed;
 
 
 /**
@@ -133,6 +134,12 @@ public class EbRegistration extends EbBase
   // replaced by EbTeam
   @Serialized
   protected List<AnEvent> m_myEvents = new ArrayList<AnEvent>();
+
+  /**
+   * arbitrary string that can be used by external program to store data and get it back.
+   */
+  @Unindexed
+  protected String m_remember = null;
 
 
   public EbTeam getTeam(GameData p_game)
@@ -460,6 +467,16 @@ public class EbRegistration extends EbBase
   public void setOriginalAccountId(long p_originalAccountId)
   {
     m_originalAccountId = p_originalAccountId;
+  }
+
+  public String getRemember()
+  {
+    return m_remember;
+  }
+
+  public void setRemember(String p_remember)
+  {
+    m_remember = p_remember;
   }
 
 

@@ -89,6 +89,8 @@ public class PMServlet extends HttpServlet
     ServletFileUpload upload = new ServletFileUpload();
     try
     {
+      p_request.setCharacterEncoding( "UTF-8" );
+
       // build message to send
       Properties props = new Properties();
       Session session = Session.getDefaultInstance( props, null );

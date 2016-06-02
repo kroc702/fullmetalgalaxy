@@ -29,6 +29,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.HexCoordinateSystem;
@@ -58,6 +61,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtRepair;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtUnLoad;
+import com.fullmetalgalaxy.model.persist.gamelog.EbRemember;
 import com.fullmetalgalaxy.server.FmpLogger;
 
 /**
@@ -251,6 +255,18 @@ public class DriverSTAI extends DriverFileFormat
         // 'captureTurret'. turret idNumber. unit1 idNumber
         case "captureTurret":
           evt = new EbEvtControlFreighter();
+          // evt.setCost(-1 * p_game.getEbConfigGameTime().getActionPtMaxPerExtraShip() );
+          evt.setCost( -5 );
+          evt.setToken( getLong( line[2] ) );
+          evt.setTokenCarrier( getLong( line[1] ) );
+          evt.setRegistrationId( playerId );
+          evt.setAccountId( accountId );
+          evt.setGameId( model.getGameId() );
+          evt.setGameVersion( gameVersion );
+          evt.setTransientComment( "line " + currentLineIndex + ": " + currentLine );
+          model.getGameEvents().add( evt );
+
+          evt = new EbEvtLoad();
           evt.setToken( getLong( line[2] ) );
           evt.setTokenCarrier( getLong( line[1] ) );
           break;
@@ -367,7 +383,12 @@ public class DriverSTAI extends DriverFileFormat
           model.getGameEvents().add( evtmsg );
           break;
         case "remember":
-          // TODO
+          String toRemember = null;
+          if( currentLine.length() > 9 )
+          {
+            toRemember = currentLine.substring( 9 );
+          }
+          evt = new EbRemember( toRemember );
           break;
         // comment
         case "":
@@ -470,6 +491,7 @@ public class DriverSTAI extends DriverFileFormat
       printStream.println( "team," + team.getId() );
       for( EbRegistration player : team.getPlayers( p_game.getGame().getPreview() ) )
       {
+        // export player information
         printStream.print( "player," + player.getId() );
         if( player.getAccount() != null )
         {
@@ -480,6 +502,10 @@ public class DriverSTAI extends DriverFileFormat
           printStream.print( ",0" );
         }
         printStream.println( "," + player.getPtAction() );
+        if( player.getRemember() != null )
+        {
+          printStream.println( "remember," + player.getRemember() );
+        }
         for( EbToken token : p_game.getGame().getSetToken() )
         {
           if( token.getLocation() == Location.Orbit )
@@ -491,10 +517,33 @@ public class DriverSTAI extends DriverFileFormat
             }
           }
         }
+        // export token on board and select turrets
+        Map<AnBoardPosition, EbToken> turrets = new HashMap<AnBoardPosition, EbToken>();
         for( EbToken token : p_game.getGame().getSetToken() )
         {
           if( token.getColor() != EnuColor.None && player.getEnuColor().contain( token.getColor() ) )
           {
+            if( token.getType() == TokenType.Turret )
+            {
+              EbToken currentSelectedTurret = turrets.get( token.getPosition() );
+              if( currentSelectedTurret == null || token.getLocation() == Location.Board )
+              {
+                // keep this turret
+                turrets.put( token.getPosition(), token );
+              }
+              else if( currentSelectedTurret.getLocation() == Location.Board )
+              {
+                // the selected turret is better
+              }
+              else
+              {
+                // the previousely selected turret and this turret are in graveyard
+                // we don't mind which one we choose.
+              }
+              // don't export turret now.
+              continue;
+            }
+
             if( token.getLocation() == Location.Board )
             {
               printStream.print( "create," + token.getId() + "," + getConstant( token.getType() ) + ","
@@ -512,28 +561,33 @@ public class DriverSTAI extends DriverFileFormat
                 printStream.println( "," + getConstant( token.getPosition().getSector() ) );
               }
             }
-            else if( token.getLocation() == Location.Graveyard && token.getType() == TokenType.Turret )
-            {
-              EbToken freighter = p_game.getGame().getToken( token.getPosition(), TokenType.Freighter );
-              if( freighter != null )
-              {
-                if( freighter.getBulletCount() > 0
-                    && EbEvtRepair.isRepairable( p_game.getGame(), freighter.getId(), token.getPosition() ) )
-                {
-                  printStream.println( "create," + token.getId() + ",FMPDamagedTurret," + token.getColor() + ","
-                      + token.getPosition().getY() + "," + token.getPosition().getX() + ","
-                      + getConstant( token.getPosition().getSector() ) );
-                }
-                else
-                {
-                  printStream.println( "create," + token.getId() + ",FMPIrreparableTurret," + token.getColor() + ","
-                      + token.getPosition().getY() + "," + token.getPosition().getX() + ","
-                      + getConstant( token.getPosition().getSector() ) );
-                }
-              }
-            }
           }
         }
+        // export turrets
+        for( Entry<AnBoardPosition, EbToken> entry : turrets.entrySet() )
+        {
+          EbToken turret = entry.getValue();
+          EbToken freighter = p_game.getGame().getToken( turret.getPosition(), TokenType.Freighter );
+          if( freighter != null )
+          {
+            String turretContant = getConstant( turret.getType() );
+            if( turret.getLocation() == Location.Graveyard )
+            {
+              if( EbEvtRepair.isRepairable( p_game.getGame(), freighter.getId(), turret.getPosition() ) )
+              {
+                turretContant = "FMPDamagedTurret";
+              }
+              else
+              {
+                turretContant = "FMPIrreparableTurret";
+              }
+            }
+            printStream.print( "create," + turret.getId() + "," + turretContant + "," + turret.getColor() + ","
+                + turret.getPosition().getY() + "," + turret.getPosition().getX() );
+            printStream.println( "," + getConstant( turret.getPosition().getSector() ) );
+          }
+        }
+        // export token indise other token
         for( EbToken token : p_game.getGame().getSetToken() )
         {
           if( token.getLocation() == Location.Token )

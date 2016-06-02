@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -34,6 +35,7 @@ import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.Game;
+import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.fullmetalgalaxy.server.serialization.DriverSTAI;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -57,11 +59,11 @@ public class WebHook implements DeferredTask
    */
   private static final long serialVersionUID = 1L;
 
-  public final static Logger logger = Logger.getLogger( WebHook.class.getSimpleName() );
+  public final static Logger logger = Logger.getLogger( WebHook.class.getName() );
 
   private Game game = null;
   private EbAccount account = null;
-
+  private int retryCount = 0;
 
 
   public WebHook(Game p_game, EbAccount p_account)
@@ -74,7 +76,12 @@ public class WebHook implements DeferredTask
   public void start()
   {
     logger.info( "start processing web hook" );
-    QueueFactory.getQueue( "longDBTask" ).add(
+    if( retryCount > 0 )
+    {
+      logger.info( "retry count = " + retryCount );
+    }
+    QueueFactory.getDefaultQueue()
+        .add(
         TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
   }
 
@@ -84,6 +91,8 @@ public class WebHook implements DeferredTask
     long startTime = System.currentTimeMillis();
 
     DriverSTAI driverStai = new DriverSTAI();
+    HTTPResponse response = null;
+    String payload = null;
 
     try
     {
@@ -93,21 +102,35 @@ public class WebHook implements DeferredTask
       URL url = new URL( account.getWebHook() );
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      // ugly patch ...
+      game.getPreview().incVersion();
       driverStai.saveGame( modelFmpInit, baos );
-      String payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId()
-          + "," + account.getId() + "," + account.getPassword() + "\n\n";
+      game.getPreview().decVersion();
+      payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId()
+          + "," + account.getId() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n\n";
       payload += baos.toString( "UTF-8" );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
           .doNotFollowRedirects() );
       request.setPayload( payload.getBytes( "UTF-8" ) );
 
-      HTTPResponse response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+      response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+      if( response.getResponseCode() != 200 )
+      {
+        throw new Exception( "http post response status : " + response.getResponseCode() );
+      }
       ByteArrayInputStream bis = new ByteArrayInputStream(response.getContent());
       
       // assume response is STAI
       ModelFmpUpdate requestUpdate = driverStai.loadGameUpdate( bis, "" + game.getId() );
-      GameServicesImpl service = new GameServicesImpl();
-      service.runModelUpdate( requestUpdate );
+      if( !requestUpdate.getGameEvents().isEmpty() )
+      {
+        GameServicesImpl service = new GameServicesImpl();
+        service.runModelUpdate( requestUpdate );
+      }
+      else
+      {
+        logger.info( "web hook response didn't contain any action" );
+      }
 
     } catch( Throwable th )
     {
@@ -117,6 +140,54 @@ public class WebHook implements DeferredTask
       {
         logger.severe( ((RpcFmpException)th).getCauseEvent().toString() );
         logger.severe( ((RpcFmpException)th).getCauseEvent().getTransientComment() );
+      }
+      retryCount++;
+      if( retryCount < 2 )
+      {
+        this.start();
+      }
+      else
+      {
+        // send an error report to account
+        StringBuffer body = new StringBuffer();
+        body.append( "game= " + game.getName() + "\n" );
+        body.append( "game url= http://www.fullmetalgalaxy.com/game.jsp?id=" + game.getId() + "\n" );
+        body.append( "account= " + account.getPseudo() + "\n" );
+        body.append( "webhook url= " + account.getWebHook() + "\n" );
+        body.append( "webhook failed " + retryCount + " times\n" );
+        body.append( "last error= " + th.getMessage() + "\n" );
+        if( th instanceof RpcFmpException && ((RpcFmpException)th).getCauseEvent() != null )
+        {
+          body.append( ((RpcFmpException)th).getCauseEvent().toString() );
+          body.append( "\n" );
+          body.append( ((RpcFmpException)th).getCauseEvent().getTransientComment() );
+          body.append( "\n" );
+        }
+        body.append( "retry webhook= http://www.fullmetalgalaxy.com/AccountServlet?account=" + account.getId()
+            + "&retrywebhook=" + game.getId() + "\n" );
+        body.append( "--------------------------\n" );
+        if( payload != null )
+        {
+          body.append( "POST data=\n" );
+          body.append( payload );
+          body.append( "--------------------------\n" );
+        }
+        if( response != null )
+        {
+          body.append( "last response code= " + response.getResponseCode() + "\n" );
+          body.append( "last response content=\n" );
+          try
+          {
+            body.append( new String( response.getContent(), getCharset( response ) ) );
+            body.append( "\n" );
+          } catch( UnsupportedEncodingException e )
+          {
+            logger.severe( e.getMessage() );
+          }
+          body.append( "--------------------------\n" );
+        }
+        FmgMessage errorMessage = new FmgMessage( "WebHook failed", body.toString() );
+        errorMessage.sendEMail( account );
       }
     }
   }

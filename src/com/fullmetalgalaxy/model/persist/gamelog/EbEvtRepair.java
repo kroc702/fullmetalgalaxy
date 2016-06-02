@@ -80,6 +80,12 @@ public class EbEvtRepair extends AnEventPlay
 
   public static boolean isRepairable(Game p_game, long p_freighterId, AnBoardPosition position)
   {
+    // first, check bullet count of freighter token
+    EbToken freighter = p_game.getToken( p_freighterId );
+    if( freighter != null && freighter.getBulletCount() <= 0 )
+    {
+      return false;
+    }
     // check that no other turret construction occur on this hex since last
     // control
     int iback = 0;
