@@ -22,6 +22,7 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.event;
 
+import com.fullmetalgalaxy.client.game.GameEngine.ProcessModelUpdate;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -37,7 +38,7 @@ public class GameActionEvent extends GwtEvent<GameActionEvent.Handler>
    * Implemented by objects that handle {@link GameActionEvent}.
    */
   public interface Handler extends EventHandler {
-    public void onGameEvent(AnEvent p_message);
+    public void onGameEvent(AnEvent p_message, ProcessModelUpdate p_processModelUpdate);
   }
 
   /**
@@ -46,12 +47,19 @@ public class GameActionEvent extends GwtEvent<GameActionEvent.Handler>
   public static Type<GameActionEvent.Handler> TYPE = new Type<GameActionEvent.Handler>();
   
   private AnEvent m_modelSender = null;
+  private ProcessModelUpdate m_modelUpdateProcessor = null;
   
   public GameActionEvent(AnEvent p_modelSender)
   {
     m_modelSender = p_modelSender;
   }
   
+  public GameActionEvent(AnEvent p_modelSender, ProcessModelUpdate p_modelUpdateProcessor)
+  {
+    m_modelSender = p_modelSender;
+    m_modelUpdateProcessor = p_modelUpdateProcessor;
+  }
+
   
   @Override
   public com.google.gwt.event.shared.GwtEvent.Type<GameActionEvent.Handler> getAssociatedType()
@@ -62,7 +70,7 @@ public class GameActionEvent extends GwtEvent<GameActionEvent.Handler>
   @Override
   protected void dispatch(GameActionEvent.Handler p_handler)
   {
-    p_handler.onGameEvent( m_modelSender );
+    p_handler.onGameEvent( m_modelSender, m_modelUpdateProcessor );
     
   }
 

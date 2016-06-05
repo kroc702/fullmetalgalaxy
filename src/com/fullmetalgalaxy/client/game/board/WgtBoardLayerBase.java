@@ -177,7 +177,7 @@ public class WgtBoardLayerBase extends AbsolutePanel implements BoardLayer
    * @param p_wgtHexPosition position in hexagon
    * @return true if a part of the given hexagon is visible.
    */
-  protected boolean isHexVisible(AnPair p_wgtHexPosition)
+  public boolean isHexVisible(AnPair p_wgtHexPosition)
   {
     return true;
     /*boolean isXVisible = false;    

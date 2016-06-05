@@ -419,26 +419,42 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       return;
     }
 
-    try
+    new ProcessModelUpdate( p_result ).start();
+  }
+
+
+  public class ProcessModelUpdate
+  {
+    private int index = 0;
+    ModelFmpUpdate m_modelUpdate = null;
+    private boolean isNewPlayerTurn = false;
+
+    public ProcessModelUpdate(ModelFmpUpdate p_modelUpdate)
+    {
+      m_modelUpdate = p_modelUpdate;
+    }
+
+
+    public void start()
     {
       if( (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation)
-          && getGame().getVersion() >= p_result.getToVersion() )
+          && getGame().getVersion() >= m_modelUpdate.getToVersion() )
       {
         // assume we can discard this update !
         return;
       }
 
-      if( getGame().getVersion() < p_result.getFromVersion()
-          || (getGame().getVersion() != p_result.getFromVersion() && getGame().getVersion() < p_result
+      if( getGame().getVersion() < m_modelUpdate.getFromVersion()
+          || (getGame().getVersion() != m_modelUpdate.getFromVersion() && getGame().getVersion() < m_modelUpdate
               .getToVersion()) )
       {
-        Window.alert( "Error: receive incoherant model update (" + p_result.getFromVersion()
+        Window.alert( "Error: receive incoherant model update (" + m_modelUpdate.getFromVersion()
             + " expected " + getGame().getVersion() + "). reload page" );
         ClientUtil.reload();
         return;
       }
 
-      if( p_result.getClientID() == m_lastModelUpdateClientID )
+      if( m_modelUpdate.getClientID() == m_lastModelUpdateClientID )
       {
         // this update correspond to the last action request
         // and we receive response from channel before RCP !
@@ -447,25 +463,38 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
 
 
-      if( p_result.getAccountId() == AppMain.instance().getMyAccount().getId() )
+      if( m_modelUpdate.getAccountId() == AppMain.instance().getMyAccount().getId() )
       {
         getActionBuilder().clear();
       }
-      getGame().setVersion( p_result.getToVersion() );
+      getGame().setVersion( m_modelUpdate.getToVersion() );
 
-      // handle game events first
-      //
-      boolean isNewPlayerTurn = false;
-      List<AnEvent> events = p_result.getGameEvents();
-      for( AnEvent event : events )
+      // to remove action building ui
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
+
+      nextEvent();
+    }
+
+    public void nextEvent()
+    {
+      if( index >= m_modelUpdate.getGameEvents().size() )
       {
+        finish();
+        return;
+      }
+
+      try
+      {
+
+        AnEvent event = m_modelUpdate.getGameEvents().get( index );
+        index++;
+
         // if we receive and end turn event after an hidden parallel time step
         // we need to unexec my private event logs
         if( event instanceof EbEvtPlayerTurn && getGame().getCurrentPlayerIds().size() == 1 )
         {
           isNewPlayerTurn = true;
-          if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
-              && getMyRegistration() != null
+          if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() ) && getMyRegistration() != null
               && !getMyRegistration().getTeam( getGame() ).getMyEvents().isEmpty() )
           {
             for( int i = getMyRegistration().getTeam( getGame() ).getMyEvents().size() - 1; i >= 0; i-- )
@@ -479,9 +508,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         if( event.getType() == GameLogType.EvtCancel )
         {
           ((EbEvtCancel)event).execCancel( getGame() );
+          nextEvent();
         }
-        else if( event instanceof AnEventUser
-            && event.canBeParallelHidden()
+        else if( event instanceof AnEventUser && event.canBeParallelHidden()
             && getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
             && ((AnEventUser)event).getMyRegistration( getGame() ) != null )
         {
@@ -491,7 +520,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           {
             event.exec( getGame() );
             getGame().updateLastTokenUpdate( null );
-            AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
+            AppRoot.getEventBus().fireEvent( new GameActionEvent( event, this ) );
+            // nextEvent();
+          }
+          else
+          {
+            nextEvent();
           }
         }
         else
@@ -499,29 +533,31 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           event.exec( getGame() );
           getGame().addEvent( event );
           getGame().updateLastTokenUpdate( null );
-          AppRoot.getEventBus().fireEvent( new GameActionEvent( event ) );
+          AppRoot.getEventBus().fireEvent( new GameActionEvent( event, this ) );
+          // nextEvent();
         }
-        
+      } catch( Throwable e )
+      {
+        // no i18n
+        RpcUtil.logError( "error ", e );
+        Window.alert( "unexpected error : " + e );
       }
+    }
 
+    public void finish()
+    {
       // assume that if we receive an update, something has changed !
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
 
       if( isNewPlayerTurn
           && getMyRegistration() != null
-          && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds()
-              .contains( getMyRegistration().getId() )) )
+          && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds().contains(
+              getMyRegistration().getId() )) )
       {
         Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
       }
-    } catch( Throwable e )
-    {
-      // no i18n
-      RpcUtil.logError( "error ", e );
-      Window.alert( "unexpected error : " + e );
     }
   }
-
 
   @Override
   public void onChannelMessage(Object p_message)

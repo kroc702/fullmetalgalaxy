@@ -32,6 +32,7 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.AppRoot;
 import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.GameEngine.ProcessModelUpdate;
 import com.fullmetalgalaxy.client.game.board.WgtBoardLayerBase;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.tokens.TokenImages;
@@ -177,7 +178,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       if( p_token.getPosition().getY() < m_cropTopHex )
       {
         DOM.setStyleAttribute( tokenWidget.getTokenImage().getElement(), "zIndex",
-            Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight() ) ) );
+            Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight(), false ) ) );
       }
       else
       {
@@ -277,18 +278,21 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
       p_image.setVisible( false );
       return;
     }
-    add( p_image );
-    p_image.setVisible( true );
+    if( !p_image.isAttached() || !p_image.isVisible() )
+    {
+      add( p_image );
+      p_image.setVisible( true );
+    }
     p_absImage.applyTo( p_image );
 
     if( p_token.getPosition().getY() < m_cropTopHex )
     {
       DOM.setStyleAttribute( p_image.getElement(), "zIndex",
-          Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight() ) ) );
+          Integer.toString( p_token.getZIndex( GameEngine.game().getLandHeight() + 1, true ) ) );
     }
     else
     {
-      DOM.setStyleAttribute( p_image.getElement(), "zIndex", Integer.toString( p_token.getZIndex() ) );
+      DOM.setStyleAttribute( p_image.getElement(), "zIndex", Integer.toString( p_token.getZIndex( 1, true ) ) );
     }
 
 
@@ -372,7 +376,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
 
 
   @Override
-  public void onGameEvent(AnEvent p_event)
+  public void onGameEvent(AnEvent p_event, ProcessModelUpdate p_processModelUpdate)
   {
     super.onModelChange( false );
     Game game = GameEngine.model().getGame();
@@ -380,7 +384,7 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
     if( animation != null )
     {
       m_tokenLastUpdate = game.getLastTokenUpdate().getTime();
-      addAnimation( animation );
+      addAnimation( animation, p_processModelUpdate );
     }
     else
     {
@@ -395,6 +399,10 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
         m_lastTideValue = game.getCurrentTide();
         invalidateTokenMap();
         redraw();
+      }
+      if( p_processModelUpdate != null )
+      {
+        p_processModelUpdate.nextEvent();
       }
     }
   }
@@ -419,9 +427,11 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
 
   private List<AnimEvent> m_animations = new LinkedList<AnimEvent>();
   private boolean isAnimationRunning = false;
+  private List<ProcessModelUpdate> processEvents = new LinkedList<ProcessModelUpdate>();
 
-  private void addAnimation(AnimEvent p_animation)
+  private void addAnimation(AnimEvent p_animation, ProcessModelUpdate p_processModelUpdate)
   {
+    processEvents.add( p_processModelUpdate );
     m_animations.add( p_animation );
     if( !isAnimationRunning )
     {
@@ -434,17 +444,30 @@ public class WgtBoardLayerToken extends WgtBoardLayerBase implements LoadHandler
   {
     if( m_animations.isEmpty() )
     {
+      if( !processEvents.isEmpty() )
+      {
+        ProcessModelUpdate processEvent = processEvents.get( 0 );
+        processEvents.remove( 0 );
+        processEvent.nextEvent();
+      }
       return;
     }
     m_animations.remove( 0 );
     if( !m_animations.isEmpty() )
     {
+      processEvents.remove( 0 );
       m_animations.get( 0 ).run();
     }
     else
     {
       isAnimationRunning = false;
       redraw();
+      if( !processEvents.isEmpty() )
+      {
+        ProcessModelUpdate processEvent = processEvents.get( 0 );
+        processEvents.remove( 0 );
+        processEvent.nextEvent();
+      }
     }
   }
 

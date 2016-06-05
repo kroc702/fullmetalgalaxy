@@ -27,6 +27,7 @@ import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.event.GameActionEvent;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.GameEngine.ProcessModelUpdate;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.GameType;
@@ -269,7 +270,7 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   }
 
   @Override
-  public void onGameEvent(AnEvent p_message)
+  public void onGameEvent(AnEvent p_message, ProcessModelUpdate p_processModelUpdate)
   {
     if( p_message instanceof EbEvtMessage )
     if( AppMain.instance().getMyAccount().getId() == 0

@@ -106,8 +106,8 @@ public class WebHook implements DeferredTask
       game.getPreview().incVersion();
       driverStai.saveGame( modelFmpInit, baos );
       game.getPreview().decVersion();
-      payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId()
-          + "," + account.getId() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n\n";
+      payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId() + ","
+          + account.getId() + "," + account.getPseudo() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n\n";
       payload += baos.toString( "UTF-8" );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
           .doNotFollowRedirects() );

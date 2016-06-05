@@ -177,17 +177,18 @@ public class EbToken extends EbBase
    */
   public int getZIndex()
   {
-    return getZIndex( 0 );
+    return getZIndex( 0, false );
   }
 
   /**
    * like getZIndex() but we can shift token by an y offset
    * @param p_yOffset
+   * @param p_warnImage if true, skip graveyard test (ie never use 0 zindex)
    * @return
    */
-  public int getZIndex(int p_yOffset)
+  public int getZIndex(int p_yOffset, boolean p_warnImage)
   {
-    if( getLocation() == Location.Graveyard )
+    if( !p_warnImage && getLocation() == Location.Graveyard )
     {
       return 0;
     }
