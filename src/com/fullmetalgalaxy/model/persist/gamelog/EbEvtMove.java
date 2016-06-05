@@ -170,14 +170,27 @@ public class EbEvtMove extends AnEventPlay
     }
     // check no hexagon are skipped
     AnBoardPosition tokenPosition = getToken(p_game).getPosition();
-    if( !tokenPosition.equals( getNewPosition() )
-        && !p_game.getCoordinateSystem().areNeighbor( tokenPosition, getNewPosition() )
-        && ((getToken(p_game).getHexagonSize() == 1) || !p_game.getCoordinateSystem().getNeighbor( tokenPosition,
-            tokenPosition.getSector() ).equals(
-            p_game.getCoordinateSystem().getNeighbor( getNewPosition(), getNewPosition().getSector() ) )) )
+    if( getToken( p_game ).getHexagonSize() == 1 )
     {
-      // unusual error: no i18n
-      throw new RpcFmpException( "You must select all moving step without any gap between them.", this );
+      if( !tokenPosition.equals( getNewPosition() )
+          && !p_game.getCoordinateSystem().areNeighbor( tokenPosition, getNewPosition() ) )
+      {
+        // unusual error: no i18n
+        throw new RpcFmpException( "You must select all moving step without any gap between them.", this );
+      }
+    }
+    else
+    {
+      AnBoardPosition tokenExtraPosition = p_game.getCoordinateSystem().getNeighbor( tokenPosition,
+          tokenPosition.getSector() );
+      AnBoardPosition newExtraPosition = p_game.getCoordinateSystem().getNeighbor( getNewPosition(),
+          getNewPosition().getSector() );
+      if( !tokenPosition.equals( getNewPosition() ) && !tokenExtraPosition.equals( newExtraPosition )
+          && !tokenPosition.equals( newExtraPosition ) && !tokenExtraPosition.equals( getNewPosition() ) )
+      {
+        // unusual error: no i18n
+        throw new RpcFmpException( "You must select all moving step without any gap between them.", this );
+      }
     }
     // check that player control the token color
     EbRegistration myRegistration = getMyRegistration(p_game);
