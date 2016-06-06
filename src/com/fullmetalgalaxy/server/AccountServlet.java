@@ -229,8 +229,7 @@ public class AccountServlet extends HttpServlet
     {
       // user ask for his password to be send on his email
       String msg = "";
-      FmgDataStore ds = new FmgDataStore( false );
-      Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
+      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {
@@ -254,11 +253,14 @@ public class AccountServlet extends HttpServlet
           new FmgMessage( "askPassword" ).sendEMail( account );
           
           msg = "un email a été envoyé à " + account.getEmail();
+
+          FmgDataStore ds = new FmgDataStore( false );
+          account = ds.get( EbAccount.class, account.getId() );
           account.setLastPasswordAsk( new Date() );
           ds.put( account );
+          ds.close();
         }
       }
-      ds.close();
       
       p_response.sendRedirect( "/password.jsp?msg="+msg );
       return;
