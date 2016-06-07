@@ -23,7 +23,6 @@
 package com.fullmetalgalaxy.model.persist.gamelog;
 
 import java.util.HashSet;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.Company;
@@ -213,19 +212,37 @@ public class EbGameJoin extends AnEventUser
     // create all tokens
     EbToken shipToken = new EbToken();
     shipToken.setType( TokenType.Freighter );
-    game.addToken( shipToken );
     shipToken.setColor( registration.getColor() );
     shipToken.setLocation( Location.Orbit );
+    if( shipToken.isTrancient() || game.getToken( shipToken.getId() ) == null )
+    {
+      game.addToken( shipToken );
+    }
+    else
+    {
+      // warning: ore stored in action are not the same instance as in game
+      shipToken = game.getToken( shipToken.getId() );
+    }
     // shipToken.setLastUpdate( currentDate );
 
     // create initial freighter holds
-    for( Entry<TokenType, Integer> entry : p_game.getInitialHolds().entrySet() )
+    // use TokenType values array instead of holds entryset to always keep the same order (so the same id)
+    for( TokenType type : TokenType.values() )
     {
-      for( int i = 0; i < entry.getValue(); i++ )
+      if( type == TokenType.Freighter )
+      {
+        continue;
+      }
+      Integer typeCount = p_game.getInitialHolds().get( type );
+      if( typeCount == null )
+      {
+        typeCount = 0;
+      }
+      for( int i = 0; i < typeCount; i++ )
       {
         EbToken token = new EbToken();
-        token.setType( entry.getKey() );
-        game.addToken( token );
+        token.setType( type );
+        token.setLocation( Location.Token );
         if( token.canBeColored() )
         {
           token.setColor( registration.getColor() );
@@ -235,6 +252,15 @@ public class EbGameJoin extends AnEventUser
           token.setColor( EnuColor.None );
         }
         token.setBulletCount( token.getType().getMaxBulletCount() );
+        if( token.isTrancient() || game.getToken( token.getId() ) == null )
+        {
+          game.addToken( token );
+        }
+        else
+        {
+          // warning: ore stored in action are not the same instance as in game
+          token = game.getToken( token.getId() );
+        }
         shipToken.loadToken( token );
       }
     }

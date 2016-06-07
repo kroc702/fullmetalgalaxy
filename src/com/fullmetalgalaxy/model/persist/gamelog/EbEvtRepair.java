@@ -157,7 +157,15 @@ public class EbEvtRepair extends AnEventPlay
     EbToken turret = new EbToken();
     turret.setType( TokenType.Turret );
     turret.setColor( freighter.getColor() );
-    p_game.addToken( turret );
+    if( turret.isTrancient() || p_game.getToken( turret.getId() ) == null )
+    {
+      p_game.addToken( turret );
+    }
+    else
+    {
+      // warning: ore stored in action are not the same instance as in game
+      turret = p_game.getToken( turret.getId() );
+    }
     p_game.moveToken( turret, getPosition( p_game ) );
     turret.getPosition().setSector(
         p_game.getCoordinateSystem().getSector( freighter.getPosition(), getPosition( p_game ) ) );
