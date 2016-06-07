@@ -66,6 +66,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTakeOff;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTide;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTimeStep;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
+import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -535,7 +536,7 @@ public class GameWorkflow
           {
             EbAccount account = FmgDataStore.dao().get( EbAccount.class,
                 registration.getAccount().getId() );
-            if( new FmgMessage( "playerDontPlay", p_game ).sendEMail( account ) )
+            if( new FmgMessage( "playerDontPlay", p_game ).setNotifLevel( NotificationQty.Min ).send( account ) )
             {
               registration.addNotifSended( "playerDontPlay" );
               // to save game & registration

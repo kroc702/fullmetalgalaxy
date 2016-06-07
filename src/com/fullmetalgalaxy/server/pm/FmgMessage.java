@@ -464,9 +464,10 @@ public class FmgMessage
     return m_notifLevel;
   }
 
-  public void setNotifLevel(NotificationQty p_notifLevel)
+  public FmgMessage setNotifLevel(NotificationQty p_notifLevel)
   {
     m_notifLevel = p_notifLevel;
+    return this;
   }
 
 

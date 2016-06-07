@@ -233,8 +233,7 @@ public class GameNotification
     }
     // for high verbosity notification or high speed game, check player's room
     // presence
-    if( (p_level == NotificationQty.Max || p_game.getConfigGameTime().isQuick())
-        && ChannelManager.getRoom( p_game.getId() ).isConnected( account.getPseudo() ) )
+    if( ChannelManager.getRoom( p_game.getId() ).isConnected( account.getPseudo() ) )
     {
       logger.fine( "game " + p_game.getName() + ", notification " + p_msg.getName() + "player "
           + account.getPseudo() + " is connected: we don't need to send an email" );
