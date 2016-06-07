@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.client.game.board.layertoken;
 
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.model.Location;
 import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtTransfer;
 
@@ -39,6 +40,20 @@ public class AnimTransfer extends AnimMoveBase
   {
     super( p_layerToken, p_event );
   }
+
+  @Override
+  protected void onStart()
+  {
+    super.onStart();
+    if( m_event.getTokenCarrier( GameEngine.model().getGame() ).getLocation() != Location.Board
+        || m_event.getNewTokenCarrier( GameEngine.model().getGame() ).getLocation() != Location.Board )
+    {
+      cancel();
+      return;
+    }
+  }
+
+
 
   @Override
   protected void onComplete()

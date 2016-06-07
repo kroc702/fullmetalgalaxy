@@ -47,6 +47,23 @@ public class AnimMove extends AnimMoveBase
   protected void onStart()
   {
     super.onStart();
+    if( getOldPosition().equals( getNewPosition() ) )
+    {
+      cancel();
+      return;
+    }
+    if( m_token.getHexagonSize() > 1 )
+    {
+      AnBoardPosition tokenExtraPosition = GameEngine.model().getGame().getCoordinateSystem()
+          .getNeighbor( getOldPosition(), getOldPosition().getSector() );
+      AnBoardPosition newExtraPosition = GameEngine.model().getGame().getCoordinateSystem()
+          .getNeighbor( getNewPosition(), getNewPosition().getSector() );
+      if( tokenExtraPosition.equals( newExtraPosition ) )
+      {
+        cancel();
+        return;
+      }
+    }
     landPixOffset = GameEngine.model().getGame().getLandPixOffset( getNewPosition() );
   }
 
