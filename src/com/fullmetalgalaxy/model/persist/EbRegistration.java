@@ -86,6 +86,7 @@ public class EbRegistration extends EbBase
   // ------------------------------------------
   private int m_color = EnuColor.Unknown;
   private int m_OriginalColor = EnuColor.Unknown;
+  private int m_actionPointBonus = 0;
   /** number of weather hen at the last time step change. */
   private int m_workingWeatherHenCount = 0;
   private int m_ptAction = 0;
@@ -250,7 +251,7 @@ public class EbRegistration extends EbBase
   public int getMaxActionPt(Game p_game)
   {
     int freighterCount = getOnBoardFreighterCount( p_game );
-    return p_game.getEbConfigGameTime().getActionPtMaxReserve()
+    return getActionPointBonus() + p_game.getEbConfigGameTime().getActionPtMaxReserve()
         + ((freighterCount - 1) * p_game.getEbConfigGameTime().getActionPtMaxPerExtraShip());
   }
 
@@ -302,6 +303,7 @@ public class EbRegistration extends EbBase
       action += getDefaultActionInc( p_game );
       action += (freighterCount - 1) * p_game.getEbConfigGameTime().getActionPtPerExtraShip();
     }
+    action += getActionPointBonus();
     return action;
   }
 
@@ -477,6 +479,16 @@ public class EbRegistration extends EbBase
   public void setRemember(String p_remember)
   {
     m_remember = p_remember;
+  }
+
+  public int getActionPointBonus()
+  {
+    return m_actionPointBonus;
+  }
+
+  public void setActionPointBonus(int p_actionPointBonus)
+  {
+    m_actionPointBonus = p_actionPointBonus;
   }
 
 

@@ -58,6 +58,8 @@ public class WgtEditOneRegistration extends Composite
   private WgtIntBox m_intActionPoints = new WgtIntBox();
   private Label m_lblColors = new Label("colors:");
   private IntegerBox m_intColors = new IntegerBox();
+  private Label m_lblAPBonus = new Label( "action bonus:" );
+  private IntegerBox m_intAPBonus = new IntegerBox();
   // remove ban button from here as there is one on game page that is better
   // private Button m_btnBan = new Button( "Bannir ce joueur" );
   private CheckBox m_chkCurrentPlayer = new CheckBox( "Current player" );
@@ -99,6 +101,22 @@ public class WgtEditOneRegistration extends Composite
         }
         m_registration.setColor( m_intColors.getValue() );
         m_lblColors.setText( "colors: "+m_registration.getEnuColor() );
+      }
+    } );
+    panel.add( m_lblAPBonus );
+    panel.add( m_intAPBonus );
+    m_intAPBonus.addChangeHandler( new ChangeHandler()
+    {
+      @Override
+      public void onChange(ChangeEvent p_event)
+      {
+        if( m_registration == null )
+          return;
+        if( m_intAPBonus.getValue() == null )
+        {
+          m_intAPBonus.setValue( 0 );
+        }
+        m_registration.setActionPointBonus( m_intAPBonus.getValue() );
       }
     } );
     m_chkCurrentPlayer.addClickHandler( new ClickHandler()
@@ -208,6 +226,7 @@ public class WgtEditOneRegistration extends Composite
     }
     m_intActionPoints.setValue( p_reg.getPtAction() );
     m_intColors.setValue( p_reg.getColor() );
+    m_intAPBonus.setValue( p_reg.getActionPointBonus() );
     m_lblColors.setText( "colors: "+p_reg.getEnuColor() );
     m_chkCurrentPlayer.setValue( GameEngine.model().getGame().getCurrentPlayerIds()
         .contains( p_reg.getId() ) );
