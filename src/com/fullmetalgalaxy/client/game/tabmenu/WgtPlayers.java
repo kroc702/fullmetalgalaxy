@@ -31,11 +31,13 @@ import java.util.Set;
 import com.fullmetalgalaxy.client.AppMain;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
 import com.fullmetalgalaxy.client.game.GameEngine;
+import com.fullmetalgalaxy.client.game.board.DlgAIJoinGame;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.BoardIcons;
 import com.fullmetalgalaxy.client.ressources.Icons;
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
+import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
@@ -294,6 +296,34 @@ public class WgtPlayers extends Composite implements ClickHandler
     if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
     {
       VerticalPanel vpanel = new VerticalPanel();
+
+      // add register button to register AI
+      // check game creator or admin
+      if( (GameEngine.model().getGame().getAccountCreator() != null && AppMain.instance().getMyAccount().getId() == GameEngine
+          .model().getGame().getAccountCreator().getId())
+          || AppMain.instance().iAmAdmin() )
+      {
+        // check that game need player
+        if( (GameEngine.model().getGame().getStatus() == GameStatus.Open || GameEngine.model().getGame().getStatus() == GameStatus.Pause)
+            && GameEngine.model().getGame().getMaxNumberOfPlayer() > GameEngine.model().getGame()
+                .getCurrentNumberOfRegiteredPlayer() )
+        {
+          PushButton m_btnRegister = new PushButton( new Image( Icons.s_instance.register32() ) );
+          m_btnRegister.setTitle( MAppBoard.s_messages.joinGame() );
+          m_btnRegister.setStyleName( "fmp-PushButton32" );
+          m_btnRegister.addClickHandler( new ClickHandler()
+          {
+            @Override
+            public void onClick(ClickEvent p_event)
+            {
+              DlgAIJoinGame.instance().show();
+              DlgAIJoinGame.instance().center();
+            }
+          } );
+          vpanel.add( m_btnRegister );
+        }
+      }
+
 
       // other connected User
       vpanel.add( new Label( "Visiteur(s) :" ) );

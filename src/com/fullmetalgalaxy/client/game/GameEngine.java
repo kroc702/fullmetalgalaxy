@@ -62,6 +62,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.AnEventUser;
 import com.fullmetalgalaxy.model.persist.gamelog.EbAdmin;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMove;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtPlayerTurn;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.fullmetalgalaxy.model.persist.gamelog.EventsPlayBuilder;
@@ -489,11 +490,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         AnEvent event = m_modelUpdate.getGameEvents().get( index );
         index++;
 
-        // if we receive and end turn event after an hidden parallel time step
-        // we need to unexec my private event logs
+        // new turn event
         if( event instanceof EbEvtPlayerTurn && getGame().getCurrentPlayerIds().size() == 1 )
         {
           isNewPlayerTurn = true;
+          // if we receive and end turn event after an hidden parallel time step
+          // we need to unexec my private event logs
           if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() ) && getMyRegistration() != null
               && !getMyRegistration().getTeam( getGame() ).getMyEvents().isEmpty() )
           {
@@ -521,7 +523,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
             event.exec( getGame() );
             getGame().updateLastTokenUpdate( null );
             AppRoot.getEventBus().fireEvent( new GameActionEvent( event, this ) );
-            // nextEvent();
           }
           else
           {
@@ -534,7 +535,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           getGame().addEvent( event );
           getGame().updateLastTokenUpdate( null );
           AppRoot.getEventBus().fireEvent( new GameActionEvent( event, this ) );
-          // nextEvent();
+          // this allow player to select his token before the animation end
+          if( event instanceof EbEvtMove
+              && AppMain.instance().getMyAccount().getId() == ((EbEvtMove)event).getAccountId() )
+          {
+            nextEvent();
+          }
         }
       } catch( Throwable e )
       {
@@ -554,6 +560,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds().contains(
               getMyRegistration().getId() )) )
       {
+        isNewPlayerTurn = false;
         Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
       }
     }

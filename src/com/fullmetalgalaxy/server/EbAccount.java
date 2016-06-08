@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.persistence.Embedded;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
 import jskills.IPlayer;
@@ -60,6 +61,14 @@ public class EbAccount extends EbPublicAccount implements IPlayer
   @PrePersist
   void onPersist()
   {
+    setAI( getWebHook() != null && !getWebHook().isEmpty() );
+  }
+
+  @PostLoad
+  public void onLoad()
+  {
+    /* do something after load */
+    setAI( getWebHook() != null && !getWebHook().isEmpty() );
   }
 
 

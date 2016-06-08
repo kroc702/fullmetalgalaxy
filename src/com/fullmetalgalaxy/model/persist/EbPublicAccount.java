@@ -40,7 +40,7 @@ public class EbPublicAccount extends EbBase
   // theses data come from database (Account table)
   // -------------------------------------------
   private String m_pseudo = "";
-
+  transient private boolean m_isAI = false;
   
   public EbPublicAccount()
   {
@@ -55,6 +55,7 @@ public class EbPublicAccount extends EbBase
     
     setId( p_account.getId() );
     setPseudo( p_account.getPseudo() );
+    setAI( p_account.isAI() );
   }
   
 
@@ -170,6 +171,15 @@ public class EbPublicAccount extends EbBase
     m_pseudo = p_pseudo.trim();
   }
 
+  public boolean isAI()
+  {
+    return m_isAI;
+  }
+
+  public void setAI(boolean p_isAI)
+  {
+    m_isAI = p_isAI;
+  }
 
 
 

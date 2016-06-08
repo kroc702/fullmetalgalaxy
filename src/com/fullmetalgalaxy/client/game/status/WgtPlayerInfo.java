@@ -108,8 +108,8 @@ public class WgtPlayerInfo extends Composite
     m_lblAction.setHTML( "&nbsp;: "
         + m_registration.getPtAction()
         + "/"
-        + (game.getEbConfigGameTime().getActionPtMaxReserve() + ((m_registration.getEnuColor()
-            .getNbColor() - 1) * game.getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
+        + (game.getEbConfigGameTime().getActionPtMaxReserve() + m_registration.getActionPointBonus() + ((m_registration
+            .getEnuColor().getNbColor() - 1) * game.getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
     if( game.isParallel() )
     {
       Date nextActionIncrement = game.estimateTimeStepDate( game.getCurrentTimeStep() + 1 );

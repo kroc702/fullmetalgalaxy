@@ -56,6 +56,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DlgJoinChooseColor extends DialogBox
 {
+  private EbGameJoin account = null;
+
   // UI
   private ListBox m_companySelection = new ListBox();
   private Image m_companyPreview = new Image();
@@ -229,7 +231,7 @@ public class DlgJoinChooseColor extends DialogBox
         int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection
             .getSelectedIndex() ) );
         EnuColor color = new EnuColor( colorValue );
-        EbGameJoin action = new EbGameJoin();
+        EbGameJoin action = getJoinEvent();
         Company company = Company.Freelancer;
         try
         {
@@ -240,8 +242,6 @@ public class DlgJoinChooseColor extends DialogBox
         }
         action.setCompany( company );
         action.setGame( GameEngine.model().getGame() );
-        action.setAccountId( AppMain.instance().getMyAccount().getId() );
-        action.setAccount( AppMain.instance().getMyAccount() );
         action.setColor( color.getValue() );
         GameEngine.model().runSingleAction( action );
         hide();
@@ -253,5 +253,26 @@ public class DlgJoinChooseColor extends DialogBox
     setWidget( m_panel );
   }
 
+  public EbGameJoin getJoinEvent()
+  {
+    if( account == null )
+    {
+      account = new EbGameJoin();
+      account.setAccountId( AppMain.instance().getMyAccount().getId() );
+      account.setAccount( AppMain.instance().getMyAccount() );
+    }
+    return account;
+  }
 
+  public void setJoinEvent(EbGameJoin p_account)
+  {
+    account = p_account;
+  }
+
+  @Override
+  public void hide()
+  {
+    account = null;
+    super.hide();
+  }
 }

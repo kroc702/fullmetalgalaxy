@@ -50,6 +50,7 @@ public class EbGameJoin extends AnEventUser
   private int m_color = EnuColor.None;
   private EbPublicAccount m_account = null;
   private Company m_company = Company.Freelancer;
+  private int m_actionPointBonus = 0;
 
   /**
    * 
@@ -175,6 +176,7 @@ public class EbGameJoin extends AnEventUser
     EbRegistration registration = new EbRegistration();
     registration.setColor( getColor() );
     registration.setOriginalColor( registration.getColor() );
+    registration.setActionPointBonus( getActionPointBonus() );
     game.addRegistration( registration );
     if( game.getCurrentTimeStep() > 1 )
     {
@@ -345,6 +347,16 @@ public class EbGameJoin extends AnEventUser
   public void setCompany(Company p_company)
   {
     m_company = p_company;
+  }
+
+  public int getActionPointBonus()
+  {
+    return m_actionPointBonus;
+  }
+
+  public void setActionPointBonus(int p_actionPointBonus)
+  {
+    m_actionPointBonus = p_actionPointBonus;
   }
 
 
