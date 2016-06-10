@@ -157,11 +157,10 @@ public class AccountServlet extends HttpServlet
         new WebHook( game, account ).start();
       } catch( Exception e )
       {
-        p_response.sendRedirect( "/genericmsg.jsp?title=Unkown error " + Auth.getUserPseudo( p_request, p_response ) );
+        p_response.sendRedirect( "/genericmsg.jsp?title=Unkown error " + e.getMessage() );
         return;
       }
-      p_response.sendRedirect( "/genericmsg.jsp?title=Webhook retry is launched"
-          + Auth.getUserPseudo( p_request, p_response ) );
+      p_response.sendRedirect( "/genericmsg.jsp?title=Webhook retry is launched" );
     }
     else
     {

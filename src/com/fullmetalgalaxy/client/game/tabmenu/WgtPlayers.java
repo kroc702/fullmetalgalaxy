@@ -247,7 +247,8 @@ public class WgtPlayers extends Composite implements ClickHandler
                 ""
                     + registration.getPtAction()
                     + "/"
-                    + (GameEngine.model().getGame().getEbConfigGameTime().getActionPtMaxReserve() + ((registration
+                + (GameEngine.model().getGame().getEbConfigGameTime().getActionPtMaxReserve()
+                    + registration.getActionPointBonus() + ((registration
                         .getEnuColor().getNbColor() - 1) * GameEngine.model().getGame()
                         .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
 

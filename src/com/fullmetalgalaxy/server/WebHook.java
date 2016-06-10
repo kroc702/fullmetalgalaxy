@@ -17,7 +17,7 @@
  *  License along with Full Metal Galaxy.  
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2010, 2011, 2012, 2013 Vincent Legendre
+ *  Copyright 2010 to 2016 Vincent Legendre
  *
  * *********************************************************************/
 
@@ -27,6 +27,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -155,6 +158,10 @@ public class WebHook implements DeferredTask
         body.append( "account= " + account.getPseudo() + "\n" );
         body.append( "webhook url= " + account.getWebHook() + "\n" );
         body.append( "webhook failed " + retryCount + " times\n" );
+        SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy.MM.dd 'at' HH:mm:ss z" );
+        dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+        body.append( "last request time= " + dateFormat.format( new Date( startTime ) ) + "\n" );
+        body.append( "last request duration= " + ((System.currentTimeMillis() - startTime) / 1000) + " sec\n" );
         body.append( "last error= " + th.getMessage() + "\n" );
         if( th instanceof RpcFmpException && ((RpcFmpException)th).getCauseEvent() != null )
         {

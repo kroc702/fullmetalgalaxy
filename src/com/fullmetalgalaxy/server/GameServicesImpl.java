@@ -346,7 +346,8 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // no i18n as unusual
       throw new RpcFmpException( "run action on unknown game: "+p_modelUpdate.getGameId());
     }
-    if( game.getVersion() != p_modelUpdate.getFromVersion() )
+    if( game.getVersion() != p_modelUpdate.getFromVersion()
+        && !game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
     {
       // TODO should we try to apply this update ?
       throw new RpcFmpException( "Send action on wrong game version" );

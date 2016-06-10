@@ -33,6 +33,7 @@ import com.fullmetalgalaxy.client.widget.GuiEntryPoint;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
+import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -270,14 +271,20 @@ public class MAppTabMenu extends GuiEntryPoint implements ValueChangeHandler<Boo
   }
 
   @Override
-  public void onGameEvent(AnEvent p_message, ProcessModelUpdate p_processModelUpdate)
+  public void onGameEvent(AnEvent p_event, ProcessModelUpdate p_processModelUpdate)
   {
-    if( p_message instanceof EbEvtMessage )
-    if( AppMain.instance().getMyAccount().getId() == 0
-          || ((EbEvtMessage)p_message).getAccountId() != AppMain.instance().getMyAccount().getId() )
+    if( p_event instanceof EbEvtMessage )
+    {
+      if( AppMain.instance().getMyAccount().getId() == 0
+          || ((EbEvtMessage)p_event).getAccountId() != AppMain.instance().getMyAccount().getId() )
+      {
+        closeAllTab();
+        openTab( m_btnMessage );
+      }
+    }
+    else if( p_event instanceof EbGameJoin )
     {
       closeAllTab();
-      openTab( m_btnMessage );
     }
   }
 
