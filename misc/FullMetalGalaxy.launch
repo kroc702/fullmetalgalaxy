@@ -5,6 +5,7 @@
 <listAttribute key="com.google.gwt.eclipse.core.ENTRY_POINT_MODULES">
 <listEntry value="com.fullmetalgalaxy.Game"/>
 </listAttribute>
+<booleanAttribute key="com.google.gwt.eclipse.core.SUPERDEVMODE_ENABLED" value="true"/>
 <stringAttribute key="com.google.gwt.eclipse.core.URL" value="game.jsp?id=0"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/fullmetalgalaxy"/>
@@ -18,7 +19,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.suite.appengineClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-startupUrl game.jsp?id=0 -war C:\Java\workspace\fullmetalgalaxy\war -port 8888 -codeServerPort 9997 -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -server com.google.appengine.tools.development.gwt.AppEngineLauncher com.fullmetalgalaxy.Game"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-superDevMode -port 8888 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -startupUrl game.jsp?id=0 -war C:\Java\workspace\fullmetalgalaxy\war -codeServerPort 9997 -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO com.fullmetalgalaxy.Game"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="fullmetalgalaxy"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\Java\appengine-java-sdk-1.9.27\lib\agent\appengine-agent.jar -Xmx512m"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\Java\eclipse43\plugins\com.google.appengine.eclipse.sdkbundle_1.9.34\appengine-java-sdk-1.9.34\lib\agent\appengine-agent.jar -Xmx1024m"/>
 </launchConfiguration>

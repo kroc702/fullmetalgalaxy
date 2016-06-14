@@ -25,6 +25,7 @@ package com.fullmetalgalaxy.client.game;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -411,6 +412,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   };
 
 
+  private List<ProcessModelUpdate> pendingUpdates = new LinkedList<ProcessModelUpdate>();
 
   protected void receiveModelUpdate(ModelFmpUpdate p_result)
   {
@@ -420,7 +422,13 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       return;
     }
 
-    new ProcessModelUpdate( p_result ).start();
+    // new ProcessModelUpdate( p_result ).start();
+
+    pendingUpdates.add( new ProcessModelUpdate( p_result ) );
+    if( pendingUpdates.size() == 1 )
+    {
+      pendingUpdates.get( 0 ).start();
+    }
   }
 
 
@@ -442,6 +450,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           && getGame().getVersion() >= m_modelUpdate.getToVersion() )
       {
         // assume we can discard this update !
+        if( !pendingUpdates.isEmpty() && pendingUpdates.get( 0 ) == this )
+        {
+          pendingUpdates.remove( 0 );
+        }
         return;
       }
 
@@ -547,6 +559,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         // no i18n
         RpcUtil.logError( "error ", e );
         Window.alert( "unexpected error : " + e );
+        if( !pendingUpdates.isEmpty() && pendingUpdates.get( 0 ) == this )
+        {
+          pendingUpdates.remove( 0 );
+        }
       }
     }
 
@@ -556,12 +572,22 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
 
       if( isNewPlayerTurn
+          && !ClientUtil.isPageVisible()
           && getMyRegistration() != null
           && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds().contains(
               getMyRegistration().getId() )) )
       {
         isNewPlayerTurn = false;
         Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
+      }
+
+      if( !pendingUpdates.isEmpty() && pendingUpdates.get( 0 ) == this )
+      {
+        pendingUpdates.remove( 0 );
+      }
+      if( !pendingUpdates.isEmpty() )
+      {
+        pendingUpdates.get( 0 ).start();
       }
     }
   }

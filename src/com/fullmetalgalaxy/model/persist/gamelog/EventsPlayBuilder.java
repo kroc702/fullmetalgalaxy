@@ -1741,6 +1741,7 @@ public class EventsPlayBuilder implements GameEventStack
     // unload the content of action.getToken() to action.getTokenCarrier()
     if( action.getToken( m_game ).containToken() )
     {
+      List<EbEvtTransfer> transfers = new ArrayList<EbEvtTransfer>();
       for( EbToken tokenContent : action.getToken( m_game ).getContains() )
       {
         EbEvtTransfer transfer = new EbEvtTransfer();
@@ -1751,6 +1752,11 @@ public class EventsPlayBuilder implements GameEventStack
         transfer.setNewTokenCarrier( p_tokenCarrier );
         transfer.setCost( 0 );
         transfer.setAuto( true );
+        transfers.add( transfer );
+      }
+      // executing transfer in a separate loop to avoid concurent modification exeption
+      for( EbEvtTransfer transfer : transfers )
+      {
         actionAdd( transfer );
       }
     }

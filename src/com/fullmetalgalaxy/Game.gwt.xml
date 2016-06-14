@@ -40,5 +40,5 @@
   <extend-configuration-property name="compiler.splitpoint.initial.sequence"
     value="com.fullmetalgalaxy.client.AppMain"/>
     -->
-    
+ 
 </module>

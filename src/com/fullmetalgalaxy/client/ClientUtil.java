@@ -90,6 +90,26 @@ public class ClientUtil
   }-*/;
 
   /**
+   * @return true if the page is visible or state unkown
+   */
+  public static native boolean isPageVisible() /*-{
+    if( typeof $doc.hidden !== "undefined" ) {
+      return !($doc.hidden);
+    } else if( typeof $doc.mozHidden !== "undefined" ) {
+      return !($doc.mozHidden);
+    } else if( typeof $doc.msHidden !== "undefined" ) {
+      return !($doc.msHidden);
+    } else if( typeof $doc.webkitHidden !== "undefined" ) {
+      return !($doc.webkitHidden);
+    } 
+    return true;
+  }-*/;
+
+  public static native void focus() /*-{
+    $wnd.focus();
+  }-*/;
+
+  /**
    * horizontal and vertical scroll increments
    * @param p_xInc
    * @param p_yInc
