@@ -214,7 +214,7 @@ public class GameNotification
     // web hook is always used instead email
     if( account.getWebHook() != null && "newTurn".equals( p_msg.getName() ) )
     {
-      new WebHook( p_game, account ).start();
+      new WebHook( p_game.getId(), account.getId() ).start();
       return;
     }
 

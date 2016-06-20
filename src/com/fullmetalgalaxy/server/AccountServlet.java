@@ -39,7 +39,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
 import com.fullmetalgalaxy.model.AuthProvider;
-import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -151,10 +150,8 @@ public class AccountServlet extends HttpServlet
       // retry a webhook
       // ===============
       try{
-        EbAccount account = FmgDataStore.dao().get( EbAccount.class,
-            Long.parseLong( p_request.getParameter( "account" ) ) );
-        Game game = FmgDataStore.dao().getGame( Long.parseLong( p_request.getParameter( "retrywebhook" ) ) );
-        new WebHook( game, account ).start();
+        new WebHook( Long.parseLong( p_request.getParameter( "retrywebhook" ) ), Long.parseLong( p_request
+            .getParameter( "account" ) ) ).start();
       } catch( Exception e )
       {
         p_response.sendRedirect( "/genericmsg.jsp?title=Unkown error " + e.getMessage() );

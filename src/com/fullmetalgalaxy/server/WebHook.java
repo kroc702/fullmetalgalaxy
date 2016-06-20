@@ -30,6 +30,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,16 +65,19 @@ public class WebHook implements DeferredTask
 
   public final static Logger logger = Logger.getLogger( WebHook.class.getName() );
 
-  private Game game = null;
-  private EbAccount account = null;
+  private long gameId = 0;
+  private long accountId = 0;
   private int retryCount = 0;
+  private long startTimeMillis = 0;
+  private long delayStartMillis = 0;
+  private String staiExtraStatements = null;
 
 
-  public WebHook(Game p_game, EbAccount p_account)
+  public WebHook(long p_gameId, long p_accountId)
   {
     super();
-    game = p_game;
-    account = p_account;
+    gameId = p_gameId;
+    accountId = p_accountId;
   }
 
   public void start()
@@ -83,6 +87,7 @@ public class WebHook implements DeferredTask
     {
       logger.info( "retry count = " + retryCount );
     }
+    startTimeMillis = System.currentTimeMillis();
     QueueFactory.getDefaultQueue()
         .add(
         TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
@@ -91,11 +96,33 @@ public class WebHook implements DeferredTask
   @Override
   public void run()
   {
-    long startTime = System.currentTimeMillis();
+    // wait before performing webhook request
+    if( System.currentTimeMillis() - startTimeMillis < delayStartMillis )
+    {
+      QueueFactory.getDefaultQueue().add(
+          TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
+      return;
+    }
+
+
+    startTimeMillis = System.currentTimeMillis();
+    delayStartMillis = 0;
 
     DriverSTAI driverStai = new DriverSTAI();
     HTTPResponse response = null;
     String payload = null;
+
+    Game game = null;
+    EbAccount account = null;
+    try
+    {
+      game = FmgDataStore.dao().getGame( gameId );
+      account = FmgDataStore.dao().get( EbAccount.class, accountId );
+    } catch( Throwable th )
+    {
+      logger.log( Level.SEVERE, "unable to read game and account", th );
+      return;
+    }
 
     try
     {
@@ -105,12 +132,14 @@ public class WebHook implements DeferredTask
       URL url = new URL( account.getWebHook() );
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      // ugly patch ...
-      game.getPreview().incVersion();
       driverStai.saveGame( modelFmpInit, baos );
-      game.getPreview().decVersion();
       payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId() + ","
           + account.getId() + "," + account.getPseudo() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n\n";
+      if( staiExtraStatements != null )
+      {
+        payload += staiExtraStatements;
+        payload += "\n";
+      }
       payload += baos.toString( "UTF-8" );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
           .doNotFollowRedirects() );
@@ -147,6 +176,9 @@ public class WebHook implements DeferredTask
       retryCount++;
       if( retryCount < 2 )
       {
+        // wait between 2 and 30 seconds before performing a retry
+        delayStartMillis = Math.round( 1000 * (2 + Math.random() * 28) );
+        staiExtraStatements = "retry," + (retryCount - 1) + "," + delayStartMillis + ", " + th.getMessage();
         this.start();
       }
       else
@@ -160,8 +192,8 @@ public class WebHook implements DeferredTask
         body.append( "webhook failed " + retryCount + " times\n" );
         SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy.MM.dd 'at' HH:mm:ss z" );
         dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
-        body.append( "last request time= " + dateFormat.format( new Date( startTime ) ) + "\n" );
-        body.append( "last request duration= " + ((System.currentTimeMillis() - startTime) / 1000) + " sec\n" );
+        body.append( "last request time= " + dateFormat.format( new Date( startTimeMillis ) ) + "\n" );
+        body.append( "last request duration= " + ((System.currentTimeMillis() - startTimeMillis) / 1000) + " sec\n" );
         body.append( "last error= " + th.getMessage() + "\n" );
         if( th instanceof RpcFmpException && ((RpcFmpException)th).getCauseEvent() != null )
         {
