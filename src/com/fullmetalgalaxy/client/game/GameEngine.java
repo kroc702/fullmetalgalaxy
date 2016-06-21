@@ -553,6 +553,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           {
             nextEvent();
           }
+          // this is another trick to avoid the case where model update are received before the widget board subscibre to this event
+          if( getGame().getGameType() == GameType.Puzzle )
+          {
+            nextEvent();
+          }
         }
       } catch( Throwable e )
       {

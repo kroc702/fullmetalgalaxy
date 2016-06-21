@@ -150,8 +150,10 @@ public class AccountServlet extends HttpServlet
       // retry a webhook
       // ===============
       try{
-        new WebHook( Long.parseLong( p_request.getParameter( "retrywebhook" ) ), Long.parseLong( p_request
-            .getParameter( "account" ) ) ).start();
+        WebHook webhook = new WebHook( Long.parseLong( p_request.getParameter( "retrywebhook" ) ), Long.parseLong( p_request
+            .getParameter( "account" ) ) );
+        webhook.staiExtraStatements = "retry, manual by user "+Auth.getUserPseudo( p_request, p_response );
+        webhook.start();
       } catch( Exception e )
       {
         p_response.sendRedirect( "/genericmsg.jsp?title=Unkown error " + e.getMessage() );

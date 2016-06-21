@@ -70,7 +70,7 @@ public class WebHook implements DeferredTask
   private int retryCount = 0;
   private long startTimeMillis = 0;
   private long delayStartMillis = 0;
-  private String staiExtraStatements = null;
+  public String staiExtraStatements = null;
 
 
   public WebHook(long p_gameId, long p_accountId)
@@ -166,8 +166,7 @@ public class WebHook implements DeferredTask
 
     } catch( Throwable th )
     {
-      logger.severe( "webhook fail : account= " + account.getPseudo() + " url=" + account.getWebHook() + "\n"
-          + th.getMessage() );
+      logger.log( Level.SEVERE, "webhook fail : account= " + account.getPseudo() + " url=" + account.getWebHook(), th );
       if( th instanceof RpcFmpException && ((RpcFmpException)th).getCauseEvent() != null )
       {
         logger.severe( ((RpcFmpException)th).getCauseEvent().toString() );

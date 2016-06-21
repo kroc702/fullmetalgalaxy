@@ -886,7 +886,10 @@ public class GameWorkflow
       GlobalVars.incrementFGameNbOfHexagon( p_game.getNumberOfHexagon() );
       GlobalVars.incrementFGameNbPlayer( p_game.getSetRegistration().size() );
 
-      updateStat4FinishedGame( p_game, true );
+      QueueFactory.getDefaultQueue().add(
+          TaskOptions.Builder.withPayload( new UpdateStat4FinishedGame( p_game.getId(), true ) ) );
+      // the following action was causing datastore contention
+      // updateStat4FinishedGame( p_game, true );
     }
     else if( p_game.getGameType() == GameType.Initiation )
     {
