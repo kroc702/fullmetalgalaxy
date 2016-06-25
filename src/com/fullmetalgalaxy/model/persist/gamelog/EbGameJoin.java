@@ -22,7 +22,10 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.model.persist.gamelog;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fullmetalgalaxy.model.Company;
@@ -137,6 +140,11 @@ public class EbGameJoin extends AnEventUser
     {
       registration = createRegistration(p_game);
     }
+    else
+    {
+      // this is due to a bug where a player manage to register a game without creating his freighter
+      createTokens( p_game, registration.getColor() );
+    }
     if( registration.isReplacement() && registration.getOriginalAccountId() == getAccount().getId() )
     {
       // player replace himself
@@ -168,7 +176,7 @@ public class EbGameJoin extends AnEventUser
     return str;
   }
 
-  private EbRegistration createRegistration(Game p_game)
+  private EbRegistration createRegistration(Game p_game) throws RpcFmpException
   {
     assert p_game != null;
     Game game = p_game;
@@ -212,20 +220,53 @@ public class EbGameJoin extends AnEventUser
     game.getCurrentPlayerIds().add( game.getTeamByOrderIndex( 0 ).getPlayerIds().get( 0 ) );
 
     // create all tokens
-    EbToken shipToken = new EbToken();
-    shipToken.setType( TokenType.Freighter );
-    shipToken.setColor( registration.getColor() );
-    shipToken.setLocation( Location.Orbit );
-    if( shipToken.isTrancient() || game.getToken( shipToken.getId() ) == null )
+    createTokens( p_game, registration.getColor() );
+
+    return registration;
+  }
+
+  /**
+   * create all token for a given color. if tokens already exists, this method may update initial hold.
+   * @param color
+   * @throws RpcFmpException 
+   */
+  public void createTokens(Game p_game, int color) throws RpcFmpException
+  {
+    if( !EnuColor.isSingleColor( color )){
+      throw new RpcFmpException( "can't create token with several color");
+    }
+    List<EbToken> freighters = p_game.getAllFreighter( color );
+    EbToken shipToken = null;
+    Map<TokenType, Integer> currentHolds = new HashMap<TokenType,Integer>();
+    if( !freighters.isEmpty() )
     {
-      game.addToken( shipToken );
+      shipToken = freighters.get( 0 );
+      for(EbToken token : shipToken.getContains() ) {
+        Integer current = currentHolds.get( token.getType() );
+        if( current == null ) {
+          current = 0;
+        }
+        current++;
+        currentHolds.put( token.getType(), current );
+      }
     }
     else
     {
-      // warning: ore stored in action are not the same instance as in game
-      shipToken = game.getToken( shipToken.getId() );
+      shipToken = new EbToken();
+      shipToken.setType( TokenType.Freighter );
+      shipToken.setColor( color );
+      shipToken.setLocation( Location.Orbit );
+      if( shipToken.isTrancient() || p_game.getToken( shipToken.getId() ) == null )
+      {
+        p_game.addToken( shipToken );
+      }
+      else
+      {
+        // warning: ore stored in action are not the same instance as in game
+        shipToken = p_game.getToken( shipToken.getId() );
+      }
+      // shipToken.setLastUpdate( currentDate );
     }
-    // shipToken.setLastUpdate( currentDate );
 
     // create initial freighter holds
     // use TokenType values array instead of holds entryset to always keep the same order (so the same id)
@@ -235,40 +276,45 @@ public class EbGameJoin extends AnEventUser
       {
         continue;
       }
-      Integer typeCount = p_game.getInitialHolds().get( type );
-      if( typeCount == null )
+      Integer typeCurrentCount = currentHolds.get( type );
+      if( typeCurrentCount == null )
       {
-        typeCount = 0;
+        typeCurrentCount = 0;
       }
-      for( int i = 0; i < typeCount; i++ )
+      Integer typeTargetCount = p_game.getInitialHolds().get( type );
+      if( typeTargetCount == null )
+      {
+        typeTargetCount = 0;
+      }
+      for( int i = 0; i < typeTargetCount - typeCurrentCount; i++ )
       {
         EbToken token = new EbToken();
         token.setType( type );
         token.setLocation( Location.Token );
         if( token.canBeColored() )
         {
-          token.setColor( registration.getColor() );
+          token.setColor( color );
         }
         else
         {
           token.setColor( EnuColor.None );
         }
         token.setBulletCount( token.getType().getMaxBulletCount() );
-        if( token.isTrancient() || game.getToken( token.getId() ) == null )
+        if( token.isTrancient() || p_game.getToken( token.getId() ) == null )
         {
-          game.addToken( token );
+          p_game.addToken( token );
         }
         else
         {
           // warning: ore stored in action are not the same instance as in game
-          token = game.getToken( token.getId() );
+          token = p_game.getToken( token.getId() );
         }
         shipToken.loadToken( token );
       }
     }
 
-    return registration;
   }
+
 
   /* (non-Javadoc)
    * @see com.fullmetalgalaxy.model.persist.gamelog.AnEvent2#unexec()
@@ -337,6 +383,7 @@ public class EbGameJoin extends AnEventUser
   public void setAccount(EbPublicAccount p_account)
   {
     m_account = p_account;
+    setAccountId( m_account.getId() );
   }
 
   public Company getCompany()
