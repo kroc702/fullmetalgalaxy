@@ -97,8 +97,15 @@ public class WebHook implements DeferredTask
   public void run()
   {
     // wait before performing webhook request
-    if( System.currentTimeMillis() - startTimeMillis < delayStartMillis )
+    long waitingTime = System.currentTimeMillis() - startTimeMillis;
+    if( waitingTime < delayStartMillis )
     {
+      try
+      {
+        Thread.sleep( delayStartMillis - waitingTime );
+      } catch( InterruptedException e )
+      {
+      }
       QueueFactory.getDefaultQueue().add(
           TaskOptions.Builder.withPayload( this ).header( "X-AppEngine-FailFast", "true" ) );
       return;
@@ -134,18 +141,27 @@ public class WebHook implements DeferredTask
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       driverStai.saveGame( modelFmpInit, baos );
       payload = "id," + game.getId() + "\nyou," + game.getRegistrationByIdAccount( account.getId() ).getId() + ","
-          + account.getId() + "," + account.getPseudo() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n\n";
+          + account.getId() + "," + account.getPseudo() + "," + account.getPassword() + "\nwebhookAnswerInResponse\n";
       if( staiExtraStatements != null )
       {
         payload += staiExtraStatements;
         payload += "\n";
       }
+      payload += "\n";
       payload += baos.toString( "UTF-8" );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
           .doNotFollowRedirects() );
+      request.getFetchOptions().disallowTruncate();
+      request.getFetchOptions().doNotFollowRedirects();
+      request.getFetchOptions().doNotValidateCertificate();
+      // maximum allowed by https://cloud.google.com/appengine/docs/java/outbound-requests#request_timeouts
+      request.getFetchOptions().setDeadline( 60.0 );
       request.setPayload( payload.getBytes( "UTF-8" ) );
 
+      
       response = URLFetchServiceFactory.getURLFetchService().fetch( request );
+      
+      
       if( response.getResponseCode() != 200 )
       {
         throw new Exception( "http post response status : " + response.getResponseCode() );
@@ -173,11 +189,11 @@ public class WebHook implements DeferredTask
         logger.severe( ((RpcFmpException)th).getCauseEvent().getTransientComment() );
       }
       retryCount++;
-      if( retryCount < 2 )
+      if( retryCount < 3 )
       {
-        // wait between 2 and 30 seconds before performing a retry
-        delayStartMillis = Math.round( 1000 * (2 + Math.random() * 28) );
-        staiExtraStatements = "retry," + (retryCount - 1) + "," + delayStartMillis + ", " + th.getMessage();
+        // wait between 2 and 10 seconds before performing a retry
+        delayStartMillis = Math.round( 1000 * (2 + Math.random() * 8) );
+        staiExtraStatements = "retry," + retryCount + "," + delayStartMillis + ", " + th.getMessage();
         this.start();
       }
       else
