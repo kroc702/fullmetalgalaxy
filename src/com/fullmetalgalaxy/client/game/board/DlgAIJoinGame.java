@@ -110,7 +110,6 @@ public class DlgAIJoinGame extends DialogBox implements ClickHandler
       account.setPseudo( listAI.getItemText( listAI.getSelectedIndex() ) );
       account.setAI( true );
       EbGameJoin joinEvent = new EbGameJoin();
-      joinEvent.setAccountId( account.getId() );
       joinEvent.setAccount( account );
       joinEvent.setActionPointBonus( intAPBonus.getValue() );
 

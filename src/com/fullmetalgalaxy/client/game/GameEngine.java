@@ -44,6 +44,7 @@ import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.game.board.layertoken.AnimEvent;
 import com.fullmetalgalaxy.client.game.board.layertoken.AnimFactory;
 import com.fullmetalgalaxy.model.EnuZoom;
+import com.fullmetalgalaxy.model.GameGenerator;
 import com.fullmetalgalaxy.model.GameServices;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
@@ -103,6 +104,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   {
     return GameEngine.model().getGame();
   }
+
+  public static GameGenerator generator()
+  {
+    return GameEngine.model().getGameGenerator();
+  }
+
   
   public static HexCoordinateSystem coordinateSystem()
   {
@@ -110,7 +117,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   }
   
   protected Game m_game = new Game();
-
+  protected GameGenerator m_generator = new GameGenerator( m_game );
 
   protected EventsPlayBuilder m_actionBuilder = new EventsPlayBuilder();
 
@@ -172,6 +179,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           //ModelFmpMain.model().m_connectedUsers = model.getPresenceRoom();
         }
         m_game = model.getGame();
+        if( m_generator != null )
+        {
+          m_generator.setGame( m_game );
+        }
         getActionBuilder().setGame( getGame() );
         getActionBuilder().setMyAccount( AppMain.instance().getMyAccount() );
         // play my events (for parallel hidden turns)
@@ -352,6 +363,10 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void reinitGame()
   {
     m_game = new Game();
+    if( m_generator != null )
+    {
+      m_generator.setGame( m_game );
+    }
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
@@ -360,6 +375,14 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     return m_game;
   }
 
+  public GameGenerator getGameGenerator()
+  {
+    if( m_generator == null )
+    {
+      m_generator = new GameGenerator( getGame() );
+    }
+    return m_generator;
+  }
 
 
   /** last model update client ID that was send without any response.

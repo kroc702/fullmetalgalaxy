@@ -120,7 +120,7 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
           m_wgtEditLand.setPixelSize( m_tabPanel.getOffsetWidth(), m_tabPanel.getOffsetHeight() - 20 );
           if( m_isLandGenerated == false )
           {
-            GameGenerator.generLands();
+            GameEngine.generator().generLands();
             m_isLandGenerated = true;
           }
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
@@ -134,10 +134,10 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
           {
             if( m_isLandGenerated == false )
             {
-              GameGenerator.generLands();
+              GameEngine.generator().generLands();
               m_isLandGenerated = true;
             }
-            GameGenerator.populateOres();
+            GameEngine.generator().populateOres();
             m_isOreGenerated = true;
           }
           AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
@@ -212,13 +212,13 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
       // lands creation
       if( m_isLandGenerated == false )
       {
-        GameGenerator.generLands();
+        GameEngine.generator().generLands();
       }
       if( m_isOreGenerated == false )
       {
-        GameGenerator.populateOres();
+        GameEngine.generator().populateOres();
       }
-      GameGenerator.cleanToken();
+      GameEngine.generator().cleanToken();
     }
 
     // (3) Create an asynchronous callback to handle the result.
@@ -322,8 +322,8 @@ public class MAppGameCreation extends GuiEntryPoint implements ClickHandler,
 
     game.setConfigGameTime( ConfigGameTime.Standard );
     game.setMaxNumberOfPlayer( 4 );
-    GameGenerator.setSize( MapSize.Medium );
-    GameGenerator.clearLand( LandType.Plain );
+    GameEngine.generator().setSize( MapSize.Medium );
+    GameEngine.generator().clearLand( LandType.Plain );
 
     m_isLandGenerated = false;
     m_isOreGenerated = false;

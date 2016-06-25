@@ -164,7 +164,8 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        GameGenerator.setLakeBoard( Boolean.parseBoolean( m_lstAlgo.getValue( m_lstAlgo.getSelectedIndex() ) ) );
+        GameEngine.generator()
+            .setLakeBoard( Boolean.parseBoolean( m_lstAlgo.getValue( m_lstAlgo.getSelectedIndex() ) ) );
       }
     } );
     m_panel.add( m_lstAlgo );
@@ -173,14 +174,14 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     hpanel.add( new Label( "terre en %" ) );
     m_txtLandPercent.addChangeListener( this );
     hpanel.add( m_txtLandPercent );
-    m_txtLandPercent.setText( "" + GameGenerator.getLandPercent() );
+    m_txtLandPercent.setText( "" + GameEngine.generator().getLandPercent() );
     m_txtLandPercent.setMaxLength( 3 );
     m_txtLandPercent.setWidth( "30px" );
     m_panel.add( hpanel );
     hpanel = new HorizontalPanel();
     hpanel.add( new Label( "Hexagonale" ) );
     hpanel.add( m_chkRoundMap );
-    m_chkRoundMap.setChecked( GameGenerator.isHexagonMap() );
+    m_chkRoundMap.setChecked( GameEngine.generator().isHexagonMap() );
     m_panel.add( hpanel );
 
     m_btnLoadMap.addClickHandler( this );
@@ -290,17 +291,17 @@ public class WgtToolsEditLands extends Composite implements ClickHandler, MouseL
     if( p_event.getSource() == m_btnGenerate )
     {
       int percent = Integer.parseInt( m_txtLandPercent.getText() );
-      GameGenerator.setSize( landWidth, landHeight );
-      GameGenerator.setLandPercent( percent );
-      GameGenerator.setHexagonMap( m_chkRoundMap.getValue() );
-      GameGenerator.generLands();
+      GameEngine.generator().setSize( landWidth, landHeight );
+      GameEngine.generator().setLandPercent( percent );
+      GameEngine.generator().setHexagonMap( m_chkRoundMap.getValue() );
+      GameEngine.generator().generLands();
       GameEngine.model().getGame().setMapUri( null );
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
     else if( p_event.getSource() == m_btnClear )
     {
-      GameGenerator.setSize( landWidth, landHeight );
-      GameGenerator.clearLand( m_wgtlayerEditLand.getLeftClic() );
+      GameEngine.generator().setSize( landWidth, landHeight );
+      GameEngine.generator().clearLand( m_wgtlayerEditLand.getLeftClic() );
       GameEngine.model().getGame().setMapUri( null );
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }

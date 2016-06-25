@@ -258,7 +258,6 @@ public class DlgJoinChooseColor extends DialogBox
     if( account == null )
     {
       account = new EbGameJoin();
-      account.setAccountId( AppMain.instance().getMyAccount().getId() );
       account.setAccount( AppMain.instance().getMyAccount() );
     }
     return account;

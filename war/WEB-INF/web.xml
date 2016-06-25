@@ -53,6 +53,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
        <url-pattern>/api/game/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+       <servlet-name>PublicNewGameApiServlet</servlet-name>
+       <servlet-class>com.fullmetalgalaxy.server.PublicNewGameApiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+       <servlet-name>PublicNewGameApiServlet</servlet-name>
+       <url-pattern>/api/newgame/*</url-pattern>
+    </servlet-mapping>
+
 		<servlet>
 		  <servlet-name>mailhandler</servlet-name>
 		  <servlet-class>com.fullmetalgalaxy.server.pm.MailHandlerServlet</servlet-class>

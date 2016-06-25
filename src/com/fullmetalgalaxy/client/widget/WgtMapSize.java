@@ -24,7 +24,6 @@
 package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.AppRoot;
-import com.fullmetalgalaxy.client.creation.GameGenerator;
 import com.fullmetalgalaxy.client.event.ModelUpdateEvent;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.MapSize;
@@ -111,7 +110,7 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
   @Override
   public void onValueChange(ValueChangeEvent<Boolean> p_event)
   {
-    GameGenerator.setSize( getSelectedMapSize() );
+    GameEngine.generator().setSize( getSelectedMapSize() );
     AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
   }
 
@@ -128,7 +127,7 @@ public class WgtMapSize extends Composite implements ValueChangeHandler<Boolean>
         // if game is transient, this mean that we are building map and we
         // change player number:
         // so we need to regenerate map according to new size !
-        GameGenerator.setSize( getSelectedMapSize() );
+        GameEngine.generator().setSize( getSelectedMapSize() );
         AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         return;
       }

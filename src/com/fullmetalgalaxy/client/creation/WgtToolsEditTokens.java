@@ -202,14 +202,14 @@ public class WgtToolsEditTokens extends Composite implements ClickHandler, Chang
     if( p_event.getSource() == m_btnOre )
     {
       if( m_chkOreInSea.getValue() ) {
-        GameGenerator.s_oreAllowedOnLands.add( LandType.Sea );
+        GameEngine.generator().s_oreAllowedOnLands.add( LandType.Sea );
       } else {
-        GameGenerator.s_oreAllowedOnLands.remove( LandType.Sea );
+        GameEngine.generator().s_oreAllowedOnLands.remove( LandType.Sea );
       }
-      GameGenerator.s_useAllOre = m_chkUseAllOre.getValue();
-      GameGenerator.s_useOreGenerator = m_chkUseOreGenerator.getValue();
+      GameEngine.generator().s_useAllOre = m_chkUseAllOre.getValue();
+      GameEngine.generator().s_useOreGenerator = m_chkUseOreGenerator.getValue();
 
-      GameGenerator.populateOres();
+      GameEngine.generator().populateOres();
       m_wgtBoardEditTokens.m_layerToken.cleanToken();
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
     }
