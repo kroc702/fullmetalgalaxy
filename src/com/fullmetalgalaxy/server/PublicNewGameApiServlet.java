@@ -33,6 +33,8 @@ import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameGenerator;
 import com.fullmetalgalaxy.model.ModelFmpInit;
+import com.fullmetalgalaxy.model.PlanetType;
+import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
@@ -74,7 +76,8 @@ public class PublicNewGameApiServlet extends HttpServlet
       }
 
       String[] aiPlayers = p_req.getParameterValues( "ai" );
-      if( aiPlayers.length == 0 ) {
+      if( aiPlayers == null || aiPlayers.length == 0 )
+      {
         aiPlayers = new String[1];
         aiPlayers[0] = "stai";
       }
@@ -87,6 +90,14 @@ public class PublicNewGameApiServlet extends HttpServlet
       GameGenerator generator = new GameGenerator( game );
 
       // configure options
+      if( p_req.getParameter( "name" ) != null )
+      {
+        game.setName( p_req.getParameter( "name" ) );
+      }
+      else
+      {
+        game.setName( account.getPseudo() + " solo" );
+      }
       game.setMaxNumberOfPlayer( aiPlayers.length + 1 );
 
       if( p_req.getParameter( "map" ) != null )
@@ -104,6 +115,11 @@ public class PublicNewGameApiServlet extends HttpServlet
       {
         // generate map
         generator.generLands();
+        game.setPlanetType( PlanetType.values()[RpcUtil.random( PlanetType.values().length )] );
+      }
+      if( p_req.getParameter( "planet" ) != null )
+      {
+        game.setPlanetType( PlanetType.parse( p_req.getParameter( "planet" ) ) );
       }
 
       // create ore
@@ -113,6 +129,11 @@ public class PublicNewGameApiServlet extends HttpServlet
       GameWorkflow.gameOpen( game );
 
       // add AI
+      int aiBonus = 0;
+      if( p_req.getParameter( "aiBonus" ) != null )
+      {
+        aiBonus = Integer.parseInt( p_req.getParameter( "aiBonus" ) );
+      }
       for( String aiPlayer : aiPlayers )
       {
         EbGameJoin joinEvent = new EbGameJoin();
@@ -142,6 +163,7 @@ public class PublicNewGameApiServlet extends HttpServlet
         joinEvent.setAccount( aiAccount );
         joinEvent.setCompany( Company.Freelancer );
         joinEvent.setGame( game );
+        joinEvent.setActionPointBonus( aiBonus );
         // game.getFreePlayersColors().
         joinEvent.checkedExec( game );
         game.addEvent( joinEvent );
@@ -149,7 +171,7 @@ public class PublicNewGameApiServlet extends HttpServlet
 
       // add logged player
       EbGameJoin joinEvent = new EbGameJoin();
-      joinEvent.setAccount( account );
+      joinEvent.setAccount( new EbPublicAccount( account ) );
       joinEvent.setColor( EnuColor.Blue );
       joinEvent.setCompany( Company.Freelancer );
       joinEvent.setGame( game );

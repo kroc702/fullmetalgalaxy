@@ -59,7 +59,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     </servlet>
     <servlet-mapping>
        <servlet-name>PublicNewGameApiServlet</servlet-name>
-       <url-pattern>/api/newgame/*</url-pattern>
+       <url-pattern>/newgame/*</url-pattern>
     </servlet-mapping>
 
 		<servlet>

@@ -53,4 +53,27 @@ public enum PlanetType implements IsSerializable
       return "dirt";
     }
   }
+
+
+  public static PlanetType parse(String str)
+  {
+    PlanetType type = Desert;
+    try
+    {
+      type = PlanetType.valueOf( str );
+    } catch( Throwable e )
+    {
+      for( PlanetType possibleType : values() )
+      {
+        if( possibleType.getFolderName().equals( str ) )
+        {
+          type = possibleType;
+          break;
+        }
+      }
+    }
+    return type;
+  }
+
+
 }

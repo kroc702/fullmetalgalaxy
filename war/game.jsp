@@ -20,6 +20,18 @@
 	    	    room = Serializer.escape(Serializer.toClient( ChannelManager.getRoom(id) ));
 	      }
 	      ModelFmpInit modelFmpInit = GameServicesImpl.sgetModelFmpInit(request,response,request.getParameter("id"));
+	      
+	      if( Auth.isUserLogged( request, response ) && modelFmpInit != null && modelFmpInit.getGame() != null && !modelFmpInit.getGame().getCurrentPlayerIds().isEmpty() ) {
+	        Game game = modelFmpInit.getGame();
+	        EbRegistration currentRegistration = game.getRegistration( game.getCurrentPlayerIds().get( 0 ) );
+	        if( game.getStatus() == GameStatus.Running && currentRegistration.haveAccount() && currentRegistration.getAccount().isAI()) {
+	          WebHook webhook = new WebHook( game.getId(), currentRegistration.getAccount().getId() );
+	          webhook.staiExtraStatements = "retry, manual by user "+Auth.getUserPseudo( request, response ) +" from game page";
+	          webhook.setStartDelayMillis(4000);
+	          webhook.start();
+	        }
+	      }
+	      
 	      String model = Serializer.escape(Serializer.toClient( modelFmpInit ));
 	    %>
 		<meta name='gwt:property' id='fmp_channelToken' content='<%= channelToken %>' />

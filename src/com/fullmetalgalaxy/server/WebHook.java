@@ -69,7 +69,8 @@ public class WebHook implements DeferredTask
   private long accountId = 0;
   private int retryCount = 0;
   private long startTimeMillis = 0;
-  private long delayStartMillis = 0;
+  private long startDelayMillis = 0;
+
   public String staiExtraStatements = null;
 
 
@@ -98,11 +99,11 @@ public class WebHook implements DeferredTask
   {
     // wait before performing webhook request
     long waitingTime = System.currentTimeMillis() - startTimeMillis;
-    if( waitingTime < delayStartMillis )
+    if( waitingTime < startDelayMillis )
     {
       try
       {
-        Thread.sleep( delayStartMillis - waitingTime );
+        Thread.sleep( startDelayMillis - waitingTime );
       } catch( InterruptedException e )
       {
       }
@@ -113,7 +114,7 @@ public class WebHook implements DeferredTask
 
 
     startTimeMillis = System.currentTimeMillis();
-    delayStartMillis = 0;
+    startDelayMillis = 0;
 
     DriverSTAI driverStai = new DriverSTAI();
     HTTPResponse response = null;
@@ -151,6 +152,7 @@ public class WebHook implements DeferredTask
       payload += baos.toString( "UTF-8" );
       HTTPRequest request = new HTTPRequest( url, HTTPMethod.POST, FetchOptions.Builder.withDefaults()
           .doNotFollowRedirects() );
+      request.setHeader( new HTTPHeader( "Content-Type", "text/plain; charset=utf-8" ) );
       request.getFetchOptions().disallowTruncate();
       request.getFetchOptions().doNotFollowRedirects();
       request.getFetchOptions().doNotValidateCertificate();
@@ -192,8 +194,8 @@ public class WebHook implements DeferredTask
       if( retryCount < 3 )
       {
         // wait between 2 and 10 seconds before performing a retry
-        delayStartMillis = Math.round( 1000 * (2 + Math.random() * 8) );
-        staiExtraStatements = "retry," + retryCount + "," + delayStartMillis + ", " + th.getMessage();
+        startDelayMillis = Math.round( 1000 * (2 + Math.random() * 8) );
+        staiExtraStatements = "retry," + retryCount + "," + startDelayMillis + ", " + th.getMessage();
         this.start();
       }
       else
@@ -245,6 +247,12 @@ public class WebHook implements DeferredTask
       }
     }
   }
+
+  public void setStartDelayMillis(long p_startDelayMillis)
+  {
+    startDelayMillis = p_startDelayMillis;
+  }
+
 
   private static Pattern s_charsetPattern = Pattern.compile( ".*charset=(.+)[; $].*" );
 

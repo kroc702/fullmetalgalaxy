@@ -371,7 +371,7 @@ public class DriverSTAI extends DriverFileFormat
           endTurn.setAccountId( accountId );
           endTurn.setGameId( model.getGameId() );
           endTurn.setGameVersion( gameVersion );
-          // this allow stai to leave two tank on same montain
+          // this allow stai to leave two tanks on same montain
           endTurn.setAuto( true );
           model.getGameEvents().add( endTurn );
           break;
