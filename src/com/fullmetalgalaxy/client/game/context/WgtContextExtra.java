@@ -288,10 +288,25 @@ public class WgtContextExtra extends WgtView implements ClickHandler
       String lblStr = Messages.getTokenString( 0, p_token.getType() );
       if( (p_token.getType().getMaxBulletCount() > 0) && (p_token.getBulletCount() != p_token.getType().getMaxBulletCount()))
       {
-        if( p_token.getType().getMaxBulletCount() - p_token.getBulletCount() >= 2 )
-          lblStr += "<br/>xx";
-        else
-          lblStr += "<br/>x";
+        float fireCount = p_token.getType().getMaxBulletCount() - p_token.getBulletCount();
+        lblStr += "<br/>x";
+        fireCount--;
+        while( fireCount >= 1 )
+        {
+          lblStr += "x";
+          fireCount--;
+        }
+      }
+      // display loaded units in case of bug
+      if( p_token.getContainSize() > 0 )
+      {
+        lblStr += "<br/>#";
+        int charCount = 1;
+        while( p_token.getContainSize() > charCount )
+        {
+          lblStr += "#";
+          charCount++;
+        }
       }
       label.setHTML( lblStr );
     }
