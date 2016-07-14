@@ -464,6 +464,12 @@ public class DriverSTAI extends DriverFileFormat
     }
     printStream.println( "" );
 
+    // print construct reserve
+    for( Entry<TokenType, Integer> entry : p_game.getGame().getConstructReserve().entrySet() )
+    {
+      printStream.print( "reserve," + getConstant( entry.getKey() ) + "," + entry.getValue() );
+    }
+
     printStream.println( "" );
 
     // print terrain
