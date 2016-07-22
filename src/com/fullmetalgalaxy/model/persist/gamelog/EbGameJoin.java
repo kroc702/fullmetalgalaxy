@@ -140,7 +140,7 @@ public class EbGameJoin extends AnEventUser
     {
       registration = createRegistration(p_game);
     }
-    else
+    else if( p_game.getCurrentTimeStep() < p_game.getEbConfigGameTime().getDeploymentTimeStep() )
     {
       // this is due to a bug where a player manage to register a game without creating his freighter
       createTokens( p_game, registration.getColor() );
