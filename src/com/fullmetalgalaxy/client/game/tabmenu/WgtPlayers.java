@@ -40,6 +40,7 @@ import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.GameStatus;
 import com.fullmetalgalaxy.model.GameType;
 import com.fullmetalgalaxy.model.Presence;
+import com.fullmetalgalaxy.model.ai.ScoreEstimation;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
@@ -90,6 +91,14 @@ public class WgtPlayers extends Composite implements ClickHandler
   
   private void initPlayerPanel()
   {
+    // this step may be too long for user ui...
+    Map<EbTeam, Integer> finalScores = null;
+    if( GameEngine.model().getGame().isFinished() )
+    {
+      ScoreEstimation scoreEstimation = new ScoreEstimation( GameEngine.model().getGame() );
+      finalScores = scoreEstimation.estimateFinalScore();
+    }
+
     m_banButtons.clear();
     m_skipTurnButtons.clear();
     m_playerPanel.clear();
@@ -143,6 +152,10 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_playerGrid.setText( 0, 3, "couleur(s)" );
     m_playerGrid.setText( 0, 4, "pt d'action" );
     m_playerGrid.setHTML( 0, 5, "pt de victoire<br/>(estimation)" );
+    if( GameEngine.model().getGame().isFinished() )
+    {
+      m_playerGrid.setHTML( 0, 5, "pt de victoire" );
+    }
     m_playerGrid.setText( 0, 6, "" ); // must play before
     m_playerGrid.setText( 0, 7, "" ); // ban
     m_playerGrid.setText( 0, 8, "" ); // skip turn
@@ -253,8 +266,15 @@ public class WgtPlayers extends Composite implements ClickHandler
                         .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
 
         // display Wining points
-        m_playerGrid.setText( index, 5,
-            "" + team.estimateWinningScore( GameEngine.model().getGame() ) );
+        if( finalScores == null )
+        {
+          m_playerGrid.setText( index, 5, "" + team.estimateWinningScore( GameEngine.model().getGame() ) );
+        }
+        else
+        {
+          m_playerGrid.setText( index, 5, "" + team.estimateWinningScore( GameEngine.model().getGame() ) + "/"
+            + finalScores.get( team ) );
+        }
 
         // display admin button
         if( (GameEngine.model().getGame().getAccountCreator() != null && AppMain.instance()
