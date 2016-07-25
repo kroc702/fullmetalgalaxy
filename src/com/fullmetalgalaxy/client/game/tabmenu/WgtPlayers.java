@@ -93,10 +93,14 @@ public class WgtPlayers extends Composite implements ClickHandler
   {
     // this step may be too long for user ui...
     Map<EbTeam, Integer> finalScores = null;
-    if( GameEngine.model().getGame().isFinished() )
+    // Map<EbTeam, Integer> unusedActionPoint = null;
+    // Map<EbTeam, Integer> totalActionPoint = null;
+    if( !GameEngine.model().getGame().isFinished() )
     {
       ScoreEstimation scoreEstimation = new ScoreEstimation( GameEngine.model().getGame() );
       finalScores = scoreEstimation.estimateFinalScore();
+      // unusedActionPoint = scoreEstimation.getUnusedActionPoint();
+      // totalActionPoint = scoreEstimation.estimateTotalActionPoint();
     }
 
     m_banButtons.clear();
@@ -273,7 +277,8 @@ public class WgtPlayers extends Composite implements ClickHandler
         else
         {
           m_playerGrid.setText( index, 5, "" + team.estimateWinningScore( GameEngine.model().getGame() ) + "/"
-            + finalScores.get( team ) );
+              + finalScores.get( team ) );
+          // + "(+" + unusedActionPoint.get( team ) + "/" + totalActionPoint.get( team ) + "AP)" );
         }
 
         // display admin button

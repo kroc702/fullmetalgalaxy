@@ -93,6 +93,14 @@ public class ScoreEstimation
   {
     Map<EbTeam, Integer> totalActionPoint = new HashMap<EbTeam, Integer>();
     int remainingTimeStep = game.getEbConfigGameTime().getTotalTimeStep() - game.getCurrentTimeStep();
+    for( Integer takeOffTurn : game.getEbConfigGameTime().getTakeOffTurns() )
+    {
+      // takeoff turn doesn't receive action points
+      if( game.getCurrentTimeStep() < takeOffTurn )
+      {
+        remainingTimeStep--;
+      }
+    }
     for( Entry<EbTeam, Integer> entry : getActionPtPerTimeStep().entrySet() )
     {
       totalActionPoint.put( entry.getKey(), entry.getValue() * remainingTimeStep );
