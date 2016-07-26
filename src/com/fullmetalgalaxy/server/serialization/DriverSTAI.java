@@ -45,6 +45,7 @@ import com.fullmetalgalaxy.model.persist.AnBoardPosition;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
 import com.fullmetalgalaxy.model.persist.EbToken;
+import com.fullmetalgalaxy.model.persist.FireDisabling;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEvent;
 import com.fullmetalgalaxy.model.persist.gamelog.AnEventPlay;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtConstruct;
@@ -467,7 +468,7 @@ public class DriverSTAI extends DriverFileFormat
     // print construct reserve
     for( Entry<TokenType, Integer> entry : p_game.getGame().getConstructReserve().entrySet() )
     {
-      printStream.print( "reserve," + getConstant( entry.getKey() ) + "," + entry.getValue() );
+      printStream.println( "reserve," + getConstant( entry.getKey() ) + "," + entry.getValue() );
     }
 
     printStream.println( "" );
@@ -568,6 +569,13 @@ public class DriverSTAI extends DriverFileFormat
               {
                 printStream.println( "," + getConstant( token.getPosition().getSector() ) );
               }
+            }
+
+            if( token.isFireDisabled() )
+            {
+              FireDisabling fd = token.getFireDisablingList().get( 0 );
+              printStream.println( "fireDisabled," + fd.getTargetId() + "," + fd.getDestroyer1Id() + ","
+                  + fd.getDestroyer2Id() );
             }
           }
         }
