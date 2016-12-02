@@ -169,6 +169,9 @@ public class ScoreEstimation
     Map<EbTeam, Integer> totalActionPoint = estimateTotalActionPoint();
     unusedActionPoint = new HashMap<EbTeam, Integer>();
 
+    int oreGeneratorOreCount = (game.getEbConfigGameTime().getTotalTimeStep() - game.getCurrentTimeStep()) / 3;
+
+
     // establish a list of freighter per team
     // for freighter that are not on board, we add dirrectly his score
     List<EbToken> freighters = game.getAllFreighter( EnuColor.getMaxColorValue() );
@@ -222,8 +225,8 @@ public class ScoreEstimation
         }
         else if( token.getType() == TokenType.Ore2Generator || token.getType() == TokenType.Ore3Generator )
         {
-          // consider a generator produce 10 ores
-          for( int i = 0; i < 10; i++ )
+          // consider a generator produce several ores
+          for( int i = 0; i < oreGeneratorOreCount; i++ )
           {
             EbToken generatedOre = new EbToken( TokenType.Ore );
             if( token.getType() == TokenType.Ore3Generator )
