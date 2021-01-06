@@ -104,47 +104,6 @@ public class AccountServlet extends HttpServlet
       }
       p_response.sendRedirect( redirectUrl );
     }
-    else if( p_request.getParameter( "link" ) != null )
-    {
-      // user link FMG and Forum account
-      // ===============================
-
-      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class )
-          .filter( "m_forumKey", p_request.getParameter( "link" ) );
-      QueryResultIterator<EbAccount> it = query.iterator();
-      if( !it.hasNext() )
-      {
-        p_response.sendRedirect( "/genericmsg.jsp?title=Erreur: clef non trouvé" );
-        return;
-      }
-      EbAccount account = it.next();
-      if( !Auth.isUserLogged( p_request, p_response ) )
-      {
-        // arg, user must be connected for this !
-        String redirectUrl = Auth.getFmgLoginURL( p_request, p_response );
-        if( account.getAuthProvider() == AuthProvider.Google )
-        {
-          redirectUrl = Auth.getGoogleLoginURL( p_request, p_response );
-        }
-        p_response.sendRedirect( redirectUrl );
-        return;
-      }
-      if( Auth.getUserAccount( p_request, p_response ).getId() != account.getId() )
-      {
-        p_response
-            .sendRedirect( "/genericmsg.jsp?title=Erreur: la clef ne correspond pas au compte "
-                + Auth.getUserPseudo( p_request, p_response ) );
-        return;
-      }
-      account.setIsforumIdConfirmed( true );
-      ServerUtil.forumConnector().pullAccount( account );
-      FmgDataStore ds = new FmgDataStore( false );
-      ds.put( account );
-      ds.close();
-      p_response.sendRedirect( "/genericmsg.jsp?title=les comptes '" + account.getPseudo()
-          + "' de FMG et du Forum sont liés" );
-      return;
-    }
     else if( p_request.getParameter( "retrywebhook" ) != null )
     {
       // retry a webhook
@@ -490,15 +449,6 @@ public class AccountServlet extends HttpServlet
       return "Vous devez definir un mot de passe";
     }
 
-
-    if( id == 0 && params.containsKey( "createforumaccount" ) )
-    {
-      // a new account was created: check if we need to create new forum account
-      if( ServerUtil.forumConnector().createAccount( account ) )
-      {
-        account.setIsforumIdConfirmed( true );
-      }
-    }
 
     store.put( account );
     store.close();

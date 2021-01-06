@@ -1,6 +1,6 @@
-<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.server.forum.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,java.util.GregorianCalendar,java.util.Calendar" %>
+<%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,java.util.GregorianCalendar,java.util.Calendar" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+<%@taglib prefix="fmg" uri="/WEB-INF/tags/implicit.tld"%>
 
 <!DOCTYPE html>
 <html lang="<%= I18n.getLocale(request,response) %>">
@@ -63,21 +63,6 @@
 <% } %>
 		</div>
 		
-		<div id="rssCollumn" class="collumn" >
-			<h2><a href="http://fullmetalplanete.forum2jeux.com/f40-news"><fmg:resource key="index_lastnew"/></a>
-				<a class="iconrss" href="http://fullmetalplanete.forum2jeux.com/feed?f=40" target="_blank"></a>
-			</h2>
-				<div id="newsrss">
-					<%= News.getHtml() %>
-				</div>
-
-			<h2><a href="/gamelist.jsp"><fmg:resource key="index_lastgames"/></a>
-			</h2>
-				<div id="gamesrss">
-					<%= Games.getHtml() %>
-				</div>
-		</div>
-
 
 		<div id="keyPointsCollumn" class="collumn">
 <% if(Auth.isUserLogged( request, response )) { 

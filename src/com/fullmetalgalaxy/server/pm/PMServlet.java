@@ -23,13 +23,7 @@
 package com.fullmetalgalaxy.server.pm;
 
 import java.io.IOException;
-import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +33,19 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.fullmetalgalaxy.model.AuthProvider;
 import com.fullmetalgalaxy.server.EbAccount;
 import com.fullmetalgalaxy.server.FmgDataStore;
 import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.ServerUtil;
+import com.mailjet.client.ClientOptions;
+import com.mailjet.client.MailjetClient;
+import com.mailjet.client.MailjetRequest;
+import com.mailjet.client.MailjetResponse;
+import com.mailjet.client.resource.Emailv31;
 
 /**
  * @author Vincent
@@ -92,14 +93,12 @@ public class PMServlet extends HttpServlet
       p_request.setCharacterEncoding( "UTF-8" );
 
       // build message to send
-      Properties props = new Properties();
-      Session session = Session.getDefaultInstance( props, null );
-      MimeMessage msg = new MimeMessage( session );
-      msg.setSubject( "[FMG] no subject", "text/plain" );
-      msg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
-      msg.setFrom( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
-      EbAccount fromAccount = null;
-
+      // send an email with mailjet API
+      String subject = "no subject";
+      String content = "";
+      JSONArray mailTo = new JSONArray();
+      String replyTo = null;
+      
       // Parse the request
       FileItemIterator iter = upload.getItemIterator( p_request );
       while( iter.hasNext() )
@@ -109,11 +108,11 @@ public class PMServlet extends HttpServlet
         {
           if( "msg".equalsIgnoreCase( item.getFieldName() ) )
           {
-            msg.setContent( Streams.asString( item.openStream(), "UTF-8" ), "text/plain" );
+        	  content = Streams.asString( item.openStream(), "UTF-8" );
           }
           if( "subject".equalsIgnoreCase( item.getFieldName() ) )
           {
-            msg.setSubject( "[FMG] " + Streams.asString( item.openStream(), "UTF-8" ), "text/plain" );
+        	  subject = Streams.asString( item.openStream(), "UTF-8" );
           }
           if( "toid".equalsIgnoreCase( item.getFieldName() ) )
           {
@@ -123,12 +122,14 @@ public class PMServlet extends HttpServlet
             } catch(NumberFormatException e) {}
             if( account != null )
             {
-              msg.addRecipient( Message.RecipientType.TO, new InternetAddress( account.getEmail(),
-                  account.getPseudo() ) );
+            	mailTo.put(new JSONObject()
+                        .put("Email", account.getEmail())
+                        .put("Name", account.getPseudo()));
             }
           }
           if( "fromid".equalsIgnoreCase( item.getFieldName() ) )
           {
+        	  EbAccount  fromAccount = null;
             try {
               fromAccount = FmgDataStore.dao().get( EbAccount.class, Long.parseLong( Streams.asString( item.openStream(), "UTF-8" ) ) );
             } catch(NumberFormatException e) {}
@@ -137,21 +138,36 @@ public class PMServlet extends HttpServlet
               if( fromAccount.getAuthProvider() == AuthProvider.Google
                   && !fromAccount.isHideEmailToPlayer() )
               {
-                msg.setFrom( new InternetAddress( fromAccount.getEmail(), fromAccount.getPseudo() ) );
+            	  replyTo = fromAccount.getEmail();
               }
               else
               {
-                msg.setFrom( new InternetAddress( fromAccount.getFmgEmail(), fromAccount
-                    .getPseudo() ) );
+            	  replyTo =  fromAccount.getFmgEmail();
               }
             }
           }
         }
       }
 
-      // msg.addRecipients( Message.RecipientType.BCC, InternetAddress.parse(
-      // "archive@fullmetalgalaxy.com" ) );
-      Transport.send( msg );
+ 	 ClientOptions options = ClientOptions.builder()
+	            .apiKey("a2b35f062939e510bfc46852a484487a")
+	            .apiSecretKey("ab1e463bc8664bc4093e757431cd245e")
+	            .build();
+   MailjetClient client = new MailjetClient(options);
+   
+   MailjetRequest request = new MailjetRequest(Emailv31.resource)
+         .property(Emailv31.MESSAGES, new JSONArray()
+             .put(new JSONObject()
+                 .put(Emailv31.Message.FROM, new JSONObject()
+                     .put("Email", "admin@fullmetalgalaxy.com")
+                     .put("Name", "FMG Admin"))
+                 .put(Emailv31.Message.TO, mailTo)
+                 .put(Emailv31.Message.SUBJECT, "[FMG] " + subject)
+                 .put(Emailv31.Message.TEXTPART, content)
+                 .put(Emailv31.Message.HEADERS, new JSONObject()
+                         .put("Reply-To",replyTo))));
+   MailjetResponse response = client.post(request);
+
 
     } catch( Exception e )
     {

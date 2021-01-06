@@ -1,5 +1,5 @@
 <%@ page import="com.fullmetalgalaxy.server.*" %>
-<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+<%@taglib prefix="fmg" uri="/WEB-INF/tags/implicit.tld"%>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 
 <div id="login">

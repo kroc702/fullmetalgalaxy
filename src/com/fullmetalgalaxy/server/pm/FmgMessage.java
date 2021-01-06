@@ -38,6 +38,16 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.mailjet.client.ClientOptions;
+import com.mailjet.client.MailjetClient;
+import com.mailjet.client.MailjetRequest;
+import com.mailjet.client.MailjetResponse;
+import com.mailjet.client.errors.MailjetException;
+import com.mailjet.client.resource.Emailv31;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
 import com.fullmetalgalaxy.model.persist.EbTeam;
@@ -47,6 +57,7 @@ import com.fullmetalgalaxy.server.EbAccount.NotificationQty;
 import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.LocaleFmg;
 import com.fullmetalgalaxy.server.ServerUtil;
+
 
 /**
  * @author vlegendr
@@ -171,29 +182,38 @@ public class FmgMessage
     //
     if( p_account.haveEmail() )
     {
-      // send an email
-      Properties props = new Properties();
-      Session session = Session.getDefaultInstance( props, null );
-      MimeMessage mimemsg = new MimeMessage( session );
-
-      try
-      {
-        mimemsg.setSender( new InternetAddress( "admin@fullmetalgalaxy.com", "FMG Admin" ) );
-        mimemsg.setSubject( "[FMG] " + msg.getSubject() );
-        mimemsg.setContent( msg.getBody(), "text/plain" );
-        mimemsg.setRecipients( Message.RecipientType.TO,
-            InternetAddress.parse( p_account.getEmail() ) );
-        mimemsg.setRecipients( Message.RecipientType.BCC,
-            InternetAddress.parse( "archive@fullmetalgalaxy.com" ) );
-        Transport.send( mimemsg );
-        log.fine( "Mail send to " + p_account.getEmail() + " subject:" + msg.getSubject() );
-        isOk = true;
-      } catch( Exception e )
-      {
-        isOk = false;
-        log.error( e );
-        error = e.getMessage();
-      }
+    	 try
+         {
+    		 // send an email with mailjet API
+    		 ClientOptions options = ClientOptions.builder()
+    		            .apiKey("a2b35f062939e510bfc46852a484487a")
+    		            .apiSecretKey("ab1e463bc8664bc4093e757431cd245e")
+    		            .build();
+		      MailjetClient client = new MailjetClient(options);
+		      
+		      MailjetRequest request = new MailjetRequest(Emailv31.resource)
+		            .property(Emailv31.MESSAGES, new JSONArray()
+		                .put(new JSONObject()
+		                    .put(Emailv31.Message.FROM, new JSONObject()
+		                        .put("Email", "admin@fullmetalgalaxy.com")
+		                        .put("Name", "FMG Admin"))
+		                    .put(Emailv31.Message.TO, new JSONArray()
+		                        .put(new JSONObject()
+		                            .put("Email", p_account.getEmail())
+		                            .put("Name", p_account.getPseudo())))
+		                    .put(Emailv31.Message.SUBJECT, "[FMG] " + msg.getSubject())
+		                    .put(Emailv31.Message.TEXTPART, msg.getBody())));
+		      MailjetResponse response = client.post(request);
+    		      
+    		      
+	        log.fine( "Mail send to " + p_account.getEmail() + " subject:" + msg.getSubject() );
+	        isOk = true;
+		} catch( Exception e )
+		{
+			isOk = false;
+			log.error( e );
+			error = e.getMessage();
+		}
     }
     else
     {
@@ -205,33 +225,11 @@ public class FmgMessage
     return isOk;
   }
 
-  /**
-   * send this message as a forum private message, regardless user profile
-   * and event if link between forum and fmg isn't confirmed
-   * @param p_account
-   * @return
-   */
-  public boolean sendPM(EbAccount p_account)
-  {
-    if( p_account == null )
-    {
-      return false;
-    }
-    boolean isOk = true;
-    String error = null;
-
-    // localize msg
-    FmgMessage msg = localize(p_account);
-
-    // send a forum private message
-    isOk = ServerUtil.forumConnector().sendPMessage( "[FMG] " + msg.getSubject(), msg.getBody(),
-        p_account.getPseudo() );
-
-    // send a copy to archive@fullmetalgalaxy.com
-    send2Archive( msg, "PM", error );
-    
-    return isOk;
-  }
+  
+  
+  
+	  
+  
 
   /**
    * construct message according to parameters and locale

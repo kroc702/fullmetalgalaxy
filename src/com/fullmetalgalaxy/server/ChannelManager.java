@@ -39,16 +39,9 @@ import com.fullmetalgalaxy.model.Presence;
 import com.fullmetalgalaxy.model.Presence.ClientType;
 import com.fullmetalgalaxy.model.PresenceRoom;
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.server.xmpp.ChatCommand;
-import com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet;
-import com.fullmetalgalaxy.server.xmpp.XMPPProbeServlet;
-import com.google.appengine.api.channel.ChannelMessage;
-import com.google.appengine.api.channel.ChannelService;
-import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.api.xmpp.JID;
 
 /**
  * @author Vincent
@@ -76,7 +69,6 @@ public class ChannelManager extends HttpServlet
   private final static int CONNECTION_MIN_DIFF_MS = 1000 * 3; // 3sec
 
   private static MemcacheService s_cache = MemcacheServiceFactory.getMemcacheService();
-  private static ChannelService s_channelService = ChannelServiceFactory.getChannelService();
 
 
   @Override
@@ -175,7 +167,7 @@ public class ChannelManager extends HttpServlet
     String channelToken = null;
     if( p_presence.getClientType() == ClientType.CHAT || p_presence.getClientType() == ClientType.GAME )
     {
-      channelToken = s_channelService.createChannel( p_presence.getChannelId() );
+      //channelToken = s_channelService.createChannel( p_presence.getChannelId() );
     }
     
     // room was updated: update cache
@@ -211,7 +203,7 @@ public class ChannelManager extends HttpServlet
           // client have 4 seconds to answer
           presence.getLastConnexion().setTime(
               System.currentTimeMillis() - CACHE_PRESENCE_TTL_MS + 4000 );
-          s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+          //s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
         } catch( Exception e )
         {
           AppRoot.logger.severe( e.getMessage() );
@@ -266,7 +258,7 @@ public class ChannelManager extends HttpServlet
           if( presence.getJabberId() != null )
           {
             // send presence to xmpp clients
-            XMPPProbeServlet.sendPresence( new JID( presence.getJabberId() ) );
+            //XMPPProbeServlet.sendPresence( new JID( presence.getJabberId() ) );
           }
           else
           {
@@ -279,7 +271,7 @@ public class ChannelManager extends HttpServlet
           try
           {
             AppRoot.logger.finer( "ChannelManager.sendMessage "+ presence.getChannelId() );
-            s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+            //s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
           } catch( Exception e )
           {
             AppRoot.logger.severe( e.getMessage() );
@@ -302,7 +294,7 @@ public class ChannelManager extends HttpServlet
     isRoomUpdated |= updateLastConnexion( p_room, p_msg.getFromPseudo(), p_msg.getFromPageId() );
     isRoomUpdated |= removeTooOld( p_room );
     
-    boolean isCommand = ChatCommand.process( p_msg );
+    boolean isCommand = false;//ChatCommand.process( p_msg );
     String response = Serializer.toClient( p_msg );
 
     if( response != null )
@@ -321,7 +313,7 @@ public class ChannelManager extends HttpServlet
           if( !presence.getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ) )
           {
             // send chat message to a jabber client
-            boolean isSend = XMPPMessageServlet.sendXmppMessage( presence.getJabberId(), p_msg );
+            boolean isSend = true;//XMPPMessageServlet.sendXmppMessage( presence.getJabberId(), p_msg );
             if( !isSend )
             {
               // message send fail: remove presence
@@ -335,7 +327,7 @@ public class ChannelManager extends HttpServlet
           try
           {
             AppRoot.logger.finer( "ChannelManager.sendMessage "+ presence.getChannelId() );
-            s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+            //s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
           } catch( Exception e )
           {
             AppRoot.logger.severe( e.getMessage() );
@@ -387,7 +379,7 @@ public class ChannelManager extends HttpServlet
         {
           if( presence.getClientType() == ClientType.GAME )
           {
-            s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+            //s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
           }
         } catch( Exception e )
         {
@@ -446,14 +438,14 @@ public class ChannelManager extends HttpServlet
         if( presence.getClientType() == ClientType.XMPP )
         {
           // for xmpp clients we can't ask presence with an empty message
-          if( XMPPMessageServlet.isPresent( presence.getJabberId() ) )
+          /*if( XMPPMessageServlet.isPresent( presence.getJabberId() ) )
           {
             presence.setLastConnexion();
           }
           else
           {
             toRemove.add( presence );
-          }
+          }*/
           isRoomUpdated = true;
         }
         else
@@ -481,7 +473,7 @@ public class ChannelManager extends HttpServlet
     {
       try
       {
-        s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
+        //s_channelService.sendMessage( new ChannelMessage( presence.getChannelId(), response ) );
       } catch( Exception e )
       {
         AppRoot.logger.severe( e.getMessage() );

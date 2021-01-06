@@ -32,9 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import jskills.GameInfo;
 
 import com.fullmetalgalaxy.model.RpcUtil;
-import com.fullmetalgalaxy.server.forum.ConectorImpl;
-import com.fullmetalgalaxy.server.forum.ForumConector;
-import com.fullmetalgalaxy.server.forum.NewsConector;
 import com.google.appengine.api.utils.SystemProperty;
 
 /**
@@ -223,17 +220,6 @@ public class ServerUtil
   
 
 
-  private static ConectorImpl s_forumConnector = new ConectorImpl();
-
-  public static ForumConector forumConnector()
-  {
-    return s_forumConnector;
-  }
-
-  public static NewsConector newsConnector()
-  {
-    return s_forumConnector;
-  }
 
   /**
    * compute a compacted single tag from a given string.

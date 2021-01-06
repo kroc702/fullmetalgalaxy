@@ -1,6 +1,6 @@
 <%@ page import="com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+<%@taglib prefix="fmg" uri="/WEB-INF/tags/implicit.tld"%>
 
 	<div id="motifHeader">
 	<div id="bordure">

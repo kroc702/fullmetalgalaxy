@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>fmgwar</application>
-	<version>284</version>
+	<version>291</version>
 	
 	<sessions-enabled>true</sessions-enabled>
 	<precompilation-enabled>true</precompilation-enabled>
@@ -16,37 +16,34 @@
 	</system-properties>
 	
 	<inbound-services>
-    	<service>xmpp_message</service>
-    	<service>xmpp_presence</service>
-    	<service>xmpp_subscribe</service>
     	<service>mail</service>
   	</inbound-services>
   
 	<admin-console>
-    	<page name="Index" url="/admin/index.jsp" />
-    	<page name="Accounts" url="/admin/accounts.jsp" />
+    	<page name="Index" url="/admin/index.jsp"/>
+    	<page name="Accounts" url="/admin/accounts.jsp"/>
   	</admin-console>
   
 	<static-files>
         <!-- We can't cache game.jsp since game data is now embedded -->
-        <include path="/game.jsp" expiration="0s" />
-        <include path="/**.nocache.**" expiration="0s" />
-        <include path="/**.jsp" expiration="1h" />
-        <include path="/**.cache.**" expiration="365d" />
-        <include path="/**images/**" expiration="10d" />
+        <include path="/game.jsp" expiration="0s"/>
+        <include path="/**.nocache.**" expiration="0s"/>
+        <include path="/**.jsp" expiration="1h"/>
+        <include path="/**.cache.**" expiration="365d"/>
+        <include path="/**images/**" expiration="10d"/>
         <!-- include path="/ImageServlet" expiration="1d" /-->
-        <include path="/**" expiration="1h" />
-        <exclude path="/include/**" />
-        <exclude path="/**.pspimage" />
+        <include path="/**" expiration="1h"/>
+        <exclude path="/include/**"/>
+        <exclude path="/**.pspimage"/>
     </static-files>
     
     <resource-files>
-        <include path="/**_fr.html" />
-        <include path="/**_en.html" />
-        <include path="/puzzles/**.bin" />
-        <include path="/include/*" />
-        <include path="/**txt" />
-        <include path="/**rpc" />
+        <include path="/**_fr.html"/>
+        <include path="/**_en.html"/>
+        <include path="/puzzles/**.bin"/>
+        <include path="/include/*"/>
+        <include path="/**txt"/>
+        <include path="/**rpc"/>
     </resource-files>
     
     <static-error-handlers>
@@ -55,4 +52,5 @@
     	<handler file="error-timeout.html" error-code="timeout"/>
   	</static-error-handlers>
   	
+  <runtime>java8</runtime>
 </appengine-web-app>

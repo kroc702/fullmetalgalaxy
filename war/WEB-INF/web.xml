@@ -99,15 +99,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     </servlet-mapping>
   
     <servlet>
-       <servlet-name>SynchroForum</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.forum.SynchroForum</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>SynchroForum</servlet-name>
-       <url-pattern>/cron/synchroforum</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
        <servlet-name>GameUpdate</servlet-name>
        <servlet-class>com.fullmetalgalaxy.server.cron.GameUpdate</servlet-class>
     </servlet>
@@ -126,60 +117,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     </servlet-mapping>
   
   
-    <servlet>
-       <servlet-name>XMPPMessageServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPMessageServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPMessageServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
-       <servlet-name>XMPPAvailableServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPAvailableServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPAvailableServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/presence/available/</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
-       <servlet-name>XMPPUnavailableServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPUnavailableServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPUnavailableServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
-       <servlet-name>XMPPProbeServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPProbeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPProbeServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/presence/probe/</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
-       <servlet-name>XMPPSuscribeServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPSuscribeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPSuscribeServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/subscription/subscribe/</url-pattern>
-    </servlet-mapping>
-  
-    <servlet>
-       <servlet-name>XMPPUnsuscribeServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.xmpp.XMPPUnsuscribeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-       <servlet-name>XMPPUnsuscribeServlet</servlet-name>
-       <url-pattern>/_ah/xmpp/subscription/unsubscribe/</url-pattern>
-    </servlet-mapping>
-  
 	<servlet>
 		<servlet-name>_ah_sessioncleanup</servlet-name>
 		<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>
@@ -196,6 +133,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<security-constraint>
 	   <web-resource-collection>
+	   	   <web-resource-name>admin</web-resource-name>
 	       <url-pattern>/admin/accounts.jsp</url-pattern>
 	       <url-pattern>/admin/index.jsp</url-pattern>
          <url-pattern>/_ah/mail/*</url-pattern>

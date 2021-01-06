@@ -1,10 +1,4 @@
 /war/WEB-INF/classes/
-/war/WEB-INF/lib/appengine*.jar
-/war/WEB-INF/lib/datanucleus*.jar
-/war/WEB-INF/lib/geronimo*.jar
-/war/WEB-INF/lib/gwt*.jar
-/war/WEB-INF/lib/jdo2-api*.jar
-/war/WEB-INF/lib/jsr107cache*.jar
 /war/game/
 /war/WEB-INF/appengine-generated/
 /javadoc/
@@ -14,6 +8,5 @@
 /war/WEB-INF/deploy/
 /src/com/fullmetalgalaxy/server/forum/forumaccount.properties
 /gwt-unitCache
-/war/WEB-INF/lib/google_sql.jar
 *.blend1
 /extras

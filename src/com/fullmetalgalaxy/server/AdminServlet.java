@@ -50,7 +50,6 @@ import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
 import com.fullmetalgalaxy.model.persist.EbGamePreview;
 import com.fullmetalgalaxy.model.persist.EbRegistration;
-import com.fullmetalgalaxy.server.forum.ConectorImpl;
 import com.fullmetalgalaxy.server.pm.FmgMessage;
 
 /**
@@ -90,85 +89,7 @@ public class AdminServlet extends HttpServlet
       p_resp.sendRedirect( "/halloffames.jsp" );
     }
 
-    // pull account from forum
-    // =======================
-    strid = p_req.getParameter( "pullaccount" );
-    if( strid != null )
-    {
-      FmgDataStore ds = new FmgDataStore( false );
-      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
-      if( account != null )
-      {
-        if( ServerUtil.forumConnector().pullAccount( account ) )
-        {
-          ds.put( account );
-          p_resp.sendRedirect( "/account.jsp?id="+account.getId() );
-        }
-        else
-        {
-          p_resp.getOutputStream().println( "pullAccount failed" );
-        }
-      }
-      else
-      {
-        p_resp.getOutputStream().println( "account " + strid + " not found" );
-      }
-      ds.close();
-    }
-
-    // push account to forum
-    // =======================
-    strid = p_req.getParameter( "pushaccount" );
-    if( strid != null )
-    {
-      EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
-      if( account != null )
-      {
-        if( ServerUtil.forumConnector().pushAccount( account ) )
-        {
-          p_resp.sendRedirect( "/account.jsp?id="+account.getId() );
-        }
-        else
-        {
-          p_resp.getOutputStream().println( "pushAccount failed" );
-        }
-      }
-      else
-      {
-        p_resp.getOutputStream().println( "account " + strid + " not found" );
-      }
-    }
-
-    // link forum account
-    // ==================
-    strid = p_req.getParameter( "linkaccount" );
-    if( strid != null )
-    {
-      FmgDataStore ds = new FmgDataStore( false );
-      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
-      if( account != null )
-      {
-        String forumId = ServerUtil.forumConnector().getUserId( account.getPseudo() );
-        if( forumId == null )
-        {
-          p_resp.getOutputStream().println(
-              "username " + account.getPseudo() + " not found on forum" );
-        }
-        else
-        {
-          account.setForumId( forumId );
-          account.setIsforumIdConfirmed( true );
-          ds.put( account );
-          p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
-        }
-      }
-      else
-      {
-        p_resp.getOutputStream().println( "account " + strid + " not found" );
-      }
-      ds.close();
-    }
-
+    
     // send a test private message
     // ===========================
     strid = p_req.getParameter( "testpm" );
@@ -188,80 +109,6 @@ public class AdminServlet extends HttpServlet
       }
     }
 
-
-    // send a link private message
-    // ===========================
-    strid = p_req.getParameter( "linkpm" );
-    if( strid != null )
-    {
-      EbAccount account = FmgDataStore.dao().find( EbAccount.class, Long.parseLong( strid ) );
-      if( account != null )
-      {
-        if( new FmgMessage( "linkAccount" ).sendPM( account ) )
-        {
-          p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
-        }
-        else
-        {
-          p_resp.getOutputStream().println( "PM failed" );
-        }
-      }
-    }
-
-
-    // create forum account
-    // ====================
-    strid = p_req.getParameter( "createforumaccount" );
-    if( strid != null )
-    {
-      FmgDataStore ds = new FmgDataStore( false );
-      EbAccount account = ds.find( EbAccount.class, Long.parseLong( strid ) );
-      if( account != null )
-      {
-        String forumId = ServerUtil.forumConnector().getUserId( account.getPseudo() );
-        if( forumId != null )
-        {
-          p_resp.getOutputStream().println( "username " + account.getPseudo() + " exist on forum" );
-        }
-        else
-        {
-          if( ServerUtil.forumConnector().createAccount( account ) )
-          {
-            account.setIsforumIdConfirmed( true );
-            ds.put( account );
-            p_resp.sendRedirect( "/account.jsp?id=" + account.getId() );
-          }
-          else
-          {
-            p_resp.getOutputStream().println( "createAccount failed");
-          }
-        }
-      }
-      else
-      {
-        p_resp.getOutputStream().println( "account " + strid + " not found" );
-      }
-      ds.close();
-    }
-
-    // post a new game on forum (test)
-    // ===============================
-    strid = p_req.getParameter( "forumpostgame" );
-    if( strid != null )
-    {
-      FmgMessage msg = FmgMessage.buildMessage( LocaleFmg.getDefault(), "forumPostGame" );
-      msg.putParam( "game_name", "Tutorial" );
-      msg.putParam( "game_description",
-          "La première partie que vous pouvez faire pour vous familiariser avec les règles (environ 15min)" );
-      msg.putParam( "game_url",
-          "http://www.fullmetalgalaxy.com/game.jsp?id=/puzzles/tutorial/model.bin" );
-      msg = msg.applyParams();
-
-      // ServerUtil.newsConnector().postNews(
-      // ConectorImpl.FORUM_GAMES_THREAD_ID, msg.getSubject(),
-      // msg.getBody() );
-      ServerUtil.newsConnector().postNews( ConectorImpl.FORUM_GAMES_THREAD_ID, "ezrtret", "erztre" );
-    }
 
     // download game
     // =============

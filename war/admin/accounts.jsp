@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,java.text.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.*,com.fullmetalgalaxy.model.constant.*,com.googlecode.objectify.Query" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+<%@taglib prefix="fmg" uri="/WEB-INF/tags/implicit.tld"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>

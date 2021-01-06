@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,com.fullmetalgalaxy.server.*,com.fullmetalgalaxy.model.persist.*,com.fullmetalgalaxy.model.constant.*,com.fullmetalgalaxy.model.*" %>
 <%@page pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@taglib prefix="fmg" uri="/WEB-INF/classes/fmg.tld"%>
+<%@taglib prefix="fmg" uri="/WEB-INF/tags/implicit.tld"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,13 +46,6 @@ if(account == null) {
 	<h2><fmg:resource key="account_createnewaccount"/></h2>
 	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
 	<fmg:resource key="account_canusegoogleaccount"/></a>
-<%} else if(account.isIsforumIdConfirmed() && account.getForumId() != null){ %>
-  <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
-	<a href="http://fullmetalplanete.forum2jeux.com/profile?mode=editprofile">Editer le profil du forum</a><br/>
-	Voir mon profil public sur: 
-	<a href="/profile.jsp?id=<%=account.getId()%>">FMG</a> 
-	ou sur le 
-	<a href="http://<%=FmpConstant.getForumHost()%>/u<%=account.getForumId()%>">Forum</a><br/>
 <%} else {%>
   <img src='<%= account.getAvatarUrl() %>' border=0 alt='Avatar' style="float:right;">
 	<a href="/profile.jsp?id=<%=account.getId()%>">Voir mon profil public.</a> 
@@ -76,20 +69,6 @@ if(account == null) {
 	<input type="text" name="password2" value="<%= account.getPassword() %>"/><br/>
 	<fmg:resource key="account_pseudo"/> :
 	<input type="text" name="pseudo" value="<%= account.getPseudo() %>"/><br/>
-	<% if( account.isIsforumIdConfirmed() && account.getForumId() != null )
-	  {
-		out.println("<a href=\"/admin/Servlet?pullaccount="+account.getId()+"\">pull data from forum</a><br/>" );
-		out.println("<a href=\"/admin/Servlet?pushaccount="+account.getId()+"\">push data to forum</a><br/>" );
-		out.println("<a href=\"/admin/Servlet?testpm="+account.getId()+"\">Send a test PM</a><br/>" );
-	  } else if( account.getForumId() != null ){
-		out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">link existing forum account</a><br/>" );
-		if( account.getForumKey() != null ){
-			out.println("<a href=\"/admin/Servlet?linkpm="+account.getId()+"\">Send a link forum PM</a><br/>" );
-		}
-	  } else {
-	    out.println("<a href=\"/admin/Servlet?linkaccount="+account.getId()+"\">pull account ID</a><br/>" );
-	    out.println("<a href=\"/admin/Servlet?createforumaccount="+account.getId()+"\">create forum account</a><br/>" );
-	  } %>
 	<hr/>
 <% } else { %>
 	<input type="hidden" name="authprovider" value="<%= account.getAuthProvider() %>"/>
@@ -116,25 +95,8 @@ if(account == null) {
 <fmg:resource key="account_email"/> :
 <input type="text" name="email" value="<%= account.getEmail() %>"/><br/>
 email alias FMG : <%= account.getFmgEmail() %><br/>
-<fmg:resource key="account_jabberid"/> :
-<input type="text" name="jabberId" value="<%= account.getJabberId() %>"/><br/>
 <fmg:resource key="account_avatarurl"/> :
 <input type="text" name="avatarurl" value="<%= account.getForumAvatarUrl()!=null ? account.getForumAvatarUrl() : "" %>"/><br/>  
-webhook :
-<input type="text" name="webhook" value="<%= account.getWebHook()!=null ? account.getWebHook() : "" %>"/><br/>  
-<fmg:resource key="account_allowgamemessages"/> :
-	<SELECT name="NotificationQty">
-	<% for( EbAccount.NotificationQty notif : EbAccount.NotificationQty.values()) { %>
-		<OPTION VALUE="<%=notif%>" <%= account.getNotificationQty()==notif ? "SELECTED" : "" %> ><%=notif%></OPTION>
-	<% } %>
-	</SELECT><br/>
-<fmg:resource key="account_allowplayermessages"/> : <input type="checkbox" name="AllowMsgFromPlayer"  value="1" <%= account.allowMsgFromPlayer() ? "checked" : "" %> ><br/>
-Cacher mon email aux autres joueurs : <input type="checkbox" name="HideEmailToPlayer"  value="1" <%= account.isHideEmailToPlayer() ? "checked" : "" %> ><br/>
-<% if( id == 0 ) { %>
-<fmg:resource key="account_createforumaccount"/> <input type="checkbox" name="createforumaccount" value="1" checked /> 
-<br/>
-<% } %>
-<br/>
 
 
 <input type="submit" name="Submit" value="<fmg:resource key="account_save"/>"/>

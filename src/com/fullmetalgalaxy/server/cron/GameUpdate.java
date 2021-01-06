@@ -43,7 +43,6 @@ import com.fullmetalgalaxy.server.FmpLogger;
 import com.fullmetalgalaxy.server.GameNotification;
 import com.fullmetalgalaxy.server.GameWorkflow;
 import com.fullmetalgalaxy.server.LongDBTask;
-import com.fullmetalgalaxy.server.forum.SynchroForum;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.taskqueue.DeferredTask;
@@ -61,7 +60,7 @@ import com.googlecode.objectify.Query;
 public class GameUpdate extends HttpServlet
 {
   private static final long serialVersionUID = 1L;
-  private final static FmpLogger log = FmpLogger.getLogger( SynchroForum.class.getName() );
+  private final static FmpLogger log = FmpLogger.getLogger( GameUpdate.class.getName() );
 
   protected class GameUpdateCommand implements DeferredTask
   {

@@ -6,13 +6,12 @@ You shouldn't commit your change in this file
 <project name="FullMetalGalaxy-config">
 	<property environment="env" />
 
-	<property name="adminaccount" value="vincent.legendre@gmail.com" />
-	<property name="imagemagickDir" value="C:\Java\IM-convert\" />
-	<property name="eclipsedir" value="C:\Java\eclipse43" />
-	<property name="appenginesdkdir" value="${eclipsedir}\plugins\com.google.appengine.eclipse.sdkbundle_1.9.34\appengine-java-sdk-1.9.34" />
-	<property name="gwtsdkdir" value="${eclipsedir}\plugins\com.google.gwt.eclipse.sdkbundle_2.7.0\gwt-2.7.0" />
-	<property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.11.0.v201303080030" />
-	<property name="javahome" value="C:\Java\jdk1.7.0_25"/>
+	<!--property name="adminaccount" value="vincent.legendre@gmail.com" /-->
+	<property name="imagemagickDir" value="E:\perso\IM-convert\" />
+	<property name="appenginesdkdir" value="E:\perso\appengine-java-sdk-1.9.82" />
+	<property name="gwtsdkdir" value="E:\perso\gwt-2.9.0" />
+	<!--property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.11.0.v201303080030" /-->
+	<property name="javahome" value="C:\Program Files\Java\jdk1.8.0_251"/><!--E:\perso\jdk-15.0.1"/-->
 
 	<property name="git" value="C:\Program Files\Git\bin\git" />
 	<property name="javadocDir" value="javadoc" />
