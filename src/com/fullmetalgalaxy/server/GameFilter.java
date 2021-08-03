@@ -125,7 +125,7 @@ public class GameFilter
     Query<EbGamePreview> gameList = FmgDataStore.dao().query( EbGamePreview.class );
     if( !m_name.isEmpty() )
     {
-      gameList.filter("m_name >=",m_name).filter("m_name <", m_name + "\uFFFD");
+      gameList.filter( "m_name >=", m_name ).filter( "m_name <", m_name + "\uFFFD" );
     }
     if( !m_pseudo.isEmpty() )
     {
@@ -191,8 +191,8 @@ public class GameFilter
     {
       gameList.filter( "m_status =", );
     }*/
-    
-    
+
+
     if( !m_orderByDate.isEmpty() )
     {
       gameList.order( "-m_creationDate" );
@@ -203,39 +203,42 @@ public class GameFilter
 
   public String getHtml()
   {
-    // TODO i18n 
+    // TODO i18n
     return "<form name='myform' action='/gamelist.jsp' method='get'><hr/>"
-        + "<img src='/images/css/calendar.png' title='classé par date'/> <input type='checkbox' name='orderByDate' value='checked' "
-        + m_orderByDate
-        + "> "
-        + "<img src='/images/icons/fast16.png' title='Partie rapide (1h30)'/> <input type='checkbox' name='fast' value='checked' "+m_fast+"> "
+        + "<img src='/images/icons/calendar.png' title='classé par date'/> <input type='checkbox' name='orderByDate' value='checked' "
+        + m_orderByDate + "> "
+        + "<img src='/images/icons/fast16.png' title='Partie rapide (1h30)'/> <input type='checkbox' name='fast' value='checked' "
+        + m_fast + "> "
         + "<img src='/images/icons/slow16.png' title='Partie lente (25 jours ou illimité)'/> <input type='checkbox' name='slow' value='checked' "
-        + m_slow
-        + "> "
-        + "<img src='/images/icons/turnbyturn16.png' title='Partie en mode tour par tour' /> <input type='checkbox' name='turnbyturn' value='checked' "+m_turnbyturn+"> "
+        + m_slow + "> "
+        + "<img src='/images/icons/turnbyturn16.png' title='Partie en mode tour par tour' /> <input type='checkbox' name='turnbyturn' value='checked' "
+        + m_turnbyturn + "> "
         + "<img src='/images/icons/parallele16.png' title='Partie en mode parallèle'/> <input type='checkbox' name='parallele' value='checked' "
-        + m_parallele
-        + "> "
+        + m_parallele + "> "
         // +
-        // "<img src='/images/icons/protected16.png' title='Partie protégé par un mot de passe'/> <input type='checkbox' name='protected' value='checked' "
+        // "<img src='/images/icons/protected16.png' title='Partie protégé par
+        // un mot de passe'/> <input type='checkbox' name='protected'
+        // value='checked' "
         // + m_protected
         // + "> "
         // +
-        // "<img src='/images/icons/unprotected16.png' title='Partie non protégé'/> <input type='checkbox' name='unprotected' value='checked' "
+        // "<img src='/images/icons/unprotected16.png' title='Partie non
+        // protégé'/> <input type='checkbox' name='unprotected' value='checked'
+        // "
         // + m_unprotected
         // + "> "
-        + "<img src='/images/icons/open16.png' title='Partie ouverte aux inscriptions'/> <input type='checkbox' name='open' value='checked' "+m_open+"> "
-        + "<img src='/images/icons/running16.png' title='Partie en cours'/> <input type='checkbox' name='running' value='checked' "+m_running+"> "
-        + "<img src='/images/icons/pause16.png' title='Partie en pause'/> <input type='checkbox' name='pause' value='checked' "+m_pause+"> "
+        + "<img src='/images/icons/open16.png' title='Partie ouverte aux inscriptions'/> <input type='checkbox' name='open' value='checked' "
+        + m_open + "> "
+        + "<img src='/images/icons/running16.png' title='Partie en cours'/> <input type='checkbox' name='running' value='checked' "
+        + m_running + "> "
+        + "<img src='/images/icons/pause16.png' title='Partie en pause'/> <input type='checkbox' name='pause' value='checked' "
+        + m_pause + "> "
         + "<img src='/images/icons/history16.png' title='Partie archivé'/> <input type='checkbox' name='history' value='checked' "
-        + m_history
-        + "> "
+        + m_history + "> "
         + "<img src='/images/icons/canceled16.png' title='Partie annulé'/> <input type='checkbox' name='canceled' value='checked' "
-        + m_canceled
-        + "> <br/>"
-        + "nom de la partie: <input type='text' name='name' value='" + m_name + "'>"
-        + "nom d'un joueur: <input type='text' name='pseudo' value='" + m_pseudo + "'>"
-        + "<input type='hidden' name='tab' value='" + m_tab
+        + m_canceled + "> <br/>" + "nom de la partie: <input type='text' name='name' value='"
+        + m_name + "'>" + "nom d'un joueur: <input type='text' name='pseudo' value='" + m_pseudo
+        + "'>" + "<input type='hidden' name='tab' value='" + m_tab
         + "'><input type='submit' name='Submit' value='Rechercher'/><hr/></form>";
 
   }

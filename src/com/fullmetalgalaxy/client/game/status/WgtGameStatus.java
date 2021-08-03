@@ -85,7 +85,7 @@ public class WgtGameStatus extends WgtView
 
     // game turn
     Panel hPanel = new HorizontalPanel();
-    m_iconTime.setUrl( "/images/clear.cache.gif" );
+    m_iconTime.setUrl( "images/clear.cache.gif" );
     hPanel.add( m_iconTime );
     m_lblTurn.setStyleName( "fmp-status-text" );
     m_lblTurn.setTitle( "Tour actuel / Nombre total de tours" );
@@ -114,8 +114,9 @@ public class WgtGameStatus extends WgtView
 
   private long computeGameHash(Game game)
   {
-    return game.getCurrentTimeStep() + game.getCurrentTide().ordinal() * 10 + game.getNextTide().ordinal() * 100
-        + game.getNextTide2().ordinal() * 200 + game.getCurrentPlayerIds().hashCode();
+    return game.getCurrentTimeStep() + game.getCurrentTide().ordinal() * 10
+        + game.getNextTide().ordinal() * 100 + game.getNextTide2().ordinal() * 200
+        + game.getCurrentPlayerIds().hashCode();
   }
 
 
@@ -161,8 +162,7 @@ public class WgtGameStatus extends WgtView
       }
       else
       {
-        displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) )
-.getTeam( game )
+        displayEndTurn( game.getRegistration( game.getCurrentPlayerIds().get( 0 ) ).getTeam( game )
             .getEndTurnDate() );
       }
     }
@@ -180,8 +180,8 @@ public class WgtGameStatus extends WgtView
       // Display current tides
       m_panelTide.clear();
       Image image = BoardIcons.iconTide( game.getCurrentTide() ).createImage();
-      image.setTitle( MAppBoard.s_messages.currentTide()
-          + Messages.getTideString( 0, game.getCurrentTide() ) );
+      image.setTitle(
+          MAppBoard.s_messages.currentTide() + Messages.getTideString( 0, game.getCurrentTide() ) );
       m_panelTide.add( image );
       m_panelTide.setCellWidth( image, "20px" );
 
@@ -210,8 +210,8 @@ public class WgtGameStatus extends WgtView
         else
         {
           image = BoardIcons.iconTide( game.getNextTide() ).createImage();
-          image.setTitle( MAppBoard.s_messages.nextTide()
-              + Messages.getTideString( 0, game.getNextTide() ) );
+          image.setTitle(
+              MAppBoard.s_messages.nextTide() + Messages.getTideString( 0, game.getNextTide() ) );
         }
         if( game.getEbConfigGameTime().isParallel() )
         {
@@ -227,13 +227,12 @@ public class WgtGameStatus extends WgtView
 
         if( GameEngine.model().getMyRegistration().getTeam( game )
             .getTideForeCast( game.getPreview() ) >= 2
-            && (game.getNextTideChangeTimeStep()
-                + game.getEbConfigGameTime().getTideChangeFrequency() <= game.getEbConfigGameTime()
-                .getTotalTimeStep()) )
+            && (game.getNextTideChangeTimeStep() + game.getEbConfigGameTime()
+                .getTideChangeFrequency() <= game.getEbConfigGameTime().getTotalTimeStep()) )
         {
           image = BoardIcons.iconTide( game.getNextTide2() ).createImage();
-          image.setTitle( MAppBoard.s_messages.nextTide()
-              + Messages.getTideString( 0, game.getNextTide2() ) );
+          image.setTitle(
+              MAppBoard.s_messages.nextTide() + Messages.getTideString( 0, game.getNextTide2() ) );
           m_panelTide.add( image );
           m_panelTide.setCellWidth( image, "20px" );
         }
@@ -337,8 +336,7 @@ public class WgtGameStatus extends WgtView
     if( sec >= 60 * 60 )
     {
       // if end turn is farrer than one hour, simply display date
-      m_lblDate.setHTML( "&nbsp;(" + ClientUtil.formatDateTime( m_endTurn )
-          + ")&nbsp;&nbsp;" );
+      m_lblDate.setHTML( "&nbsp;(" + ClientUtil.formatDateTime( m_endTurn ) + ")&nbsp;&nbsp;" );
     }
     else
     {

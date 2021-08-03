@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.Company;
 import com.fullmetalgalaxy.model.EnuColor;
@@ -51,7 +52,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * @author Kroc
  * 
- * During the game join process, this dialog ask player to choose his color.
+ *         During the game join process, this dialog ask player to choose his
+ *         color.
  */
 
 public class DlgJoinChooseColor extends DialogBox
@@ -126,23 +128,23 @@ public class DlgJoinChooseColor extends DialogBox
         }
       }
     }
-    
+
     for( Company company : freeCompany )
     {
       m_companySelection.addItem( company.getFullName(), company.toString() );
     }
     m_companySelection.setSelectedIndex( Random.nextInt( m_companySelection.getItemCount() ) );
-    Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
-        .getSelectedIndex() ) );
-    m_companyPreview.setUrl( "/images/avatar/" + company + ".jpg" );
+    Company company = Company
+        .valueOf( m_companySelection.getValue( m_companySelection.getSelectedIndex() ) );
+    m_companyPreview.setUrl( FmgConstants.avatarFolderUri + company + ".jpg" );
     m_companySelection.addChangeHandler( new ChangeHandler()
     {
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        Company company = Company.valueOf( m_companySelection.getValue( m_companySelection
-            .getSelectedIndex() ) );
-        m_companyPreview.setUrl( "/images/avatar/" + company + ".jpg" );
+        Company company = Company
+            .valueOf( m_companySelection.getValue( m_companySelection.getSelectedIndex() ) );
+        m_companyPreview.setUrl( FmgConstants.avatarFolderUri + company + ".jpg" );
       }
     } );
     Panel hpanel = new HorizontalPanel();
@@ -169,36 +171,40 @@ public class DlgJoinChooseColor extends DialogBox
     {
       if( color.getValue() != EnuColor.None )
       {
-        m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ), ""+color.getValue() );
+        m_colorSelection.addItem( Messages.getColorString( 0, color.getValue() ),
+            "" + color.getValue() );
       }
     }
     m_colorSelection.setSelectedIndex( Random.nextInt( m_colorSelection.getItemCount() ) );
     // initialize company icon
-    int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
+    int colorValue = Integer
+        .parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ) );
     EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor( colorValue );
     if( registration != null && registration.getTeam( GameEngine.model().getGame() ) != null )
     {
-      m_companyPreview.setUrl( "/images/avatar/" +
-          registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
+      m_companyPreview.setUrl( FmgConstants.avatarFolderUri
+          + registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
     }
     // initialize color icon
-    m_colorPreview.setUrl( "/images/board/" + (new EnuColor( colorValue )).toString()
-        + "/preview.jpg" );
+    m_colorPreview.setUrl(
+        FmgConstants.boardFolderUri + (new EnuColor( colorValue )).toString() + "/preview.jpg" );
     m_colorSelection.addChangeHandler( new ChangeHandler()
     {
       @Override
       public void onChange(ChangeEvent p_event)
       {
-        int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ));
-        EnuColor color = new EnuColor(colorValue);
-        m_colorPreview.setUrl( "/images/board/" + color.toString() + "/preview.jpg" );
+        int colorValue = Integer
+            .parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ) );
+        EnuColor color = new EnuColor( colorValue );
+        m_colorPreview.setUrl( FmgConstants.boardFolderUri + color.toString() + "/preview.jpg" );
         m_btnOk.setEnabled( true );
         // for replacement: search corresponding team
-        EbRegistration registration = GameEngine.model().getGame().getRegistrationByColor( colorValue );
+        EbRegistration registration = GameEngine.model().getGame()
+            .getRegistrationByColor( colorValue );
         if( registration != null && registration.getTeam( GameEngine.model().getGame() ) != null )
         {
-          m_companyPreview.setUrl( "/images/avatar/" +
-              registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
+          m_companyPreview.setUrl( FmgConstants.avatarFolderUri
+              + registration.getTeam( GameEngine.model().getGame() ).getCompany() + ".jpg" );
         }
       }
     } );
@@ -228,15 +234,15 @@ public class DlgJoinChooseColor extends DialogBox
       @Override
       public void onClick(ClickEvent p_event)
       {
-        int colorValue = Integer.parseInt( m_colorSelection.getValue( m_colorSelection
-            .getSelectedIndex() ) );
+        int colorValue = Integer
+            .parseInt( m_colorSelection.getValue( m_colorSelection.getSelectedIndex() ) );
         EnuColor color = new EnuColor( colorValue );
         EbGameJoin action = getJoinEvent();
         Company company = Company.Freelancer;
         try
         {
-          company = Company.valueOf( m_companySelection.getValue( m_companySelection
-              .getSelectedIndex() ) );
+          company = Company
+              .valueOf( m_companySelection.getValue( m_companySelection.getSelectedIndex() ) );
         } catch( Exception e )
         {
         }

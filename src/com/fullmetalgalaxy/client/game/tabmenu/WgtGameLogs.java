@@ -73,8 +73,8 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     m_tree.clear();
     if( GameEngine.model().getGame().getAdditionalEventCount() > 0 )
     {
-      m_tree.addItem( new TreeItemAdditionalEvent( GameEngine.model().getGame()
-          .getAdditionalEventCount() ) );
+      m_tree.addItem(
+          new TreeItemAdditionalEvent( GameEngine.model().getGame().getAdditionalEventCount() ) );
     }
     m_additionalEventCount = GameEngine.model().getGame().getAdditionalEventCount();
     if( GameEngine.model().getGame().getEbConfigGameTime().isParallel() )
@@ -99,7 +99,8 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
     if( myRegistration != null
         && !myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents().isEmpty() )
     {
-      TreeItem turnTreeItem = new TreeItem( SafeHtmlUtils.fromString( myRegistration.getAccount().getPseudo() ) );
+      TreeItem turnTreeItem = new TreeItem(
+          SafeHtmlUtils.fromString( myRegistration.getAccount().getPseudo() ) );
       m_tree.addItem( turnTreeItem );
       for( AnEvent event : myRegistration.getTeam( GameEngine.model().getGame() ).getMyEvents() )
       {
@@ -193,9 +194,10 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
       }
       if( event instanceof EbEvtControlFreighter )
       {
-        if( ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() ) != null
+        if( ((EbEvtControlFreighter)event)
+            .getOldRegistration( GameEngine.model().getGame() ) != null
             && ((EbEvtControlFreighter)event).getOldRegistration( GameEngine.model().getGame() )
-            .getColor() == EnuColor.None )
+                .getColor() == EnuColor.None )
         {
           playerCount--;
         }
@@ -231,8 +233,8 @@ public class WgtGameLogs extends Composite implements SelectionHandler<TreeItem>
           || event.getLastUpdate().getDate() != dateTreeItem.getEvent().getLastUpdate().getDate() )
       {
         dateTreeItem = new TreeItemEvent( event );
-        dateTreeItem.setHTML( "<img src='/images/css/calendar.png'/> "
-            + EventPresenter.getDate( event ) );
+        dateTreeItem.setHTML(
+            "<img src='/images/icons/calendar.png'/> " + EventPresenter.getDate( event ) );
         m_tree.addItem( dateTreeItem );
       }
       dateTreeItem.addItem( new TreeItemEvent( event ) );

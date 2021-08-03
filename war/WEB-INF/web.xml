@@ -5,6 +5,20 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   
+  <!-- cf doc here https://cloud.google.com/appengine/docs/standard/java/config/webxml -->
+  
+  
+  <!-- Filters -->
+  <filter>
+      <filter-name>CorsFilter</filter-name>
+      <filter-class>com.fullmetalgalaxy.server.CorsFilter</filter-class>
+  </filter>
+  <filter-mapping>
+      <filter-name>CorsFilter</filter-name>
+      <url-pattern>*</url-pattern>
+  </filter-mapping>
+    
+    
   <!-- Servlets -->
   
   <servlet>
@@ -44,9 +58,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
        <url-pattern>/PMServlet</url-pattern>
     </servlet-mapping>
 
+<!-- 
     <servlet>
        <servlet-name>PublicGameApiServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.PublicGameApiServlet</servlet-class>
+       <servlet-class>com.fullmetalgalaxy.server.api.PublicGameApiServlet</servlet-class>
     </servlet>
     <servlet-mapping>
        <servlet-name>PublicGameApiServlet</servlet-name>
@@ -55,13 +70,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
     <servlet>
        <servlet-name>PublicNewGameApiServlet</servlet-name>
-       <servlet-class>com.fullmetalgalaxy.server.PublicNewGameApiServlet</servlet-class>
+       <servlet-class>com.fullmetalgalaxy.server.api.PublicNewGameApiServlet</servlet-class>
     </servlet>
     <servlet-mapping>
        <servlet-name>PublicNewGameApiServlet</servlet-name>
        <url-pattern>/newgame/*</url-pattern>
     </servlet-mapping>
-
+ -->
 		<servlet>
 		  <servlet-name>mailhandler</servlet-name>
 		  <servlet-class>com.fullmetalgalaxy.server.pm.MailHandlerServlet</servlet-class>
@@ -125,6 +140,20 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	  <servlet-name>_ah_sessioncleanup</servlet-name>
 	  <url-pattern>/_ah/sessioncleanup</url-pattern>
 	</servlet-mapping>
+
+
+	<servlet>
+	    <servlet-name>RestServlet</servlet-name>
+	    <servlet-class>com.fullmetalgalaxy.server.api.RestServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>RestServlet</servlet-name>
+	    <url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	
+
+
 
   <!-- Default page to serve -->
   <welcome-file-list>

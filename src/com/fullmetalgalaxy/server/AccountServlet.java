@@ -54,10 +54,12 @@ public class AccountServlet extends HttpServlet
   private static final long serialVersionUID = -4916146982326069190L;
   private final static FmpLogger log = FmpLogger.getLogger( AccountServlet.class.getName() );
 
-
-
-  /* (non-Javadoc)
-   * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
+   * javax.servlet.http.HttpServletResponse)
    */
   @Override
   protected void doGet(HttpServletRequest p_request, HttpServletResponse p_response)
@@ -108,10 +110,12 @@ public class AccountServlet extends HttpServlet
     {
       // retry a webhook
       // ===============
-      try{
-        WebHook webhook = new WebHook( Long.parseLong( p_request.getParameter( "retrywebhook" ) ), Long.parseLong( p_request
-            .getParameter( "account" ) ) );
-        webhook.staiExtraStatements = "retry, manual by user "+Auth.getUserPseudo( p_request, p_response );
+      try
+      {
+        WebHook webhook = new WebHook( Long.parseLong( p_request.getParameter( "retrywebhook" ) ),
+            Long.parseLong( p_request.getParameter( "account" ) ) );
+        webhook.staiExtraStatements = "retry, manual by user "
+            + Auth.getUserPseudo( p_request, p_response );
         webhook.start();
       } catch( Exception e )
       {
@@ -127,9 +131,12 @@ public class AccountServlet extends HttpServlet
     }
   }
 
-
-  /* (non-Javadoc)
-   * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
+   * javax.servlet.http.HttpServletResponse)
    */
   @Override
   protected void doPost(HttpServletRequest p_request, HttpServletResponse p_response)
@@ -186,7 +193,8 @@ public class AccountServlet extends HttpServlet
     {
       // user ask for his password to be send on his email
       String msg = "";
-      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class ).filter( "m_email", params.get( "email" ) );
+      Query<EbAccount> query = FmgDataStore.dao().query( EbAccount.class ).filter( "m_email",
+          params.get( "email" ) );
       QueryResultIterator<EbAccount> it = query.iterator();
       if( !it.hasNext() )
       {
@@ -195,8 +203,8 @@ public class AccountServlet extends HttpServlet
       else
       {
         EbAccount account = it.next();
-        if( account.getLastPasswordAsk() != null 
-            && account.getLastPasswordAsk().getTime() > System.currentTimeMillis() - (1000*60*60*24) )
+        if( account.getLastPasswordAsk() != null && account.getLastPasswordAsk()
+            .getTime() > System.currentTimeMillis() - (1000 * 60 * 60 * 24) )
         {
           msg = "une seule demande par jour";
         }
@@ -208,7 +216,7 @@ public class AccountServlet extends HttpServlet
         {
           // all is ok, send a mail
           new FmgMessage( "askPassword" ).sendEMail( account );
-          
+
           msg = "un email a été envoyé à " + account.getEmail();
 
           FmgDataStore ds = new FmgDataStore( false );
@@ -218,8 +226,8 @@ public class AccountServlet extends HttpServlet
           ds.close();
         }
       }
-      
-      p_response.sendRedirect( "/password.jsp?msg="+msg );
+
+      p_response.sendRedirect( "/password.jsp?msg=" + msg );
       return;
     }
     else
@@ -257,16 +265,15 @@ public class AccountServlet extends HttpServlet
       }
     }
 
-
   }
-
 
   /**
    * try to connect an FMG (not google or other credential) user
+   * 
    * @param p_request
    * @param p_response
    * @param params
-   * @return false if connection failed and p_response is redirected. 
+   * @return false if connection failed and p_response is redirected.
    * @throws IOException
    */
   private boolean connectFmgUser(HttpServletRequest p_request, HttpServletResponse p_response,
@@ -278,15 +285,16 @@ public class AccountServlet extends HttpServlet
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
       return false;
     }
-    FmgDataStore ds = new FmgDataStore(true);
+    FmgDataStore ds = new FmgDataStore( true );
     Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_login", login );
     EbAccount account = query.get();
     if( account == null )
     {
-      query = ds.query( EbAccount.class ).filter( "m_compactPseudo", ServerUtil.compactTag( login ) );
+      query = ds.query( EbAccount.class ).filter( "m_compactPseudo",
+          ServerUtil.compactTag( login ) );
       account = query.get();
     }
-    
+
     if( account == null )
     {
       p_response.sendRedirect( "/auth.jsp?msg=login ou mot de passe invalide" );
@@ -295,13 +303,15 @@ public class AccountServlet extends HttpServlet
     login = account.getLogin();
     params.put( "login", login );
     p_request.setAttribute( "login", login );
-    
-    // if user is already connected as admin: don't check password and allow connect to another user
-    if( !Auth.isUserAdmin( p_request, p_response ))
+
+    // if user is already connected as admin: don't check password and allow
+    // connect
+    // to another user
+    if( !Auth.isUserAdmin( p_request, p_response ) )
     {
       if( account.getAuthProvider() != AuthProvider.Fmg )
       {
-        p_response.sendRedirect( Auth.getGoogleLoginURL( p_request, p_response ) );
+        p_response.sendRedirect( Auth.getGoogleLoginURL( Auth.getFullURI( p_request ) ) );
         return false;
       }
       String password = params.get( "password" );
@@ -317,12 +327,11 @@ public class AccountServlet extends HttpServlet
         return false;
       }
     }
-    
+
     // all seams ok: connect user
     Auth.connectUser( p_request, login );
     return true;
   }
-
 
   /**
    * 
@@ -365,7 +374,7 @@ public class AccountServlet extends HttpServlet
     String strid = params.get( "accountid" );
     assert strid != null;
     long id = Long.parseLong( strid );
-    FmgDataStore store = new FmgDataStore(false);
+    FmgDataStore store = new FmgDataStore( false );
     EbAccount account = null;
     if( id == 0 )
     {
@@ -394,9 +403,8 @@ public class AccountServlet extends HttpServlet
       }
       // just update an account
       account = store.get( EbAccount.class, id );
-      if( params.get( "pseudo" ) != null
-          && (account.getPseudo() == null || !account.getPseudo().equalsIgnoreCase(
-              params.get( "pseudo" ) )) )
+      if( params.get( "pseudo" ) != null && (account.getPseudo() == null
+          || !account.getPseudo().equalsIgnoreCase( params.get( "pseudo" ) )) )
       {
         // lets check that pseudo ins't took already
         if( FmgDataStore.isPseudoExist( params.get( "pseudo" ) ) )
@@ -427,7 +435,14 @@ public class AccountServlet extends HttpServlet
     }
     account.setAllowMsgFromPlayer( params.get( "AllowMsgFromPlayer" ) != null );
     account.setHideEmailToPlayer( params.get( "HideEmailToPlayer" ) != null );
-    account.setNotificationQty( NotificationQty.valueOf( params.get( "NotificationQty" ) ) );
+    if( params.get( "NotificationQty" ) != null )
+    {
+      account.setNotificationQty( NotificationQty.valueOf( params.get( "NotificationQty" ) ) );
+    }
+    else
+    {
+      account.setNotificationQty( NotificationQty.Std );
+    }
 
     account.setEmail( params.get( "email" ) );
     account.setJabberId( params.get( "jabberId" ) );
@@ -448,7 +463,6 @@ public class AccountServlet extends HttpServlet
       store.rollback();
       return "Vous devez definir un mot de passe";
     }
-
 
     store.put( account );
     store.close();

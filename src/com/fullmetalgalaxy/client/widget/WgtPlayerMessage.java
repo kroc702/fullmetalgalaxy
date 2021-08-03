@@ -24,6 +24,7 @@
 package com.fullmetalgalaxy.client.widget;
 
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
@@ -47,7 +48,7 @@ public class WgtPlayerMessage extends Composite
   {
     super();
     EbPublicAccount account = p_game.getAccount( p_message.getAccountId() );
-    String avatarUrl = "/images/avatar/avatar-default.jpg";
+    String avatarUrl = FmgConstants.avatarFolderUri + "avatar-default.jpg";
     String pseudo = "???";
     if( account != null )
     {

@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.client.game.board;
 
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.constant.FmpConstant;
@@ -53,15 +54,16 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
   {
     super.setZoom( p_zoom );
     String odd = "";
-    if(m_cropLeftHex%2 != 0) odd = "-odd";
+    if( m_cropLeftHex % 2 != 0 )
+      odd = "-odd";
     switch( p_zoom.getValue() )
     {
     default:
     case EnuZoom.Medium:
-      setStyleName( "fmp-grid-tactic"+odd );
+      setStyleName( "fmp-grid-tactic" + odd );
       break;
     case EnuZoom.Small:
-      setStyleName( "fmp-grid-strategy"+odd );
+      setStyleName( "fmp-grid-strategy" + odd );
       break;
     }
   }
@@ -88,7 +90,7 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
       int p_cropBotomHex)
   {
     super.cropDisplay( p_cropLeftHex, p_cropTopHex, p_cropRightHex, p_cropBotomHex );
-    setZoom(GameEngine.model().getZoomDisplayed());
+    setZoom( GameEngine.model().getZoomDisplayed() );
   }
 
 
@@ -99,15 +101,19 @@ public class WgtBoardLayerGrid extends WgtBoardLayerBase
   public static int createGridRules()
   {
     int oldLength = ClientUtil.setCssRule( ".fmp-grid-tactic",
-        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/tactic/grid.gif);}" ) - 1;
+        "{background: url(" + FmgConstants.boardFolderUri
+            + GameEngine.model().getGame().getPlanetType().getFolderName() + "/tactic/grid.gif);}" )
+        - 1;
     ClientUtil.setCssRule( ".fmp-grid-tactic-odd",
-        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/tactic/grid.gif) "
-            +(FmpConstant.getHexWidth(EnuZoom.Medium)*3/4)+"px 0px;}" );
-    ClientUtil.setCssRule( ".fmp-grid-strategy",
-        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/strategy/grid.gif);}" );
+        "{background: url(" + FmgConstants.boardFolderUri
+            + GameEngine.model().getGame().getPlanetType().getFolderName() + "/tactic/grid.gif) "
+            + (FmpConstant.getHexWidth( EnuZoom.Medium ) * 3 / 4) + "px 0px;}" );
+    ClientUtil.setCssRule( ".fmp-grid-strategy", "{background: url(" + FmgConstants.boardFolderUri
+        + GameEngine.model().getGame().getPlanetType().getFolderName() + "/strategy/grid.gif);}" );
     ClientUtil.setCssRule( ".fmp-grid-strategy-odd",
-        "{background: url(images/board/"+GameEngine.model().getGame().getPlanetType().getFolderName()+"/strategy/grid.gif) "
-        +(FmpConstant.getHexWidth(EnuZoom.Small)*3/4)+"px 0px;}" );
+        "{background: url(" + FmgConstants.boardFolderUri
+            + GameEngine.model().getGame().getPlanetType().getFolderName() + "/strategy/grid.gif) "
+            + (FmpConstant.getHexWidth( EnuZoom.Small ) * 3 / 4) + "px 0px;}" );
     return oldLength;
   }
 }

@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.AppMain;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.chat.DlgChatInput;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.DlgAIJoinGame;
@@ -74,13 +75,13 @@ public class WgtPlayers extends Composite implements ClickHandler
   private Map<Widget, EbRegistration> m_banButtons = new HashMap<Widget, EbRegistration>();
   private Map<Widget, EbRegistration> m_skipTurnButtons = new HashMap<Widget, EbRegistration>();
   private Panel m_playerPanel = new FlowPanel();
-  
+
   private Button m_btnChat = new Button( "chat" );
-  
+
   public WgtPlayers()
   {
     super();
-    
+
     m_btnChat.addClickHandler( this );
     initPlayerPanel();
     ScrollPanel m_scrollPanel = new ScrollPanel();
@@ -88,7 +89,7 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_scrollPanel.add( m_playerPanel );
     initWidget( m_scrollPanel );
   }
-  
+
   private void initPlayerPanel()
   {
     // this step may be too long for user ui...
@@ -107,18 +108,19 @@ public class WgtPlayers extends Composite implements ClickHandler
     m_skipTurnButtons.clear();
     m_playerPanel.clear();
     int playerCount = GameEngine.model().getGame().getSetRegistration().size();
-    String strPlayerCount = ""+playerCount;
+    String strPlayerCount = "" + playerCount;
     if( playerCount != GameEngine.model().getGame().getMaxNumberOfPlayer() )
     {
-      strPlayerCount += "/"+GameEngine.model().getGame().getMaxNumberOfPlayer();
+      strPlayerCount += "/" + GameEngine.model().getGame().getMaxNumberOfPlayer();
     }
     String strLabel = MAppBoard.s_messages.xPlayers( strPlayerCount );
     if( GameEngine.model().getGame().getMaxTeamAllowed() > 0 )
     {
-      String strTeamCount = ""+GameEngine.model().getGame().getTeams().size();
-      if( GameEngine.model().getGame().getTeams().size() != GameEngine.model().getGame().getMaxTeamAllowed() )
+      String strTeamCount = "" + GameEngine.model().getGame().getTeams().size();
+      if( GameEngine.model().getGame().getTeams().size() != GameEngine.model().getGame()
+          .getMaxTeamAllowed() )
       {
-        strTeamCount += "/"+GameEngine.model().getGame().getMaxTeamAllowed();
+        strTeamCount += "/" + GameEngine.model().getGame().getMaxTeamAllowed();
       }
       strLabel += " - " + MAppBoard.s_messages.xTeams( strTeamCount );
     }
@@ -177,12 +179,12 @@ public class WgtPlayers extends Composite implements ClickHandler
         // display team avatar
         if( team.getCompany() != Company.Freelancer )
         {
-          m_playerGrid
-              .setHTML( index, 0, "<IMG SRC='/images/avatar/" + team.getCompany()
+          m_playerGrid.setHTML( index, 0,
+              "<IMG SRC='" + FmgConstants.avatarFolderUri + team.getCompany()
                   + ".jpg' WIDTH=60 HEIGHT=60 BORDER=0 title='" + team.getCompany().getFullName()
                   + "'/>" );
         }
-        
+
         if( registration.haveAccount() )
         {
           // display avatar
@@ -206,8 +208,8 @@ public class WgtPlayers extends Composite implements ClickHandler
         else
         {
           // display avatar
-          m_playerGrid.setHTML( index, 1,
-              "<IMG SRC='/images/avatar/avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
+          m_playerGrid.setHTML( index, 1, "<IMG SRC='" + FmgConstants.avatarFolderUri
+              + "avatar-default.jpg' WIDTH=60 HEIGHT=60 BORDER=0 />" );
           // display login
           html = "???";
         }
@@ -217,7 +219,7 @@ public class WgtPlayers extends Composite implements ClickHandler
         {
           html += " <a target='_blank' href='"
               + registration.getAccount().getEMailUrl( GameEngine.model().getGame().getName() )
-              + "'><img src='/images/css/icon_pm.gif' border=0 alt='PM' /></a> ";
+              + "'><img src='/images/icons/icon_pm.gif' border=0 alt='PM' /></a> ";
         }
 
         if( GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() ) )
@@ -231,7 +233,8 @@ public class WgtPlayers extends Composite implements ClickHandler
         }
         if( registration.isReplacement() )
         {
-          EbPublicAccount resigned = registration.getOriginalAccount( GameEngine.model().getGame() );
+          EbPublicAccount resigned = registration
+              .getOriginalAccount( GameEngine.model().getGame() );
           html += "<br/><small>remplace&nbsp;<a href='" + resigned.getProfileUrl()
               + "' target='_blank'>" + resigned.getPseudo() + "</a></small>";
         }
@@ -251,34 +254,33 @@ public class WgtPlayers extends Composite implements ClickHandler
         }
         if( color.getValue() == EnuColor.None )
         {
-          htmlColors += " <IMG SRC='images/board/icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
+          htmlColors += " <IMG SRC=" + FmgConstants.boardFolderUri
+              + "'icon.gif' WIDTH=16 HEIGHT=16 BORDER=0 TITLE='"
               + Messages.getColorString( 0, color.getValue() ) + "'> ";
         }
         m_playerGrid.setHTML( index, 3, htmlColors );
 
         // display action points
-        m_playerGrid
-            .setText(
-                index,
-                4,
-                ""
-                    + registration.getPtAction()
-                    + "/"
+        m_playerGrid.setText( index, 4,
+            "" + registration.getPtAction() + "/"
                 + (GameEngine.model().getGame().getEbConfigGameTime().getActionPtMaxReserve()
-                    + registration.getActionPointBonus() + ((registration
-                        .getEnuColor().getNbColor() - 1) * GameEngine.model().getGame()
+                    + registration.getActionPointBonus()
+                    + ((registration.getEnuColor().getNbColor() - 1) * GameEngine.model().getGame()
                         .getEbConfigGameTime().getActionPtMaxPerExtraShip())) );
 
         // display Wining points
         if( finalScores == null )
         {
-          m_playerGrid.setText( index, 5, "" + team.estimateWinningScore( GameEngine.model().getGame() ) );
+          m_playerGrid.setText( index, 5,
+              "" + team.estimateWinningScore( GameEngine.model().getGame() ) );
         }
         else
         {
-          m_playerGrid.setText( index, 5, "" + team.estimateWinningScore( GameEngine.model().getGame() ) + "/"
-              + finalScores.get( team ) );
-          // + "(+" + unusedActionPoint.get( team ) + "/" + totalActionPoint.get( team ) + "AP)" );
+          m_playerGrid.setText( index, 5,
+              "" + team.estimateWinningScore( GameEngine.model().getGame() ) + "/"
+                  + finalScores.get( team ) );
+          // + "(+" + unusedActionPoint.get( team ) + "/" +
+          // totalActionPoint.get( team ) + "AP)" );
         }
 
         // display admin button
@@ -299,7 +301,8 @@ public class WgtPlayers extends Composite implements ClickHandler
           }
 
           // display endTurn button
-          if( (GameEngine.model().getGame().getCurrentPlayerIds().contains( registration.getId() )) )
+          if( (GameEngine.model().getGame().getCurrentPlayerIds()
+              .contains( registration.getId() )) )
           {
             PushButton btnSkipTurn = new PushButton( new Image( Icons.s_instance.endTurn32() ) );
             btnSkipTurn.setTitle( MAppBoard.s_messages.endTurn() );
@@ -310,12 +313,12 @@ public class WgtPlayers extends Composite implements ClickHandler
           }
 
         }
-        
+
       }
 
     m_playerPanel.add( m_playerGrid );
-    
-    
+
+
     // come from old WgtContextPlayers
     //
     Game game = GameEngine.model().getGame();
@@ -325,12 +328,13 @@ public class WgtPlayers extends Composite implements ClickHandler
 
       // add register button to register AI
       // check game creator or admin
-      if( (GameEngine.model().getGame().getAccountCreator() != null && AppMain.instance().getMyAccount().getId() == GameEngine
-          .model().getGame().getAccountCreator().getId())
+      if( (GameEngine.model().getGame().getAccountCreator() != null && AppMain.instance()
+          .getMyAccount().getId() == GameEngine.model().getGame().getAccountCreator().getId())
           || AppMain.instance().iAmAdmin() )
       {
         // check that game need player
-        if( (GameEngine.model().getGame().getStatus() == GameStatus.Open || GameEngine.model().getGame().getStatus() == GameStatus.Pause)
+        if( (GameEngine.model().getGame().getStatus() == GameStatus.Open
+            || GameEngine.model().getGame().getStatus() == GameStatus.Pause)
             && GameEngine.model().getGame().getMaxNumberOfPlayer() > GameEngine.model().getGame()
                 .getCurrentNumberOfRegiteredPlayer() )
         {
@@ -362,10 +366,12 @@ public class WgtPlayers extends Composite implements ClickHandler
           vpanel.add( html );
         }
       }
-      if( (game.getGameType() == GameType.MultiPlayer || game.getGameType() == GameType.Initiation) )
+      if( (game.getGameType() == GameType.MultiPlayer
+          || game.getGameType() == GameType.Initiation) )
       {
         vpanel.add( m_btnChat );
-        vpanel.add( new HTML("<a href='/chat.jsp?id="+game.getId()+"' target='_blank'><img src='/images/icon_new_window.gif'/></a>") );
+        vpanel.add( new HTML( "<a href='/chat.jsp?id=" + game.getId()
+            + "' target='_blank'><img src='/images/icon_new_window.gif'/></a>" ) );
       }
       m_playerPanel.add( vpanel );
     }
@@ -386,9 +392,6 @@ public class WgtPlayers extends Composite implements ClickHandler
 
 
 
-
-  
-
   /* (non-Javadoc)
    * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
@@ -406,11 +409,10 @@ public class WgtPlayers extends Composite implements ClickHandler
           registration.getTeam( GameEngine.model().getGame() ).getFireColor() );
       if( registration.getAccount() != null )
       {
-         playerName = registration.getAccount().getPseudo();
+        playerName = registration.getAccount().getPseudo();
       }
-      if( Window.confirm( "Voulez-vous réellement sauter le tour de "
-          + playerName
-          + ", il lui reste "+registration.getPtAction()+" points d'action.") )
+      if( Window.confirm( "Voulez-vous réellement sauter le tour de " + playerName
+          + ", il lui reste " + registration.getPtAction() + " points d'action." ) )
       {
         EbEvtPlayerTurn action = new EbEvtPlayerTurn();
         action.setGame( GameEngine.model().getGame() );
@@ -419,7 +421,8 @@ public class WgtPlayers extends Composite implements ClickHandler
           action.setAccountId( registration.getAccount().getId() );
         }
         action.setOldPlayerId( registration.getId() );
-        // ok itsn't an automatic action, but with this trick I can track of the guy which
+        // ok itsn't an automatic action, but with this trick I can track of the
+        // guy which
         // end this turn and pass through action checking
         action.setAuto( true );
         GameEngine.model().runSingleAction( action );

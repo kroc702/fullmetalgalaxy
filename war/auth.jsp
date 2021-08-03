@@ -34,7 +34,7 @@ mot de passe :
 
 <p>
 Si vous n'avez pas de compte, vous pouvez 
-<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >utiliser votre compte google</a>
+<a href="<%= Auth.getGoogleLoginURL(Auth.getFullURI( request )) %>" >utiliser votre compte google</a>
  ou bien 
 <A HREF="/account.jsp">cr&eacute;er un nouveau compte</A>. 
 </p>

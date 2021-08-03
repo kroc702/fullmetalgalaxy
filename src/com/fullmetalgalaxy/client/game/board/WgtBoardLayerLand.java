@@ -24,6 +24,7 @@ package com.fullmetalgalaxy.client.game.board;
 
 
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuZoom;
 import com.fullmetalgalaxy.model.LandType;
@@ -53,7 +54,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     m_baseUrl = ClientUtil.getUrlParameter( "graphicpack" );
     if( m_baseUrl == null )
     {
-      m_baseUrl = "/images/board/";
+      m_baseUrl = FmgConstants.boardFolderUri;
     }
     if( !m_baseUrl.endsWith( "/" ) )
     {
@@ -81,7 +82,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     {
       return;
     }
-    
+
     if( (m_lastGameId != GameEngine.model().getGame().getId()) || (p_forceRedraw) )
     {
       m_lastGameId = GameEngine.model().getGame().getId();
@@ -154,8 +155,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
         int hexHeight = 1;
         iy++;
         while( (iy < p_game.getLandHeight() && iy < m_cropBotomHex)
-            && (land == p_game.getLand( ix, iy )) 
-            && (hexHeight < getTextureHexCount( land )) )
+            && (land == p_game.getLand( ix, iy )) && (hexHeight < getTextureHexCount( land )) )
         {
           hexHeight++;
           iy++;
@@ -166,7 +166,8 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
           pxX -= getHexMontainWidthMargin( p_zoom );
           pxY += yOffset - getHexMontainHeightMargin( p_zoom );
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
-              + ((hexHeight * pxHexHeight) + getHexMontainHeightMargin( p_zoom ) + (getHexHeightMargin( p_zoom )))
+              + ((hexHeight * pxHexHeight) + getHexMontainHeightMargin( p_zoom )
+                  + (getHexHeightMargin( p_zoom )))
               + "px; z-index:" + (iy * 2 + ix % 2 - 1) + ";\" class=\"fmp-" + land
               + indexTextures[land.ordinal()] + "\"></div>" );
         }
@@ -176,8 +177,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
           pxY += yOffset - getHexHeightMargin( p_zoom );
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + ((hexHeight * pxHexHeight) + (getHexHeightMargin( p_zoom ) * 2))
-              + "px;\" class=\"fmp-" + land + indexTextures[land.ordinal()]
-              + "\"></div>" );
+              + "px;\" class=\"fmp-" + land + indexTextures[land.ordinal()] + "\"></div>" );
         }
 
         if( indexTextures[land.ordinal()] == 1 )
@@ -203,8 +203,7 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
           int pxX = tmppxX;
           pxX -= getHexMontainWidthMargin( p_zoom );
           pxY += yOffset - getHexMontainHeightMargin( p_zoom );
-          html.append( "<div style=\"left: "
-              + pxX + "px; top: " + pxY + "px; height: "
+          html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + (pxHexHeight + getHexMontainHeightMargin( p_zoom ) + (getHexHeightMargin( p_zoom )))
               + "px; z-index:" + (iy * 2 + ix % 2 - 1) + ";\" class=\"fmp-" + land
               + indexTextures[land.ordinal()] + "\"></div>" );
@@ -228,8 +227,8 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
     setLandsWidth( LandType.Reef, width );
     setLandsWidth( LandType.Marsh, width );
     setLandsWidth( LandType.Plain, width );
-    width = (FmpConstant.getHexWidth( p_zoom ) + (getHexMontainWidthMargin( p_zoom.getValue() ) + getHexWidthMargin( p_zoom
-        .getValue() )));
+    width = (FmpConstant.getHexWidth( p_zoom )
+        + (getHexMontainWidthMargin( p_zoom.getValue() ) + getHexWidthMargin( p_zoom.getValue() )));
     setLandsWidth( LandType.Montain, width );
 
     m_html.setHTML( getHtmlLand() );
@@ -322,38 +321,29 @@ public class WgtBoardLayerLand extends WgtBoardLayerBase
   {
     s_firstLandRuleIndex1 = ClientUtil.setCssRule( ".fmp-None1",
         "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
-    ClientUtil.setCssRule( ".fmp-Sea1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea1.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Reef1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight1.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Marsh1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low1.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Plain1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain1.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Montain1",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain1.png);}" );
+    ClientUtil.setCssRule( ".fmp-Sea1", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/sea1.png);}" );
+    ClientUtil.setCssRule( ".fmp-Reef1", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/reef_hight1.png);}" );
+    ClientUtil.setCssRule( ".fmp-Marsh1", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/swamp_low1.png);}" );
+    ClientUtil.setCssRule( ".fmp-Plain1", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/plain1.png);}" );
+    ClientUtil.setCssRule( ".fmp-Montain1", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/montain1.png);}" );
 
     s_firstLandRuleIndex2 = ClientUtil.setCssRule( ".fmp-None2",
         "{position: absolute; width: 77px; background: url(images/clear.cache.gif);}" ) - 1;
-    ClientUtil
-        .setCssRule( ".fmp-Sea2",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/sea2.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Reef2",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/reef_hight2.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Marsh2",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/swamp_low2.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Plain2",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/plain2.png);}" );
-    ClientUtil
-        .setCssRule( ".fmp-Montain2",
-            " {position: absolute; width: 77px; background: url(images/board/desert/tactic/montain2.png);}" );
+    ClientUtil.setCssRule( ".fmp-Sea2", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/sea2.png);}" );
+    ClientUtil.setCssRule( ".fmp-Reef2", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/reef_hight2.png);}" );
+    ClientUtil.setCssRule( ".fmp-Marsh2", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/swamp_low2.png);}" );
+    ClientUtil.setCssRule( ".fmp-Plain2", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/plain2.png);}" );
+    ClientUtil.setCssRule( ".fmp-Montain2", " {position: absolute; width: 77px; background: url("
+        + FmgConstants.boardFolderUri + "desert/tactic/montain2.png);}" );
 
   }
 

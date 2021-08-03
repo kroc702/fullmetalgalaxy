@@ -1,4 +1,21 @@
 
+
+# to run a local server
+# =====================
+java_dev_appserver war --jvm_flag=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
+
+admin console url: /_ah/admin
+
+# to deploy
+# =========
+https://cloud.google.com/sdk/gcloud/reference/app/deploy
+ 
+gcloud app deploy war/WEB-INF/appengine-web.xml --no-promote 
+
+GAE sdk list: https://storage.googleapis.com/appengine-sdks/
+
+
+
 # to refresh header from all java file
 # ====================================
 cd src

@@ -59,6 +59,7 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -85,12 +86,12 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
   {
     return s_gameService;
   }
-  
+
   public static AppMain instance()
   {
     return s_instance;
   }
-  
+
   protected EbPublicAccount m_myAccount = new EbPublicAccount();
 
   protected boolean m_myAccountAdmin = false;
@@ -104,7 +105,7 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
   private boolean m_isChannelConnected = false;
 
   private ChannelMessageHandlerCollection m_channelMessageHandlerCollection = new ChannelMessageHandlerCollection();
-  
+
   public boolean m_isCheckChannelTimerScheduled = false;
   private Timer m_checkChannelTimer = new Timer()
   {
@@ -129,7 +130,7 @@ public class AppMain extends AppRoot implements SourcesChannelMessageEvents, Win
     }
   };
 
-private ChatEngine m_chatEngine = null;
+  private ChatEngine m_chatEngine = null;
 
 
   /**
@@ -139,6 +140,16 @@ private ChatEngine m_chatEngine = null;
   {
     super();
     s_instance = this;
+
+    // get service url from page
+    String serviceUrl = ClientUtil.readGwtPropertyString( "service_url" );
+    if( serviceUrl != null && !serviceUrl.isEmpty() )
+    {
+      ((ServiceDefTarget)getRpcService()).setServiceEntryPoint( serviceUrl );
+      // if needed to add custom header cf
+      // https://stuffthathappens.com/blog/custom-http-headers-with-gwt-rpc/
+    }
+
     loadAccountInfoFromPage();
 
     HorizontalPanel hPanel = new HorizontalPanel();
@@ -158,7 +169,7 @@ private ChatEngine m_chatEngine = null;
     m_myAccountAdmin = ClientUtil.readGwtPropertyBoolean( "fmp_useradmin" );
     m_pageId = ClientUtil.readGwtPropertyLong( "fmp_pageid" ).intValue();
     m_gameId = ClientUtil.readGwtPropertyLong( "fmp_gameid" ).longValue();
-    
+
     m_channelToken = ClientUtil.readGwtProperty( "fmp_channelToken" );
     if( m_channelToken != null && !m_channelToken.equalsIgnoreCase( "null" ) )
     {
@@ -175,8 +186,8 @@ private ChatEngine m_chatEngine = null;
   {
     Presence presence = new Presence( AppMain.instance().getMyAccount().getPseudo(), m_gameId,
         AppMain.instance().getPageId() );
-    //presence.setClientType( ClientType.GAME );
-    //presence.setClientType( ClientType.CHAT );
+    // presence.setClientType( ClientType.GAME );
+    // presence.setClientType( ClientType.CHAT );
     return presence;
   }
 
@@ -196,6 +207,7 @@ private ChatEngine m_chatEngine = null;
     public void onFailure(Throwable p_caught)
     {
     }
+
     @Override
     public void onSuccess(Void p_result)
     {
@@ -209,6 +221,7 @@ private ChatEngine m_chatEngine = null;
     {
       Window.alert( "server (re)connexion error !!!" );
     }
+
     @Override
     public void onSuccess(String p_result)
     {
@@ -234,8 +247,8 @@ private ChatEngine m_chatEngine = null;
         @Override
         public void onOpen()
         {
-          //MAppMessagesStack.s_instance.showMessage( "onOpen" );
-          
+          // MAppMessagesStack.s_instance.showMessage( "onOpen" );
+
           // send an empty chat message to check channel is working
           ChatMessage message = new ChatMessage();
           message.setGameId( m_gameId );
@@ -247,14 +260,14 @@ private ChatEngine m_chatEngine = null;
         @Override
         public void onMessage(String message)
         {
-          //MAppMessagesStack.s_instance.showMessage( "onMessage" );
-          
+          // MAppMessagesStack.s_instance.showMessage( "onMessage" );
+
           // we receive a message from channel: we won't need to reload page
           cancelCheckChannelTimer();
           // also reshedule channel watchdog
           if( isChannelConnected() )
           {
-              m_channelWatchDogTimer.cancel();
+            m_channelWatchDogTimer.cancel();
           }
           m_channelWatchDogTimer.schedule( WATCHDOG_PERIOD_MS );
 
@@ -263,13 +276,14 @@ private ChatEngine m_chatEngine = null;
           onChannelConnected();
 
           Object object = deserialize( message );
-          
-          // TODO use a dedicated class instead of this empty ChatMessage for keep alive msg
+
+          // TODO use a dedicated class instead of this empty ChatMessage for
+          // keep alive msg
           if( object instanceof ChatMessage )
           {
             ChatMessage p_msg = (ChatMessage)object;
-            if( p_msg.isEmpty() 
-                && !getMyAccount().getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ))
+            if( p_msg.isEmpty()
+                && !getMyAccount().getPseudo().equalsIgnoreCase( p_msg.getFromPseudo() ) )
             {
               // empty message: server ask if we are still connected
               ChatMessage keepAliveMessage = new ChatMessage();
@@ -279,7 +293,7 @@ private ChatEngine m_chatEngine = null;
               AppMain.getRpcService().sendChatMessage( keepAliveMessage, m_dummyCallback );
             }
           }
-          
+
           m_channelMessageHandlerCollection.fireEventChanelMessage( object );
 
         }
@@ -308,6 +322,7 @@ private ChatEngine m_chatEngine = null;
     m_isChannelConnected = true;
     MAppMessagesStack.s_instance.removeMessage( m_pnlChannelDisconnected );
   }
+
   private void onChannelDisconnected()
   {
     m_isChannelConnected = false;
@@ -317,7 +332,7 @@ private ChatEngine m_chatEngine = null;
       MAppMessagesStack.s_instance.showPersitentMessage( m_pnlChannelDisconnected );
     }
   }
-  
+
   /**
    * this method is used to simulate channel event
    * @param p_object
@@ -350,8 +365,6 @@ private ChatEngine m_chatEngine = null;
 
 
 
-
-
   /* (non-Javadoc)
    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
    */
@@ -359,24 +372,24 @@ private ChatEngine m_chatEngine = null;
   public void onModuleLoad()
   {
     super.onModuleLoad();
-    
+
     // start engines, ie none graphical components
-    if(RootPanel.get(GameEngine.HISTORY_ID) != null )
+    if( RootPanel.get( GameEngine.HISTORY_ID ) != null )
     {
       new GameEngine().onModuleLoad();
     }
-    if(RootPanel.get(ChatEngine.HISTORY_ID) != null )
+    if( RootPanel.get( ChatEngine.HISTORY_ID ) != null )
     {
       m_chatEngine = new ChatEngine();
       m_chatEngine.onModuleLoad();
     }
-    
+
     // call all entry point involve in this application
-    if( RootPanel.get(MAppContext.HISTORY_ID) != null )
+    if( RootPanel.get( MAppContext.HISTORY_ID ) != null )
     {
       new MAppContext().onModuleLoad();
     }
-    if( RootPanel.get(MAppGameCreation.HISTORY_ID) != null )
+    if( RootPanel.get( MAppGameCreation.HISTORY_ID ) != null )
     {
       GWT.runAsync( MAppGameCreation.class, new RunAsyncCallback()
       {
@@ -385,6 +398,7 @@ private ChatEngine m_chatEngine = null;
         {
           Window.alert( "Error while downloading script: " + caught.getLocalizedMessage() );
         }
+
         @Override
         public void onSuccess()
         {
@@ -392,35 +406,35 @@ private ChatEngine m_chatEngine = null;
         }
       } );
     }
-    if( RootPanel.get(MAppStatusBar.HISTORY_ID) != null )
+    if( RootPanel.get( MAppStatusBar.HISTORY_ID ) != null )
     {
       new MAppStatusBar().onModuleLoad();
     }
-    if( RootPanel.get(MAppMessagesStack.HISTORY_ID) != null )
+    if( RootPanel.get( MAppMessagesStack.HISTORY_ID ) != null )
     {
       new MAppMessagesStack().onModuleLoad();
     }
-    if( RootPanel.get(MAppBoard.HISTORY_ID) != null )
+    if( RootPanel.get( MAppBoard.HISTORY_ID ) != null )
     {
       new MAppBoard().onModuleLoad();
     }
-    if( RootPanel.get(MAppTabMenu.HISTORY_ID) != null )
+    if( RootPanel.get( MAppTabMenu.HISTORY_ID ) != null )
     {
       new MAppTabMenu().onModuleLoad();
     }
-    if( RootPanel.get(MAppLittlePresences.HISTORY_ID) != null )
+    if( RootPanel.get( MAppLittlePresences.HISTORY_ID ) != null )
     {
       new MAppLittlePresences().onModuleLoad();
     }
-    if( RootPanel.get(MAppPresences.HISTORY_ID) != null )
+    if( RootPanel.get( MAppPresences.HISTORY_ID ) != null )
     {
       new MAppPresences().onModuleLoad();
     }
-    if( RootPanel.get(MAppChat.HISTORY_ID) != null )
+    if( RootPanel.get( MAppChat.HISTORY_ID ) != null )
     {
       new MAppChat().onModuleLoad();
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
 
     onChannelDisconnected();
   }
@@ -446,7 +460,7 @@ private ChatEngine m_chatEngine = null;
   {
     return m_pageId;
   }
-  
+
   public boolean isUserConnected(String p_pseudo)
   {
     if( m_chatEngine != null && p_pseudo != null )
@@ -462,13 +476,12 @@ private ChatEngine m_chatEngine = null;
     {
       return m_chatEngine.getPresenceRoom();
     }
-    return new PresenceRoom(0);
+    return new PresenceRoom( 0 );
   }
 
 
   @Override
-  public void addChannelMessageEventHandler(Class<?> p_class,
-      ChannelMessageEventHandler p_handler)
+  public void addChannelMessageEventHandler(Class<?> p_class, ChannelMessageEventHandler p_handler)
   {
     m_channelMessageHandlerCollection.addChannelMessageEventHandler( p_class, p_handler );
   }
@@ -479,7 +492,7 @@ private ChatEngine m_chatEngine = null;
   {
     m_channelMessageHandlerCollection.removeChannelMessageEventHandler( p_class, p_handler );
   }
-  
+
   /**
    * This method should be called if we are waiting for Channel Message.
    * If we don't receive it after a short time period, page will be reloaded.
@@ -490,7 +503,7 @@ private ChatEngine m_chatEngine = null;
     m_checkChannelTimer.schedule( 5000 );
     m_isCheckChannelTimerScheduled = true;
   }
-  
+
   public void cancelCheckChannelTimer()
   {
     if( m_isCheckChannelTimerScheduled )
@@ -499,12 +512,12 @@ private ChatEngine m_chatEngine = null;
       m_isCheckChannelTimerScheduled = false;
     }
   }
-  
+
   @Override
   public void onWindowClosing(ClosingEvent p_event)
   {
     AppMain.getRpcService().disconnect( getMyPresence(), m_dummyCallback );
   }
-  
-  
+
+
 }

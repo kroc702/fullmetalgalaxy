@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.model.EnuColor;
 import com.fullmetalgalaxy.model.EnuZoom;
@@ -61,6 +62,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 
   /**
    * display or hide all fire cover.
+   * 
    * @param p_isVisible
    */
   public void displayFireCover(boolean p_isVisible)
@@ -74,6 +76,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 
   /**
    * display or hide one fire cover layer of a specific registration.
+   * 
    * @param p_isVisible
    * @param p_team
    */
@@ -104,11 +107,11 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 
   }
 
-
-
   private long m_lastGameId = 0;
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#onModelChange()
    */
   @Override
@@ -159,9 +162,11 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     }
   }
 
-
-  /* (non-Javadoc)
-   * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.fullmetalgalaxy.model.EnuZoom)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.fullmetalgalaxy.client.board.test.BoardLayerBase#setZoom(com.
+   * fullmetalgalaxy.model.EnuZoom)
    */
   @Override
   public void setZoom(EnuZoom p_zoom)
@@ -180,8 +185,6 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
     }
   }
 
-
-
   /**
    * @return true if at least one fire cover is visible.
    */
@@ -199,13 +202,13 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
 
   /**
    * redraw a firecover layer in a specific HTML widget.
+   * 
    * @param p_team
    */
   private String getFireCoverHtml(EbTeam p_team)
   {
     StringBuffer html = new StringBuffer();
     Game game = GameEngine.model().getGame();
-
 
     // compute the size of the widget
     resetPixelSize();
@@ -258,7 +261,7 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
           html.append( "<div style=\"left: " + pxX + "px; top: " + pxY + "px; height: "
               + pxHexHeight + "px;\" class=\"" + hCssClass + "\"></div>" );
         }
-        iy++;        
+        iy++;
       }
     }
     html.append( "</div>" );
@@ -286,18 +289,17 @@ public class WgtBoardLayerFireCover extends WgtBoardLayerBase
   public static void createFireCoverRules(String p_color)
   {
     ClientUtil.setCssRule( ".cover-tactic-" + p_color,
-        " {position: absolute; width: 77px; background: url(images/board/" + p_color
-            + "/tactic/cover.png);}" );
+        " {position: absolute; width: 77px; background: url(" + FmgConstants.boardFolderUri
+            + p_color + "/tactic/cover.png);}" );
     ClientUtil.setCssRule( ".cover-strategy-" + p_color,
-        " {position: absolute; width: 34px; background: url(images/board/" + p_color
-            + "/strategy/cover.png);}" );
+        " {position: absolute; width: 34px; background: url(" + FmgConstants.boardFolderUri
+            + p_color + "/strategy/cover.png);}" );
     ClientUtil.setCssRule( ".hcover-tactic-" + p_color,
-        " {position: absolute; width: 77px; background: url(images/board/" + p_color
-            + "/tactic/hcover.png);}" );
+        " {position: absolute; width: 77px; background: url(" + FmgConstants.boardFolderUri
+            + p_color + "/tactic/hcover.png);}" );
     ClientUtil.setCssRule( ".hcover-strategy-" + p_color,
-        " {position: absolute; width: 34px; background: url(images/board/" + p_color
-            + "/strategy/hcover.png);}" );
+        " {position: absolute; width: 34px; background: url(" + FmgConstants.boardFolderUri
+            + p_color + "/strategy/hcover.png);}" );
   }
-
 
 }

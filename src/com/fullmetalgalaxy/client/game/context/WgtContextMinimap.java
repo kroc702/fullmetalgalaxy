@@ -23,6 +23,7 @@
 package com.fullmetalgalaxy.client.game.context;
 
 
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.fullmetalgalaxy.client.game.board.MAppBoard;
 import com.fullmetalgalaxy.client.ressources.Icons;
@@ -61,12 +62,14 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   private long m_lastResfreshGameId = -1;
 
 
-  private static ImageElement[] tokenImages = new ImageElement[EnuColor.getAllSingleColor().length + 1];
+  private static ImageElement[] tokenImages = new ImageElement[EnuColor.getAllSingleColor().length
+      + 1];
   static
   {
     for( int iColor : EnuColor.getAllSingleColor() )
     {
-      Image img = new Image( "/images/board/" + EnuColor.singleColorToString( iColor ) + "/minimap/token.png" );
+      Image img = new Image( FmgConstants.boardFolderUri + EnuColor.singleColorToString( iColor )
+          + "/minimap/token.png" );
       tokenImages[iColor] = ImageElement.as( img.getElement() );
       Image.prefetch( img.getUrl() );
     }
@@ -113,8 +116,8 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       for( int iLand = 0; iLand < LandType.values().length; iLand++ )
       {
         LandType land = LandType.values()[iLand];
-        Image img = new Image( "/images/board/" + game.getPlanetType().getFolderName() + "/minimap/"
-            + land.getImageName( game.getCurrentTide() ) );
+        Image img = new Image( FmgConstants.boardFolderUri + game.getPlanetType().getFolderName()
+            + "/minimap/" + land.getImageName( game.getCurrentTide() ) );
         img.addLoadHandler( new LoadHandler()
         {
           @Override
@@ -134,11 +137,13 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
         {
           if( game.getLand( ix, iy ) == LandType.Montain )
           {
-            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4, 8, 8 );
+            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4,
+                8, 8 );
           }
           else
           {
-            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4, 8, 8 );
+            gc.drawImage( images[game.getLand( ix, iy ).ordinal()], ix * 8, iy * 8 + (ix % 2) * 4,
+                8, 8 );
           }
         }
       }
@@ -148,13 +153,12 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       {
         if( token.getLocation() == Location.Board && token.getColor() != EnuColor.None )
         {
-          gc.drawImage( tokenImages[token.getColor()], token.getPosition().getX() * 8, token
-              .getPosition()
-              .getY() * 8 + (token.getPosition().getX() % 2) * 4, 8, 8 );
+          gc.drawImage( tokenImages[token.getColor()], token.getPosition().getX() * 8,
+              token.getPosition().getY() * 8 + (token.getPosition().getX() % 2) * 4, 8, 8 );
           for( AnBoardPosition position : token.getExtraPositions( game.getCoordinateSystem() ) )
           {
-            gc.drawImage( tokenImages[token.getColor()], position.getX() * 8, position.getY() * 8
-                + (position.getX() % 2) * 4, 8, 8 );
+            gc.drawImage( tokenImages[token.getColor()], position.getX() * 8,
+                position.getY() * 8 + (position.getX() % 2) * 4, 8, 8 );
           }
         }
       }
@@ -176,7 +180,7 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
       if( (winnerTeam != null) )
       {
         strWinner += winnerTeam.getCompany().getFullName() + ":\n";
-        for( EbRegistration registration : winnerTeam.getPlayers( game.getPreview() ))
+        for( EbRegistration registration : winnerTeam.getPlayers( game.getPreview() ) )
           if( registration.haveAccount() )
           {
             strWinner += registration.getAccount().getPseudo() + "\n";
@@ -195,8 +199,10 @@ public class WgtContextMinimap extends Composite implements MouseUpHandler
   {
     if( p_event.getSource() == canvas )
     {
-      int hexPositionX = (int)(((float)p_event.getX() * GameEngine.model().getGame().getLandWidth()) / FmpConstant.miniMapWidth);
-      int hexPositionY = (int)(((float)p_event.getY() * GameEngine.model().getGame().getLandHeight()) / FmpConstant.miniMapHeight);
+      int hexPositionX = (int)(((float)p_event.getX() * GameEngine.model().getGame().getLandWidth())
+          / FmpConstant.miniMapWidth);
+      int hexPositionY = (int)(((float)p_event.getY()
+          * GameEngine.model().getGame().getLandHeight()) / FmpConstant.miniMapHeight);
       MAppBoard.s_instance.setScrollPosition( hexPositionX, hexPositionY );
     }
   }

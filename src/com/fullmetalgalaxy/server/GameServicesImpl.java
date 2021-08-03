@@ -56,6 +56,7 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbEvtCancel;
 import com.fullmetalgalaxy.model.persist.gamelog.EbEvtMessage;
 import com.fullmetalgalaxy.model.persist.gamelog.GameLogType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.SerializationPolicy;
 import com.googlecode.objectify.Key;
 
 /**
@@ -74,6 +75,26 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   public GameServicesImpl()
   {
     super();
+  }
+
+  /*
+   * disable this security check to ease test from external site
+   * @see com.google.gwt.user.server.rpc.RemoteServiceServlet#checkPermutationStrongName()
+   */
+  @Override
+  protected void checkPermutationStrongName() throws SecurityException
+  {
+  }
+
+  /**
+   * an explanation of the RPC protocol and serialization policy: https://docs.google.com/document/d/1eG0YocsYYbNAtivkLtcaiEE5IOF5u4LUol8-LL0TIKU/edit#
+   */
+  @Override
+  protected SerializationPolicy doGetSerializationPolicy(HttpServletRequest request,
+      String moduleBaseURL, String strongName)
+  {
+    moduleBaseURL = moduleBaseURL.replace( "/games/game/", "/game/" );
+    return super.doGetSerializationPolicy( request, moduleBaseURL, strongName );
   }
 
   /**
@@ -105,7 +126,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // no i18n
       throw new RpcFmpException( "You must be logged for this action" );
     }
-    FmgDataStore dataStore = new FmgDataStore(false);
+    FmgDataStore dataStore = new FmgDataStore( false );
     EbAccount account = Auth.getUserAccount( getThreadLocalRequest(), getThreadLocalResponse() );
 
     boolean isNewlyCreated = true;
@@ -121,13 +142,13 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       adminEvent.setGame( p_game );
       adminEvent.setMessage( p_modifDesc );
 
-      if( !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() )
-          && (p_game.getAccountCreator().getId() != account.getId() || (p_game.getCurrentTimeStep() >= 2 && p_game
-              .getGameType() != GameType.Initiation)) )
+      if( !Auth.isUserAdmin( getThreadLocalRequest(), getThreadLocalResponse() ) && (p_game
+          .getAccountCreator().getId() != account.getId()
+          || (p_game.getCurrentTimeStep() >= 2 && p_game.getGameType() != GameType.Initiation)) )
       {
         // TODO i18n
         throw new RpcFmpException(
- "seul l'admin peut modifier la partie après l'atterissage des joueurs" );
+            "seul l'admin peut modifier la partie après l'atterissage des joueurs" );
       }
       adminEvent.setAccountId( account.getId() );
       p_game.addEvent( adminEvent );
@@ -154,7 +175,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
    */
   static protected Game getEbGame(long p_gameId)
   {
-    FmgDataStore dataStore = new FmgDataStore(false);
+    FmgDataStore dataStore = new FmgDataStore( false );
     Game model = dataStore.getGame( p_gameId );
     boolean isGameUpdated = false;
     if( model == null )
@@ -330,7 +351,6 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
 
 
 
-
   @Override
   public ModelFmpUpdate runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException
   {
@@ -339,12 +359,12 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       // no i18n as unusual
       throw new RpcFmpException( "No actions provided" );
     }
-    FmgDataStore dataStore = new FmgDataStore(false);
+    FmgDataStore dataStore = new FmgDataStore( false );
     Game game = dataStore.getGame( p_modelUpdate.getGameId() );
     if( game == null )
     {
       // no i18n as unusual
-      throw new RpcFmpException( "run action on unknown game: "+p_modelUpdate.getGameId());
+      throw new RpcFmpException( "run action on unknown game: " + p_modelUpdate.getGameId() );
     }
     if( game.getVersion() != p_modelUpdate.getFromVersion()
         && !game.isTimeStepParallelHidden( game.getCurrentTimeStep() ) )
@@ -369,8 +389,9 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
     try
     {
       // an automatic update before run event ?
-      modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game, p_modelUpdate.getGameEvents() ) );
-      
+      modelUpdate.getGameEvents()
+          .addAll( GameWorkflow.checkUpdate( game, p_modelUpdate.getGameEvents() ) );
+
       // then run all provided event
       for( AnEvent event : p_modelUpdate.getGameEvents() )
       {
@@ -388,30 +409,35 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
               && (game.getAccount( ((AnEventUser)event).getAccountId() ) == null) )
           {
             // add our account info into this game
-            game.addAccount( new EbPublicAccount( FmgDataStore.dao().get( EbAccount.class,
-                ((AnEventUser)event).getAccountId() ) ) );
+            game.addAccount( new EbPublicAccount(
+                FmgDataStore.dao().get( EbAccount.class, ((AnEventUser)event).getAccountId() ) ) );
           }
         }
         event.setLastUpdate( ServerUtil.currentDate() );
         event.setGameVersion( game.getVersion() );
-        
+
         // execute action
-        if(event.getType() == GameLogType.EvtCancel)
+        if( event.getType() == GameLogType.EvtCancel )
         {
           // cancel action doesn't work in exact same way as other event
-          // if loaded game don't have enough event loaded, load them before cancel
-          if( ((EbEvtCancel)event).getFromActionIndex()-((EbEvtCancel)event).getToActionIndex() > game.getLogs().size() )
+          // if loaded game don't have enough event loaded, load them before
+          // cancel
+          if( ((EbEvtCancel)event).getFromActionIndex()
+              - ((EbEvtCancel)event).getToActionIndex() > game.getLogs().size() )
           {
             // TODO I think we have a database storage leak here.
-            // we remove reference from game, but we don't remove entity from data store
-            // we may also have a bug if we cancel action on very big game (more than 3 additional game log)
+            // we remove reference from game, but we don't remove entity from
+            // data store
+            // we may also have a bug if we cancel action on very big game (more
+            // than 3 additional game log)
             EbGameLog gameLog = getAdditionalGameLog( game.getId() );
-            game.setAdditionalEventCount( game.getAdditionalEventCount() - gameLog.getLog().size() );
+            game.setAdditionalEventCount(
+                game.getAdditionalEventCount() - gameLog.getLog().size() );
             game.getAdditionalGameLog().clear();
             gameLog.getLog().addAll( game.getLogs() );
             game.setLogs( gameLog.getLog() );
           }
-          
+
           ((EbEvtCancel)event).execCancel( game );
         }
         else if( registration != null && game.isTimeStepParallelHidden( game.getCurrentTimeStep() )
@@ -439,7 +465,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
       modelUpdate.getGameEvents().addAll( p_modelUpdate.getGameEvents() );
       // another automatic update after running event ?
       modelUpdate.getGameEvents().addAll( GameWorkflow.checkUpdate( game ) );
-      
+
     } catch( RpcFmpException e )
     {
       dataStore.rollback();
@@ -468,10 +494,11 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   public void sendChatMessage(ChatMessage p_message) throws RpcFmpException
   {
     // we could check pseudo to detect cheater...
-    //p_message
-    //    .setFromPseudo( Auth.getUserPseudo( getThreadLocalRequest(), getThreadLocalResponse() ) );
+    // p_message
+    // .setFromPseudo( Auth.getUserPseudo( getThreadLocalRequest(),
+    // getThreadLocalResponse() ) );
     p_message.setDate( ServerUtil.currentDate() );
-    
+
     PresenceRoom room = ChannelManager.getRoom( p_message.getGameId() );
     ChannelManager.broadcast( room, p_message );
   }
@@ -481,7 +508,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     ChannelManager.disconnect( p_presence );
   }
-  
+
   @Override
   public String reconnect(Presence p_presence)
   {
@@ -493,7 +520,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
   {
     getEbGame( p_gameId );
   }
-  
+
   /**
    * This service is only here to serialize a ChatMessage class with RPC.encodeResponseForSuccess
    */
@@ -574,7 +601,7 @@ public class GameServicesImpl extends RemoteServiceServlet implements GameServic
         }
       }
     }
-   
+
     return modelUpdate;
   }
 

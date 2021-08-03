@@ -22,8 +22,8 @@
  * *********************************************************************/
 package com.fullmetalgalaxy.client.game.board;
 
-
 import com.fullmetalgalaxy.client.ClientUtil;
+import com.fullmetalgalaxy.client.FmgConstants;
 import com.fullmetalgalaxy.client.game.GameEngine;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -44,7 +44,9 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements Native
     setStyleName( "fmp-atmosphere" );
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.fullmetalgalaxy.client.board.WgtBoardLayerBase#onModelChange()
    */
   @Override
@@ -57,9 +59,12 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements Native
     }
   }
 
-
-  /* (non-Javadoc)
-   * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
+  /* 
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(
+   * com.google.gwt.user.client.Event.NativePreviewEvent)
    */
   @Override
   public void onPreviewNativeEvent(NativePreviewEvent p_event)
@@ -67,17 +72,14 @@ public class WgtBoardLayerAtmosphere extends WgtBoardLayerBase implements Native
     // nothing to do
   }
 
-
-
   @SuppressWarnings("unused")
   private static int s_firstGridRuleIndex = createGridRules();
 
   public static int createGridRules()
   {
     int oldLength = ClientUtil.setCssRule( ".fmp-atmosphere",
-        "{background: url(images/board/atmosphere/clear.png);}" ) - 1;
+        "{background: url(" + FmgConstants.boardFolderUri + "atmosphere/clear.png);}" ) - 1;
     return oldLength;
   }
-
 
 }

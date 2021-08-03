@@ -42,7 +42,7 @@ import com.googlecode.objectify.Query;
 public class Auth
 {
 
-  private static String getFullURI(HttpServletRequest p_request)
+  public static String getFullURI(HttpServletRequest p_request)
   {
     assert p_request != null;
     String querry = p_request.getQueryString();
@@ -53,27 +53,32 @@ public class Auth
     return p_request.getRequestURI() + "?" + querry;
   }
 
-  public static String getLogoutURL(HttpServletRequest p_request, HttpServletResponse p_response)
+  public static String getLogoutURL(String continueUrl)
   {
-    assert p_request != null;
-    assert p_response != null;
-    return "/AccountServlet?logout=1&&continue=" + getFullURI( p_request );
+    if( continueUrl == null || continueUrl.isEmpty() )
+    {
+      continueUrl = "/";
+    }
+    return "/AccountServlet?logout=1&&continue=" + continueUrl;
   }
 
-  public static String getFmgLoginURL(HttpServletRequest p_request, HttpServletResponse p_response)
+  public static String getFmgLoginURL(String continueUrl)
   {
-    assert p_request != null;
-    assert p_response != null;
-    return "/auth.jsp?continue=" + getFullURI( p_request );
+    if( continueUrl == null || continueUrl.isEmpty() )
+    {
+      continueUrl = "/";
+    }
+    return "/auth.jsp?continue=" + continueUrl;
   }
 
-  public static String getGoogleLoginURL(HttpServletRequest p_request,
-      HttpServletResponse p_response)
+  public static String getGoogleLoginURL(String continueUrl)
   {
-    assert p_request != null;
-    assert p_response != null;
+    if( continueUrl == null || continueUrl.isEmpty() )
+    {
+      continueUrl = "/";
+    }
     UserService userService = UserServiceFactory.getUserService();
-    return userService.createLoginURL( getFullURI( p_request ) );
+    return userService.createLoginURL( continueUrl );
   }
 
   private static boolean isUserGoogleLogged(HttpServletRequest p_request,
@@ -160,7 +165,7 @@ public class Auth
     if( account == null )
     {
       // look account into datastore
-      FmgDataStore ds = new FmgDataStore(true);
+      FmgDataStore ds = new FmgDataStore( true );
       Query<EbAccount> query = ds.query( EbAccount.class ).filter( "m_login", login );
       account = query.get();
       p_request.getSession().setAttribute( "account", account );
@@ -173,16 +178,15 @@ public class Auth
       account.setAuthProvider( AuthProvider.Google );
       account.setLogin( login );
       account.setJabberId( login );
-      FmgDataStore dataStore = new FmgDataStore(false);
+      FmgDataStore dataStore = new FmgDataStore( false );
       dataStore.put( account );
       dataStore.close();
       GlobalVars.incrementAccountCount( 1 );
     }
 
     // if last connexion is older than one day, update it
-    if( account.getLastConnexion() == null
-        || account.getLastConnexion().before(
-        new Date( System.currentTimeMillis() - (1000 * 60 * 60 * 24) ) ) )
+    if( account.getLastConnexion() == null || account.getLastConnexion()
+        .before( new Date( System.currentTimeMillis() - (1000 * 60 * 60 * 24) ) ) )
     {
       FmgDataStore ds = new FmgDataStore( false );
       account = ds.get( EbAccount.class, account.getId() );
@@ -194,7 +198,7 @@ public class Auth
 
     return account;
   }
-  
+
   /**
    * Always return something even if user isn't connected
    * @param p_request
@@ -220,7 +224,8 @@ public class Auth
   public static void connectUser(HttpServletRequest p_request, String p_login)
   {
     p_request.getSession( true ).setAttribute( "login", p_login );
-    // this is useful in case of reconnexion without deconnexion (admin function)
+    // this is useful in case of reconnexion without deconnexion (admin
+    // function)
     p_request.getSession().setAttribute( "account", null );
   }
 

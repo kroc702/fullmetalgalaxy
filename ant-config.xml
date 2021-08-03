@@ -6,13 +6,18 @@ You shouldn't commit your change in this file
 <project name="FullMetalGalaxy-config">
 	<property environment="env" />
 
-	<!--property name="adminaccount" value="vincent.legendre@gmail.com" /-->
-	<property name="imagemagickDir" value="E:\perso\IM-convert\" />
+	<!-- to compress gwt images bundle (reduce color) -->
+	<property name="imagemagickDir" value="E:\perso\IM-convert" />
 	<property name="appenginesdkdir" value="E:\perso\appengine-java-sdk-1.9.82" />
+	<!-- to compile client code -->
 	<property name="gwtsdkdir" value="E:\perso\gwt-2.9.0" />
+	<!-- to start local App engine server & upload war (unless in path) -->
+	<property name="gclouddir" value="C:\Users\v1j\AppData\Local\Google\Cloud SDK\google-cloud-sdk" />
 	<!--property name="junitdir" value="${eclipsedir}\plugins\org.junit_4.11.0.v201303080030" /-->
 	<property name="javahome" value="C:\Program Files\Java\jdk1.8.0_251"/><!--E:\perso\jdk-15.0.1"/-->
-
+	<!-- to start local github pages preview server (unless in path) -->
+	<property name="rubyhome" value="C:\Ruby27-x64" />
+	
 	<property name="git" value="C:\Program Files\Git\bin\git" />
 	<property name="javadocDir" value="javadoc" />
 	<property name="jsstyle" value="OBFUSCATED" />	<!-- PRETTY, DETAILED, OBFUSCATED -->

@@ -1,61 +1,20 @@
 	<aside>
     <div class="tm-sidebar uk-hidden-small">
 		<ul class="uk-nav">
-        {% assign dir_pages = site.pages | where:'dir',page.dir %}
-        {% assign folder = page.dir | replace_first:'/','' %}
-        {% for categorie in site.data[folder] %}
-            <li class="uk-nav-header">{{ categorie.title[include.lang] }}</li>
-            {% for article in categorie.docs %}
-                <!--{{ article }}-->
-                {% assign document_found = false %}
-                {% assign document_default = null %}
-                {% assign document_default_lang = null %}
-                {% for document in dir_pages %}
-                    {% assign document_names = document.name | replace_first:'/','' | split:"." %}
-                    {% assign document_name = document_names[0] %}
-                    {% assign document_lang = document_names[1] %}
-                    {% unless site.data.i18n.lang contains document_lang %}
-                        {% assign document_lang = document.lang %}
-                    {% endunless %}
-                    {% if document_name == article %}
-                        {% if document_lang == include.lang %}
-                            <li><a href="{{ document.url }}">{{ document.title }}</a></li>
-                            {% assign document_found = true %}
-                            {% break %}
-                        {% else %}
-                            {% assign document_default = document %}
-                            {% assign document_default_lang = document_lang %}
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-                {% if document_found == false %}
-                    {% if document_default != null %}
-                        <li><a href="{{ document_default.url }}">{{ document_default.title }} ({{document_default_lang}})</a></li>
-                    {% else %}
-                        <li><a class="uk-text-warning" href="{{page.dir}}/{{article}}.{{include.lang}}.html">{{article}}</a></li>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            <li class="uk-nav-divider"></li>
-        {% endfor %}   
-		</ul>
+		
+		{% assign folder = page.dir | replace:'/','' %}
+		{% assign dir_pages = site.pages | where:'dir',page.dir  %}
+        {% for article in site.data.navside[folder] %}
+			{% for document in dir_pages %}
+				{% assign document_names = document.name | replace_first:'/','' | split:"." %}
+                {% assign document_name = document_names[0] %}
+				{% if document_name == article %}
+					<li><a href="{{ document.url }}">{{ document.title }}</a></li>
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+ 		</ul>
 	</div>
-{% comment %}
-    <div class="uk-visible-small uk-dropdown">
-        <button class="uk-button">Pages... <i class="uk-icon-caret-down"></i></button>
-        <ul class="uk-nav uk-nav-dropdown">
-        {% for document in dir_pages %}
-            {% assign document_names = document.name | replace_first:'/','' | split:"." %}
-            {% assign document_name = document_names[0] %}
-            {% assign document_lang = document_names[1] %}
-            {% unless site.data.i18n.lang contains document_lang %}
-                {% assign document_lang = document.lang %}
-            {% endunless %}
-            {% if document_lang == include.lang %}
-                <li><a href="{{ document.url }}">{{ document.title }}</a></li>
-            {% endif %}
-        {% endfor %}
-        </ul>
-    </div>
-{% endcomment %}
+
+
 	</aside>

@@ -29,7 +29,7 @@
 	    	<img style="border=none" border=0 src="/images/css/icon_user.cache.png" alt="" />&nbsp;<%= Auth.getUserPseudo(request,response) %>
 	    </a> |
 	    <% } %>
-	    <a href="<%= Auth.getLogoutURL(request,response) %>" >
+	    <a href="<%= Auth.getLogoutURL(Auth.getFullURI( request )) %>" >
 	        <img style="border=none" border=0 src="/images/css/icon_power.cache.png" alt="" />&nbsp;D&eacute;connexion
 	    </a><br/>
 	    <a target="_blank" href="https://github.com/kroc702/fullmetalgalaxy/issues/new" style="position:relative; top:-10px;">
@@ -47,7 +47,7 @@
 		</div>
 	</form>
 	<div id="loginlinks">
-	<a href="<%= Auth.getGoogleLoginURL(request,response) %>" >
+	<a href="<%= Auth.getGoogleLoginURL(Auth.getFullURI( request )) %>" >
         <img style="border=none" border=0 src="/images/icon_google.cache.ico" alt="Google" />&nbsp;<fmg:resource key="menu_googleconnexion"/> 
     </a>
     <a href="/account.jsp"><img style="border=none" border=0 src="/images/logo16.png" alt="FMG" />&nbsp;<fmg:resource key="menu_suscribe"/></a>

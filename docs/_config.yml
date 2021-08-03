@@ -2,12 +2,13 @@
 # site.url, site.title
 
 title: 'Full Metal Galaxy'
+url: 'http://fullmetalgalaxy.com'
 
 collections:
   montest:
     output: true
 
-gems:
+plugins:
 - jekyll-sitemap
   
 ########
@@ -27,6 +28,9 @@ exclude:
 safe: true
 lsi: false
 
+###################
+#gameurl: 'http://localhost:8080'
+gameurl: 'http://game.fullmetalgalaxy.com'
 ###################
 prose:
   rooturl: ''

@@ -110,12 +110,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     return GameEngine.model().getGameGenerator();
   }
 
-  
+
   public static HexCoordinateSystem coordinateSystem()
   {
     return GameEngine.model().getGame().getCoordinateSystem();
   }
-  
+
   protected Game m_game = new Game();
   protected GameGenerator m_generator = new GameGenerator( m_game );
 
@@ -146,7 +146,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   private int m_currentActionIndex = 0;
   /** game currentTimeStep at the moment we start time line mode */
   private int m_lastTurnPlayed = 0;
-  
+
 
   private int m_successiveRpcErrorCount = 0;
 
@@ -167,7 +167,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       super.onSuccess( p_result );
       ModelFmpInit model = (ModelFmpInit)p_result;
-      if( model==null )
+      if( model == null )
       {
         Window.alert( MAppBoard.s_messages.unknownGame() );
         return;
@@ -176,7 +176,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       {
         if( model.getPresenceRoom() != null )
         {
-          //ModelFmpMain.model().m_connectedUsers = model.getPresenceRoom();
+          // ModelFmpMain.model().m_connectedUsers = model.getPresenceRoom();
         }
         m_game = model.getGame();
         if( m_generator != null )
@@ -202,12 +202,13 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           Window.alert( "unexpected error : " + e );
         }
 
-        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+        AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
         AppRoot.getEventBus().fireEvent( new GameLoadEvent( m_game ) );
         if( m_game.getGameType() == GameType.MultiPlayer
             || m_game.getGameType() == GameType.Initiation )
         {
-          AppMain.instance().addChannelMessageEventHandler( ModelFmpUpdate.class, GameEngine.model() );
+          AppMain.instance().addChannelMessageEventHandler( ModelFmpUpdate.class,
+              GameEngine.model() );
           // this timer poll server for update if channel isn't connected
           m_eventsPollingTimer.scheduleRepeating( EVENTS_POLLING_PERIOD_MS );
         }
@@ -216,12 +217,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           LocalGame.loadGame( GameEngine.model() );
         }
         AppMain.instance().stopLoading();
-        
-        // if current user is the game creator and game need player, ask him with a dialog
+
+        // if current user is the game creator and game need player, ask him
+        // with a dialog
         //
-        if( m_game.getStatus() == GameStatus.Open
-            && AppMain.instance().getMyAccount() != null
-            && AppMain.instance().getMyAccount().getId() == m_game.getAccountCreator().getId() 
+        if( m_game.getStatus() == GameStatus.Open && AppMain.instance().getMyAccount() != null
+            && AppMain.instance().getMyAccount().getId() == m_game.getAccountCreator().getId()
             && getMyRegistration() == null )
         {
           DlgJoinGame.instance().show();
@@ -237,9 +238,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     public void run()
     {
       // don't ask for update if we are waiting for response !
-      if( !AppMain.instance().isChannelConnected()
-          && m_lastModelUpdateClientID == 0
-          && (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation) )
+      if( !AppMain.instance().isChannelConnected() && m_lastModelUpdateClientID == 0
+          && (getGame().getGameType() == GameType.MultiPlayer
+              || getGame().getGameType() == GameType.Initiation) )
       {
         AppMain.getRpcService().getUpdate( getGame().getId(), getGame().getVersion(),
             m_callbackEvents );
@@ -261,7 +262,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     for( Iterator<EbRegistration> it = getGame().getSetRegistration().iterator(); it.hasNext(); )
     {
       EbRegistration registration = (EbRegistration)it.next();
-      if( registration.haveAccount() 
+      if( registration.haveAccount()
           && registration.getAccount().getId() == AppMain.instance().getMyAccount().getId() )
       {
         return registration;
@@ -367,7 +368,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       m_generator.setGame( m_game );
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
 
   public Game getGame()
@@ -407,19 +408,18 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     public void onFailure(Throwable p_caught)
     {
       m_successiveRpcErrorCount++;
-      //super.onFailure( p_caught );
+      // super.onFailure( p_caught );
       m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
       // maybe the action failed because the model isn't up to date
       if( m_successiveRpcErrorCount <= 2 && AppMain.instance().isChannelConnected() )
       {
         if( p_caught instanceof RpcFmpException )
         {
           MAppMessagesStack.s_instance
-.showWarning( ((RpcFmpException)p_caught)
-              .getLocalizedMessage() );
+              .showWarning( ((RpcFmpException)p_caught).getLocalizedMessage() );
         }
         else if( ClientUtil.getUrlParameter( "debug" ) != null )
         {
@@ -469,7 +469,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
     public void start()
     {
-      if( (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation)
+      if( (getGame().getGameType() == GameType.MultiPlayer
+          || getGame().getGameType() == GameType.Initiation)
           && getGame().getVersion() >= m_modelUpdate.getToVersion() )
       {
         // assume we can discard this update !
@@ -481,8 +482,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
 
       if( getGame().getVersion() < m_modelUpdate.getFromVersion()
-          || (getGame().getVersion() != m_modelUpdate.getFromVersion() && getGame().getVersion() < m_modelUpdate
-              .getToVersion()) )
+          || (getGame().getVersion() != m_modelUpdate.getFromVersion()
+              && getGame().getVersion() < m_modelUpdate.getToVersion()) )
       {
         Window.alert( "Error: receive incoherant model update (" + m_modelUpdate.getFromVersion()
             + " expected " + getGame().getVersion() + "). reload page" );
@@ -531,10 +532,12 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           isNewPlayerTurn = true;
           // if we receive and end turn event after an hidden parallel time step
           // we need to unexec my private event logs
-          if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() ) && getMyRegistration() != null
+          if( getGame().isTimeStepParallelHidden( getGame().getCurrentTimeStep() )
+              && getMyRegistration() != null
               && !getMyRegistration().getTeam( getGame() ).getMyEvents().isEmpty() )
           {
-            for( int i = getMyRegistration().getTeam( getGame() ).getMyEvents().size() - 1; i >= 0; i-- )
+            for( int i = getMyRegistration().getTeam( getGame() ).getMyEvents().size()
+                - 1; i >= 0; i-- )
             {
               getMyRegistration().getTeam( getGame() ).getMyEvents().get( i ).unexec( getGame() );
             }
@@ -576,7 +579,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           {
             nextEvent();
           }
-          // this is another trick to avoid the case where model update are received before the widget board subscibre to this event
+          // this is another trick to avoid the case where model update are
+          // received before the widget board subscibre to this event
           if( getGame().getGameType() == GameType.Puzzle )
           {
             nextEvent();
@@ -599,11 +603,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       // assume that if we receive an update, something has changed !
       AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
 
-      if( isNewPlayerTurn
-          && !ClientUtil.isPageVisible()
-          && getMyRegistration() != null
-          && (getGame().getCurrentPlayerIds().size() == 0 || getGame().getCurrentPlayerIds().contains(
-              getMyRegistration().getId() )) )
+      if( isNewPlayerTurn && !ClientUtil.isPageVisible() && getMyRegistration() != null
+          && (getGame().getCurrentPlayerIds().size() == 0
+              || getGame().getCurrentPlayerIds().contains( getMyRegistration().getId() )) )
       {
         isNewPlayerTurn = false;
         Window.alert( MAppBoard.s_messages.yourTurnToPlay() );
@@ -623,12 +625,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   @Override
   public void onChannelMessage(Object p_message)
   {
-    if( p_message instanceof ModelFmpUpdate)
+    if( p_message instanceof ModelFmpUpdate )
     {
       receiveModelUpdate( (ModelFmpUpdate)p_message );
     }
   }
-  
 
 
 
@@ -651,8 +652,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
 
     try
     {
-      if( !GameEngine.model().isLogged()
-          && (getGame().getGameType() == GameType.MultiPlayer || getGame().getGameType() == GameType.Initiation) )
+      if( !GameEngine.model().isLogged() && (getGame().getGameType() == GameType.MultiPlayer
+          || getGame().getGameType() == GameType.Initiation) )
       {
         // no i18n as HMI won't allow that. so unusual
         throw new RpcFmpException( "You must be logged to do this action" );
@@ -679,7 +680,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     } catch( Throwable p_caught )
     {
       Window.alert( "Unknown error on client: " + p_caught );
@@ -741,11 +742,9 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       m_lastModelUpdateClientID = 0;
       AppMain.instance().stopLoading();
       getActionBuilder().cancel();
-      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+      AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     }
   }
-
-
 
 
 
@@ -771,7 +770,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setGridDisplayed(boolean p_isGridDisplayed)
   {
     m_isGridDisplayed = p_isGridDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     backupHMIFlags();
   }
 
@@ -789,7 +788,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setAtmosphereDisplayed(boolean p_isAtmosphereDisplayed)
   {
     m_isAtmosphereDisplayed = p_isAtmosphereDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     backupHMIFlags();
   }
 
@@ -807,7 +806,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setCustomMapDisplayed(boolean p_isCustomMapDisplayed)
   {
     m_isCustomMapDisplayed = p_isCustomMapDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
 
   /**
@@ -824,7 +823,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setFireCoverDisplayed(boolean p_isFireCoverDisplayed)
   {
     m_isFireCoverDisplayed = p_isFireCoverDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     backupHMIFlags();
   }
 
@@ -847,7 +846,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
   public void setZoomDisplayed(EnuZoom p_zoomDisplayed)
   {
     m_zoomDisplayed = p_zoomDisplayed;
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
     backupHMIFlags();
   }
 
@@ -882,7 +881,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       m_currentActionIndex += getMyRegistration().getTeam( getGame() ).getMyEvents().size();
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
 
   /**
@@ -927,8 +926,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         action = logs.get( m_currentActionIndex );
       }
 
-      if( action != null && !(action instanceof EbAdmin)
-          && !(action instanceof EbGameJoin)
+      if( action != null && !(action instanceof EbAdmin) && !(action instanceof EbGameJoin)
           && !(action instanceof EbEvtCancel) )
       {
         // unexec action
@@ -939,7 +937,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         {
           RpcUtil.logError( "error ", e );
           Window.alert( "unexpected error : " + e );
-          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+          AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
           return;
         }
         // don't count automatic action as one action to play
@@ -964,7 +962,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         }
       }
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
 
   /**
@@ -994,8 +992,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         action = logs.get( m_currentActionIndex );
       }
 
-      if( !(action instanceof EbAdmin) 
-          && !(action instanceof EbGameJoin)
+      if( !(action instanceof EbAdmin) && !(action instanceof EbGameJoin)
           && !(action instanceof EbEvtCancel) )
       {
         // exec action
@@ -1014,8 +1011,8 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           p_actionCount--;
         }
         // if next action is automatic, then exec too
-        if( m_currentActionIndex<logs.size()-1 
-            && logs.get( m_currentActionIndex+1 ).isAuto() )
+        if( m_currentActionIndex < logs.size() - 1
+            && logs.get( m_currentActionIndex + 1 ).isAuto() )
         {
           p_actionCount++;
         }
@@ -1026,7 +1023,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
       m_currentActionIndex++;
     }
-    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent(GameEngine.model()) );
+    AppRoot.getEventBus().fireEvent( new ModelUpdateEvent( GameEngine.model() ) );
   }
 
   /**
@@ -1177,13 +1174,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     {
       return getGame().getLogs().get( m_currentActionIndex );
     }
-    if( getMyRegistration() != null
-        && m_currentActionIndex < getGame().getLogs().size()
-            + getMyRegistration().getTeam( getGame() ).getMyEvents().size() )
+    if( getMyRegistration() != null && m_currentActionIndex < getGame().getLogs().size()
+        + getMyRegistration().getTeam( getGame() ).getMyEvents().size() )
     {
       return getMyRegistration().getTeam( getGame() ).getMyEvents()
-          .get(
-          m_currentActionIndex - getGame().getLogs().size() );
+          .get( m_currentActionIndex - getGame().getLogs().size() );
     }
     return null;
   }
@@ -1264,7 +1259,7 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
     restoreHMIFlags();
 
     String strModel = ClientUtil.getJSString( "fmp_model" );
-    if( strModel != null )
+    if( strModel != null && !strModel.isEmpty() && !strModel.equals( "null" ) )
     {
       try
       {
@@ -1281,11 +1276,11 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
         AppRoot.logger.log( Level.WARNING, e.getMessage() );
       }
     }
-    
+
     if( AppMain.instance().isLoading() )
     {
       // well, model init wasn't found in jsp => ask it with standard RPC call
-      String gameId = ClientUtil.getUrlParameter( "id" ); 
+      String gameId = ClientUtil.getUrlParameter( "id" );
       if( gameId != null )
       {
         AppMain.getRpcService().getModelFmpInit( gameId, loadGameCallback );
@@ -1297,7 +1292,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
       }
     }
   }
-
 
 
 
@@ -1330,9 +1324,6 @@ public class GameEngine implements EntryPoint, ChannelMessageEventHandler
           callbackLoadAdditionalEvents );
     }
   }
-
-
-
 
 
 

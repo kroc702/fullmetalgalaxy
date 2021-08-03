@@ -20,7 +20,7 @@
  *  Copyright 2010 to 2015 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.server;
+package com.fullmetalgalaxy.server.api;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -34,6 +34,8 @@ import com.fullmetalgalaxy.model.ModelFmpInit;
 import com.fullmetalgalaxy.model.ModelFmpUpdate;
 import com.fullmetalgalaxy.model.RpcFmpException;
 import com.fullmetalgalaxy.model.persist.EbGameLog;
+import com.fullmetalgalaxy.server.FmpLogger;
+import com.fullmetalgalaxy.server.GameServicesImpl;
 import com.fullmetalgalaxy.server.serialization.DriverFactory;
 import com.fullmetalgalaxy.server.serialization.DriverFileFormat;
 import com.fullmetalgalaxy.server.serialization.DriverXML;
@@ -123,7 +125,8 @@ public class PublicGameApiServlet extends HttpServlet
       if( e instanceof RpcFmpException && ((RpcFmpException)e).getCauseEvent() != null )
       {
         p_resp.getOutputStream().println( ((RpcFmpException)e).getCauseEvent().toString() );
-        p_resp.getOutputStream().println( ((RpcFmpException)e).getCauseEvent().getTransientComment() );
+        p_resp.getOutputStream()
+            .println( ((RpcFmpException)e).getCauseEvent().getTransientComment() );
       }
       e.printStackTrace( new PrintStream( p_resp.getOutputStream() ) );
       return;

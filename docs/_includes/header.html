@@ -1,7 +1,85 @@
 	<header id="header" style="height:80px;">
 	<div class="uk-container uk-container-center" >
 	<img src="/images/title.png" />
+    <div id="login" style="margin:10px; float:right; ">
+	    
+    </div>
 	</div>
   	<div id="char" class="uk-hidden-small"></div>
   	<div id="sousMarin" class="uk-hidden-small"></div>
     </header>
+    
+<script type="text/javascript" language="javascript">
+	// load my account
+	
+	
+	
+	function updateLogin(newAccount) {
+		let response = null;
+		try{
+			response = JSON.parse(localStorage.getItem('account'));
+		} catch(e){
+			localStorage.removeItem('account');
+		}
+		if( newAccount ) {
+			if( response && response.public && newAccount.public && response.public.id === newAccount.public.id ) {
+				// nothing to update
+				return;
+			}
+			response = newAccount;
+			localStorage.setItem('account', JSON.stringify(newAccount));
+		} 
+		let loginContent = document.getElementById("login");
+		if( !response ) {
+			// well... nothing :)
+		} else if( !response.public ) {
+			// user isn' logged
+			if( !response.fmgLoginUrl.startsWith('http') ) {
+				response.fmgLoginUrl = '{{ site.gameurl }}' + response.fmgLoginUrl;
+			}
+			if( !response.googleLoginUrl.startsWith('http') ) {
+				response.googleLoginUrl = '{{ site.gameurl }}' + response.googleLoginUrl;
+			}
+			loginContent.innerHTML = '<form id="login" method="POST" action="{{ site.gameurl }}/AccountServlet" enctype="multipart/form-data"><div><span><label>login</label><input type="text" name="login" size="15" /></span><span><label>pass</label><input type="password" name="password" size="15" autocomplete="current-password" /></span><input type="hidden" name="connexion" value="1"/><input type="hidden" name="continue" value="{{ site.url }}{{ page.url }}"/><span><input id="login-submit" type="submit" name="Submit" value="Go!" /></span></div></form>';
+			loginContent.innerHTML += '<a href="'+response.fmgLoginUrl+'{{ page.url }}" ><img border=0 src="/images/logo32.png" alt="FMG" />&nbsp;Connexion standard</a>';
+			loginContent.innerHTML += '<a href="'+response.googleLoginUrl+'{{ page.url }}" ><img border=0 src="/images/google_logo32.png" alt="G" />&nbsp;Connexion avec google</a>';
+		} else {
+			let html = '<div data-uk-dropdown>';
+			html += '<div><h2>'+response.public.pseudo+'&nbsp;<img border=0 width=32 height=32 src="'+response.public.avatarUrl+'" /></h2></div>';
+			html += '<div class="uk-dropdown uk-dropdown-bottom"><ul class="uk-nav uk-nav-dropdown">';
+			html += '<li><a href="'+response.public.profileUrl+'">profile</a></li>';
+			html += '<li><a href="'+response.logoutUrl+'">logout</a></li>';
+			html += '</ul></div>';
+			html += '</div>';
+			loginContent.innerHTML = html;
+		}
+	}
+	updateLogin();
+	
+	
+	
+	// to send cookies, cf https://github.com/github/fetch#sending-cookies
+	var requestHeaders = new Headers();
+	var requestInit = { method: 'GET',
+	               headers: requestHeaders,
+	               mode: 'cors',
+	               cache: 'default',
+	               credentials: 'include' };
+
+	var request = new Request('{{ site.gameurl }}/api/account/me', requestInit);
+	
+	fetch(request).then(function (response) {
+		if( !response.ok ) {
+			throw "network issue";
+		}
+		return response.json();
+	}).then(function (response) {
+		updateLogin(response);
+	}).catch(function (error) {
+		let loginContent = document.getElementById("login");
+		loginContent.innerHTML = error;
+	});
+</script>
+
+
+    

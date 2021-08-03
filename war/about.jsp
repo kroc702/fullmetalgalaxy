@@ -45,10 +45,6 @@ de génération de carte.</li>
 <li>Hébergé par  <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Google App Engine" /></li>
 </ul>
 
-<h3>Précédentes versions :</h3>
-<pre>
-<%@include file="/include/history.html"%>           
-</pre>
 
 <%@include file="/include/footer.jsp"%>
 </body>

@@ -3,6 +3,8 @@
 <head>
    <meta charset="utf-8">
    <title>{{ site.title }} - {{ page.title }}</title>
+	
+{% include meta.html %}	
 
 	<script src="/js/jquery-2.1.4.min.js"></script>
 	
@@ -16,28 +18,19 @@
 	<link rel="stylesheet" href="/css/components/slideshow.almost-flat.min.css" />
 	<link rel="stylesheet" href="/css/components/dotnav.almost-flat.min.css" />
 	<link rel="stylesheet" href="/css/components/slidenav.almost-flat.min.css" />
-
-
 	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
 </head>
 <body>
     <div class="background"><div class="page">
 
-{% assign page_names = page.name | replace_first:'/','' | split:"." %}
-{% assign page_name = page_names[0] %}
-{% assign page_lang = page_names[1] %}
-{% unless site.data.i18n.lang contains page_lang %}
-    {% assign page_lang = page.lang %}
-{% endunless %}
-<!-- name: {{page_name}} - lang: {{page_lang}} - time: {{ site.time }} -->
  
 {% include header.html %}	
-{% include navbar.html lang=page_lang name=page_name %}
+{% include navbar.html %}
 
 	<div class="uk-container uk-container-center">
 	<div class="uk-grid" data-uk-grid-margin="">
     
-{% include navaside.html lang=page_lang name=page_name %}	
+{% include navside.html %}	
 
 	<div class="tm-main uk-width-medium-3-4">
 		<article class="uk-article">

@@ -20,7 +20,7 @@
  *  Copyright 2010 to 2015 Vincent Legendre
  *
  * *********************************************************************/
-package com.fullmetalgalaxy.server;
+package com.fullmetalgalaxy.server.api;
 
 import java.io.IOException;
 
@@ -38,6 +38,12 @@ import com.fullmetalgalaxy.model.RpcUtil;
 import com.fullmetalgalaxy.model.persist.EbPublicAccount;
 import com.fullmetalgalaxy.model.persist.Game;
 import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
+import com.fullmetalgalaxy.server.Auth;
+import com.fullmetalgalaxy.server.EbAccount;
+import com.fullmetalgalaxy.server.FmgDataStore;
+import com.fullmetalgalaxy.server.FmpLogger;
+import com.fullmetalgalaxy.server.GameServicesImpl;
+import com.fullmetalgalaxy.server.GameWorkflow;
 
 /**
  * @author Vincent
@@ -49,7 +55,8 @@ import com.fullmetalgalaxy.model.persist.gamelog.EbGameJoin;
 public class PublicNewGameApiServlet extends HttpServlet
 {
   private static final long serialVersionUID = 533579014067656255L;
-  private final static FmpLogger log = FmpLogger.getLogger( PublicNewGameApiServlet.class.getName() );
+  private final static FmpLogger log = FmpLogger
+      .getLogger( PublicNewGameApiServlet.class.getName() );
 
   /**
    * 
@@ -81,8 +88,8 @@ public class PublicNewGameApiServlet extends HttpServlet
         aiPlayers = new String[1];
         aiPlayers[0] = "stai";
       }
-      
-      
+
+
       FmgDataStore dataStore = new FmgDataStore( false );
       EbAccount account = Auth.getUserAccount( p_req, p_resp );
 
@@ -103,7 +110,8 @@ public class PublicNewGameApiServlet extends HttpServlet
       if( p_req.getParameter( "map" ) != null )
       {
         // create map from an existing game
-        ModelFmpInit modelInitMap = GameServicesImpl.sgetModelFmpInit( p_req, p_resp, p_req.getParameter( "map" ) );
+        ModelFmpInit modelInitMap = GameServicesImpl.sgetModelFmpInit( p_req, p_resp,
+            p_req.getParameter( "map" ) );
         Game gameMap = modelInitMap.getGame();
         game.setMapShape( gameMap.getMapShape() );
         game.setLandSize( gameMap.getLandWidth(), gameMap.getLandHeight() );
@@ -192,7 +200,6 @@ public class PublicNewGameApiServlet extends HttpServlet
       p_resp.sendRedirect( "/genericmsg.jsp?title=Erreur:" + th.getMessage() );
     }
   }
-
 
 
 

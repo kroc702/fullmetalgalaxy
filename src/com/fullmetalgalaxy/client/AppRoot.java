@@ -51,9 +51,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 public abstract class AppRoot implements EntryPoint, WindowResizeListener, HistoryListener,
     SourcesPreviewEvents, NativePreviewHandler
 {
-  public static Logger logger = Logger.getLogger("AppRoot");
+  public static Logger logger = Logger.getLogger( "AppRoot" );
   private static AppRoot s_instance = null;
-  
+
   /**
    * @return the first instance of AppMain
    */
@@ -61,15 +61,15 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   {
     return s_instance;
   }
-  
+
   protected PopupPanel m_loadingPanel = new PopupPanel( false, true );
   protected int m_isLoading = 0;
 
   private HistoryState m_historyState = new HistoryState();
   private EventPreviewHandlerCollection m_previewListenerCollection = new EventPreviewHandlerCollection();
   private EventBus m_eventBus = new SimpleEventBus();
-  
-  
+
+
   /**
    * 
    */
@@ -105,16 +105,16 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
     // 'baz' state.
     String initToken = History.getToken();
     m_historyState.fromString( initToken );
-    if(initToken == null || initToken.isEmpty())
+    if( initToken == null || initToken.isEmpty() )
     {
       m_historyState = getDefaultHistoryState();
       initToken = m_historyState.toString();
     }
-    
+
     // onHistoryChanged() is not called when the application first runs. Call
     // it now in order to reflect the initial state.
     onHistoryChanged( initToken );
-    
+
   }
 
   public static EventBus getEventBus()
@@ -156,8 +156,8 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
     {
       return;
     }
-    com.google.gwt.dom.client.Element elmt = com.google.gwt.dom.client.Element.as( p_event
-        .getNativeEvent().getEventTarget() );
+    com.google.gwt.dom.client.Element elmt = com.google.gwt.dom.client.Element
+        .as( p_event.getNativeEvent().getEventTarget() );
     if( elmt instanceof InputElement )
     {
       String type = ((InputElement)elmt).getType();
@@ -206,8 +206,8 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   {
     if( RootPanel.get( "app_history" ) != null )
     {
-      return new HistoryState( DOM.getElementAttribute(
-          RootPanel.get( "app_history" ).getElement(), "content" ) );
+      return new HistoryState(
+          DOM.getElementAttribute( RootPanel.get( "app_history" ).getElement(), "content" ) );
     }
     return new HistoryState();
   }
@@ -218,10 +218,10 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
   @Override
   public void onHistoryChanged(String p_historyToken)
   {
-    
+
   }
 
- 
+
   public void startLoading()
   {
     if( m_isLoading < 0 )
@@ -251,6 +251,6 @@ public abstract class AppRoot implements EntryPoint, WindowResizeListener, Histo
     return m_isLoading > 0;
   }
 
-  
+
 
 }

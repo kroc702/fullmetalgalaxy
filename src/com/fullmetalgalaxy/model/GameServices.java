@@ -94,7 +94,7 @@ public interface GameServices extends RemoteService
 
   public ModelFmpUpdate runModelUpdate(ModelFmpUpdate p_modelUpdate) throws RpcFmpException;
 
-  
+
   /**
    * This method shouldn't be used anymore as update is now send with channel API.
    * 
@@ -104,8 +104,7 @@ public interface GameServices extends RemoteService
    * @return model change between p_lastVersion date and current date.
    * @throws RpcFmpException
    */
-  public ModelFmpUpdate getModelFmpUpdate(long p_gameId)
-      throws RpcFmpException;
+  public ModelFmpUpdate getModelFmpUpdate(long p_gameId) throws RpcFmpException;
 
 
   /**
@@ -113,8 +112,7 @@ public interface GameServices extends RemoteService
    * @param p_message
    * @throws RpcFmpException
    */
-  public void sendChatMessage(ChatMessage p_message)
-      throws RpcFmpException;
+  public void sendChatMessage(ChatMessage p_message) throws RpcFmpException;
 
   public void disconnect(Presence p_presence);
 
@@ -124,7 +122,7 @@ public interface GameServices extends RemoteService
    * @return
    */
   public String reconnect(Presence p_presence);
-  
+
   /**
    * This service is only here to serialize a ChatMessage class with RPC.encodeResponseForSuccess
    */

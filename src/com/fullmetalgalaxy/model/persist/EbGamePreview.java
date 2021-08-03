@@ -107,13 +107,15 @@ public class EbGamePreview extends EbBase
   /**
    * if zero, team are not allowed.
    */
-  
-  private int m_maxTeamAllowed = 0; 
+
+  private int m_maxTeamAllowed = 0;
+
   public void loadIsTeamAllowed(@AlsoLoad("m_isTeamAllowed") boolean p_isTeamAllowed)
   {
-    if( p_isTeamAllowed ) m_maxTeamAllowed = 6; 
+    if( p_isTeamAllowed )
+      m_maxTeamAllowed = 6;
   }
-  
+
   // configuration
   private ConfigGameTime m_configGameTime = ConfigGameTime.Standard;
   @Serialized
@@ -129,13 +131,13 @@ public class EbGamePreview extends EbBase
 
   /** a list of lower case tag to ease research */
   private List<String> m_tags = new ArrayList<String>();
- 
+
   private MapShape m_mapShape = MapShape.Flat;
-  
+
   /** game statistics for finished game */
   @Serialized
   private GameStatistics m_stats = null;
-  
+
   public EbGamePreview()
   {
     super();
@@ -190,7 +192,8 @@ public class EbGamePreview extends EbBase
       {
         registration.m_myEvents = null;
       }
-      if( registration.m_singleColor == EnuColor.Unknown || !registration.getEnuColor().contain( registration.m_singleColor ) )
+      if( registration.m_singleColor == EnuColor.Unknown
+          || !registration.getEnuColor().contain( registration.m_singleColor ) )
       {
         registration.m_singleColor = registration.getEnuColor().getSingleColor().getValue();
       }
@@ -390,11 +393,11 @@ public class EbGamePreview extends EbBase
 
     // team's order index property may be corrupted
     // repair them:
-    for(int index=0; index<sortedTeam.size(); index++)
+    for( int index = 0; index < sortedTeam.size(); index++ )
     {
       sortedTeam.get( index ).setOrderIndex( index );
     }
-    
+
     return sortedTeam;
   }
 
@@ -446,8 +449,8 @@ public class EbGamePreview extends EbBase
     if( isParallel() )
       return false;
     return (p_timeStep > 1 && p_timeStep <= getEbConfigGameTime().getDeploymentTimeStep())
-        || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep ) && p_timeStep != getEbConfigGameTime()
-            .getTotalTimeStep());
+        || (getEbConfigGameTime().getTakeOffTurns().contains( p_timeStep )
+            && p_timeStep != getEbConfigGameTime().getTotalTimeStep());
   }
 
 
@@ -536,11 +539,12 @@ public class EbGamePreview extends EbBase
           strBuf.append( player.getAccount().getPseudo() );
         }
         if( player != null
-            && (!isParallel() || getCurrentTimeStep() < 1 || isTimeStepParallelHidden( getCurrentTimeStep() ))
+            && (!isParallel() || getCurrentTimeStep() < 1
+                || isTimeStepParallelHidden( getCurrentTimeStep() ))
             && (getCurrentPlayerIds().contains( player.getId() )) )
         {
-          strBuf
-              .append( " <img style='border=none' border=0 src='/images/css/icon_action.cache.png' alt='Current' />" );
+          strBuf.append(
+              " <img style='border=none' border=0 src='/images/icons/icon_action.cache.png' alt='Current' />" );
         }
         if( playerCount < team.getPlayerIds().size() )
           strBuf.append( " - " );
@@ -589,17 +593,17 @@ public class EbGamePreview extends EbBase
     StringBuffer strBuf = new StringBuffer( "" );
     // minimap
     strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
- + "\"><img src=\"/images/board/"
-        + getPlanetType().getFolderName() + "/preview.jpg\" height=\"50\"></a></td>" );
+        + "\"><img src=\"images/board/" + getPlanetType().getFolderName()
+        + "/preview.jpg\" height=\"50\"></a></td>" );
     // game name
-    strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
-        + "</big><br/><small>" );
+    strBuf.append(
+        "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName() + "</big><br/><small>" );
     // player name and number
     strBuf.append( getPlayersAsString() );
     if( getCurrentNumberOfRegiteredPlayer() != getMaxNumberOfPlayer() )
     {
-      strBuf.append( " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer()
-          + ")" );
+      strBuf.append(
+          " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer() + ")" );
     }
     strBuf.append( "</small></a></td>" );
 
@@ -609,8 +613,8 @@ public class EbGamePreview extends EbBase
 
     if( getEbConfigGameTime().isParallel() )
     {
-      strBuf.append( ""
-          + (getCurrentTimeStep() * 100 / getEbConfigGameTime().getTotalTimeStep()) + "%" );
+      strBuf.append(
+          "" + (getCurrentTimeStep() * 100 / getEbConfigGameTime().getTotalTimeStep()) + "%" );
     }
     else
     {
@@ -636,17 +640,17 @@ public class EbGamePreview extends EbBase
     StringBuffer strBuf = new StringBuffer( "" );
     // minimap
     strBuf.append( "<td style=\"width:100px;\"><a href=\"/game.jsp?id=" + getId()
- + "\"><img src=\"/images/board/"
-        + getPlanetType().getFolderName() + "/preview.jpg\" height=\"50\"></a></td>" );
+        + "\"><img src=\"images/board/" + getPlanetType().getFolderName()
+        + "/preview.jpg\" height=\"50\"></a></td>" );
     // game name
-    strBuf.append( "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName()
-        + "</big><br/><small>" );
+    strBuf.append(
+        "<td><a href=\"/game.jsp?id=" + getId() + "\"><big>" + getName() + "</big><br/><small>" );
     // player name and number
     strBuf.append( getPlayersAsString() );
     if( getCurrentNumberOfRegiteredPlayer() != getMaxNumberOfPlayer() )
     {
-      strBuf.append( " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer()
-          + ")" );
+      strBuf.append(
+          " (" + getCurrentNumberOfRegiteredPlayer() + "/" + getMaxNumberOfPlayer() + ")" );
     }
     strBuf.append( "</small></a></td>" );
 
@@ -658,7 +662,8 @@ public class EbGamePreview extends EbBase
     /*strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " - <img src=\""
         + PlayerStyle.fromStatsPlayer( registration.getStats() ).getIconUrl() + "\"/></td>" );
     */
-    //strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + " </td>" );
+    // strBuf.append( "</td><td>" + registration.getStats().getFinalScore() + "
+    // </td>" );
 
     return strBuf.toString();
   }
@@ -670,7 +675,8 @@ public class EbGamePreview extends EbBase
   @Deprecated
   private boolean isOpen()
   {
-    m_isOpen = ((getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer()) && (!isStarted()) && !isHistory());
+    m_isOpen = ((getCurrentNumberOfRegiteredPlayer() < getMaxNumberOfPlayer()) && (!isStarted())
+        && !isHistory());
     return m_isOpen;
   }
 
@@ -1203,6 +1209,6 @@ public class EbGamePreview extends EbBase
   {
     m_stats = p_stats;
   }
-  
-  
+
+
 }
