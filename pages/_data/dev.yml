@@ -1,0 +1,22 @@
+- title:
+    fr: Général
+    en: General
+  docs:
+  - index
+  - Copyright
+  - Screenshots
+- title:
+    fr: Code
+    en: Code
+  docs:
+  - welcome
+  - Overview
+  - HowToStart
+  - Devenv
+  - CodeClient
+  - CodeServer
+  - DebugTips
+  - ImagesGeneration
+  - Square2hex
+  - troubleshooting
+ 

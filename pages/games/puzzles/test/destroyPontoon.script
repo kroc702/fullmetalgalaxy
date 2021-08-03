@@ -1,0 +1,29 @@
+# destroy one pontoon
+board 28 3 false
+board 22 6 true
+board 22 6 true
+board 22 6 false
+token 210
+board 21 5 false
+board 21 5 false
+board 22 6 false
+token 211
+board 21 6 false
+board 21 6 false
+board 21 6 false
+board 21 5 true
+board 19 5 false
+board 19 5 false
+# pontoon 19 4 shouldn't be destroyed
+
+# destroy pontoon 7 12
+board 10 8 false
+board 6 13 false
+board 7 12 false
+board 7 12 false
+board 7 12 false
+action EvtFire
+board 8 11 false
+board 6 12 false
+ok
+# check all destroyed in 7,12 7,11 and 8,11

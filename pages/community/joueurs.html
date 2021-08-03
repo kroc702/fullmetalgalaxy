@@ -1,0 +1,56 @@
+---
+layout: nonavside
+title: Joueurs
+published: true
+lang: fr
+---
+
+<div id="content" style="min-height: 600px;background-image: url('/community/images/robot_instructor.jpg');background-repeat:no-repeat;background-position: 100% 100%;">
+	<div class="uk-grid">
+		<div class='uk-width-1-5'><h3>Avatar</h3></div>
+		<div class='uk-width-1-5'><h3>Pseudo</h3></div>
+		<div class='uk-width-1-5'><h3>Nb victoire / partie</h3></div>
+		<div class='uk-width-1-5'><h3>Dernière connexion</h3></div>
+	</div> 
+</div>
+
+<script>
+
+fetch('{{ site.gameurl }}/api/account/list?all=true').then(function (response) {
+	if( !response.ok ) {
+		throw "network issue";
+	}
+	return response.json();
+}).then(function (list) {
+	let content = document.getElementById("content");
+	for(let i=0; i<list.length; i++) {
+		let account = list[i];
+		
+		let grid = document.createElement('div');
+		grid.classList.add('uk-grid');
+		let elm = document.createElement('div');
+		elm.classList.add('uk-width-1-5');
+		elm.innerHTML = "<img src='" + account.avatarUrl + "' height='40px' />";
+		grid.appendChild(elm);
+		elm = document.createElement('div');
+		elm.classList.add('uk-width-1-5');
+		elm.innerHTML = "<a href='/community/profile.html?id="+ account.id + "'>"+account.pseudo+"</a>";
+		grid.appendChild(elm);
+		elm = document.createElement('div');
+		elm.classList.add('uk-width-1-5');
+		elm.innerHTML = account.fullStats.m_victoryCount+" / "+account.fullStats.m_finshedGameCount;
+		grid.appendChild(elm);
+		elm = document.createElement('div');
+		elm.classList.add('uk-width-1-5');
+		elm.innerHTML = account.lastConnexion;
+		grid.appendChild(elm);
+
+		content.appendChild(grid);
+	}
+}).catch(function (error) {
+	document.getElementById("content").innerHTML = error;
+});
+
+
+
+</script>

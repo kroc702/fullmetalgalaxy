@@ -1,0 +1,166 @@
+
+@import 'https://fonts.googleapis.com/css?family=Lato:900,700,400,300';
+
+
+html, body { 
+  font: 400 16px / 24px 'Lato';
+  height: 100%; 
+}
+body .page { 
+ min-height: 100%; 
+ margin-bottom: -35px; 
+ /*background: #232F3C;*/
+}
+.background{
+min-height: 100%; 
+background-image: url('/css/bg.jpg');
+}
+.page:after {
+  content: "";
+  display: block;
+}
+
+.tm-image {
+  width: 100%;
+  height: 100%;
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 500px;
+}
+
+header #char {
+	background-image: url('/css/char.png');
+	width: 79px;
+	height: 29px;
+	position: absolute;
+	left: 100px;
+	top:  53px;
+}
+
+header #sousMarin {
+	background-image: url('/css/sousMarin.png');
+	height: 28px;
+	width: 56px;
+	position: absolute;
+	right: 30px;
+	top: 65px;
+}
+
+
+footer, .page:after {
+  height: 35px; 
+}
+
+footer {
+ clear: both;
+ position: relative;
+ z-index: 10;
+ height: 35px;
+ margin-top: -35px;
+}
+
+footer #travaux {
+  background-image: url('travailPattern.png');
+  width: 121px;
+  height: 35px;
+  position: absolute;
+  margin-left: 50px;
+}
+footer #copyright {
+	margin: 0;
+	width:100%;
+  float: right;
+  text-align:right;
+  padding: 0 20px;
+  position: relative;
+  top: 4px;
+  font-size: 10pt;
+  text-decoration:none;
+  cursor: pointer;
+  color: #B8B8B8;
+}
+
+.uk-navbar, 
+.uk-navbar .uk-container,
+footer  {
+  background: #364555;
+  background-image: url('/css/bg-noise.png');
+}
+
+nav .uk-navbar-nav>li>a {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: lato;
+  text-decoration: none;
+  color: #fff;
+  text-shadow: none;
+}
+nav .uk-navbar-nav>li.uk-active>a {
+  border-bottom-width: 4px;
+  border-bottom-color: #e7ac20;
+  background-color: inherit;
+  color: #fff;
+}
+
+nav .uk-navbar-nav>li.uk-open>a,
+nav .uk-navbar-nav>li>a:hover {
+  background-color: inherit;
+  color : #e7ac20;
+}
+
+nav svg {
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  background: none;
+  fill:#fff;
+}
+nav li.uk-open>a svg,
+nav a:hover  svg{
+  fill:#e7ac20;
+}
+nav.uk-active {
+box-shadow: rgb(0,0,0) 0px 0px 10px;
+}
+
+.page>.uk-container{
+  background-color: #fff;
+  color: black;
+  box-shadow: 0px 0px 10px #000;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+aside {
+  max-width: calc(25% - 35px);
+}
+
+article li {
+  list-style-image: url('/css/li.png');
+}
+
+.fmg-button::before {
+content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 500" ><path class="bg-button" d="m 229.28,21.97 0,39.75 c -30.905,1.29 -61.546,9.284 -89.53,23.905 l 21.406,37.063 C 184.2,110.92 210.32,104.28 238,104.28 c 93.408,0 168.938,75.53 168.938,168.94 0,26.766 -6.234,52.056 -17.282,74.53 l -5.97,-2.563 -26.467,-12.437 c -21.125,44.53 -66.495,75.313 -119.064,75.313 -8.49,0 -16.8,-0.778 -24.844,-2.313 l -7.375,33.375 C 127.89,424.178 69.03,355.665 69.03,273.22 c 0,-26.843 6.267,-52.2 17.376,-74.72 L 49.094,176.97 C 8.887,255.27 20.824,352.718 83.031,419.063 L 51.907,450.188 65.127,463.406 116.53,412 c 24.013,21.04 53.516,35.934 86.064,42.28 l -6.938,31.44 c 1.515,0.333 3.016,0.636 4.53,0.936 0.01,0.002 0.023,-0.002 0.033,0 6.05,1.198 12.11,2.15 18.155,2.813 0.01,0 0.02,-0.002 0.03,0 3.02,0.33 6.053,0.58 9.064,0.78 4.53,0.3 9.056,0.458 13.56,0.47 25.954,0.06 51.352,-4.64 75.095,-13.564 2.363,-0.888 4.734,-1.81 7.063,-2.78 9.477,-3.953 18.656,-8.6 27.468,-13.876 2.518,-1.508 5.014,-3.076 7.47,-4.688 1.227,-0.805 2.444,-1.605 3.655,-2.437 2.424,-1.663 4.802,-3.39 7.158,-5.156 8.243,-6.18 16.06,-12.97 23.375,-20.345 2.09,-2.107 4.15,-4.268 6.156,-6.47 1.007,-1.105 1.98,-2.213 2.967,-3.342 0.977,-1.118 1.952,-2.235 2.907,-3.375 0.005,-0.007 -0.005,-0.026 0,-0.032 0.954,-1.14 1.912,-2.275 2.844,-3.437 0.005,-0.008 -0.006,-0.026 0,-0.033 0.936,-1.168 1.867,-2.34 2.78,-3.53 2.748,-3.582 5.375,-7.252 7.907,-11.032 0.842,-1.257 1.682,-2.502 2.5,-3.78 1.912,-2.992 3.734,-6.052 5.5,-9.158 l 36.688,15.782 7.375,-17.158 -66.032,-28.437 c 11.786,-24.18 18.458,-51.308 18.563,-79.97 l 28.06,0 c 0,-16.67 -1.963,-33.12 -5.75,-49.06 l 40.88,-4.841 -2.187,-18.563 -43.876,5.188 c -11.17,-33.444 -30.614,-63.935 -57,-88.406 -24.59,-22.81 -53.15,-38.68 -83.25,-47.72 L 309.5,32.625 291.47,27.781 281.25,65.907 c -10.994,-2.27 -22.124,-3.643 -33.28,-4.156 l 0,-39.781 z M 123.595,95 c -10.347,6.634 -20.245,14.223 -29.53,22.813 l 30.28,30.312 0.03,0 c 6.448,-5.856 13.358,-11.22 20.657,-16.03 z m -42.688,36.094 c -8.512,9.367 -15.998,19.302 -22.53,29.656 l 37.187,21.47 c 4.692,-7.334 9.95,-14.283 15.687,-20.782 z" fill="rgba(54,69,85,0.4)" /></svg>');
+position: absolute;
+display: block;
+width: 130%;
+height : 130%;
+top: -15%;
+left: -15%;
+/*z-index: -1;*/
+transition: 0.5s;
+}
+
+.fmg-button {
+width: 32px;
+height : 32px;
+cursor: pointer;
+position: absolute;
+}
+
+.fmg-button:hover::before {
+transform: scale(1.2,1.2) rotate(30deg);
+transition: 0.5s;
+fill:#e7ac20;
+}

@@ -1,0 +1,129 @@
+<com.fullmetalgalaxy.model.ModelFmpInit>
+  <game>
+    <m__preview>
+      <id>5158081776320512</id>
+      <m__version>3</m__version>
+      <m__name>TF22</m__name>
+      <m__description></m__description>
+      <m__maxNumberOfPlayer>4</m__maxNumberOfPlayer>
+      <m__currentTimeStep>1</m__currentTimeStep>
+      <m__gameType>MultiPlayer</m__gameType>
+      <m__planetType>Desert</m__planetType>
+      <m__history>false</m__history>
+      <m__isOpen>true</m__isOpen>
+      <m__started>false</m__started>
+      <m__status>Open</m__status>
+      <m__minimapUri>/puzzles/tf22/minimap.jpg</m__minimapUri>
+      <m__currentPlayerIds>
+        <long>108</long>
+      </m__currentPlayerIds>
+      <m__currentPlayerId>108</m__currentPlayerId>
+      <m__accountCreator>
+        <id>544001</id>
+        <m__pseudo>panhardisium</m__pseudo>
+      </m__accountCreator>
+      <m__landWidth>28</m__landWidth>
+      <m__landHeight>19</m__landHeight>
+      <m__creationDate>2014-01-26 14:41:14.680 CET</m__creationDate>
+      <m__lastUpdate>2014-02-05 20:26:05.254 CET</m__lastUpdate>
+      <m__isVip>false</m__isVip>
+      <m__maxTeamAllowed>0</m__maxTeamAllowed>
+      <m__configGameTime>Standard</m__configGameTime>
+      <m__setRegistration/>
+      <m__teams/>
+      <m__tags/>
+      <m__mapShape>Flat</m__mapShape>
+    </m__preview>
+    <m__data>
+      <id>5158081776320512</id>
+      <m__preview>
+        <raw serialization="custom">
+          <com.google.appengine.api.datastore.Key>
+            <default>
+              <id>5158081776320512</id>
+              <appId>s~fmgwar</appId>
+              <kind>EbGamePreview</kind>
+            </default>
+          </com.google.appengine.api.datastore.Key>
+        </raw>
+      </m__preview>
+      <m__currentTide>Medium</m__currentTide>
+      <m__nextTide>Medium</m__nextTide>
+      <m__nextTide2>Medium</m__nextTide2>
+      <m__averageTideLevel>2</m__averageTideLevel>
+      <m__lastTideChange>10</m__lastTideChange>
+      <m__lastTimeStepChange>2014-01-27 10:33:16.156 CET</m__lastTimeStepChange>
+      <m__lands>REQkQ0REREREREREJEJURBREREREJDI0MzRDQlREE0QjRDREI0NEM0RDNBISISIzMyJDQ0QSRCM1
+IxERRDIzM0RERBIjEkUjETEzMlNFMkREERExRCQRESMyQ0REVVQSESFEJCERESFDRERUNBIRIURE
+IxERESJDNERTIhNBQ1QzIhERERIRNCJDM1EzVEMzIyMREhERMUNEVSRURTQjERERESExRFRENEM0
+MxURERFBIxEiNERERDREFBERIUNENEJDRFVENEQSEREhQ0RERERERERCRBQRESEzRFVEVVVEREJE
+JBEhMkNEREREREQ0MkQzQ0EyREREREREVEUzRFREVFVEREREREQA</m__lands>
+      <m__setToken/>
+      <m__additionalEventCount>0</m__additionalEventCount>
+      <m__setGameLog/>
+
+      <m__triggers/>
+      <m__accounts/>
+      <m__constructReserve>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+          <int>0</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
+          <int>0</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
+          <int>0</int>
+        </entry>
+      </m__constructReserve>
+      <m__initialHolds>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>WeatherHen</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Barge</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Pontoon</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Crab</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Tank</com.fullmetalgalaxy.model.TokenType>
+          <int>4</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Heap</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Crayfish</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Hovertank</com.fullmetalgalaxy.model.TokenType>
+          <int>1</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Speedboat</com.fullmetalgalaxy.model.TokenType>
+          <int>2</int>
+        </entry>
+        <entry>
+          <com.fullmetalgalaxy.model.TokenType>Turret</com.fullmetalgalaxy.model.TokenType>
+          <int>3</int>
+        </entry>
+      </m__initialHolds>
+      <m__nextLocalId>841</m__nextLocalId>
+    </m__data>
+    <m__lastTokenUpdate>1970-01-01 01:00:00.0 CET</m__lastTokenUpdate>
+    <m__allowedNodeGraphCache/>
+    <m__forbidenNodeGraphCache/>
+  </game>
+</com.fullmetalgalaxy.model.ModelFmpInit>

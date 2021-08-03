@@ -1,0 +1,119 @@
+# move near two colorless token
+board 29 2 false
+board 32 2 true
+ok
+board 32 2 false
+token 214
+board 33 1 false
+ok
+board 32 2 false
+token 215
+board 33 2 false
+ok
+# fire on unit
+board 33 2 false
+action EvtFire
+board 33 1 false
+board 34 1 false
+ok
+# fire on ore
+board 33 2 false
+action EvtFire
+board 33 0 false
+board 33 1 false
+ok
+# fire on unit but no munition
+board 33 2 false
+board 33 1 true
+assert exception
+board 34 2 false
+cancel
+board 34 2 false
+# control colorless unit
+board 19 10 false
+board 29 6 false
+board 33 2 false
+action EvtControl
+board 33 1 false
+board 34 2 false
+ok
+# unallowed enter in disabled firecover
+board 34 2 false
+board 34 3 false
+ok
+board 34 3 false
+assert exception
+board 34 4 false
+cancel
+# other unit move in disabled fire cover
+board 33 1 false
+board 34 2 false
+board 35 2 false
+board 35 3 false
+board 34 4 false
+board 31 3 true
+board 31 4 false
+ok
+board 31 4 false
+board 30 5 false
+ok
+# unallowed rotating neutralisation
+board 30 5 false
+board 31 4 false
+ok
+board 18 10 false
+board 33 2 false
+assert exception
+board 33 3 false
+cancel
+# rotating neutralisation with 4 tanks
+board 29 1 false
+board 30 3 true
+ok
+board 33 2 false
+board 33 3 false
+ok
+board 34 3 false
+board 34 4 false
+ok
+# then control poor victim :)
+board 34 4 false
+board 33 4 true
+board 33 3 false
+ok
+
+###############################
+
+# control speedboat
+# -> go into disable firecover and control disable unit
+board 28 3 false
+board 20 8 true
+ok
+board 20 8 false
+token 210
+board 19 8 false
+board 18 9 false
+board 18 9 false
+board 20 8 false
+token 211
+board 19 8 false
+board 19 8 false
+board 19 8 false
+action EvtControl
+board 18 9 false
+board 18 8 false
+board 18 8 false
+# then control orange barge
+board 18 9 false
+board 18 10 false
+board 17 10 false
+board 16 10 false
+board 16 10 false
+board 19 8 false
+board 17 10 true
+board 17 10 false
+board 17 10 false
+board 16 11 true
+board 16 10 false
+board 16 10 false
+# check that barge 16,11 and his content are cyan

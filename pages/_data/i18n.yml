@@ -1,0 +1,35 @@
+default_lang: 
+  fr: 0
+  en: 1
+lang: 
+  en: English
+  fr: Français
+  
+home:
+  fr: Accueil
+  en: Home  
+games:
+  fr: Parties
+  en: Games
+comunity:
+  fr: Comunauté
+  en: Comunity
+help:
+  fr: Aide
+  en: Help
+dev:
+  fr: Développement
+  en: Development
+
+tostart:
+  fr: Pour d&eacute;buter
+  en: To start
+manual:  
+  fr: Manuel d'utilisation
+  en: User manual
+rules:
+  fr: Les règles
+  en: Rules
+faq:
+  fr: FAQ
+  en: FAQ

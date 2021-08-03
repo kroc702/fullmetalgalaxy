@@ -1,0 +1,36 @@
+# check weather hen can't build two crab
+board 3 1 false
+board 3 0 false
+board 3 0 false
+board 3 1 false
+token 174 Crab
+board 4 1 false
+board 4 1 false
+board 3 1 false
+board 2 1 false
+board 2 1 false
+board 3 1 false
+token 175 Crab
+assert exception
+board 4 2 false
+cancel 
+# check weather hen can't build three units
+board 3 1 false
+token 175 Tank
+board 4 2 false
+board 4 2 false
+board 3 1 false
+board 2 3 true
+board 2 3 true
+board 2 2 false
+token 2 Tank
+assert exception
+board 3 2 false
+cancel
+board 2 2 false
+token 2 Pontoon
+assert exception
+board 3 2 false
+cancel
+board 3 2 false
+

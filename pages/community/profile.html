@@ -1,0 +1,67 @@
+---
+layout: nonavside
+title: Joueurs
+published: true
+lang: fr
+---
+
+<div id="content" style="min-height: 600px;background-image: url('/community/images/robot_instructor.jpg');background-repeat:no-repeat;background-position: 100% 100%;">
+</div>
+
+<script>
+fetch('{{ site.gameurl }}/api/account'+document.location.search).then(function (response) {
+	if( !response.ok ) {
+		throw "network issue";
+	}
+	return response.json();
+}).then(function (account) {
+	let content = document.getElementById("content");
+	
+	let elm = document.createElement('div');
+	elm.style.float = 'right';
+	elm.innerHTML = "<img src='" + account.avatarUrl + "' height='64px' />";
+	content.appendChild(elm);
+	elm = document.createElement('h2');
+	elm.innerHTML = account.pseudo;
+	content.appendChild(elm);
+	elm = document.createElement('div');
+	elm.innerHTML = "Inscription : "+account.subscription;
+	content.appendChild(elm);
+	elm = document.createElement('div');
+	elm.innerHTML = "Dernière connexion : "+account.lastConnexion;
+	content.appendChild(elm);
+	
+	elm = document.createElement('h2');
+	elm.innerHTML = 'stats';
+	content.appendChild(elm);
+	elm = document.createElement('div');
+	elm.innerHTML += "<p>Gains total: "+account.fullStats.m_score+"</p>";
+	let gameCount = account.fullStats.m_finshedGameCount;
+	elm.innerHTML += "<p>Nb de victoires/défaites/parties: "+account.fullStats.m_victoryCount+" / "+account.fullStats.m_losedCount+" / "+gameCount+"</p>";
+	elm.innerHTML += "<p>Période : "+account.fullStats.m_firstGameDate+" - "+account.fullStats.m_lastGameDate+"</p>";
+	let players = '';
+	for(let player of account.fullStats.m_opponentPlayers ) {
+		players += player.pseudo;
+		players += ', ';
+	}
+	elm.innerHTML += "<p>"+account.fullStats.m_opponentPlayerCount+" adversaires rencontrés : "+players+"</p>";
+	let otherStats = 'Autre stats:';
+	otherStats += "\nRank: "+account.fullStats.m_averageNormalizedRank;
+	otherStats += "\nRentabilité: "+account.fullStats.m_averageProfitability;
+	otherStats += "\nRéactivité: "+account.fullStats.m_averageReactivityInSec/3600+" heures";
+	otherStats += "\nCapture de minerais: "+account.fullStats.m_oreLoad /gameCount;
+	otherStats += "\nConstruction: "+account.fullStats.m_construction /gameCount;
+	otherStats += "\nDestruction: "+account.fullStats.m_destruction /gameCount;
+	otherStats += "\nCapture astronef: "+account.fullStats.m_freighterCapture /gameCount;
+	otherStats += "\nCapture unité: "+account.fullStats.m_unitsCapture /gameCount;
+	elm.innerHTML += "<pre>"+otherStats+"</pre>";
+	content.appendChild(elm);
+	
+	
+}).catch(function (error) {
+	document.getElementById("content").innerHTML = error;
+});
+
+
+
+</script>

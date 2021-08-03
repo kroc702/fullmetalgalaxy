@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>{{ site.title }} - {{ page.title }}</title>
+
+{% include meta.html %}	
+
+	<script src="/js/jquery-2.1.4.min.js"></script>
+	
+	<script src="/js/uikit.min.js"></script>
+	<link rel="stylesheet" href="/css/uikit.almost-flat.min.css" />
+
+	<script src="/js/components/sticky.min.js"></script>
+	<link rel="stylesheet" href="/css/components/sticky.almost-flat.min.css" />
+
+    <script src="/js/components/slideshow.min.js"></script>
+	<link rel="stylesheet" href="/css/components/slideshow.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/dotnav.almost-flat.min.css" />
+	<link rel="stylesheet" href="/css/components/slidenav.almost-flat.min.css" />
+
+
+	<link rel="stylesheet" type="text/css" href="/css/fmg.css" >
+</head>
+<body>
+    <div class="background"><div class="page">
+
+ 
+{% include header.html %}	
+{% include navbar.html %}
+
+	<div class="uk-container uk-container-center">
+	<div class="uk-grid" data-uk-grid-margin="">
+    
+	<div class="tm-main uk-width-medium-1-1">
+		<article class="uk-article">
+		<p class="uk-article-meta">{{ page.last_modified_at }} </p>
+			{{ content }}
+		</article>	 
+	</div>
+	
+	</div>
+	</div>
+
+	</div></div>
+
+{% include footer.html %}	
+{% include analytics.html %}
+
+</body>
+</html>

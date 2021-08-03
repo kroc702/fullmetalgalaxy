@@ -1,4 +1,5 @@
 /war/WEB-INF/classes/
+/war/WEB-INF/tags/
 /war/game/
 /war/WEB-INF/appengine-generated/
 /javadoc/
@@ -10,3 +11,6 @@
 /gwt-unitCache
 *.blend1
 /extras
+_site/
+.sass-cache/
+.jekyll-metadata

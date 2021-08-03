@@ -1,0 +1,65 @@
+###########
+# site.url, site.title
+
+title: 'Full Metal Galaxy'
+
+collections:
+  montest:
+    output: true
+
+gems:
+- jekyll-sitemap
+  
+########
+# more settings
+
+markdown: kramdown
+
+sass:
+  sass_dir: css
+  style:    expanded
+
+exclude:
+- README.md
+- preview.bat
+- Gemfile
+
+safe: true
+lsi: false
+
+###################
+prose:
+  rooturl: ''
+  siteurl: 'http://wiki.fullmetalgalaxy.com/'
+  relativeLinks: 'http://prose.github.io/starter/links.jsonp'
+  media: 'images'
+  ignore:
+    - _config.yml
+    - /_layouts
+    - /_includes
+  metadata:
+    _posts:
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "blog"
+      - name: "tags"
+        field:
+          element: "multiselect"
+          label: "Add Tags"
+          placeholder: "Choose Tags"
+          options:
+            - name: "Apples"
+              value: "apples"
+            - name: "Bananas"
+              value: "bananas"
+    _posts/static:
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "page"
+      - name: "permalink"
+        field:
+          element: "text"
+          label: "Permalink"
+          value: ""

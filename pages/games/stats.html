@@ -1,0 +1,32 @@
+---
+layout: nonavside
+title: Statistiques
+published: true
+lang: fr
+---
+
+<div id="content" style="width: 100%;min-height: 600px;background-image: url('/community/images/robot_instructor.jpg');background-repeat:no-repeat;background-position: 100% 100%;">
+</div>
+
+<script>
+
+fetch('{{ site.gameurl }}/api/stats/global').then(function (response) {
+	if( !response.ok ) {
+		throw "network issue";
+	}
+	return response.json();
+}).then(function (map) {
+	let content = document.getElementById("content");
+	for(let key in map) {
+		content.innerHTML += key;
+		content.innerHTML += " = ";
+		content.innerHTML += map[key];
+		content.innerHTML += "<br/>";
+	}
+}).catch(function (error) {
+	document.getElementById("content").innerHTML = error;
+});
+
+
+
+</script>
